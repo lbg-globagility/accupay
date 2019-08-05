@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports AccuPay.Repository
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
 Imports Microsoft.Extensions.Logging.Console
@@ -65,6 +66,8 @@ Public Class PayrollResources
     Private _filingStatuses As DataTable
 
     Private _systemOwner As SystemOwner
+
+    Private _allowanceRepository As AllowanceRepository
 
     Public ReadOnly Property Employees As ICollection(Of Employee)
         Get
@@ -195,6 +198,8 @@ Public Class PayrollResources
     Public Async Function Load() As Task
 
         'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+
+        _allowanceRepository = New AllowanceRepository
 
         Await LoadPayPeriod()
 
@@ -479,11 +484,10 @@ Public Class PayrollResources
     Private Async Function LoadAllowances() As Task
         Try
             Using context = New PayrollContext(logger)
-                ' Retrieve all allowances whose begin and end date spans the cutoff dates.
-                Dim query = context.Allowances.Include(Function(a) a.Product).
-                    Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                    Where(Function(a) _payDateFrom <= If(a.EffectiveEndDate, DateTime.Now))
+                Dim query As IQueryable(Of Allowance) = _allowanceRepository.
+                                                GetAllowancesWithPayPeriodBaseQuery(context,
+                                                                       _payDateFrom:=_payDateFrom,
+                                                                       _payDateTo:=_payDateTo)
 
                 _allowances = Await query.ToListAsync()
             End Using

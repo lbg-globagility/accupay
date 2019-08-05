@@ -2,8 +2,6 @@
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
-Imports Simplified = AccuPay.SimplifiedEntities.GridView
 
 Public Class AddAllowanceForm
     Private _currentEmployee As Employee

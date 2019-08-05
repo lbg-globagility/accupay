@@ -1,6 +1,12 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Enums
+Imports AccuPay.Extensions
+Imports AccuPay.Repository
+Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
@@ -30,9 +36,15 @@ Public Class SalaryTab
 
     Private _isSystemOwnerBenchMark As Boolean
 
+    Private _allowanceRepository As AllowanceRepository
+
+    Private _ecolaAllowance As Allowance
+
+    Private _currentPayPeriod As IPayPeriod
+
     Public Property BasicSalary As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtAmount.Text)
+            Return txtAmount.Text.ToDecimal
         End Get
         Set(value As Decimal)
             txtAmount.Text = CStr(value)
@@ -41,7 +53,7 @@ Public Class SalaryTab
 
     Public Property AllowanceSalary As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtAllowance.Text)
+            Return txtAllowance.Text.ToDecimal
         End Get
         Set(value As Decimal)
             txtAllowance.Text = CStr(value)
@@ -50,7 +62,7 @@ Public Class SalaryTab
 
     Public Property PhilHealth As Decimal?
         Get
-            Return TypeTools.ParseDecimalOrNull(txtPhilHealth.Text)
+            Return txtPhilHealth.Text.ToNullableDecimal
         End Get
         Set(value As Decimal?)
             If value.HasValue Then
@@ -62,15 +74,25 @@ Public Class SalaryTab
     Public Sub New()
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
+
+        _allowanceRepository = New AllowanceRepository
     End Sub
 
-    Public Sub SetEmployee(employee As Employee)
+    Public Async Function SetEmployee(employee As Employee) As Task
+
+        _employee = employee
+
+        If Await InitializeBenchmarkData() = False Then
+            Return
+        Else
+
+            txtEcola.Text = _ecolaAllowance.Amount.ToString
+        End If
 
         If _mode = FormMode.Creating Then
             EnableSalaryGrid()
         End If
 
-        _employee = employee
         txtPayFrequency.Text = employee.PayFrequency.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = employee.FullNameWithMiddleInitial
@@ -80,7 +102,45 @@ Public Class SalaryTab
 
         ChangeMode(FormMode.Empty)
         LoadSalaries()
-    End Sub
+    End Function
+
+    Private Async Function InitializeBenchmarkData() As Task(Of Boolean)
+        If _isSystemOwnerBenchMark Then
+
+            Dim employeeId = _employee?.RowID
+
+            Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
+
+            If _currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
+                MessageBoxHelper.ErrorMessage(errorMessage)
+
+                Return False
+            End If
+
+            'If we are going to enable this as a policy, check its employee type.
+            'If Daily then its allowance frequency should also be Daily.
+            'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
+            'If _employee.IsDaily Then
+            'End If
+
+            _ecolaAllowance = Await PayrollTools.GetOrCreateEmployeeEcola(
+                                                employeeId.Value,
+                                                payDateFrom:=_currentPayPeriod.PayFromDate,
+                                                payDateTo:=_currentPayPeriod.PayToDate,
+                                                allowanceFrequency:=Allowance.FREQUENCY_DAILY,
+                                                amount:=0,
+                                                effectiveEndDateShouldBeNull:=True)
+
+            If _ecolaAllowance Is Nothing Then
+                MessageBoxHelper.ErrorMessage(errorMessage)
+                Return False
+            End If
+
+        End If
+
+        Return True
+
+    End Function
 
     Private Sub ToggleBenchmarkEcola()
 
@@ -94,7 +154,7 @@ Public Class SalaryTab
 
     End Sub
 
-    Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
         End If
@@ -104,6 +164,8 @@ Public Class SalaryTab
         LoadSalaries()
 
         _isSystemOwnerBenchMark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        _currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
         ToggleBenchmarkEcola()
 
@@ -304,20 +366,20 @@ Public Class SalaryTab
         End If
     End Sub
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+    Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
         Using context = New PayrollContext()
             Try
                 With _currentSalary
                     .EffectiveFrom = dtpEffectiveFrom.Value
                     .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
-                    .BasicSalary = TypeTools.ParseDecimal(txtAmount.Text)
-                    .AllowanceSalary = TypeTools.ParseDecimal(txtAllowance.Text)
+                    .BasicSalary = txtAmount.Text.ToDecimal
+                    .AllowanceSalary = txtAllowance.Text.ToDecimal
                     .TotalSalary = (.BasicSalary + .AllowanceSalary)
                     .DoPaySSSContribution = chkPaySSS.Checked
                     .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
-                    .PhilHealthDeduction = TypeTools.ParseDecimal(txtPhilHealth.Text)
+                    .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
                     .AutoComputeHDMFContribution = ChkPagIbig.Checked
-                    .HDMFAmount = TypeTools.ParseDecimal(txtPagIbig.Text)
+                    .HDMFAmount = txtPagIbig.Text.ToDecimal
                 End With
 
                 If _currentSalary.RowID.HasValue Then
@@ -327,7 +389,13 @@ Public Class SalaryTab
                     context.Salaries.Add(_currentSalary)
                 End If
 
-                context.SaveChanges()
+                If _isSystemOwnerBenchMark Then
+
+                    Await SaveEcola(context)
+
+                End If
+
+                Await context.SaveChangesAsync()
 
                 Dim messageTitle = ""
                 If _mode = FormMode.Creating Then
@@ -349,6 +417,20 @@ Public Class SalaryTab
         LoadSalaries()
         ChangeMode(FormMode.Editing)
     End Sub
+
+    Private Async Function SaveEcola(context As PayrollContext) As Task
+        Dim _ecolaAllowanceId = _ecolaAllowance?.RowID
+
+        If _ecolaAllowanceId IsNot Nothing Then
+
+            Dim ecolaAllowance = Await context.Allowances.
+                    FirstOrDefaultAsync(Function(a) a.RowID.Value = _ecolaAllowanceId.Value)
+
+            ecolaAllowance.Amount = txtEcola.Text.ToDecimal
+            ecolaAllowance.LastUpdBy = z_User
+
+        End If
+    End Function
 
     Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
         Dim result = MsgBox("Are you sure you want to delete this salary?", MsgBoxStyle.YesNo, "Delete Salary")
@@ -402,7 +484,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub txtAmount_TextChanged(sender As Object, e As EventArgs)
-        Dim basicSalary = TypeTools.ParseDecimal(txtAmount.Text)
+        Dim basicSalary = txtAmount.Text.ToDecimal
 
         If _currentSalary Is Nothing Then
             Return
@@ -420,8 +502,8 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UpdateTotalSalary()
-        Dim totalSalary = TypeTools.ParseDecimal(txtAmount.Text) +
-                    TypeTools.ParseDecimal(txtAllowance.Text)
+        Dim totalSalary = txtAmount.Text.ToDecimal +
+                    txtAllowance.Text.ToDecimal
 
         txtTotalSalary.Text = totalSalary.ToString
     End Sub
@@ -468,13 +550,6 @@ Public Class SalaryTab
             End If
         End Using
     End Sub
-
-    Private Enum FormMode
-        Disabled
-        Empty
-        Creating
-        Editing
-    End Enum
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 

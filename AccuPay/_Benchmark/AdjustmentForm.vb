@@ -2,12 +2,13 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AdjustmentForm
 
-    Private ReadOnly _adjustmentType As AdjustmentType.AdjustmentType
+    Private ReadOnly _adjustmentType As AdjustmentType
 
     Private _productRepository As ProductRepository
 
@@ -15,15 +16,9 @@ Public Class AdjustmentForm
 
     Private _currentAdjustment As Product
 
-    Private _currentFormType As FormType
+    Private _currentFormType As FormMode
 
-    Private Enum FormType
-        Null
-        Add
-        Edit
-    End Enum
-
-    Sub New(Optional adjustmentType As AdjustmentType.AdjustmentType = AdjustmentType.AdjustmentType.Blank)
+    Sub New(Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -42,13 +37,13 @@ Public Class AdjustmentForm
     End Sub
 
     Private Async Function RefreshForm() As Task
-        If _adjustmentType = AdjustmentType.AdjustmentType.Deduction Then
+        If _adjustmentType = AdjustmentType.Deduction Then
 
             _adjustments = Await _productRepository.GetDeductionAdjustmentTypes()
 
             Me.Text = "Deduction Adjustments"
 
-        ElseIf _adjustmentType = AdjustmentType.AdjustmentType.OtherIncome Then
+        ElseIf _adjustmentType = AdjustmentType.OtherIncome Then
 
             _adjustments = Await _productRepository.GetAdditionAdjustmentTypes()
 
@@ -66,7 +61,7 @@ Public Class AdjustmentForm
         AdjustmentGridView.AutoGenerateColumns = False
         AdjustmentGridView.DataSource = _adjustments
 
-        _currentFormType = FormType.Null
+        _currentFormType = FormMode.Empty
     End Function
 
     Private Function GetSelectedAdjustment() As Product
@@ -114,7 +109,7 @@ Public Class AdjustmentForm
         CodeTextBox.Clear()
         DescriptionTextBox.Clear()
 
-        _currentFormType = FormType.Add
+        _currentFormType = FormMode.Creating
 
         CodeTextBox.Focus()
 
@@ -139,7 +134,7 @@ Public Class AdjustmentForm
         CodeTextBox.Text = _currentAdjustment.Comments
         DescriptionTextBox.Text = _currentAdjustment.PartNo
 
-        _currentFormType = FormType.Edit
+        _currentFormType = FormMode.Editing
 
         CodeTextBox.Focus()
 
@@ -178,7 +173,7 @@ Public Class AdjustmentForm
 
         Dim errorTextBox As TextBox = GetTextBoxWithError()
 
-        If _currentFormType = FormType.Null Then Return
+        If _currentFormType = FormMode.Empty Then Return
 
         If errorTextBox IsNot Nothing Then
 
@@ -188,7 +183,7 @@ Public Class AdjustmentForm
 
         End If
 
-        If _currentFormType = FormType.Edit AndAlso _currentAdjustment?.RowID Is Nothing Then
+        If _currentFormType = FormMode.Editing AndAlso _currentAdjustment?.RowID Is Nothing Then
 
             MessageBoxHelper.ErrorMessage("There was a problem in updating the adjustment type. Please reopen the form and try again.")
             Return
@@ -201,7 +196,7 @@ Public Class AdjustmentForm
 
                                     Dim adjustmentName = DescriptionTextBox.Text.Trim
 
-                                    If _currentFormType = FormType.Add Then
+                                    If _currentFormType = FormMode.Creating Then
 
                                         Await _productRepository.AddAdjustmentType(
                                                         adjustmentName:=adjustmentName,
@@ -210,7 +205,7 @@ Public Class AdjustmentForm
 
                                         successMessage = $"Adjustment: '{adjustmentName}' successfully added."
 
-                                    ElseIf _currentFormType = FormType.Edit Then
+                                    ElseIf _currentFormType = FormMode.Editing Then
 
                                         Dim currentAdjustmentId = _currentAdjustment.RowID.Value
 

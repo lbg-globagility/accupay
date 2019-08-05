@@ -14,6 +14,8 @@
 
     Public Shared ReadOnly SSS_LOAN As String = "SSS LOAN"
 
+    Public Shared ReadOnly ECOLA As String = "ecola"
+
     Public Shared ReadOnly VACATION_LEAVE_PART_NO As String = LeaveType.Vacation
 
     Public Shared ReadOnly SICK_LEAVE_PART_NO As String = LeaveType.Sick

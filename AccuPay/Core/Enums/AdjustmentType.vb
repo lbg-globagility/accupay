@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Public Class AdjustmentType
+Namespace Global.AccuPay.Enums
 
     Public Enum AdjustmentType
 
@@ -10,4 +10,4 @@ Public Class AdjustmentType
 
     End Enum
 
-End Class
+End Namespace

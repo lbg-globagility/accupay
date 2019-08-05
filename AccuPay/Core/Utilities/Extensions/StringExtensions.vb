@@ -22,6 +22,12 @@ Namespace Global.AccuPay.Extensions
             Return ObjectUtils.ToDecimal(num)
         End Function
 
+        <Extension()>
+        Public Function ToNullableDecimal(num As String) As Decimal?
+
+            Return ObjectUtils.ToNullableDecimal(num)
+        End Function
+
     End Module
 
 End Namespace

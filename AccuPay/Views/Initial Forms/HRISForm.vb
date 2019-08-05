@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports AccuPay.Enums
 
 Public Class HRISForm
 
@@ -405,14 +406,14 @@ Public Class HRISForm
 
     Private Sub DeductionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeductionsToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentType.AdjustmentType.Deduction)
+        Dim form As New AdjustmentForm(AdjustmentType.Deduction)
         form.ShowDialog()
 
     End Sub
 
     Private Sub OtherIncomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OtherIncomeToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentType.AdjustmentType.OtherIncome)
+        Dim form As New AdjustmentForm(AdjustmentType.OtherIncome)
         form.ShowDialog()
 
     End Sub

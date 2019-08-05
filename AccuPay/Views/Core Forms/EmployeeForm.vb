@@ -1491,7 +1491,7 @@ Public Class EmployeeForm
     Dim LastFirstMidName As String = Nothing
     Dim publicEmpRowID = Nothing
 
-    Sub dgvEmp_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvEmp.SelectionChanged
+    Async Sub dgvEmp_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvEmp.SelectionChanged
 
         RemoveHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
         RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
@@ -1660,7 +1660,7 @@ Public Class EmployeeForm
                     txtLName.Text = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
                     txtSName.Text = If(IsDBNull(.Cells("Column21").Value), "", .Cells("Column21").Value)
 
-                    Static case_one As Integer = -1
+                    Dim case_one As Integer = -1
                     If case_one <> sameEmpID Then
                         case_one = sameEmpID
                         VIEW_employeedependents(.Cells("RowID").Value)
@@ -1885,7 +1885,7 @@ Public Class EmployeeForm
                     VIEW_employeeattachments(.Cells("RowID").Value)
                     dgvempatta_SelectionChanged(sender, e)
                 ElseIf selectedTab Is tbpNewSalary Then
-                    SalaryTab.SetEmployee(employee)
+                    Await SalaryTab.SetEmployee(employee)
                 End If
 
                 If txtdgvDepen IsNot Nothing Then

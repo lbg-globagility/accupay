@@ -112,6 +112,17 @@ Namespace Global.AccuPay.Repository
             End If
         End Function
 
+        Public Function GetAllowancesWithPayPeriodBaseQuery(context As PayrollContext, _payDateFrom As Date, _payDateTo As Date) _
+            As IQueryable(Of Allowance)
+
+            ' Retrieve all allowances whose begin and end date spans the cutoff dates.
+            Return context.Allowances.
+                Include(Function(a) a.Product).
+                Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
+                Where(Function(a) a.EffectiveStartDate <= _payDateTo).
+                Where(Function(a) _payDateFrom <= If(a.EffectiveEndDate, Date.Now))
+        End Function
+
         Private Sub Insert(
             allowance As Allowance,
             context As PayrollContext)

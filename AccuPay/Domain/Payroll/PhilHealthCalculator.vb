@@ -10,8 +10,6 @@ Namespace Global.AccuPay.Payroll
         Private ReadOnly _policy As PhilHealthPolicy
         Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
 
-        Private Const EcolaName As String = "ecola"
-
         Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of PhilHealthBracket))
             _policy = policy
             _philHealthBrackets = philHealthBrackets
@@ -98,7 +96,7 @@ Namespace Global.AccuPay.Payroll
                 Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
                 Dim ecolas = allowances.
-                    Where(Function(ea) ea.Product.PartNo.ToLower() = EcolaName)
+                    Where(Function(ea) ea.Product.PartNo.ToLower() = ProductConstant.ECOLA)
 
                 Dim ecolaPerMonth = 0D
                 If ecolas.Any() Then

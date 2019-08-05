@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository
@@ -144,7 +145,7 @@ Namespace Global.AccuPay.Repository
         Public Async Function AddAdjustmentType(
                                     adjustmentName As String,
                                     code As String,
-                                    adjustmentType As AdjustmentType.AdjustmentType,
+                                    adjustmentType As AdjustmentType,
                                     Optional throwError As Boolean = True) _
             As Task(Of Product)
 
@@ -399,12 +400,12 @@ Namespace Global.AccuPay.Repository
             End Using
         End Function
 
-        Private Shared Function DetermineAdjustmentTypeString(adjustmentType As AdjustmentType.AdjustmentType) As String
-            If adjustmentType = AccuPay.AdjustmentType.AdjustmentType.Deduction Then
+        Private Shared Function DetermineAdjustmentTypeString(adjustmentType As AdjustmentType) As String
+            If adjustmentType = AdjustmentType.Deduction Then
 
                 Return ProductConstant.ADJUSTMENT_TYPE_DEDUCTION
 
-            ElseIf adjustmentType = AccuPay.AdjustmentType.AdjustmentType.OtherIncome Then
+            ElseIf adjustmentType = AdjustmentType.OtherIncome Then
 
                 Return ProductConstant.ADJUSTMENT_TYPE_ADDITION
             Else
