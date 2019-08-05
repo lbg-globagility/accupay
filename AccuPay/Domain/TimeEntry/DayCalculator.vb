@@ -587,7 +587,8 @@ Public Class DayCalculator
                         (Not _policy.RequiredToWorkLastDayForHolidayPay))
 
                 If isEntitledToHolidayPay Then
-                    timeEntry.RegularHolidayPay += basicHolidayPay
+                    'timeEntry.RegularHolidayPay += basicHolidayPay
+                    timeEntry.BasicRegularHolidayPay = basicHolidayPay
                 End If
             End If
         End If

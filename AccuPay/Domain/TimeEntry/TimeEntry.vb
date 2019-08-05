@@ -82,6 +82,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property RegularHolidayPay As Decimal
 
+        <NotMapped>
+        Public Property BasicRegularHolidayPay As Decimal
+
         Public Property RegularHolidayOTHours As Decimal
 
         Public Property RegularHolidayOTPay As Decimal

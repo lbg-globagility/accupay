@@ -15,7 +15,7 @@ Public Class TimeEntryGenerator
     Private ReadOnly _cutoffStart As Date
 
     Private ReadOnly _cutoffEnd As Date
-
+    Private ReadOnly _threeDays As Integer = 3
     Private _timeEntries As IList(Of TimeEntry)
     Private _actualTimeEntries As IList(Of ActualTimeEntry)
     Private _timeLogs As IList(Of TimeLog)
@@ -34,6 +34,7 @@ Public Class TimeEntryGenerator
     Private _finished As Integer
 
     Private _errors As Integer
+    Private _employees As IList(Of Employee)
 
     Public ReadOnly Property ErrorCount As Integer
         Get
@@ -63,14 +64,17 @@ Public Class TimeEntryGenerator
         Dim settings As ListOfValueCollection = Nothing
         Dim agencies As IList(Of Agency) = Nothing
 
+        Dim timeEntryPolicy As TimeEntryPolicy
         Using context = New PayrollContext()
 
             settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            timeEntryPolicy = New TimeEntryPolicy(settings)
 
             employees = context.Employees.
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Include(Function(e) e.Position).
                 ToList()
+            _employees = employees
 
             agencies = context.Agencies.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -84,10 +88,12 @@ Public Class TimeEntryGenerator
                 Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
                 ToList()
 
-            Dim previousCutoff = _cutoffStart.AddDays(-3)
+            Dim previousCutoff = _cutoffStart.AddDays(-_threeDays)
+            Dim endOfCutOff As Date = _cutoffEnd
+            If timeEntryPolicy.PostLegalHolidayCheck Then endOfCutOff = _cutoffEnd.AddDays(_threeDays)
             _timeEntries = context.TimeEntries.
                 Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
-                Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
+                Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= endOfCutOff).
                 ToList()
 
             _actualTimeEntries = context.ActualTimeEntries.
@@ -134,7 +140,7 @@ Public Class TimeEntryGenerator
                 Where(Function(es) _cutoffStart <= es.DateSched AndAlso es.DateSched <= _cutoffEnd).
                 ToList()
 
-            If New TimeEntryPolicy(settings).ComputeBreakTimeLate Then
+            If timeEntryPolicy.ComputeBreakTimeLate Then
                 _timeAttendanceLogs = context.TimeAttendanceLogs.
                                 Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
                                 Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
@@ -167,7 +173,7 @@ Public Class TimeEntryGenerator
         Parallel.ForEach(employees,
             Sub(employee)
                 Try
-                    CalculateEmployee(employee, organization, payrateCalendar, settings, agencies)
+                    CalculateEmployee(employee, organization, payrateCalendar, settings, agencies, timeEntryPolicy)
                 Catch ex As Exception
                     logger.Error(ex.Message, ex)
                     _errors += 1
@@ -177,7 +183,7 @@ Public Class TimeEntryGenerator
             End Sub)
     End Sub
 
-    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency))
+    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency), timeEntryPolicy As TimeEntryPolicy)
         Dim previousTimeEntries As IList(Of TimeEntry) = _timeEntries.
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
@@ -273,6 +279,12 @@ Public Class TimeEntryGenerator
 
         Next
 
+        PostLegalHolidayCheck(timeEntries, payrateCalendar, timeEntryPolicy)
+
+        timeEntries.ForEach(Sub(t)
+                                t.RegularHolidayPay += t.BasicRegularHolidayPay
+                            End Sub)
+
         If employee.IsUnderAgency Then
             Dim agency = agencies.SingleOrDefault(Function(a) Nullable.Equals(a.RowID, employee.AgencyID))
 
@@ -289,6 +301,45 @@ Public Class TimeEntryGenerator
             AddAgencyFeesToContext(context, agencyFees)
             context.SaveChanges()
         End Using
+    End Sub
+
+    Private Sub PostLegalHolidayCheck(timeEntries As List(Of TimeEntry), payrateCalendar As PayratesCalendar, timeEntryPolicy As TimeEntryPolicy)
+        If timeEntryPolicy.PostLegalHolidayCheck Then
+            Dim employeeId = timeEntries.FirstOrDefault?.EmployeeID
+            Dim employees = _employees.
+                Where(Function(e) e.CalcHoliday).
+                Where(Function(e) Equals(employeeId, e.RowID)).
+                ToList()
+
+            Dim isEntitledForLegalHolidayPay = employees.Any()
+            If Not isEntitledForLegalHolidayPay Then Return
+
+            Dim legalHolidays = payrateCalendar.LegalHolidays
+
+            If legalHolidays.Any() Then
+                Dim legalHolidayDescDates = legalHolidays.
+                    Select(Function(p) p.Date).
+                    OrderByDescending(Function(d) d).
+                    ToList()
+
+                Dim employee = employees.FirstOrDefault
+                For Each holidayDate In legalHolidayDescDates
+                    Dim presentAfterLegalHoliday = PayrollTools.HasWorkAfterLegalHoliday(
+                        holidayDate, _cutoffEnd, timeEntries, payrateCalendar)
+
+                    If Not presentAfterLegalHoliday Then
+                        Dim timeEntry = timeEntries.Where(Function(t) t.Date = holidayDate).FirstOrDefault
+
+                        timeEntry.BasicRegularHolidayPay = 0
+                        'If employee.IsMonthly Then
+
+                        'ElseIf employee.IsDaily Then
+
+                        'End If
+                    End If
+                Next
+            End If
+        End If
     End Sub
 
     Private Sub AddTimeEntriesToContext(context As PayrollContext, timeEntries As IList(Of TimeEntry))
