@@ -53,6 +53,7 @@ Partial Class SalaryTab2
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
@@ -117,7 +118,9 @@ Partial Class SalaryTab2
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.txtEcola = New System.Windows.Forms.TextBox()
+        Me.Label18 = New System.Windows.Forms.Label()
+        Me.Label19 = New System.Windows.Forms.Label()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -174,6 +177,11 @@ Partial Class SalaryTab2
         Me.ToolStripProgressBar2.Size = New System.Drawing.Size(100, 22)
         Me.ToolStripProgressBar2.Visible = False
         '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
         'btnImport
         '
         Me.btnImport.Image = CType(resources.GetObject("btnImport.Image"), System.Drawing.Image)
@@ -194,6 +202,9 @@ Partial Class SalaryTab2
         '
         'grpSalary
         '
+        Me.grpSalary.Controls.Add(Me.txtEcola)
+        Me.grpSalary.Controls.Add(Me.Label18)
+        Me.grpSalary.Controls.Add(Me.Label19)
         Me.grpSalary.Controls.Add(Me.txtTotalSalary)
         Me.grpSalary.Controls.Add(Me.txtPayFrequency)
         Me.grpSalary.Controls.Add(Me.txtSalaryType)
@@ -256,7 +267,7 @@ Partial Class SalaryTab2
         '
         'txtBasicPay
         '
-        Me.txtBasicPay.Location = New System.Drawing.Point(392, 96)
+        Me.txtBasicPay.Location = New System.Drawing.Point(672, 96)
         Me.txtBasicPay.Name = "txtBasicPay"
         Me.txtBasicPay.ReadOnly = True
         Me.txtBasicPay.Size = New System.Drawing.Size(160, 22)
@@ -315,7 +326,7 @@ Partial Class SalaryTab2
         '
         'Label14
         '
-        Me.Label14.Location = New System.Drawing.Point(376, 96)
+        Me.Label14.Location = New System.Drawing.Point(656, 96)
         Me.Label14.Name = "Label14"
         Me.Label14.Size = New System.Drawing.Size(16, 24)
         Me.Label14.TabIndex = 270
@@ -439,7 +450,7 @@ Partial Class SalaryTab2
         '
         'Label7
         '
-        Me.Label7.Location = New System.Drawing.Point(280, 96)
+        Me.Label7.Location = New System.Drawing.Point(560, 96)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(96, 24)
         Me.Label7.TabIndex = 63
@@ -798,10 +809,30 @@ Partial Class SalaryTab2
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
         '
-        'ToolStripSeparator1
+        'txtEcola
         '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        Me.txtEcola.Location = New System.Drawing.Point(392, 96)
+        Me.txtEcola.Name = "txtEcola"
+        Me.txtEcola.Size = New System.Drawing.Size(160, 22)
+        Me.txtEcola.TabIndex = 286
+        '
+        'Label18
+        '
+        Me.Label18.Location = New System.Drawing.Point(376, 96)
+        Me.Label18.Name = "Label18"
+        Me.Label18.Size = New System.Drawing.Size(16, 24)
+        Me.Label18.TabIndex = 285
+        Me.Label18.Text = "₱"
+        Me.Label18.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'Label19
+        '
+        Me.Label19.Location = New System.Drawing.Point(280, 96)
+        Me.Label19.Name = "Label19"
+        Me.Label19.Size = New System.Drawing.Size(96, 24)
+        Me.Label19.TabIndex = 284
+        Me.Label19.Text = "ECOLA"
+        Me.Label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'SalaryTab2
         '
@@ -899,4 +930,7 @@ Partial Class SalaryTab2
     Friend WithEvents Column10 As DataGridViewTextBoxColumn
     Friend WithEvents Column11 As DataGridViewTextBoxColumn
     Friend WithEvents ToolStripSeparator1 As ToolStripSeparator
+    Friend WithEvents txtEcola As TextBox
+    Friend WithEvents Label18 As Label
+    Friend WithEvents Label19 As Label
 End Class

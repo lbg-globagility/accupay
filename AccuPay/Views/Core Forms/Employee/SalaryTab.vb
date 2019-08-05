@@ -6,6 +6,8 @@ Imports PayrollSys
 
 Public Class SalaryTab
 
+    Dim sys_ownr As New SystemOwner
+
     Private Const StandardPagIbigContribution As Decimal = 100
 
     Private _mode As FormMode = FormMode.Empty
@@ -25,6 +27,8 @@ Public Class SalaryTab
     Private _philHealthMinimumContribution As Decimal
 
     Private _philHealthMaximumContribution As Decimal
+
+    Private _isSystemOwnerBenchMark As Boolean
 
     Public Property BasicSalary As Decimal
         Get
@@ -61,6 +65,7 @@ Public Class SalaryTab
     End Sub
 
     Public Sub SetEmployee(employee As Employee)
+
         If _mode = FormMode.Creating Then
             EnableSalaryGrid()
         End If
@@ -77,6 +82,18 @@ Public Class SalaryTab
         LoadSalaries()
     End Sub
 
+    Private Sub ToggleBenchmarkEcola()
+
+        lblTotalSalary.Visible = Not _isSystemOwnerBenchMark
+        lblTotalSalaryPeroSign.Visible = Not _isSystemOwnerBenchMark
+        txtTotalSalary.Visible = Not _isSystemOwnerBenchMark
+
+        lblEcola.Visible = _isSystemOwnerBenchMark
+        lblEcolaPeroSign.Visible = _isSystemOwnerBenchMark
+        txtEcola.Visible = _isSystemOwnerBenchMark
+
+    End Sub
+
     Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
@@ -85,6 +102,10 @@ Public Class SalaryTab
         LoadPhilHealthBrackets()
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
+
+        _isSystemOwnerBenchMark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        ToggleBenchmarkEcola()
 
         AddHandler txtAmount.TextChanged, AddressOf txtAmount_TextChanged
     End Sub

@@ -31,13 +31,13 @@ Partial Class HRISForm
         Me.EducBGToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrevEmplyrToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PromotionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DisciplinaryActionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.EmpSalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem10 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.BonusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LeaveToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem8 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OvertimeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OfficialBusinessToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AttachmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OffSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DivisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -48,6 +48,8 @@ Partial Class HRISForm
         Me.EmployeeExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.LoansToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AllowanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeductionsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OtherIncomeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelHRIS = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
@@ -55,7 +57,7 @@ Partial Class HRISForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.PositionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem, Me.LoansToolStripMenuItem, Me.AllowanceToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.PositionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem, Me.LoansToolStripMenuItem, Me.AllowanceToolStripMenuItem, Me.DeductionsToolStripMenuItem, Me.OtherIncomeToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -64,7 +66,7 @@ Partial Class HRISForm
         '
         'EmployeeToolStripMenuItem
         '
-        Me.EmployeeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckListToolStripMenuItem, Me.PersonalinfoToolStripMenuItem, Me.AwardsToolStripMenuItem, Me.CertificatesToolStripMenuItem, Me.EducBGToolStripMenuItem, Me.PrevEmplyrToolStripMenuItem, Me.ToolStripSeparator1, Me.ToolStripMenuItem3, Me.DisciplinaryActionToolStripMenuItem, Me.EmpSalToolStripMenuItem, Me.ToolStripMenuItem10, Me.LeaveToolStripMenuItem, Me.ToolStripMenuItem8, Me.ToolStripMenuItem9, Me.AttachmentToolStripMenuItem, Me.OffSetToolStripMenuItem})
+        Me.EmployeeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CheckListToolStripMenuItem, Me.PersonalinfoToolStripMenuItem, Me.AwardsToolStripMenuItem, Me.CertificatesToolStripMenuItem, Me.EducBGToolStripMenuItem, Me.PrevEmplyrToolStripMenuItem, Me.ToolStripSeparator1, Me.PromotionToolStripMenuItem, Me.DisciplinaryActionToolStripMenuItem, Me.EmpSalToolStripMenuItem, Me.BonusToolStripMenuItem, Me.LeaveToolStripMenuItem, Me.OvertimeToolStripMenuItem, Me.OfficialBusinessToolStripMenuItem, Me.AttachmentToolStripMenuItem, Me.OffSetToolStripMenuItem})
         Me.EmployeeToolStripMenuItem.Name = "EmployeeToolStripMenuItem"
         Me.EmployeeToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
         Me.EmployeeToolStripMenuItem.Text = "Employee"
@@ -72,97 +74,97 @@ Partial Class HRISForm
         'CheckListToolStripMenuItem
         '
         Me.CheckListToolStripMenuItem.Name = "CheckListToolStripMenuItem"
-        Me.CheckListToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CheckListToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.CheckListToolStripMenuItem.Text = "Check list"
         '
         'PersonalinfoToolStripMenuItem
         '
         Me.PersonalinfoToolStripMenuItem.Name = "PersonalinfoToolStripMenuItem"
-        Me.PersonalinfoToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PersonalinfoToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.PersonalinfoToolStripMenuItem.Text = "Personal Profile"
         '
         'AwardsToolStripMenuItem
         '
         Me.AwardsToolStripMenuItem.Name = "AwardsToolStripMenuItem"
-        Me.AwardsToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AwardsToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.AwardsToolStripMenuItem.Text = "Awards"
         '
         'CertificatesToolStripMenuItem
         '
         Me.CertificatesToolStripMenuItem.Name = "CertificatesToolStripMenuItem"
-        Me.CertificatesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.CertificatesToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.CertificatesToolStripMenuItem.Text = "Certifications"
         '
         'EducBGToolStripMenuItem
         '
         Me.EducBGToolStripMenuItem.Name = "EducBGToolStripMenuItem"
-        Me.EducBGToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EducBGToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.EducBGToolStripMenuItem.Text = "Educ Background"
         '
         'PrevEmplyrToolStripMenuItem
         '
         Me.PrevEmplyrToolStripMenuItem.Name = "PrevEmplyrToolStripMenuItem"
-        Me.PrevEmplyrToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PrevEmplyrToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.PrevEmplyrToolStripMenuItem.Text = "Previous Employer"
         '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(170, 6)
         '
-        'ToolStripMenuItem3
+        'PromotionToolStripMenuItem
         '
-        Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem3.Text = "Promotion"
+        Me.PromotionToolStripMenuItem.Name = "PromotionToolStripMenuItem"
+        Me.PromotionToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.PromotionToolStripMenuItem.Text = "Promotion"
         '
         'DisciplinaryActionToolStripMenuItem
         '
         Me.DisciplinaryActionToolStripMenuItem.Name = "DisciplinaryActionToolStripMenuItem"
-        Me.DisciplinaryActionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.DisciplinaryActionToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.DisciplinaryActionToolStripMenuItem.Text = "Disciplinary Action"
         '
         'EmpSalToolStripMenuItem
         '
         Me.EmpSalToolStripMenuItem.Name = "EmpSalToolStripMenuItem"
-        Me.EmpSalToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.EmpSalToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.EmpSalToolStripMenuItem.Text = "Salary"
         '
-        'ToolStripMenuItem10
+        'BonusToolStripMenuItem
         '
-        Me.ToolStripMenuItem10.Name = "ToolStripMenuItem10"
-        Me.ToolStripMenuItem10.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem10.Text = "Bonus"
+        Me.BonusToolStripMenuItem.Name = "BonusToolStripMenuItem"
+        Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.BonusToolStripMenuItem.Text = "Bonus"
         '
         'LeaveToolStripMenuItem
         '
         Me.LeaveToolStripMenuItem.Name = "LeaveToolStripMenuItem"
-        Me.LeaveToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.LeaveToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.LeaveToolStripMenuItem.Text = "Leave"
         '
-        'ToolStripMenuItem8
+        'OvertimeToolStripMenuItem
         '
-        Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
-        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem8.Text = "Overtime"
+        Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
+        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.OvertimeToolStripMenuItem.Text = "Overtime"
         '
-        'ToolStripMenuItem9
+        'OfficialBusinessToolStripMenuItem
         '
-        Me.ToolStripMenuItem9.Name = "ToolStripMenuItem9"
-        Me.ToolStripMenuItem9.Size = New System.Drawing.Size(180, 22)
-        Me.ToolStripMenuItem9.Text = "Official business"
+        Me.OfficialBusinessToolStripMenuItem.Name = "OfficialBusinessToolStripMenuItem"
+        Me.OfficialBusinessToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.OfficialBusinessToolStripMenuItem.Text = "Official business"
         '
         'AttachmentToolStripMenuItem
         '
         Me.AttachmentToolStripMenuItem.Name = "AttachmentToolStripMenuItem"
-        Me.AttachmentToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AttachmentToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.AttachmentToolStripMenuItem.Text = "Attachment"
         '
         'OffSetToolStripMenuItem
         '
         Me.OffSetToolStripMenuItem.AccessibleDescription = "Cinema 2000"
         Me.OffSetToolStripMenuItem.Name = "OffSetToolStripMenuItem"
-        Me.OffSetToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.OffSetToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
         Me.OffSetToolStripMenuItem.Text = "Offset"
         '
         'DivisionToolStripMenuItem
@@ -215,6 +217,20 @@ Partial Class HRISForm
         Me.AllowanceToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
         Me.AllowanceToolStripMenuItem.Text = "Allowance"
         '
+        'DeductionsToolStripMenuItem
+        '
+        Me.DeductionsToolStripMenuItem.Name = "DeductionsToolStripMenuItem"
+        Me.DeductionsToolStripMenuItem.Size = New System.Drawing.Size(79, 20)
+        Me.DeductionsToolStripMenuItem.Text = "Deductions"
+        Me.DeductionsToolStripMenuItem.Visible = False
+        '
+        'OtherIncomeToolStripMenuItem
+        '
+        Me.OtherIncomeToolStripMenuItem.Name = "OtherIncomeToolStripMenuItem"
+        Me.OtherIncomeToolStripMenuItem.Size = New System.Drawing.Size(92, 20)
+        Me.OtherIncomeToolStripMenuItem.Text = "Other Income"
+        Me.OtherIncomeToolStripMenuItem.Visible = False
+        '
         'PanelHRIS
         '
         Me.PanelHRIS.Dock = System.Windows.Forms.DockStyle.Fill
@@ -254,11 +270,11 @@ Partial Class HRISForm
     Friend WithEvents ToolStripSeparator1 As System.Windows.Forms.ToolStripSeparator
     Friend WithEvents EducBGToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents DisciplinaryActionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem3 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents PromotionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckListToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem10 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem8 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ToolStripMenuItem9 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents BonusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OvertimeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents OfficialBusinessToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AttachmentToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents OffSetToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents JobLevelToolStripMenuItem As ToolStripMenuItem
@@ -267,4 +283,6 @@ Partial Class HRISForm
     Friend WithEvents EmployeeExperimentalToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents LoansToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents AllowanceToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeductionsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents OtherIncomeToolStripMenuItem As ToolStripMenuItem
 End Class

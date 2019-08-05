@@ -294,7 +294,6 @@ Public Class MDIPrimaryForm
 
         If if_sysowner_is_benchmark Then
             tsbtnGeneral.Visible = False
-            tsbtnHRIS.Visible = False
             tsbtnTime.Visible = False
         End If
 

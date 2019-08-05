@@ -21,6 +21,8 @@ Public Class EmployeeForm
 
     Dim sys_ownr As New SystemOwner
 
+    Private if_sysowner_is_benchmark As Boolean
+
     Private threadArrayList As New List(Of Thread)
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -1711,6 +1713,27 @@ Public Class EmployeeForm
     Dim paytypestring As String
 
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        If if_sysowner_is_benchmark Then
+
+            'only salary and employee tabs should be visible
+
+            tabctrlemp.TabPages.Remove(tbpempchklist)
+            tabctrlemp.TabPages.Remove(tbpAwards)
+            tabctrlemp.TabPages.Remove(tbpCertifications)
+            tabctrlemp.TabPages.Remove(tbpLeave)
+            tabctrlemp.TabPages.Remove(tbpDiscipAct)
+            tabctrlemp.TabPages.Remove(tbpEducBG)
+            tabctrlemp.TabPages.Remove(tbpPrevEmp)
+            tabctrlemp.TabPages.Remove(tbpPromotion)
+            tabctrlemp.TabPages.Remove(tbpEmpOT)
+            tabctrlemp.TabPages.Remove(tbpOBF)
+            tabctrlemp.TabPages.Remove(tbpBonus)
+            tabctrlemp.TabPages.Remove(tbpAttachment)
+
+        End If
 
         If dbnow = Nothing Then
             dbnow = EXECQUER(CURDATE_MDY)

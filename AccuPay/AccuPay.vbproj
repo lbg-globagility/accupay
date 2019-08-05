@@ -387,6 +387,12 @@
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
+    <Compile Include="_Benchmark\AdjustmentForm.Designer.vb">
+      <DependentUpon>AdjustmentForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\AdjustmentForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="_Benchmark\AdjustmentInput.vb" />
     <Compile Include="_Benchmark\BenchmarkPayrollForm.Designer.vb">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
@@ -1810,6 +1816,9 @@
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\AdjustmentForm.resx">
+      <DependentUpon>AdjustmentForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\BenchmarkPayrollForm.resx">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>

@@ -9,6 +9,10 @@ Imports AccuPay.Utils
 
 Public Class EmployeeLoansForm
 
+    Dim sys_ownr As New SystemOwner
+
+    Private if_sysowner_is_benchmark As Boolean
+
     Private _employeeRepository As New EmployeeRepository
     Private _productRepository As New ProductRepository
     Private _listOfValueRepository As New ListOfValueRepository
@@ -33,6 +37,8 @@ Public Class EmployeeLoansForm
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+
+        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
         DetailsTabControl.Enabled = False
 
@@ -589,7 +595,14 @@ Public Class EmployeeLoansForm
 
     Private Async Function LoadLoanTypes() As Task
 
-        Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+        If if_sysowner_is_benchmark Then
+
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
+        Else
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+
+        End If
+
         PopulateLoanTypeCombobox()
 
     End Function

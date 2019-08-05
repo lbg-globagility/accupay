@@ -6,6 +6,10 @@ Imports AccuPay.Utils
 
 Public Class AddLoanScheduleForm
 
+    Dim sys_ownr As New SystemOwner
+
+    Private if_sysowner_is_benchmark As Boolean
+
     Private _currentEmployee As Employee
 
     Private _newLoanSchedule As New LoanSchedule
@@ -37,6 +41,8 @@ Public Class AddLoanScheduleForm
         Me.IsSaved = False
 
         Me.NewLoanTypes = New List(Of Product)
+
+        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
     End Sub
 
@@ -287,7 +293,14 @@ Public Class AddLoanScheduleForm
 
     Private Async Function LoadLoanTypes() As Task
 
-        Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+        If if_sysowner_is_benchmark Then
+
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
+        Else
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+
+        End If
+
         PopulateLoanTypeCombobox()
 
     End Function

@@ -80,25 +80,21 @@ Namespace Benchmark
 
         Private Async Function InitializeLoanIds(logger As ILog) As Task(Of Boolean)
 
-            Dim loanTypeCategory = "Loan Type"
-            Const pagibigLoanName As String = "PAGIBIG LOAN"
-            Const sssLoanName As String = "SSS LOAN"
-
             Using context As New PayrollContext
 
                 'get category
-                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(loanTypeCategory, context)
+                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(ProductConstant.LOAN_TYPE_CATEGORY, context)
 
                 'get Ids from product table
 
                 _pagibigLoanId = (Await context.Products.
                                         Where(Function(p) CBool(p.CategoryID.Value = loanTypeCategoryId)).
-                                        Where(Function(p) p.PartNo = pagibigLoanName).
+                                        Where(Function(p) p.PartNo = ProductConstant.PAG_IBIG_LOAN).
                                         FirstOrDefaultAsync)?.RowID
 
                 _sssLoanId = (Await context.Products.
                                         Where(Function(p) CBool(p.CategoryID.Value = loanTypeCategoryId)).
-                                        Where(Function(p) p.PartNo = sssLoanName).
+                                        Where(Function(p) p.PartNo = ProductConstant.SSS_LOAN).
                                         FirstOrDefaultAsync)?.RowID
 
                 If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
@@ -119,9 +115,6 @@ Namespace Benchmark
 
             Dim adjustmentTypeCategory = "Adjustment Type"
 
-            Dim deductionsType = "DEDUCTION"
-            Dim incomeType = "ADDITION"
-
             Using context As New PayrollContext
 
                 Dim loanTypeCategoryId As Integer? = Await GetCategoryId(adjustmentTypeCategory, context)
@@ -130,12 +123,12 @@ Namespace Benchmark
 
                 _deductionList = Await context.Products.
                                         Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
-                                        Where(Function(p) p.Description = deductionsType).
+                                        Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).
                                         ToListAsync
 
                 _incomeList = Await context.Products.
                                         Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
-                                        Where(Function(p) p.Description = incomeType).
+                                        Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_ADDITION).
                                         ToListAsync
 
                 Return True

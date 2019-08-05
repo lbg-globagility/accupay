@@ -8,16 +8,6 @@ Namespace Global.AccuPay.Repository
 
     Public Class ProductRepository
 
-        Public Async Function GetLoanTypes() _
-            As Task(Of IEnumerable(Of Product))
-
-            Dim categoryName = ProductConstant.LOAN_TYPE_CATEGORY
-
-            Dim category = Await GetOrCreateCategoryByName(categoryName)
-            Return Await GetProductsByCategory(category.RowID)
-
-        End Function
-
         Public Async Function GetAllowanceTypes() _
             As Task(Of IEnumerable(Of Product))
 
@@ -25,6 +15,69 @@ Namespace Global.AccuPay.Repository
 
             Dim category = Await GetOrCreateCategoryByName(categoryName)
             Return Await GetProductsByCategory(category.RowID)
+
+        End Function
+
+        Public Async Function GetLoanTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Using context As New PayrollContext
+
+                Return Await (Await GetLoanTypesBaseQuery(context)).ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetGovernmentLoanTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Dim governmentLoans = {ProductConstant.PAG_IBIG_LOAN, ProductConstant.SSS_LOAN}
+
+            Using context As New PayrollContext
+
+                Return Await (Await GetAdjustmentTypesBaseQuery(context)).
+                            Where(Function(p) governmentLoans.Contains(p.PartNo)).
+                            ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetAdjustmentTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Using context As New PayrollContext
+
+                Return Await (Await GetAdjustmentTypesBaseQuery(context)).ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetDeductionAdjustmentTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Using context As New PayrollContext
+
+                Return Await (Await GetAdjustmentTypesBaseQuery(context)).
+                            Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).
+                            ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function GetAdditionAdjustmentTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Using context As New PayrollContext
+
+                Return Await (Await GetAdjustmentTypesBaseQuery(context)).
+                            Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_ADDITION).
+                            ToListAsync
+
+            End Using
 
         End Function
 
@@ -213,14 +266,39 @@ Namespace Global.AccuPay.Repository
 
             Using context = New PayrollContext()
 
-                Dim listOfValues = Await context.Products.
-                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                Where(Function(p) Nullable.Equals(p.CategoryID, categoryId)).
-                                ToListAsync
+                Dim listOfValues = Await GetProductsByCategoryBaseQuery(categoryId, context).
+                                            ToListAsync
 
                 Return listOfValues
 
             End Using
+
+        End Function
+
+        Private Function GetProductsByCategoryBaseQuery(categoryId As Integer?, context As PayrollContext) _
+            As IQueryable(Of Product)
+
+            Return context.Products.
+                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                Where(Function(p) Nullable.Equals(p.CategoryID, categoryId))
+
+        End Function
+
+        Private Async Function GetAdjustmentTypesBaseQuery(context As PayrollContext) As Task(Of IQueryable(Of Product))
+
+            Dim categoryName = ProductConstant.ADJUSTMENT_TYPE_CATEGORY
+
+            Dim category = Await GetOrCreateCategoryByName(categoryName)
+            Return GetProductsByCategoryBaseQuery(category.RowID, context)
+
+        End Function
+
+        Private Async Function GetLoanTypesBaseQuery(context As PayrollContext) As Task(Of IQueryable(Of Product))
+
+            Dim categoryName = ProductConstant.LOAN_TYPE_CATEGORY
+
+            Dim category = Await GetOrCreateCategoryByName(categoryName)
+            Return GetProductsByCategoryBaseQuery(category.RowID, context)
 
         End Function
 

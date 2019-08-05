@@ -8,6 +8,45 @@ Public Class HRISForm
 
     Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
 
+    Private if_sysowner_is_benchmark As Boolean
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        PrepareFormForBenchmark()
+    End Sub
+
+    Private Sub PrepareFormForBenchmark()
+
+        If if_sysowner_is_benchmark Then
+            CheckListToolStripMenuItem.Visible = False
+            AwardsToolStripMenuItem.Visible = False
+            CertificatesToolStripMenuItem.Visible = False
+            EducBGToolStripMenuItem.Visible = False
+            PrevEmplyrToolStripMenuItem.Visible = False
+            PromotionToolStripMenuItem.Visible = False
+            DisciplinaryActionToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            OvertimeToolStripMenuItem.Visible = False
+            OfficialBusinessToolStripMenuItem.Visible = False
+            AttachmentToolStripMenuItem.Visible = False
+            OffSetToolStripMenuItem.Visible = False
+            JobLevelToolStripMenuItem.Visible = False
+            EmployeeExperimentalToolStripMenuItem.Visible = False
+            AllowanceToolStripMenuItem.Visible = False
+            LeaveToolStripMenuItem.Visible = False
+
+            DeductionsToolStripMenuItem.Visible = True
+            OtherIncomeToolStripMenuItem.Visible = True
+        End If
+
+    End Sub
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -208,7 +247,7 @@ Public Class HRISForm
         'Employee.tbpPrevEmp_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles PromotionToolStripMenuItem.Click
 
         Dim index = EmployeeForm.GetPromotionTabPageIndex
 
@@ -219,7 +258,7 @@ Public Class HRISForm
         'Employee.tbpPromotion_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem8.Click
+    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpEmpOT)
 
@@ -230,7 +269,7 @@ Public Class HRISForm
         'Employee.tbpEmpOT_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem9.Click
+    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpOBF)
 
@@ -241,7 +280,7 @@ Public Class HRISForm
         'Employee.tbpOBF_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem10.Click
+    Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpBonus)
 
@@ -362,6 +401,20 @@ Public Class HRISForm
     Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
         ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
         previousForm = EmployeeAllowanceForm
+    End Sub
+
+    Private Sub DeductionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeductionsToolStripMenuItem.Click
+
+        Dim form As New AdjustmentForm(AdjustmentForm.AdjustmentType.Deduction)
+        form.ShowDialog()
+
+    End Sub
+
+    Private Sub OtherIncomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OtherIncomeToolStripMenuItem.Click
+
+        Dim form As New AdjustmentForm(AdjustmentForm.AdjustmentType.OtherIncome)
+        form.ShowDialog()
+
     End Sub
 
 End Class
