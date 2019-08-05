@@ -1831,6 +1831,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
