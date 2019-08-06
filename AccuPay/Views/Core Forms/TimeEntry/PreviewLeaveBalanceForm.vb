@@ -81,7 +81,7 @@ Public Class PreviewLeaveBalanceForm
                 FirstOrDefaultAsync
             Dim leaveCategoryId = leaveCategory.RowID
 
-            Dim leaveTypeList = New String() {ProductConstant.VACATION_LEAVE_PART_NO, ProductConstant.SICK_LEAVE_PART_NO}
+            Dim leaveTypeList = New String() {ProductConstant.VACATION_LEAVE, ProductConstant.SICK_LEAVE}
             Dim vacationLeaveType = leaveTypeList(0)
             Dim sickLeaveType = leaveTypeList(1)
 

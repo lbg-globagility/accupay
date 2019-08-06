@@ -15,8 +15,8 @@ Namespace Global.AccuPay.Repository
         Private Const STATUS_APPROVED As String = "Approved"
 
         Private VALIDATABLE_TYPES As New List(Of String) From {
-                    ProductConstant.SICK_LEAVE_PART_NO,
-                    ProductConstant.VACATION_LEAVE_PART_NO
+                    ProductConstant.SICK_LEAVE,
+                    ProductConstant.VACATION_LEAVE
             }
 
         Public Async Function SaveManyAsync(leaves As List(Of Leave)) As Task
@@ -270,7 +270,7 @@ Namespace Global.AccuPay.Repository
 
                 Dim totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves, policy, employeeShifts, shiftSchedules, employee)
 
-                If leave.LeaveType = ProductConstant.SICK_LEAVE_PART_NO Then
+                If leave.LeaveType = ProductConstant.SICK_LEAVE Then
 
                     Dim sickLeaveBalance = Await EmployeeData.GetSickLeaveBalance(employee.RowID)
 
@@ -280,7 +280,7 @@ Namespace Global.AccuPay.Repository
 
                     End If
 
-                ElseIf leave.LeaveType = ProductConstant.VACATION_LEAVE_PART_NO Then
+                ElseIf leave.LeaveType = ProductConstant.VACATION_LEAVE Then
 
                     Dim vacationLeaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
 

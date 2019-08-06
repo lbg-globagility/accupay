@@ -10,13 +10,13 @@ Namespace Global.AccuPay.ModelData
 
         Public Shared Async Function GetVacationLeaveBalance(employeeId As Integer?) As Task(Of Decimal)
 
-            Return Await GetLeaveBalance(employeeId, ProductConstant.VACATION_LEAVE_PART_NO)
+            Return Await GetLeaveBalance(employeeId, ProductConstant.VACATION_LEAVE)
 
         End Function
 
         Public Shared Async Function GetSickLeaveBalance(employeeId As Integer?) As Task(Of Decimal)
 
-            Return Await GetLeaveBalance(employeeId, ProductConstant.SICK_LEAVE_PART_NO)
+            Return Await GetLeaveBalance(employeeId, ProductConstant.SICK_LEAVE)
 
         End Function
 

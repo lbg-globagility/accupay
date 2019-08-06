@@ -16,14 +16,14 @@
 
     Public Shared ReadOnly ECOLA As String = "ecola"
 
-    Public Shared ReadOnly VACATION_LEAVE_PART_NO As String = "Vacation leave"
+    Public Shared ReadOnly VACATION_LEAVE As String = "Vacation leave"
 
-    Public Shared ReadOnly SICK_LEAVE_PART_NO As String = "Sick leave"
+    Public Shared ReadOnly SICK_LEAVE As String = "Sick leave"
 
-    Public Shared ReadOnly MATERNITY_LEAVE_PART_NO As String = "Maternity leave"
+    Public Shared ReadOnly MATERNITY_LEAVE As String = "Maternity leave"
 
-    Public Shared ReadOnly PARENTAL_LEAVE_PART_NO As String = "Parental"
+    Public Shared ReadOnly PARENTAL_LEAVE As String = "Parental"
 
-    Public Shared ReadOnly OTHERS_LEAVE_PART_NO As String = "Others"
+    Public Shared ReadOnly OTHERS_LEAVE As String = "Others"
 
 End Class

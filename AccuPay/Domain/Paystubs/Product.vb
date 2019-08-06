@@ -166,31 +166,43 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsVacationLeave As Boolean
             Get
-                Return PartNo.Trim.ToUpper = ProductConstant.VACATION_LEAVE_PART_NO.ToUpper
+                Return PartNo.Trim.ToUpper = ProductConstant.VACATION_LEAVE.ToUpper
             End Get
         End Property
 
         Public ReadOnly Property IsSickLeave As Boolean
             Get
-                Return PartNo.Trim.ToUpper = ProductConstant.SICK_LEAVE_PART_NO.ToUpper
+                Return PartNo.Trim.ToUpper = ProductConstant.SICK_LEAVE.ToUpper
             End Get
         End Property
 
         Public ReadOnly Property IsMaternityLeave As Boolean
             Get
-                Return PartNo.Trim.ToUpper = ProductConstant.MATERNITY_LEAVE_PART_NO.ToUpper
+                Return PartNo.Trim.ToUpper = ProductConstant.MATERNITY_LEAVE.ToUpper
             End Get
         End Property
 
         Public ReadOnly Property IsParentalLeave As Boolean
             Get
-                Return PartNo.Trim.ToUpper = ProductConstant.PARENTAL_LEAVE_PART_NO.ToUpper
+                Return PartNo.Trim.ToUpper = ProductConstant.PARENTAL_LEAVE.ToUpper
             End Get
         End Property
 
         Public ReadOnly Property IsOthersLeave As Boolean
             Get
-                Return PartNo.Trim.ToUpper = ProductConstant.OTHERS_LEAVE_PART_NO.ToUpper
+                Return PartNo.Trim.ToUpper = ProductConstant.OTHERS_LEAVE.ToUpper
+            End Get
+        End Property
+
+        Public ReadOnly Property IsPagibigLoan As Boolean
+            Get
+                Return PartNo.Trim.ToUpper = ProductConstant.PAG_IBIG_LOAN.ToUpper
+            End Get
+        End Property
+
+        Public ReadOnly Property IsSssLoan As Boolean
+            Get
+                Return PartNo.Trim.ToUpper = ProductConstant.SSS_LOAN.ToUpper
             End Get
         End Property
 

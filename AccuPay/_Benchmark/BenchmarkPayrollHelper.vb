@@ -2,12 +2,14 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Repository
 Imports log4net
-Imports Microsoft.EntityFrameworkCore
 
 Namespace Benchmark
 
     Public Class BenchmarkPayrollHelper
+
+        Private _productRepository As ProductRepository
 
         Private _pagibigLoanId As Integer?
         Private _sssLoanId As Integer?
@@ -29,6 +31,9 @@ Namespace Benchmark
         End Property
 
         Private Sub New()
+
+            _productRepository = New ProductRepository
+
         End Sub
 
         Public Shared Async Function GetInstance(logger As ILog) As Task(Of BenchmarkPayrollHelper)
@@ -80,32 +85,18 @@ Namespace Benchmark
 
         Private Async Function InitializeLoanIds(logger As ILog) As Task(Of Boolean)
 
-            Using context As New PayrollContext
+            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes()
 
-                'get category
-                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(ProductConstant.LOAN_TYPE_CATEGORY, context)
+            _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
+            _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
 
-                'get Ids from product table
+            If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
 
-                _pagibigLoanId = (Await context.Products.
-                                        Where(Function(p) CBool(p.CategoryID.Value = loanTypeCategoryId)).
-                                        Where(Function(p) p.PartNo = ProductConstant.PAG_IBIG_LOAN).
-                                        FirstOrDefaultAsync)?.RowID
+                logger.Error("Pagibig or SSS loan Id were not found in the database.")
 
-                _sssLoanId = (Await context.Products.
-                                        Where(Function(p) CBool(p.CategoryID.Value = loanTypeCategoryId)).
-                                        Where(Function(p) p.PartNo = ProductConstant.SSS_LOAN).
-                                        FirstOrDefaultAsync)?.RowID
+                Return False
 
-                If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
-
-                    logger.Error("Pagibig or SSS loan Id were not found in the database.")
-
-                    Return False
-
-                End If
-
-            End Using
+            End If
 
             Return True
 
@@ -113,35 +104,13 @@ Namespace Benchmark
 
         Private Async Function InitializeAdjustmentsLists() As Task(Of Boolean)
 
-            Dim adjustmentTypeCategory = "Adjustment Type"
+            _deductionList = New List(Of Product)(Await _productRepository.GetDeductionAdjustmentTypes())
+            _incomeList = New List(Of Product)(Await _productRepository.GetAdditionAdjustmentTypes())
 
-            Using context As New PayrollContext
+            If _deductionList Is Nothing OrElse _incomeList Is Nothing Then Return False
 
-                Dim loanTypeCategoryId As Integer? = Await GetCategoryId(adjustmentTypeCategory, context)
+            Return True
 
-                If loanTypeCategoryId Is Nothing Then Return False
-
-                _deductionList = Await context.Products.
-                                        Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
-                                        Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).
-                                        ToListAsync
-
-                _incomeList = Await context.Products.
-                                        Where(Function(p) p.CategoryID.Value = loanTypeCategoryId.Value).
-                                        Where(Function(p) p.Description = ProductConstant.ADJUSTMENT_TYPE_ADDITION).
-                                        ToListAsync
-
-                Return True
-
-            End Using
-
-        End Function
-
-        Private Shared Async Function GetCategoryId(loanTypeCategory As String, context As PayrollContext) As Task(Of Integer?)
-            Return (Await context.Categories.
-                                                           Where(Function(c) c.CategoryName = loanTypeCategory).
-                                                           Where(Function(c) c.OrganizationID = z_OrganizationID).
-                                                           FirstOrDefaultAsync)?.RowID
         End Function
 
     End Class

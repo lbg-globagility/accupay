@@ -139,13 +139,13 @@ Namespace Global.AccuPay.Entity
 
         Public Sub SetLeaveHours(type As String, leaveHours As Decimal)
             Select Case type
-                Case ProductConstant.SICK_LEAVE_PART_NO
+                Case ProductConstant.SICK_LEAVE
                     SickLeaveHours = leaveHours
-                Case ProductConstant.VACATION_LEAVE_PART_NO
+                Case ProductConstant.VACATION_LEAVE
                     VacationLeaveHours = leaveHours
-                Case ProductConstant.MATERNITY_LEAVE_PART_NO
+                Case ProductConstant.MATERNITY_LEAVE
                     MaternityLeaveHours = leaveHours
-                Case ProductConstant.OTHERS_LEAVE_PART_NO
+                Case ProductConstant.OTHERS_LEAVE
                     OtherLeaveHours = leaveHours
             End Select
         End Sub

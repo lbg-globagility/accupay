@@ -559,14 +559,14 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub UpdatePaystubItems(context As PayrollContext)
-        Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.VACATION_LEAVE_PART_NO).FirstOrDefault()
-        Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE_PART_NO).FirstOrDefault()
+        Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.VACATION_LEAVE).FirstOrDefault()
+        Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE).FirstOrDefault()
 
         context.Entry(_paystub).Collection(Function(p) p.PaystubItems).Load()
         context.Set(Of PaystubItem).RemoveRange(_paystub.PaystubItems)
 
         Dim vacationLeaveBalance = context.PaystubItems.
-            Where(Function(p) p.Product.PartNo = ProductConstant.VACATION_LEAVE_PART_NO).
+            Where(Function(p) p.Product.PartNo = ProductConstant.VACATION_LEAVE).
             Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
             FirstOrDefault()
 
@@ -583,7 +583,7 @@ Public Class PayrollGeneration
         _paystub.PaystubItems.Add(vacationLeaveBalance)
 
         Dim sickLeaveBalance = context.PaystubItems.
-            Where(Function(p) p.Product.PartNo = ProductConstant.SICK_LEAVE_PART_NO).
+            Where(Function(p) p.Product.PartNo = ProductConstant.SICK_LEAVE).
             Where(Function(p) CBool(p.Paystub.RowID = _paystub.RowID)).
             FirstOrDefault()
 
