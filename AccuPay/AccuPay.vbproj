@@ -1825,7 +1825,6 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
     <EmbeddedResource Include="_Benchmark\AdjustmentForm.resx">
       <DependentUpon>AdjustmentForm.vb</DependentUpon>
     </EmbeddedResource>
