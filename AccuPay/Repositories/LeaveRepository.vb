@@ -126,7 +126,7 @@ Namespace Global.AccuPay.Repository
                 UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType, newAllowance, employee, leaveLedgerQuery)
 
                 Dim leaveLedger = Await leaveLedgerQuery.FirstOrDefaultAsync()
-                Dim leaveLedgerId = leaveLedger.RowID
+                Dim leaveLedgerId = leaveLedger?.RowID
 
                 If leaveLedgerId Is Nothing Then
 
