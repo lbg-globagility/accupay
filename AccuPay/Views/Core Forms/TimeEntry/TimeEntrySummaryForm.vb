@@ -128,11 +128,16 @@ Public Class TimeEntrySummaryForm
         Next
 
         If _selectedPayPeriod Is Nothing Then
-            Dim dateToday = DateTime.Today
 
             Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payPeriods))
 
-            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
+            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod?.RowID))
+
+            If _selectedPayPeriod Is Nothing Then
+
+                Return
+
+            End If
 
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
@@ -753,6 +758,13 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
+
+        If _selectedPayPeriod Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
+        End If
+
         Dim generator = New TimeEntryGenerator(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
         Dim progressDialog = New TimeEntryProgressDialog(generator)
@@ -1439,6 +1451,13 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
+
+        If _selectedPayPeriod Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
+        End If
+
         Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
                                 " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")
         Dim askConfirmation = MessageBox.Show(ask, "Confirm delete", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
@@ -1451,8 +1470,8 @@ Public Class TimeEntrySummaryForm
         Using command = New MySqlCommand(query,
                                          New MySqlConnection(mysql_conn_text))
             With command
-                .Parameters.AddWithValue("@dateFrom", _selectedPayPeriod?.PayFromDate)
-                .Parameters.AddWithValue("@dateTo", _selectedPayPeriod?.PayToDate)
+                .Parameters.AddWithValue("@dateFrom", _selectedPayPeriod.PayFromDate)
+                .Parameters.AddWithValue("@dateTo", _selectedPayPeriod.PayToDate)
                 .Parameters.AddWithValue("@employeePrimKey", _selectedEmployee?.RowID)
 
                 Await .Connection.OpenAsync()

@@ -311,7 +311,7 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName
 
-            If em.LeaveAllowance > 0 Then .LeaveAllowance = em.LeaveAllowance
+            If em.LeaveAllowance > 0 Then .VacationLeaveAllowance = em.LeaveAllowance
 
             If Not String.IsNullOrWhiteSpace(em.MaritalStatus) Then .MaritalStatus = em.MaritalStatus
 

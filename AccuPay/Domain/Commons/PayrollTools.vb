@@ -176,9 +176,29 @@ Public Class PayrollTools
         If payperiods Is Nothing OrElse payperiods.Count = 0 Then
 
             Using context = New PayrollContext()
+
+                Dim payPeriodThisDay = Await context.PayPeriods.
+                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                        Where(Function(p) p.IsMonthly).
+                                        Where(Function(p) p.PayToDate >= Date.Now).
+                                        Where(Function(p) p.PayFromDate <= Date.Now).
+                                        OrderByDescending(Function(p) p.PayToDate).
+                                        FirstOrDefaultAsync
+
+                'This is done to ensure that we get the correct year.
+                'For scenarios like The first cutoff for 2019 is Dec. 16-31, 2018
+                'workingYearThisDay for December 16 should be 2019, not 2018.
+                Dim workingYearThisDay = payPeriodThisDay?.Year
+
+                If workingYearThisDay Is Nothing Then
+
+                    Return Nothing
+
+                End If
+
                 Return Await context.PayPeriods.
-                        Where(Function(p) p.Year = Now.Year).
-                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                        Where(Function(p) p.Year = workingYearThisDay.Value).
+                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                         Where(Function(p) p.IsMonthly).
                         Where(Function(p) p.PayToDate < Date.Now).
                         OrderByDescending(Function(p) p.PayToDate).
@@ -248,6 +268,32 @@ Public Class PayrollTools
 
             Return ecolaAllowance
         End Using
+
+    End Function
+
+    Friend Shared Async Function GetFirstPayPeriodOfTheYear(context As PayrollContext, currentPayPeriod As PayPeriod) As Task(Of PayPeriod)
+
+        Dim currentPayPeriodYear = currentPayPeriod?.Year
+
+        If currentPayPeriodYear Is Nothing Then Return Nothing
+
+        If context Is Nothing Then
+            context = New PayrollContext
+        End If
+
+        Return Await context.PayPeriods.
+                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                        Where(Function(p) p.IsMonthly).
+                        Where(Function(p) p.Year = currentPayPeriodYear.Value).
+                        Where(Function(p) p.IsFirstPayPeriodOfTheYear).
+                        FirstOrDefaultAsync
+    End Function
+
+    Friend Shared Async Function GetFirstDayOfTheYear(context As PayrollContext, currentPayPeriod As PayPeriod) As Task(Of Date?)
+
+        Dim firstPayPeriodOfTheYear = Await GetFirstPayPeriodOfTheYear(context, currentPayPeriod)
+
+        Return firstPayPeriodOfTheYear?.PayFromDate
 
     End Function
 

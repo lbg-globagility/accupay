@@ -91,7 +91,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property OtherLeaveBalance As Decimal
 
-        Public Property LeaveAllowance As Decimal
+        <Column("LeaveAllowance")>
+        Public Property VacationLeaveAllowance As Decimal
 
         Public Property SickLeaveAllowance As Decimal
 

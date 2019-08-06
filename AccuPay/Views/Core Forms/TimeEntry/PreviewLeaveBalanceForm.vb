@@ -293,7 +293,7 @@ Public Class PreviewLeaveBalanceForm
 
         Public ReadOnly Property VacationLeaveAllowance As Decimal
             Get
-                Return _employee.LeaveAllowance
+                Return _employee.VacationLeaveAllowance
             End Get
         End Property
 

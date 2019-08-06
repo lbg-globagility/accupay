@@ -57,13 +57,11 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
 
-
         Public ReadOnly Property IsCredit As Boolean
             Get
                 Return Type.Trim.ToUpper = LeaveTransactionType.Credit.ToUpper
             End Get
         End Property
-
 
         Public ReadOnly Property IsDebit As Boolean
             Get

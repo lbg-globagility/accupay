@@ -6,9 +6,11 @@ Namespace Global.AccuPay.Utils
 
     Public Class MessageBoxHelper
 
+        Private Const MessageTitle As String = "AccuPay"
+
         Private Shared _logger As ILog = LogManager.GetLogger("TimeLogsLogger")
 
-        Public Shared Sub DefaultErrorMessage(Optional title As String = "Accupay", Optional exception As Exception = Nothing, Optional errorMessageTitle As String = "DefaultErrorMessage")
+        Public Shared Sub DefaultErrorMessage(Optional title As String = MessageTitle, Optional exception As Exception = Nothing, Optional errorMessageTitle As String = "DefaultErrorMessage")
 
             If exception IsNot Nothing Then
                 _logger.Error(errorMessageTitle, exception)
@@ -19,19 +21,19 @@ Namespace Global.AccuPay.Utils
                    title)
         End Sub
 
-        Public Shared Sub ErrorMessage(message As String, Optional title As String = "Accupay")
+        Public Shared Sub ErrorMessage(message As String, Optional title As String = MessageTitle)
 
             MessageBox.Show(message, title, MessageBoxButtons.OK, MessageBoxIcon.Error)
 
         End Sub
 
-        Public Shared Sub Warning(ByVal message As String, ByVal Optional title As String = "Accupay", ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+        Public Shared Sub Warning(ByVal message As String, ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
 
             MessageBox.Show(message, title, messageBoxButtons, MessageBoxIcon.Warning)
 
         End Sub
 
-        Public Shared Sub Information(ByVal message As String, ByVal Optional title As String = "Accupay", ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
+        Public Shared Sub Information(ByVal message As String, ByVal Optional title As String = MessageTitle, ByVal Optional messageBoxButtons As MessageBoxButtons = MessageBoxButtons.OK)
 
             MessageBox.Show(message, title, messageBoxButtons, MessageBoxIcon.Information)
 

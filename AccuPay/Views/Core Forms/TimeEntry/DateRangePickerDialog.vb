@@ -81,7 +81,7 @@ Public Class DateRangePickerDialog
         End If
 
         Dim currentPayPeriodModel = _payperiodModels.
-                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod.RowID)).
+                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod?.RowID)).
                                 LastOrDefault
 
         If currentPayPeriodModel Is Nothing Then Return

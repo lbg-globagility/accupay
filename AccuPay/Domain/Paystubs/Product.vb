@@ -176,6 +176,24 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsMaternityLeave As Boolean
+            Get
+                Return PartNo.Trim.ToUpper = ProductConstant.MATERNITY_LEAVE_PART_NO.ToUpper
+            End Get
+        End Property
+
+        Public ReadOnly Property IsParentalLeave As Boolean
+            Get
+                Return PartNo.Trim.ToUpper = ProductConstant.PARENTAL_LEAVE_PART_NO.ToUpper
+            End Get
+        End Property
+
+        Public ReadOnly Property IsOthersLeave As Boolean
+            Get
+                Return PartNo.Trim.ToUpper = ProductConstant.OTHERS_LEAVE_PART_NO.ToUpper
+            End Get
+        End Property
+
         Public ReadOnly Property IsThirteenthMonthPay As Boolean
             Get
                 Return AllocateBelowSafetyFlag = "1"

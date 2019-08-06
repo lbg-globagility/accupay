@@ -6,6 +6,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Extensions
+Imports AccuPay.SimplifiedEntities
 
 Namespace Global.AccuPay.Repository
 
@@ -54,7 +55,7 @@ Namespace Global.AccuPay.Repository
 
                         Dim employee = employees.FirstOrDefault(Function(e) Nullable.Equals(e.RowID, leave.EmployeeID))
 
-                        Dim unusedApprovedLeaves = GetUnusedApprovedLeavesByType(context, employee.RowID, leave)
+                        Dim unusedApprovedLeaves = Await GetUnusedApprovedLeavesByType(context, employee.RowID, leave)
 
                         Dim earliestUnusedApprovedLeave = unusedApprovedLeaves.OrderBy(Function(l) l.StartDate).FirstOrDefault
 
@@ -87,6 +88,180 @@ Namespace Global.AccuPay.Repository
             End Using
 
         End Function
+
+        Public Async Function ForceUpdateLeaveAllowance(employeeId As Integer,
+                                                        selectedLeaveType As LeaveType.LeaveType,
+                                                        newAllowance As Decimal) As Task(Of Decimal)
+
+            Dim newBalance As Decimal = newAllowance
+
+            Dim currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+
+            Dim firstPayPeriodOfTheYear = Await PayrollTools.GetFirstPayPeriodOfTheYear(context:=Nothing,
+                                                        currentPayPeriod:=CType(currentPayPeriod, PayPeriod))
+
+            Dim firstDayOfTheWorkingYear = firstPayPeriodOfTheYear?.PayFromDate
+
+            If currentPayPeriod Is Nothing OrElse
+                firstPayPeriodOfTheYear?.RowID Is Nothing OrElse
+                firstDayOfTheWorkingYear Is Nothing Then
+
+                Throw New Exception("Cannot retrieve current pay period or the first days of the working year.")
+
+            End If
+
+            Using context As New PayrollContext
+
+                '#1. Update employee's leave allowance
+                '#2. Update employee's leave transactions
+
+                Dim employee = Await context.Employees.
+                                FirstOrDefaultAsync(Function(e) e.RowID.Value = employeeId)
+
+                Dim leaveLedgerQuery = context.LeaveLedgers.
+                                        Include(Function(l) l.Product).
+                                        Where(Function(l) l.EmployeeID.Value = employeeId)
+
+                '#1
+                UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType, newAllowance, employee, leaveLedgerQuery)
+
+                Dim leaveLedger = Await leaveLedgerQuery.FirstOrDefaultAsync()
+                Dim leaveLedgerId = leaveLedger.RowID
+
+                If leaveLedgerId Is Nothing Then
+
+                    Throw New Exception("Cannot retrieve the leave ledger ID.")
+
+                End If
+
+                Console.WriteLine($"Leave ledger ID: {leaveLedgerId}")
+
+                Dim leaveTransactions = Await context.LeaveTransactions.
+                                                Where(Function(l) l.EmployeeID.Value = employeeId).
+                                                Where(Function(l) l.TransactionDate >= firstDayOfTheWorkingYear.Value).
+                                                Where(Function(l) l.LeaveLedgerID.Value = leaveLedgerId.Value).
+                                                OrderBy(Function(l) l.TransactionDate).
+                                                ToListAsync()
+
+                '2.1. Add the first credit (the beginning balance).
+                '2.2. Remove existing credits from database. It should only have one credit, on the first cutoff, then all debits.
+                '2.3. Save all debits but their balance should be recalculated to adjust to the new allowance.
+                '2.4. Update the leaveledger's last transaction ID.
+                '2.5. Check if there is a last transaction ID saved for the leaveledger.
+                '     If no last transaction ID, this means that the employee did not have a leave for the current pay period.
+                '     Use the newly added first credit (the beginning balance) as the last transaction ID for the leaveledger.
+
+                Dim lastTransactionId As Integer? = Nothing
+
+                '#2.1
+                Dim beginningTransaction As New LeaveTransaction
+                beginningTransaction.OrganizationID = z_OrganizationID
+                beginningTransaction.CreatedBy = z_User
+                beginningTransaction.EmployeeID = employeeId
+                beginningTransaction.ReferenceID = Nothing
+                beginningTransaction.LeaveLedgerID = leaveLedgerId
+                beginningTransaction.PayPeriodID = firstPayPeriodOfTheYear.RowID
+                beginningTransaction.TransactionDate = firstDayOfTheWorkingYear.Value
+                beginningTransaction.Type = LeaveTransactionType.Credit
+                beginningTransaction.Amount = newAllowance
+                beginningTransaction.Balance = newAllowance
+
+                context.LeaveTransactions.Add(beginningTransaction)
+
+                '-
+                For Each leaveTransaction In leaveTransactions
+
+                    If leaveTransaction.IsCredit Then
+
+                        '#2.2
+                        context.Remove(leaveTransaction)
+                    Else
+
+                        '#2.3
+                        newBalance = newBalance - leaveTransaction.Amount
+                        leaveTransaction.Balance = newBalance
+                        leaveTransaction.LastUpdBy = z_User
+
+                        lastTransactionId = leaveTransaction.RowID
+
+                    End If
+
+                Next
+
+                '#2.4
+                'lastTransactionId will be null if the employee did not use at least one leave for the
+                'whole year. This will be managed in section 2.5
+                leaveLedger.LastTransactionID = lastTransactionId
+                leaveLedger.LastUpdBy = z_User
+
+                Await context.SaveChangesAsync()
+
+                '#2.5
+                Await ProcessIfEmployeeHasNotTakenAleaveThisYear(firstPayPeriodOfTheYear, context, leaveLedgerId)
+
+            End Using
+
+            Return newBalance
+
+        End Function
+
+        Private Shared Async Function ProcessIfEmployeeHasNotTakenAleaveThisYear(firstPayPeriodOfTheYear As PayPeriod, context As PayrollContext, leaveLedgerId As Integer?) As Task
+            Dim updatedLeaveLedger = Await context.LeaveLedgers.
+                                                    FirstOrDefaultAsync(Function(l) l.RowID.Value = leaveLedgerId.Value)
+
+            If updatedLeaveLedger Is Nothing Then
+
+                Throw New ArgumentException("Cannot find leave ledger.")
+
+            ElseIf updatedLeaveLedger.LastTransactionID Is Nothing Then
+
+                'get the beginning balance transaction geting it from the first payperiod of the year
+                'that we added earlier [using GUID as rowids would have made this easier]
+                Dim updatedBeginningTransaction = Await context.LeaveTransactions.
+                                Where(Function(t) t.PayPeriodID.Value = firstPayPeriodOfTheYear.RowID.Value).
+                                Where(Function(t) t.LeaveLedgerID.Value = updatedLeaveLedger.RowID.Value).
+                                Where(Function(t) t.IsCredit).
+                                OrderByDescending(Function(t) t.Amount).
+                                FirstOrDefaultAsync()
+
+                If updatedBeginningTransaction Is Nothing Then
+
+                    Throw New ArgumentException("Was not able to create a beginning transaction")
+
+                End If
+
+                updatedLeaveLedger.LastTransactionID = updatedBeginningTransaction.RowID
+                updatedLeaveLedger.LastUpdBy = z_User
+                Await context.SaveChangesAsync()
+
+            End If
+        End Function
+
+        Private Shared Sub UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType As LeaveType.LeaveType, newAllowance As Decimal, ByRef employee As Employee, ByRef leaveLedgerQuery As IQueryable(Of LeaveLedger))
+            Select Case selectedLeaveType
+                Case LeaveType.LeaveType.Sick
+                    leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsSickLeave)
+                    employee.SickLeaveAllowance = newAllowance
+
+                Case LeaveType.LeaveType.Vacation
+                    leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsVacationLeave)
+                    employee.VacationLeaveAllowance = newAllowance
+
+                Case LeaveType.LeaveType.Others
+                    leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsOthersLeave)
+                    employee.OtherLeaveAllowance = newAllowance
+
+                Case LeaveType.LeaveType.Maternity
+                    leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsMaternityLeave)
+                    employee.MaternityLeaveAllowance = newAllowance
+
+                Case LeaveType.LeaveType.Parental
+                    leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsParentalLeave)
+                    'THIS DOES NOT HAVE AN ALLOWANCE COLUMN
+                    Throw New Exception("No column for Parental Leave Allowance on employee table.")
+
+            End Select
+        End Sub
 
         Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Employee, leave As Leave) As Task
             If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
@@ -182,10 +357,10 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Shared Function GetUnusedApprovedLeavesByType(
+        Private Shared Async Function GetUnusedApprovedLeavesByType(
                                     context As PayrollContext,
                                     employeeId As Integer?,
-                                    leave As Leave) As List(Of Leave)
+                                    leave As Leave) As Task(Of List(Of Leave))
 
             Dim currentPayPeriod = context.PayPeriods.
                                                     Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
@@ -193,12 +368,7 @@ Namespace Global.AccuPay.Repository
                                                     Where(Function(p) p.IsBetween(leave.StartDate)).
                                                     FirstOrDefault
 
-            Dim firstDayOfTheYear = context.PayPeriods.
-                                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                                    Where(Function(p) p.IsMonthly).
-                                                    Where(Function(p) p.Year = currentPayPeriod.Year).
-                                                    Where(Function(p) p.IsFirstPayPeriodOfTheYear).
-                                                    FirstOrDefault?.PayFromDate
+            Dim firstDayOfTheYear As Date? = Await PayrollTools.GetFirstDayOfTheYear(context, currentPayPeriod)
 
             Dim lastDayOfTheYear = context.PayPeriods.
                                                     Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).

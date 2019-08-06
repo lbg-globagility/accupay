@@ -16,8 +16,14 @@
 
     Public Shared ReadOnly ECOLA As String = "ecola"
 
-    Public Shared ReadOnly VACATION_LEAVE_PART_NO As String = LeaveType.Vacation
+    Public Shared ReadOnly VACATION_LEAVE_PART_NO As String = "Vacation leave"
 
-    Public Shared ReadOnly SICK_LEAVE_PART_NO As String = LeaveType.Sick
+    Public Shared ReadOnly SICK_LEAVE_PART_NO As String = "Sick leave"
+
+    Public Shared ReadOnly MATERNITY_LEAVE_PART_NO As String = "Maternity leave"
+
+    Public Shared ReadOnly PARENTAL_LEAVE_PART_NO As String = "Parental"
+
+    Public Shared ReadOnly OTHERS_LEAVE_PART_NO As String = "Others"
 
 End Class

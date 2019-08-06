@@ -704,7 +704,7 @@ Public Class EmployeeForm
     Dim empBDate As String
     Dim dontUpdateEmp As SByte = 0
 
-    Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
+    Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
         MaskedTextBox1.Focus()
         pbemppic.Focus()
         MaskedTextBox2.Focus()
@@ -809,7 +809,7 @@ Public Class EmployeeForm
                 image_object = DBNull.Value
             End If
         End If
-        Static null_index() As Integer = {-1, 0}
+        Dim null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
 
         Dim succeed As Boolean = False
@@ -883,8 +883,16 @@ Public Class EmployeeForm
                            0)
             succeed = new_eRowID IsNot Nothing
 
-            'TODO benchmark
-            'save allowance from leave groupbox
+            'this is during edit
+            If if_sysowner_is_benchmark AndAlso employee_RowID IsNot Nothing Then
+
+                Dim leaveRepository As New LeaveRepository
+                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee_RowID,
+                                                                AccuPay.LeaveType.LeaveType.Vacation,
+                                                                LeaveAllowanceTextBox.Text.ToDecimal)
+
+                LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
+            End If
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))

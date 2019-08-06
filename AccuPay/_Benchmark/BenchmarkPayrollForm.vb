@@ -82,6 +82,11 @@ Public Class BenchmarkPayrollForm
 
         Await GetCutOffPeriod()
 
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
+        End If
+
         Await LoadPayrollDetails()
 
     End Sub
@@ -267,6 +272,11 @@ Public Class BenchmarkPayrollForm
         _currentPayPeriod = Await PayrollTools.
                                 GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
+        End If
+
         UpdateCutOffLabel()
     End Function
 
@@ -344,6 +354,11 @@ Public Class BenchmarkPayrollForm
 
             _currentPayPeriod = form.PayPeriod
 
+            If _currentPayPeriod Is Nothing Then
+                MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+                Return
+            End If
+
             UpdateCutOffLabel()
 
             Await LoadPayrollDetails()
@@ -375,6 +390,11 @@ Public Class BenchmarkPayrollForm
             MessageBoxHelper.ErrorMessage("No employee selected.")
             Return
 
+        End If
+
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
         End If
 
         Dim regularDays = AccuMath.CommercialRound(RegularDaysTextBox.Text.ToDecimal)
