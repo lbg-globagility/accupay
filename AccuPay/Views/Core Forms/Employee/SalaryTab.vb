@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Extensions
@@ -122,14 +123,10 @@ Public Class SalaryTab
             'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
             'If _employee.IsDaily Then
             'End If
-
-            _ecolaAllowance = Await PayrollTools.GetOrCreateEmployeeEcola(
+            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
                                                 employeeId.Value,
                                                 payDateFrom:=_currentPayPeriod.PayFromDate,
-                                                payDateTo:=_currentPayPeriod.PayToDate,
-                                                allowanceFrequency:=Allowance.FREQUENCY_DAILY,
-                                                amount:=0,
-                                                effectiveEndDateShouldBeNull:=True)
+                                                payDateTo:=_currentPayPeriod.PayToDate)
 
             If _ecolaAllowance Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)

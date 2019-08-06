@@ -2169,4 +2169,13 @@
         8m36tn0fvi/fp+/bj8GPxY/Jj82PkU/CA6r3n8n/BwACli3ErAAoAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="OtherIncomeGridViewColumn1.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="OtherIncomeGridViewColumn2.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
+  <metadata name="OtherIncomeGridViewColumn3.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
 </root>

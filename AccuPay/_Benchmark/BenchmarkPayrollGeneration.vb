@@ -19,6 +19,8 @@ Namespace Benchmark
 
         Private ReadOnly _overtimeRate As OvertimeRate
 
+        Private ReadOnly _ecola As Allowance
+
         Private ReadOnly _actualSalaryPolicy As ActualTimeEntryPolicy
 
         Private ReadOnly _selectedDeductions As List(Of AdjustmentInput)
@@ -43,7 +45,8 @@ Namespace Benchmark
                 actualSalaryPolicy As ActualTimeEntryPolicy,
                 selectedDeductions As List(Of AdjustmentInput),
                 selectedIncomes As List(Of AdjustmentInput),
-                overtimes As List(Of OvertimeInput))
+                overtimes As List(Of OvertimeInput),
+                ecola As Allowance)
 
             _employee = employee
             _payrollResources = payrollResources
@@ -57,6 +60,7 @@ Namespace Benchmark
             _selectedDeductions = selectedDeductions
             _selectedIncomes = selectedIncomes
             _overtimes = overtimes
+            _ecola = ecola
         End Sub
 
         Public Shared Function DoProcess(
@@ -71,7 +75,8 @@ Namespace Benchmark
                                     actualSalaryPolicy As ActualTimeEntryPolicy,
                                     selectedDeductions As List(Of AdjustmentInput),
                                     selectedIncomes As List(Of AdjustmentInput),
-                                    overtimes As List(Of OvertimeInput)) As Paystub
+                                    overtimes As List(Of OvertimeInput),
+                                    ecola As Allowance) As Paystub
 
             Dim generator As New BenchmarkPayrollGeneration(
                                     employee,
@@ -85,7 +90,8 @@ Namespace Benchmark
                                     actualSalaryPolicy:=actualSalaryPolicy,
                                     selectedDeductions:=selectedDeductions,
                                     selectedIncomes:=selectedIncomes,
-                                    overtimes:=overtimes)
+                                    overtimes:=overtimes,
+                                    ecola:=ecola)
 
             Dim payrollGeneration = New PayrollGeneration(
                                 generator._employee,
@@ -121,6 +127,9 @@ Namespace Benchmark
 
             ComputeBasicHoursAndBasicPay(paystub, employee)
             ComputeHoursAndPay(paystub)
+
+            'TODO
+            'ComputeEcola()
 
             CreateAdjustments(paystub)
 

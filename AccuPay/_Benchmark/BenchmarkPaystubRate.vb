@@ -263,7 +263,9 @@ Namespace Benchmark
 
         Private Function ComputeFinalRoundedRate(value As Decimal, Optional isActual As Boolean = False) As Decimal
 
-            Return AccuMath.CommercialRound(value * If(isActual, Me.ActualHourlyRate, Me.HourlyRate))
+            Dim finalRate = If(isActual, Me.ActualHourlyRate, Me.HourlyRate)
+
+            Return AccuMath.CommercialRound(value * finalRate)
 
         End Function
 
@@ -289,16 +291,16 @@ Namespace Benchmark
         Private Sub ComputeDeductions(lateHours As Decimal, undertimeHours As Decimal, absentHours As Decimal)
             'Deductions
             Me.LateHours = lateHours
-            Me.LateDeduction = AccuMath.CommercialRound(Me.LateHours * Me.HourlyRate)
-            Me.ActualLateDeduction = AccuMath.CommercialRound(Me.LateHours * Me.ActualHourlyRate)
+            Me.LateDeduction = ComputeFinalRoundedRate(Me.LateHours)
+            Me.ActualLateDeduction = ComputeFinalRoundedRate(Me.LateHours, isActual:=True)
 
             Me.UndertimeHours = undertimeHours
-            Me.UndertimeDeduction = AccuMath.CommercialRound(Me.UndertimeHours * Me.HourlyRate)
-            Me.ActualUndertimeDeduction = AccuMath.CommercialRound(Me.UndertimeHours * Me.ActualHourlyRate)
+            Me.UndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours)
+            Me.ActualUndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours, isActual:=True)
 
             Me.AbsentHours = absentHours
-            Me.AbsenceDeduction = AccuMath.CommercialRound(Me.AbsentHours * Me.HourlyRate)
-            Me.ActualAbsenceDeduction = AccuMath.CommercialRound(Me.AbsentHours * Me.ActualHourlyRate)
+            Me.AbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours)
+            Me.ActualAbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours, isActual:=True)
         End Sub
 
         Private Function GetNightDifferentialRate(basicRate As Decimal, nightDifferentialRate As Decimal) As Decimal

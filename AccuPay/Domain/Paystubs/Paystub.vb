@@ -198,6 +198,9 @@ Namespace Global.AccuPay.Entity
         Public Property RegularHolidayRestDayNightDiffOTHours As Decimal
         Public Property RegularHolidayRestDayNightDiffOTPay As Decimal
 
+        <NotMapped>
+        Public Property Ecola As Decimal
+
         Public ReadOnly Property AdditionalPay As Decimal
             Get
                 Dim original =

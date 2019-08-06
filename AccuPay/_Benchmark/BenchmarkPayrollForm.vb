@@ -40,6 +40,8 @@ Public Class BenchmarkPayrollForm
 
     Private _overtimes As List(Of OvertimeInput)
 
+    Private _ecola As Allowance
+
     Private _leaveBalance As Decimal
 
     Private Const MoneyFormat As String = "#,##0.0000"
@@ -191,6 +193,11 @@ Public Class BenchmarkPayrollForm
                 Return
             End If
 
+            _ecola = Await BenchmarkPayrollHelper.GetEcola(
+                                                employeeId.Value,
+                                                payDateFrom:=_currentPayPeriod.PayFromDate,
+                                                payDateTo:=_currentPayPeriod.PayToDate)
+
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
             _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
@@ -208,6 +215,8 @@ Public Class BenchmarkPayrollForm
             PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
             PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
             AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
+
+            EcolaTextBox.Text = _ecola.Amount.ToString(MoneyFormat)
 
             _selectedDeductions.Clear()
             DeductionsGridView.Rows.Clear()
@@ -255,7 +264,7 @@ Public Class BenchmarkPayrollForm
         PagibigLoanTextBox.ResetText()
         SssLoanTextBox.ResetText()
 
-        NightDifferentialAmountTextBox.ResetText()
+        EcolaAmountTextBox.ResetText()
         ThirteenthMonthPayTextBox.ResetText()
         LeaveBalanceTextBox.ResetText()
 
@@ -422,7 +431,8 @@ Public Class BenchmarkPayrollForm
                                                 actualSalaryPolicy:=_actualSalaryPolicy,
                                                 selectedDeductions:=_selectedDeductions,
                                                 selectedIncomes:=_selectedIncomes,
-                                                overtimes:=_overtimes)
+                                                overtimes:=_overtimes,
+                                                ecola:=_ecola)
 
         TotalDeductionsLabel.Text = "Php " & Math.Abs(_currentPaystub.TotalDeductionAdjustments).RoundToString()
         TotalOtherIncomeLabel.Text = "Php " & _currentPaystub.TotalAdditionAdjustments.RoundToString()
@@ -435,7 +445,7 @@ Public Class BenchmarkPayrollForm
         PagibigLoanTextBox.Text = 0D.RoundToString()
         SssLoanTextBox.Text = 0D.RoundToString()
 
-        NightDifferentialAmountTextBox.Text = _currentPaystub.NightDiffHours.RoundToString()
+        EcolaAmountTextBox.Text = _currentPaystub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
         LeaveBalanceTextBox.Text = (_leaveBalance - ConvertHoursToDays(_currentPaystub.LeaveHours)).ToString
 

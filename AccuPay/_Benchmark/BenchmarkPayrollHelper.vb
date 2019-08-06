@@ -14,6 +14,8 @@ Namespace Benchmark
         Private _pagibigLoanId As Integer?
         Private _sssLoanId As Integer?
 
+#Region "Read-only Properties"
+
         Private _deductionList As List(Of Product)
 
         Public ReadOnly Property DeductionList() As List(Of Product)
@@ -30,11 +32,28 @@ Namespace Benchmark
             End Get
         End Property
 
+#End Region
+
         Private Sub New()
 
             _productRepository = New ProductRepository
 
         End Sub
+
+        Public Shared Async Function GetEcola(
+                                        employeeId As Integer,
+                                        payDateFrom As Date,
+                                        payDateTo As Date) As Task(Of Allowance)
+
+            Return Await PayrollTools.GetOrCreateEmployeeEcola(
+                                                employeeId,
+                                                payDateFrom:=payDateFrom,
+                                                payDateTo:=payDateTo,
+                                                allowanceFrequency:=Allowance.FREQUENCY_DAILY,
+                                                amount:=0,
+                                                effectiveEndDateShouldBeNull:=True)
+
+        End Function
 
         Public Shared Async Function GetInstance(logger As ILog) As Task(Of BenchmarkPayrollHelper)
 
