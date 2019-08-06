@@ -124,7 +124,6 @@ Namespace Global.AccuPay.Views.Payroll
 
                 catchdt = n_SQLQueryToDatatable.ResultTable
 
-                'rptdoc = New OfficialPaySlipFormat
                 Dim rptPayslip As New DefaultPaySlipFormat
 
                 With rptPayslip.Section2
