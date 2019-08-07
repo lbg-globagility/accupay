@@ -220,32 +220,22 @@ Public Class ImportLoansForm
 
         Dim messageTitle = "Import Loans"
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Dim loansWithOutEmployeeObject = _loans.CloneListJson()
 
-            Dim loansWithOutEmployeeObject = _loans.CloneListJson()
+                For Each loan In loansWithOutEmployeeObject
+                    loan.Employee = Nothing
+                Next
 
-            For Each loan In loansWithOutEmployeeObject
-                loan.Employee = Nothing
-            Next
+                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
 
-            Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
+                Me.IsSaved = True
 
-            Me.IsSaved = True
+                Me.Close()
+            End Function)
 
-            Me.Close()
-        Catch ex As ArgumentException
-
-            Dim errorMessage = "One of the loans has an error:" & Environment.NewLine & ex.Message
-
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+        Me.Cursor = Cursors.Default
 
     End Sub
 

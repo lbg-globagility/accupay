@@ -155,6 +155,7 @@ Public Class AddLoanScheduleForm
         ForceLoanScheduleDataBindingsCommit()
 
         Dim confirmMessage = ""
+        Dim messageTitle = "New Loan"
 
         If Me._newLoanSchedule.TotalLoanAmount = 0 AndAlso Me._newLoanSchedule.DeductionAmount = 0 Then
             confirmMessage = "You did not enter a value for Total Loan Amount and Deduction Amount. Do you want to save the new loan?"
@@ -170,23 +171,26 @@ Public Class AddLoanScheduleForm
         If String.IsNullOrWhiteSpace(confirmMessage) = False Then
 
             If MessageBoxHelper.Confirm(Of Boolean) _
-                (confirmMessage, "New Loan", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
+                (confirmMessage, messageTitle, messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         End If
 
-        Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
-        Me.IsSaved = True
+                Me.IsSaved = True
 
-        If sender Is btnAddAndNew Then
-            ShowBalloonInfo("Loan Successfully Added", "Saved")
+                If sender Is btnAddAndNew Then
+                    ShowBalloonInfo("Loan Successfully Added", "Saved")
 
-            ResetForm()
-        Else
+                    ResetForm()
+                Else
 
-            Me.ShowBalloonSuccess = True
-            Me.Close()
-        End If
+                    Me.ShowBalloonSuccess = True
+                    Me.Close()
+                End If
+            End Function)
 
     End Sub
 

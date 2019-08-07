@@ -31,7 +31,7 @@ Namespace Global.AccuPay.Repository
             Using context = New PayrollContext()
 
                 Return Await context.LoanSchedules.
-                        Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
+                        Where(Function(l) l.EmployeeID.Value = employeeId.Value).
                         ToListAsync
 
             End Using
@@ -49,7 +49,7 @@ Namespace Global.AccuPay.Repository
             Using context = New PayrollContext()
 
                 Return Await context.LoanSchedules.
-                        Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
+                        Where(Function(l) l.EmployeeID.Value = employeeId.Value).
                         Where(Function(l) (inProgressChecked AndAlso l.Status = STATUS_IN_PROGRESS) OrElse
                                    (onHoldChecked AndAlso l.Status = STATUS_ON_HOLD) OrElse
                                    (cancelledChecked AndAlso l.Status = STATUS_CANCELLED) OrElse
@@ -60,12 +60,31 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetActiveLoansByLoanNameAsync(
+            loanName As String,
+            employeeId As Integer?) As _
+            Task(Of IEnumerable(Of LoanSchedule))
+
+            Using context = New PayrollContext()
+
+                Return Await context.LoanSchedules.
+                        Include(Function(l) l.LoanType).
+                        Include(Function(l) l.LoanType.CategoryEntity).
+                        Where(Function(l) l.LoanType.CategoryEntity.CategoryName = ProductConstant.LOAN_TYPE_CATEGORY).
+                        Where(Function(l) l.LoanType.PartNo.ToUpper = loanName.ToUpper).
+                        Where(Function(l) l.Status = STATUS_IN_PROGRESS).
+                        Where(Function(l) l.EmployeeID.Value = employeeId.Value).
+                        ToListAsync
+            End Using
+
+        End Function
+
         Public Async Function GetByIdAsync(loanScheduleId As Integer?) As Task(Of LoanSchedule)
 
             Using context = New PayrollContext()
 
                 Return Await context.LoanSchedules.
-                    FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, loanScheduleId))
+                    FirstOrDefaultAsync(Function(l) l.RowID.Value = loanScheduleId.Value)
 
             End Using
 
@@ -78,7 +97,7 @@ Namespace Global.AccuPay.Repository
 
                 Return Await context.LoanTransactions.
                         Include(Function(l) l.PayPeriod).
-                        Where(Function(l) Nullable.Equals(l.LoanScheduleID, loanScheduleId)).
+                        Where(Function(l) l.LoanScheduleID = loanScheduleId.Value).
                         ToListAsync
 
             End Using
@@ -112,6 +131,16 @@ Namespace Global.AccuPay.Repository
 
             End If
 
+            If String.IsNullOrWhiteSpace(loanSchedule.LoanName) Then
+
+                Dim loanName = loanTypes.FirstOrDefault(Function(l) l.RowID.Value = loanSchedule.LoanTypeID.Value)?.PartNo
+
+                loanSchedule.LoanName = loanName
+
+            End If
+
+            Await ValidationForBenchmark(loanSchedule)
+
             'sanitize columns
             loanSchedule.TotalLoanAmount = AccuMath.CommercialRound(loanSchedule.TotalLoanAmount)
             loanSchedule.TotalBalanceLeft = AccuMath.CommercialRound(loanSchedule.TotalBalanceLeft)
@@ -139,6 +168,39 @@ Namespace Global.AccuPay.Repository
                     Me.Insert(loanSchedule, loanTypes, passedContext)
                 Else
                     Await Me.UpdateAsync(loanSchedule, passedContext)
+                End If
+            End If
+        End Function
+
+        Private Async Function ValidationForBenchmark(loanSchedule As LoanSchedule) As Task
+            Dim sys_ownr As New SystemOwner
+            If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+
+                'IF benchmark
+                '#1. Only Pagibig loan or SSS loan can be saved
+                '#2. Only one active Pagibig or SSS loan is allowed.
+
+                '#1
+                If loanSchedule.LoanName <> ProductConstant.PAG_IBIG_LOAN AndAlso
+                        loanSchedule.LoanName <> ProductConstant.SSS_LOAN Then
+
+                    Throw New ArgumentException("Only PAGIBIG and SSS loan are allowed!")
+
+                End If
+
+                '#2
+                If loanSchedule.Status = STATUS_IN_PROGRESS Then
+
+                    Dim sameActiveLoans = Await GetActiveLoansByLoanNameAsync(loanSchedule.LoanName, loanSchedule.EmployeeID)
+
+                    'if insert, check if there are any sameActiveLoans
+                    'if update, check if there are any sameActiveLoans that is not the currently updated loan schedule
+                    If (loanSchedule.RowID Is Nothing AndAlso sameActiveLoans.Any) OrElse
+                            (loanSchedule.RowID.HasValue AndAlso sameActiveLoans.Where(Function(l) l.RowID.Value <> loanSchedule.RowID.Value).Any) Then
+
+                        Throw New ArgumentException("Only one active PAGIBIG and one active SSS loan are allowed!")
+
+                    End If
                 End If
             End If
         End Function
@@ -199,14 +261,6 @@ Namespace Global.AccuPay.Repository
                 loanSchedule.LoanNumber = ""
             End If
 
-            If String.IsNullOrWhiteSpace(loanSchedule.LoanName) Then
-
-                Dim loanName = loanTypes.FirstOrDefault(Function(l) Nullable.Equals(l.RowID, loanSchedule.LoanTypeID))?.PartNo
-
-                loanSchedule.LoanName = loanName
-
-            End If
-
             loanSchedule.Created = Date.Now
             loanSchedule.CreatedBy = z_User
 
@@ -220,7 +274,7 @@ Namespace Global.AccuPay.Repository
 
             Dim oldLoanSchedule = Await Me.GetByIdAsync(newLoanSchedule.RowID)
             Dim loanTransactionsCount = Await context.LoanTransactions.
-                                        CountAsync(Function(l) Nullable.Equals(l.LoanScheduleID, newLoanSchedule.RowID))
+                                        CountAsync(Function(l) l.LoanScheduleID = newLoanSchedule.RowID.Value)
 
             'if cancelled na yung loan, hindi pwede ma update
             If (oldLoanSchedule.Status = STATUS_CANCELLED) Then

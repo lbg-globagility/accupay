@@ -230,31 +230,26 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
 
-            Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
+                ShowBalloonInfo($"{changedLoanSchedules.Count} Loan(s) Successfully Updated.", messageTitle)
 
-            ShowBalloonInfo($"{changedLoanSchedules.Count} Loan(s) Successfully Updated.", messageTitle)
+                Dim currentEmployee = GetSelectedEmployee()
 
-            Dim currentEmployee = GetSelectedEmployee()
+                If currentEmployee Is Nothing Then Return
 
-            If currentEmployee Is Nothing Then Return
-
-            Await LoadLoanSchedules(currentEmployee)
-        Catch ex As ArgumentException
-
-            Dim errorMessage = "One of the updated loans has an error:" & Environment.NewLine & ex.Message
-
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
-        End Try
+                Await LoadLoanSchedules(currentEmployee)
+            End Function)
     End Sub
 
     Private Sub cboLoanType_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboLoanType.SelectedValueChanged
+        UpdateLoanTypeID()
 
+    End Sub
+
+    Private Sub UpdateLoanTypeID()
         If Me._currentLoanSchedule IsNot Nothing Then
             Dim selectedLoanType = Me._loanTypeList.FirstOrDefault(Function(l) l.PartNo = cboLoanType.Text)
 
@@ -267,7 +262,6 @@ Public Class EmployeeLoansForm
 
             End If
         End If
-
     End Sub
 
     Private Async Sub tsbtnNewLoan_Click(sender As Object, e As EventArgs) Handles tsbtnNewLoan.Click
@@ -499,6 +493,11 @@ Public Class EmployeeLoansForm
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
 
+        chkInProgressFilter.Text = LoanScheduleRepository.STATUS_IN_PROGRESS
+        chkOnHoldFilter.Text = LoanScheduleRepository.STATUS_ON_HOLD
+        chkCancelledFilter.Text = LoanScheduleRepository.STATUS_CANCELLED
+        chkCompleteFilter.Text = LoanScheduleRepository.STATUS_COMPLETE
+
         ResetLoanScheduleForm()
         Me._currentloanSchedules.Clear()
         Me.LoanScheduleBindingSource.Clear()
@@ -678,6 +677,8 @@ Public Class EmployeeLoansForm
 
         cboLoanType.DataBindings.Clear()
         cboLoanType.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanName")
+        cboLoanType.Text = Me._currentLoanSchedule.LoanName
+        UpdateLoanTypeID()
 
         txtLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Clear()
@@ -741,11 +742,6 @@ Public Class EmployeeLoansForm
 
         cmbDeductionSchedule.SelectedIndex = -1
         cmbDeductionSchedule.DataBindings.Clear()
-
-        chkInProgressFilter.Text = LoanScheduleRepository.STATUS_IN_PROGRESS
-        chkOnHoldFilter.Text = LoanScheduleRepository.STATUS_ON_HOLD
-        chkCancelledFilter.Text = LoanScheduleRepository.STATUS_CANCELLED
-        chkCompleteFilter.Text = LoanScheduleRepository.STATUS_COMPLETE
 
         tbpHistory.Text = LOAN_HISTORY_TAB_TEXT
 

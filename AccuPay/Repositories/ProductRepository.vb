@@ -37,7 +37,7 @@ Namespace Global.AccuPay.Repository
 
             Using context As New PayrollContext
 
-                Return Await (Await GetAdjustmentTypesBaseQuery(context)).
+                Return Await (Await GetLoanTypesBaseQuery(context)).
                             Where(Function(p) governmentLoans.Contains(p.PartNo)).
                             ToListAsync
 
