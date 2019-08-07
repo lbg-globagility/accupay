@@ -1,4 +1,6 @@
-﻿Imports System.Runtime.CompilerServices
+﻿Option Strict On
+
+Imports System.Runtime.CompilerServices
 
 Namespace Global.AccuPay.Extensions
     Public Module DecimalExtensions

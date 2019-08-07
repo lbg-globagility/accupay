@@ -39,4 +39,24 @@ Public Class AccuMath
         Return CommercialRound(CDec(value), places)
     End Function
 
+    ''' <summary>
+    ''' This method is used as a workaround on VB.Net's fuck up ternary operator using nullable decimal. Example of built-in ternary operator: If(value, 0, Nothing). If it's true, it return 0. If it's false, it should return Nothing but VB.Net is a fuck up PL and returns zero instead. This is due to VB.Net's "Nothing" actually a closer match to C#'s default(T) instead of null. And the value of default(Integer) is 0.
+    ''' </summary>
+    ''' <param name="condition"></param>
+    ''' <param name="trueOutput">The output when the condition is True.</param>
+    ''' <param name="falseOutput">The output when the condition is False.</param>
+    ''' <returns>A nullable decimal.</returns>
+    Public Shared Function NullableDecimalTernaryOperator(condition As Boolean, trueOutput As Decimal?, falseOutput As Decimal?) As Decimal?
+
+        If condition Then
+
+            Return trueOutput
+        Else
+
+            Return falseOutput
+
+        End If
+
+    End Function
+
 End Class

@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
+Imports AccuPay.Loans
 Imports AccuPay.ModelData
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
@@ -18,6 +19,7 @@ Public Class BenchmarkPayrollForm
 
     Private _employeeRepository As EmployeeRepository
     Private _salaryRepository As SalaryRepository
+    Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
     Private _employees As List(Of Employee)
@@ -42,6 +44,10 @@ Public Class BenchmarkPayrollForm
 
     Private _ecola As Allowance
 
+    Private _pagibigLoan As LoanSchedule
+
+    Private _sssLoan As LoanSchedule
+
     Private _leaveBalance As Decimal
 
     Private Const MoneyFormat As String = "#,##0.0000"
@@ -61,6 +67,8 @@ Public Class BenchmarkPayrollForm
 
         _selectedDeductions = New List(Of AdjustmentInput)
         _selectedIncomes = New List(Of AdjustmentInput)
+
+        _loanScheduleRepository = New LoanScheduleRepository
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -193,10 +201,7 @@ Public Class BenchmarkPayrollForm
                 Return
             End If
 
-            _ecola = Await BenchmarkPayrollHelper.GetEcola(
-                                                employeeId.Value,
-                                                payDateFrom:=_currentPayPeriod.PayFromDate,
-                                                payDateTo:=_currentPayPeriod.PayToDate)
+            If (Await FetchOtherPayrollData(employeeId) = False) Then Return
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
@@ -230,6 +235,43 @@ Public Class BenchmarkPayrollForm
 
         End If
 
+    End Function
+
+    Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
+        _ecola = Await BenchmarkPayrollHelper.GetEcola(
+                                                        employeeId.Value,
+                                                        payDateFrom:=_currentPayPeriod.PayFromDate,
+                                                        payDateTo:=_currentPayPeriod.PayToDate)
+
+        If _ecola Is Nothing Then
+
+            MessageBoxHelper.Warning("Cannot retrieve the ECOLA data for this employee. Please contact Globagility Inc. to help fix this.")
+            Return False
+        End If
+
+        Dim _pagibigLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+
+        If _pagibigLoans.Count > 1 Then
+
+            MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
+            Return False
+        Else
+            _pagibigLoan = _pagibigLoans.FirstOrDefault
+
+        End If
+
+        Dim _sssLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+
+        If _sssLoans.Count > 1 Then
+
+            MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
+            Return False
+        Else
+            _sssLoan = _sssLoans.FirstOrDefault
+
+        End If
+
+        Return True
     End Function
 
     Private Sub ClearEmployeeForms()
@@ -419,7 +461,7 @@ Public Class BenchmarkPayrollForm
             Return
         End If
 
-        _currentPaystub = BenchmarkPayrollGeneration.DoProcess(
+        Dim output = BenchmarkPayrollGeneration.DoProcess(
                                                 employee,
                                                 _payrollResources,
                                                 _currentPayPeriod,
@@ -434,6 +476,55 @@ Public Class BenchmarkPayrollForm
                                                 overtimes:=_overtimes,
                                                 ecola:=_ecola)
 
+        _currentPaystub = output.Paystub
+
+        'Get loans data
+        Dim loans = output.LoanTransanctions
+
+        Dim pagIbigLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigLoan Is Nothing, 0, Nothing)
+        Dim sssLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_sssLoan Is Nothing, 0, Nothing)
+
+        Dim loanIndex As Integer = 0
+
+        While (loans.Any)
+
+            Dim loan = loans(loanIndex)
+
+            If loan.LoanScheduleID = _pagibigLoan.RowID.Value Then
+
+                If pagIbigLoan Is Nothing Then
+
+                    pagIbigLoan = loan.Amount
+                    loans.Remove(loan)
+                    Continue While
+                Else
+                    'This most likely happens when there are multiple active pagibig loans which is not allowed.
+                    MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                    Return
+                End If
+
+            ElseIf loan.LoanScheduleID = _sssLoan.RowID.Value Then
+
+                If sssLoan Is Nothing Then
+
+                    sssLoan = loan.Amount
+                    loans.Remove(loan)
+                    Continue While
+                Else
+                    'This most likely happens when there are multiple active SSS loans which is not allowed.
+                    MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                    Return
+                End If
+            Else
+
+                'This most likely happens when there are multiple active SSS loans which is not allowed.
+                MessageBoxHelper.ErrorMessage("There is a problem fetching the data for loans. Please contact Globagility Inc. to help fix this.")
+                Return
+            End If
+
+        End While
+
+        'Show data from paystub
         TotalDeductionsLabel.Text = "Php " & Math.Abs(_currentPaystub.TotalDeductionAdjustments).RoundToString()
         TotalOtherIncomeLabel.Text = "Php " & _currentPaystub.TotalAdditionAdjustments.RoundToString()
 
@@ -442,8 +533,8 @@ Public Class BenchmarkPayrollForm
         SssAmountTextBox.Text = _currentPaystub.SssEmployeeShare.RoundToString()
         PagibigAmountTextBox.Text = _currentPaystub.HdmfEmployeeShare.RoundToString()
         WithholdingTaxTextBox.Text = _currentPaystub.WithholdingTax.RoundToString()
-        PagibigLoanTextBox.Text = 0D.RoundToString()
-        SssLoanTextBox.Text = 0D.RoundToString()
+        PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
+        SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
 
         EcolaAmountTextBox.Text = _currentPaystub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()

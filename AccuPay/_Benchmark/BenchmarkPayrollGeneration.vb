@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Loans
 Imports AccuPay.SimplifiedEntities
 
 Namespace Benchmark
@@ -63,6 +64,20 @@ Namespace Benchmark
             _ecola = ecola
         End Sub
 
+        Public Class DoProcessOutput
+
+            Public ReadOnly Property Paystub As Paystub
+            Public ReadOnly Property LoanTransanctions As List(Of LoanTransaction)
+
+            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction))
+
+                Me.Paystub = paystub
+                Me.LoanTransanctions = loanTransanctions
+
+            End Sub
+
+        End Class
+
         Public Shared Function DoProcess(
                                     employee As Employee,
                                     payrollResources As PayrollResources,
@@ -76,7 +91,7 @@ Namespace Benchmark
                                     selectedDeductions As List(Of AdjustmentInput),
                                     selectedIncomes As List(Of AdjustmentInput),
                                     overtimes As List(Of OvertimeInput),
-                                    ecola As Allowance) As Paystub
+                                    ecola As Allowance) As DoProcessOutput
 
             Dim generator As New BenchmarkPayrollGeneration(
                                     employee,
@@ -98,13 +113,13 @@ Namespace Benchmark
                                 generator._payrollResources
                             )
 
-            Dim paystub As Paystub = generator.CreatePaystub(employee, payrollGeneration)
+            Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
 
-            Return paystub
+            Return output
 
         End Function
 
-        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As Paystub
+        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
@@ -135,8 +150,9 @@ Namespace Benchmark
 
             ComputeTotalEarnings(paystub, employee)
 
-            generator.ComputePayroll(paystub)
-            Return paystub
+            Dim loans = generator.ComputePayroll(paystub)
+
+            Return New DoProcessOutput(paystub, loans)
         End Function
 
         Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
