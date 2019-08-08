@@ -19,14 +19,11 @@ Public Class DailyAllowanceCalculator
     Public Function Compute(payperiod As PayPeriod, allowance As Allowance, employee As Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
-        Dim allowanceItem = New AllowanceItem() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .LastUpdBy = z_User,
-            .Paystub = paystub,
-            .PayPeriodID = payperiod.RowID,
-            .AllowanceID = allowance.RowID
-        }
+        Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
+                                                paystub:=paystub,
+                                                payperiodId:=payperiod.RowID,
+                                                allowanceId:=allowance.RowID
+                                            )
 
         For Each timeEntry In timeEntries
             If Not (allowance.EffectiveStartDate <= timeEntry.Date And timeEntry.Date <= allowance.EffectiveEndDate) Then

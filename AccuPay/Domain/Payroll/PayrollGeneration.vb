@@ -212,7 +212,9 @@ Public Class PayrollGeneration
         End Using
     End Sub
 
-    Public Function ComputePayroll(Optional paystub As Paystub = Nothing) As List(Of LoanTransaction)
+    Public Function ComputePayroll(
+                        Optional paystub As Paystub = Nothing,
+                        Optional allowanceItems As ICollection(Of AllowanceItem) = Nothing) As List(Of LoanTransaction)
 
         Dim newLoanTransactions As New List(Of LoanTransaction)
 
@@ -230,9 +232,9 @@ Public Class PayrollGeneration
 
             ComputeTotalEarnings()
 
-            CalculateAllowances()
-
         End If
+
+        CalculateAllowances(allowanceItems)
 
         Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
         socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
@@ -396,21 +398,55 @@ Public Class PayrollGeneration
         _paystub.Actual.AbsenceDeduction = paystubRate.ActualAbsenceDeduction
     End Sub
 
-    Private Sub CalculateAllowances()
+    Private Sub CalculateAllowances(Optional allowanceItems As ICollection(Of AllowanceItem) = Nothing)
+
+        If allowanceItems Is Nothing Then
+
+            CreateAllowanceItems()
+        Else
+
+            _allowanceItems.Clear()
+
+            For Each item In allowanceItems
+
+                _allowanceItems.Add(item)
+
+            Next
+
+        End If
+
+        ComputeTotalAllowances()
+    End Sub
+
+    Public Shared Function CreateBasicAllowanceItem(
+                                paystub As Paystub,
+                                payperiodId As Integer?,
+                                allowanceId As Integer?) As AllowanceItem
+
+        Return New AllowanceItem() With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .LastUpdBy = z_User,
+                .Paystub = paystub,
+                .PayPeriodID = payperiodId,
+                .AllowanceID = allowanceId
+            }
+
+    End Function
+
+    Private Sub CreateAllowanceItems()
         Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
         Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
 
         For Each allowance In _allowances
-            Dim item = New AllowanceItem() With {
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .LastUpdBy = z_User,
-                .PayPeriodID = _payPeriod.RowID,
-                .AllowanceID = allowance.RowID,
-                .Paystub = _paystub,
-                .IsTaxable = allowance.Product.IsTaxable,
-                .IsThirteenthMonthPay = allowance.Product.IsThirteenthMonthPay
-            }
+
+            Dim item = CreateBasicAllowanceItem(
+                        paystub:=_paystub,
+                        payperiodId:=_payPeriod.RowID,
+                        allowanceId:=allowance.RowID
+            )
+            item.IsTaxable = allowance.Product.IsTaxable
+            item.IsThirteenthMonthPay = allowance.Product.IsThirteenthMonthPay
 
             If allowance.IsOneTime Then
 
@@ -436,11 +472,13 @@ Public Class PayrollGeneration
 
             _allowanceItems.Add(item)
         Next
+    End Sub
 
+    Private Sub ComputeTotalAllowances()
         _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(
-            _allowanceItems.
-                Where(Function(a) a.IsTaxable).
-                Sum(Function(a) a.Amount))
+                    _allowanceItems.
+                        Where(Function(a) a.IsTaxable).
+                        Sum(Function(a) a.Amount))
 
         _paystub.TotalAllowance = AccuMath.CommercialRound(
             _allowanceItems.

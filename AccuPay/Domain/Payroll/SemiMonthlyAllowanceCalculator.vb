@@ -26,15 +26,13 @@ Public Class SemiMonthlyAllowanceCalculator
     End Sub
 
     Public Function Calculate(allowance As Allowance) As AllowanceItem
-        Dim allowanceItem = New AllowanceItem() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .LastUpdBy = z_User,
-            .Paystub = _paystub,
-            .PayPeriodID = _payperiod.RowID,
-            .AllowanceID = allowance.RowID,
-            .Amount = allowance.Amount
-        }
+
+        Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
+                                                paystub:=_paystub,
+                                                payperiodId:=_payperiod.RowID,
+                                                allowanceId:=allowance.RowID
+                                            )
+        allowanceItem.Amount = allowance.Amount
 
         If allowance.Product.Fixed Then
             Return allowanceItem

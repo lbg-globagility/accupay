@@ -117,7 +117,7 @@ Namespace Global.AccuPay.Payroll
 
             ElseIf calculationBasis = PhilHealthCalculationBasis.BasicMinusDeduction Then
 
-                basisPay = If(previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithOutOvertimeAndLeave
+                basisPay = If(previousPaystub?.TotalDaysPayWithoutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithoutOvertimeAndLeave
 
             End If
 

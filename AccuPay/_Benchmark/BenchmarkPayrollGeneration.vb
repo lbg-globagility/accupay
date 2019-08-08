@@ -143,14 +143,20 @@ Namespace Benchmark
             ComputeBasicHoursAndBasicPay(paystub, employee)
             ComputeHoursAndPay(paystub)
 
-            'TODO
-            'ComputeEcola()
+            'Compute AccuPay allowance
+            Dim ecolaAllowance = ComputeEcola(paystub)
+            Dim allowanceItems As New List(Of AllowanceItem)
+            If ecolaAllowance?.Amount IsNot Nothing OrElse ecolaAllowance?.Amount <> 0 Then
+
+                allowanceItems.Add(ecolaAllowance)
+            Else
+                allowanceItems = Nothing
+            End If
 
             CreateAdjustments(paystub)
-
             ComputeTotalEarnings(paystub, employee)
 
-            Dim loans = generator.ComputePayroll(paystub)
+            Dim loans = generator.ComputePayroll(paystub, allowanceItems)
 
             Return New DoProcessOutput(paystub, loans)
         End Function
@@ -358,6 +364,24 @@ Namespace Benchmark
             paystub.Actual.RegularHolidayRestDayNightDiffOTPay = _employeeRate.ActualRegularHolidayRestDayNightDiffOTPay
 
         End Sub
+
+        Private Function ComputeEcola(paystub As Paystub) As AllowanceItem
+
+            Dim totalDaysWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave / BenchmarkPaystubRate.WorkHoursPerDay
+
+            paystub.Ecola = totalDaysWorked * If(_ecola?.Amount, 0)
+
+            Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
+                                                paystub:=paystub,
+                                                payperiodId:=_currentPayPeriod.RowID,
+                                                allowanceId:=_ecola?.RowID
+                                            )
+
+            allowanceItem.Amount = paystub.Ecola
+
+            Return allowanceItem
+
+        End Function
 
         Private Sub CreateAdjustments(paystub As Paystub)
 
