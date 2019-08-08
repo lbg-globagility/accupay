@@ -23,15 +23,15 @@ Partial Class BenchmarkPayrollForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BenchmarkPayrollForm))
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.PayPeriodLabel = New System.Windows.Forms.Label()
         Me.Label121 = New System.Windows.Forms.Label()
@@ -100,7 +100,6 @@ Partial Class BenchmarkPayrollForm
         Me.ResignedCheckBox = New System.Windows.Forms.CheckBox()
         Me.Label140 = New System.Windows.Forms.Label()
         Me.EcolaTextBox = New System.Windows.Forms.TextBox()
-        Me.ComputeThirteenthMonthCheckBox = New System.Windows.Forms.CheckBox()
         Me.ComputeSalaryButton = New System.Windows.Forms.Button()
         Me.SetOvertimeButton = New System.Windows.Forms.Button()
         Me.Label129 = New System.Windows.Forms.Label()
@@ -309,24 +308,24 @@ Partial Class BenchmarkPayrollForm
         Me.EmployeesGridView.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle10.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle10.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle10.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle10.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle10.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle10.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.EmployeesGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.EmployeesGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeesGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.EmployeesGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.EmployeesGridViewColumn1, Me.EmployeesGridViewColumn2})
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle11.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesGridView.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeesGridView.Location = New System.Drawing.Point(9, 87)
         Me.EmployeesGridView.MultiSelect = False
         Me.EmployeesGridView.Name = "EmployeesGridView"
@@ -441,7 +440,7 @@ Partial Class BenchmarkPayrollForm
         Me.SummaryGroupBox.Controls.Add(Me.Label91)
         Me.SummaryGroupBox.Controls.Add(Me.Label96)
         Me.SummaryGroupBox.Controls.Add(Me.Label92)
-        Me.SummaryGroupBox.Location = New System.Drawing.Point(783, 20)
+        Me.SummaryGroupBox.Location = New System.Drawing.Point(766, 20)
         Me.SummaryGroupBox.Name = "SummaryGroupBox"
         Me.SummaryGroupBox.Size = New System.Drawing.Size(323, 541)
         Me.SummaryGroupBox.TabIndex = 50
@@ -922,7 +921,7 @@ Partial Class BenchmarkPayrollForm
         Me.InputsTabControl.Location = New System.Drawing.Point(430, 245)
         Me.InputsTabControl.Name = "InputsTabControl"
         Me.InputsTabControl.SelectedIndex = 0
-        Me.InputsTabControl.Size = New System.Drawing.Size(301, 316)
+        Me.InputsTabControl.Size = New System.Drawing.Size(284, 316)
         Me.InputsTabControl.TabIndex = 49
         '
         'DaysWorkedTabPage
@@ -931,7 +930,6 @@ Partial Class BenchmarkPayrollForm
         Me.DaysWorkedTabPage.Controls.Add(Me.ResignedCheckBox)
         Me.DaysWorkedTabPage.Controls.Add(Me.Label140)
         Me.DaysWorkedTabPage.Controls.Add(Me.EcolaTextBox)
-        Me.DaysWorkedTabPage.Controls.Add(Me.ComputeThirteenthMonthCheckBox)
         Me.DaysWorkedTabPage.Controls.Add(Me.ComputeSalaryButton)
         Me.DaysWorkedTabPage.Controls.Add(Me.SetOvertimeButton)
         Me.DaysWorkedTabPage.Controls.Add(Me.Label129)
@@ -947,7 +945,7 @@ Partial Class BenchmarkPayrollForm
         Me.DaysWorkedTabPage.Controls.Add(Me.Label131)
         Me.DaysWorkedTabPage.Location = New System.Drawing.Point(4, 24)
         Me.DaysWorkedTabPage.Name = "DaysWorkedTabPage"
-        Me.DaysWorkedTabPage.Size = New System.Drawing.Size(293, 288)
+        Me.DaysWorkedTabPage.Size = New System.Drawing.Size(276, 288)
         Me.DaysWorkedTabPage.TabIndex = 2
         Me.DaysWorkedTabPage.Text = "DAYS WORKED"
         Me.DaysWorkedTabPage.UseVisualStyleBackColor = True
@@ -958,7 +956,7 @@ Partial Class BenchmarkPayrollForm
         Me.Label207.AutoSize = True
         Me.Label207.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label207.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label207.Location = New System.Drawing.Point(238, 92)
+        Me.Label207.Location = New System.Drawing.Point(221, 92)
         Me.Label207.Name = "Label207"
         Me.Label207.Size = New System.Drawing.Size(40, 18)
         Me.Label207.TabIndex = 48
@@ -998,21 +996,9 @@ Partial Class BenchmarkPayrollForm
         Me.EcolaTextBox.Location = New System.Drawing.Point(155, 166)
         Me.EcolaTextBox.Name = "EcolaTextBox"
         Me.EcolaTextBox.ReadOnly = True
-        Me.EcolaTextBox.Size = New System.Drawing.Size(117, 22)
+        Me.EcolaTextBox.Size = New System.Drawing.Size(100, 22)
         Me.EcolaTextBox.TabIndex = 47
         Me.EcolaTextBox.Text = "0"
-        '
-        'ComputeThirteenthMonthCheckBox
-        '
-        Me.ComputeThirteenthMonthCheckBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.ComputeThirteenthMonthCheckBox.AutoSize = True
-        Me.ComputeThirteenthMonthCheckBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComputeThirteenthMonthCheckBox.Location = New System.Drawing.Point(71, 205)
-        Me.ComputeThirteenthMonthCheckBox.Name = "ComputeThirteenthMonthCheckBox"
-        Me.ComputeThirteenthMonthCheckBox.Size = New System.Drawing.Size(201, 20)
-        Me.ComputeThirteenthMonthCheckBox.TabIndex = 19
-        Me.ComputeThirteenthMonthCheckBox.Text = "COMPUTE 13TH MONTH"
-        Me.ComputeThirteenthMonthCheckBox.UseVisualStyleBackColor = True
         '
         'ComputeSalaryButton
         '
@@ -1022,7 +1008,7 @@ Partial Class BenchmarkPayrollForm
         Me.ComputeSalaryButton.FlatAppearance.BorderSize = 0
         Me.ComputeSalaryButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.ComputeSalaryButton.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.ComputeSalaryButton.Location = New System.Drawing.Point(148, 230)
+        Me.ComputeSalaryButton.Location = New System.Drawing.Point(131, 230)
         Me.ComputeSalaryButton.Name = "ComputeSalaryButton"
         Me.ComputeSalaryButton.Size = New System.Drawing.Size(125, 45)
         Me.ComputeSalaryButton.TabIndex = 31
@@ -1071,7 +1057,7 @@ Partial Class BenchmarkPayrollForm
         Me.LeaveTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LeaveTextBox.Location = New System.Drawing.Point(155, 141)
         Me.LeaveTextBox.Name = "LeaveTextBox"
-        Me.LeaveTextBox.Size = New System.Drawing.Size(117, 22)
+        Me.LeaveTextBox.Size = New System.Drawing.Size(100, 22)
         Me.LeaveTextBox.TabIndex = 29
         Me.LeaveTextBox.Text = "1"
         '
@@ -1082,7 +1068,7 @@ Partial Class BenchmarkPayrollForm
         Me.Panel24.BackColor = System.Drawing.Color.Gray
         Me.Panel24.Location = New System.Drawing.Point(9, 44)
         Me.Panel24.Name = "Panel24"
-        Me.Panel24.Size = New System.Drawing.Size(263, 2)
+        Me.Panel24.Size = New System.Drawing.Size(246, 2)
         Me.Panel24.TabIndex = 7
         '
         'Label77
@@ -1125,7 +1111,7 @@ Partial Class BenchmarkPayrollForm
         Me.RegularDaysTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.RegularDaysTextBox.Location = New System.Drawing.Point(155, 66)
         Me.RegularDaysTextBox.Name = "RegularDaysTextBox"
-        Me.RegularDaysTextBox.Size = New System.Drawing.Size(117, 22)
+        Me.RegularDaysTextBox.Size = New System.Drawing.Size(100, 22)
         Me.RegularDaysTextBox.TabIndex = 25
         '
         'LateTextBox
@@ -1135,7 +1121,7 @@ Partial Class BenchmarkPayrollForm
         Me.LateTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.LateTextBox.Location = New System.Drawing.Point(155, 116)
         Me.LateTextBox.Name = "LateTextBox"
-        Me.LateTextBox.Size = New System.Drawing.Size(117, 22)
+        Me.LateTextBox.Size = New System.Drawing.Size(100, 22)
         Me.LateTextBox.TabIndex = 27
         '
         'OvertimeTextBox
@@ -1147,7 +1133,7 @@ Partial Class BenchmarkPayrollForm
         Me.OvertimeTextBox.Location = New System.Drawing.Point(155, 91)
         Me.OvertimeTextBox.Name = "OvertimeTextBox"
         Me.OvertimeTextBox.ReadOnly = True
-        Me.OvertimeTextBox.Size = New System.Drawing.Size(80, 22)
+        Me.OvertimeTextBox.Size = New System.Drawing.Size(63, 22)
         Me.OvertimeTextBox.TabIndex = 26
         '
         'Label131
@@ -1176,7 +1162,7 @@ Partial Class BenchmarkPayrollForm
         Me.DeductionsTabPage.Location = New System.Drawing.Point(4, 24)
         Me.DeductionsTabPage.Name = "DeductionsTabPage"
         Me.DeductionsTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DeductionsTabPage.Size = New System.Drawing.Size(310, 288)
+        Me.DeductionsTabPage.Size = New System.Drawing.Size(293, 288)
         Me.DeductionsTabPage.TabIndex = 0
         Me.DeductionsTabPage.Text = "DEDUCTIONS"
         Me.DeductionsTabPage.UseVisualStyleBackColor = True
@@ -1244,34 +1230,34 @@ Partial Class BenchmarkPayrollForm
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DeductionsGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle12.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle12.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle12.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle12.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle12.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle12.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeductionsGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeductionsGridView.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.DeductionsGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.DeductionsGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.DeductionsGridViewColumn1, Me.DeductionsGridViewColumn2, Me.DeductionsGridViewColumn3})
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
-        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.DeductionsGridView.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Bold)
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.DeductionsGridView.DefaultCellStyle = DataGridViewCellStyle5
         Me.DeductionsGridView.Location = New System.Drawing.Point(9, 85)
         Me.DeductionsGridView.Name = "DeductionsGridView"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle15.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle15.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle15.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle15.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle15.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle15.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DeductionsGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DeductionsGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.DeductionsGridView.RowHeadersVisible = False
         Me.DeductionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.DeductionsGridView.Size = New System.Drawing.Size(290, 173)
@@ -1296,9 +1282,9 @@ Partial Class BenchmarkPayrollForm
         'DeductionsGridViewColumn3
         '
         Me.DeductionsGridViewColumn3.DataPropertyName = "Amount"
-        DataGridViewCellStyle13.Format = "N2"
-        DataGridViewCellStyle13.NullValue = Nothing
-        Me.DeductionsGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle4.Format = "N2"
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.DeductionsGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle4
         Me.DeductionsGridViewColumn3.FillWeight = 20.0!
         Me.DeductionsGridViewColumn3.HeaderText = "Amount"
         Me.DeductionsGridViewColumn3.Name = "DeductionsGridViewColumn3"
@@ -1351,7 +1337,7 @@ Partial Class BenchmarkPayrollForm
         Me.OtherIncomeTabPage.Location = New System.Drawing.Point(4, 24)
         Me.OtherIncomeTabPage.Name = "OtherIncomeTabPage"
         Me.OtherIncomeTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.OtherIncomeTabPage.Size = New System.Drawing.Size(310, 288)
+        Me.OtherIncomeTabPage.Size = New System.Drawing.Size(293, 288)
         Me.OtherIncomeTabPage.TabIndex = 1
         Me.OtherIncomeTabPage.Text = "OTHER INCOME"
         Me.OtherIncomeTabPage.UseVisualStyleBackColor = True
@@ -1445,9 +1431,9 @@ Partial Class BenchmarkPayrollForm
         'OtherIncomeGridViewColumn3
         '
         Me.OtherIncomeGridViewColumn3.DataPropertyName = "Amount"
-        DataGridViewCellStyle16.Format = "N2"
-        DataGridViewCellStyle16.NullValue = Nothing
-        Me.OtherIncomeGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle7.Format = "N2"
+        DataGridViewCellStyle7.NullValue = Nothing
+        Me.OtherIncomeGridViewColumn3.DefaultCellStyle = DataGridViewCellStyle7
         Me.OtherIncomeGridViewColumn3.FillWeight = 20.0!
         Me.OtherIncomeGridViewColumn3.HeaderText = "Amount"
         Me.OtherIncomeGridViewColumn3.Name = "OtherIncomeGridViewColumn3"
@@ -1509,7 +1495,7 @@ Partial Class BenchmarkPayrollForm
         Me.EmployeeDetailsGroupBox.Controls.Add(Me.PerHourTextBox)
         Me.EmployeeDetailsGroupBox.Location = New System.Drawing.Point(430, 20)
         Me.EmployeeDetailsGroupBox.Name = "EmployeeDetailsGroupBox"
-        Me.EmployeeDetailsGroupBox.Size = New System.Drawing.Size(301, 221)
+        Me.EmployeeDetailsGroupBox.Size = New System.Drawing.Size(284, 221)
         Me.EmployeeDetailsGroupBox.TabIndex = 48
         Me.EmployeeDetailsGroupBox.TabStop = False
         '
@@ -1742,9 +1728,9 @@ Partial Class BenchmarkPayrollForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "Amount"
-        DataGridViewCellStyle17.Format = "N2"
-        DataGridViewCellStyle17.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle8.Format = "N2"
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle8
         Me.DataGridViewTextBoxColumn5.FillWeight = 20.0!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
@@ -1769,9 +1755,9 @@ Partial Class BenchmarkPayrollForm
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "Amount"
-        DataGridViewCellStyle18.Format = "N2"
-        DataGridViewCellStyle18.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle9.Format = "N2"
+        DataGridViewCellStyle9.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn8.FillWeight = 20.0!
         Me.DataGridViewTextBoxColumn8.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
@@ -1859,7 +1845,6 @@ Partial Class BenchmarkPayrollForm
     Friend WithEvents ResignedCheckBox As CheckBox
     Friend WithEvents Label140 As Label
     Friend WithEvents EcolaTextBox As TextBox
-    Friend WithEvents ComputeThirteenthMonthCheckBox As CheckBox
     Friend WithEvents ComputeSalaryButton As Button
     Friend WithEvents SetOvertimeButton As Button
     Friend WithEvents Label129 As Label

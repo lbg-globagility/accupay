@@ -12,7 +12,7 @@ Public Enum SssCalculationBasis
     Earnings
     GrossPay
     BasicSalary
-    BasicMinusDeduction
+    BasicMinusDeductions
 End Enum
 
 Public Enum PhilHealthCalculationBasis
@@ -20,11 +20,10 @@ Public Enum PhilHealthCalculationBasis
     GrossPay
     BasicSalary
     BasicAndEcola
-    BasicMinusDeduction
+    BasicMinusDeductions
 End Enum
 
-Public Enum WithholdingTaxCalculationBasis
-    Earnings
-    GrossPay
-    BasicSalary
+Public Enum ThirteenthMonthCalculationBasis
+    RegularPayAndAllowance
+    DailyRate
 End Enum

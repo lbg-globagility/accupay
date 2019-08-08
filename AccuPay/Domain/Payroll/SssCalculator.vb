@@ -24,7 +24,6 @@ Public Class SssCalculator
             Return
         End If
 
-        Dim sssCalculation = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
         ' Get the social security bracket based on the amount earned.
         Dim amount = GetSocialSecurityAmount(paystub, previousPaystub, salary, employee)
         Dim socialSecurityBracket = FindMatchingBracket(amount)
@@ -81,7 +80,7 @@ Public Class SssCalculator
 
                 Return If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
 
-            Case SssCalculationBasis.BasicMinusDeduction
+            Case SssCalculationBasis.BasicMinusDeductions
 
                 Return If(previousPaystub?.TotalDaysPayWithoutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithoutOvertimeAndLeave
 

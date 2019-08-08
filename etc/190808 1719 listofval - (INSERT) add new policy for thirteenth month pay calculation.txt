@@ -1,0 +1,1 @@
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('RegularPayAndAllowance', 'CalculationBasis', 'ThirteenthMonthPolicy', 'Yes', '2019-08-08 17:18:35', '1', '2019-08-08 17:18:39', '1', '1');

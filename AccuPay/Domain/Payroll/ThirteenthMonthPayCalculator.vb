@@ -7,7 +7,7 @@ Namespace Global.AccuPay.Payroll
 
     Public Class ThirteenthMonthPayCalculator
 
-        Public Sub Calculate(_employee As Employee,
+        Public Sub Calculate(employee As Employee,
                            paystub As Paystub,
                            timeEntries As ICollection(Of TimeEntry),
                            actualtimeentries As ICollection(Of ActualTimeEntry),
@@ -24,6 +24,42 @@ Namespace Global.AccuPay.Payroll
                 paystub.ThirteenthMonthPay.LastUpdBy = z_User
             End If
 
+            Dim thirteenthMonthAmount As Decimal
+
+            Dim thirteenMonthCalculation = settings.GetEnum("ThirteenthMonthPolicy.CalculationBasis", ThirteenthMonthCalculationBasis.RegularPayAndAllowance)
+
+            thirteenthMonthAmount = GetThirteenMonthAmount(paystub, thirteenMonthCalculation, employee, timeEntries, actualtimeentries, salary, settings, allowanceItems)
+
+            paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
+            paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear
+            paystub.ThirteenthMonthPay.Paystub = paystub
+        End Sub
+
+        Private Shared Function GetThirteenMonthAmount(paystub As Paystub, thirteenMonthPolicy As ThirteenthMonthCalculationBasis, employee As Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
+
+            Select Case thirteenMonthPolicy
+                Case ThirteenthMonthCalculationBasis.RegularPayAndAllowance
+
+                    Return ComputeRegularPayAndAllowance(employee, timeEntries, actualtimeentries, salary, settings, allowanceItems)
+
+                Case ThirteenthMonthCalculationBasis.DailyRate
+
+                    Dim hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave
+                    Dim daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay
+
+                    Dim dailyRate = PayrollTools.GetDailyRate(salary, employee)
+
+                    Return AccuMath.CommercialRound(daysWorked * dailyRate)
+
+                Case Else
+
+                    Return 0
+
+            End Select
+
+        End Function
+
+        Private Shared Function ComputeRegularPayAndAllowance(_employee As Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
             Dim contractualEmployementStatuses = New String() {"Contractual", "SERVICE CONTRACT"}
 
             Dim thirteenthMonthAmount = 0D
@@ -70,11 +106,8 @@ Namespace Global.AccuPay.Payroll
 
             Dim allowanceAmount = allowanceItems.Where(Function(a) a.IsThirteenthMonthPay).Sum(Function(a) a.Amount)
             thirteenthMonthAmount += allowanceAmount
-
-            paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount
-            paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear
-            paystub.ThirteenthMonthPay.Paystub = paystub
-        End Sub
+            Return thirteenthMonthAmount
+        End Function
 
     End Class
 

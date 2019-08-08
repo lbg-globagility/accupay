@@ -181,7 +181,6 @@ Public Class PayrollGeneration
 
     Private Sub SavePayroll(newLoanTransactions As List(Of LoanTransaction))
         Using context = New PayrollContext()
-            UpdateLeaveLedger(context)
 
             If _paystub.RowID.HasValue Then
                 context.Entry(_paystub).State = EntityState.Modified
@@ -199,14 +198,14 @@ Public Class PayrollGeneration
 
             _paystub.AllowanceItems = _allowanceItems
 
-            UpdatePaystubItems(context)
-
             For Each newLoanTransaction In newLoanTransactions
                 context.LoanTransactions.Add(newLoanTransaction)
             Next
 
-            Dim thirteenthMonthPayCalculator = New ThirteenthMonthPayCalculator()
-            thirteenthMonthPayCalculator.Calculate(_employee, _paystub, _timeEntries, _actualtimeentries, _salary, _settings, _allowanceItems)
+            If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
+                UpdateLeaveLedger(context)
+                UpdatePaystubItems(context)
+            End If
 
             context.SaveChanges()
         End Using
@@ -262,6 +261,9 @@ Public Class PayrollGeneration
 
         Dim actualCalculator = New PaystubActualCalculator()
         actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub)
+
+        Dim thirteenthMonthPayCalculator = New ThirteenthMonthPayCalculator()
+        thirteenthMonthPayCalculator.Calculate(_employee, _paystub, _timeEntries, _actualtimeentries, _salary, _settings, _allowanceItems)
 
         Return newLoanTransactions
     End Function
