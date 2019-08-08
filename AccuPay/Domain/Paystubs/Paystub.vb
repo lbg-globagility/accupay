@@ -234,6 +234,17 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property TotalDaysPayWithOutOvertimeAndLeave As Decimal
+            Get
+                Return RegularPay +
+                    RestDayPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayRestDayPay +
+                    RegularHolidayPay +
+                    RegularHolidayRestDayPay
+            End Get
+        End Property
+
         Public ReadOnly Property BasicDeductions As Decimal
             Get
                 Return LateDeduction + UndertimeDeduction + AbsenceDeduction

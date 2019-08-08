@@ -230,9 +230,9 @@ Public Class PayrollGeneration
 
             ComputeTotalEarnings()
 
-        End If
+            CalculateAllowances()
 
-        CalculateAllowances()
+        End If
 
         Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
         socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
