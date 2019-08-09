@@ -782,6 +782,12 @@ Public Class EmployeeForm
                 WarnBalloon("Please input employee position.", "Invalid Position", lblforballoon, 0, -69)
                 Exit Sub
             End If
+
+        ElseIf Trim(txtWorkDaysPerYear.Text) = "" OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
+            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+            cboEmpStat.Focus()
+            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
+            Exit Sub
         End If
 
         Dim employee_RowID = Nothing
