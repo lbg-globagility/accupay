@@ -1859,7 +1859,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 270
+        Me.SplitContainer2.SplitterDistance = 267
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -1888,6 +1888,7 @@ Partial Class EmployeeForm
         Me.chkcalcRestDayOT.TabIndex = 5
         Me.chkcalcRestDayOT.Text = "Calculate Rest Day OT"
         Me.chkcalcRestDayOT.UseVisualStyleBackColor = True
+        Me.chkcalcRestDayOT.Visible = False
         '
         'chkcalcRestDay
         '
@@ -1902,17 +1903,18 @@ Partial Class EmployeeForm
         'chkcalcNightDiffOT
         '
         Me.chkcalcNightDiffOT.AutoSize = True
-        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(190, 26)
+        Me.chkcalcNightDiffOT.Location = New System.Drawing.Point(22, 72)
         Me.chkcalcNightDiffOT.Name = "chkcalcNightDiffOT"
         Me.chkcalcNightDiffOT.Size = New System.Drawing.Size(169, 17)
         Me.chkcalcNightDiffOT.TabIndex = 3
         Me.chkcalcNightDiffOT.Text = "Calculate Night Differential OT"
         Me.chkcalcNightDiffOT.UseVisualStyleBackColor = True
+        Me.chkcalcNightDiffOT.Visible = False
         '
         'chkcalcNightDiff
         '
         Me.chkcalcNightDiff.AutoSize = True
-        Me.chkcalcNightDiff.Location = New System.Drawing.Point(22, 72)
+        Me.chkcalcNightDiff.Location = New System.Drawing.Point(190, 26)
         Me.chkcalcNightDiff.Name = "chkcalcNightDiff"
         Me.chkcalcNightDiff.Size = New System.Drawing.Size(151, 17)
         Me.chkcalcNightDiff.TabIndex = 2
@@ -3124,7 +3126,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 151)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 154)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
