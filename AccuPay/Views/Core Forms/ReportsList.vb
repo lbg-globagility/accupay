@@ -56,6 +56,15 @@ Public Class ReportsList
                 lvMainMenu.Items.Add(newListItem)
             End If
         Next
+
+        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+
+            Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
+
+            Dim summaryListItem = New ListViewItem(summaryProvider.Name)
+            summaryListItem.Tag = summaryProvider
+            lvMainMenu.Items.Add(summaryListItem)
+        End If
     End Sub
 
     Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
@@ -70,7 +79,8 @@ Public Class ReportsList
                     New PagIBIGMonthlyReportProvider(),
                     New TaxReportProvider(),
                     New ThirteenthMonthSummaryReportProvider(),
-                    New LoanLedgerReportProvider()
+                    New LoanLedgerReportProvider(),
+                    New PayrollSummaryExcelFormatReportProvider()
                 }
     End Function
 
@@ -102,7 +112,18 @@ Public Class ReportsList
             Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
 
             Try
-                provider.Run()
+                If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark AndAlso
+                    TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
+
+                    Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)
+
+                    payrollSummary.IsActual = False
+
+                    payrollSummary.Run()
+                Else
+
+                    provider.Run()
+                End If
             Catch ex As NotImplementedException
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try

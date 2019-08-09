@@ -77,6 +77,11 @@ Public Class BenchmarkPayrollForm
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        Await RefreshForm()
+
+    End Sub
+
+    Private Async Function RefreshForm() As Task
         InitializeControls()
 
         _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
@@ -102,8 +107,7 @@ Public Class BenchmarkPayrollForm
         End If
 
         Await LoadPayrollDetails()
-
-    End Sub
+    End Function
 
     Private Async Function LoadPayrollDetails() As Task
 
@@ -667,16 +671,18 @@ Public Class BenchmarkPayrollForm
 
     End Sub
 
-    Private Sub SavePayrollButton_Click(sender As Object, e As EventArgs) Handles SavePayrollButton.Click
+    Private Async Sub SavePayrollButton_Click(sender As Object, e As EventArgs) Handles SavePayrollButton.Click
 
-        FunctionUtils.TryCatchFunction($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
-            Sub()
+        Await FunctionUtils.TryCatchFunctionAsync($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
+            Async Function()
 
                 BenchmarkPayrollGeneration.Save(_payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
 
+                Await RefreshForm()
+
                 MessageBoxHelper.Information($"Payroll for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}] was generated successfully.", "Payroll Generation")
 
-            End Sub)
+            End Function)
 
     End Sub
 
@@ -823,6 +829,12 @@ Public Class BenchmarkPayrollForm
 
         Beep()
         e.Cancel = True
+
+    End Sub
+
+    Private Async Sub RefreshFormButton_Click(sender As Object, e As EventArgs) Handles RefreshFormButton.Click
+
+        Await RefreshForm()
 
     End Sub
 

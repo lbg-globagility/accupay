@@ -8,7 +8,7 @@ Imports OfficeOpenXml.Style
 Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider
 
-    Public Property Name As String = "" Implements IReportProvider.Name
+    Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
 
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
         New ReportColumn("Code", "DatCol2", ColumnType.Text),
