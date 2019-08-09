@@ -4,6 +4,10 @@ Imports System.Collections.ObjectModel
 
 Public Class ReportsList
 
+    Dim sys_ownr As New SystemOwner
+
+    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim providers = New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
@@ -30,6 +34,10 @@ Public Class ReportsList
         }
         'New PayrollLedgerReportProvider(),
 
+        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+            providers = GetBenchmarkReports()
+        End If
+
         For Each provider In providers
             Dim dataTable = New SqlToDataTable($"
                 SELECT l.DisplayValue
@@ -41,6 +49,7 @@ Public Class ReportsList
             Dim found = dataTable.Select($"DisplayValue = '{type}'").Count >= 1
 
             If found Then
+
                 Dim newListItem = New ListViewItem(provider.Name)
                 newListItem.Tag = provider
 
@@ -48,6 +57,22 @@ Public Class ReportsList
             End If
         Next
     End Sub
+
+    Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
+        Return New Collection(Of IReportProvider) From {
+                    New SalaryIncreaseHistoryReportProvider(),
+                    New EmployeeProfilesReportProvider(),
+                    New EmployeeIdentificationNumberReportProvider(),
+                    New LoanSummaryByEmployeeReportProvider(),
+                    New LoanSummaryByTypeReportProvider(),
+                    New SSSMonthlyReportProvider(),
+                    New PhilHealthReportProvider(),
+                    New PagIBIGMonthlyReportProvider(),
+                    New TaxReportProvider(),
+                    New ThirteenthMonthSummaryReportProvider(),
+                    New LoanLedgerReportProvider()
+                }
+    End Function
 
     Private Sub lvMainMenu_KeyDown(sender As Object, e As KeyEventArgs) Handles lvMainMenu.KeyDown
         If lvMainMenu.Items.Count <> 0 Then
