@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -179,7 +180,7 @@ Public Class PayrollGeneration
         End Try
     End Sub
 
-    Private Sub SavePayroll(newLoanTransactions As List(Of LoanTransaction))
+    Public Sub SavePayroll(newLoanTransactions As List(Of LoanTransaction))
         Using context = New PayrollContext()
 
             If _paystub.RowID.HasValue Then
@@ -205,6 +206,9 @@ Public Class PayrollGeneration
             If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
                 UpdateLeaveLedger(context)
                 UpdatePaystubItems(context)
+            Else
+                UpdateBenchmarkLeaveLedger(context)
+
             End If
 
             context.SaveChanges()
@@ -488,9 +492,30 @@ Public Class PayrollGeneration
                 Sum(Function(a) a.Amount))
     End Sub
 
-    Private Function CalculateOneTimeAllowances(allowance As Allowance) As Decimal
-        Return allowance.Amount
-    End Function
+    Private Sub UpdateBenchmarkLeaveLedger(context As PayrollContext)
+        Dim vacationLedger = context.LeaveLedgers.
+                                        Include(Function(l) l.Product).
+                                        Include(Function(l) l.LastTransaction).
+                                        Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                                        Where(Function(l) l.Product.IsVacationLeave).
+                                        FirstOrDefault
+
+        If vacationLedger Is Nothing Then
+
+            Throw New Exception($"Vacation ledger for Employee No.: {_employee.EmployeeNo}")
+
+        End If
+
+        context.RemoveRange(context.LeaveTransactions.Where(Function(t) t.LeaveLedgerID.Value = vacationLedger.RowID.Value))
+
+        UpdateLedgerTransaction(
+                    employeeId:=_employee.RowID,
+                    leaveId:=Nothing,
+                    ledger:=vacationLedger,
+                    totalLeaveHours:=_paystub.LeaveHours,
+                    transactionDate:=_payPeriod.PayToDate)
+
+    End Sub
 
     Private Sub UpdateLeaveLedger(context As PayrollContext)
         Dim leaves = context.Leaves.
@@ -535,22 +560,37 @@ Public Class PayrollGeneration
 
                 Dim transactionDate = If(IsDBNull(leave.EndDate), leave.StartDate, leave.EndDate)
 
-                Dim newTransaction = New LeaveTransaction() With {
-                    .OrganizationID = z_OrganizationID,
-                    .Created = Date.Now,
-                    .EmployeeID = leave.EmployeeID,
-                    .PayPeriodID = _payPeriod.RowID,
-                    .ReferenceID = leave.RowID,
-                    .TransactionDate = transactionDate.Value,
-                    .Type = LeaveTransactionType.Debit,
-                    .Amount = totalLeaveHours,
-                    .Balance = If(ledger?.LastTransaction?.Balance, 0) - totalLeaveHours
-                }
-
-                ledger.LeaveTransactions.Add(newTransaction)
-                ledger.LastTransaction = newTransaction
+                UpdateLedgerTransaction(
+                    employeeId:=leave.EmployeeID,
+                    leaveId:=leave.RowID,
+                    ledger:=ledger,
+                    totalLeaveHours:=totalLeaveHours,
+                    transactionDate:=transactionDate)
             End If
         Next
+    End Sub
+
+    Private Sub UpdateLedgerTransaction(
+                    employeeId As Integer?,
+                    leaveId As Integer?,
+                    ledger As LeaveLedger,
+                    totalLeaveHours As Decimal,
+                    transactionDate As Date?)
+
+        Dim newTransaction = New LeaveTransaction() With {
+                            .OrganizationID = z_OrganizationID,
+                            .Created = Date.Now,
+                            .EmployeeID = employeeId,
+                            .PayPeriodID = _payPeriod.RowID,
+                            .ReferenceID = leaveId,
+                            .TransactionDate = transactionDate.Value,
+                            .Type = LeaveTransactionType.Debit,
+                            .Amount = totalLeaveHours,
+                            .Balance = If(ledger?.LastTransaction?.Balance, 0) - totalLeaveHours
+                        }
+
+        ledger.LeaveTransactions.Add(newTransaction)
+        ledger.LastTransaction = newTransaction
     End Sub
 
     Private Function ComputeLoans() As List(Of LoanTransaction)

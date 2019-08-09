@@ -1582,13 +1582,8 @@ Public Class PayStubForm
         MDIPrimaryForm.systemprogressbar.Value = percentComplete
 
         If _finishedPaystubs = _totalPaystubs Then
-            Dim param_array = New Object() {orgztnID, paypRowID, z_User}
 
-            Static strquery_recompute_13monthpay As String =
-                "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
-
-            Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
-            n_ExecSQLProcedure.ExecuteQuery()
+            PayrollTools.UpdateLoanSchedule(paypRowID)
 
             Dim dialog = New PayrollResultDialog(_results.ToList()) With {
                 .Owner = Me

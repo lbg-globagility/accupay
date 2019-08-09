@@ -32,6 +32,10 @@ Public Class BenchmarkPayrollForm
 
     Private _currentPaystub As Paystub
 
+    Private _payrollGenerator As PayrollGeneration
+
+    Public _loanTransanctions As List(Of LoanTransaction)
+
     Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
@@ -476,9 +480,23 @@ Public Class BenchmarkPayrollForm
                                                 overtimes:=_overtimes,
                                                 ecola:=_ecola)
 
+        'TODO
+        '#1. Extract the generator here and put it in a global field DONE
+        '#2. Save paystub DONE
+        '#3. Test save paystub from database DONE
+        '#4. Show payroll summary (test OT)
+        '#5. Paystub values should be correct in payroll summary
+        '#6.  Hide reports that would now work. (Do this first in master branch)
+        '#7. Resolve bugs from master branch like employee saving with 0  workdays per year.
+        'BONUS
+        '#1. Resign employee
+        '#2. Payslip
+
         _currentPaystub = output.Paystub
+        _payrollGenerator = output.PayrollGenerator
 
         'Get loans data
+        _loanTransanctions = output.LoanTransanctions.CloneListJson()
         Dim loans = output.LoanTransanctions
 
         Dim pagIbigLoan As Decimal? = AccuMath.NullableDecimalTernaryOperator(_pagibigLoan Is Nothing, 0, Nothing)
@@ -650,6 +668,15 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Sub SavePayrollButton_Click(sender As Object, e As EventArgs) Handles SavePayrollButton.Click
+
+        FunctionUtils.TryCatchFunction($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
+            Sub()
+
+                BenchmarkPayrollGeneration.Save(_payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
+
+                MessageBoxHelper.Information($"Payroll for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}] was generated successfully.", "Payroll Generation")
+
+            End Sub)
 
     End Sub
 

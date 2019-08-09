@@ -68,11 +68,13 @@ Namespace Benchmark
 
             Public ReadOnly Property Paystub As Paystub
             Public ReadOnly Property LoanTransanctions As List(Of LoanTransaction)
+            Public ReadOnly Property PayrollGenerator As PayrollGeneration
 
-            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction))
+            Sub New(paystub As Paystub, loanTransanctions As List(Of LoanTransaction), generator As PayrollGeneration)
 
                 Me.Paystub = paystub
                 Me.LoanTransanctions = loanTransanctions
+                Me.PayrollGenerator = generator
 
             End Sub
 
@@ -119,6 +121,16 @@ Namespace Benchmark
 
         End Function
 
+        Public Shared Sub Save(
+                            payrollGenerator As PayrollGeneration,
+                            loanTransanctions As List(Of LoanTransaction),
+                            payPeriodId As Integer)
+
+            payrollGenerator.SavePayroll(loanTransanctions)
+            PayrollTools.UpdateLoanSchedule(payPeriodId)
+
+        End Sub
+
         Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
@@ -158,7 +170,7 @@ Namespace Benchmark
 
             Dim loans = generator.ComputePayroll(paystub, allowanceItems)
 
-            Return New DoProcessOutput(paystub, loans)
+            Return New DoProcessOutput(paystub, loans, generator)
         End Function
 
         Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
