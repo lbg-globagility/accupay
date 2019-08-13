@@ -1859,7 +1859,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 267
+        Me.SplitContainer2.SplitterDistance = 264
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3126,7 +3126,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 154)
+        Me.dgvDepen.Size = New System.Drawing.Size(852, 157)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn0
@@ -9080,6 +9080,7 @@ Partial Class EmployeeForm
         '
         'tbpNewSalary
         '
+        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
         Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
         Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
         Me.tbpNewSalary.Name = "tbpNewSalary"
