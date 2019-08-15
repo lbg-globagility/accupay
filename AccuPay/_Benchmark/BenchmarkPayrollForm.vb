@@ -128,6 +128,9 @@ Public Class BenchmarkPayrollForm
 
         DeductionComboBox.DisplayMember = "PartNo"
         OtherIncomeComboBox.DisplayMember = "PartNo"
+
+        TotalDeductionTextBox.Clear()
+        TotalOtherIncomeTextBox.Clear()
     End Sub
 
     Private Async Function LoadPayrollResourcesAsync() As Task
@@ -330,11 +333,6 @@ Public Class BenchmarkPayrollForm
     Private Async Function GetCutOffPeriod() As Task
         _currentPayPeriod = Await PayrollTools.
                                 GetCurrentlyWorkedOnPayPeriodByCurrentYear()
-
-        If _currentPayPeriod Is Nothing Then
-            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-            Return
-        End If
 
         UpdateCutOffLabel()
     End Function

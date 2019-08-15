@@ -10,83 +10,106 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
 
-    Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = New ReadOnlyCollection(Of ReportColumn)({
-        New ReportColumn("Code", "DatCol2", ColumnType.Text),
-        New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
-        New ReportColumn("Rate", "Rate"),
-        New ReportColumn("Basic Hours", "BasicHours"),
-        New ReportColumn("Basic Pay", "BasicPay"),
-        New ReportColumn("Reg Hrs", "RegularHours"),
-        New ReportColumn("Reg Pay", "RegularPay"),
-        New ReportColumn("OT Hrs", "OvertimeHours", [optional]:=True),
-        New ReportColumn("OT Pay", "OvertimePay", [optional]:=True),
-        New ReportColumn("ND Hrs", "NightDiffHours", [optional]:=True),
-        New ReportColumn("ND Pay", "NightDiffPay", [optional]:=True),
-        New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours", [optional]:=True),
-        New ReportColumn("NDOT Pay", "NightDiffOvertimePay", [optional]:=True),
-        New ReportColumn("R.Day Hrs", "RestDayHours", [optional]:=True),
-        New ReportColumn("R.Day Pay", "RestDayPay", [optional]:=True),
-        New ReportColumn("R.DayOT Hrs", "RestDayOTHours", [optional]:=True),
-        New ReportColumn("R.DayOT Pay", "RestDayOTPay", [optional]:=True),
-        New ReportColumn("R.Day ND Hrs", "RestDayNightDiffHours", [optional]:=True),
-        New ReportColumn("R.Day ND Pay", "RestDayNightDiffPay", [optional]:=True),
-        New ReportColumn("R.Day NDOT Hrs", "RestDayNightDiffOTHours", [optional]:=True),
-        New ReportColumn("R.Day NDOT Pay", "RestDayNightDiffOTPay", [optional]:=True),
-        New ReportColumn("S.Hol Hrs", "SpecialHolidayHours", [optional]:=True),
-        New ReportColumn("S.Hol Pay", "SpecialHolidayPay", [optional]:=True),
-        New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours", [optional]:=True),
-        New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay", [optional]:=True),
-        New ReportColumn("S.Hol ND Hrs", "SpecialHolidayNightDiffHours", [optional]:=True),
-        New ReportColumn("S.Hol ND Pay", "SpecialHolidayNightDiffPay", [optional]:=True),
-        New ReportColumn("S.Hol NDOT Hrs", "SpecialHolidayNightDiffOTHours", [optional]:=True),
-        New ReportColumn("S.Hol NDOT Pay", "SpecialHolidayNightDiffOTPay", [optional]:=True),
-        New ReportColumn("S.Hol R.Day Hrs", "SpecialHolidayRestDayHours", [optional]:=True),
-        New ReportColumn("S.Hol R.Day Pay", "SpecialHolidayRestDayPay", [optional]:=True),
-        New ReportColumn("S.Hol R.DayOT Hrs", "SpecialHolidayRestDayOTHours", [optional]:=True),
-        New ReportColumn("S.Hol R.DayOT Pay", "SpecialHolidayRestDayOTPay", [optional]:=True),
-        New ReportColumn("S.Hol R.Day ND Hrs", "SpecialHolidayRestDayNightDiffHours", [optional]:=True),
-        New ReportColumn("S.Hol R.Day ND Pay", "SpecialHolidayRestDayNightDiffPay", [optional]:=True),
-        New ReportColumn("S.Hol R.Day NDOT Hrs", "SpecialHolidayRestDayNightDiffOTHours", [optional]:=True),
-        New ReportColumn("S.Hol R.Day NDOT Pay", "SpecialHolidayRestDayNightDiffOTPay", [optional]:=True),
-        New ReportColumn("R.Hol Hrs", "RegularHolidayHours", [optional]:=True),
-        New ReportColumn("R.Hol Pay", "RegularHolidayPay", [optional]:=True),
-        New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours", [optional]:=True),
-        New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay", [optional]:=True),
-        New ReportColumn("R.Hol ND Hrs", "RegularHolidayNightDiffHours", [optional]:=True),
-        New ReportColumn("R.Hol ND Pay", "RegularHolidayNightDiffPay", [optional]:=True),
-        New ReportColumn("R.Hol NDOT Hrs", "RegularHolidayNightDiffOTHours", [optional]:=True),
-        New ReportColumn("R.Hol NDOT Pay", "RegularHolidayNightDiffOTPay", [optional]:=True),
-        New ReportColumn("R.Hol R.Day Hrs", "RegularHolidayRestDayHours", [optional]:=True),
-        New ReportColumn("R.Hol R.Day Pay", "RegularHolidayRestDayPay", [optional]:=True),
-        New ReportColumn("R.Hol R.DayOT Hrs", "RegularHolidayRestDayOTHours", [optional]:=True),
-        New ReportColumn("R.Hol R.DayOT Pay", "RegularHolidayRestDayOTPay", [optional]:=True),
-        New ReportColumn("R.Hol R.Day ND Hrs", "RegularHolidayRestDayNightDiffHours", [optional]:=True),
-        New ReportColumn("R.Hol R.Day ND Pay", "RegularHolidayRestDayNightDiffPay", [optional]:=True),
-        New ReportColumn("R.Hol R.Day NDOT Hrs", "RegularHolidayRestDayNightDiffOTHours", [optional]:=True),
-        New ReportColumn("R.Hol R.Day NDOT Pay", "RegularHolidayRestDayNightDiffOTPay", [optional]:=True),
-        New ReportColumn("Leave Hrs", "LeaveHours", [optional]:=True),
-        New ReportColumn("Leave Pay", "LeavePay", [optional]:=True),
-        New ReportColumn("Late Hrs", "LateHours", [optional]:=True),
-        New ReportColumn("Late Amt", "LateDeduction", [optional]:=True),
-        New ReportColumn("UT Hrs", "UndertimeHours", [optional]:=True),
-        New ReportColumn("UT Amt", "UndertimeDeduction", [optional]:=True),
-        New ReportColumn("Absent Hrs", "AbsentHours", [optional]:=True),
-        New ReportColumn("Absent Amt", "AbsentDeduction", [optional]:=True),
-        New ReportColumn("Allowance", "TotalAllowance"),
-        New ReportColumn("Bonus", "TotalBonus", [optional]:=True),
-        New ReportColumn("Gross", "GrossIncome"),
-        New ReportColumn("SSS", "SSS", [optional]:=True),
-        New ReportColumn("Ph.Health", "PhilHealth", [optional]:=True),
-        New ReportColumn("HDMF", "HDMF", [optional]:=True),
-        New ReportColumn("Taxable", "TaxableIncome"),
-        New ReportColumn("W.Tax", "WithholdingTax"),
-        New ReportColumn("Loan", "TotalLoans"),
-        New ReportColumn("A.Fee", "AgencyFee", [optional]:=True),
-        New ReportColumn("Adj.", "TotalAdjustments", [optional]:=True),
-        New ReportColumn("Net Pay", "NetPay"),
-        New ReportColumn("13th Month", "13thMonthPay"),
-        New ReportColumn("Total", "Total")
-    })
+    Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = GetReportColumns()
+
+    Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ReportColumn)
+
+        Dim allowanceColumnName = "Allowance"
+
+        Dim reportColumns = New List(Of ReportColumn)({
+                New ReportColumn("Code", "DatCol2", ColumnType.Text),
+                New ReportColumn("Full Name", "DatCol3", ColumnType.Text),
+                New ReportColumn("Rate", "Rate"),
+                New ReportColumn("Basic Hours", "BasicHours"),
+                New ReportColumn("Basic Pay", "BasicPay"),
+                New ReportColumn("Reg Hrs", "RegularHours"),
+                New ReportColumn("Reg Pay", "RegularPay"),
+                New ReportColumn("OT Hrs", "OvertimeHours", [optional]:=True),
+                New ReportColumn("OT Pay", "OvertimePay", [optional]:=True),
+                New ReportColumn("ND Hrs", "NightDiffHours", [optional]:=True),
+                New ReportColumn("ND Pay", "NightDiffPay", [optional]:=True),
+                New ReportColumn("NDOT Hrs", "NightDiffOvertimeHours", [optional]:=True),
+                New ReportColumn("NDOT Pay", "NightDiffOvertimePay", [optional]:=True),
+                New ReportColumn("R.Day Hrs", "RestDayHours", [optional]:=True),
+                New ReportColumn("R.Day Pay", "RestDayPay", [optional]:=True),
+                New ReportColumn("R.DayOT Hrs", "RestDayOTHours", [optional]:=True),
+                New ReportColumn("R.DayOT Pay", "RestDayOTPay", [optional]:=True),
+                New ReportColumn("R.Day ND Hrs", "RestDayNightDiffHours", [optional]:=True),
+                New ReportColumn("R.Day ND Pay", "RestDayNightDiffPay", [optional]:=True),
+                New ReportColumn("R.Day NDOT Hrs", "RestDayNightDiffOTHours", [optional]:=True),
+                New ReportColumn("R.Day NDOT Pay", "RestDayNightDiffOTPay", [optional]:=True),
+                New ReportColumn("S.Hol Hrs", "SpecialHolidayHours", [optional]:=True),
+                New ReportColumn("S.Hol Pay", "SpecialHolidayPay", [optional]:=True),
+                New ReportColumn("S.HolOT Hrs", "SpecialHolidayOTHours", [optional]:=True),
+                New ReportColumn("S.HolOT Pay", "SpecialHolidayOTPay", [optional]:=True),
+                New ReportColumn("S.Hol ND Hrs", "SpecialHolidayNightDiffHours", [optional]:=True),
+                New ReportColumn("S.Hol ND Pay", "SpecialHolidayNightDiffPay", [optional]:=True),
+                New ReportColumn("S.Hol NDOT Hrs", "SpecialHolidayNightDiffOTHours", [optional]:=True),
+                New ReportColumn("S.Hol NDOT Pay", "SpecialHolidayNightDiffOTPay", [optional]:=True),
+                New ReportColumn("S.Hol R.Day Hrs", "SpecialHolidayRestDayHours", [optional]:=True),
+                New ReportColumn("S.Hol R.Day Pay", "SpecialHolidayRestDayPay", [optional]:=True),
+                New ReportColumn("S.Hol R.DayOT Hrs", "SpecialHolidayRestDayOTHours", [optional]:=True),
+                New ReportColumn("S.Hol R.DayOT Pay", "SpecialHolidayRestDayOTPay", [optional]:=True),
+                New ReportColumn("S.Hol R.Day ND Hrs", "SpecialHolidayRestDayNightDiffHours", [optional]:=True),
+                New ReportColumn("S.Hol R.Day ND Pay", "SpecialHolidayRestDayNightDiffPay", [optional]:=True),
+                New ReportColumn("S.Hol R.Day NDOT Hrs", "SpecialHolidayRestDayNightDiffOTHours", [optional]:=True),
+                New ReportColumn("S.Hol R.Day NDOT Pay", "SpecialHolidayRestDayNightDiffOTPay", [optional]:=True),
+                New ReportColumn("R.Hol Hrs", "RegularHolidayHours", [optional]:=True),
+                New ReportColumn("R.Hol Pay", "RegularHolidayPay", [optional]:=True),
+                New ReportColumn("R.HolOT Hrs", "RegularHolidayOTHours", [optional]:=True),
+                New ReportColumn("R.HolOT Pay", "RegularHolidayOTPay", [optional]:=True),
+                New ReportColumn("R.Hol ND Hrs", "RegularHolidayNightDiffHours", [optional]:=True),
+                New ReportColumn("R.Hol ND Pay", "RegularHolidayNightDiffPay", [optional]:=True),
+                New ReportColumn("R.Hol NDOT Hrs", "RegularHolidayNightDiffOTHours", [optional]:=True),
+                New ReportColumn("R.Hol NDOT Pay", "RegularHolidayNightDiffOTPay", [optional]:=True),
+                New ReportColumn("R.Hol R.Day Hrs", "RegularHolidayRestDayHours", [optional]:=True),
+                New ReportColumn("R.Hol R.Day Pay", "RegularHolidayRestDayPay", [optional]:=True),
+                New ReportColumn("R.Hol R.DayOT Hrs", "RegularHolidayRestDayOTHours", [optional]:=True),
+                New ReportColumn("R.Hol R.DayOT Pay", "RegularHolidayRestDayOTPay", [optional]:=True),
+                New ReportColumn("R.Hol R.Day ND Hrs", "RegularHolidayRestDayNightDiffHours", [optional]:=True),
+                New ReportColumn("R.Hol R.Day ND Pay", "RegularHolidayRestDayNightDiffPay", [optional]:=True),
+                New ReportColumn("R.Hol R.Day NDOT Hrs", "RegularHolidayRestDayNightDiffOTHours", [optional]:=True),
+                New ReportColumn("R.Hol R.Day NDOT Pay", "RegularHolidayRestDayNightDiffOTPay", [optional]:=True),
+                New ReportColumn("Leave Hrs", "LeaveHours", [optional]:=True),
+                New ReportColumn("Leave Pay", "LeavePay", [optional]:=True),
+                New ReportColumn("Late Hrs", "LateHours", [optional]:=True),
+                New ReportColumn("Late Amt", "LateDeduction", [optional]:=True),
+                New ReportColumn("UT Hrs", "UndertimeHours", [optional]:=True),
+                New ReportColumn("UT Amt", "UndertimeDeduction", [optional]:=True),
+                New ReportColumn("Absent Hrs", "AbsentHours", [optional]:=True),
+                New ReportColumn("Absent Amt", "AbsentDeduction", [optional]:=True),
+                New ReportColumn(allowanceColumnName, "TotalAllowance"),
+                New ReportColumn("Bonus", "TotalBonus", [optional]:=True),
+                New ReportColumn("Gross", "GrossIncome"),
+                New ReportColumn("SSS", "SSS", [optional]:=True),
+                New ReportColumn("Ph.Health", "PhilHealth", [optional]:=True),
+                New ReportColumn("HDMF", "HDMF", [optional]:=True),
+                New ReportColumn("Taxable", "TaxableIncome"),
+                New ReportColumn("W.Tax", "WithholdingTax"),
+                New ReportColumn("Loan", "TotalLoans"),
+                New ReportColumn("A.Fee", "AgencyFee", [optional]:=True),
+                New ReportColumn("Adj.", "TotalAdjustments", [optional]:=True),
+                New ReportColumn("Net Pay", "NetPay"),
+                New ReportColumn("13th Month", "13thMonthPay"),
+                New ReportColumn("Total", "Total")
+            })
+
+        Dim sys_ownr As New SystemOwner
+
+        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+
+            Dim allowanceColumn = reportColumns.Where(Function(r) r.Name = allowanceColumnName).FirstOrDefault
+
+            If allowanceColumn IsNot Nothing Then
+
+                allowanceColumn.Name = "Ecola"
+
+            End If
+
+        End If
+
+        Return New ReadOnlyCollection(Of ReportColumn)(reportColumns)
+    End Function
 
     Private Const FontSize As Single = 8
 

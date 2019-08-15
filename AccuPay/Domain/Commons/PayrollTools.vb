@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
@@ -177,11 +178,13 @@ Public Class PayrollTools
 
             Using context = New PayrollContext()
 
+                Dim today = Date.Today.ToMinimumHourValue
+
                 Dim payPeriodThisDay = Await context.PayPeriods.
                                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                                         Where(Function(p) p.IsMonthly).
-                                        Where(Function(p) p.PayToDate >= Date.Now).
-                                        Where(Function(p) p.PayFromDate <= Date.Now).
+                                        Where(Function(p) p.PayToDate >= today).
+                                        Where(Function(p) p.PayFromDate <= today).
                                         OrderByDescending(Function(p) p.PayToDate).
                                         FirstOrDefaultAsync
 

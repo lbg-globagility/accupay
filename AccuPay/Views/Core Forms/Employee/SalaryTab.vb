@@ -5,8 +5,6 @@ Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Extensions
-Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -37,11 +35,7 @@ Public Class SalaryTab
 
     Private _isSystemOwnerBenchMark As Boolean
 
-    Private _allowanceRepository As AllowanceRepository
-
     Private _ecolaAllowance As Allowance
-
-    Private _currentPayPeriod As IPayPeriod
 
     Public Property BasicSalary As Decimal
         Get
@@ -76,7 +70,6 @@ Public Class SalaryTab
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        _allowanceRepository = New AllowanceRepository
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -112,7 +105,9 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            If _currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
+            Dim currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+
+            If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
 
                 Return False
@@ -125,8 +120,8 @@ Public Class SalaryTab
             'End If
             _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
                                                 employeeId.Value,
-                                                payDateFrom:=_currentPayPeriod.PayFromDate,
-                                                payDateTo:=_currentPayPeriod.PayToDate)
+                                                payDateFrom:=currentPayPeriod.PayFromDate,
+                                                payDateTo:=currentPayPeriod.PayToDate)
 
             If _ecolaAllowance Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
@@ -151,7 +146,7 @@ Public Class SalaryTab
 
     End Sub
 
-    Private Async Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub SalaryTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
         End If
@@ -161,8 +156,6 @@ Public Class SalaryTab
         LoadSalaries()
 
         _isSystemOwnerBenchMark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
-
-        _currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
 
         ToggleBenchmarkEcola()
 

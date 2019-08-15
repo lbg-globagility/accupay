@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -499,6 +498,8 @@ Public Class PayrollGeneration
                                         Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
                                         Where(Function(l) l.Product.IsVacationLeave).
                                         FirstOrDefault
+
+        vacationLedger.LeaveTransactions = New List(Of LeaveTransaction)
 
         If vacationLedger Is Nothing Then
 
