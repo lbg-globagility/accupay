@@ -26,3 +26,9 @@ Public Enum WithholdingTaxCalculationBasis
     GrossPay
     BasicSalary
 End Enum
+
+Public Enum PayrollSummaryAdjustmentBreakdownPolicy
+    TotalOnly
+    BreakdownOnly
+    Both
+End Enum

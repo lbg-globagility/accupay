@@ -1,9 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports System.Collections.ReadOnlyCollectionBase
-Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
+Imports AccuPay.Entity
 
 Public Class ListOfValueCollection
 

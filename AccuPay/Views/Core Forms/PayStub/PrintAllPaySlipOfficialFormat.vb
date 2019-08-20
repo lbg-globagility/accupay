@@ -36,7 +36,7 @@ Namespace Global.AccuPay.Views.Payroll
             If SystemOwner.Goldwings = current_system_owner Then
 
                 Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
+                        New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
 
                 catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -120,7 +120,7 @@ Namespace Global.AccuPay.Views.Payroll
             Else
 
                 Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
+                New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & n_PayPeriodRowID & "," & n_IsPrintingAsActual & ");")
 
                 catchdt = n_SQLQueryToDatatable.ResultTable
 
