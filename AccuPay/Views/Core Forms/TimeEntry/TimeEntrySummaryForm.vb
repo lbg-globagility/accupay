@@ -271,7 +271,7 @@ Public Class TimeEntrySummaryForm
         ColumnRHolHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayHours > 0)
         ColumnRHolPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RegularHolidayPay > 0)
 
-        ColumnRHolOTHrs.Visible = tim_eEntries.Any(Function(t) t.RegularHolidayOTHours > 0)
+        ColumnRHolOTHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayOTHours > 0)
         ColumnRHolOTPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RegularHolidayOTPay > 0)
 
         ColumnOTPay.Visible = _hideMoneyColumns = False
