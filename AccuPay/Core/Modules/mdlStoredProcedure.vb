@@ -567,7 +567,8 @@ Module mdlStoredProcedure
                                      Optional I_WorkDaysPerYear As Object = Nothing,
                                      Optional I_RDOCode As Object = Nothing,
                                      Optional I_ZIPCode As Object = Nothing,
-                                     Optional WithholdingDeductionSchedule As Object = Nothing) As Boolean
+                                     Optional WithholdingDeductionSchedule As Object = Nothing,
+                                     Optional I_IsAgency As Boolean = False) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -615,6 +616,7 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_RDOCode", I_RDOCode.ToString)
 
                 .Parameters.AddWithValue("I_ZIPCode", I_ZIPCode.ToString)
+                .Parameters.AddWithValue("I_IsAgency", I_IsAgency)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
@@ -657,7 +659,8 @@ Module mdlStoredProcedure
                                      Optional I_WorkDaysPerYear As Object = Nothing,
                                      Optional I_RDOCode As Object = Nothing,
                                      Optional I_ZIPCode As Object = Nothing,
-                                     Optional WithholdingDeductionSchedule As Object = Nothing) As Boolean
+                                     Optional WithholdingDeductionSchedule As Object = Nothing,
+                                     Optional I_IsAgency As Boolean = False) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -704,6 +707,7 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_RDOCode", I_RDOCode.ToString)
 
                 .Parameters.AddWithValue("I_ZIPCode", I_ZIPCode.ToString)
+                .Parameters.AddWithValue("I_IsAgency", I_IsAgency)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
@@ -748,7 +752,8 @@ Module mdlStoredProcedure
                                      Optional I_WorkDaysPerYear As Object = Nothing,
                                      Optional I_RDOCode As Object = Nothing,
                                      Optional I_ZIPCode As Object = Nothing,
-                                     Optional WithholdingDeductionSchedule As Object = Nothing) As Boolean
+                                     Optional WithholdingDeductionSchedule As Object = Nothing,
+                                             Optional I_IsAgency As Boolean = False) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -797,6 +802,7 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_RDOCode", I_RDOCode.ToString)
 
                 .Parameters.AddWithValue("I_ZIPCode", I_ZIPCode.ToString)
+                .Parameters.AddWithValue("I_IsAgency", I_IsAgency)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
@@ -840,7 +846,8 @@ Module mdlStoredProcedure
                                      Optional I_WorkDaysPerYear As Object = Nothing,
                                      Optional I_RDOCode As Object = Nothing,
                                      Optional I_ZIPCode As Object = Nothing,
-                                     Optional WithholdingDeductionSchedule As Object = Nothing) As Boolean
+                                     Optional WithholdingDeductionSchedule As Object = Nothing,
+                                                   Optional I_IsAgency As Boolean = False) As Boolean
 
         Dim F_return As Boolean = False
         Dim SQL_command As MySqlCommand =
@@ -888,6 +895,7 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_RDOCode", I_RDOCode.ToString)
 
                 .Parameters.AddWithValue("I_ZIPCode", I_ZIPCode.ToString)
+                .Parameters.AddWithValue("I_IsAgency", I_IsAgency)
 
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
