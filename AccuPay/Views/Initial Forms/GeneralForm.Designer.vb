@@ -104,6 +104,7 @@ Partial Class GeneralForm
         Me.DutyShiftingToolStripMenuItem.Name = "DutyShiftingToolStripMenuItem"
         Me.DutyShiftingToolStripMenuItem.Size = New System.Drawing.Size(87, 20)
         Me.DutyShiftingToolStripMenuItem.Text = "Duty shifting"
+        Me.DutyShiftingToolStripMenuItem.Visible = False
         '
         'PayRateToolStripMenuItem
         '
