@@ -66,7 +66,9 @@ Public Class SssCalculator
                                              salary As Salary,
                                              employee As Employee) As Decimal
 
-        Dim calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
+        Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
+
+        Dim calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, policyByOrganization)
 
         Select Case calculationBasis
             Case SssCalculationBasis.BasicSalary
