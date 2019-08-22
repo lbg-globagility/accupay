@@ -9,7 +9,7 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `BEFDEL_branch` BEFORE DELETE ON `branch` FOR EACH ROW BEGIN
 
-UPDATE employeetimeentrydetails SET ChargeToDivisionID=NULL WHERE ChargeToDivisionID=OLD.RowID AND OrganizationID=OLD.OrganizationID;
+#UPDATE employeetimeentrydetails SET ChargeToDivisionID=NULL WHERE ChargeToDivisionID=OLD.RowID AND OrganizationID=OLD.OrganizationID;
 
 END//
 DELIMITER ;
