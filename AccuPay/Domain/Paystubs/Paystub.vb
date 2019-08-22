@@ -154,6 +154,9 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
 
+        <ForeignKey("PayPeriodID")>
+        Public Overridable Property PayPeriod As PayPeriod
+
         Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)

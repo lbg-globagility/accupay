@@ -1,7 +1,11 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports System.Threading.Tasks
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
+Imports AccuPay.Utils
+Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -10,7 +14,21 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
 
+    Private Const adjustmentColumn As String = "(Adj.)"
+
+    Private Const totalAdjustmentColumn As String = "Adj."
+
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ReportColumn) = GetReportColumns()
+
+    Private Const FontSize As Single = 8
+
+    Private ReadOnly margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
+
+    Private Const EmployeeRowIDColumnName As String = "EmployeeRowID"
+
+    Private _settings As ListOfValueCollection
+
+    Public Property IsActual As Boolean
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ReportColumn)
 
@@ -88,7 +106,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 New ReportColumn("W.Tax", "WithholdingTax"),
                 New ReportColumn("Loan", "TotalLoans"),
                 New ReportColumn("A.Fee", "AgencyFee", [optional]:=True),
-                New ReportColumn("Adj.", "TotalAdjustments", [optional]:=True),
+                New ReportColumn(totalAdjustmentColumn, "TotalAdjustments", [optional]:=True),
                 New ReportColumn("Net Pay", "NetPay"),
                 New ReportColumn("13th Month", "13thMonthPay"),
                 New ReportColumn("Total", "Total")
@@ -111,13 +129,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Return New ReadOnlyCollection(Of ReportColumn)(reportColumns)
     End Function
 
-    Private Const FontSize As Single = 8
-
-    Private ReadOnly margin_size() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
-
-    Public Property IsActual As Boolean
-
-    Public Sub Run() Implements IReportProvider.Run
+    Public Async Sub Run() Implements IReportProvider.Run
         Dim bool_result As Short = Convert.ToInt16(IsActual)
 
         Dim payrollSelector = New PayrollSummaDateSelection With {
@@ -127,6 +139,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
         If payrollSelector.ShowDialog() <> DialogResult.OK Then
             Return
         End If
+
+        Using context As New PayrollContext
+
+            _settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+        End Using
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
@@ -178,7 +196,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim viewableReportColumns = GetViewableReportColumns(allEmployees, hideEmptyColumns)
+            Dim viewableReportColumns = Await GetViewableReportColumns(allEmployees, hideEmptyColumns, payrollSelector)
 
             Dim employeeGroups = GroupEmployees(allEmployees)
 
@@ -246,6 +264,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
             For Each employee In employeeGroup.Employees
                 Dim letters = GenerateAlphabet.GetEnumerator()
 
+                Dim employeeId = employee(EmployeeRowIDColumnName)
+
                 For Each reportColumn In viewableReportColumns
                     letters.MoveNext()
                     Dim alphabet = letters.Current
@@ -254,7 +274,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
                     Dim cell = worksheet.Cells(column)
                     Dim sourceName = reportColumn.Source
-                    cell.Value = employee(sourceName)
+                    cell.Value = GetCellValue(employee, sourceName)
 
                     If reportColumn.Type = ColumnType.Numeric Then
                         cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
@@ -292,7 +312,28 @@ Public Class PayrollSummaryExcelFormatReportProvider
         SetDefaultPrinterSettings(worksheet.PrinterSettings)
     End Sub
 
-    Private Function GetViewableReportColumns(allEmployees As ICollection(Of DataRow), hideEmptyColumns As Boolean) As ICollection(Of ReportColumn)
+    Private Function GetCellValue(employee As DataRow, sourceName As String) As Object
+        If sourceName.EndsWith(adjustmentColumn) AndAlso GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
+
+            If _adjustments Is Nothing Then Return 0
+
+            Dim productName = GetAdjustmentColumnFromName(sourceName)
+            Dim employeeId = ObjectUtils.ToNullableInteger(employee(EmployeeRowIDColumnName))
+
+            Dim adjustment = _adjustments.
+                    Where(Function(a) a.Product.PartNo = productName).
+                    Where(Function(a) a.Paystub.EmployeeID.Value = employeeId.Value).
+                    Sum(Function(a) a.PayAmount)
+
+            Return adjustment
+
+        End If
+
+        Return employee(sourceName)
+    End Function
+
+    Private Async Function GetViewableReportColumns(allEmployees As ICollection(Of DataRow), hideEmptyColumns As Boolean, payrollSummaDateSelection As PayrollSummaDateSelection) As Task(Of ICollection(Of ReportColumn))
+
         Dim viewableReportColumns = New List(Of ReportColumn)
         For Each reportColumn In _reportColumns
             If reportColumn.Optional AndAlso hideEmptyColumns Then
@@ -306,6 +347,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 viewableReportColumns.Add(reportColumn)
             End If
         Next
+
+        If GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
+            Await AddAdjustmentBreakdownColumns(allEmployees, viewableReportColumns, payrollSummaDateSelection)
+        End If
 
         Return viewableReportColumns
     End Function
@@ -508,6 +553,159 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Return groups
     End Function
+
+#Region "Adjustment Breakdown"
+
+    Private _adjustmentQueried As Boolean
+    Private _adjustments As List(Of IAdjustment)
+
+    Private Function GetPayrollSummaryPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
+        Return _settings.GetEnum("Payroll Summary Policy.AdjustmentBreakdown", PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly)
+    End Function
+
+    Private Async Function AddAdjustmentBreakdownColumns(allEmployees As ICollection(Of DataRow), viewableReportColumns As List(Of ReportColumn), payrollSummaDateSelection As PayrollSummaDateSelection) As Task
+
+        Dim adjustments = Await GetCurrentAdjustments(payrollSummaDateSelection, allEmployees)
+
+        Dim groupedAdjustments = adjustments.GroupBy(Function(a) a.ProductID).ToList
+
+        Dim totalAdjustmentReportColumn = viewableReportColumns.Where(Function(r) r.Name = totalAdjustmentColumn).FirstOrDefault
+        Dim totalAdjustmentColumnIndex = viewableReportColumns.IndexOf(totalAdjustmentReportColumn)
+
+        Dim counter = 1
+
+        'add breakdown columns
+        For Each adjustment In groupedAdjustments
+
+            Dim adjustmentName = GetAdjustmentName(adjustment(0).Product?.Name)
+
+            If String.IsNullOrWhiteSpace(adjustmentName) Then Continue For
+
+            viewableReportColumns.Insert(totalAdjustmentColumnIndex + counter, New ReportColumn(adjustmentName, adjustmentName))
+
+            counter += 1
+        Next
+
+        'remove total adjustments column
+        viewableReportColumns.RemoveAt(totalAdjustmentColumnIndex)
+
+        'add back the total adjustment column if it is not BreakdownOnly
+        'this will put the column after the adjustment breakdown columns
+        If GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.BreakdownOnly Then
+
+            If GetPayrollSummaryPolicy() = PayrollSummaryAdjustmentBreakdownPolicy.Both Then
+
+                totalAdjustmentReportColumn.Name = "Total Adj."
+
+            End If
+
+            If counter > 1 Then
+                'we have minus 1 here because we remove the original total adjustment column
+                viewableReportColumns.Insert(totalAdjustmentColumnIndex + counter - 1, totalAdjustmentReportColumn)
+            Else
+                viewableReportColumns.Insert(totalAdjustmentColumnIndex, totalAdjustmentReportColumn)
+
+            End If
+
+        End If
+
+    End Function
+
+    Public Async Function GetCurrentAdjustments(
+                            payrollSummaDateSelection As PayrollSummaDateSelection,
+                            Optional allEmployees As ICollection(Of DataRow) = Nothing) _
+                            As Task(Of List(Of IAdjustment))
+
+        If _adjustmentQueried AndAlso _adjustments IsNot Nothing Then
+
+            Return _adjustments
+
+        End If
+
+        Using context As New PayrollContext
+
+            Dim payPeriodFrom As New PayPeriod
+            Dim payPeriodTo As New PayPeriod
+
+            If payrollSummaDateSelection.PayPeriodFromID IsNot Nothing Then
+
+                payPeriodFrom = Await context.PayPeriods.
+                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodFromID.Value).
+                                FirstOrDefaultAsync
+            End If
+
+            If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
+
+                payPeriodTo = Await context.PayPeriods.
+                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodToID.Value).
+                                FirstOrDefaultAsync
+            End If
+
+            If payPeriodFrom?.PayFromDate Is Nothing OrElse payPeriodTo?.PayToDate Is Nothing Then
+
+                Throw New ArgumentException("Cannot fetch pay period data.")
+
+            End If
+
+            Dim employeeIds = GetEmployeeIds(allEmployees)
+
+            Dim adjustmentQuery = GetBaseAdjustmentQuery(context.Adjustments.Where(Function(a) a.OrganizationID.Value = z_OrganizationID), payPeriodFrom.PayFromDate, payPeriodTo.PayToDate, employeeIds)
+            Dim actualAdjustmentQuery = GetBaseAdjustmentQuery(context.ActualAdjustments.Where(Function(a) a.OrganizationID.Value = z_OrganizationID), payPeriodFrom.PayFromDate, payPeriodTo.PayToDate, employeeIds)
+
+            If allEmployees Is Nothing Then
+
+                adjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
+                actualAdjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
+
+            End If
+
+            _adjustmentQueried = True
+
+            _adjustments = New List(Of IAdjustment)(Await adjustmentQuery.ToListAsync)
+            _adjustments.AddRange(New List(Of IAdjustment)(Await actualAdjustmentQuery.ToListAsync))
+
+            Return _adjustments
+
+        End Using
+    End Function
+
+    Private Function GetBaseAdjustmentQuery(query As IQueryable(Of IAdjustment), PayFromDate As Date, PayToDate As Date, employeeIds As Decimal?()) As IQueryable(Of IAdjustment)
+
+        Return query.Include(Function(p) p.Product).
+                                Include(Function(p) p.Paystub).
+                                Include(Function(p) p.Paystub.PayPeriod).
+                                Where(Function(p) p.Paystub.PayPeriod.PayFromDate >= PayFromDate).
+                                Where(Function(p) p.Paystub.PayPeriod.PayToDate <= PayToDate).
+                                Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
+
+    End Function
+
+    Private Shared Function GetAdjustmentName(name As String) As String
+
+        If String.IsNullOrWhiteSpace(name) Then Return Nothing
+
+        Return $"{name} {adjustmentColumn}"
+
+    End Function
+
+    Private Shared Function GetAdjustmentColumnFromName(column As String) As String
+
+        Return column.Replace($" {adjustmentColumn}", "")
+
+    End Function
+
+    Private Function GetEmployeeIds(allEmployees As ICollection(Of DataRow)) As Decimal?()
+
+        Dim employeeIdsArray(allEmployees.Count - 1) As Decimal?
+
+        For index = 0 To employeeIdsArray.Count - 1
+            employeeIdsArray(index) = ObjectUtils.ToNullableDecimal(allEmployees(index)(EmployeeRowIDColumnName))
+        Next
+
+        Return employeeIdsArray
+    End Function
+
+#End Region
 
     Private Class EmployeeGroup
 
