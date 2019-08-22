@@ -1,5 +1,6 @@
 ﻿Imports System.Configuration
 Imports System.Threading
+Imports AccuPay.Utils
 Imports Indigo
 Imports MySql.Data.MySqlClient
 
@@ -251,9 +252,9 @@ Public Class MDIPrimaryForm
                 dbnow = EXECQUER(CURDATE_MDY)
             End If
 
-            ToolStripButton3.Text = "Time &&" & vbNewLine & "Attendance"
+            TimeToolStripButton.Text = "Time &&" & vbNewLine & "Attendance"
 
-            ToolStripButton3.ToolTipText = "Time & Attendance"
+            TimeToolStripButton.ToolTipText = "Time & Attendance"
 
             '123, 24
 
@@ -267,10 +268,53 @@ Public Class MDIPrimaryForm
 
             PictureBox1.Image = ImageList1.Images(1)
             LoadVersionNo()
+
+            PrepareFormForUserLevelAuthorizations()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
         End Try
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                GeneralToolStripButton.Visible = False
+                PayrollToolStripButton.Visible = False
+                ReportsToolStripButton.Visible = False
+
+                LoanBalanceCollapsibleGroupBox.Visible = False
+                NegativePayslipsCollapsibleGroupBox.Visible = False
+                PendingOfficialBusinessCollapsibleGroupBox.Visible = False
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    TimeToolStripButton.Visible = False
+
+                End If
+
+            End If
+
+        End Using
+
     End Sub
 
     Private Sub LoadVersionNo()
@@ -308,19 +352,19 @@ Public Class MDIPrimaryForm
 
         ToolStripButton0.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
         ToolStripButton0.Font = selectedButtonFont
 
-        ToolStripButton1.Font = unselectedButtonFont
-        tsbtnHRIS.Font = unselectedButtonFont
-        ToolStripButton3.Font = unselectedButtonFont
-        ToolStripButton4.Font = unselectedButtonFont
-        ToolStripButton5.Font = unselectedButtonFont
+        GeneralToolStripButton.Font = unselectedButtonFont
+        HrisToolStripButton.Font = unselectedButtonFont
+        TimeToolStripButton.Font = unselectedButtonFont
+        PayrollToolStripButton.Font = unselectedButtonFont
+        ReportsToolStripButton.Font = unselectedButtonFont
 
         Static once As SByte = 0
         If once = 0 Then
@@ -330,7 +374,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles ToolStripButton1.Click
+    Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles GeneralToolStripButton.Click
 
         isHome = 0
 
@@ -345,25 +389,25 @@ Public Class MDIPrimaryForm
         FormReports.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton1.BackColor = Color.FromArgb(255, 255, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton1.Font = selectedButtonFont
+        GeneralToolStripButton.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        tsbtnHRIS.Font = unselectedButtonFont
-        ToolStripButton3.Font = unselectedButtonFont
-        ToolStripButton4.Font = unselectedButtonFont
-        ToolStripButton5.Font = unselectedButtonFont
+        HrisToolStripButton.Font = unselectedButtonFont
+        TimeToolStripButton.Font = unselectedButtonFont
+        PayrollToolStripButton.Font = unselectedButtonFont
+        ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(0, sender, e)
     End Sub
 
-    Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+    Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles TimeToolStripButton.Click
 
         isHome = 0
 
@@ -378,20 +422,20 @@ Public Class MDIPrimaryForm
         FormReports.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton3.BackColor = Color.FromArgb(255, 255, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton3.Font = selectedButtonFont
+        TimeToolStripButton.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        ToolStripButton1.Font = unselectedButtonFont
-        tsbtnHRIS.Font = unselectedButtonFont
-        ToolStripButton4.Font = unselectedButtonFont
-        ToolStripButton5.Font = unselectedButtonFont
+        GeneralToolStripButton.Font = unselectedButtonFont
+        HrisToolStripButton.Font = unselectedButtonFont
+        PayrollToolStripButton.Font = unselectedButtonFont
+        ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(2, sender, e)
     End Sub
@@ -541,7 +585,7 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
+    Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
         isHome = 0
 
@@ -556,26 +600,26 @@ Public Class MDIPrimaryForm
         FormReports.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton4.BackColor = Color.FromArgb(255, 255, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton4.Font = selectedButtonFont
+        PayrollToolStripButton.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        ToolStripButton1.Font = unselectedButtonFont
-        tsbtnHRIS.Font = unselectedButtonFont
-        ToolStripButton3.Font = unselectedButtonFont
-        ToolStripButton5.Font = unselectedButtonFont
+        GeneralToolStripButton.Font = unselectedButtonFont
+        HrisToolStripButton.Font = unselectedButtonFont
+        TimeToolStripButton.Font = unselectedButtonFont
+        ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(3, sender, e)
 
     End Sub
 
-    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles tsbtnHRIS.Click
+    Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
 
         isHome = 0
 
@@ -590,20 +634,20 @@ Public Class MDIPrimaryForm
         FormReports.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton5.BackColor = Color.FromArgb(194, 228, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        tsbtnHRIS.BackColor = Color.FromArgb(255, 255, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        tsbtnHRIS.Font = selectedButtonFont
+        HrisToolStripButton.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        ToolStripButton1.Font = unselectedButtonFont
-        ToolStripButton3.Font = unselectedButtonFont
-        ToolStripButton4.Font = unselectedButtonFont
-        ToolStripButton5.Font = unselectedButtonFont
+        GeneralToolStripButton.Font = unselectedButtonFont
+        TimeToolStripButton.Font = unselectedButtonFont
+        PayrollToolStripButton.Font = unselectedButtonFont
+        ReportsToolStripButton.Font = unselectedButtonFont
 
         refresh_previousForm(1, sender, e)
     End Sub
@@ -649,7 +693,7 @@ Public Class MDIPrimaryForm
 
     End Sub
 
-    Private Sub ToolStripButton5_Click_1(sender As Object, e As EventArgs) Handles ToolStripButton5.Click
+    Private Sub ToolStripButton5_Click_1(sender As Object, e As EventArgs) Handles ReportsToolStripButton.Click
         isHome = 0
 
         LockTime()
@@ -661,20 +705,20 @@ Public Class MDIPrimaryForm
         TimeAttendForm.Hide()
 
         ToolStripButton0.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton1.BackColor = Color.FromArgb(194, 228, 255)
-        tsbtnHRIS.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton3.BackColor = Color.FromArgb(194, 228, 255)
-        ToolStripButton4.BackColor = Color.FromArgb(194, 228, 255)
+        GeneralToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        HrisToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        TimeToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
+        PayrollToolStripButton.BackColor = Color.FromArgb(194, 228, 255)
 
-        ToolStripButton5.BackColor = Color.FromArgb(255, 255, 255)
+        ReportsToolStripButton.BackColor = Color.FromArgb(255, 255, 255)
 
-        ToolStripButton5.Font = selectedButtonFont
+        ReportsToolStripButton.Font = selectedButtonFont
 
         ToolStripButton0.Font = unselectedButtonFont
-        ToolStripButton1.Font = unselectedButtonFont
-        tsbtnHRIS.Font = unselectedButtonFont
-        ToolStripButton3.Font = unselectedButtonFont
-        ToolStripButton4.Font = unselectedButtonFont
+        GeneralToolStripButton.Font = unselectedButtonFont
+        HrisToolStripButton.Font = unselectedButtonFont
+        TimeToolStripButton.Font = unselectedButtonFont
+        PayrollToolStripButton.Font = unselectedButtonFont
     End Sub
 
     Sub LockTime()
@@ -901,7 +945,7 @@ Public Class MDIPrimaryForm
         Dim privileges = New SqlToDataTable(sql).Read()
 
         If Not HasPrivilege(privileges, "Employee Loan Schedule") Then
-            CollapsibleGroupBox1.Visible = False
+            LoanBalanceCollapsibleGroupBox.Visible = False
         End If
 
         If Not HasPrivilege(privileges, "Employee Time Entry Logs") Then
@@ -909,21 +953,21 @@ Public Class MDIPrimaryForm
         End If
 
         If Not HasPrivilege(privileges, "Employee Pay Slip") Then
-            CollapsibleGroupBox10.Visible = False
+            NegativePayslipsCollapsibleGroupBox.Visible = False
         End If
 
         If Not HasPrivilege(privileges, "Employee Personal Profile") Then
-            CollapsibleGroupBox2.Visible = False
-            CollapsibleGroupBox9.Visible = False
+            BirthdayCollapsibleGroupBox.Visible = False
+            UnqualifiedCollapsibleGroupBox.Visible = False
             CollapsibleGroupBox5.Visible = False
         End If
 
         If Not HasPrivilege(privileges, "Official Business filing") Then
-            CollapsibleGroupBox8.Visible = False
+            PendingOfficialBusinessCollapsibleGroupBox.Visible = False
         End If
 
         If Not HasPrivilege(privileges, "Employee Overtime") Then
-            CollapsibleGroupBox7.Visible = False
+            PendingOvertimeCollapsibleGroupBox.Visible = False
         End If
 
         If Not HasPrivilege(privileges, "Employee Leave") Then
