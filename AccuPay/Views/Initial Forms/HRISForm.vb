@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports AccuPay.Utils
 
 Public Class HRISForm
 
@@ -208,7 +209,7 @@ Public Class HRISForm
         'Employee.tbpPrevEmp_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem3.Click
+    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles PromotionToolStripMenuItem.Click
 
         Dim index = EmployeeForm.GetPromotionTabPageIndex
 
@@ -219,7 +220,7 @@ Public Class HRISForm
         'Employee.tbpPromotion_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem8.Click
+    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpEmpOT)
 
@@ -230,7 +231,7 @@ Public Class HRISForm
         'Employee.tbpEmpOT_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem9.Click
+    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpOBF)
 
@@ -241,7 +242,7 @@ Public Class HRISForm
         'Employee.tbpOBF_Enter(sender, e)
     End Sub
 
-    Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem10.Click
+    Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
 
         Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpBonus)
 
@@ -288,6 +289,59 @@ Public Class HRISForm
         If Not Debugger.IsAttached Then
             EmployeeExperimentalToolStripMenuItem.Visible = False
         End If
+
+        PrepareFormForUserLevelAuthorizations()
+
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                DivisionToolStripMenuItem.Visible = False
+
+                CheckListToolStripMenuItem.Visible = False
+                AwardsToolStripMenuItem.Visible = False
+                CertificatesToolStripMenuItem.Visible = False
+                EducBGToolStripMenuItem.Visible = False
+                PrevEmplyrToolStripMenuItem.Visible = False
+                PromotionToolStripMenuItem.Visible = False
+                DisciplinaryActionToolStripMenuItem.Visible = False
+                EmpSalToolStripMenuItem.Visible = False
+                BonusToolStripMenuItem.Visible = False
+                LeaveToolStripMenuItem.Visible = False
+                OfficialBusinessToolStripMenuItem.Visible = False
+                AttachmentToolStripMenuItem.Visible = False
+                OffSetToolStripMenuItem.Visible = False
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    LoansToolStripMenuItem.Visible = False
+                    AllowanceToolStripMenuItem.Visible = False
+                    OvertimeToolStripMenuItem.Visible = False
+
+                End If
+
+            End If
+
+        End Using
 
     End Sub
 

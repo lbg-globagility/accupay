@@ -1742,7 +1742,55 @@ Public Class EmployeeForm
 
         employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
 
+        PrepareFormForUserLevelAuthorizations()
+
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                tabctrlemp.TabPages.Remove(tbpempchklist)
+                tabctrlemp.TabPages.Remove(tbpAwards)
+                tabctrlemp.TabPages.Remove(tbpCertifications)
+                tabctrlemp.TabPages.Remove(tbpEducBG)
+                tabctrlemp.TabPages.Remove(tbpPrevEmp)
+                tabctrlemp.TabPages.Remove(tbpPromotion)
+                tabctrlemp.TabPages.Remove(tbpDiscipAct)
+                tabctrlemp.TabPages.Remove(tbpNewSalary)
+                tabctrlemp.TabPages.Remove(tbpBonus)
+                tabctrlemp.TabPages.Remove(tbpLeave)
+                tabctrlemp.TabPages.Remove(tbpOBF)
+                tabctrlemp.TabPages.Remove(tbpAttachment)
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    tabctrlemp.TabPages.Remove(tbpEmpOT)
+
+                End If
+
+            End If
+
+        End Using
+
     End Sub
 
     Private Sub Employee_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
