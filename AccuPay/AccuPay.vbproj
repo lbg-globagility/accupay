@@ -388,6 +388,12 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
+    <Compile Include="Views\Core Forms\AddBranchForm.Designer.vb">
+      <DependentUpon>AddBranchForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddBranchForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>
     </Compile>
@@ -1798,6 +1804,9 @@
     <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\AddBranchForm.resx">
+      <DependentUpon>AddBranchForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddDivisionForm.resx">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>

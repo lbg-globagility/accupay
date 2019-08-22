@@ -12641,7 +12641,40 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+    Private Async Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+
+        Dim form As New AddBranchForm
+        form.ShowDialog()
+
+        If form.HasChanges Then
+
+            Dim branchId = GetSelectedBranch()?.RowID
+
+            If form.LastBranchId IsNot Nothing Then
+
+                branchId = form.LastBranchId
+
+            End If
+
+            Using context As New PayrollContext
+
+                _branches = Await context.Branches.Where(Function(b) b.OrganizationID = z_OrganizationID).ToListAsync
+
+                BranchComboBox.DataSource = _branches
+
+            End Using
+
+            Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
+
+            If currentBranch Is Nothing Then
+
+                BranchComboBox.SelectedIndex = -1
+            Else
+
+                BranchComboBox.SelectedIndex = _branches.IndexOf(currentBranch)
+            End If
+
+        End If
 
     End Sub
 
