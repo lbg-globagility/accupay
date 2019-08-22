@@ -98,6 +98,8 @@ Public Class PayrollContext
 
     Public Overridable Property Branches As DbSet(Of Branch)
 
+    Public Overridable Property Users As DbSet(Of User)
+
     Public Sub New()
     End Sub
 

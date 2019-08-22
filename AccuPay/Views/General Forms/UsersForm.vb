@@ -44,6 +44,12 @@ Public Class UsersForm
                     End With
                 Next
             End If
+
+            If dgvUserList.Rows.Count = 0 Then
+            Else
+                DisplayValue(dgvUserList.CurrentRow.Cells(c_rowid.Index).Value)
+
+            End If
         Catch ex As Exception
             MsgBox(ex.Message, MsgBoxStyle.Critical, "Error code fillUsers")
         End Try
@@ -145,6 +151,13 @@ Public Class UsersForm
         txtMiddleName.Clear()
         cmbPosition.SelectedIndex = -1
         txtUserName.Clear()
+
+        If UserLevelComboBox.Items.Count > 0 Then
+            UserLevelComboBox.SelectedIndex = 0
+        Else
+            UserLevelComboBox.SelectedIndex = -1
+
+        End If
 
     End Sub
 
@@ -352,11 +365,6 @@ Public Class UsersForm
         FillUserLevel()
         fillPosition()
         fillUsers()
-        If dgvUserList.Rows.Count = 0 Then
-        Else
-            DisplayValue(dgvUserList.CurrentRow.Cells(c_rowid.Index).Value)
-
-        End If
 
         view_ID = VIEW_privilege("Users", orgztnID)
 
