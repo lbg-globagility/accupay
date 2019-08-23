@@ -170,6 +170,10 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property Actual As PaystubActual
 
+        Public Property SpecialHolidayRestDayPay As Decimal
+
+        Public Property RegularHolidayRestDayPay As Decimal
+
         Public ReadOnly Property AdditionalPay As Decimal
             Get
                 Return (
@@ -182,6 +186,17 @@ Namespace Global.AccuPay.Entity
                     SpecialHolidayOTPay +
                     RegularHolidayPay +
                     RegularHolidayOTPay)
+            End Get
+        End Property
+
+        Public ReadOnly Property TotalDaysPayWithOutOvertimeAndLeave As Decimal
+            Get
+                Return RegularPay +
+                    RestDayPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayRestDayPay +
+                    RegularHolidayPay +
+                    RegularHolidayRestDayPay
             End Get
         End Property
 

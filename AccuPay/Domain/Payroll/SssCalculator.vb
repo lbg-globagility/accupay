@@ -83,6 +83,10 @@ Public Class SssCalculator
 
                 Return If(previousPaystub?.GrossPay, 0) + paystub.GrossPay
 
+            Case SssCalculationBasis.BasicMinusDeductions
+
+                Return If(previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithOutOvertimeAndLeave
+
             Case Else
 
                 Return 0
