@@ -268,15 +268,13 @@ Public Class MDIPrimaryForm
 
             PictureBox1.Image = ImageList1.Images(1)
             LoadVersionNo()
-
-            PrepareFormForUserLevelAuthorizations()
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         Finally
         End Try
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Sub RestrictByUserLevel()
 
         Using context As New PayrollContext
 
@@ -929,6 +927,31 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub RestrictDashboardByPrivilege()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                RestrictByPosition()
+            Else
+
+                RestrictByUserLevel()
+
+            End If
+        End Using
+
+    End Sub
+
+    Private Sub RestrictByPosition()
         Dim sql = $"
             SELECT v.ViewName 'Name', (pv.AllowedToAccess = 'Y') 'HasAccess'
             FROM position_view pv
