@@ -728,6 +728,11 @@ Public Class EmployeeForm
             cboEmpType.Focus()
             WarnBalloon("Please select an employee type.", "Invalid employee type", lblforballoon, 0, -69)
             Exit Sub
+        ElseIf Trim(cboEmpStat.Text) = "" Then
+            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+            cboEmpStat.Focus()
+            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
+            Exit Sub
         ElseIf Trim(txtFName.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             txtFName.Focus()
@@ -738,23 +743,20 @@ Public Class EmployeeForm
             txtLName.Focus()
             WarnBalloon("Please input last name.", "Invalid last name", lblforballoon, 0, -69)
             Exit Sub
-
         ElseIf Trim(cboMaritStat.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboMaritStat.Focus()
             WarnBalloon("Please input marital status.", "Invalid marital status", lblforballoon, 0, -69)
             Exit Sub
-
         ElseIf Trim(cboPayFreq.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboPayFreq.Focus()
             WarnBalloon("Please input a pay frequency.", "Invalid Pay Frequency", lblforballoon, 0, -69)
             Exit Sub
-
-        ElseIf Trim(cboEmpStat.Text) = "" Then
+        ElseIf String.IsNullOrWhiteSpace(txtWorkDaysPerYear.Text) OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpStat.Focus()
-            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
+            txtWorkDaysPerYear.Focus()
+            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
             Exit Sub
 
         ElseIf rdbDirectDepo.Checked Then
@@ -773,6 +775,9 @@ Public Class EmployeeForm
 
         ElseIf positID = "" Then
 
+            'this fucking elseif block skips over the next elseif
+            'don't put another elseif at the bottom
+
             positID = EXECQUER("SELECT RowID FROM position WHERE PositionName='" & cboPosit.Text & "' AND OrganizationID='" & orgztnID & "';")
 
             If positID = "" Then
@@ -782,12 +787,6 @@ Public Class EmployeeForm
                 WarnBalloon("Please input employee position.", "Invalid Position", lblforballoon, 0, -69)
                 Exit Sub
             End If
-
-        ElseIf Trim(txtWorkDaysPerYear.Text) = "" OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpStat.Focus()
-            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
-            Exit Sub
         End If
 
         Dim employee_RowID = Nothing
@@ -1893,7 +1892,7 @@ Public Class EmployeeForm
             With dgvEmp.CurrentRow
                 Dim empPix() As DataRow
                 publicEmpRowID = .Cells("RowID").Value
-                If sameEmpID <> .Cells("RowID").Value Then
+                If IsDBNull(.Cells("RowID").Value) = False AndAlso sameEmpID <> .Cells("RowID").Value Then
 
                     sameEmpID = .Cells("RowID").Value
 
