@@ -445,7 +445,7 @@ Public Class MetroLogin
                     Return True
                 Else
 
-                    MessageBoxHelper.ErrorMessage("You are not authorize to access this organization.")
+                    MessageBoxHelper.ErrorMessage("You are not authorized to access this organization.")
                     Return False
 
                 End If
