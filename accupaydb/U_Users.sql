@@ -6,9 +6,27 @@
 
 DROP PROCEDURE IF EXISTS `U_Users`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `U_Users`(IN `I_RowID` INT(11), IN `I_LastName` VARCHAR(50), IN `I_FirstName` VARCHAR(50), IN `I_MiddleName` VARCHAR(50), IN `I_PositionID` INT(11), IN `I_Created` DATETIME, IN `I_LastUpdBy` INT(11), IN `I_CreatedBy` INT(11), IN `I_LastUpd` DATETIME, IN `I_Status` VARCHAR(10)
-, IN `I_EmailAddress` VARCHAR(50), IN `enc_userid` VARCHAR(50), IN `enc_pword` VARCHAR(50))
-    DETERMINISTIC
+CREATE DEFINER=`root`@`localhost` PROCEDURE `U_Users`(
+	IN `I_RowID` INT(11),
+	IN `I_LastName` VARCHAR(50),
+	IN `I_FirstName` VARCHAR(50),
+	IN `I_MiddleName` VARCHAR(50),
+	IN `I_PositionID` INT(11),
+	IN `I_Created` DATETIME,
+	IN `I_LastUpdBy` INT(11),
+	IN `I_CreatedBy` INT(11),
+	IN `I_LastUpd` DATETIME,
+	IN `I_Status` VARCHAR(10),
+	IN `I_EmailAddress` VARCHAR(50),
+	IN `enc_userid` VARCHAR(50),
+	IN `enc_pword` VARCHAR(50),
+	IN `I_UserLevel` INT(1)
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
 UPDATE user SET
@@ -23,7 +41,8 @@ UPDATE user SET
     `Status` = I_Status,
     EmailAddress = I_EmailAddress
     ,`UserID` = enc_userid
-    ,`Password` = enc_pword
+    ,`Password` = enc_pword,
+    UserLevel = I_UserLevel
 WHERE RowID = I_RowID;END//
 DELIMITER ;
 

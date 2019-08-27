@@ -28,6 +28,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property NightDifferentialTimeTo As TimeSpan
 
+        Public Property IsAgency As Boolean
+
     End Class
 
 End Namespace

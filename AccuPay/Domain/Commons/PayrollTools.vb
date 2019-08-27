@@ -191,4 +191,20 @@ Public Class PayrollTools
 
     End Function
 
+    Public Shared Function CheckIfUsingUserLevel() As Boolean
+
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) Then
+                Return True
+            End If
+
+        End Using
+
+        Return False
+
+    End Function
+
 End Class

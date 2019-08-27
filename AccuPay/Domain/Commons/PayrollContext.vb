@@ -96,6 +96,10 @@ Public Class PayrollContext
 
     Public Overridable Property PayFrequencies As DbSet(Of PayFrequency)
 
+    Public Overridable Property Branches As DbSet(Of Branch)
+
+    Public Overridable Property Users As DbSet(Of User)
+
     Public Sub New()
     End Sub
 
@@ -122,4 +126,5 @@ Public Class PayrollContext
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
     End Sub
+
 End Class

@@ -22,9 +22,9 @@ Partial Class UsersForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Deleteg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.ToolStripSeparator11 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
@@ -41,8 +41,7 @@ Partial Class UsersForm
         Me.tsAuditTrail = New System.Windows.Forms.ToolStripButton()
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
-        Me.dgvGeneral = New System.Windows.Forms.DataGridView()
-        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dgvPrivilege = New System.Windows.Forms.DataGridView()
         Me.Addg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Modifyg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Readg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -75,6 +74,21 @@ Partial Class UsersForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtLastName = New System.Windows.Forms.TextBox()
         Me.dgvUserList = New System.Windows.Forms.DataGridView()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.UserPrivilegeLabel = New System.Windows.Forms.Label()
+        Me.UserLevelLabel = New System.Windows.Forms.Label()
+        Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -82,10 +96,10 @@ Partial Class UsersForm
         Me.c_Mname = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_emailadd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label11 = New System.Windows.Forms.Label()
+        Me.UserLevelDescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserLevelColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip3.SuspendLayout()
-        CType(Me.dgvGeneral, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.dgvPrivilege, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpDetails.SuspendLayout()
         CType(Me.dgvUserList, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -218,53 +232,46 @@ Partial Class UsersForm
         Me.Label8.Text = "USER FORM"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'dgvGeneral
+        'dgvPrivilege
         '
-        Me.dgvGeneral.AllowUserToAddRows = False
-        Me.dgvGeneral.AllowUserToDeleteRows = False
-        Me.dgvGeneral.AllowUserToResizeRows = False
-        Me.dgvGeneral.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.dgvPrivilege.AllowUserToAddRows = False
+        Me.dgvPrivilege.AllowUserToDeleteRows = False
+        Me.dgvPrivilege.AllowUserToResizeRows = False
+        Me.dgvPrivilege.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.dgvGeneral.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvGeneral.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
-        Me.dgvGeneral.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvGeneral.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Modules, Me.Addg, Me.Modifyg, Me.Deleteg, Me.Readg})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvGeneral.DefaultCellStyle = DataGridViewCellStyle2
-        Me.dgvGeneral.Location = New System.Drawing.Point(665, 243)
-        Me.dgvGeneral.Name = "dgvGeneral"
-        Me.dgvGeneral.ReadOnly = True
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvGeneral.RowHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvGeneral.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvGeneral.Size = New System.Drawing.Size(420, 304)
-        Me.dgvGeneral.TabIndex = 1
-        '
-        'Modules
-        '
-        Me.Modules.HeaderText = "Module Name"
-        Me.Modules.Name = "Modules"
-        Me.Modules.ReadOnly = True
-        Me.Modules.Width = 150
+        Me.dgvPrivilege.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPrivilege.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        Me.dgvPrivilege.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvPrivilege.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Modules, Me.Addg, Me.Modifyg, Me.Deleteg, Me.Readg})
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPrivilege.DefaultCellStyle = DataGridViewCellStyle5
+        Me.dgvPrivilege.Location = New System.Drawing.Point(665, 243)
+        Me.dgvPrivilege.Name = "dgvPrivilege"
+        Me.dgvPrivilege.ReadOnly = True
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPrivilege.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
+        Me.dgvPrivilege.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvPrivilege.Size = New System.Drawing.Size(420, 304)
+        Me.dgvPrivilege.TabIndex = 1
         '
         'Addg
         '
@@ -296,6 +303,8 @@ Partial Class UsersForm
         'grpDetails
         '
         Me.grpDetails.BackColor = System.Drawing.Color.White
+        Me.grpDetails.Controls.Add(Me.UserLevelComboBox)
+        Me.grpDetails.Controls.Add(Me.UserLevelLabel)
         Me.grpDetails.Controls.Add(Me.cboxposition)
         Me.grpDetails.Controls.Add(Me.lblAddPosition)
         Me.grpDetails.Controls.Add(Me.Label17)
@@ -334,7 +343,7 @@ Partial Class UsersForm
         '
         Me.cboxposition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboxposition.FormattingEnabled = True
-        Me.cboxposition.Location = New System.Drawing.Point(253, 77)
+        Me.cboxposition.Location = New System.Drawing.Point(256, 77)
         Me.cboxposition.Name = "cboxposition"
         Me.cboxposition.Size = New System.Drawing.Size(210, 21)
         Me.cboxposition.TabIndex = 42
@@ -348,12 +357,13 @@ Partial Class UsersForm
         Me.lblAddPosition.TabIndex = 41
         Me.lblAddPosition.TabStop = True
         Me.lblAddPosition.Text = "Add Position"
+        Me.lblAddPosition.Visible = False
         '
         'Label17
         '
         Me.Label17.AutoSize = True
         Me.Label17.ForeColor = System.Drawing.Color.Red
-        Me.Label17.Location = New System.Drawing.Point(637, 98)
+        Me.Label17.Location = New System.Drawing.Point(637, 108)
         Me.Label17.Name = "Label17"
         Me.Label17.Size = New System.Drawing.Size(11, 13)
         Me.Label17.TabIndex = 40
@@ -363,7 +373,7 @@ Partial Class UsersForm
         '
         Me.Label16.AutoSize = True
         Me.Label16.ForeColor = System.Drawing.Color.Red
-        Me.Label16.Location = New System.Drawing.Point(599, 59)
+        Me.Label16.Location = New System.Drawing.Point(599, 61)
         Me.Label16.Name = "Label16"
         Me.Label16.Size = New System.Drawing.Size(11, 13)
         Me.Label16.TabIndex = 39
@@ -373,7 +383,7 @@ Partial Class UsersForm
         '
         Me.Label15.AutoSize = True
         Me.Label15.ForeColor = System.Drawing.Color.Red
-        Me.Label15.Location = New System.Drawing.Point(589, 22)
+        Me.Label15.Location = New System.Drawing.Point(601, 22)
         Me.Label15.Name = "Label15"
         Me.Label15.Size = New System.Drawing.Size(11, 13)
         Me.Label15.TabIndex = 38
@@ -445,7 +455,7 @@ Partial Class UsersForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(547, 98)
+        Me.Label4.Location = New System.Drawing.Point(547, 109)
         Me.Label4.Name = "Label4"
         Me.Label4.Size = New System.Drawing.Size(91, 13)
         Me.Label4.TabIndex = 29
@@ -453,7 +463,7 @@ Partial Class UsersForm
         '
         'txtConfirmPassword
         '
-        Me.txtConfirmPassword.Location = New System.Drawing.Point(547, 114)
+        Me.txtConfirmPassword.Location = New System.Drawing.Point(547, 125)
         Me.txtConfirmPassword.Name = "txtConfirmPassword"
         Me.txtConfirmPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
         Me.txtConfirmPassword.Size = New System.Drawing.Size(210, 20)
@@ -462,7 +472,7 @@ Partial Class UsersForm
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(547, 59)
+        Me.Label5.Location = New System.Drawing.Point(547, 61)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(53, 13)
         Me.Label5.TabIndex = 27
@@ -470,7 +480,7 @@ Partial Class UsersForm
         '
         'txtPassword
         '
-        Me.txtPassword.Location = New System.Drawing.Point(547, 75)
+        Me.txtPassword.Location = New System.Drawing.Point(547, 77)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
         Me.txtPassword.Size = New System.Drawing.Size(210, 20)
@@ -481,9 +491,9 @@ Partial Class UsersForm
         Me.Label6.AutoSize = True
         Me.Label6.Location = New System.Drawing.Point(547, 22)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(43, 13)
+        Me.Label6.Size = New System.Drawing.Size(55, 13)
         Me.Label6.TabIndex = 25
-        Me.Label6.Text = "User ID"
+        Me.Label6.Text = "Username"
         '
         'txtUserName
         '
@@ -573,9 +583,10 @@ Partial Class UsersForm
         Me.dgvUserList.AllowUserToResizeRows = False
         Me.dgvUserList.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.dgvUserList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvUserList.BackgroundColor = System.Drawing.Color.White
         Me.dgvUserList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvUserList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_userid, Me.c_Position, Me.c_lname, Me.c_fname, Me.c_Mname, Me.c_rowid, Me.c_emailadd})
+        Me.dgvUserList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_userid, Me.c_Position, Me.c_lname, Me.c_fname, Me.c_Mname, Me.c_rowid, Me.c_emailadd, Me.UserLevelDescriptionColumn, Me.UserLevelColumn})
         Me.dgvUserList.Location = New System.Drawing.Point(12, 243)
         Me.dgvUserList.Name = "dgvUserList"
         Me.dgvUserList.ReadOnly = True
@@ -584,9 +595,124 @@ Partial Class UsersForm
         Me.dgvUserList.Size = New System.Drawing.Size(647, 304)
         Me.dgvUserList.TabIndex = 62
         '
+        'Label10
+        '
+        Me.Label10.AutoSize = True
+        Me.Label10.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.Label10.Location = New System.Drawing.Point(8, 216)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(118, 24)
+        Me.Label10.TabIndex = 35
+        Me.Label10.Text = "USER LIST"
+        '
+        'UserPrivilegeLabel
+        '
+        Me.UserPrivilegeLabel.AutoSize = True
+        Me.UserPrivilegeLabel.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
+        Me.UserPrivilegeLabel.Location = New System.Drawing.Point(661, 216)
+        Me.UserPrivilegeLabel.Name = "UserPrivilegeLabel"
+        Me.UserPrivilegeLabel.Size = New System.Drawing.Size(182, 24)
+        Me.UserPrivilegeLabel.TabIndex = 66
+        Me.UserPrivilegeLabel.Text = "USER PRIVILEGE"
+        '
+        'UserLevelLabel
+        '
+        Me.UserLevelLabel.AutoSize = True
+        Me.UserLevelLabel.Location = New System.Drawing.Point(256, 109)
+        Me.UserLevelLabel.Name = "UserLevelLabel"
+        Me.UserLevelLabel.Size = New System.Drawing.Size(58, 13)
+        Me.UserLevelLabel.TabIndex = 43
+        Me.UserLevelLabel.Text = "User Level"
+        '
+        'UserLevelComboBox
+        '
+        Me.UserLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.UserLevelComboBox.FormattingEnabled = True
+        Me.UserLevelComboBox.Location = New System.Drawing.Point(256, 125)
+        Me.UserLevelComboBox.Name = "UserLevelComboBox"
+        Me.UserLevelComboBox.Size = New System.Drawing.Size(210, 21)
+        Me.UserLevelComboBox.TabIndex = 44
+        '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "User ID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.Width = 86
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Position"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.Width = 87
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Last Name"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.Width = 86
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "First Name"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.Width = 86
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Middle Name"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.Width = 86
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Column1"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.Visible = False
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Email Address"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.Width = 87
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "User Level"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.Width = 86
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "Module Name"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        Me.DataGridViewTextBoxColumn9.Visible = False
+        Me.DataGridViewTextBoxColumn9.Width = 150
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Module Name"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        Me.DataGridViewTextBoxColumn10.Width = 150
+        '
+        'Modules
+        '
+        Me.Modules.HeaderText = "Module Name"
+        Me.Modules.Name = "Modules"
+        Me.Modules.ReadOnly = True
+        Me.Modules.Width = 150
+        '
         'c_userid
         '
-        Me.c_userid.HeaderText = "User ID"
+        Me.c_userid.HeaderText = "Username"
         Me.c_userid.Name = "c_userid"
         Me.c_userid.ReadOnly = True
         '
@@ -627,25 +753,18 @@ Partial Class UsersForm
         Me.c_emailadd.Name = "c_emailadd"
         Me.c_emailadd.ReadOnly = True
         '
-        'Label10
+        'UserLevelDescriptionColumn
         '
-        Me.Label10.AutoSize = True
-        Me.Label10.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.Label10.Location = New System.Drawing.Point(8, 216)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(118, 24)
-        Me.Label10.TabIndex = 35
-        Me.Label10.Text = "USER LIST"
+        Me.UserLevelDescriptionColumn.HeaderText = "User Level"
+        Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
+        Me.UserLevelDescriptionColumn.ReadOnly = True
         '
-        'Label11
+        'UserLevelColumn
         '
-        Me.Label11.AutoSize = True
-        Me.Label11.Font = New System.Drawing.Font("Arial", 15.75!, System.Drawing.FontStyle.Bold)
-        Me.Label11.Location = New System.Drawing.Point(661, 216)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(182, 24)
-        Me.Label11.TabIndex = 66
-        Me.Label11.Text = "USER PRIVILEGE"
+        Me.UserLevelColumn.HeaderText = "User Level (Index)"
+        Me.UserLevelColumn.Name = "UserLevelColumn"
+        Me.UserLevelColumn.ReadOnly = True
+        Me.UserLevelColumn.Visible = False
         '
         'UsersForm
         '
@@ -654,9 +773,9 @@ Partial Class UsersForm
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(220, Byte), Integer), CType(CType(190, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(1124, 559)
         Me.ControlBox = False
-        Me.Controls.Add(Me.Label11)
+        Me.Controls.Add(Me.UserPrivilegeLabel)
         Me.Controls.Add(Me.Label10)
-        Me.Controls.Add(Me.dgvGeneral)
+        Me.Controls.Add(Me.dgvPrivilege)
         Me.Controls.Add(Me.ToolStrip3)
         Me.Controls.Add(Me.lblSaveMsg)
         Me.Controls.Add(Me.Label8)
@@ -670,7 +789,7 @@ Partial Class UsersForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.ToolStrip3.ResumeLayout(False)
         Me.ToolStrip3.PerformLayout()
-        CType(Me.dgvGeneral, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.dgvPrivilege, System.ComponentModel.ISupportInitialize).EndInit()
         Me.grpDetails.ResumeLayout(False)
         Me.grpDetails.PerformLayout()
         CType(Me.dgvUserList, System.ComponentModel.ISupportInitialize).EndInit()
@@ -694,7 +813,7 @@ Partial Class UsersForm
     Friend WithEvents tsAuditTrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents lblSaveMsg As System.Windows.Forms.Label
     Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents dgvGeneral As System.Windows.Forms.DataGridView
+    Friend WithEvents dgvPrivilege As System.Windows.Forms.DataGridView
     Friend WithEvents Modules As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Addg As System.Windows.Forms.DataGridViewCheckBoxColumn
     Friend WithEvents Modifyg As System.Windows.Forms.DataGridViewCheckBoxColumn
@@ -721,20 +840,34 @@ Partial Class UsersForm
     Friend WithEvents txtLastName As System.Windows.Forms.TextBox
     Friend WithEvents dgvUserList As System.Windows.Forms.DataGridView
     Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label11 As System.Windows.Forms.Label
+    Friend WithEvents UserPrivilegeLabel As System.Windows.Forms.Label
     Friend WithEvents Label17 As System.Windows.Forms.Label
     Friend WithEvents Label16 As System.Windows.Forms.Label
     Friend WithEvents Label15 As System.Windows.Forms.Label
     Friend WithEvents Label14 As System.Windows.Forms.Label
     Friend WithEvents Label13 As System.Windows.Forms.Label
     Friend WithEvents Label12 As System.Windows.Forms.Label
-    Friend WithEvents c_userid As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_Position As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_lname As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_fname As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_Mname As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_rowid As System.Windows.Forms.DataGridViewTextBoxColumn
-    Friend WithEvents c_emailadd As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents lblAddPosition As System.Windows.Forms.LinkLabel
     Friend WithEvents cboxposition As System.Windows.Forms.ComboBox
+    Friend WithEvents UserLevelComboBox As ComboBox
+    Friend WithEvents UserLevelLabel As Label
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents c_userid As DataGridViewTextBoxColumn
+    Friend WithEvents c_Position As DataGridViewTextBoxColumn
+    Friend WithEvents c_lname As DataGridViewTextBoxColumn
+    Friend WithEvents c_fname As DataGridViewTextBoxColumn
+    Friend WithEvents c_Mname As DataGridViewTextBoxColumn
+    Friend WithEvents c_rowid As DataGridViewTextBoxColumn
+    Friend WithEvents c_emailadd As DataGridViewTextBoxColumn
+    Friend WithEvents UserLevelDescriptionColumn As DataGridViewTextBoxColumn
+    Friend WithEvents UserLevelColumn As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
 End Class
