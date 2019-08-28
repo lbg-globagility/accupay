@@ -166,7 +166,13 @@ Public Class PayrollGeneration
             _paystub.EmployeeID = _employee.RowID
 
             If _employee.IsMonthly Or _employee.IsFixed Then
-                If _employee.WorkDaysPerYear > 0 Then
+                If _policy.UseShiftSchedule Then
+                    Dim totalWorkHours = _employeeDutySchedules.Where(Function(ss) ss.EmployeeID.Value = _employee.RowID.Value).Sum(Function(ss) ss.WorkHours)
+
+                    _paystub.BasicHours = totalWorkHours
+                End If
+
+                If _paystub.BasicHours = 0 And _employee.WorkDaysPerYear > 0 Then
                     Dim workDaysPerPayPeriod = _employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear / CalendarConstants.SemiMonthlyPayPeriodsPerMonth
 
                     _paystub.BasicHours = workDaysPerPayPeriod * 8
