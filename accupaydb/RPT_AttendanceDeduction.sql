@@ -21,7 +21,7 @@ SELECT
     ,ROUND(SUM(et.HoursLateAmount), 2) `DatCol7`
     ,ROUND(SUM(et.UndertimeHoursAmount), 2) `DatCol9`
     ,SUM((et.Absent > 0)) `DatCol4`
-    ,ROUND(SUM( (et.HoursLate * mins_per_hour) ), 2) `DatCol6`
+    ,ROUND(SUM( et.HoursLate ), 2) `DatCol6`
     ,ROUND(SUM(et.UndertimeHours), 2) `DatCol8`
 FROM employeetimeentry et
 INNER JOIN employee e
