@@ -65,7 +65,9 @@ Public Class SssCalculator
                                              salary As Salary,
                                              employee As Employee) As Decimal
 
-        Dim calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary)
+        Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
+
+        Dim calculationBasis = _settings.GetEnum("SocialSecuritySystem.CalculationBasis", SssCalculationBasis.BasicSalary, policyByOrganization)
 
         Select Case calculationBasis
             Case SssCalculationBasis.BasicSalary
@@ -82,7 +84,7 @@ Public Class SssCalculator
 
             Case SssCalculationBasis.BasicMinusDeductions
 
-                Return If(previousPaystub?.TotalDaysPayWithoutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithoutOvertimeAndLeave
+                Return If(previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithOutOvertimeAndLeave
 
             Case Else
 

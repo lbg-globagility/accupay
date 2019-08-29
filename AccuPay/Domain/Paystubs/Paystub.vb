@@ -154,6 +154,9 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
 
+        <ForeignKey("PayPeriodID")>
+        Public Overridable Property PayPeriod As PayPeriod
+
         Public Overridable Property Adjustments As ICollection(Of Adjustment)
 
         Public Overridable Property ActualAdjustments As ICollection(Of ActualAdjustment)
@@ -252,6 +255,17 @@ Namespace Global.AccuPay.Entity
                     SpecialHolidayRestDayHours +
                     RegularHolidayHours +
                     RegularHolidayRestDayHours
+            End Get
+        End Property
+
+        Public ReadOnly Property TotalDaysPayWithOutOvertimeAndLeave As Decimal
+            Get
+                Return RegularPay +
+                    RestDayPay +
+                    SpecialHolidayPay +
+                    SpecialHolidayRestDayPay +
+                    RegularHolidayPay +
+                    RegularHolidayRestDayPay
             End Get
         End Property
 

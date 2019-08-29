@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports AccuPay.Enums
+Imports AccuPay.Utils
 
 Public Class HRISForm
 
@@ -56,7 +57,7 @@ Public Class HRISForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If formuserprivilege.Count > 0 Then
+        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -328,6 +329,59 @@ Public Class HRISForm
         If Not Debugger.IsAttached Then
             EmployeeExperimentalToolStripMenuItem.Visible = False
         End If
+
+        PrepareFormForUserLevelAuthorizations()
+
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                DivisionToolStripMenuItem.Visible = False
+
+                CheckListToolStripMenuItem.Visible = False
+                AwardsToolStripMenuItem.Visible = False
+                CertificatesToolStripMenuItem.Visible = False
+                EducBGToolStripMenuItem.Visible = False
+                PrevEmplyrToolStripMenuItem.Visible = False
+                PromotionToolStripMenuItem.Visible = False
+                DisciplinaryActionToolStripMenuItem.Visible = False
+                EmpSalToolStripMenuItem.Visible = False
+                BonusToolStripMenuItem.Visible = False
+                LeaveToolStripMenuItem.Visible = False
+                OfficialBusinessToolStripMenuItem.Visible = False
+                AttachmentToolStripMenuItem.Visible = False
+                OffSetToolStripMenuItem.Visible = False
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    LoansToolStripMenuItem.Visible = False
+                    AllowanceToolStripMenuItem.Visible = False
+                    OvertimeToolStripMenuItem.Visible = False
+
+                End If
+
+            End If
+
+        End Using
 
     End Sub
 

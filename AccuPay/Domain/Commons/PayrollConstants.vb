@@ -27,3 +27,15 @@ Public Enum ThirteenthMonthCalculationBasis
     RegularPayAndAllowance
     DailyRate
 End Enum
+
+Public Enum WithholdingTaxCalculationBasis
+    Earnings
+    GrossPay
+    BasicSalary
+End Enum
+
+Public Enum PayrollSummaryAdjustmentBreakdownPolicy
+    TotalOnly
+    BreakdownOnly
+    Both
+End Enum

@@ -1,9 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports System.Collections.ReadOnlyCollectionBase
-Imports System.Collections.Generic
 Imports System.Collections.ObjectModel
+Imports AccuPay.Entity
 
 Public Class ListOfValueCollection
 
@@ -18,13 +16,41 @@ Public Class ListOfValueCollection
         Return value IsNot Nothing
     End Function
 
-    Public Function GetValue(lic As String) As String
-        Dim value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+    Public Function GetValue(lic As String, Optional findByOrganization As Boolean = False) As String
+
+        Dim value As ListOfValue
+
+        If findByOrganization Then
+
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic AndAlso f.OrganizationID IsNot Nothing AndAlso f.OrganizationID.Value = z_OrganizationID)
+
+            If value Is Nothing Then
+                value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+            End If
+        Else
+
+            value = _values?.FirstOrDefault(Function(f) f.LIC = lic)
+        End If
+
         Return value?.DisplayValue
     End Function
 
-    Public Function GetValue(type As String, lic As String) As String
-        Dim value = _values?.FirstOrDefault(Function(f) f.Type = type And f.LIC = lic)
+    Public Function GetValue(type As String, lic As String, Optional findByOrganization As Boolean = False) As String
+
+        Dim value As ListOfValue
+
+        If findByOrganization Then
+
+            value = _values?.FirstOrDefault(Function(f) f.Type = type AndAlso f.LIC = lic AndAlso f.OrganizationID IsNot Nothing AndAlso f.OrganizationID.Value = z_OrganizationID)
+
+            If value Is Nothing Then
+                value = _values?.FirstOrDefault(Function(f) f.Type = type AndAlso f.LIC = lic)
+            End If
+        Else
+
+            value = _values?.FirstOrDefault(Function(f) f.Type = type AndAlso f.LIC = lic)
+        End If
+
         Return value?.DisplayValue
     End Function
 
@@ -51,13 +77,13 @@ Public Class ListOfValueCollection
         Return If(GetStringValue(names.Item1, names.Item2), [default])
     End Function
 
-    Public Function GetEnum(Of T As {Structure})(name As String, Optional [default] As T = Nothing) As T
+    Public Function GetEnum(Of T As {Structure})(name As String, Optional [default] As T = Nothing, Optional findByOrganization As Boolean = False) As T
         Dim names = Split(name)
-        Return GetEnum(Of T)(names.Item1, names.Item2, [default])
+        Return GetEnum(Of T)(names.Item1, names.Item2, [default], findByOrganization)
     End Function
 
-    Public Function GetEnum(Of T As {Structure})(type As String, lic As String, Optional [default] As T = Nothing) As T
-        Dim value = GetValue(type, lic)
+    Public Function GetEnum(Of T As {Structure})(type As String, lic As String, Optional [default] As T = Nothing, Optional findByOrganization As Boolean = False) As T
+        Dim value = GetValue(type, lic, findByOrganization)
 
         If value Is Nothing Then
             Return [default]

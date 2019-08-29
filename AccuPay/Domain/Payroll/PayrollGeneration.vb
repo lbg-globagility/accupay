@@ -238,6 +238,20 @@ Public Class PayrollGeneration
 
         CalculateAllowances(allowanceItems)
 
+        Dim newLoanTransactions = ComputeLoans()
+
+        If _paystub.TotalEarnings < 0 Then
+            _paystub.TotalEarnings = 0
+        End If
+
+        Dim grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance
+
+        'gross pay and total earnings should be higher than the goverment deduction calculators
+        'since it is sometimes used in computing the basis pay for the deductions
+        'depending on the organization's policy
+        _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance
+        _paystub.TotalAdjustments = _paystub.Adjustments.Sum(Function(a) a.Amount)
+
         Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
         socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
 
@@ -250,16 +264,6 @@ Public Class PayrollGeneration
         Dim withholdingTaxCalculator = New WithholdingTaxCalculator(_settings, _resources.FilingStatuses, _resources.WithholdingTaxBrackets, _resources.DivisionMinimumWages)
         withholdingTaxCalculator.Calculate(_paystub, _previousPaystub, _employee, _payPeriod, _salary)
 
-        newLoanTransactions = ComputeLoans()
-
-        If _paystub.TotalEarnings < 0 Then
-            _paystub.TotalEarnings = 0
-        End If
-
-        Dim grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance
-
-        _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance
-        _paystub.TotalAdjustments = _paystub.Adjustments.Sum(Function(a) a.Amount)
         _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments)
 
         Dim actualCalculator = New PaystubActualCalculator()

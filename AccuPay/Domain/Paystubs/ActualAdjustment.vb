@@ -7,35 +7,39 @@ Namespace Global.AccuPay.Entity
 
     <Table("paystubadjustmentactual")>
     Public Class ActualAdjustment
+        Implements IAdjustment
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer?
+        Public Property RowID As Integer? Implements IAdjustment.RowID
 
-        Public Property OrganizationID As Integer?
+        Public Property OrganizationID As Integer? Implements IAdjustment.OrganizationID
 
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property Created As Date
+        Public Property Created As Date Implements IAdjustment.Created
 
-        Public Property CreatedBy As Integer?
+        Public Property CreatedBy As Integer? Implements IAdjustment.CreatedBy
 
         <DatabaseGenerated(DatabaseGeneratedOption.Computed)>
-        Public Property LastUpd As Date?
+        Public Property LastUpd As Date? Implements IAdjustment.LastUpd
 
-        Public Property LastUpdBy As Integer?
+        Public Property LastUpdBy As Integer? Implements IAdjustment.LastUpdBy
 
-        Public Property PayStubID As Integer?
+        Public Property PayStubID As Integer? Implements IAdjustment.PayStubID
 
-        Public Property ProductID As Integer?
+        Public Property ProductID As Integer? Implements IAdjustment.ProductID
 
-        Public Property PayAmount As Decimal
+        Public Property PayAmount As Decimal Implements IAdjustment.PayAmount
 
-        Public Property Comment As String
+        Public Property Comment As String Implements IAdjustment.Comment
 
-        Public Property IsActual As Boolean
+        Public Property IsActual As Boolean Implements IAdjustment.IsActual
 
         <ForeignKey("PayStubID")>
-        Public Overridable Property Paystub As Paystub
+        Public Overridable Property Paystub As Paystub Implements IAdjustment.Paystub
+
+        <ForeignKey("ProductID")>
+        Public Overridable Property Product As Product Implements IAdjustment.Product
 
     End Class
 
