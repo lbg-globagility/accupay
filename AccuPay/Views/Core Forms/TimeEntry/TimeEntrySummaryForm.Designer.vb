@@ -416,7 +416,7 @@ Partial Class TimeEntrySummaryForm
         Me.employeesDataGridView.ReadOnly = True
         Me.employeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.employeesDataGridView.Size = New System.Drawing.Size(352, 440)
+        Me.employeesDataGridView.Size = New System.Drawing.Size(312, 440)
         Me.employeesDataGridView.TabIndex = 137
         '
         'cemp_RowID
@@ -465,7 +465,7 @@ Partial Class TimeEntrySummaryForm
         Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.regenerateTimeEntryButton, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm, Me.tstbnResetLeaveBalance, Me.ToolStripLabel1, Me.tsBtnDeleteTimeEntry, Me.tsbtnrecalc})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
-        Me.ToolStrip1.Size = New System.Drawing.Size(846, 25)
+        Me.ToolStrip1.Size = New System.Drawing.Size(886, 25)
         Me.ToolStrip1.TabIndex = 125
         Me.ToolStrip1.Text = "ToolStrip1"
         '
@@ -583,7 +583,7 @@ Partial Class TimeEntrySummaryForm
         Me.searchTextBox.Location = New System.Drawing.Point(80, 16)
         Me.searchTextBox.MaxLength = 50
         Me.searchTextBox.Name = "searchTextBox"
-        Me.searchTextBox.Size = New System.Drawing.Size(259, 22)
+        Me.searchTextBox.Size = New System.Drawing.Size(219, 22)
         Me.searchTextBox.TabIndex = 64
         '
         'TabControl1
@@ -595,10 +595,10 @@ Partial Class TimeEntrySummaryForm
         Me.TabControl1.Controls.Add(Me.tbpemptimeent)
         Me.TabControl1.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed
         Me.TabControl1.ItemSize = New System.Drawing.Size(152, 25)
-        Me.TabControl1.Location = New System.Drawing.Point(368, 24)
+        Me.TabControl1.Location = New System.Drawing.Point(328, 24)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
-        Me.TabControl1.Size = New System.Drawing.Size(860, 511)
+        Me.TabControl1.Size = New System.Drawing.Size(900, 511)
         Me.TabControl1.TabIndex = 132
         '
         'tbpemptimeent
@@ -609,7 +609,7 @@ Partial Class TimeEntrySummaryForm
         Me.tbpemptimeent.Location = New System.Drawing.Point(4, 4)
         Me.tbpemptimeent.Name = "tbpemptimeent"
         Me.tbpemptimeent.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpemptimeent.Size = New System.Drawing.Size(852, 478)
+        Me.tbpemptimeent.Size = New System.Drawing.Size(892, 478)
         Me.tbpemptimeent.TabIndex = 0
         Me.tbpemptimeent.Text = "EMPLOYEE TIME ENTRY              "
         Me.tbpemptimeent.UseVisualStyleBackColor = True
@@ -623,7 +623,7 @@ Partial Class TimeEntrySummaryForm
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel1.Location = New System.Drawing.Point(3, 28)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(846, 447)
+        Me.Panel1.Size = New System.Drawing.Size(886, 447)
         Me.Panel1.TabIndex = 486
         '
         'timeEntriesDataGridView
@@ -651,7 +651,7 @@ Partial Class TimeEntrySummaryForm
         Me.timeEntriesDataGridView.Name = "timeEntriesDataGridView"
         Me.timeEntriesDataGridView.ReadOnly = True
         Me.timeEntriesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(829, 397)
+        Me.timeEntriesDataGridView.Size = New System.Drawing.Size(869, 397)
         Me.timeEntriesDataGridView.TabIndex = 494
         '
         'payPeriodsDataGridView
@@ -684,7 +684,7 @@ Partial Class TimeEntrySummaryForm
         Me.payPeriodsDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.payPeriodsDataGridView.RowTemplate.Height = 95
         Me.payPeriodsDataGridView.ScrollBars = System.Windows.Forms.ScrollBars.None
-        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(829, 86)
+        Me.payPeriodsDataGridView.Size = New System.Drawing.Size(869, 86)
         Me.payPeriodsDataGridView.TabIndex = 493
         '
         'Column8
@@ -1154,7 +1154,7 @@ Partial Class TimeEntrySummaryForm
         Me.Panel2.Controls.Add(Me.Label29)
         Me.Panel2.Location = New System.Drawing.Point(8, 32)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(352, 56)
+        Me.Panel2.Size = New System.Drawing.Size(312, 56)
         Me.Panel2.TabIndex = 139
         '
         'ctxtmenstrpTimeEntry
@@ -2195,6 +2195,7 @@ Partial Class TimeEntrySummaryForm
         '
         Me.ColumnRowID.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
         Me.ColumnRowID.DataPropertyName = "RowID"
+        Me.ColumnRowID.Frozen = True
         Me.ColumnRowID.HeaderText = "RowID"
         Me.ColumnRowID.Name = "ColumnRowID"
         Me.ColumnRowID.ReadOnly = True
@@ -2207,6 +2208,7 @@ Partial Class TimeEntrySummaryForm
         Me.ColumnDate.DataPropertyName = "EntryDate"
         DataGridViewCellStyle4.Format = "MM/dd/yyyy"
         Me.ColumnDate.DefaultCellStyle = DataGridViewCellStyle4
+        Me.ColumnDate.Frozen = True
         Me.ColumnDate.HeaderText = "Date"
         Me.ColumnDate.MinimumWidth = 80
         Me.ColumnDate.Name = "ColumnDate"
@@ -2218,6 +2220,7 @@ Partial Class TimeEntrySummaryForm
         Me.ColumnDay.DataPropertyName = "EntryDate"
         DataGridViewCellStyle5.Format = "ddd"
         Me.ColumnDay.DefaultCellStyle = DataGridViewCellStyle5
+        Me.ColumnDay.Frozen = True
         Me.ColumnDay.HeaderText = "Day"
         Me.ColumnDay.Name = "ColumnDay"
         Me.ColumnDay.ReadOnly = True
@@ -2230,6 +2233,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle6.Format = "HH:mm"
         DataGridViewCellStyle6.NullValue = Nothing
         Me.ColumnShiftFrom.DefaultCellStyle = DataGridViewCellStyle6
+        Me.ColumnShiftFrom.Frozen = True
         Me.ColumnShiftFrom.HeaderText = "Shift From"
         Me.ColumnShiftFrom.Name = "ColumnShiftFrom"
         Me.ColumnShiftFrom.ReadOnly = True
@@ -2241,6 +2245,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle7.Format = "HH:mm"
         Me.ColumnShiftTo.DefaultCellStyle = DataGridViewCellStyle7
+        Me.ColumnShiftTo.Frozen = True
         Me.ColumnShiftTo.HeaderText = "Shift To"
         Me.ColumnShiftTo.Name = "ColumnShiftTo"
         Me.ColumnShiftTo.ReadOnly = True
@@ -2249,6 +2254,7 @@ Partial Class TimeEntrySummaryForm
         'ColumnDayType
         '
         Me.ColumnDayType.DataPropertyName = "DayType"
+        Me.ColumnDayType.Frozen = True
         Me.ColumnDayType.HeaderText = "Day Type"
         Me.ColumnDayType.Name = "ColumnDayType"
         Me.ColumnDayType.ReadOnly = True
@@ -2260,6 +2266,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle8.Format = "HH:mm"
         Me.ColumnOTStart.DefaultCellStyle = DataGridViewCellStyle8
+        Me.ColumnOTStart.Frozen = True
         Me.ColumnOTStart.HeaderText = "OT Start"
         Me.ColumnOTStart.Name = "ColumnOTStart"
         Me.ColumnOTStart.ReadOnly = True
@@ -2271,6 +2278,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle9.Format = "HH:mm"
         Me.ColumnOTEnd.DefaultCellStyle = DataGridViewCellStyle9
+        Me.ColumnOTEnd.Frozen = True
         Me.ColumnOTEnd.HeaderText = "OT End"
         Me.ColumnOTEnd.Name = "ColumnOTEnd"
         Me.ColumnOTEnd.ReadOnly = True
@@ -2282,6 +2290,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle10.Format = "HH:mm"
         Me.ColumnTimeIn.DefaultCellStyle = DataGridViewCellStyle10
+        Me.ColumnTimeIn.Frozen = True
         Me.ColumnTimeIn.HeaderText = "Time In"
         Me.ColumnTimeIn.Name = "ColumnTimeIn"
         Me.ColumnTimeIn.ReadOnly = True
@@ -2293,6 +2302,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle11.Format = "HH:mm"
         Me.ColumnTimeOut.DefaultCellStyle = DataGridViewCellStyle11
+        Me.ColumnTimeOut.Frozen = True
         Me.ColumnTimeOut.HeaderText = "Time Out"
         Me.ColumnTimeOut.Name = "ColumnTimeOut"
         Me.ColumnTimeOut.ReadOnly = True
@@ -2304,6 +2314,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle12.Format = "HH:mm"
         Me.ColumnLeaveStart.DefaultCellStyle = DataGridViewCellStyle12
+        Me.ColumnLeaveStart.Frozen = True
         Me.ColumnLeaveStart.HeaderText = "LV Start"
         Me.ColumnLeaveStart.Name = "ColumnLeaveStart"
         Me.ColumnLeaveStart.ReadOnly = True
@@ -2315,6 +2326,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle13.Format = "HH:mm"
         Me.ColumnLeaveEnd.DefaultCellStyle = DataGridViewCellStyle13
+        Me.ColumnLeaveEnd.Frozen = True
         Me.ColumnLeaveEnd.HeaderText = "LV End"
         Me.ColumnLeaveEnd.Name = "ColumnLeaveEnd"
         Me.ColumnLeaveEnd.ReadOnly = True
@@ -2326,6 +2338,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle14.Format = "HH:mm"
         Me.ColumnOBStart.DefaultCellStyle = DataGridViewCellStyle14
+        Me.ColumnOBStart.Frozen = True
         Me.ColumnOBStart.HeaderText = "OB Start"
         Me.ColumnOBStart.Name = "ColumnOBStart"
         Me.ColumnOBStart.ReadOnly = True
@@ -2337,6 +2350,7 @@ Partial Class TimeEntrySummaryForm
         DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
         DataGridViewCellStyle15.Format = "HH:mm"
         Me.ColumnOBEnd.DefaultCellStyle = DataGridViewCellStyle15
+        Me.ColumnOBEnd.Frozen = True
         Me.ColumnOBEnd.HeaderText = "OB End"
         Me.ColumnOBEnd.Name = "ColumnOBEnd"
         Me.ColumnOBEnd.ReadOnly = True
