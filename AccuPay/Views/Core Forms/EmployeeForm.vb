@@ -25,6 +25,8 @@ Public Class EmployeeForm
 
     Private threadArrayList As New List(Of Thread)
 
+    Private _branches As New List(Of Branch)
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
@@ -728,6 +730,11 @@ Public Class EmployeeForm
             cboEmpType.Focus()
             WarnBalloon("Please select an employee type.", "Invalid employee type", lblforballoon, 0, -69)
             Exit Sub
+        ElseIf Trim(cboEmpStat.Text) = "" Then
+            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+            cboEmpStat.Focus()
+            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
+            Exit Sub
         ElseIf Trim(txtFName.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             txtFName.Focus()
@@ -738,23 +745,20 @@ Public Class EmployeeForm
             txtLName.Focus()
             WarnBalloon("Please input last name.", "Invalid last name", lblforballoon, 0, -69)
             Exit Sub
-
         ElseIf Trim(cboMaritStat.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboMaritStat.Focus()
             WarnBalloon("Please input marital status.", "Invalid marital status", lblforballoon, 0, -69)
             Exit Sub
-
         ElseIf Trim(cboPayFreq.Text) = "" Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
             cboPayFreq.Focus()
             WarnBalloon("Please input a pay frequency.", "Invalid Pay Frequency", lblforballoon, 0, -69)
             Exit Sub
-
-        ElseIf Trim(cboEmpStat.Text) = "" Then
+        ElseIf String.IsNullOrWhiteSpace(txtWorkDaysPerYear.Text) OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpStat.Focus()
-            WarnBalloon("Please input an Employee status.", "Invalid Employee status", lblforballoon, 0, -69)
+            txtWorkDaysPerYear.Focus()
+            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
             Exit Sub
 
         ElseIf rdbDirectDepo.Checked Then
@@ -773,6 +777,9 @@ Public Class EmployeeForm
 
         ElseIf positID = "" Then
 
+            'this fucking elseif block skips over the next elseif
+            'don't put another elseif at the bottom
+
             positID = EXECQUER("SELECT RowID FROM position WHERE PositionName='" & cboPosit.Text & "' AND OrganizationID='" & orgztnID & "';")
 
             If positID = "" Then
@@ -782,12 +789,6 @@ Public Class EmployeeForm
                 WarnBalloon("Please input employee position.", "Invalid Position", lblforballoon, 0, -69)
                 Exit Sub
             End If
-
-        ElseIf Trim(txtWorkDaysPerYear.Text) = "" OrElse ObjectUtils.ToDecimal(txtWorkDaysPerYear.Text) <= 0 Then
-            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-            cboEmpStat.Focus()
-            WarnBalloon("Please input a valid work days per year.", "Invalid Work Days per Year", lblforballoon, 0, -69)
-            Exit Sub
         End If
 
         Dim employee_RowID = Nothing
@@ -886,7 +887,8 @@ Public Class EmployeeForm
                            (Not chkbxRevealInPayroll.Checked),
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
-                           0)
+                           0,
+                           GetSelectedBranch()?.RowID)
             succeed = new_eRowID IsNot Nothing
 
             'this is during edit
@@ -1030,6 +1032,8 @@ Public Class EmployeeForm
 
             .Cells("LateGracePeriod").Value = txtUTgrace.Text
             .Cells("AgencyName").Value = cboAgency.Text
+
+            .Cells("BranchID").Value = GetSelectedBranch()?.RowID
 
         End With
         tsbtnNewEmp.Enabled = True
@@ -1422,7 +1426,55 @@ Public Class EmployeeForm
 
         employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
 
+        PrepareFormForUserLevelAuthorizations()
+
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                tabctrlemp.TabPages.Remove(tbpempchklist)
+                tabctrlemp.TabPages.Remove(tbpAwards)
+                tabctrlemp.TabPages.Remove(tbpCertifications)
+                tabctrlemp.TabPages.Remove(tbpEducBG)
+                tabctrlemp.TabPages.Remove(tbpPrevEmp)
+                tabctrlemp.TabPages.Remove(tbpPromotion)
+                tabctrlemp.TabPages.Remove(tbpDiscipAct)
+                tabctrlemp.TabPages.Remove(tbpNewSalary)
+                tabctrlemp.TabPages.Remove(tbpBonus)
+                tabctrlemp.TabPages.Remove(tbpLeave)
+                tabctrlemp.TabPages.Remove(tbpOBF)
+                tabctrlemp.TabPages.Remove(tbpAttachment)
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    tabctrlemp.TabPages.Remove(tbpEmpOT)
+
+                End If
+
+            End If
+
+        End Using
+
     End Sub
 
     Private Sub Employee_ResizeEnd(sender As Object, e As EventArgs) Handles Me.ResizeEnd
@@ -1525,7 +1577,7 @@ Public Class EmployeeForm
             With dgvEmp.CurrentRow
                 Dim empPix() As DataRow
                 publicEmpRowID = .Cells("RowID").Value
-                If sameEmpID <> .Cells("RowID").Value Then
+                If IsDBNull(.Cells("RowID").Value) = False AndAlso sameEmpID <> .Cells("RowID").Value Then
 
                     sameEmpID = .Cells("RowID").Value
 
@@ -1766,6 +1818,20 @@ Public Class EmployeeForm
                             MaskedTextBox2.Text = CDate(date_value_string(1)).ToShortDateString
                         End If
                     End If
+
+                    Dim branchId = .Cells("BranchID").Value
+                    Dim branch = _branches.
+                        Where(Function(b) Nullable.Equals(b.RowID, branchId)).
+                        FirstOrDefault
+
+                    Dim branchIndex As Integer = -1
+
+                    If branch IsNot Nothing Then
+                        branchIndex = _branches.IndexOf(branch)
+                    End If
+
+                    BranchComboBox.SelectedIndex = branchIndex
+
                     AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
 
                 ElseIf selectedTab Is tbpAwards Then
@@ -3300,6 +3366,8 @@ Public Class EmployeeForm
 
             enlistToCboBox("SELECT DisplayValue FROM listofval WHERE `Type`='Bank Names';", cbobank)
 
+            ShowBranch()
+
             Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT '' AS RowID, '' AS AgencyName" &
                                                                  " UNION" &
                                                                  " SELECT RowID,AgencyName FROM agency WHERE OrganizationID='" & orgztnID & "' AND IsActive=1;")
@@ -3403,6 +3471,51 @@ Public Class EmployeeForm
         dgvEmp_SelectionChanged(sender, e)
 
     End Sub
+
+    Private Sub ShowBranch()
+
+        Using context As New PayrollContext
+
+            _branches = context.Branches.
+                                Where(Function(b) b.OrganizationID = z_OrganizationID).
+                                ToList
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showBranch = settings.GetBoolean("Employee Policy.ShowBranch", False)
+
+            If showBranch = False Then
+
+                BranchComboBox.Visible = False
+                BranchLabel.Visible = False
+                AddBranchLinkButton.Visible = False
+
+                Return
+
+            End If
+
+            BranchComboBox.Visible = True
+            BranchLabel.Visible = True
+            AddBranchLinkButton.Visible = True
+
+            BranchComboBox.DisplayMember = "Name"
+            BranchComboBox.DataSource = _branches
+
+        End Using
+
+    End Sub
+
+    Private Function GetSelectedBranch() As Branch
+
+        If BranchComboBox.SelectedIndex >= 0 AndAlso BranchComboBox.SelectedIndex < _branches.Count Then
+
+            Return _branches(BranchComboBox.SelectedIndex)
+
+        End If
+
+        Return Nothing
+
+    End Function
 
     Private Sub tbpEmployee_Leave(sender As Object, e As EventArgs) 'Handles tbpEmployee.Leave
         tbpEmployee.Text = "PERSON"
@@ -12277,6 +12390,43 @@ Public Class EmployeeForm
         showAuditTrail.Show()
         showAuditTrail.loadAudTrail(view_IDMed)
         showAuditTrail.BringToFront()
+
+    End Sub
+
+    Private Async Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+
+        Dim form As New AddBranchForm
+        form.ShowDialog()
+
+        If form.HasChanges Then
+
+            Dim branchId = GetSelectedBranch()?.RowID
+
+            If form.LastBranchId IsNot Nothing Then
+
+                branchId = form.LastBranchId
+
+            End If
+
+            Using context As New PayrollContext
+
+                _branches = Await context.Branches.Where(Function(b) b.OrganizationID = z_OrganizationID).ToListAsync
+
+                BranchComboBox.DataSource = _branches
+
+            End Using
+
+            Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
+
+            If currentBranch Is Nothing Then
+
+                BranchComboBox.SelectedIndex = -1
+            Else
+
+                BranchComboBox.SelectedIndex = _branches.IndexOf(currentBranch)
+            End If
+
+        End If
 
     End Sub
 

@@ -10,7 +10,6 @@
 
     Private Sub dutyshift_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-
         view_ID = VIEW_privilege("Employee Shift", orgztnID)
 
         loadShift()
@@ -30,8 +29,8 @@
 
         For Each drow As DataRow In shifttable.Rows
 
-            dgvshift.Rows.Add(drow("RowID"), _
-                              Format(CDate(drow("TimeFrom")), "hh:mm tt"), _
+            dgvshift.Rows.Add(drow("RowID"),
+                              Format(CDate(drow("TimeFrom")), "hh:mm tt"),
                               drow("TimeTo"))
 
         Next
@@ -58,7 +57,7 @@
 
         'dtpTimeFrom.Focus()
 
-        MDIPrimaryForm.tsbtnGeneral_Click(sender, e)
+        MDIPrimaryForm.ToolStripButton1_Click(sender, e)
 
         GeneralForm.ChangeForm(ShiftEntryForm)
         previousForm = ShiftEntryForm
@@ -87,23 +86,20 @@
             Exit Sub
         End If
 
-
         For Each dgvrow As DataGridViewRow In dgvshift.Rows
             With dgvrow
                 If .IsNewRow Then
-
                 Else
                     If Val(.Cells("shf_RowID").Value) = 0 Then
                         'shf_TimeFrom
 
-                        .Cells("shf_RowID").Value = INSUPD_shift(, _
-                                         MilitTime(.Cells("shf_TimeFrom").Value), _
+                        .Cells("shf_RowID").Value = INSUPD_shift(,
+                                         MilitTime(.Cells("shf_TimeFrom").Value),
                                          MilitTime(.Cells("shf_TimeTo").Value))
-
                     Else
                         If listofEditRowShift.Contains(.Cells("shf_RowID").Value) Then
-                            INSUPD_shift(.Cells("shf_RowID").Value, _
-                                         MilitTime(.Cells("shf_TimeFrom").Value), _
+                            INSUPD_shift(.Cells("shf_RowID").Value,
+                                         MilitTime(.Cells("shf_TimeFrom").Value),
                                          MilitTime(.Cells("shf_TimeTo").Value))
 
                         End If
@@ -121,8 +117,8 @@
 
     End Sub
 
-    Function INSUPD_shift(Optional sh_RowID As Object = Nothing, _
-                          Optional sh_TimeFrom As Object = Nothing, _
+    Function INSUPD_shift(Optional sh_RowID As Object = Nothing,
+                          Optional sh_TimeFrom As Object = Nothing,
                           Optional sh_TimeTo As Object = Nothing) As Object
 
         Dim params(5, 2) As Object
@@ -141,12 +137,10 @@
         params(4, 1) = sh_TimeFrom
         params(5, 1) = sh_TimeTo
 
-        INSUPD_shift = _
-            EXEC_INSUPD_PROCEDURE(params, _
-                                   "INSUPD_shift", _
+        INSUPD_shift =
+            EXEC_INSUPD_PROCEDURE(params,
+                                   "INSUPD_shift",
                                    "shiftRowID")
-
-
 
     End Function
 
@@ -198,8 +192,8 @@
         If Trim(thegetval) <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -226,7 +220,6 @@
                 haserrinputshift = 0
 
                 dgvshift.Item("shf_TimeFrom", dgvleaveRowindx).ErrorText = Nothing
-
             Catch ex As Exception
                 Try
                     dateobj = dateobj.ToString.Replace(":", " ")
@@ -242,7 +235,6 @@
                     haserrinputshift = 0
 
                     dgvshift.Item("shf_TimeFrom", dgvleaveRowindx).ErrorText = Nothing
-
                 Catch ex_1 As Exception
                     haserrinputshift = 1
                     dgvshift.Item("shf_TimeFrom", dgvleaveRowindx).ErrorText = "     Invalid time value"
@@ -261,7 +253,6 @@
 
                     End If
                 End Try
-
             Finally
                 If Trim(thegetval) <> "" Then
                     dgvshift.Item("shf_TimeFrom", dgvleaveRowindx).Value = theretval
@@ -332,8 +323,8 @@
         If Trim(thegetval) <> "" Then
             Try
 
-                If dateobj.ToString.Contains("A") Or _
-                    dateobj.ToString.Contains("P") Or _
+                If dateobj.ToString.Contains("A") Or
+                    dateobj.ToString.Contains("P") Or
                     dateobj.ToString.Contains("M") Then
 
                     ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -360,7 +351,6 @@
                 haserrinputshift = 0
 
                 dgvshift.Item("shf_TimeTo", dgvleaveRowindx).ErrorText = Nothing
-
             Catch ex As Exception
                 Try
                     dateobj = dateobj.ToString.Replace(":", " ")
@@ -376,7 +366,6 @@
                     haserrinputshift = 0
 
                     dgvshift.Item("shf_TimeTo", dgvleaveRowindx).ErrorText = Nothing
-
                 Catch ex_1 As Exception
                     haserrinputshift = 1
                     dgvshift.Item("shf_TimeTo", dgvleaveRowindx).ErrorText = "     Invalid time value"
@@ -397,7 +386,6 @@
 
                     End If
                 End Try
-
             Finally
                 If Trim(thegetval) <> "" Then
                     dgvshift.Item("shf_TimeTo", dgvleaveRowindx).Value = theretval
@@ -418,6 +406,7 @@
         End If
 
     End Sub
+
     Private Sub mtxtTimeTo_Leave(sender As Object, e As EventArgs) Handles mtxtTimeTo.Leave
 
     End Sub
@@ -427,7 +416,6 @@
     End Sub
 
     Private Sub dgvshift_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvshift.CellContentClick
-
 
     End Sub
 
@@ -454,7 +442,6 @@
                     mtxtTimeFrom.Text = ""
 
                     mtxtTimeTo.Text = ""
-
                 Else
 
                     prev_elv_StartTime = .Cells("shf_TimeFrom").Value
@@ -464,7 +451,6 @@
                     If .Cells("shf_TimeFrom").Value = Nothing Then
 
                         mtxtTimeFrom.Text = ""
-
                     Else
 
                         mtxtTimeFrom.Text = .Cells("shf_TimeFrom").Value 'getStrBetween(.Cells("shf_TimeFrom").Value.ToString, "", " ")
@@ -476,7 +462,6 @@
                     If .Cells("shf_TimeTo").Value = Nothing Then
 
                         mtxtTimeTo.Text = ""
-
                     Else
 
                         mtxtTimeTo.Text = .Cells("shf_TimeTo").Value 'getStrBetween(.Cells("shf_TimeTo").Value.ToString, "", " ")
@@ -488,7 +473,6 @@
                 End If
 
             End With
-
         Else
 
         End If
@@ -529,8 +513,8 @@
 
         Try
 
-            If dateobj.ToString.Contains("A") Or _
-                dateobj.ToString.Contains("P") Or _
+            If dateobj.ToString.Contains("A") Or
+                dateobj.ToString.Contains("P") Or
                 dateobj.ToString.Contains("M") Then
 
                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -556,7 +540,6 @@
             haserrinputshift = 0
 
             dgvshift.Item(colNameleave, rowIndxleave).ErrorText = Nothing
-
         Catch ex As Exception
             Try
                 dateobj = dateobj.ToString.Replace(":", " ")
@@ -572,7 +555,6 @@
                 haserrinputshift = 0
 
                 dgvshift.Item(colNameleave, rowIndxleave).ErrorText = Nothing
-
             Catch ex_1 As Exception
                 haserrinputshift = 1
                 dgvshift.Item(colNameleave, rowIndxleave).ErrorText = "     Invalid time value"
@@ -617,13 +599,13 @@
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -655,7 +637,6 @@
             dgvshift.Focus()
         Else
             If dgvshift.CurrentRow.Cells("shf_RowID").Value = Nothing Then
-
             Else
 
                 EmployeeShiftEntryForm.dtpTimeFrom.Value = "1/1/2000 " & dgvshift.CurrentRow.Cells("shf_TimeFrom").Value
@@ -694,4 +675,5 @@
         showAuditTrail.BringToFront()
 
     End Sub
+
 End Class

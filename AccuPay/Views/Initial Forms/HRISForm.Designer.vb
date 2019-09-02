@@ -115,7 +115,7 @@ Partial Class HRISForm
         'PromotionToolStripMenuItem
         '
         Me.PromotionToolStripMenuItem.Name = "PromotionToolStripMenuItem"
-        Me.PromotionToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.PromotionToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PromotionToolStripMenuItem.Text = "Promotion"
         '
         'DisciplinaryActionToolStripMenuItem
@@ -133,7 +133,7 @@ Partial Class HRISForm
         'BonusToolStripMenuItem
         '
         Me.BonusToolStripMenuItem.Name = "BonusToolStripMenuItem"
-        Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.BonusToolStripMenuItem.Text = "Bonus"
         '
         'LeaveToolStripMenuItem
@@ -145,13 +145,13 @@ Partial Class HRISForm
         'OvertimeToolStripMenuItem
         '
         Me.OvertimeToolStripMenuItem.Name = "OvertimeToolStripMenuItem"
-        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.OvertimeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OvertimeToolStripMenuItem.Text = "Overtime"
         '
         'OfficialBusinessToolStripMenuItem
         '
         Me.OfficialBusinessToolStripMenuItem.Name = "OfficialBusinessToolStripMenuItem"
-        Me.OfficialBusinessToolStripMenuItem.Size = New System.Drawing.Size(173, 22)
+        Me.OfficialBusinessToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.OfficialBusinessToolStripMenuItem.Text = "Official business"
         '
         'AttachmentToolStripMenuItem

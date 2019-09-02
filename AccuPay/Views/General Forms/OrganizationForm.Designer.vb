@@ -95,12 +95,7 @@ Partial Class OrganizationForm
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtcompanyName = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Label52 = New System.Windows.Forms.Label()
-        Me.Label50 = New System.Windows.Forms.Label()
-        Me.Label34 = New System.Windows.Forms.Label()
         Me.Label40 = New System.Windows.Forms.Label()
-        Me.Label30 = New System.Windows.Forms.Label()
-        Me.Label31 = New System.Windows.Forms.Label()
         Me.cmbEmpFlag = New System.Windows.Forms.ComboBox()
         Me.lblAddStatus = New System.Windows.Forms.LinkLabel()
         Me.Label27 = New System.Windows.Forms.Label()
@@ -172,6 +167,8 @@ Partial Class OrganizationForm
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
+        Me.Label71 = New System.Windows.Forms.Label()
+        Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -209,6 +206,8 @@ Partial Class OrganizationForm
         'SplitContainer1.Panel1
         '
         Me.SplitContainer1.Panel1.AutoScroll = True
+        Me.SplitContainer1.Panel1.Controls.Add(Me.IsAgencyCheckBox)
+        Me.SplitContainer1.Panel1.Controls.Add(Me.Label71)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtZIP)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtRDO)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label68)
@@ -268,12 +267,7 @@ Partial Class OrganizationForm
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label1)
         Me.SplitContainer1.Panel1.Controls.Add(Me.txtcompanyName)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label4)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label52)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label50)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label34)
         Me.SplitContainer1.Panel1.Controls.Add(Me.Label40)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label30)
-        Me.SplitContainer1.Panel1.Controls.Add(Me.Label31)
         '
         'SplitContainer1.Panel2
         '
@@ -993,71 +987,16 @@ Partial Class OrganizationForm
         Me.Label4.TabIndex = 320
         Me.Label4.Text = "Company Name :"
         '
-        'Label52
-        '
-        Me.Label52.AutoSize = True
-        Me.Label52.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label52.ForeColor = System.Drawing.Color.Red
-        Me.Label52.Location = New System.Drawing.Point(434, 91)
-        Me.Label52.Name = "Label52"
-        Me.Label52.Size = New System.Drawing.Size(19, 23)
-        Me.Label52.TabIndex = 336
-        Me.Label52.Text = "*"
-        '
-        'Label50
-        '
-        Me.Label50.AutoSize = True
-        Me.Label50.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label50.ForeColor = System.Drawing.Color.Red
-        Me.Label50.Location = New System.Drawing.Point(460, 170)
-        Me.Label50.Name = "Label50"
-        Me.Label50.Size = New System.Drawing.Size(19, 23)
-        Me.Label50.TabIndex = 334
-        Me.Label50.Text = "*"
-        '
-        'Label34
-        '
-        Me.Label34.AutoSize = True
-        Me.Label34.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label34.ForeColor = System.Drawing.Color.Red
-        Me.Label34.Location = New System.Drawing.Point(89, 209)
-        Me.Label34.Name = "Label34"
-        Me.Label34.Size = New System.Drawing.Size(19, 23)
-        Me.Label34.TabIndex = 331
-        Me.Label34.Text = "*"
-        '
         'Label40
         '
         Me.Label40.AutoSize = True
-        Me.Label40.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label40.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
         Me.Label40.ForeColor = System.Drawing.Color.Red
         Me.Label40.Location = New System.Drawing.Point(100, 15)
         Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(19, 23)
+        Me.Label40.Size = New System.Drawing.Size(18, 24)
         Me.Label40.TabIndex = 321
         Me.Label40.Text = "*"
-        '
-        'Label30
-        '
-        Me.Label30.AutoSize = True
-        Me.Label30.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label30.ForeColor = System.Drawing.Color.Red
-        Me.Label30.Location = New System.Drawing.Point(100, 91)
-        Me.Label30.Name = "Label30"
-        Me.Label30.Size = New System.Drawing.Size(19, 23)
-        Me.Label30.TabIndex = 329
-        Me.Label30.Text = "*"
-        '
-        'Label31
-        '
-        Me.Label31.AutoSize = True
-        Me.Label31.Font = New System.Drawing.Font("Gisha", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label31.ForeColor = System.Drawing.Color.Red
-        Me.Label31.Location = New System.Drawing.Point(81, 131)
-        Me.Label31.Name = "Label31"
-        Me.Label31.Size = New System.Drawing.Size(19, 23)
-        Me.Label31.TabIndex = 330
-        Me.Label31.Text = "*"
         '
         'cmbEmpFlag
         '
@@ -1575,6 +1514,7 @@ Partial Class OrganizationForm
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(60, 22)
         Me.btnDelete.Text = "&Delete"
+        Me.btnDelete.Visible = False
         '
         'ToolStripSeparator2
         '
@@ -1681,6 +1621,24 @@ Partial Class OrganizationForm
         Me.Label35.Text = "ORGANIZATION"
         Me.Label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
+        'Label71
+        '
+        Me.Label71.AutoSize = True
+        Me.Label71.Location = New System.Drawing.Point(15, 307)
+        Me.Label71.Name = "Label71"
+        Me.Label71.Size = New System.Drawing.Size(57, 13)
+        Me.Label71.TabIndex = 376
+        Me.Label71.Text = "Is Agency:"
+        '
+        'IsAgencyCheckBox
+        '
+        Me.IsAgencyCheckBox.AutoSize = True
+        Me.IsAgencyCheckBox.Location = New System.Drawing.Point(186, 307)
+        Me.IsAgencyCheckBox.Name = "IsAgencyCheckBox"
+        Me.IsAgencyCheckBox.Size = New System.Drawing.Size(15, 14)
+        Me.IsAgencyCheckBox.TabIndex = 377
+        Me.IsAgencyCheckBox.UseVisualStyleBackColor = True
+        '
         'OrganizationForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1744,18 +1702,13 @@ Partial Class OrganizationForm
     Friend WithEvents PhotoImages As System.Windows.Forms.PictureBox
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents lblAddOrgType As System.Windows.Forms.LinkLabel
-    Friend WithEvents Label52 As System.Windows.Forms.Label
     Friend WithEvents txtorgTinNumTxt As System.Windows.Forms.TextBox
     Friend WithEvents Label51 As System.Windows.Forms.Label
     Friend WithEvents addAddressLink1 As System.Windows.Forms.LinkLabel
-    Friend WithEvents Label50 As System.Windows.Forms.Label
     Friend WithEvents cmborganizationTypeCB As System.Windows.Forms.ComboBox
     Friend WithEvents Label33 As System.Windows.Forms.Label
     Friend WithEvents txttradeName As System.Windows.Forms.TextBox
     Friend WithEvents Label32 As System.Windows.Forms.Label
-    Friend WithEvents Label34 As System.Windows.Forms.Label
-    Friend WithEvents Label31 As System.Windows.Forms.Label
-    Friend WithEvents Label30 As System.Windows.Forms.Label
     Friend WithEvents txtcompUrl As System.Windows.Forms.TextBox
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents txtcompAltPhoneTxt As System.Windows.Forms.TextBox
@@ -1867,4 +1820,6 @@ Partial Class OrganizationForm
     Friend WithEvents txtRDO As System.Windows.Forms.TextBox
     Friend WithEvents Label68 As System.Windows.Forms.Label
     Friend WithEvents Label70 As System.Windows.Forms.Label
+    Friend WithEvents IsAgencyCheckBox As CheckBox
+    Friend WithEvents Label71 As Label
 End Class

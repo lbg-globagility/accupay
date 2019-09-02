@@ -55,6 +55,8 @@ Public Class TimeEntrySummaryForm
 
     Private _useNewShift As Boolean
 
+    Private _hideMoneyColumns As Boolean
+
     Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         employeesDataGridView.AutoGenerateColumns = False
         timeEntriesDataGridView.AutoGenerateColumns = False
@@ -76,7 +78,34 @@ Public Class TimeEntrySummaryForm
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
 
+        CheckIfMoneyColumnsAreGoingToBeHidden()
+
         LoadYears()
+    End Sub
+
+    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
+                                user.UserLevel <> UserLevel.Two AndAlso
+                                user.UserLevel <> UserLevel.Three
+
+        End Using
     End Sub
 
     Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
@@ -227,28 +256,36 @@ Public Class TimeEntrySummaryForm
         ColumnLeaveEnd.Visible = timeEntries.Any(Function(t) t.LeaveEnd.HasValue)
 
         ColumnNDiffHrs.Visible = timeEntries.Any(Function(t) t.NightDiffHours > 0)
-        ColumnNDiffPay.Visible = timeEntries.Any(Function(t) t.NightDiffAmount > 0)
+        ColumnNDiffPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.NightDiffAmount > 0)
 
         ColumnNDiffOTHrs.Visible = timeEntries.Any(Function(t) t.NightDiffOTHours > 0)
-        ColumnNDiffOTPay.Visible = timeEntries.Any(Function(t) t.NightDiffOTAmount > 0)
+        ColumnNDiffOTPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.NightDiffOTAmount > 0)
 
         ColumnRDayHrs.Visible = timeEntries.Any(Function(t) t.RestDayHours > 0)
-        ColumnRDayPay.Visible = timeEntries.Any(Function(t) t.RestDayAmount > 0)
+        ColumnRDayPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RestDayAmount > 0)
 
         ColumnRDayOTHrs.Visible = timeEntries.Any(Function(t) t.RestDayOTHours > 0)
-        ColumnRDayOTPay.Visible = timeEntries.Any(Function(t) t.RestDayOTPay > 0)
+        ColumnRDayOTPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RestDayOTPay > 0)
 
         ColumnSHolHrs.Visible = timeEntries.Any(Function(t) t.SpecialHolidayHours > 0)
-        ColumnSHolPay.Visible = timeEntries.Any(Function(t) t.SpecialHolidayPay > 0)
+        ColumnSHolPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.SpecialHolidayPay > 0)
 
         ColumnSHolOTHrs.Visible = timeEntries.Any(Function(t) t.SpecialHolidayOTHours > 0)
-        ColumnSHolOTPay.Visible = timeEntries.Any(Function(t) t.SpecialHolidayOTPay > 0)
+        ColumnSHolOTPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.SpecialHolidayOTPay > 0)
 
         ColumnRHolHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayHours > 0)
-        ColumnRHolPay.Visible = timeEntries.Any(Function(t) t.RegularHolidayPay > 0)
+        ColumnRHolPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RegularHolidayPay > 0)
 
         ColumnRHolOTHrs.Visible = timeEntries.Any(Function(t) t.RegularHolidayOTHours > 0)
-        ColumnRHolOTPay.Visible = timeEntries.Any(Function(t) t.RegularHolidayOTPay > 0)
+        ColumnRHolOTPay.Visible = _hideMoneyColumns = False AndAlso timeEntries.Any(Function(t) t.RegularHolidayOTPay > 0)
+
+        ColumnOTPay.Visible = _hideMoneyColumns = False
+        ColumnLeavePay.Visible = _hideMoneyColumns = False
+        ColumnAbsent.Visible = _hideMoneyColumns = False
+        ColumnLateDeduc.Visible = _hideMoneyColumns = False
+        ColumnUndertimeDeduc.Visible = _hideMoneyColumns = False
+        ColumnTotalPay.Visible = _hideMoneyColumns = False
+        ColumnTotalAdditionalPay.Visible = _hideMoneyColumns = False
 
         timeEntriesDataGridView.ResumeLayout()
     End Sub

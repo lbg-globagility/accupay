@@ -80,6 +80,7 @@ SELECT e.RowID
         ,IFNULL(e.OffsetBalance,0)                  `OffsetBalance`
         ,IFNULL(ag.AgencyName,'')                   `AgencyName`
         ,IFNULL(ag.RowID,'')                            `ag_RowID`
+        ,e.BranchID 
 
 FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id     AND LENGTH(emp_id) > 0
     UNION

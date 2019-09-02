@@ -18,9 +18,12 @@ Namespace Global.AccuPay.Payroll
 
         Public ReadOnly Property CalculationBasis As PhilHealthCalculationBasis
             Get
+                Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
+
                 Return _settings.GetEnum(
                     "PhilHealth.CalculationBasis",
-                    PhilHealthCalculationBasis.BasicSalary)
+                    PhilHealthCalculationBasis.BasicSalary,
+                    policyByOrganization)
             End Get
         End Property
 

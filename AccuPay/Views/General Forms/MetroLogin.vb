@@ -1,10 +1,6 @@
-﻿Imports System.IO
-Imports System.Threading.Tasks
-Imports MetroFramework
-Imports System.Threading
-Imports System.Linq.Expressions
-Imports MySql.Data.MySqlClient
+﻿Imports System.Linq.Expressions
 Imports System.Xml
+Imports AccuPay.Utils
 
 Public Class MetroLogin
 
@@ -55,8 +51,6 @@ Public Class MetroLogin
 
         ds.WriteXmlSchema(xm_schemafile)
         ds.WriteXml(xm_datafile)
-
-
 
     End Sub
 
@@ -197,7 +191,6 @@ Public Class MetroLogin
             Me.Close()
 
             Return True
-
         Else
             'ShiftTemplater
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -304,7 +297,6 @@ Public Class MetroLogin
 
         Console.WriteLine(DecrypedData("¯õæøøüô÷"))
 
-
         Static err_count As SByte = 0
 
         If z_User > 0 Then
@@ -320,8 +312,6 @@ Public Class MetroLogin
                     Exit Sub
 
                 End If
-
-
 
                 err_count = 0 'resets the failed log in attempt count
 
@@ -340,7 +330,6 @@ Public Class MetroLogin
                 userLastName = splitFNameLName(1).ToString.Replace(".", "")
 
                 If userLastName = "" Then
-
                 Else
                     userLastName = StrConv(userLastName, VbStrConv.ProperCase)
 
@@ -379,17 +368,19 @@ Public Class MetroLogin
                 z_postName = EXECQUER("SELECT p.PositionName FROM user u INNER JOIN position p ON p.RowID=u.PositionID WHERE u.RowID='" & z_User & "';")
 
                 If orgztnID <> Nothing Then
+
+                    If CheckIfAuthorizedByUserLevel() Then
+                        MDIPrimaryForm.Show()
+                    End If
+
                     'Dim n_MDIPrimaryForm As New MDIPrimaryForm
-                    MDIPrimaryForm.Show()
                     'n_MDIPrimaryForm.Show()
                 End If
-
             Catch ex As Exception
 
                 MsgBox(getErrExcptn(ex, Me.Name))
 
             End Try
-
         Else
             WarnBalloon("Please input your correct credentials.", "Invalid credentials", btnlogin, btnlogin.Width - 18, -69)
 
@@ -412,6 +403,61 @@ Public Class MetroLogin
         btnlogin.Enabled = True
     End Sub
 
+    Private Function CheckIfAuthorizedByUserLevel() As Boolean
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("User does not exists.")
+                Return False
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+                Return True
+            End If
+
+            If user.UserLevel = UserLevel.One OrElse
+                user.UserLevel = UserLevel.Two OrElse
+                user.UserLevel = UserLevel.Four OrElse
+                user.UserLevel = UserLevel.Five Then
+
+                Return True
+
+            End If
+
+            Dim organization = context.Organizations.FirstOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
+
+            If organization Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Organization does not exists.")
+                Return False
+            End If
+
+            If user.UserLevel = UserLevel.Three Then
+
+                If organization.IsAgency = True Then
+
+                    Return True
+                Else
+
+                    MessageBoxHelper.ErrorMessage("You are not authorized to access this organization.")
+                    Return False
+
+                End If
+
+            End If
+
+        End Using
+
+        Return False
+
+    End Function
+
     Function UserAuthentication(Optional pass_word As Object = Nothing)
         'Optional user_id As Object = Nothing
 
@@ -422,16 +468,13 @@ Public Class MetroLogin
         'params(0, 0) = "user_name"
         'params(1, 0) = "pass_word"
 
-
         'Dim n_EncryptData As New EncryptData(txtbxUserID.Text)
 
         'params(0, 1) = n_EncryptData.ResultValue
 
-
         'n_EncryptData = New EncryptData(txtbxPword.Text)
 
         'params(1, 1) = n_EncryptData.ResultValue
-
 
         Dim returnobj = Nothing
         'EXEC_INSUPD_PROCEDURE(params,
@@ -510,8 +553,6 @@ Public Class MetroLogin
 
         'cbxorganiz.Enabled = Convert.ToBoolean("0")
 
-
-
         'Dim dialog_box = MessageBox.Show("Come on", "", MessageBoxButtons.YesNoCancel)
 
         'If dialog_box = Windows.Forms.DialogResult.Yes Then
@@ -544,7 +585,6 @@ Public Class MetroLogin
             cbxorganiz.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
 
             cbxorganiz.DataSource = n_SQLQueryToDatatable.ResultTable
-
         Else
 
             Dim isThereSomeNewToOrganization =
@@ -559,7 +599,6 @@ Public Class MetroLogin
                 cbxorganiz.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
 
                 cbxorganiz.DataSource = n_SQLQueryToDatatable.ResultTable
-
             Else
 
             End If
@@ -673,20 +712,20 @@ Friend Class EncryptData
     End Function
 
     Private Sub SampleExpression()
-        ' Creating an expression tree. 
+        ' Creating an expression tree.
         Dim expr As Expression(Of Func(Of Integer, Boolean)) =
             Function(num) num < 5
 
-        ' Compiling the expression tree into a delegate. 
+        ' Compiling the expression tree into a delegate.
         Dim result As Func(Of Integer, Boolean) = expr.Compile()
 
         ' Invoking the delegate and writing the result to the console.
         Console.WriteLine(result(4))
 
-        ' Prints True. 
+        ' Prints True.
 
-        ' You can also use simplified syntax 
-        ' to compile and run an expression tree. 
+        ' You can also use simplified syntax
+        ' to compile and run an expression tree.
         ' The following line can replace two previous statements.
         Console.WriteLine(expr.Compile()(4))
 

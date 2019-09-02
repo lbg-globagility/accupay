@@ -1,4 +1,6 @@
-﻿Public Class GeneralForm
+﻿Imports AccuPay.Utils
+
+Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
@@ -12,7 +14,7 @@
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If formuserprivilege.Count > 0 Then
+        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -40,7 +42,6 @@
                 End If
 
             Next
-
         Else
             Exit Sub
         End If
@@ -89,7 +90,38 @@
         Next
 
     End Sub
+
     Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+            Else
+
+                UserPrivilegeToolStripMenuItem.Visible = False
+
+            End If
+
+            If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
+
+                UserToolStripMenuItem.Visible = False
+                OrganizationToolStripMenuItem.Visible = False
+                ListOfValueToolStripMenuItem.Visible = False
+
+            End If
+
+        End Using
 
     End Sub
 
@@ -105,7 +137,6 @@
         'Else
         '    FormLeft.Add("Users")
         'End If
-
 
         'If FormLeft.Count = 0 Then
         '    MDIPrimaryForm.text = "Welcome"
@@ -157,7 +188,7 @@
 
     End Sub
 
-    Private Sub SupplierToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SupplierToolStripMenuItem.Click
+    Private Sub SupplierToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserPrivilegeToolStripMenuItem.Click
 
         'ChangeForm(UserPrivilegeForm)
         ChangeForm(userprivil, "User Privilege")
@@ -287,18 +318,18 @@
 
     Sub reloadViewPrivilege()
 
-        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" & _
-                                             " RowID" & _
-                                             " FROM position_view" & _
-                                             " WHERE OrganizationID='" & orgztnID & "'" & _
-                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" & _
+        Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
+                                             " RowID" &
+                                             " FROM position_view" &
+                                             " WHERE OrganizationID='" & orgztnID & "'" &
+                                             " AND (DATE_FORMAT(Created,@@date_format) = CURDATE()" &
                                              " OR DATE_FORMAT(LastUpd,@@date_format) = CURDATE()));")
 
         If hasPositionViewUpdate = "1" Then
 
-            position_view_table = retAsDatTbl("SELECT *" & _
-                                              " FROM position_view" & _
-                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" & _
+            position_view_table = retAsDatTbl("SELECT *" &
+                                              " FROM position_view" &
+                                              " WHERE PositionID=(SELECT PositionID FROM user WHERE RowID=" & z_User & ")" &
                                               " AND OrganizationID='" & orgztnID & "';")
 
         End If
@@ -348,7 +379,6 @@
 
             n_BranchForm.Show()
             n_BranchForm.BringToFront()
-
         Else
             n_BranchForm = New BranchHierarchyForm
 
@@ -381,7 +411,6 @@
 
             n_AreaForm.Show()
             n_AreaForm.BringToFront()
-
         Else
             n_AreaForm = New AreaForm
 

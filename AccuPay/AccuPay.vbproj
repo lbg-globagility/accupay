@@ -321,6 +321,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core\Enums\FormMode.vb" />
+    <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
@@ -354,6 +355,7 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
+    <Compile Include="Domain\Employees\Branch.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\IPaystubRate.vb" />
     <Compile Include="Domain\Payroll\OvertimeRate.vb" />
@@ -375,6 +377,7 @@
     <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
+    <Compile Include="Domain\User.vb" />
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -417,6 +420,12 @@
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
     </Compile>
     <Compile Include="_Benchmark\SetOvertimeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddBranchForm.Designer.vb">
+      <DependentUpon>AddBranchForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\AddBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\AddDivisionForm.Designer.vb">
@@ -1839,6 +1848,9 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\AddBranchForm.resx">
+      <DependentUpon>AddBranchForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddDivisionForm.resx">
       <DependentUpon>AddDivisionForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2109,6 +2121,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\MDIPrimaryForm.resx">
       <DependentUpon>MDIPrimaryForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Initial Forms\PayrollForm.resx">
       <DependentUpon>PayrollForm.vb</DependentUpon>

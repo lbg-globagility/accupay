@@ -12,7 +12,7 @@
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If formuserprivilege.Count > 0 Then
+        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then

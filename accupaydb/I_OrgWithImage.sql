@@ -6,9 +6,47 @@
 
 DROP PROCEDURE IF EXISTS `I_OrgWithImage`;
 DELIMITER //
-CREATE DEFINER=`root`@`localhost` PROCEDURE `I_OrgWithImage`(IN `I_Name` VARCHAR(100), IN `I_TradeName` VARCHAR(100), IN `I_PrimaryAddressID` INT(10), IN `I_PrimaryContactID` INT(10), IN `I_MainPhone` VARCHAR(50), IN `I_FaxNumber` VARCHAR(50), IN `I_EmailAddress` VARCHAR(50), IN `I_AltEmailAddress` VARCHAR(50), IN `I_AltPhone` VARCHAR(50), IN `I_URL` VARCHAR(50), IN `I_Created` DATETIME, IN `I_CreatedBy` INT(11), IN `I_LastUpd` DATETIME, IN `I_LastUpdBy` INT(11)
-, IN `I_TINNo` VARCHAR(50), IN `I_OrganizationType` VARCHAR(50), IN `I_Image` LONGBLOB, IN `I_VacationLeaveDays` DECIMAL(11,3), IN `I_SickLeaveDays` DECIMAL(11,3), IN `I_MaternityLeaveDays` DECIMAL(11,3), IN `I_OthersLeaveDays` DECIMAL(11,3), IN `I_NightDifferentialTimeFrom` TIME, IN `I_NightDifferentialTimeTo` TIME, IN `I_NightShiftTimeFrom` TIME, IN `I_NightShiftTimeTo` TIME, IN `I_PhilhealthDeductionSchedule` VARCHAR(50), IN `I_SSSDeductionSchedule` VARCHAR(50), IN `I_PagIbigDeductionSchedule` VARCHAR(50), IN `I_PayFrequencyID` INT, IN `I_WorkDaysPerYear` INT, IN `I_RDOCode` CHAR(50), IN `I_ZIPCode` CHAR(50), IN `I_WithholdingDeductionSchedule` CHAR(50))
-    DETERMINISTIC
+CREATE DEFINER=`root`@`localhost` PROCEDURE `I_OrgWithImage`(
+	IN `I_Name` VARCHAR(100),
+	IN `I_TradeName` VARCHAR(100),
+	IN `I_PrimaryAddressID` INT(10),
+	IN `I_PrimaryContactID` INT(10),
+	IN `I_MainPhone` VARCHAR(50),
+	IN `I_FaxNumber` VARCHAR(50),
+	IN `I_EmailAddress` VARCHAR(50),
+	IN `I_AltEmailAddress` VARCHAR(50),
+	IN `I_AltPhone` VARCHAR(50),
+	IN `I_URL` VARCHAR(50),
+	IN `I_Created` DATETIME,
+	IN `I_CreatedBy` INT(11),
+	IN `I_LastUpd` DATETIME,
+	IN `I_LastUpdBy` INT(11),
+	IN `I_TINNo` VARCHAR(50),
+	IN `I_OrganizationType` VARCHAR(50),
+	IN `I_Image` LONGBLOB,
+	IN `I_VacationLeaveDays` DECIMAL(11,3),
+	IN `I_SickLeaveDays` DECIMAL(11,3),
+	IN `I_MaternityLeaveDays` DECIMAL(11,3),
+	IN `I_OthersLeaveDays` DECIMAL(11,3),
+	IN `I_NightDifferentialTimeFrom` TIME,
+	IN `I_NightDifferentialTimeTo` TIME,
+	IN `I_NightShiftTimeFrom` TIME,
+	IN `I_NightShiftTimeTo` TIME,
+	IN `I_PhilhealthDeductionSchedule` VARCHAR(50),
+	IN `I_SSSDeductionSchedule` VARCHAR(50),
+	IN `I_PagIbigDeductionSchedule` VARCHAR(50),
+	IN `I_PayFrequencyID` INT,
+	IN `I_WorkDaysPerYear` INT,
+	IN `I_RDOCode` CHAR(50),
+	IN `I_ZIPCode` CHAR(50),
+	IN `I_WithholdingDeductionSchedule` CHAR(50),
+	IN `I_IsAgency` TINYINT(1)
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 INSERT INTO organization
     (
@@ -44,7 +82,8 @@ INSERT INTO organization
     WorkDaysPerYear,
     RDOCode,
     ZIPCode,
-    WithholdingDeductionSchedule
+    WithholdingDeductionSchedule,
+    IsAgency
     )
 VALUES
     (
@@ -80,7 +119,8 @@ VALUES
     IF(I_WorkDaysPerYear=0, IF(DAY(LAST_DAY(ADDDATE(MAKEDATE(YEAR(CURDATE()),1), INTERVAL 1 MONTH))) <= 28, 260, 261), I_WorkDaysPerYear),
     I_RDOCode,
     I_ZIPCode,
-    I_WithholdingDeductionSchedule
+    I_WithholdingDeductionSchedule,
+    I_IsAgency
     ); END//
 DELIMITER ;
 

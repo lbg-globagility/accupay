@@ -6,7 +6,7 @@
 
 DROP PROCEDURE IF EXISTS `USER_dropdownposition`;
 DELIMITER //
-CREATE DEFINER=`root`@`%` PROCEDURE `USER_dropdownposition`(IN `organizid` INT, IN `userrowid` INT)
+CREATE DEFINER=`root`@`localhost` PROCEDURE `USER_dropdownposition`(IN `organizid` INT, IN `userrowid` INT)
     DETERMINISTIC
 BEGIN
 
