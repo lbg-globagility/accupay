@@ -892,10 +892,10 @@ Public Class EmployeeForm
             succeed = new_eRowID IsNot Nothing
 
             'this is during edit
-            If if_sysowner_is_benchmark AndAlso employee_RowID IsNot Nothing Then
+            If if_sysowner_is_benchmark AndAlso new_eRowID IsNot Nothing Then
 
                 Dim leaveRepository As New LeaveRepository
-                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee_RowID,
+                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(new_eRowID,
                                                                 AccuPay.LeaveType.LeaveType.Vacation,
                                                                 LeaveAllowanceTextBox.Text.ToDecimal)
 
