@@ -16,7 +16,8 @@ SET $endDateFrom = (
     SELECT PayFromDate
     FROM payperiod p
     WHERE p.PayToDate = $dateTo AND
-        p.OrganizationID = $organizationID);
+        p.OrganizationID = $organizationID AND 
+		p.TotalGrossSalary = 1); #Added because there is an error here if payperiod has weekly data. This should be improved to support weekly in the future.
 
 SELECT
     e.EmployeeID AS DatCol1,
