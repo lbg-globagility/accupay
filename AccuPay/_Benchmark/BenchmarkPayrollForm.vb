@@ -510,7 +510,7 @@ Public Class BenchmarkPayrollForm
 
             Dim loan = loans(loanIndex)
 
-            If loan.LoanScheduleID = _pagibigLoan.RowID.Value Then
+            If _pagibigLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _pagibigLoan.RowID.Value Then
 
                 If pagIbigLoan Is Nothing Then
 
@@ -523,7 +523,7 @@ Public Class BenchmarkPayrollForm
                     Return
                 End If
 
-            ElseIf loan.LoanScheduleID = _sssLoan.RowID.Value Then
+            ElseIf _sssLoan?.RowID IsNot Nothing AndAlso loan.LoanScheduleID = _sssLoan.RowID.Value Then
 
                 If sssLoan Is Nothing Then
 
