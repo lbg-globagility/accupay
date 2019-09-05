@@ -29,7 +29,7 @@ Public Class BenchmarkPaystubRateTest
             .AllowanceSalary = 63
         }
 
-        _benchmarkPaystubRate = New BenchmarkPaystubRate(_employee, New List(Of Salary)({_salary}))
+        _benchmarkPaystubRate = New BenchmarkPaystubRate(_employee, _salary)
 
         InitializeOvertimeRate()
 
