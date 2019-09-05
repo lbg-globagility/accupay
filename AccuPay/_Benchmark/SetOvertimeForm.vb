@@ -134,6 +134,13 @@ Public Class SetOvertimeForm
             Return
         End If
 
+        If Me.Overtimes.Where(Function(o) o.OvertimeType.Name = overtimeRate.Name).Any Then
+
+            MessageBoxHelper.Warning("You have already added this overtime type.")
+            Return
+
+        End If
+
         If HoursRadioButton.Checked = False AndAlso DaysRadioButton.Checked = False Then
 
             MessageBoxHelper.Warning("Choose if input is in hours or days.")

@@ -130,7 +130,17 @@ Public Class OvertimeRateService
 
     Private Shared Function ConvertToRate(input As String) As Decimal
 
-        Return input.ToDecimal / 100
+        If input.Length > 2 Then
+
+            'add a decimal to convert it properly
+            'since the inputs are either
+            '286 which is equals 2.86 or
+            '1375 which is equals 1.375
+            input = input.Insert(1, ".")
+
+        End If
+
+        Return input.ToDecimal
 
     End Function
 
