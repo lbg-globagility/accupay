@@ -891,11 +891,13 @@ Public Class EmployeeForm
                            GetSelectedBranch()?.RowID)
             succeed = new_eRowID IsNot Nothing
 
+            Dim employeeId = If(tsbtnNewEmp.Enabled = False, new_eRowID, employee_RowID)
+
             'this is during edit
-            If if_sysowner_is_benchmark AndAlso new_eRowID IsNot Nothing Then
+            If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
                 Dim leaveRepository As New LeaveRepository
-                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(new_eRowID,
+                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employeeId,
                                                                 AccuPay.LeaveType.LeaveType.Vacation,
                                                                 LeaveAllowanceTextBox.Text.ToDecimal)
 
