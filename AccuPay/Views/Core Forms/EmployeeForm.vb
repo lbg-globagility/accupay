@@ -27,6 +27,8 @@ Public Class EmployeeForm
 
     Private _branches As New List(Of Branch)
 
+    Private _payFrequencies As New List(Of PayFrequency)
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
@@ -980,7 +982,7 @@ Public Class EmployeeForm
 
             .Cells("Column29").Value = cboPosit.SelectedValue
 
-            .Cells("Column22").Value = paytypestring
+            .Cells("Column22").Value = cboPayFreq.Text
 
             .Cells("Column31").Value = cboMaritStat.Text : .Cells("Column32").Value = Val(txtNumDepen.Text)
             .Cells("Column34").Value = cboEmpType.Text
@@ -1308,13 +1310,6 @@ Public Class EmployeeForm
         Throw New NotImplementedException()
     End Sub
 
-    Sub loadPayFreqType()
-        enlistTheLists("SELECT CONCAT(RowID,'@',PayFrequencyType) FROM payfrequency", payFreq)
-        For Each r In payFreq
-            cboPayFreq.Items.Add(StrReverse(getStrBetween(StrReverse(r), "", "@")))
-        Next
-    End Sub
-
     Dim dt_cboPosit As New DataTable
 
     Sub loadPositName()
@@ -1420,7 +1415,6 @@ Public Class EmployeeForm
         view_ID = VIEW_privilege("Employee Personal Profile", orgztnID)
 
         loademployee()
-        'loadPayFreqType()
 
         u_nem = EXECQUER(USERNameStrPropr & z_User)
 
@@ -1671,8 +1665,11 @@ Public Class EmployeeForm
                     txtMobPhne.Text = If(IsDBNull(.Cells("Column17").Value), "", .Cells("Column17").Value) : txtHomeAddr.Text = .Cells("Column18").Value
                     txtemail.Text = .Cells("Column14").Value
 
-                    If .Cells("Column22").Value = "" Then : cboPayFreq.SelectedIndex = -1 : cboPayFreq.Text = ""
-                    Else : cboPayFreq.Text = .Cells("Column22").Value
+                    Dim payFrequency = _payFrequencies.Where(Function(p) p.Type = .Cells("Column22").Value).FirstOrDefault
+                    If payFrequency Is Nothing Then
+                        cboPayFreq.SelectedIndex = -1
+                    Else
+                        cboPayFreq.SelectedIndex = _payFrequencies.IndexOf(payFrequency)
                     End If
 
                     RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
@@ -3338,14 +3335,14 @@ Public Class EmployeeForm
 
     Dim emp_ralation As New AutoCompleteStringCollection
 
-    Sub tbpEmployee_Enter(sender As Object, e As EventArgs) Handles tbpEmployee.Enter
+    Async Sub tbpEmployee_Enter(sender As Object, e As EventArgs) Handles tbpEmployee.Enter
 
         tabpageText(tabIndx)
 
         tbpEmployee.Text = "PERSONAL PROFILE               "
 
         Label25.Text = "PERSONAL PROFILE"
-        Static once As SByte = 0
+        Dim once As SByte = 0
         If once = 0 Then
             once = 1
 
@@ -3403,14 +3400,15 @@ Public Class EmployeeForm
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
 
-            Dim dt_payfreq As New DataTable
-
-            dt_payfreq = retAsDatTbl("SELECT RowID,PayFrequencyType FROM payfrequency WHERE RowID IN (1,4) ORDER BY RowID DESC;")
+            Dim payFrequencies = Await (New PayFrequencyRepository()).GetAllAsync()
+            _payFrequencies = payFrequencies.
+                Where(Function(p) p.RowID = PayrollTools.PayFrequencyMonthlyId OrElse
+                                    p.RowID = PayrollTools.PayFrequencyWeeklyId).ToList
 
             cboPayFreq.ValueMember = "RowID"
-            cboPayFreq.DisplayMember = "PayFrequencyType"
+            cboPayFreq.DisplayMember = "Type"
 
-            cboPayFreq.DataSource = dt_payfreq
+            cboPayFreq.DataSource = _payFrequencies
 
             For Each strval In emp_ralation
                 Colmn7.Items.Add(strval)
