@@ -1519,20 +1519,7 @@ Public Class PayStubForm
 
             If prompt = Windows.Forms.DialogResult.Yes Then
 
-                Dim n_ExecuteQuery As New ExecuteQuery("SELECT RowID" &
-                                                       " FROM paystub" &
-                                                       " WHERE EmployeeID='" & dgvemployees.Tag & "'" &
-                                                       " AND OrganizationID='" & orgztnID & "'" &
-                                                       " AND PayPeriodID='" & paypRowID & "'" &
-                                                       " LIMIT 1;")
-
-                Dim paystubRowID As Object = Nothing
-
-                paystubRowID = n_ExecuteQuery.Result
-
-                If paystubRowID IsNot Nothing Then
-                    n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
-                End If
+                PayrollTools.DeletePaystub(dgvemployees.Tag, paypRowID)
 
             End If
 

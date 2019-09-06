@@ -335,4 +335,23 @@ Public Class PayrollTools
 
     End Function
 
+    Public Shared Sub DeletePaystub(employeeId As Integer, payPeriodId As Integer)
+
+        Dim n_ExecuteQuery As New ExecuteQuery("SELECT RowID" &
+                                                       " FROM paystub" &
+                                                       " WHERE EmployeeID='" & employeeId & "'" &
+                                                       " AND OrganizationID='" & orgztnID & "'" &
+                                                       " AND PayPeriodID='" & payPeriodId & "'" &
+                                                       " LIMIT 1;")
+
+        Dim paystubRowID As Object = Nothing
+
+        paystubRowID = n_ExecuteQuery.Result
+
+        If paystubRowID IsNot Nothing Then
+            n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID.ToString & "');")
+        End If
+
+    End Sub
+
 End Class

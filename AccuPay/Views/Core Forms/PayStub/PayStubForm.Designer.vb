@@ -3074,14 +3074,14 @@ Partial Class PayStubForm
         'tsbtnDeclaredSummary
         '
         Me.tsbtnDeclaredSummary.Name = "tsbtnDeclaredSummary"
-        Me.tsbtnDeclaredSummary.Size = New System.Drawing.Size(180, 22)
+        Me.tsbtnDeclaredSummary.Size = New System.Drawing.Size(120, 22)
         Me.tsbtnDeclaredSummary.Tag = "False"
         Me.tsbtnDeclaredSummary.Text = "Declared"
         '
         'tsbtnActualSummary
         '
         Me.tsbtnActualSummary.Name = "tsbtnActualSummary"
-        Me.tsbtnActualSummary.Size = New System.Drawing.Size(180, 22)
+        Me.tsbtnActualSummary.Size = New System.Drawing.Size(120, 22)
         Me.tsbtnActualSummary.Tag = "True"
         Me.tsbtnActualSummary.Text = "Actual"
         '

@@ -312,7 +312,7 @@ Public Class BenchmarkPayrollForm
         BasicPaySummaryTextBox.ResetText()
         PhilhealthAmountTextBox.ResetText()
         SssAmountTextBox.ResetText()
-        PagibigNumberTextBox.ResetText()
+        PagibigAmountTextBox.ResetText()
         WithholdingTaxTextBox.ResetText()
         PagibigLoanTextBox.ResetText()
         SssLoanTextBox.ResetText()
