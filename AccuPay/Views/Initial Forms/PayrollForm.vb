@@ -4,6 +4,8 @@
 
     Private sys_ownr As New SystemOwner
 
+    Private if_sysowner_is_benchmark As Boolean
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -74,8 +76,18 @@
 
     Sub PayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollToolStripMenuItem.Click
         'ChangeForm(PayrollGenerateForm)
-        ChangeForm(PayStubForm, "Employee Pay Slip")
-        previousForm = PayStubForm
+
+        If if_sysowner_is_benchmark Then
+
+            ChangeForm(BenchmarkPayrollForm, "Benchmark - Payroll Form")
+            previousForm = BenchmarkPayrollForm
+        Else
+
+            ChangeForm(PayStubForm, "Employee Pay Slip")
+            previousForm = PayStubForm
+
+        End If
+
     End Sub
 
     Private Sub BonusToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
@@ -97,7 +109,6 @@
 
     Private Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         setProperInterfaceBaseOnCurrentSystemOwner()
-
 
         If Not Debugger.IsAttached Then
             PaystubExperimentalToolStripMenuItem.Visible = False
@@ -154,11 +165,30 @@
 
         End If
 
+        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        If if_sysowner_is_benchmark Then
+
+            BenchmarkPaystubToolStripMenuItem.Visible = True
+
+            BonusToolStripMenuItem.Visible = False
+            WithholdingTaxToolStripMenuItem.Visible = False
+            PaystubExperimentalToolStripMenuItem.Visible = False
+        Else
+            BenchmarkPaystubToolStripMenuItem.Visible = False
+        End If
+
     End Sub
 
     Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
         ChangeForm(PaystubView, "Employee Pay Slip")
         previousForm = PaystubView
+    End Sub
+
+    Private Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click
+
+        ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
+        previousForm = BenchmarkPaystubForm
     End Sub
 
 End Class

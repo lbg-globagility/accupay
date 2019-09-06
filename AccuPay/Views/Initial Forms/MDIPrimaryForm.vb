@@ -616,14 +616,7 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        If if_sysowner_is_benchmark Then
-
-            ChangeForm(BenchmarkPayrollForm)
-        Else
-
-            ChangeForm(PayrollForm)
-
-        End If
+        ChangeForm(PayrollForm)
 
         GeneralForm.Hide()
         HRISForm.Hide()

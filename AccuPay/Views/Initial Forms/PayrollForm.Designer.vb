@@ -28,13 +28,14 @@ Partial Class PayrollForm
         Me.WithholdingTaxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PaystubExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelPayroll = New System.Windows.Forms.Panel()
+        Me.BenchmarkPaystubToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollToolStripMenuItem, Me.BonusToolStripMenuItem, Me.WithholdingTaxToolStripMenuItem, Me.PaystubExperimentalToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollToolStripMenuItem, Me.BonusToolStripMenuItem, Me.WithholdingTaxToolStripMenuItem, Me.PaystubExperimentalToolStripMenuItem, Me.BenchmarkPaystubToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -73,6 +74,12 @@ Partial Class PayrollForm
         Me.PanelPayroll.Size = New System.Drawing.Size(1006, 446)
         Me.PanelPayroll.TabIndex = 3
         '
+        'BenchmarkPaystubToolStripMenuItem
+        '
+        Me.BenchmarkPaystubToolStripMenuItem.Name = "BenchmarkPaystubToolStripMenuItem"
+        Me.BenchmarkPaystubToolStripMenuItem.Size = New System.Drawing.Size(66, 20)
+        Me.BenchmarkPaystubToolStripMenuItem.Text = "Paystubs"
+        '
         'PayrollForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -96,4 +103,5 @@ Partial Class PayrollForm
     Friend WithEvents BonusToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents WithholdingTaxToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PaystubExperimentalToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents BenchmarkPaystubToolStripMenuItem As ToolStripMenuItem
 End Class

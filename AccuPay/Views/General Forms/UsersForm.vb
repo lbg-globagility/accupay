@@ -350,8 +350,8 @@ Public Class UsersForm
                 UserLevelComboBox.Visible = False
                 UserLevelDescriptionColumn.Visible = False
 
-                UserPrivilegeLabel.Visible = False
-                dgvPrivilege.Visible = False
+                UserPrivilegeLabel.Visible = True
+                dgvPrivilege.Visible = True
 
             End If
 

@@ -414,6 +414,12 @@
     </Compile>
     <Compile Include="_Benchmark\BenchmarkPayrollGeneration.vb" />
     <Compile Include="_Benchmark\BenchmarkPayrollHelper.vb" />
+    <Compile Include="_Benchmark\BenchmarkPaystubForm.Designer.vb">
+      <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\BenchmarkPaystubForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="_Benchmark\BenchmarkPaystubRate.vb" />
     <Compile Include="_Benchmark\OvertimeInput.vb" />
     <Compile Include="_Benchmark\SetOvertimeForm.Designer.vb">
@@ -1840,6 +1846,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\BenchmarkPayrollForm.resx">
       <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\BenchmarkPaystubForm.resx">
+      <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
