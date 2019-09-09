@@ -69,6 +69,34 @@ Namespace Benchmark
 
         End Function
 
+        Public Shared Function GetTotalOvertimePay(paystub As Paystub) As Decimal
+
+            Return paystub.OvertimePay +
+                paystub.NightDiffPay +
+                paystub.NightDiffOvertimePay +
+                paystub.RestDayPay +
+                paystub.RestDayOTPay +
+                paystub.RestDayNightDiffPay +
+                paystub.RestDayNightDiffOTPay +
+                paystub.SpecialHolidayPay +
+                paystub.SpecialHolidayOTPay +
+                paystub.SpecialHolidayNightDiffPay +
+                paystub.SpecialHolidayNightDiffOTPay +
+                paystub.SpecialHolidayRestDayPay +
+                paystub.SpecialHolidayRestDayOTPay +
+                paystub.SpecialHolidayRestDayNightDiffPay +
+                paystub.SpecialHolidayRestDayNightDiffOTPay +
+                paystub.RegularHolidayPay +
+                paystub.RegularHolidayOTPay +
+                paystub.RegularHolidayNightDiffPay +
+                paystub.RegularHolidayNightDiffOTPay +
+                paystub.RegularHolidayRestDayPay +
+                paystub.RegularHolidayRestDayOTPay +
+                paystub.RegularHolidayRestDayNightDiffPay +
+                paystub.RegularHolidayRestDayNightDiffOTPay
+
+        End Function
+
         ''' <summary>
         ''' Makes sure that Accupay does not have unneccesary data for benchmark.
         ''' </summary>

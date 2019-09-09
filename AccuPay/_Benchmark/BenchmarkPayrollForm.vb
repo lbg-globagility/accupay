@@ -567,7 +567,7 @@ Public Class BenchmarkPayrollForm
                                     Math.Abs(_currentPaystub.TotalDeductionAdjustments)).RoundToString()
 
         TotalOtherIncomeTextBox.Text = _currentPaystub.TotalAdditionAdjustments.RoundToString()
-        TotalOvertimeTextBox.Text = GetTotalOvertimePay(_currentPaystub).RoundToString()
+        TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(_currentPaystub).RoundToString()
         NetPayTextBox.Text = _currentPaystub.NetPay.RoundToString()
 
         SummaryGroupBox.Enabled = True
@@ -576,34 +576,6 @@ Public Class BenchmarkPayrollForm
     Private Function ConvertHoursToDays(hours As Decimal) As Decimal
 
         Return hours / BenchmarkPaystubRate.WorkHoursPerDay
-
-    End Function
-
-    Private Function GetTotalOvertimePay(paystub As Paystub) As Decimal
-
-        Return paystub.OvertimePay +
-                paystub.NightDiffPay +
-                paystub.NightDiffOvertimePay +
-                paystub.RestDayPay +
-                paystub.RestDayOTPay +
-                paystub.RestDayNightDiffPay +
-                paystub.RestDayNightDiffOTPay +
-                paystub.SpecialHolidayPay +
-                paystub.SpecialHolidayOTPay +
-                paystub.SpecialHolidayNightDiffPay +
-                paystub.SpecialHolidayNightDiffOTPay +
-                paystub.SpecialHolidayRestDayPay +
-                paystub.SpecialHolidayRestDayOTPay +
-                paystub.SpecialHolidayRestDayNightDiffPay +
-                paystub.SpecialHolidayRestDayNightDiffOTPay +
-                paystub.RegularHolidayPay +
-                paystub.RegularHolidayOTPay +
-                paystub.RegularHolidayNightDiffPay +
-                paystub.RegularHolidayNightDiffOTPay +
-                paystub.RegularHolidayRestDayPay +
-                paystub.RegularHolidayRestDayOTPay +
-                paystub.RegularHolidayRestDayNightDiffPay +
-                paystub.RegularHolidayRestDayNightDiffOTPay
 
     End Function
 

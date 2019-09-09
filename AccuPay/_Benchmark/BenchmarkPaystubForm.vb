@@ -1,5 +1,8 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Benchmark
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
+Imports AccuPay.ModelData
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
@@ -20,6 +23,14 @@ Public Class BenchmarkPaystubForm
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
+    Private _productRepository As ProductRepository
+
+    Private _pagibigLoanId As Integer?
+
+    Private _sssLoanId As Integer?
+
+    Private _overtimeRate As OvertimeRate
+
     Sub New()
 
         ' This call is required by the designer.
@@ -28,6 +39,7 @@ Public Class BenchmarkPaystubForm
         ' Add any initialization after the InitializeComponent() call.
         _employeeRepository = New EmployeeRepository
         _salaryRepository = New SalaryRepository
+        _productRepository = New ProductRepository
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -47,6 +59,11 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
+        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes()
+
+        _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
+        _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
+
         Await RefreshForm()
 
     End Sub
@@ -61,9 +78,7 @@ Public Class BenchmarkPaystubForm
             Return
         End If
 
-        'Await LoadPayrollDetails()
-
-        '_overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
 
         Await LoadPayrollDetails()
     End Function
@@ -188,17 +203,14 @@ Public Class BenchmarkPaystubForm
             EmployeeNumberLabel.Text = employee.EmployeeNo
             EmployeeNameLabel.Text = employee.FullNameLastNameFirst.ToUpper
 
-            Return
-
             'TODO
-            '4. get undeclared/actual salary
-            '5. populate summary
+            '2. Ecola
+            '5. get undeclared/actual salary
 
             Using context As New PayrollContext
 
-                Dim payStub = Await context.Paystubs.
-                        FirstOrDefaultAsync(Function(p) p.EmployeeID.Value = employeeId AndAlso p.PayPeriodID.Value = _currentPayPeriod.RowID.Value)
-
+                'paystub
+                Dim payStub As Paystub = Await GetPayStub(employeeId, context)
                 Dim payStubId = payStub?.RowID
 
                 If payStubId Is Nothing Then
@@ -208,71 +220,338 @@ Public Class BenchmarkPaystubForm
 
                 End If
 
-                Dim payStubAdjustments = Await context.Adjustments.
-                                                Include(Function(a) a.Product).
-                                                Where(Function(a) a.PaystubID = payStubId).
-                                                Select(Function(p) New Adjustments With {
-                                                    .Amount = p.Amount,
-                                                    .Code = p.Product.Comments,
-                                                    .Description = p.Product.PartNo
-                                                    }).
-                                                ToListAsync
-
-                Dim deductions = payStubAdjustments.Where(Function(p) p.Amount < 0).ToList
+                'adjustments (deductions and other incomes)
+                Dim payStubAdjustments = Await GetAdjustments(context, payStubId)
                 Dim otherIncomes = payStubAdjustments.Where(Function(p) p.Amount > 0).ToList
-
-                Dim loanRecords = context.LoanTransactions.
-                                            Where(Function(l) l.EmployeeID = employeeId).
-                                            Where(Function(l) l.PayPeriodID = _currentPayPeriod.RowID.Value).
-                                            ToListAsync
+                Dim deductions = GetAdjustmentDeductions(payStubAdjustments)
 
                 DeductionsGridView.DataSource = deductions
                 OtherIncomeGridView.DataSource = otherIncomes
 
+                'loans
+                Dim loanAmounts = Await GetGovernmentLoanAmounts(context, employeeId)
+                Dim pagIbigLoan = loanAmounts.Item1
+                Dim sssLoan = loanAmounts.Item2
+
+                'overtime list
+                Dim overtimeInputs = GetOvertimeInputs(payStub, employee)
+                If overtimeInputs Is Nothing Then Return
+                OvertimeGridView.DataSource = overtimeInputs
+
+                'Show summary
+                TotalDeductionsLabel.Text = "Php " & Math.Abs(payStub.TotalDeductionAdjustments).RoundToString()
+                TotalOtherIncomeLabel.Text = "Php " & payStub.TotalAdditionAdjustments.RoundToString()
+
+                BasicPaySummaryTextBox.Text = payStub.BasicPay.RoundToString()
+                PhilhealthAmountTextBox.Text = payStub.PhilHealthEmployeeShare.RoundToString()
+                SssAmountTextBox.Text = payStub.SssEmployeeShare.RoundToString()
+                PagibigAmountTextBox.Text = payStub.HdmfEmployeeShare.RoundToString()
+                WithholdingTaxTextBox.Text = payStub.WithholdingTax.RoundToString()
+                PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
+                SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
+
+                payStub.Ecola = payStub.AllowanceItems.Sum(Function(a) a.Amount)
+                EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
+                ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
+                LeaveBalanceTextBox.Text = (Await EmployeeData.GetVacationLeaveBalance(employee.RowID)).ToString
+
+                GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
+                TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
+
+                TotalDeductionTextBox.Text = (payStub.NetDeductions +
+                                            Math.Abs(payStub.TotalDeductionAdjustments)).RoundToString()
+
+                TotalOtherIncomeTextBox.Text = payStub.TotalAdditionAdjustments.RoundToString()
+                TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(payStub).RoundToString()
+                NetPayTextBox.Text = payStub.NetPay.RoundToString()
+
             End Using
+        End If
 
-            '1.
+    End Function
 
-            'Dim salary = _salaries.
-            '                Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
-            '                FirstOrDefault
+    Private Function GetOvertimeInputs(paystub As Paystub, employee As Employee) As List(Of OvertimeInput)
 
-            'If salary Is Nothing Then
+        Dim overtimeInputs As New List(Of OvertimeInput)
 
-            '    MessageBoxHelper.Warning("Cannot retrieve the employee salary. It may have been edited or deleted after this payroll was generated.")
-            'End If
+        Dim salary = _salaries.
+                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+                            FirstOrDefault
 
-            'If (Await FetchOtherPayrollData(employeeId) = False) Then Return
+        If salary Is Nothing Then
 
-            '_employeeRate = New BenchmarkPaystubRate(employee, salary)
+            MessageBoxHelper.Warning("Selected employee currently has no active salary. Please add one before computing the employees payroll.")
+            Return Nothing
+        End If
 
-            '_leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+        Dim employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            'If _employeeRate.IsInvalid Then Return
+        If employeeRate.IsInvalid Then
 
-            'EmployeeNumberLabel.Text = _employeeRate.Employee.EmployeeNo
-            'EmployeeNameLabel.Text = _employeeRate.Employee.FullNameLastNameFirst.ToUpper
+            MessageBoxHelper.Warning("Cannot retrieve details of the employee. Please try again and refresh the form or contact Globagility Inc.")
+            Return Nothing
+        End If
 
-            'TinTextBox.Text = _employeeRate.Employee.TinNo
-            'SssNumberTextBox.Text = _employeeRate.Employee.SssNo
-            'PagibigNumberTextBox.Text = _employeeRate.Employee.HdmfNo
-            'PhilhealthNumberTextBox.Text = _employeeRate.Employee.PhilHealthNo
-            'BasicPayTextBox.Text = _employeeRate.MonthlyRate.ToString(MoneyFormat)
-            'PerDayTextBox.Text = _employeeRate.DailyRate.ToString(MoneyFormat)
-            'PerHourTextBox.Text = _employeeRate.HourlyRate.ToString(MoneyFormat)
-            'AllowanceTextBox.Text = _employeeRate.AllowanceSalary.ToString(MoneyFormat)
+        Dim payPerHour = employeeRate.HourlyRate
 
-            'EcolaTextBox.Text = _ecola.Amount.ToString(MoneyFormat)
+        If paystub.OvertimePay <> 0 Then
 
-            '_selectedDeductions.Clear()
-            'DeductionsGridView.Rows.Clear()
-            '_selectedIncomes.Clear()
-            'OtherIncomeGridView.Rows.Clear()
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.Overtime,
+                                    paystub.OvertimeHours,
+                                    False,
+                                    payPerHour))
+        End If
 
-            '_overtimes = New List(Of OvertimeInput)
+        If paystub.NightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.NightDifferential,
+                                    paystub.NightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.NightDiffOvertimePay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.NightDifferentialOvertime,
+                                    paystub.NightDiffOvertimeHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RestDayPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RestDay,
+                                    paystub.RestDayHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RestDayOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RestDayOvertime,
+                                    paystub.RestDayOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RestDayNightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RestDayNightDifferential,
+                                    paystub.RestDayNightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RestDayNightDiffOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RestDayNightDifferentialOvertime,
+                                    paystub.RestDayNightDiffOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHoliday,
+                                    paystub.SpecialHolidayHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayOvertime,
+                                    paystub.SpecialHolidayOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayNightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayNightDifferential,
+                                    paystub.SpecialHolidayNightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayNightDiffOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayNightDifferentialOvertime,
+                                    paystub.SpecialHolidayNightDiffOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayRestDayPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayRestDay,
+                                    paystub.SpecialHolidayRestDayHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayRestDayOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayRestDayOvertime,
+                                    paystub.SpecialHolidayRestDayOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayRestDayNightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayRestDayNightDifferential,
+                                    paystub.SpecialHolidayRestDayNightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.SpecialHolidayRestDayNightDiffOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.SpecialHolidayRestDayNightDifferentialOvertime,
+                                    paystub.SpecialHolidayRestDayNightDiffOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHoliday,
+                                    paystub.RegularHolidayHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayOvertime,
+                                    paystub.RegularHolidayOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayNightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayNightDifferential,
+                                    paystub.RegularHolidayNightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayNightDiffOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayNightDifferentialOvertime,
+                                    paystub.RegularHolidayNightDiffOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayRestDayPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayRestDay,
+                                    paystub.RegularHolidayRestDayHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayRestDayOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayRestDayOvertime,
+                                    paystub.RegularHolidayRestDayOTHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayRestDayNightDiffPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayRestDayNightDifferential,
+                                    paystub.RegularHolidayRestDayNightDiffHours,
+                                    False,
+                                    payPerHour))
+        End If
+
+        If paystub.RegularHolidayRestDayNightDiffOTPay <> 0 Then
+
+            overtimeInputs.Add(New OvertimeInput(
+                                    _overtimeRate.RegularHolidayRestDayNightDifferentialOvertime,
+                                    paystub.RegularHolidayRestDayNightDiffOTHours,
+                                    False,
+                                    payPerHour))
 
         End If
 
+        Return overtimeInputs
+
+    End Function
+
+    Private Async Function GetGovernmentLoanAmounts(context As PayrollContext, employeeId As Integer) As Task(Of (Decimal?, Decimal?))
+
+        Dim loanRecords = Await context.LoanTransactions.
+                                            Include(Function(t) t.LoanSchedule).
+                                            Include(Function(t) t.LoanSchedule.LoanType).
+                                            Where(Function(t) t.EmployeeID = employeeId).
+                                            Where(Function(t) t.PayPeriodID = _currentPayPeriod.RowID.Value).
+                                            ToListAsync
+
+        Dim pagIbigLoan = loanRecords.
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID = _pagibigLoanId)?.Amount
+        Dim sssLoan = loanRecords.
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID = _sssLoanId)?.Amount
+
+        Return (pagIbigLoan, sssLoan)
+
+    End Function
+
+    Private Shared Function GetAdjustmentDeductions(payStubAdjustments As List(Of Adjustments)) As List(Of Adjustments)
+        Dim deductions = payStubAdjustments.Where(Function(p) p.Amount < 0).ToList
+        For Each deduction In deductions
+            deduction.Amount = Math.Abs(deduction.Amount)
+        Next
+
+        Return deductions
+    End Function
+
+    Private Shared Async Function GetAdjustments(context As PayrollContext, payStubId As Integer?) As Task(Of List(Of Adjustments))
+        Return Await context.Adjustments.
+                                                        Include(Function(a) a.Product).
+                                                        Where(Function(a) a.PaystubID = payStubId).
+                                                        Select(Function(p) New Adjustments With {
+                                                            .Amount = p.Amount,
+                                                            .Code = p.Product.Comments,
+                                                            .Description = p.Product.PartNo
+                                                            }).
+                                                        ToListAsync
+    End Function
+
+    Private Async Function GetPayStub(employeeId As Integer, context As PayrollContext) As Task(Of Paystub)
+        Return Await context.Paystubs.
+                                Include(Function(p) p.ThirteenthMonthPay).
+                                Include(Function(a) a.Adjustments).
+                                Include(Function(a) a.ActualAdjustments).
+                                Include(Function(a) a.AllowanceItems).
+                                FirstOrDefaultAsync(Function(p) p.EmployeeID.Value = employeeId AndAlso p.PayPeriodID.Value = _currentPayPeriod.RowID.Value)
     End Function
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
