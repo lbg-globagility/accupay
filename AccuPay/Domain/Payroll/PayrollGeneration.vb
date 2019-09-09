@@ -511,7 +511,10 @@ Public Class PayrollGeneration
 
         End If
 
-        context.RemoveRange(context.LeaveTransactions.Where(Function(t) t.LeaveLedgerID.Value = vacationLedger.RowID.Value))
+        'context.RemoveRange(
+        '    context.LeaveTransactions.
+        '        Where(Function(t) t.LeaveLedgerID.Value = vacationLedger.RowID.Value).
+        '        Where(Function(t) t.PayPeriodID.Value = _payPeriod.RowID.Value))
 
         UpdateLedgerTransaction(
                     employeeId:=_employee.RowID,

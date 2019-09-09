@@ -608,11 +608,31 @@ Public Class BenchmarkPaystubForm
 
         PayrollTools.DeletePaystub(employeeId, _currentPayPeriod.RowID.Value)
 
+        Await ResetLeaveTransaction(employee)
+
         Await RefreshForm()
 
         MessageBoxHelper.Information("Done! " & vbNewLine + vbNewLine & $"Go to Payroll transactions to process the payslip of {employee.FullNameLastNameFirst} [{employee.EmployeeNo}] again.", "Delete Paystub")
 
     End Sub
+
+    Private Async Function ResetLeaveTransaction(employee As Employee) As Task
+
+        'Delete LeaveTransactions
+        Using context As New PayrollContext
+
+            context.RemoveRange(context.LeaveTransactions.
+                                Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).
+                                Where(Function(t) t.PayPeriodID.Value = _currentPayPeriod.RowID.Value))
+
+        End Using
+
+        'Reset Leave Balance
+        Dim leaveRepository As New LeaveRepository
+        Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee.RowID.Value,
+                                                                AccuPay.LeaveType.LeaveType.Vacation,
+                                                                employee.VacationLeaveAllowance)
+    End Function
 
     Private Sub SearchEmployeeTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchEmployeeTextBox.TextChanged
 
