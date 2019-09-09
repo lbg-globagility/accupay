@@ -97,6 +97,12 @@ Namespace Benchmark
 
         End Function
 
+        Public Shared Function ConvertHoursToDays(hours As Decimal) As Decimal
+
+            Return hours / BenchmarkPaystubRate.WorkHoursPerDay
+
+        End Function
+
         ''' <summary>
         ''' Makes sure that Accupay does not have unneccesary data for benchmark.
         ''' </summary>

@@ -558,7 +558,7 @@ Public Class BenchmarkPayrollForm
 
         EcolaAmountTextBox.Text = _currentPaystub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = _currentPaystub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = (_leaveBalance - ConvertHoursToDays(_currentPaystub.LeaveHours)).ToString
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((_leaveBalance - _currentPaystub.LeaveHours)).ToString
 
         GrossPayTextBox.Text = _currentPaystub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = _currentPaystub.LeavePay.RoundToString()
@@ -572,12 +572,6 @@ Public Class BenchmarkPayrollForm
 
         SummaryGroupBox.Enabled = True
     End Sub
-
-    Private Function ConvertHoursToDays(hours As Decimal) As Decimal
-
-        Return hours / BenchmarkPaystubRate.WorkHoursPerDay
-
-    End Function
 
     Private Function GetSelectedDeduction() As Product
 
