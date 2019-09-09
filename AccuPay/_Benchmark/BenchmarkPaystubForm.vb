@@ -153,6 +153,7 @@ Public Class BenchmarkPaystubForm
         EmployeeNumberLabel.Text = "000-0000"
         EmployeeNameLabel.Text = "EMPLOYEE NAME"
 
+        OvertimeGridView.DataSource = New List(Of OvertimeInput)
         DeductionsGridView.DataSource = New List(Of Adjustment)
         OtherIncomeGridView.DataSource = New List(Of Adjustment)
 
@@ -180,6 +181,8 @@ Public Class BenchmarkPaystubForm
         TotalOvertimeTextBox.ResetText()
         NetPayTextBox.ResetText()
 
+        TotalOtherIncomeLabel.Text = "00.00"
+        TotalDeductionsLabel.Text = "00.00"
         DeletePaystubButton.Enabled = False
 
     End Sub
@@ -581,7 +584,7 @@ Public Class BenchmarkPaystubForm
 
     End Sub
 
-    Private Sub DeletePaystubButton_Click(sender As Object, e As EventArgs) Handles DeletePaystubButton.Click
+    Private Async Sub DeletePaystubButton_Click(sender As Object, e As EventArgs) Handles DeletePaystubButton.Click
 
         Dim employee = GetSelectedEmployee()
         Dim employeeId = employee?.RowID
@@ -604,6 +607,8 @@ Public Class BenchmarkPaystubForm
                (confirmMessage, "Delete Paystub", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         PayrollTools.DeletePaystub(employeeId, _currentPayPeriod.RowID.Value)
+
+        Await RefreshForm()
 
         MessageBoxHelper.Information("Done! " & vbNewLine + vbNewLine & $"Go to Payroll transactions to process the payslip of {employee.FullNameLastNameFirst} [{employee.EmployeeNo}] again.", "Delete Paystub")
 
