@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
@@ -64,6 +66,13 @@ Public Class BenchmarkPaystubForm
         _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
         _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
 
+        If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
+            Return
+
+        End If
+
         Await RefreshForm()
 
     End Sub
@@ -122,7 +131,7 @@ Public Class BenchmarkPaystubForm
         If payPeriodId IsNot Nothing Then
 
             _employees = Await _employeeRepository.
-                                GetAllWithPayrollAsync(_currentPayPeriod.RowID)
+                                GetAllWithPayrollAsync(_currentPayPeriod.RowID.Value)
         Else
             _employees = New List(Of Employee)
         End If
@@ -158,10 +167,10 @@ Public Class BenchmarkPaystubForm
         OtherIncomeGridView.DataSource = New List(Of Adjustment)
 
         RegularDaysTextBox.ResetText()
-        OvertimeTextBox.ResetText()
-        LateTextBox.ResetText()
-        LeaveTextBox.ResetText()
-        EcolaTextBox.ResetText()
+        UndeclaredPerDayTextBox.ResetText()
+        UndeclaredGrossPayTextBox.ResetText()
+        HolidayAndLeaveDaysTextBox.ResetText()
+        HolidayAndLeaveAmountTextBox.ResetText()
 
         BasicPaySummaryTextBox.ResetText()
         PhilhealthAmountTextBox.ResetText()
@@ -191,8 +200,6 @@ Public Class BenchmarkPaystubForm
 
         ClearEmployeeForms()
 
-        DeletePaystubButton.Enabled = True 'move this at the bottom after you finish the codes below
-
         If EmployeesGridView.CurrentRow IsNot Nothing Then
 
             If CheckIfGridViewHasValue(EmployeesGridView) = False Then Return
@@ -205,10 +212,6 @@ Public Class BenchmarkPaystubForm
 
             EmployeeNumberLabel.Text = employee.EmployeeNo
             EmployeeNameLabel.Text = employee.FullNameLastNameFirst.ToUpper
-
-            'TODO
-            '2. Ecola
-            '5. get undeclared/actual salary
 
             Using context As New PayrollContext
 
@@ -223,59 +226,136 @@ Public Class BenchmarkPaystubForm
 
                 End If
 
-                'adjustments (deductions and other incomes)
-                Dim payStubAdjustments = Await GetAdjustments(context, payStubId)
-                Dim otherIncomes = payStubAdjustments.Where(Function(p) p.Amount > 0).ToList
-                Dim deductions = GetAdjustmentDeductions(payStubAdjustments)
+                Dim employeeRate = GetEmployeeRate(employee)
+                If employeeRate Is Nothing Then Return
 
-                DeductionsGridView.DataSource = deductions
-                OtherIncomeGridView.DataSource = otherIncomes
-
-                'loans
-                Dim loanAmounts = Await GetGovernmentLoanAmounts(context, employeeId)
-                Dim pagIbigLoan = loanAmounts.Item1
-                Dim sssLoan = loanAmounts.Item2
-
-                'overtime list
-                Dim overtimeInputs = GetOvertimeInputs(payStub, employee)
-                If overtimeInputs Is Nothing Then Return
-                OvertimeGridView.DataSource = overtimeInputs
+                PopulateOvertimeGridView(payStub, employeeRate)
+                Await PopulateAdjustmentsGridView(context, payStubId)
+                ShowUndeclaredSalaryBreakdown(payStub, employeeRate)
 
                 'Show summary
-                TotalDeductionsLabel.Text = "Php " & Math.Abs(payStub.TotalDeductionAdjustments).RoundToString()
-                TotalOtherIncomeLabel.Text = "Php " & payStub.TotalAdditionAdjustments.RoundToString()
-
-                BasicPaySummaryTextBox.Text = payStub.BasicPay.RoundToString()
-                PhilhealthAmountTextBox.Text = payStub.PhilHealthEmployeeShare.RoundToString()
-                SssAmountTextBox.Text = payStub.SssEmployeeShare.RoundToString()
-                PagibigAmountTextBox.Text = payStub.HdmfEmployeeShare.RoundToString()
-                WithholdingTaxTextBox.Text = payStub.WithholdingTax.RoundToString()
-                PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
-                SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
-
                 payStub.Ecola = payStub.AllowanceItems.Sum(Function(a) a.Amount)
-                EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
-                ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
-                LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID))).ToString
+                Await ShowSummaryData(employee, employeeId, context, payStub)
 
-                GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
-                TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
-
-                TotalDeductionTextBox.Text = (payStub.NetDeductions +
-                                            Math.Abs(payStub.TotalDeductionAdjustments)).RoundToString()
-
-                TotalOtherIncomeTextBox.Text = payStub.TotalAdditionAdjustments.RoundToString()
-                TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(payStub).RoundToString()
-                NetPayTextBox.Text = payStub.NetPay.RoundToString()
+                DeletePaystubButton.Enabled = True 'move this at the bottom after you finish the codes below
 
             End Using
         End If
 
     End Function
 
-    Private Function GetOvertimeInputs(paystub As Paystub, employee As Employee) As List(Of OvertimeInput)
+    Private Async Function ShowSummaryData(employee As Employee, employeeId As Integer, context As PayrollContext, payStub As Paystub) As Task
+        'loans
+        Dim loanAmounts = Await GetGovernmentLoanAmounts(context, employeeId)
+        Dim pagIbigLoan = loanAmounts.Item1
+        Dim sssLoan = loanAmounts.Item2
 
-        Dim overtimeInputs As New List(Of OvertimeInput)
+        TotalDeductionsLabel.Text = "Php " & Math.Abs(payStub.TotalDeductionAdjustments).RoundToString()
+        TotalOtherIncomeLabel.Text = "Php " & payStub.TotalAdditionAdjustments.RoundToString()
+
+        BasicPaySummaryTextBox.Text = payStub.BasicPay.RoundToString()
+        PhilhealthAmountTextBox.Text = payStub.PhilHealthEmployeeShare.RoundToString()
+        SssAmountTextBox.Text = payStub.SssEmployeeShare.RoundToString()
+        PagibigAmountTextBox.Text = payStub.HdmfEmployeeShare.RoundToString()
+        WithholdingTaxTextBox.Text = payStub.WithholdingTax.RoundToString()
+        PagibigLoanTextBox.Text = If(pagIbigLoan, 0).RoundToString()
+        SssLoanTextBox.Text = If(sssLoan, 0).RoundToString()
+
+        EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
+        ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID))).ToString
+
+        GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
+        TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
+
+        TotalDeductionTextBox.Text = (payStub.NetDeductions +
+                                    Math.Abs(payStub.TotalDeductionAdjustments)).RoundToString()
+
+        TotalOtherIncomeTextBox.Text = payStub.TotalAdditionAdjustments.RoundToString()
+        TotalOvertimeTextBox.Text = BenchmarkPayrollHelper.GetTotalOvertimePay(payStub).RoundToString()
+        NetPayTextBox.Text = payStub.NetPay.RoundToString()
+    End Function
+
+    Private Sub ShowUndeclaredSalaryBreakdown(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
+        Dim rawUndeclaredRate = employeeRate.ActualDailyRate - employeeRate.DailyRate
+        Dim regularDays = BenchmarkPayrollHelper.ConvertHoursToDays(payStub.RegularHours)
+        Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((payStub.TotalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
+
+        Dim undeclaredRegularPay = rawUndeclaredRate * regularDays
+        Dim undeclaredHolidayAndLeavePay = ComputeHolidayAndLeavePays(payStub, rawUndeclaredRate)
+
+        RegularDaysTextBox.Text = regularDays.RoundToString
+        UndeclaredPerDayTextBox.Text = rawUndeclaredRate.RoundToString
+        UndeclaredGrossPayTextBox.Text = undeclaredRegularPay.RoundToString
+        HolidayAndLeaveDaysTextBox.Text = holidayAndLeaveDays.RoundToString
+        HolidayAndLeaveAmountTextBox.Text = undeclaredHolidayAndLeavePay.RoundToString
+        TotalUnderclaredTextBox.Text = (undeclaredRegularPay + undeclaredHolidayAndLeavePay).RoundToString
+    End Sub
+
+    Private Function ComputeHolidayAndLeavePays(payStub As Paystub, rawUndeclaredRate As Decimal) As Decimal
+
+        If rawUndeclaredRate = 0 Then Return 0
+
+        Dim rawUndeclaredRatePerHour = rawUndeclaredRate / 8
+
+        Dim total As Decimal = 0
+
+        If payStub.LeaveHours <> 0 Then
+
+            total += payStub.LeaveHours * rawUndeclaredRatePerHour
+
+        End If
+
+        If payStub.RestDayHours <> 0 Then
+
+            total += payStub.RestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RestDay.Rate)
+
+        End If
+
+        If payStub.SpecialHolidayHours <> 0 Then
+
+            total += payStub.SpecialHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHoliday.Rate)
+
+        End If
+
+        If payStub.SpecialHolidayRestDayHours <> 0 Then
+
+            total += payStub.SpecialHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHolidayRestDay.Rate)
+
+        End If
+
+        If payStub.RegularHolidayHours <> 0 Then
+
+            total += payStub.RegularHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHoliday.Rate)
+
+        End If
+
+        If payStub.RegularHolidayRestDayHours <> 0 Then
+
+            total += payStub.RegularHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHolidayRestDay.Rate)
+
+        End If
+
+        Return total
+
+    End Function
+
+    Private Async Function PopulateAdjustmentsGridView(context As PayrollContext, payStubId As Integer?) As Task
+        Dim payStubAdjustments = Await GetAdjustments(context, payStubId)
+        Dim otherIncomes = payStubAdjustments.Where(Function(p) p.Amount > 0).ToList
+        Dim deductions = GetAdjustmentDeductions(payStubAdjustments)
+
+        DeductionsGridView.DataSource = deductions
+        OtherIncomeGridView.DataSource = otherIncomes
+    End Function
+
+    Private Sub PopulateOvertimeGridView(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
+        Dim overtimeInputs = GetOvertimeInputs(payStub, employeeRate)
+        If overtimeInputs Is Nothing Then Return
+        OvertimeGridView.DataSource = overtimeInputs
+    End Sub
+
+    Private Function GetEmployeeRate(employee As Employee) As BenchmarkPaystubRate
 
         Dim salary = _salaries.
                             Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
@@ -294,6 +374,14 @@ Public Class BenchmarkPaystubForm
             MessageBoxHelper.Warning("Cannot retrieve details of the employee. Please try again and refresh the form or contact Globagility Inc.")
             Return Nothing
         End If
+
+        Return employeeRate
+
+    End Function
+
+    Private Function GetOvertimeInputs(paystub As Paystub, employeeRate As BenchmarkPaystubRate) As List(Of OvertimeInput)
+
+        Dim overtimeInputs As New List(Of OvertimeInput)
 
         Dim payPerHour = employeeRate.HourlyRate
 
@@ -514,14 +602,14 @@ Public Class BenchmarkPaystubForm
         Dim loanRecords = Await context.LoanTransactions.
                                             Include(Function(t) t.LoanSchedule).
                                             Include(Function(t) t.LoanSchedule.LoanType).
-                                            Where(Function(t) t.EmployeeID = employeeId).
-                                            Where(Function(t) t.PayPeriodID = _currentPayPeriod.RowID.Value).
+                                            Where(Function(t) t.EmployeeID.Value = employeeId).
+                                            Where(Function(t) t.PayPeriodID.Value = _currentPayPeriod.RowID.Value).
                                             ToListAsync
 
         Dim pagIbigLoan = loanRecords.
-            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID = _pagibigLoanId)?.Amount
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _pagibigLoanId.Value)?.Amount
         Dim sssLoan = loanRecords.
-            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID = _sssLoanId)?.Amount
+            FirstOrDefault(Function(l) l.LoanSchedule.LoanTypeID.Value = _sssLoanId.Value)?.Amount
 
         Return (pagIbigLoan, sssLoan)
 
@@ -539,7 +627,7 @@ Public Class BenchmarkPaystubForm
     Private Shared Async Function GetAdjustments(context As PayrollContext, payStubId As Integer?) As Task(Of List(Of Adjustments))
         Return Await context.Adjustments.
                                                         Include(Function(a) a.Product).
-                                                        Where(Function(a) a.PaystubID = payStubId).
+                                                        Where(Function(a) a.PaystubID.Value = payStubId.Value).
                                                         Select(Function(p) New Adjustments With {
                                                             .Amount = p.Amount,
                                                             .Code = p.Product.Comments,
@@ -606,7 +694,7 @@ Public Class BenchmarkPaystubForm
         If MessageBoxHelper.Confirm(Of Boolean) _
                (confirmMessage, "Delete Paystub", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
-        PayrollTools.DeletePaystub(employeeId, _currentPayPeriod.RowID.Value)
+        PayrollTools.DeletePaystub(employeeId.Value, _currentPayPeriod.RowID.Value)
 
         Await ResetLeaveTransaction(employee)
 
