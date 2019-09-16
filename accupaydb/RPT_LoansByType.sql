@@ -24,21 +24,21 @@ SELECT
     FORMAT(IFNULL(els.TotalLoanAmount, 0), 2) `DatCol5`,
     FORMAT(ROUND(IFNULL(els.TotalLoanAmount, 0),2) - ROUND(SUM(IFNULL(slp.DeductionAmount, 0)),2),2) `DatCol6`,
     CONCAT(
-	 		(SELECT payperiod.PayFromDate FROM scheduledloansperpayperiod
+	 		DATE_FORMAT((SELECT payperiod.PayFromDate FROM scheduledloansperpayperiod
 			INNER JOIN payperiod
 			ON scheduledloansperpayperiod.PayPeriodID = payperiod.RowID
 			WHERE scheduledloansperpayperiod.EmployeeLoanRecordID = els.RowID
 			AND payperiod.PayFromDate BETWEEN PayDateFrom AND PayDateTo
 			ORDER BY payperiod.PayFromDate ASC
-			LIMIT 1),
+			LIMIT 1), '%m/%d/%Y'),
 			' to ',
-	 		(SELECT payperiod.PayToDate FROM scheduledloansperpayperiod
+	 		DATE_FORMAT((SELECT payperiod.PayToDate FROM scheduledloansperpayperiod
 			INNER JOIN payperiod
 			ON scheduledloansperpayperiod.PayPeriodID = payperiod.RowID
 			WHERE scheduledloansperpayperiod.EmployeeLoanRecordID = els.RowID
 			AND payperiod.PayFromDate BETWEEN PayDateFrom AND PayDateTo
 			ORDER BY payperiod.PayToDate DESC
-			LIMIT 1)) AS `DatCol7`,
+			LIMIT 1), '%m/%d/%Y')) AS `DatCol7`,
     els.LoanNumber AS `DatCol8`
 FROM scheduledloansperpayperiod slp
 INNER JOIN employeeloanschedule els
