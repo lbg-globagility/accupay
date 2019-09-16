@@ -679,7 +679,7 @@ Partial Class PayStubForm
         Me.txtEmpID.Multiline = True
         Me.txtEmpID.Name = "txtEmpID"
         Me.txtEmpID.ReadOnly = True
-        Me.txtEmpID.Size = New System.Drawing.Size(516, 24)
+        Me.txtEmpID.Size = New System.Drawing.Size(800, 24)
         Me.txtEmpID.TabIndex = 162
         '
         'linkPrev
