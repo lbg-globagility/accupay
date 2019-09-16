@@ -23,17 +23,17 @@ Partial Class PayStubForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStubForm))
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -272,27 +272,27 @@ Partial Class PayStubForm
         Me.Label94 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtngenpayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintall = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ManagePayrollToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.GeneratePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrintPaySlipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeclaredToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnPayrollSumma = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.tsbtnDeclaredSummary = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsbtnActualSummary = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.IncludeThirteenthMonthButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.OtherActionsToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.Incude13thMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CashOutUnusedLeavesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
-        Me.tsbtnDelEmpPayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnDelAllEmpPayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintpayslip = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteToolStripDropDownButton = New System.Windows.Forms.ToolStripButton()
+        Me.DeleteAllToolStripDropDownButton = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -360,14 +360,14 @@ Partial Class PayStubForm
         Me.dgvpayper.ColumnHeadersHeight = 34
         Me.dgvpayper.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpayper.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.PayDateFrom, Me.PayDateTo, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvpayper.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvpayper.Location = New System.Drawing.Point(10, 204)
         Me.dgvpayper.MultiSelect = False
@@ -518,14 +518,14 @@ Partial Class PayStubForm
         Me.dgvemployees.ColumnHeadersHeight = 34
         Me.dgvemployees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.FirstName, Me.MiddleName, Me.LastName, Me.EmployeeType, Me.Position, Me.Division})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle13
         Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvemployees.Location = New System.Drawing.Point(103, 104)
         Me.dgvemployees.MultiSelect = False
@@ -545,8 +545,8 @@ Partial Class PayStubForm
         '
         'EmployeeID
         '
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle12
         Me.EmployeeID.HeaderText = "Employee ID"
         Me.EmployeeID.Name = "EmployeeID"
         Me.EmployeeID.ReadOnly = True
@@ -2443,36 +2443,36 @@ Partial Class PayStubForm
         Me.dgvAdjustments.AllowUserToOrderColumns = True
         Me.dgvAdjustments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvAdjustments.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.dgvAdjustments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.psaRowID, Me.cboProducts, Me.DataGridViewTextBoxColumn66, Me.DataGridViewTextBoxColumn64, Me.Column15, Me.IsAdjustmentActual})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle17
         Me.dgvAdjustments.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvAdjustments.Location = New System.Drawing.Point(746, 19)
         Me.dgvAdjustments.MultiSelect = False
         Me.dgvAdjustments.Name = "dgvAdjustments"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.dgvAdjustments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvAdjustments.Size = New System.Drawing.Size(626, 154)
         Me.dgvAdjustments.TabIndex = 506
@@ -2496,8 +2496,8 @@ Partial Class PayStubForm
         'DataGridViewTextBoxColumn66
         '
         Me.DataGridViewTextBoxColumn66.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn66.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn66.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
@@ -2511,8 +2511,8 @@ Partial Class PayStubForm
         '
         'Column15
         '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.Column15.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.Column15.DefaultCellStyle = DataGridViewCellStyle16
         Me.Column15.FillWeight = 10.0!
         Me.Column15.HeaderText = ""
         Me.Column15.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
@@ -3015,43 +3015,88 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnDelAllEmpPayroll, Me.tsbtnprintpayslip})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayrollToolStripDropDownButton, Me.tsbtnClose, Me.ToolStripSeparator1, Me.OtherActionsToolStripDropDownButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.DeleteToolStripDropDownButton, Me.DeleteAllToolStripDropDownButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
         Me.ToolStrip1.TabIndex = 175
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'tsbtngenpayroll
+        'ManagePayrollToolStripDropDownButton
         '
-        Me.tsbtngenpayroll.Image = CType(resources.GetObject("tsbtngenpayroll.Image"), System.Drawing.Image)
-        Me.tsbtngenpayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtngenpayroll.Name = "tsbtngenpayroll"
-        Me.tsbtngenpayroll.Size = New System.Drawing.Size(113, 22)
-        Me.tsbtngenpayroll.Text = "Ge&nerate Payroll"
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GeneratePayrollToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
+        Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
+        Me.ManagePayrollToolStripDropDownButton.Size = New System.Drawing.Size(118, 22)
+        Me.ManagePayrollToolStripDropDownButton.Text = "Manage Payroll"
         '
-        'tsbtnprintall
+        'GeneratePayrollToolStripMenuItem
         '
-        Me.tsbtnprintall.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem1, Me.ActualToolStripMenuItem1})
-        Me.tsbtnprintall.Image = CType(resources.GetObject("tsbtnprintall.Image"), System.Drawing.Image)
-        Me.tsbtnprintall.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintall.Name = "tsbtnprintall"
-        Me.tsbtnprintall.Size = New System.Drawing.Size(104, 22)
-        Me.tsbtnprintall.Text = "Print pay slip"
+        Me.GeneratePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.cash_register001
+        Me.GeneratePayrollToolStripMenuItem.Name = "GeneratePayrollToolStripMenuItem"
+        Me.GeneratePayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.GeneratePayrollToolStripMenuItem.Text = "Generate Payroll"
         '
-        'DeclaredToolStripMenuItem1
+        'PrintPaySlipToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem1.Name = "DeclaredToolStripMenuItem1"
-        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem1.Tag = "0"
-        Me.DeclaredToolStripMenuItem1.Text = "Declared"
+        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem2, Me.ActualToolStripMenuItem2})
+        Me.PrintPaySlipToolStripMenuItem.Image = CType(resources.GetObject("PrintPaySlipToolStripMenuItem.Image"), System.Drawing.Image)
+        Me.PrintPaySlipToolStripMenuItem.Name = "PrintPaySlipToolStripMenuItem"
+        Me.PrintPaySlipToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.PrintPaySlipToolStripMenuItem.Text = "Print Payslips"
         '
-        'ActualToolStripMenuItem1
+        'DeclaredToolStripMenuItem2
         '
-        Me.ActualToolStripMenuItem1.Name = "ActualToolStripMenuItem1"
-        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem1.Tag = "1"
-        Me.ActualToolStripMenuItem1.Text = "Actual"
+        Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
+        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.DeclaredToolStripMenuItem2.Tag = "0"
+        Me.DeclaredToolStripMenuItem2.Text = "Declared"
+        '
+        'ActualToolStripMenuItem2
+        '
+        Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
+        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ActualToolStripMenuItem2.Tag = "1"
+        Me.ActualToolStripMenuItem2.Text = "Actual"
+        '
+        'PrintPayrollSummaryToolStripMenuItem
+        '
+        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem3, Me.ActualToolStripMenuItem3})
+        Me.PrintPayrollSummaryToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.timeattendance
+        Me.PrintPayrollSummaryToolStripMenuItem.Name = "PrintPayrollSummaryToolStripMenuItem"
+        Me.PrintPayrollSummaryToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.PrintPayrollSummaryToolStripMenuItem.Text = "Print Payroll Summary"
+        '
+        'DeclaredToolStripMenuItem3
+        '
+        Me.DeclaredToolStripMenuItem3.Name = "DeclaredToolStripMenuItem3"
+        Me.DeclaredToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem3.Tag = "0"
+        Me.DeclaredToolStripMenuItem3.Text = "Declared"
+        '
+        'ActualToolStripMenuItem3
+        '
+        Me.ActualToolStripMenuItem3.Name = "ActualToolStripMenuItem3"
+        Me.ActualToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem3.Tag = "1"
+        Me.ActualToolStripMenuItem3.Text = "Actual"
+        '
+        'ClosePayrollToolStripMenuItem
+        '
+        Me.ClosePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.l_arrow
+        Me.ClosePayrollToolStripMenuItem.Name = "ClosePayrollToolStripMenuItem"
+        Me.ClosePayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.ClosePayrollToolStripMenuItem.Text = "Close Payroll"
+        Me.ClosePayrollToolStripMenuItem.Visible = False
+        '
+        'ReopenPayrollToolStripMenuItem
+        '
+        Me.ReopenPayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.r_arrow
+        Me.ReopenPayrollToolStripMenuItem.Name = "ReopenPayrollToolStripMenuItem"
+        Me.ReopenPayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.ReopenPayrollToolStripMenuItem.Text = "Reopen Payroll"
+        Me.ReopenPayrollToolStripMenuItem.Visible = False
         '
         'tsbtnClose
         '
@@ -3062,49 +3107,26 @@ Partial Class PayStubForm
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnClose.Text = "Close"
         '
-        'tsbtnPayrollSumma
-        '
-        Me.tsbtnPayrollSumma.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnDeclaredSummary, Me.tsbtnActualSummary})
-        Me.tsbtnPayrollSumma.Image = CType(resources.GetObject("tsbtnPayrollSumma.Image"), System.Drawing.Image)
-        Me.tsbtnPayrollSumma.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnPayrollSumma.Name = "tsbtnPayrollSumma"
-        Me.tsbtnPayrollSumma.Size = New System.Drawing.Size(154, 22)
-        Me.tsbtnPayrollSumma.Text = "Print Payroll Summary"
-        '
-        'tsbtnDeclaredSummary
-        '
-        Me.tsbtnDeclaredSummary.Name = "tsbtnDeclaredSummary"
-        Me.tsbtnDeclaredSummary.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnDeclaredSummary.Tag = "False"
-        Me.tsbtnDeclaredSummary.Text = "Declared"
-        '
-        'tsbtnActualSummary
-        '
-        Me.tsbtnActualSummary.Name = "tsbtnActualSummary"
-        Me.tsbtnActualSummary.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnActualSummary.Tag = "True"
-        Me.tsbtnActualSummary.Text = "Actual"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
-        'IncludeThirteenthMonthButton
+        'OtherActionsToolStripDropDownButton
         '
-        Me.IncludeThirteenthMonthButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Incude13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem})
-        Me.IncludeThirteenthMonthButton.Image = CType(resources.GetObject("IncludeThirteenthMonthButton.Image"), System.Drawing.Image)
-        Me.IncludeThirteenthMonthButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.IncludeThirteenthMonthButton.Name = "IncludeThirteenthMonthButton"
-        Me.IncludeThirteenthMonthButton.Size = New System.Drawing.Size(71, 22)
-        Me.IncludeThirteenthMonthButton.Text = "Others"
-        Me.IncludeThirteenthMonthButton.ToolTipText = "Include 13th Month Pay"
+        Me.OtherActionsToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Incude13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem})
+        Me.OtherActionsToolStripDropDownButton.Image = CType(resources.GetObject("OtherActionsToolStripDropDownButton.Image"), System.Drawing.Image)
+        Me.OtherActionsToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.OtherActionsToolStripDropDownButton.Name = "OtherActionsToolStripDropDownButton"
+        Me.OtherActionsToolStripDropDownButton.Size = New System.Drawing.Size(71, 22)
+        Me.OtherActionsToolStripDropDownButton.Text = "Others"
+        Me.OtherActionsToolStripDropDownButton.ToolTipText = "Include 13th Month Pay"
         '
         'Incude13thMonthPayToolStripMenuItem
         '
         Me.Incude13thMonthPayToolStripMenuItem.Name = "Incude13thMonthPayToolStripMenuItem"
         Me.Incude13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.Incude13thMonthPayToolStripMenuItem.Text = "Incude 13th Month Pay"
+        Me.Incude13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
         '
         'CashOutUnusedLeavesToolStripMenuItem
         '
@@ -3114,6 +3136,7 @@ Partial Class PayStubForm
         '
         'tsSearch
         '
+        Me.tsSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tsSearch.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.tsSearch.Name = "tsSearch"
@@ -3121,6 +3144,7 @@ Partial Class PayStubForm
         '
         'tsbtnSearch
         '
+        Me.tsbtnSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
         Me.tsbtnSearch.Image = Global.AccuPay.My.Resources.Resources.magnifier_zoom
         Me.tsbtnSearch.ImageTransparentColor = System.Drawing.Color.Magenta
@@ -3145,46 +3169,24 @@ Partial Class PayStubForm
         Me.ToolStripLabel8.Name = "ToolStripLabel8"
         Me.ToolStripLabel8.Size = New System.Drawing.Size(66, 22)
         '
-        'tsbtnDelEmpPayroll
+        'DeleteToolStripDropDownButton
         '
-        Me.tsbtnDelEmpPayroll.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDelEmpPayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDelEmpPayroll.Name = "tsbtnDelEmpPayroll"
-        Me.tsbtnDelEmpPayroll.Size = New System.Drawing.Size(105, 22)
-        Me.tsbtnDelEmpPayroll.Text = "Delete Paystub"
-        Me.tsbtnDelEmpPayroll.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
+        Me.DeleteToolStripDropDownButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.DeleteToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteToolStripDropDownButton.Name = "DeleteToolStripDropDownButton"
+        Me.DeleteToolStripDropDownButton.Size = New System.Drawing.Size(105, 22)
+        Me.DeleteToolStripDropDownButton.Text = "Delete Paystub"
+        Me.DeleteToolStripDropDownButton.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
         '
-        'tsbtnDelAllEmpPayroll
+        'DeleteAllToolStripDropDownButton
         '
-        Me.tsbtnDelAllEmpPayroll.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDelAllEmpPayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDelAllEmpPayroll.Name = "tsbtnDelAllEmpPayroll"
-        Me.tsbtnDelAllEmpPayroll.Size = New System.Drawing.Size(127, 20)
-        Me.tsbtnDelAllEmpPayroll.Text = "Delete All Paystubs"
-        '
-        'tsbtnprintpayslip
-        '
-        Me.tsbtnprintpayslip.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
-        Me.tsbtnprintpayslip.Image = CType(resources.GetObject("tsbtnprintpayslip.Image"), System.Drawing.Image)
-        Me.tsbtnprintpayslip.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintpayslip.Name = "tsbtnprintpayslip"
-        Me.tsbtnprintpayslip.Size = New System.Drawing.Size(104, 20)
-        Me.tsbtnprintpayslip.Text = "&Print pay slip"
-        Me.tsbtnprintpayslip.Visible = False
-        '
-        'DeclaredToolStripMenuItem
-        '
-        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
-        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem.Tag = "0"
-        Me.DeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'ActualToolStripMenuItem
-        '
-        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
-        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem.Tag = "1"
-        Me.ActualToolStripMenuItem.Text = "Actual"
+        Me.DeleteAllToolStripDropDownButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.DeleteAllToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteAllToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteAllToolStripDropDownButton.Name = "DeleteAllToolStripDropDownButton"
+        Me.DeleteAllToolStripDropDownButton.Size = New System.Drawing.Size(127, 22)
+        Me.DeleteAllToolStripDropDownButton.Text = "Delete All Paystubs"
         '
         'ImageList1
         '
@@ -3239,12 +3241,14 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Visible = False
         '
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.HeaderText = "Pay period from"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
         Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn2.Width = 154
         '
@@ -3252,6 +3256,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn3.HeaderText = "Pay period to"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn3.Width = 153
         '
@@ -3259,6 +3264,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn4.HeaderText = "Column2"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.Visible = False
         Me.DataGridViewTextBoxColumn4.Width = 154
         '
@@ -3266,6 +3272,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn5.HeaderText = "Column3"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         Me.DataGridViewTextBoxColumn5.Visible = False
         Me.DataGridViewTextBoxColumn5.Width = 153
         '
@@ -3273,109 +3280,128 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn6.HeaderText = "TotalGrossSalary"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
         Me.DataGridViewTextBoxColumn6.Visible = False
         '
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.HeaderText = "TotalNetSalary"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
         Me.DataGridViewTextBoxColumn7.Visible = False
         '
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.HeaderText = "TotalEmpSSS"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
         Me.DataGridViewTextBoxColumn8.Visible = False
         '
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.HeaderText = "TotalEmpWithholdingTax"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Visible = False
         '
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.HeaderText = "TotalCompSSS"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Visible = False
         '
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.HeaderText = "TotalEmpPhilhealth"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
         Me.DataGridViewTextBoxColumn11.Visible = False
         '
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.HeaderText = "TotalCompPhilhealth"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
         Me.DataGridViewTextBoxColumn12.Visible = False
         '
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.HeaderText = "TotalEmpHDMF"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
         Me.DataGridViewTextBoxColumn13.Visible = False
         '
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.HeaderText = "TotalCompHDMF"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
         Me.DataGridViewTextBoxColumn14.Visible = False
         '
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.HeaderText = "now_origin"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
         Me.DataGridViewTextBoxColumn15.Visible = False
         '
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.HeaderText = "End of month"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
         Me.DataGridViewTextBoxColumn16.Visible = False
         '
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
         '
         'DataGridViewTextBoxColumn18
         '
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn18.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
         '
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
         '
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
         '
         'DataGridViewTextBoxColumn21
         '
         Me.DataGridViewTextBoxColumn21.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
         '
         'DataGridViewTextBoxColumn22
         '
         Me.DataGridViewTextBoxColumn22.HeaderText = "Employee Type"
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        Me.DataGridViewTextBoxColumn22.ReadOnly = True
         '
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.HeaderText = "Position"
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        Me.DataGridViewTextBoxColumn23.ReadOnly = True
         '
         'DataGridViewTextBoxColumn24
         '
         Me.DataGridViewTextBoxColumn24.HeaderText = "Division"
         Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
         '
         'DataGridViewTextBoxColumn25
         '
@@ -3387,8 +3413,8 @@ Partial Class PayStubForm
         'DataGridViewTextBoxColumn26
         '
         Me.DataGridViewTextBoxColumn26.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn26.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn26.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
@@ -3470,7 +3496,6 @@ Partial Class PayStubForm
     Friend WithEvents tbppayroll As System.Windows.Forms.TabPage
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents tsbtngenpayroll As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnClose As System.Windows.Forms.ToolStripButton
     Friend WithEvents txtgrosssal As System.Windows.Forms.TextBox
     Friend WithEvents txttaxabsal As System.Windows.Forms.TextBox
@@ -3623,15 +3648,6 @@ Partial Class PayStubForm
     Friend WithEvents txttotabsent_U As System.Windows.Forms.TextBox
     Friend WithEvents Label92 As System.Windows.Forms.Label
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
-    Friend WithEvents tsbtnprintpayslip As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnprintall As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnPayrollSumma As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents tsbtnDeclaredSummary As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnActualSummary As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btndiscardchanges As System.Windows.Forms.Button
     Friend WithEvents LinkLabel5 As System.Windows.Forms.LinkLabel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
@@ -3654,7 +3670,7 @@ Partial Class PayStubForm
     Friend WithEvents Column13 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column14 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents tsbtnDelEmpPayroll As System.Windows.Forms.ToolStripButton
+    Friend WithEvents DeleteToolStripDropDownButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents psaRowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cboProducts As System.Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn66 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -3695,7 +3711,7 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecHoliOtPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
-    Friend WithEvents IncludeThirteenthMonthButton As ToolStripDropDownButton
+    Friend WithEvents OtherActionsToolStripDropDownButton As ToolStripDropDownButton
     Friend WithEvents Incude13thMonthPayToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CashOutUnusedLeavesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnTotalTaxabAllowance As Button
@@ -3706,7 +3722,7 @@ Partial Class PayStubForm
     Friend WithEvents txtGrandTotalAllow As TextBox
     Friend WithEvents Label106 As Label
     Friend WithEvents Label107 As Label
-    Friend WithEvents tsbtnDelAllEmpPayroll As ToolStripButton
+    Friend WithEvents DeleteAllToolStripDropDownButton As ToolStripButton
     Friend WithEvents RowID As DataGridViewTextBoxColumn
     Friend WithEvents EmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents FirstName As DataGridViewTextBoxColumn
@@ -3743,4 +3759,14 @@ Partial Class PayStubForm
     Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+    Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents GeneratePayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PrintPaySlipToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeclaredToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents ActualToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents PrintPayrollSummaryToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeclaredToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ActualToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ClosePayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ReopenPayrollToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -53,6 +53,7 @@ Namespace Global.AccuPay.Entity
         Public Property PhHWeeklyAgentContribSched As Boolean
         Public Property HDMFWeeklyAgentContribSched As Boolean
         Public Property WTaxWeeklyAgentContribSched As Boolean
+        Public Property IsClosed As Boolean
 
         Public ReadOnly Property IsMonthly As Boolean
             Get

@@ -5,6 +5,8 @@ Imports log4net
 Imports System.Collections.Concurrent
 Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Views.Payroll
+Imports AccuPay.Utils
+Imports AccuPay.Entity
 
 Public Class PayStubForm
 
@@ -53,6 +55,8 @@ Public Class PayStubForm
     Private sys_ownr As New SystemOwner
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
+
+    Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -115,18 +119,18 @@ Public Class PayStubForm
 
         If formuserprivilege.Count = 0 Then
 
-            tsbtngenpayroll.Visible = 0
+            ManagePayrollToolStripDropDownButton.Visible = 0
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
-                    tsbtngenpayroll.Visible = 0
+                    ManagePayrollToolStripDropDownButton.Visible = 0
 
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-                        tsbtngenpayroll.Visible = 0
+                        ManagePayrollToolStripDropDownButton.Visible = 0
                     Else
-                        tsbtngenpayroll.Visible = 1
+                        ManagePayrollToolStripDropDownButton.Visible = 1
                     End If
 
                 End If
@@ -146,25 +150,68 @@ Public Class PayStubForm
     End Sub
 
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
+        ClosePayrollToolStripMenuItem.Visible = False
+        ReopenPayrollToolStripMenuItem.Visible = False
+
         Dim hasValue = (MDIPrimaryForm.systemprogressbar.Value > 0)
         If hasValue Then
             For i = 0 To 5
                 RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
             Next
         End If
+
         Dim date_param = If(param_Date = Nothing, "NULL", "'" & param_Date & "-01-01'")
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL VIEW_payperiodofyear('" & orgztnID & "'," & date_param & ",'0');")
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
+
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+        _payPeriodDataList = New List(Of PayPeriodStatusData)
+
         dgvpayper.Rows.Clear()
+        Dim index As Integer = 0
         For Each drow As DataRow In catchdt.Rows
             Dim row_array = drow.ItemArray
             dgvpayper.Rows.Add(row_array)
+
+            Dim payPeriodData = CreatePayPeriodData(payPeriodsWithPaystubCount, index, drow)
+            If payPeriodData IsNot Nothing Then
+                _payPeriodDataList.Add(payPeriodData)
+            End If
+
+            index += 1
         Next
         catchdt.Dispose()
         If hasValue Then
             AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
         End If
     End Sub
+
+    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod), index As Integer, drow As DataRow) As PayPeriodStatusData
+        Dim payPeriodData As New PayPeriodStatusData
+
+        payPeriodData.Index = index
+        payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Open
+
+        If drow("IsClosed") <> 0 Then
+            'the payperiods here are closed
+            dgvpayper.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+            payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed
+        Else
+
+            'check if this open payperiod is already modified
+            If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = drow("ppRowID")) Then
+
+                dgvpayper.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
+                dgvpayper.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
+
+                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Modified
+
+            End If
+
+        End If
+
+        Return payPeriodData
+    End Function
 
     Sub loademployee(Optional q_empsearch As String = Nothing)
         If paypRowID Is Nothing Then
@@ -250,6 +297,8 @@ Public Class PayStubForm
                 Next
 
             End With
+
+            ShowPayrollActions(True)
         Else
 
             paypRowID = Nothing
@@ -258,10 +307,20 @@ Public Class PayStubForm
             isEndOfMonth = 0
             paypPayFreqID = String.Empty
 
+            ShowPayrollActions(False)
+
             dgvemployees_SelectionChanged(sender, e)
 
         End If
         AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+    End Sub
+
+    Private Sub ShowPayrollActions(showPayrollActions As Boolean)
+
+        ManagePayrollToolStripDropDownButton.Visible = showPayrollActions
+        OtherActionsToolStripDropDownButton.Visible = showPayrollActions
+        DeleteAllToolStripDropDownButton.Visible = showPayrollActions
+        DeleteToolStripDropDownButton.Visible = showPayrollActions
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
@@ -533,14 +592,6 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub tsbtngenpayroll_Click(sender As Object, e As EventArgs) Handles tsbtngenpayroll.Click
-        With selectPayPeriod
-            .Show()
-            .BringToFront()
-            .dgvpaypers.Focus()
-        End With
-    End Sub
-
     Sub genpayroll(Optional PayFreqRowID As Object = Nothing)
         Dim loadTask = Task.Factory.StartNew(
             Function()
@@ -780,16 +831,13 @@ Public Class PayStubForm
         showAuditTrail.BringToFront()
     End Sub
 
-    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) _
-        Handles _
-        tsbtnDeclaredSummary.Click,
-        tsbtnActualSummary.Click
+    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem3.Click, ActualToolStripMenuItem3.Click
 
         Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
-        Dim obj_sender = DirectCast(sender, ToolStripMenuItem)
+        Dim is_actual = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
-        Dim is_actual As Boolean = (obj_sender.Name = tsbtnActualSummary.Name)
+        MessageBox.Show(is_actual)
 
         psefr.IsActual = is_actual
 
@@ -1503,12 +1551,12 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles tsbtnDelEmpPayroll.Click
+    Private Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteToolStripDropDownButton.Click
 
         If currentEmployeeID = Nothing Then
         Else
 
-            tsbtnDelEmpPayroll.Enabled = False
+            DeleteToolStripDropDownButton.Enabled = False
 
             Dim prompt = MessageBox.Show("Do you want to delete this '" & CDate(paypFrom).ToShortDateString &
                                          "' to '" & CDate(paypTo).ToShortDateString &
@@ -1536,7 +1584,7 @@ Public Class PayStubForm
 
             End If
 
-            tsbtnDelEmpPayroll.Enabled = True
+            DeleteToolStripDropDownButton.Enabled = True
 
         End If
 
@@ -1546,9 +1594,10 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem1.Click,
-                                                                                ActualToolStripMenuItem1.Click
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem2.Click, ActualToolStripMenuItem2.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
+
+        MessageBox.Show(IsActualFlag)
 
         Dim n_PrintAllPaySlipOfficialFormat As _
             New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
@@ -1662,8 +1711,8 @@ Public Class PayStubForm
         cashOut.Execute()
     End Sub
 
-    Private Async Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles tsbtnDelAllEmpPayroll.Click
-        tsbtnDelAllEmpPayroll.Enabled = False
+    Private Async Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteAllToolStripDropDownButton.Click
+        DeleteAllToolStripDropDownButton.Enabled = False
 
         Dim prompt = MessageBox.Show("Do you want to delete all payrolls of employees?",
                                      "Delete all employee payroll",
@@ -1690,7 +1739,7 @@ Public Class PayStubForm
             dgvemployees_SelectionChanged(sender, e)
         End If
 
-        tsbtnDelAllEmpPayroll.Enabled = True
+        DeleteAllToolStripDropDownButton.Enabled = True
     End Sub
 
     Private Enum PaginationAction
@@ -1699,5 +1748,39 @@ Public Class PayStubForm
         [Next]
         Previous
     End Enum
+
+    Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripMenuItem.Click
+
+        With selectPayPeriod
+            .Show()
+            .BringToFront()
+            .dgvpaypers.Focus()
+        End With
+
+    End Sub
+
+    Private Sub ClosePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePayrollToolStripMenuItem.Click
+
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
+    End Sub
+
+    Private Sub ReopenPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReopenPayrollToolStripMenuItem.Click
+
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return
+        End If
+
+    End Sub
 
 End Class

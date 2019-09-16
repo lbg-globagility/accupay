@@ -40,9 +40,10 @@ IF isotherformat = '0' THEN
         ,IF(DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN payp.PayFromDate AND payp.PayToDate,'0',IF(DATE_FORMAT(NOW(),'%Y-%m-%d') > payp.PayFromDate,'-1','1')) 'now_origin'
         ,payp.`Half` AS eom
         ,SSSContribSched
-		  ,PhHContribSched
-		  ,HDMFContribSched
-		  ,payp.MinWageValue
+        ,PhHContribSched
+        ,HDMFContribSched
+        ,payp.MinWageValue
+        ,payp.IsClosed
         FROM payperiod payp
         WHERE payp.OrganizationID=payp_OrganizationID
         AND TotalGrossSalary=1
