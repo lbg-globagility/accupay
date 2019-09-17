@@ -505,7 +505,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
 #Region "Adjustment Breakdown"
 
-    Private _adjustmentQueried As Boolean
     Private _adjustments As List(Of IAdjustment)
 
     Private Function GetPayrollSummaryPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
@@ -569,12 +568,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
                             Optional allEmployees As ICollection(Of DataRow) = Nothing) _
                             As Task(Of List(Of IAdjustment))
 
-        If _adjustmentQueried AndAlso _adjustments IsNot Nothing Then
-
-            Return _adjustments
-
-        End If
-
         Using context As New PayrollContext
 
             Dim payPeriodFrom As New PayPeriod
@@ -611,8 +604,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 actualAdjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
 
             End If
-
-            _adjustmentQueried = True
 
             _adjustments = New List(Of IAdjustment)(Await adjustmentQuery.ToListAsync)
             _adjustments.AddRange(New List(Of IAdjustment)(Await actualAdjustmentQuery.ToListAsync))
