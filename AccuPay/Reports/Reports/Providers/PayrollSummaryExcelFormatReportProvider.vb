@@ -271,6 +271,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Dim adjustment = _adjustments.
                     Where(Function(a) a.Product.PartNo = productName).
                     Where(Function(a) a.Paystub.EmployeeID.Value = employeeId.Value).
+                    Where(Function(a) a.Paystub.RowID.Value = ObjectUtils.ToInteger(employee("PaystubId"))).
                     Sum(Function(a) a.PayAmount)
 
             Return adjustment
