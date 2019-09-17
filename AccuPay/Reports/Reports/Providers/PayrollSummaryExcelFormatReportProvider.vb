@@ -535,8 +535,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
             counter += 1
         Next
 
-        'remove total adjustments column
-        viewableReportColumns.RemoveAt(totalAdjustmentColumnIndex)
+        If totalAdjustmentColumnIndex >= 0 AndAlso totalAdjustmentColumnIndex < viewableReportColumns.Count Then
+
+            'remove total adjustments column
+            viewableReportColumns.RemoveAt(totalAdjustmentColumnIndex)
+
+        End If
 
         'add back the total adjustment column if it is not BreakdownOnly
         'this will put the column after the adjustment breakdown columns
