@@ -168,7 +168,8 @@ SELECT
 		DATE_FORMAT(paystub.PayToDate,'%c/%e/%Y')
 	) `DatCol20`,
 	DATE_FORMAT(paystub.PayFromDate, customDateFormat) `From`,
-	DATE_FORMAT(paystub.PayToDate, customDateFormat) `To`
+	DATE_FORMAT(paystub.PayToDate, customDateFormat) `To`,
+	paystub.RowID AS 'PaystubId'
 FROM paystub
 LEFT JOIN paystubactual
 ON paystubactual.EmployeeID = paystub.EmployeeID AND
