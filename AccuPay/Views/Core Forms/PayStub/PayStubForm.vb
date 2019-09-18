@@ -323,8 +323,6 @@ Public Class PayStubForm
 
     Private Sub ShowPayrollActions(showPayrollActions As Boolean, Optional payrollStatus As PayPeriodStatusData.PayPeriodStatusReference = Nothing)
 
-        OtherActionsToolStripDropDownButton.Visible = showPayrollActions
-        DeleteAllToolStripDropDownButton.Visible = showPayrollActions
         DeleteToolStripDropDownButton.Visible = showPayrollActions
 
         If payrollStatus Is Nothing Then
@@ -340,13 +338,10 @@ Public Class PayStubForm
 
                 Case PayPeriodStatusData.PayPeriodStatus.Processing
 
-                    RegeneratePayrollToolStripMenuItem.Visible = True
+                    EnablePayrollToolStripItem()
                     ReopenPayrollToolStripMenuItem.Visible = False
-                    ClosePayrollToolStripMenuItem.Visible = True
 
-                    dgvAdjustments.Enabled = True
-                    btnSaveAdjustments.Visible = True
-                    btndiscardchanges.Visible = True
+                    EnableAdjustmentsInput()
 
                 Case PayPeriodStatusData.PayPeriodStatus.Closed
 
@@ -362,13 +357,22 @@ Public Class PayStubForm
     End Sub
 
     Private Sub DisableAllPayrollActions()
-        RegeneratePayrollToolStripMenuItem.Visible = False
-        ReopenPayrollToolStripMenuItem.Visible = False
-        ClosePayrollToolStripMenuItem.Visible = False
+        EnablePayrollToolStripItem(enable:=False)
+        EnableAdjustmentsInput(enable:=False)
+    End Sub
 
-        dgvAdjustments.Enabled = False
-        btnSaveAdjustments.Visible = False
-        btndiscardchanges.Visible = False
+    Private Sub EnablePayrollToolStripItem(Optional enable As Boolean = True)
+        RegeneratePayrollToolStripMenuItem.Visible = enable
+        DeletePayrollToolStripMenuItem.Visible = enable
+        ReopenPayrollToolStripMenuItem.Visible = enable
+        ClosePayrollToolStripMenuItem.Visible = enable
+        OthersToolStripMenuItem.Visible = enable
+    End Sub
+
+    Private Sub EnableAdjustmentsInput(Optional enable As Boolean = True)
+        dgvAdjustments.Enabled = enable
+        btnSaveAdjustments.Visible = enable
+        btndiscardchanges.Visible = enable
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
@@ -671,9 +675,9 @@ Public Class PayStubForm
         )
     End Sub
 
-    Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
-        ThreadingPayrollGeneration(t.Result)
-    End Sub
+    Private Async Function LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources)) As Task
+        Await ThreadingPayrollGeneration(t.Result)
+    End Function
 
     Private Sub LoadingPayrollDataOnError(t As Task)
         _logger.Error("Error loading one of the payroll data.", t.Exception)
@@ -681,7 +685,7 @@ Public Class PayStubForm
         Me.Enabled = True
     End Sub
 
-    Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
+    Private Async Function ThreadingPayrollGeneration(resources As PayrollResources) As Task
         _finishedPaystubs = 0
 
         Try
@@ -692,7 +696,7 @@ Public Class PayStubForm
             _failedPaystubs = 0
             _results = New BlockingCollection(Of PayrollGeneration.Result)()
 
-            Task.Run(
+            Await Task.Run(
                 Sub()
                     Parallel.ForEach(
                         resources.Employees,
@@ -706,10 +710,12 @@ Public Class PayStubForm
                             generator.DoProcess()
                         End Sub)
                 End Sub)
+
+            RefreshForm()
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
-    End Sub
+    End Function
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Me.Close()
@@ -1610,11 +1616,15 @@ Public Class PayStubForm
         If currentEmployeeID = Nothing Then
         Else
 
+            Dim toBeDeletedEmployeeID = currentEmployeeID
+            Dim toBeDeletedPaypFrom = paypFrom
+            Dim toBeDeletedPaypTo = paypTo
+
             DeleteToolStripDropDownButton.Enabled = False
 
-            Dim prompt = MessageBox.Show("Do you want to delete this '" & CDate(paypFrom).ToShortDateString &
-                                         "' to '" & CDate(paypTo).ToShortDateString &
-                                         "' payroll of employee '" & currentEmployeeID & "' ?",
+            Dim prompt = MessageBox.Show("Do you want to delete the '" & CDate(toBeDeletedPaypFrom).ToShortDateString &
+                                         "' to '" & CDate(toBeDeletedPaypTo).ToShortDateString &
+                                         "' payroll of employee '" & toBeDeletedEmployeeID & "' ?",
                                          "Delete employee payroll",
                                          MessageBoxButtons.YesNoCancel,
                                          MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
@@ -1636,6 +1646,10 @@ Public Class PayStubForm
                     n_ExecuteQuery = New ExecuteQuery("CALL DEL_specificpaystub('" & paystubRowID & "');")
                 End If
 
+                RefreshForm()
+
+                MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeID} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
+
             End If
 
             DeleteToolStripDropDownButton.Enabled = True
@@ -1656,19 +1670,6 @@ Public Class PayStubForm
         Dim n_PrintAllPaySlipOfficialFormat As _
             New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
                                               IsActualFlag)
-    End Sub
-
-    Private Sub IncludeThirteenthMonthButton_Click(sender As Object, e As EventArgs) Handles Incude13thMonthPayToolStripMenuItem.Click
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
-
-        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
-            Return
-        End If
-
-        Dim dateFrom = payPeriodSelector.DateFrom
-        Dim dateTo = payPeriodSelector.DateTo
-
-        Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
     Sub ProgressCounter(result As PayrollGeneration.Result)
@@ -1746,66 +1747,12 @@ Public Class PayStubForm
 
     End Function
 
-    Private Sub tsbtnCashOutUnusedLeaves_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
-        If paypRowID = 0 Then
-            MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
-            Return
-        End If
-
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
-
-        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
-            Return
-        End If
-
-        Dim dateFromId = payPeriodSelector.PayPeriodFromID
-        Dim dateToId = payPeriodSelector.PayPeriodToID
-
-        Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID)
-        cashOut.Execute()
-    End Sub
-
-    Private Async Sub tsbtnDelAllEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteAllToolStripDropDownButton.Click
-        DeleteAllToolStripDropDownButton.Enabled = False
-
-        Dim prompt = MessageBox.Show("Do you want to delete all payrolls of employees?",
-                                     "Delete all employee payroll",
-                                     MessageBoxButtons.YesNoCancel,
-                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-
-        If prompt = Windows.Forms.DialogResult.Yes Then
-            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-
-            Dim payperiodId As Integer? = Integer.Parse(paypRowID)
-
-            Dim paystubIds As IList(Of Integer?)
-            Using context = New PayrollContext
-                paystubIds = Await context.Paystubs.Where(Function(p) p.PayPeriodID = payperiodId).
-                    Select(Function(p) p.RowID).
-                    ToListAsync()
-            End Using
-
-            For Each p In paystubIds
-                Dim query = New ExecuteQuery($"CALL DEL_specificpaystub('{p}');")
-            Next
-
-            AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-            dgvemployees_SelectionChanged(sender, e)
-        End If
-
-        DeleteAllToolStripDropDownButton.Enabled = True
-    End Sub
-
     Private Enum PaginationAction
         First
         Last
         [Next]
         Previous
     End Enum
-
-    Private Sub RegeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RegeneratePayrollToolStripMenuItem.Click
-        'TODO regenerate payroll
-    End Sub
 
     Private Async Sub ClosePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePayrollToolStripMenuItem.Click
 
@@ -1864,6 +1811,8 @@ Public Class PayStubForm
 
         End Using
 
+        RefreshForm()
+
         If open Then
 
             MessageBoxHelper.Information("Pay period was reopened successfully.")
@@ -1873,13 +1822,14 @@ Public Class PayStubForm
 
         End If
 
-        VIEW_payperiodofyear()
-
-        dgvpayper_SelectionChanged(Nothing, Nothing)
-
         Return True
 
     End Function
+
+    Private Sub RefreshForm()
+        VIEW_payperiodofyear()
+        dgvpayper_SelectionChanged(Nothing, Nothing)
+    End Sub
 
     Private Sub GeneratePayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
@@ -1889,6 +1839,78 @@ Public Class PayStubForm
             .dgvpaypers.Focus()
         End With
 
+    End Sub
+
+    Private Sub Include13thMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
+        Dim payPeriodSelector = New PayrollSummaDateSelection()
+
+        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim dateFrom = payPeriodSelector.DateFrom
+        Dim dateTo = payPeriodSelector.DateTo
+
+        Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
+    End Sub
+
+    Private Sub CashOutUnusedLeavesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
+        If paypRowID = 0 Then
+            MsgBox("Please select a generated payroll.", MsgBoxStyle.Exclamation)
+            Return
+        End If
+
+        Dim payPeriodSelector = New PayrollSummaDateSelection()
+
+        If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
+            Return
+        End If
+
+        Dim dateFromId = payPeriodSelector.PayPeriodFromID
+        Dim dateToId = payPeriodSelector.PayPeriodToID
+
+        Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID)
+        cashOut.Execute()
+    End Sub
+
+    Private Sub RegenerateToolStripButton_Click(sender As Object, e As EventArgs) Handles RegeneratePayrollToolStripMenuItem.Click
+        'TODO regenerate payroll
+    End Sub
+
+    Private Async Sub DeletePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeletePayrollToolStripMenuItem.Click
+        DeletePayrollToolStripMenuItem.Enabled = False
+
+        Dim toBeDeletedPaypFrom = paypFrom
+        Dim toBeDeletedPaypTo = paypTo
+
+        Dim prompt = MessageBox.Show($"Do you want to delete all paystubs of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
+                                     "Delete all employee payroll",
+                                     MessageBoxButtons.YesNoCancel,
+                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+
+        If prompt = Windows.Forms.DialogResult.Yes Then
+            RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
+
+            Dim payperiodId As Integer? = Integer.Parse(paypRowID)
+
+            Dim paystubIds As IList(Of Integer?)
+            Using context = New PayrollContext
+                paystubIds = Await context.Paystubs.Where(Function(p) p.PayPeriodID = payperiodId).
+                    Select(Function(p) p.RowID).
+                    ToListAsync()
+            End Using
+
+            For Each p In paystubIds
+                Dim query = New ExecuteQuery($"CALL DEL_specificpaystub('{p}');")
+            Next
+
+            RefreshForm()
+
+            MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
+
+        End If
+
+        DeletePayrollToolStripMenuItem.Enabled = True
     End Sub
 
 End Class
