@@ -6,10 +6,22 @@ Public Class PayPeriodStatusData
     Public Enum PayPeriodStatus
 
         Open
-        Modified
+        Processing
         Closed
 
     End Enum
+
+    Public Class PayPeriodStatusReference
+
+        Public Property PayPeriodStatus As PayPeriodStatus
+
+        Sub New(payPeriodStatus As PayPeriodStatus)
+
+            Me.PayPeriodStatus = payPeriodStatus
+
+        End Sub
+
+    End Class
 
     Public Property Index As Integer
     Public Property Status As PayPeriodStatus

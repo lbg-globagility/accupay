@@ -212,7 +212,7 @@ Public Class selectPayPeriod
                 dgvpaypers.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
                 dgvpaypers.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
 
-                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Modified
+                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
             End If
 
@@ -261,17 +261,17 @@ Public Class selectPayPeriod
 
                 If currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed Then
 
-                    MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are modified pay periods, make sure to close them first.")
+                    MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
                     Return
 
                 ElseIf currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Open AndAlso
-                    _payPeriodDataList.Any(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Modified) Then
+                    _payPeriodDataList.Any(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Processing) Then
 
-                    MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish it first then close it to process other open pay periods.")
+                    MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
                     Return
 
-                ElseIf currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Modified AndAlso
-                    _payPeriodDataList.Where(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Modified).Count() > 1 Then
+                ElseIf currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing AndAlso
+                    _payPeriodDataList.Where(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Processing).Count() > 1 Then
 
                     MessageBoxHelper.Warning("There are more than one pay periods with ""PROCESSING"" status. Please close one ""PROCESSING"" pay period first. Only one pay period can be processed at a time.")
                     Return
@@ -363,9 +363,9 @@ Public Class selectPayPeriod
         Select Case currentPayPeriodData.Status
             Case PayPeriodStatusData.PayPeriodStatus.Open
                 PayPeriodStatusLabel.Text = "OPEN"
-                PayPeriodStatusLabel.BackColor = Color.Black
+                PayPeriodStatusLabel.BackColor = Color.Blue
                 PayPeriodStatusLabel.ForeColor = Color.White
-            Case PayPeriodStatusData.PayPeriodStatus.Modified
+            Case PayPeriodStatusData.PayPeriodStatus.Processing
                 PayPeriodStatusLabel.Text = "PROCESSING"
                 PayPeriodStatusLabel.BackColor = Color.Green
                 PayPeriodStatusLabel.ForeColor = Color.White

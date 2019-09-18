@@ -173,7 +173,7 @@ Public Class PayStubForm
             Dim row_array = drow.ItemArray
             dgvpayper.Rows.Add(row_array)
 
-            Dim payPeriodData = CreatePayPeriodData(payPeriodsWithPaystubCount, index, drow)
+            Dim payPeriodData = CreatePayPeriodData(payPeriodsWithPaystubCount, index, drow) 'drow("ppRowID").ToString
             If payPeriodData IsNot Nothing Then
                 _payPeriodDataList.Add(payPeriodData)
             End If
@@ -190,21 +190,21 @@ Public Class PayStubForm
         Dim payPeriodData As New PayPeriodStatusData
 
         payPeriodData.Index = index
+        Dim currentRow = dgvpayper.Rows(payPeriodData.Index)
         payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Open
 
         If drow("IsClosed") <> 0 Then
             'the payperiods here are closed
-            dgvpayper.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+            currentRow.DefaultCellStyle.ForeColor = Color.Gray
             payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed
         Else
 
             'check if this open payperiod is already modified
             If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = drow("ppRowID")) Then
 
-                dgvpayper.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
-                dgvpayper.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
+                currentRow.DefaultCellStyle.SelectionForeColor = Color.Green
 
-                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Modified
+                payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
             End If
 
@@ -296,9 +296,15 @@ Public Class PayStubForm
                     PayFreq_Changed(_tsbtn, New EventArgs)
                 Next
 
-            End With
+                If .Index < 0 OrElse .Index >= _payPeriodDataList.Count Then Return
 
-            ShowPayrollActions(True)
+                Dim currentPayperiod = _payPeriodDataList(.Index)
+                Dim isModified = currentPayperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+
+                ShowPayrollActions(isModified,
+                    New PayPeriodStatusData.PayPeriodStatusReference(currentPayperiod.Status))
+
+            End With
         Else
 
             paypRowID = Nothing
@@ -315,12 +321,54 @@ Public Class PayStubForm
         AddHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub ShowPayrollActions(showPayrollActions As Boolean)
+    Private Sub ShowPayrollActions(showPayrollActions As Boolean, Optional payrollStatus As PayPeriodStatusData.PayPeriodStatusReference = Nothing)
 
-        ManagePayrollToolStripDropDownButton.Visible = showPayrollActions
         OtherActionsToolStripDropDownButton.Visible = showPayrollActions
         DeleteAllToolStripDropDownButton.Visible = showPayrollActions
         DeleteToolStripDropDownButton.Visible = showPayrollActions
+
+        If payrollStatus Is Nothing Then
+
+            DisableAllPayrollActions()
+        Else
+
+            Select Case (payrollStatus.PayPeriodStatus)
+                Case PayPeriodStatusData.PayPeriodStatus.Open
+
+                    DisableAllPayrollActions()
+                    ClosePayrollToolStripMenuItem.Visible = True
+
+                Case PayPeriodStatusData.PayPeriodStatus.Processing
+
+                    RegeneratePayrollToolStripMenuItem.Visible = True
+                    ReopenPayrollToolStripMenuItem.Visible = False
+                    ClosePayrollToolStripMenuItem.Visible = True
+
+                    dgvAdjustments.Enabled = True
+                    btnSaveAdjustments.Visible = True
+                    btndiscardchanges.Visible = True
+
+                Case PayPeriodStatusData.PayPeriodStatus.Closed
+
+                    DisableAllPayrollActions()
+                    ReopenPayrollToolStripMenuItem.Visible = True
+
+                Case Else
+                    DisableAllPayrollActions()
+
+            End Select
+
+        End If
+    End Sub
+
+    Private Sub DisableAllPayrollActions()
+        RegeneratePayrollToolStripMenuItem.Visible = False
+        ReopenPayrollToolStripMenuItem.Visible = False
+        ClosePayrollToolStripMenuItem.Visible = False
+
+        dgvAdjustments.Enabled = False
+        btnSaveAdjustments.Visible = False
+        btndiscardchanges.Visible = False
     End Sub
 
     Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
@@ -1001,10 +1049,16 @@ Public Class PayStubForm
             Dim prompt = MessageBox.Show("Are you sure you want to delete '" & item_name & "'" & If(item_name.ToLower.Contains("adjustment"), "", " adjustment") & " ?",
                                          "Delete adjustment", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
             If prompt = Windows.Forms.DialogResult.Yes Then
-                Dim SQLTableName As String = If(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value = 0, "paystubadjustment", "paystubadjustmentactual")
-                Dim del_quer As String =
-                    "DELETE FROM " & SQLTableName & " WHERE RowID='" & dgvAdjustments.Item("psaRowID", e.RowIndex).Value & "';"
-                n_ExecuteQuery = New ExecuteQuery(del_quer)
+
+                If Not IsDBNull(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value) Then
+
+                    Dim SQLTableName As String = If(dgvAdjustments.Item("IsAdjustmentActual", e.RowIndex).Value = 0, "paystubadjustment", "paystubadjustmentactual")
+                    Dim del_quer As String =
+                        "DELETE FROM " & SQLTableName & " WHERE RowID='" & dgvAdjustments.Item("psaRowID", e.RowIndex).Value & "';"
+                    n_ExecuteQuery = New ExecuteQuery(del_quer)
+
+                End If
+
                 dgvAdjustments.Rows.Remove(dgvAdjustments.Rows(e.RowIndex))
                 dgvemployees_SelectionChanged(dgvemployees, New EventArgs)
                 btnSaveAdjustments.Enabled = False
@@ -1749,37 +1803,91 @@ Public Class PayStubForm
         Previous
     End Enum
 
-    Private Sub GeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripMenuItem.Click
+    Private Sub RegeneratePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RegeneratePayrollToolStripMenuItem.Click
+        'TODO regenerate payroll
+    End Sub
+
+    Private Async Sub ClosePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePayrollToolStripMenuItem.Click
+
+        Await UpdatePayrollStatus(open:=False)
+
+    End Sub
+
+    Private Async Sub ReopenPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReopenPayrollToolStripMenuItem.Click
+
+        Await UpdatePayrollStatus(open:=True)
+
+    End Sub
+
+    Private Async Function UpdatePayrollStatus(open As Boolean) As Task(Of Boolean)
+
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payPeriodId Is Nothing Then
+
+            MessageBoxHelper.Warning("Please select a pay period first.")
+            Return False
+        End If
+
+        Using context As New PayrollContext
+
+            Dim payPeriod = Await context.PayPeriods.FirstOrDefaultAsync(Function(p) p.RowID.Value = payPeriodId)
+
+            If payPeriod Is Nothing Then
+
+                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+                Return False
+            End If
+
+            'if the action is to reopen, check if this payperiod already has paystubs
+            'and if there is an existing OPEN payperiod that also has paystubs (PROCESSING pay pay period)
+            'Multiple OPEN or CLOSE pay periods are allowed
+            'Multiple PROCESSING pay periods are NOT allowed
+            Dim payperiodHasPaystubs = Await context.Paystubs.AnyAsync(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value)
+            Dim otherProcessingPayPeriod = Await context.Paystubs.
+                    Include(Function(p) p.PayPeriod).
+                    Where(Function(p) p.PayPeriod.RowID.Value <> payPeriod.RowID.Value).
+                    Where(Function(p) p.PayPeriod.IsClosed = False).
+                    Where(Function(p) p.PayPeriod.OrganizationID.Value = z_OrganizationID).
+                    FirstOrDefaultAsync()
+
+            If open = True AndAlso payperiodHasPaystubs AndAlso otherProcessingPayPeriod IsNot Nothing Then
+
+                MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to reopen the selected pay period.")
+                Return False
+
+            End If
+
+            payPeriod.IsClosed = Not open
+
+            Await context.SaveChangesAsync
+
+        End Using
+
+        If open Then
+
+            MessageBoxHelper.Information("Pay period was reopened successfully.")
+        Else
+
+            MessageBoxHelper.Information("Pay period was closed successfully.")
+
+        End If
+
+        VIEW_payperiodofyear()
+
+        dgvpayper_SelectionChanged(Nothing, Nothing)
+
+        Return True
+
+    End Function
+
+    Private Sub GeneratePayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
         With selectPayPeriod
             .Show()
             .BringToFront()
             .dgvpaypers.Focus()
         End With
-
-    End Sub
-
-    Private Sub ClosePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePayrollToolStripMenuItem.Click
-
-        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
-
-        If payPeriodId Is Nothing Then
-
-            MessageBoxHelper.Warning("Please select a pay period first.")
-            Return
-        End If
-
-    End Sub
-
-    Private Sub ReopenPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReopenPayrollToolStripMenuItem.Click
-
-        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
-
-        If payPeriodId Is Nothing Then
-
-            MessageBoxHelper.Warning("Please select a pay period first.")
-            Return
-        End If
 
     End Sub
 
