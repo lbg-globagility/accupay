@@ -195,7 +195,7 @@ Public Class PayStubForm
 
         If drow("IsClosed") <> 0 Then
             'the payperiods here are closed
-            currentRow.DefaultCellStyle.ForeColor = Color.Gray
+            'currentRow.DefaultCellStyle.ForeColor = Color.Gray
             payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed
         Else
 
@@ -203,6 +203,25 @@ Public Class PayStubForm
             If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = drow("ppRowID")) Then
 
                 currentRow.DefaultCellStyle.SelectionForeColor = Color.Green
+
+                Dim defaultFont = currentRow.DefaultCellStyle.Font
+                If defaultFont Is Nothing Then
+
+                    If dgvpayper.DefaultCellStyle.Font IsNot Nothing Then
+
+                        defaultFont = dgvpayper.DefaultCellStyle.Font
+
+                    ElseIf PayStubForm.DefaultFont IsNot Nothing Then
+
+                        defaultFont = PayStubForm.DefaultFont
+                    Else
+
+                        defaultFont = New Font("Microsoft Sans Serif", 8.25)
+                    End If
+
+                    currentRow.DefaultCellStyle.Font = New Font(defaultFont, FontStyle.Bold)
+
+                End If
 
                 payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 

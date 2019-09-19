@@ -213,6 +213,8 @@ Public Class selectPayPeriod
                 dgvpaypers.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
 
                 payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+            Else
+                dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Black
 
             End If
 
