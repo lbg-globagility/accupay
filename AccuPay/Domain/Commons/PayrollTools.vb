@@ -5,6 +5,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
@@ -353,5 +354,45 @@ Public Class PayrollTools
         End If
 
     End Sub
+    Public Shared Async Function ValidatePayPeriodAction(payPeriodId As Integer?) As Task(Of Boolean)
+
+        Using context As New PayrollContext
+
+            If payPeriodId Is Nothing Then
+                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+                Return False
+            End If
+
+            Dim payPeriod = Await context.PayPeriods.
+                                FirstOrDefaultAsync(Function(p) p.RowID.Value = payPeriodId.Value)
+
+            If payPeriod Is Nothing Then
+                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+                Return False
+            End If
+
+            Dim otherProcessingPayPeriod = Await context.Paystubs.
+                        Include(Function(p) p.PayPeriod).
+                        Where(Function(p) p.PayPeriod.RowID.Value <> payPeriodId.Value).
+                        Where(Function(p) p.PayPeriod.IsClosed = False).
+                        Where(Function(p) p.PayPeriod.OrganizationID.Value = z_OrganizationID).
+                        FirstOrDefaultAsync()
+
+            If payPeriod.IsClosed Then
+
+                MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
+                Return False
+
+            ElseIf Not payPeriod.IsClosed AndAlso otherProcessingPayPeriod IsNot Nothing Then
+
+                MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
+                Return False
+
+            End If
+        End Using
+
+        Return True
+
+    End Function
 
 End Class

@@ -52,6 +52,7 @@ Partial Class selectPayPeriod
         Me.lblpapyperiodval = New System.Windows.Forms.Label()
         Me.tstrip = New System.Windows.Forms.ToolStrip()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.PayPeriodStatusLabel = New System.Windows.Forms.Label()
         CType(Me.dgvpaypers, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
         Me.SuspendLayout()
@@ -321,11 +322,23 @@ Partial Class selectPayPeriod
         Me.Panel2.Size = New System.Drawing.Size(416, 29)
         Me.Panel2.TabIndex = 283
         '
+        'PayPeriodStatusLabel
+        '
+        Me.PayPeriodStatusLabel.Font = New System.Drawing.Font("Segoe UI Semibold", 9.0!, System.Drawing.FontStyle.Bold)
+        Me.PayPeriodStatusLabel.Location = New System.Drawing.Point(452, 25)
+        Me.PayPeriodStatusLabel.Name = "PayPeriodStatusLabel"
+        Me.PayPeriodStatusLabel.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.PayPeriodStatusLabel.Size = New System.Drawing.Size(86, 15)
+        Me.PayPeriodStatusLabel.TabIndex = 284
+        Me.PayPeriodStatusLabel.Text = "-----"
+        Me.PayPeriodStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'selectPayPeriod
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(548, 508)
+        Me.Controls.Add(Me.PayPeriodStatusLabel)
         Me.Controls.Add(Me.tstrip)
         Me.Controls.Add(Me.lblpapyperiodval)
         Me.Controls.Add(Me.Label2)
@@ -375,4 +388,5 @@ Partial Class selectPayPeriod
     Friend WithEvents PhHContribSched As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents HDMFContribSched As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents PayPeriodMinWageValue As System.Windows.Forms.DataGridViewTextBoxColumn
+    Friend WithEvents PayPeriodStatusLabel As Label
 End Class

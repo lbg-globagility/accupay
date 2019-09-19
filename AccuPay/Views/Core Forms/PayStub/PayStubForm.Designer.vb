@@ -272,27 +272,28 @@ Partial Class PayStubForm
         Me.Label94 = New System.Windows.Forms.Label()
         Me.Label42 = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtngenpayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintall = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnPayrollSumma = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.tsbtnDeclaredSummary = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsbtnActualSummary = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.IncludeThirteenthMonthButton = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.Incude13thMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GeneratePayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ManagePayrollToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.PrintPaySlipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeclaredToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ActualToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.OthersToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.Include13thMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CashOutUnusedLeavesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RegeneratePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsSearch = New System.Windows.Forms.ToolStripTextBox()
         Me.tsbtnSearch = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
-        Me.tsbtnDelEmpPayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnDelAllEmpPayroll = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnprintpayslip = New System.Windows.Forms.ToolStripDropDownButton()
-        Me.DeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DeleteToolStripDropDownButton = New System.Windows.Forms.ToolStripButton()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.Button3 = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
@@ -1500,10 +1501,10 @@ Partial Class PayStubForm
         Me.LinkLabel5.LinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         Me.LinkLabel5.Location = New System.Drawing.Point(1252, 3)
         Me.LinkLabel5.Name = "LinkLabel5"
-        Me.LinkLabel5.Size = New System.Drawing.Size(120, 13)
+        Me.LinkLabel5.Size = New System.Drawing.Size(121, 13)
         Me.LinkLabel5.TabIndex = 515
         Me.LinkLabel5.TabStop = True
-        Me.LinkLabel5.Text = "Add an Item at the list"
+        Me.LinkLabel5.Text = "Add an Item to the list"
         Me.LinkLabel5.VisitedLinkColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(155, Byte), Integer), CType(CType(255, Byte), Integer))
         '
         'btndiscardchanges
@@ -3015,43 +3016,125 @@ Partial Class PayStubForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtngenpayroll, Me.tsbtnprintall, Me.tsbtnClose, Me.tsbtnPayrollSumma, Me.ToolStripSeparator1, Me.IncludeThirteenthMonthButton, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.tsbtnDelEmpPayroll, Me.tsbtnDelAllEmpPayroll, Me.tsbtnprintpayslip})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GeneratePayrollToolStripButton, Me.ManagePayrollToolStripDropDownButton, Me.RegeneratePayrollToolStripMenuItem, Me.tsbtnClose, Me.ToolStripSeparator1, Me.tsSearch, Me.tsbtnSearch, Me.tsbtnAudittrail, Me.ToolStripLabel8, Me.DeleteToolStripDropDownButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(961, 25)
         Me.ToolStrip1.TabIndex = 175
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'tsbtngenpayroll
+        'GeneratePayrollToolStripButton
         '
-        Me.tsbtngenpayroll.Image = CType(resources.GetObject("tsbtngenpayroll.Image"), System.Drawing.Image)
-        Me.tsbtngenpayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtngenpayroll.Name = "tsbtngenpayroll"
-        Me.tsbtngenpayroll.Size = New System.Drawing.Size(113, 22)
-        Me.tsbtngenpayroll.Text = "Ge&nerate Payroll"
+        Me.GeneratePayrollToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cash_register001
+        Me.GeneratePayrollToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.GeneratePayrollToolStripButton.Name = "GeneratePayrollToolStripButton"
+        Me.GeneratePayrollToolStripButton.Size = New System.Drawing.Size(113, 22)
+        Me.GeneratePayrollToolStripButton.Text = "Generate Payroll"
         '
-        'tsbtnprintall
+        'ManagePayrollToolStripDropDownButton
         '
-        Me.tsbtnprintall.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem1, Me.ActualToolStripMenuItem1})
-        Me.tsbtnprintall.Image = CType(resources.GetObject("tsbtnprintall.Image"), System.Drawing.Image)
-        Me.tsbtnprintall.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintall.Name = "tsbtnprintall"
-        Me.tsbtnprintall.Size = New System.Drawing.Size(104, 22)
-        Me.tsbtnprintall.Text = "Print pay slip"
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
+        Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
+        Me.ManagePayrollToolStripDropDownButton.Size = New System.Drawing.Size(118, 22)
+        Me.ManagePayrollToolStripDropDownButton.Text = "Manage Payroll"
         '
-        'DeclaredToolStripMenuItem1
+        'PrintPaySlipToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem1.Name = "DeclaredToolStripMenuItem1"
-        Me.DeclaredToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem1.Tag = "0"
-        Me.DeclaredToolStripMenuItem1.Text = "Declared"
+        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem2, Me.ActualToolStripMenuItem2})
+        Me.PrintPaySlipToolStripMenuItem.Image = CType(resources.GetObject("PrintPaySlipToolStripMenuItem.Image"), System.Drawing.Image)
+        Me.PrintPaySlipToolStripMenuItem.Name = "PrintPaySlipToolStripMenuItem"
+        Me.PrintPaySlipToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.PrintPaySlipToolStripMenuItem.Text = "Print Payslips"
         '
-        'ActualToolStripMenuItem1
+        'DeclaredToolStripMenuItem2
         '
-        Me.ActualToolStripMenuItem1.Name = "ActualToolStripMenuItem1"
-        Me.ActualToolStripMenuItem1.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem1.Tag = "1"
-        Me.ActualToolStripMenuItem1.Text = "Actual"
+        Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
+        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem2.Tag = "0"
+        Me.DeclaredToolStripMenuItem2.Text = "Declared"
+        '
+        'ActualToolStripMenuItem2
+        '
+        Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
+        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem2.Tag = "1"
+        Me.ActualToolStripMenuItem2.Text = "Actual"
+        '
+        'PrintPayrollSummaryToolStripMenuItem
+        '
+        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem3, Me.ActualToolStripMenuItem3})
+        Me.PrintPayrollSummaryToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.timeattendance
+        Me.PrintPayrollSummaryToolStripMenuItem.Name = "PrintPayrollSummaryToolStripMenuItem"
+        Me.PrintPayrollSummaryToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.PrintPayrollSummaryToolStripMenuItem.Text = "Print Payroll Summary"
+        '
+        'DeclaredToolStripMenuItem3
+        '
+        Me.DeclaredToolStripMenuItem3.Name = "DeclaredToolStripMenuItem3"
+        Me.DeclaredToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
+        Me.DeclaredToolStripMenuItem3.Tag = "0"
+        Me.DeclaredToolStripMenuItem3.Text = "Declared"
+        '
+        'ActualToolStripMenuItem3
+        '
+        Me.ActualToolStripMenuItem3.Name = "ActualToolStripMenuItem3"
+        Me.ActualToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
+        Me.ActualToolStripMenuItem3.Tag = "1"
+        Me.ActualToolStripMenuItem3.Text = "Actual"
+        '
+        'DeletePayrollToolStripMenuItem
+        '
+        Me.DeletePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeletePayrollToolStripMenuItem.Name = "DeletePayrollToolStripMenuItem"
+        Me.DeletePayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.DeletePayrollToolStripMenuItem.Text = "Delete Payroll"
+        '
+        'ClosePayrollToolStripMenuItem
+        '
+        Me.ClosePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.l_arrow
+        Me.ClosePayrollToolStripMenuItem.Name = "ClosePayrollToolStripMenuItem"
+        Me.ClosePayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.ClosePayrollToolStripMenuItem.Text = "Close Payroll"
+        Me.ClosePayrollToolStripMenuItem.Visible = False
+        '
+        'ReopenPayrollToolStripMenuItem
+        '
+        Me.ReopenPayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.r_arrow
+        Me.ReopenPayrollToolStripMenuItem.Name = "ReopenPayrollToolStripMenuItem"
+        Me.ReopenPayrollToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.ReopenPayrollToolStripMenuItem.Text = "Reopen Payroll"
+        Me.ReopenPayrollToolStripMenuItem.Visible = False
+        '
+        'OthersToolStripMenuItem
+        '
+        Me.OthersToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Include13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem})
+        Me.OthersToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Documents_icon_64
+        Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
+        Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.OthersToolStripMenuItem.Text = "Others"
+        '
+        'Include13thMonthPayToolStripMenuItem
+        '
+        Me.Include13thMonthPayToolStripMenuItem.Name = "Include13thMonthPayToolStripMenuItem"
+        Me.Include13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
+        Me.Include13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
+        '
+        'CashOutUnusedLeavesToolStripMenuItem
+        '
+        Me.CashOutUnusedLeavesToolStripMenuItem.Name = "CashOutUnusedLeavesToolStripMenuItem"
+        Me.CashOutUnusedLeavesToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
+        Me.CashOutUnusedLeavesToolStripMenuItem.Text = "Cash Out Unused Leaves"
+        '
+        'RegeneratePayrollToolStripMenuItem
+        '
+        Me.RegeneratePayrollToolStripMenuItem.Image = CType(resources.GetObject("RegeneratePayrollToolStripMenuItem.Image"), System.Drawing.Image)
+        Me.RegeneratePayrollToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RegeneratePayrollToolStripMenuItem.Name = "RegeneratePayrollToolStripMenuItem"
+        Me.RegeneratePayrollToolStripMenuItem.Size = New System.Drawing.Size(125, 22)
+        Me.RegeneratePayrollToolStripMenuItem.Text = "Regenerate Payroll"
+        Me.RegeneratePayrollToolStripMenuItem.Visible = False
         '
         'tsbtnClose
         '
@@ -3062,58 +3145,14 @@ Partial Class PayStubForm
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnClose.Text = "Close"
         '
-        'tsbtnPayrollSumma
-        '
-        Me.tsbtnPayrollSumma.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnDeclaredSummary, Me.tsbtnActualSummary})
-        Me.tsbtnPayrollSumma.Image = CType(resources.GetObject("tsbtnPayrollSumma.Image"), System.Drawing.Image)
-        Me.tsbtnPayrollSumma.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnPayrollSumma.Name = "tsbtnPayrollSumma"
-        Me.tsbtnPayrollSumma.Size = New System.Drawing.Size(154, 22)
-        Me.tsbtnPayrollSumma.Text = "Print Payroll Summary"
-        '
-        'tsbtnDeclaredSummary
-        '
-        Me.tsbtnDeclaredSummary.Name = "tsbtnDeclaredSummary"
-        Me.tsbtnDeclaredSummary.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnDeclaredSummary.Tag = "False"
-        Me.tsbtnDeclaredSummary.Text = "Declared"
-        '
-        'tsbtnActualSummary
-        '
-        Me.tsbtnActualSummary.Name = "tsbtnActualSummary"
-        Me.tsbtnActualSummary.Size = New System.Drawing.Size(120, 22)
-        Me.tsbtnActualSummary.Tag = "True"
-        Me.tsbtnActualSummary.Text = "Actual"
-        '
         'ToolStripSeparator1
         '
         Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
         Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
         '
-        'IncludeThirteenthMonthButton
-        '
-        Me.IncludeThirteenthMonthButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.Incude13thMonthPayToolStripMenuItem, Me.CashOutUnusedLeavesToolStripMenuItem})
-        Me.IncludeThirteenthMonthButton.Image = CType(resources.GetObject("IncludeThirteenthMonthButton.Image"), System.Drawing.Image)
-        Me.IncludeThirteenthMonthButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.IncludeThirteenthMonthButton.Name = "IncludeThirteenthMonthButton"
-        Me.IncludeThirteenthMonthButton.Size = New System.Drawing.Size(71, 22)
-        Me.IncludeThirteenthMonthButton.Text = "Others"
-        Me.IncludeThirteenthMonthButton.ToolTipText = "Include 13th Month Pay"
-        '
-        'Incude13thMonthPayToolStripMenuItem
-        '
-        Me.Incude13thMonthPayToolStripMenuItem.Name = "Incude13thMonthPayToolStripMenuItem"
-        Me.Incude13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.Incude13thMonthPayToolStripMenuItem.Text = "Incude 13th Month Pay"
-        '
-        'CashOutUnusedLeavesToolStripMenuItem
-        '
-        Me.CashOutUnusedLeavesToolStripMenuItem.Name = "CashOutUnusedLeavesToolStripMenuItem"
-        Me.CashOutUnusedLeavesToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.CashOutUnusedLeavesToolStripMenuItem.Text = "Cash Out Unused Leaves"
-        '
         'tsSearch
         '
+        Me.tsSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
         Me.tsSearch.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
         Me.tsSearch.Name = "tsSearch"
@@ -3121,6 +3160,7 @@ Partial Class PayStubForm
         '
         'tsbtnSearch
         '
+        Me.tsbtnSearch.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.tsbtnSearch.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
         Me.tsbtnSearch.Image = Global.AccuPay.My.Resources.Resources.magnifier_zoom
         Me.tsbtnSearch.ImageTransparentColor = System.Drawing.Color.Magenta
@@ -3145,46 +3185,15 @@ Partial Class PayStubForm
         Me.ToolStripLabel8.Name = "ToolStripLabel8"
         Me.ToolStripLabel8.Size = New System.Drawing.Size(66, 22)
         '
-        'tsbtnDelEmpPayroll
+        'DeleteToolStripDropDownButton
         '
-        Me.tsbtnDelEmpPayroll.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDelEmpPayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDelEmpPayroll.Name = "tsbtnDelEmpPayroll"
-        Me.tsbtnDelEmpPayroll.Size = New System.Drawing.Size(105, 22)
-        Me.tsbtnDelEmpPayroll.Text = "Delete Paystub"
-        Me.tsbtnDelEmpPayroll.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
-        '
-        'tsbtnDelAllEmpPayroll
-        '
-        Me.tsbtnDelAllEmpPayroll.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.tsbtnDelAllEmpPayroll.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnDelAllEmpPayroll.Name = "tsbtnDelAllEmpPayroll"
-        Me.tsbtnDelAllEmpPayroll.Size = New System.Drawing.Size(127, 20)
-        Me.tsbtnDelAllEmpPayroll.Text = "Delete All Paystubs"
-        '
-        'tsbtnprintpayslip
-        '
-        Me.tsbtnprintpayslip.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem, Me.ActualToolStripMenuItem})
-        Me.tsbtnprintpayslip.Image = CType(resources.GetObject("tsbtnprintpayslip.Image"), System.Drawing.Image)
-        Me.tsbtnprintpayslip.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnprintpayslip.Name = "tsbtnprintpayslip"
-        Me.tsbtnprintpayslip.Size = New System.Drawing.Size(104, 20)
-        Me.tsbtnprintpayslip.Text = "&Print pay slip"
-        Me.tsbtnprintpayslip.Visible = False
-        '
-        'DeclaredToolStripMenuItem
-        '
-        Me.DeclaredToolStripMenuItem.Name = "DeclaredToolStripMenuItem"
-        Me.DeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem.Tag = "0"
-        Me.DeclaredToolStripMenuItem.Text = "Declared"
-        '
-        'ActualToolStripMenuItem
-        '
-        Me.ActualToolStripMenuItem.Name = "ActualToolStripMenuItem"
-        Me.ActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem.Tag = "1"
-        Me.ActualToolStripMenuItem.Text = "Actual"
+        Me.DeleteToolStripDropDownButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.DeleteToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteToolStripDropDownButton.Name = "DeleteToolStripDropDownButton"
+        Me.DeleteToolStripDropDownButton.Size = New System.Drawing.Size(105, 22)
+        Me.DeleteToolStripDropDownButton.Text = "Delete Paystub"
+        Me.DeleteToolStripDropDownButton.ToolTipText = "Deletes only the selected" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "payroll of an employee"
         '
         'ImageList1
         '
@@ -3239,12 +3248,14 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Visible = False
         '
         'DataGridViewTextBoxColumn2
         '
         Me.DataGridViewTextBoxColumn2.HeaderText = "Pay period from"
         Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
         Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn2.Width = 154
         '
@@ -3252,6 +3263,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn3.HeaderText = "Pay period to"
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn3.Width = 153
         '
@@ -3259,6 +3271,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn4.HeaderText = "Column2"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
         Me.DataGridViewTextBoxColumn4.Visible = False
         Me.DataGridViewTextBoxColumn4.Width = 154
         '
@@ -3266,6 +3279,7 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn5.HeaderText = "Column3"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
         Me.DataGridViewTextBoxColumn5.Visible = False
         Me.DataGridViewTextBoxColumn5.Width = 153
         '
@@ -3273,72 +3287,84 @@ Partial Class PayStubForm
         '
         Me.DataGridViewTextBoxColumn6.HeaderText = "TotalGrossSalary"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
         Me.DataGridViewTextBoxColumn6.Visible = False
         '
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.HeaderText = "TotalNetSalary"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
         Me.DataGridViewTextBoxColumn7.Visible = False
         '
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.HeaderText = "TotalEmpSSS"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
         Me.DataGridViewTextBoxColumn8.Visible = False
         '
         'DataGridViewTextBoxColumn9
         '
         Me.DataGridViewTextBoxColumn9.HeaderText = "TotalEmpWithholdingTax"
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Visible = False
         '
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.HeaderText = "TotalCompSSS"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Visible = False
         '
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.HeaderText = "TotalEmpPhilhealth"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
         Me.DataGridViewTextBoxColumn11.Visible = False
         '
         'DataGridViewTextBoxColumn12
         '
         Me.DataGridViewTextBoxColumn12.HeaderText = "TotalCompPhilhealth"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
         Me.DataGridViewTextBoxColumn12.Visible = False
         '
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.HeaderText = "TotalEmpHDMF"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.ReadOnly = True
         Me.DataGridViewTextBoxColumn13.Visible = False
         '
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.HeaderText = "TotalCompHDMF"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.ReadOnly = True
         Me.DataGridViewTextBoxColumn14.Visible = False
         '
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.HeaderText = "now_origin"
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.ReadOnly = True
         Me.DataGridViewTextBoxColumn15.Visible = False
         '
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.HeaderText = "End of month"
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.ReadOnly = True
         Me.DataGridViewTextBoxColumn16.Visible = False
         '
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.HeaderText = "RowID"
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.ReadOnly = True
         '
         'DataGridViewTextBoxColumn18
         '
@@ -3346,36 +3372,43 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn18.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.ReadOnly = True
         '
         'DataGridViewTextBoxColumn19
         '
         Me.DataGridViewTextBoxColumn19.HeaderText = "First Name"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.ReadOnly = True
         '
         'DataGridViewTextBoxColumn20
         '
         Me.DataGridViewTextBoxColumn20.HeaderText = "Middle Name"
         Me.DataGridViewTextBoxColumn20.Name = "DataGridViewTextBoxColumn20"
+        Me.DataGridViewTextBoxColumn20.ReadOnly = True
         '
         'DataGridViewTextBoxColumn21
         '
         Me.DataGridViewTextBoxColumn21.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
+        Me.DataGridViewTextBoxColumn21.ReadOnly = True
         '
         'DataGridViewTextBoxColumn22
         '
         Me.DataGridViewTextBoxColumn22.HeaderText = "Employee Type"
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
+        Me.DataGridViewTextBoxColumn22.ReadOnly = True
         '
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.HeaderText = "Position"
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
+        Me.DataGridViewTextBoxColumn23.ReadOnly = True
         '
         'DataGridViewTextBoxColumn24
         '
         Me.DataGridViewTextBoxColumn24.HeaderText = "Division"
         Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
         '
         'DataGridViewTextBoxColumn25
         '
@@ -3470,7 +3503,6 @@ Partial Class PayStubForm
     Friend WithEvents tbppayroll As System.Windows.Forms.TabPage
     Friend WithEvents SplitContainer1 As System.Windows.Forms.SplitContainer
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents tsbtngenpayroll As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnClose As System.Windows.Forms.ToolStripButton
     Friend WithEvents txtgrosssal As System.Windows.Forms.TextBox
     Friend WithEvents txttaxabsal As System.Windows.Forms.TextBox
@@ -3623,15 +3655,6 @@ Partial Class PayStubForm
     Friend WithEvents txttotabsent_U As System.Windows.Forms.TextBox
     Friend WithEvents Label92 As System.Windows.Forms.Label
     Friend WithEvents Panel3 As System.Windows.Forms.Panel
-    Friend WithEvents tsbtnprintpayslip As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnprintall As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents DeclaredToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnPayrollSumma As System.Windows.Forms.ToolStripDropDownButton
-    Friend WithEvents tsbtnDeclaredSummary As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents tsbtnActualSummary As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents btndiscardchanges As System.Windows.Forms.Button
     Friend WithEvents LinkLabel5 As System.Windows.Forms.LinkLabel
     Friend WithEvents Panel1 As System.Windows.Forms.Panel
@@ -3654,7 +3677,7 @@ Partial Class PayStubForm
     Friend WithEvents Column13 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Column14 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ToolStripLabel8 As System.Windows.Forms.ToolStripLabel
-    Friend WithEvents tsbtnDelEmpPayroll As System.Windows.Forms.ToolStripButton
+    Friend WithEvents DeleteToolStripDropDownButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents psaRowID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents cboProducts As System.Windows.Forms.DataGridViewComboBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn66 As System.Windows.Forms.DataGridViewTextBoxColumn
@@ -3695,9 +3718,6 @@ Partial Class PayStubForm
     Friend WithEvents txtSpecHoliOtPay As TextBox
     Friend WithEvents Label63 As Label
     Friend WithEvents Panel6 As Panel
-    Friend WithEvents IncludeThirteenthMonthButton As ToolStripDropDownButton
-    Friend WithEvents Incude13thMonthPayToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents CashOutUnusedLeavesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents btnTotalTaxabAllowance As Button
     Friend WithEvents txtTotTaxabAllow As TextBox
     Friend WithEvents Label104 As Label
@@ -3706,7 +3726,6 @@ Partial Class PayStubForm
     Friend WithEvents txtGrandTotalAllow As TextBox
     Friend WithEvents Label106 As Label
     Friend WithEvents Label107 As Label
-    Friend WithEvents tsbtnDelAllEmpPayroll As ToolStripButton
     Friend WithEvents RowID As DataGridViewTextBoxColumn
     Friend WithEvents EmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents FirstName As DataGridViewTextBoxColumn
@@ -3743,4 +3762,19 @@ Partial Class PayStubForm
     Friend WithEvents DataGridViewTextBoxColumn26 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn27 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
+    Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton
+    Friend WithEvents PrintPaySlipToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeclaredToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents ActualToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents PrintPayrollSummaryToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DeclaredToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ActualToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents ClosePayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ReopenPayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GeneratePayrollToolStripButton As ToolStripButton
+    Friend WithEvents OthersToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents Include13thMonthPayToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CashOutUnusedLeavesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RegeneratePayrollToolStripMenuItem As ToolStripButton
+    Friend WithEvents DeletePayrollToolStripMenuItem As ToolStripMenuItem
 End Class

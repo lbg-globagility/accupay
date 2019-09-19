@@ -27,6 +27,7 @@ SELECT payp.RowID AS ppRowID
 , pf.PayFrequencyType `TotalCompHDMF`
 ,IF(DATE_FORMAT(NOW(),'%Y-%m-%d') BETWEEN payp.PayFromDate AND payp.PayToDate,'0',IF(DATE_FORMAT(NOW(),'%Y-%m-%d') > payp.PayFromDate,'-1','1')) 'now_origin'
 ,payp.Half AS eom
+,payp.IsClosed
 
 FROM payperiod payp
 INNER JOIN (    SELECT ps.RowID, ps.PayPeriodID, FormatNumber AS FormatNum, e.PayFrequencyID FROM paystub ps

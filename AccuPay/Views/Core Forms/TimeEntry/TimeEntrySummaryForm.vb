@@ -57,7 +57,12 @@ Public Class TimeEntrySummaryForm
 
     Private _hideMoneyColumns As Boolean
 
-    Private Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private _formHasLoaded As Boolean = False
+
+    Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        _formHasLoaded = True
+
         employeesDataGridView.AutoGenerateColumns = False
         timeEntriesDataGridView.AutoGenerateColumns = False
 
@@ -70,8 +75,8 @@ Public Class TimeEntrySummaryForm
         _calculateBreakTimeLateHours = policy.ComputeBreakTimeLate
         _useNewShift = policy.UseShiftSchedule
 
-        Dim loadEmployeesTask = LoadEmployees()
-        Dim loadPayPeriodsTask = LoadPayPeriods()
+        Await LoadEmployees()
+        Await LoadPayPeriods()
 
         _breakTimeBrackets = New List(Of BreakTimeBracket)
         If _calculateBreakTimeLateHours Then
@@ -135,6 +140,12 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Public Async Function LoadPayPeriods() As Task
+
+        If _formHasLoaded = False Then Return
+
+        tsBtnDeleteTimeEntry.Visible = False
+        regenerateTimeEntryButton.Visible = False
+
         Dim numOfRows = 2
 
         _payPeriods = Await GetPayPeriods(z_OrganizationID, _selectedYear, 1)
@@ -144,16 +155,40 @@ Public Class TimeEntrySummaryForm
 
         For Each payperiod In Me._payPeriods
             Dim monthNo = payperiod.Month
-            Dim counter = monthRowCounters(monthNo - 1)
+
+            Dim columnIndex = monthNo - 1
+            Dim rowIndex = monthRowCounters(columnIndex)
 
             Dim payFromDate = payperiod.PayFromDate.ToString("dd MMM")
             Dim payToDate = payperiod.PayToDate.ToString("dd MMM")
             Dim label = payFromDate + " - " + payToDate
 
-            payPeriodsDataGridView.Rows(counter).Cells(monthNo - 1).Value = payperiod
+            Dim currentCell = payPeriodsDataGridView.Rows(rowIndex).Cells(columnIndex)
 
-            counter += 1
-            monthRowCounters(monthNo - 1) = counter
+            currentCell.Value = payperiod
+
+            If payperiod.IsClosed Then
+
+                currentCell.Style.SelectionBackColor = SystemColors.Highlight
+                currentCell.Style.BackColor = Color.White
+                currentCell.Style.ForeColor = Color.Black
+
+            ElseIf payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing Then
+
+                currentCell.Style.SelectionBackColor = Color.Green
+                currentCell.Style.BackColor = Color.Yellow
+                currentCell.Style.ForeColor = Color.Black
+            Else
+
+                currentCell.Style.SelectionBackColor = SystemColors.Highlight
+                currentCell.Style.BackColor = Color.White
+                currentCell.Style.ForeColor = Color.Gray
+
+            End If
+
+            rowIndex += 1
+            monthRowCounters(monthNo - 1) = rowIndex
+
         Next
 
         If _selectedPayPeriod Is Nothing Then
@@ -177,13 +212,20 @@ Public Class TimeEntrySummaryForm
             _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
             LoadTimeEntries()
         End If
+
+        If _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Closed Then
+
+            tsBtnDeleteTimeEntry.Visible = True
+            regenerateTimeEntryButton.Visible = True
+
+        End If
     End Function
 
     Private Async Function GetPayPeriods(organizationID As Integer,
                                          year As Integer,
                                          salaryType As Integer) As Task(Of ICollection(Of PayPeriod))
         Dim sql = <![CDATA[
-            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue
+            SELECT RowID, PayFromDate, PayToDate, Year, Month, OrdinalValue, IsClosed
             FROM payperiod
             WHERE payperiod.OrganizationID = @OrganizationID
                 AND payperiod.Year = @Year
@@ -191,6 +233,8 @@ Public Class TimeEntrySummaryForm
         ]]>.Value
 
         Dim payPeriods = New Collection(Of PayPeriod)
+
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -211,10 +255,25 @@ Public Class TimeEntrySummaryForm
                     .PayToDate = reader.GetValue(Of Date)("PayToDate"),
                     .Year = reader.GetValue(Of Integer)("Year"),
                     .Month = reader.GetValue(Of Integer)("Month"),
-                    .OrdinalValue = reader.GetValue(Of Integer)("OrdinalValue")
+                    .OrdinalValue = reader.GetValue(Of Integer)("OrdinalValue"),
+                    .IsClosed = reader.GetValue(Of Boolean)("IsClosed")
                 }
 
+                If payPeriod.IsClosed Then
+                    payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Closed
+                Else
+                    'if the pay period is open and has existing paystubs
+                    'its status should be PROCESSING
+                    If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = payPeriod.RowID.Value) Then
+                        payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+                    Else
+                        payPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Open
+
+                    End If
+                End If
+
                 payPeriods.Add(payPeriod)
+
             End While
         End Using
 
@@ -801,6 +860,9 @@ Public Class TimeEntrySummaryForm
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
             Return
         End If
+        
+        If Await PayrollTools.
+                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
 
         Dim generator = New TimeEntryGenerator(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
@@ -846,6 +908,10 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+
+        tsBtnDeleteTimeEntry.Visible = False
+        regenerateTimeEntryButton.Visible = False
+
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -856,6 +922,14 @@ Public Class TimeEntrySummaryForm
         End If
 
         _selectedPayPeriod = payPeriod
+
+        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
+
+            tsBtnDeleteTimeEntry.Visible = True
+            regenerateTimeEntryButton.Visible = True
+
+        End If
+
         LoadTimeEntries()
     End Sub
 
@@ -930,6 +1004,8 @@ Public Class TimeEntrySummaryForm
         Public Property Year As Integer
         Public Property Month As Integer
         Public Property OrdinalValue As Integer
+        Public Property IsClosed As Boolean
+        Public Property Status As PayPeriodStatusData.PayPeriodStatus
 
         Public Overrides Function ToString() As String
             Dim dateFrom = PayFromDate.ToString("MMM dd")
@@ -1130,6 +1206,10 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub DeleteShiftToolStripMenuItem_ClickAsync(sender As Object, e As EventArgs) Handles DeleteShiftToolStripMenuItem.Click
         If timeEntriesDataGridView.Rows.Count > 0 Then
+
+            If Await PayrollTools.
+                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+
             Dim currentRow = timeEntriesDataGridView.CurrentRow
 
             Dim dateTimeValue = currentRow?.Cells(ColumnDate.Name).Value
@@ -1489,11 +1569,16 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
+<<<<<<< HEAD
         If _selectedPayPeriod Is Nothing Then
 
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
             Return
         End If
+=======
+        If Await PayrollTools.
+                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+>>>>>>> master
 
         Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
                                 " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")

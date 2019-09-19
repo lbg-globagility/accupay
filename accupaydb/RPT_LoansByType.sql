@@ -22,7 +22,7 @@ SELECT
     ) `DatCol3`,
     FORMAT(SUM(IFNULL(slp.DeductionAmount, 0)), 2) `DatCol4`,
     FORMAT(IFNULL(els.TotalLoanAmount, 0), 2) `DatCol5`,
-    FORMAT(ROUND(IFNULL(els.TotalLoanAmount, 0),2) - ROUND(SUM(IFNULL(
+    FORMAT(ROUND(IFNULL(els.TotalLoanAmount, 0),2) - ROUND(IFNULL(
 	 	(SELECT SUM(scheduledloansperpayperiod.DeductionAmount)
 		FROM scheduledloansperpayperiod
 		INNER JOIN payperiod
@@ -30,7 +30,7 @@ SELECT
 		WHERE scheduledloansperpayperiod.EmployeeLoanRecordID = els.RowID
 		AND payperiod.PayToDate <= PayDateTo)
 	 
-	 , 0)),2),2) `DatCol6`,
+	 , 0),2),2) `DatCol6`,
     CONCAT(
 	 		DATE_FORMAT((SELECT MIN(payperiod.PayFromDate) FROM scheduledloansperpayperiod
 			INNER JOIN payperiod
