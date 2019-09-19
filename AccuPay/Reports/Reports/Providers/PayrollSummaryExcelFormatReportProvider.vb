@@ -271,6 +271,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Dim adjustment = _adjustments.
                     Where(Function(a) a.Product.PartNo = productName).
                     Where(Function(a) a.Paystub.EmployeeID.Value = employeeId.Value).
+                    Where(Function(a) a.Paystub.RowID.Value = ObjectUtils.ToInteger(employee("PaystubId"))).
                     Sum(Function(a) a.PayAmount)
 
             Return adjustment
@@ -504,7 +505,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
 #Region "Adjustment Breakdown"
 
-    Private _adjustmentQueried As Boolean
     Private _adjustments As List(Of IAdjustment)
 
     Private Function GetPayrollSummaryPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
@@ -534,8 +534,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
             counter += 1
         Next
 
-        'remove total adjustments column
-        viewableReportColumns.RemoveAt(totalAdjustmentColumnIndex)
+        If totalAdjustmentColumnIndex >= 0 AndAlso totalAdjustmentColumnIndex < viewableReportColumns.Count Then
+
+            'remove total adjustments column
+            viewableReportColumns.RemoveAt(totalAdjustmentColumnIndex)
+
+        End If
 
         'add back the total adjustment column if it is not BreakdownOnly
         'this will put the column after the adjustment breakdown columns
@@ -563,12 +567,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
                             payrollSummaDateSelection As PayrollSummaDateSelection,
                             Optional allEmployees As ICollection(Of DataRow) = Nothing) _
                             As Task(Of List(Of IAdjustment))
-
-        If _adjustmentQueried AndAlso _adjustments IsNot Nothing Then
-
-            Return _adjustments
-
-        End If
 
         Using context As New PayrollContext
 
@@ -606,8 +604,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 actualAdjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
 
             End If
-
-            _adjustmentQueried = True
 
             _adjustments = New List(Of IAdjustment)(Await adjustmentQuery.ToListAsync)
             _adjustments.AddRange(New List(Of IAdjustment)(Await actualAdjustmentQuery.ToListAsync))
