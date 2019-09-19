@@ -860,7 +860,7 @@ Public Class TimeEntrySummaryForm
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
             Return
         End If
-        
+
         If Await PayrollTools.
                     ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
 
@@ -1569,16 +1569,14 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-<<<<<<< HEAD
         If _selectedPayPeriod Is Nothing Then
 
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
             Return
         End If
-=======
+
         If Await PayrollTools.
                     ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
->>>>>>> master
 
         Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
                                 " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")
