@@ -121,7 +121,7 @@ Public Class DateRangePickerDialog
         For Each payperiod In _payperiodModels
 
             If payperiod.IsClosed Then
-                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Black
                 payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Closed
             Else
                 'check if this open payperiod is already modified
@@ -131,6 +131,8 @@ Public Class DateRangePickerDialog
                     PayperiodsDataGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
 
                     payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+                Else
+                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
 
                 End If
 

@@ -1630,7 +1630,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteToolStripDropDownButton.Click
+    Private Async Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteToolStripDropDownButton.Click
 
         If currentEmployeeID = Nothing Then
         Else
@@ -1666,6 +1666,8 @@ Public Class PayStubForm
                 End If
 
                 RefreshForm()
+
+                Await TimeEntrySummaryForm.LoadPayPeriods()
 
                 MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeID} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
 
@@ -1923,6 +1925,8 @@ Public Class PayStubForm
             Next
 
             RefreshForm()
+
+            Await TimeEntrySummaryForm.LoadPayPeriods()
 
             MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
 

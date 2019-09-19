@@ -202,7 +202,7 @@ Public Class selectPayPeriod
 
         If drow("IsClosed") <> 0 Then
             'the payperiods here are closed
-            dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+            dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Black
             payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed
         Else
 
@@ -214,7 +214,7 @@ Public Class selectPayPeriod
 
                 payPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing
             Else
-                dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Black
+                dgvpaypers.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
 
             End If
 

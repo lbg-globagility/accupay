@@ -171,7 +171,7 @@ Public Class TimeEntrySummaryForm
 
                 currentCell.Style.SelectionBackColor = SystemColors.Highlight
                 currentCell.Style.BackColor = Color.White
-                currentCell.Style.ForeColor = Color.Gray
+                currentCell.Style.ForeColor = Color.Black
 
             ElseIf payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing Then
 
@@ -182,7 +182,7 @@ Public Class TimeEntrySummaryForm
 
                 currentCell.Style.SelectionBackColor = SystemColors.Highlight
                 currentCell.Style.BackColor = Color.White
-                currentCell.Style.ForeColor = Color.Black
+                currentCell.Style.ForeColor = Color.Gray
 
             End If
 
