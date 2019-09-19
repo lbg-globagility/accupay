@@ -362,7 +362,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub EnablePayrollToolStripItem(Optional enable As Boolean = True)
-        RegeneratePayrollToolStripMenuItem.Visible = enable
+        'RegeneratePayrollToolStripMenuItem.Visible = enable
         DeletePayrollToolStripMenuItem.Visible = enable
         ReopenPayrollToolStripMenuItem.Visible = enable
         ClosePayrollToolStripMenuItem.Visible = enable
