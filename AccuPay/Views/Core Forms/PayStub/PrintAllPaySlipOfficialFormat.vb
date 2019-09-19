@@ -1,4 +1,8 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
+﻿Imports System.Threading.Tasks
+Imports AccuPay.Entity
+Imports AccuPay.Utils
+Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Views.Payroll
 
@@ -90,11 +94,14 @@ Namespace Global.AccuPay.Views.Payroll
                 Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
-                objText.Text =
-                Convert.ToString(
-                New SQL(String.Concat("SELECT",
-                                      " CONCAT('Payroll period ', DATE_FORMAT(pp.PayFromDate, '%c/%e/%Y'), ' to ', DATE_FORMAT(pp.PayToDate, '%c/%e/%Y')) `Result`",
-                                      " FROM payperiod pp WHERE pp.RowID=", n_PayPeriodRowID, ";")).GetFoundRow)
+
+                Dim nextPayPeriod = GetNextPayPeriod()
+
+                If nextPayPeriod IsNot Nothing Then
+
+                    objText.Text = $"Payroll period {nextPayPeriod.PayFromDate.ToShortDateString}  to {nextPayPeriod.PayToDate.ToShortDateString}"
+
+                End If
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgContact")
                 objText.Text = String.Empty
@@ -149,6 +156,30 @@ Namespace Global.AccuPay.Views.Payroll
             crvwr.Show()
 
         End Sub
+
+        Private Function GetNextPayPeriod() As PayPeriod
+
+            Dim payPeriodId = ObjectUtils.ToNullableInteger(n_PayPeriodRowID)
+
+            If payPeriodId Is Nothing Then Return Nothing
+
+            Using context As New PayrollContext
+
+                Dim currentPayPeriod = context.PayPeriods.
+                        FirstOrDefault(Function(p) p.RowID.Value = payPeriodId.Value)
+
+                If currentPayPeriod Is Nothing Then Return Nothing
+
+                Return context.PayPeriods.
+                                Where(Function(p) p.OrganizationID.Value = currentPayPeriod.OrganizationID.Value).
+                                Where(Function(p) p.PayFrequencyID.Value = currentPayPeriod.PayFrequencyID.Value).
+                                Where(Function(p) p.PayFromDate > currentPayPeriod.PayFromDate).
+                                OrderBy(Function(p) p.PayFromDate).
+                                FirstOrDefault
+
+            End Using
+
+        End Function
 
     End Class
 
