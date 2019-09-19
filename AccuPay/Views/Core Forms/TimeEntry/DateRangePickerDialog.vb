@@ -111,9 +111,35 @@ Public Class DateRangePickerDialog
                 ToListAsync()
         End Using
 
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 
         PayperiodsDataGridView.DataSource = _payperiodModels
+
+        Dim index = 0
+        For Each payperiod In _payperiodModels
+
+            If payperiod.IsClosed Then
+                PayperiodsDataGridView.Rows(index).DefaultCellStyle.ForeColor = Color.Gray
+                payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Closed
+            Else
+                'check if this open payperiod is already modified
+                If payPeriodsWithPaystubCount.Any(Function(p) p.RowID.Value = payperiod.RowID) Then
+
+                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.SelectionBackColor = Color.Green
+                    PayperiodsDataGridView.Rows(index).DefaultCellStyle.BackColor = Color.Yellow
+
+                    payperiod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+
+                End If
+
+            End If
+
+            index += 1
+
+        Next
+
     End Function
 
     Private Sub PayperiodsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles PayperiodsDataGridView.SelectionChanged
@@ -131,7 +157,11 @@ Public Class DateRangePickerDialog
         _end = payperiod.PayToDate
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        If Await PayrollTools.
+                    ValidatePayPeriodAction(_currentPayperiod.RowID) = False Then Return
+
         DialogResult = DialogResult.OK
     End Sub
 
@@ -146,6 +176,8 @@ Public Class DateRangePickerDialog
         Public Sub New(payperiod As PayPeriod)
             Me.PayPeriod = payperiod
         End Sub
+
+        Public Property Status As PayPeriodStatusData.PayPeriodStatus
 
         Public ReadOnly Property RowID As Integer
             Get
@@ -162,6 +194,12 @@ Public Class DateRangePickerDialog
         Public ReadOnly Property PayToDate As Date
             Get
                 Return PayPeriod.PayToDate
+            End Get
+        End Property
+
+        Public ReadOnly Property IsClosed As Boolean
+            Get
+                Return PayPeriod.IsClosed
             End Get
         End Property
 

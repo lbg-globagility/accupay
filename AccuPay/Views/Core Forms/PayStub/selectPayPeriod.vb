@@ -246,7 +246,7 @@ Public Class selectPayPeriod
         Panel2.Enabled = True
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         dgvpaypers.EndEdit()
 
         Dim id_value As Object = Nothing
@@ -259,28 +259,13 @@ Public Class selectPayPeriod
 
             If currentPayPeriodData IsNot Nothing Then
 
-                If currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Closed Then
-
-                    MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
-                    Return
-
-                ElseIf currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Open AndAlso
-                    _payPeriodDataList.Any(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Processing) Then
-
-                    MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
-                    Return
-
-                ElseIf currentPayPeriodData.Status = PayPeriodStatusData.PayPeriodStatus.Processing AndAlso
-                    _payPeriodDataList.Where(Function(p) p.Status = PayPeriodStatusData.PayPeriodStatus.Processing).Count() > 1 Then
-
-                    MessageBoxHelper.Warning("There are more than one pay periods with ""PROCESSING"" status. Please close one ""PROCESSING"" pay period first. Only one pay period can be processed at a time.")
-                    Return
-
-                End If
-
             End If
 
             With dgvpaypers.CurrentRow
+
+                If Await PayrollTools.
+                    ValidatePayPeriodAction(ObjectUtils.ToNullableInteger(.Cells("Column1").Value)) = False Then Return
+
                 id_value = dgvpaypers.Item("Column1", 0).Value
 
                 PayStubForm.paypRowID = .Cells("Column1").Value

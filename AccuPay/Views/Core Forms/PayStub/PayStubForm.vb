@@ -712,6 +712,8 @@ Public Class PayStubForm
                 End Sub)
 
             RefreshForm()
+
+            Await TimeEntrySummaryForm.LoadPayPeriods()
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
@@ -890,8 +892,6 @@ Public Class PayStubForm
         Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
         Dim is_actual = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
-
-        MessageBox.Show(is_actual)
 
         psefr.IsActual = is_actual
 
@@ -1665,8 +1665,6 @@ Public Class PayStubForm
     Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem2.Click, ActualToolStripMenuItem2.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
-        MessageBox.Show(IsActualFlag)
-
         Dim n_PrintAllPaySlipOfficialFormat As _
             New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
                                               IsActualFlag)
@@ -1790,7 +1788,6 @@ Public Class PayStubForm
             'and if there is an existing OPEN payperiod that also has paystubs (PROCESSING pay pay period)
             'Multiple OPEN or CLOSE pay periods are allowed
             'Multiple PROCESSING pay periods are NOT allowed
-            Dim payperiodHasPaystubs = Await context.Paystubs.AnyAsync(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value)
             Dim otherProcessingPayPeriod = Await context.Paystubs.
                     Include(Function(p) p.PayPeriod).
                     Where(Function(p) p.PayPeriod.RowID.Value <> payPeriod.RowID.Value).
@@ -1798,7 +1795,7 @@ Public Class PayStubForm
                     Where(Function(p) p.PayPeriod.OrganizationID.Value = z_OrganizationID).
                     FirstOrDefaultAsync()
 
-            If open = True AndAlso payperiodHasPaystubs AndAlso otherProcessingPayPeriod IsNot Nothing Then
+            If open = True AndAlso otherProcessingPayPeriod IsNot Nothing Then
 
                 MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to reopen the selected pay period.")
                 Return False
@@ -1812,6 +1809,8 @@ Public Class PayStubForm
         End Using
 
         RefreshForm()
+
+        Await TimeEntrySummaryForm.LoadPayPeriods()
 
         If open Then
 
