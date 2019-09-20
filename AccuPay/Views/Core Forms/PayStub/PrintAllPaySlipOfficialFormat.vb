@@ -95,7 +95,7 @@ Namespace Global.AccuPay.Views.Payroll
 
                 objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
 
-                Dim nextPayPeriod = GetNextPayPeriod()
+                Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(n_PayPeriodRowID))
 
                 If nextPayPeriod IsNot Nothing Then
 
@@ -156,30 +156,6 @@ Namespace Global.AccuPay.Views.Payroll
             crvwr.Show()
 
         End Sub
-
-        Private Function GetNextPayPeriod() As PayPeriod
-
-            Dim payPeriodId = ObjectUtils.ToNullableInteger(n_PayPeriodRowID)
-
-            If payPeriodId Is Nothing Then Return Nothing
-
-            Using context As New PayrollContext
-
-                Dim currentPayPeriod = context.PayPeriods.
-                        FirstOrDefault(Function(p) p.RowID.Value = payPeriodId.Value)
-
-                If currentPayPeriod Is Nothing Then Return Nothing
-
-                Return context.PayPeriods.
-                                Where(Function(p) p.OrganizationID.Value = currentPayPeriod.OrganizationID.Value).
-                                Where(Function(p) p.PayFrequencyID.Value = currentPayPeriod.PayFrequencyID.Value).
-                                Where(Function(p) p.PayFromDate > currentPayPeriod.PayFromDate).
-                                OrderBy(Function(p) p.PayFromDate).
-                                FirstOrDefault
-
-            End Using
-
-        End Function
 
     End Class
 

@@ -154,7 +154,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 If keepInOneSheet Then
                     Dim worksheet = excel.Workbook.Worksheets.Add(reportName)
 
-                    RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns)
+                    RenderWorksheet(worksheet, employeeGroups, short_dates, viewableReportColumns, payrollSelector)
                 Else
                     For Each employeeGroup In employeeGroups
                         Dim worksheet = excel.Workbook.Worksheets.Add(employeeGroup.DivisionName)
@@ -163,7 +163,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                             employeeGroup
                         }
 
-                        RenderWorksheet(worksheet, currentGroup, short_dates, viewableReportColumns)
+                        RenderWorksheet(worksheet, currentGroup, short_dates, viewableReportColumns, payrollSelector)
                     Next
                 End If
 
@@ -179,7 +179,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 employeeGroups As ICollection(Of EmployeeGroup),
                                 short_dates As String(),
-                                viewableReportColumns As ICollection(Of ReportColumn))
+                                viewableReportColumns As ICollection(Of ReportColumn),
+                                payrollSummaDateSelection As PayrollSummaDateSelection)
         Dim subTotalRows = New List(Of Integer)
 
         worksheet.Cells.Style.Font.Size = FontSize
@@ -188,12 +189,27 @@ Public Class PayrollSummaryExcelFormatReportProvider
         organizationCell.Value = orgNam.ToUpper()
         organizationCell.Style.Font.Bold = True
 
-        Dim dateCell = worksheet.Cells(2, 1)
-        Dim dateRange = $"For the period of {short_dates(0)} to {short_dates(1)})"
-        dateCell.Value = dateRange
+        Dim attendancePeriodCell = worksheet.Cells(2, 1)
+        Dim attendancePeriodDescription = $"For the period of {short_dates(0)} to {short_dates(1)}"
+        attendancePeriodCell.Value = attendancePeriodDescription
 
         Dim lastCell = String.Empty
         Dim rowIndex As Integer = 4
+
+        If ShowCoveredPeriod() Then
+
+            attendancePeriodCell.Value = $"Attendance Period: {short_dates(0)} to {short_dates(1)}"
+
+            Dim payFromNextCutOff = PayrollTools.GetNextPayPeriod(payrollSummaDateSelection.PayPeriodFromID)
+            Dim payToNextCutOff = PayrollTools.GetNextPayPeriod(payrollSummaDateSelection.PayPeriodToID)
+
+            Dim payrollPeriodCell = worksheet.Cells(3, 1)
+            Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayToDate.ToShortDateString)}"
+            payrollPeriodCell.Value = payrollPeriodDescription
+
+            rowIndex = 5
+
+        End If
 
         For Each employeeGroup In employeeGroups
             Dim divisionCell = worksheet.Cells(rowIndex, 1)
@@ -261,7 +277,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
     End Sub
 
     Private Function GetCellValue(employee As DataRow, sourceName As String) As Object
-        If sourceName.EndsWith(adjustmentColumn) AndAlso GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
+        If sourceName.EndsWith(adjustmentColumn) AndAlso GetPayrollSummaryAdjustmentBreakdownPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
 
             If _adjustments Is Nothing Then Return 0
 
@@ -297,7 +313,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             End If
         Next
 
-        If GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
+        If GetPayrollSummaryAdjustmentBreakdownPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly Then
             Await AddAdjustmentBreakdownColumns(allEmployees, viewableReportColumns, payrollSummaDateSelection)
         End If
 
@@ -503,11 +519,15 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Return groups
     End Function
 
+    Private Function ShowCoveredPeriod() As Boolean
+        Return _settings.GetBoolean("Payroll Summary Policy.ShowCoveredPeriod", False)
+    End Function
+
 #Region "Adjustment Breakdown"
 
     Private _adjustments As List(Of IAdjustment)
 
-    Private Function GetPayrollSummaryPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
+    Private Function GetPayrollSummaryAdjustmentBreakdownPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
         Return _settings.GetEnum("Payroll Summary Policy.AdjustmentBreakdown", PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly)
     End Function
 
@@ -543,9 +563,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         'add back the total adjustment column if it is not BreakdownOnly
         'this will put the column after the adjustment breakdown columns
-        If GetPayrollSummaryPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.BreakdownOnly Then
+        If GetPayrollSummaryAdjustmentBreakdownPolicy() <> PayrollSummaryAdjustmentBreakdownPolicy.BreakdownOnly Then
 
-            If GetPayrollSummaryPolicy() = PayrollSummaryAdjustmentBreakdownPolicy.Both Then
+            If GetPayrollSummaryAdjustmentBreakdownPolicy() = PayrollSummaryAdjustmentBreakdownPolicy.Both Then
 
                 totalAdjustmentReportColumn.Name = "Total Adj."
 
