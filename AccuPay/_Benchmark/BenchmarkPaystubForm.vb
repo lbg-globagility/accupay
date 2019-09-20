@@ -713,6 +713,8 @@ Public Class BenchmarkPaystubForm
                                 Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).
                                 Where(Function(t) t.PayPeriodID.Value = _currentPayPeriod.RowID.Value))
 
+            Await context.SaveChangesAsync
+
         End Using
 
         'Reset Leave Balance
