@@ -86,6 +86,16 @@ Public Class SssCalculator
 
                 Return If(previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithOutOvertimeAndLeave
 
+            Case SssCalculationBasis.BasicMinusDeductionsWithoutPremium
+
+                Dim totalHours = If(previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave, 0) + paystub.TotalWorkedHoursWithoutOvertimeAndLeave
+
+                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
+                Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+
+                Return totalHours * hourlyRate
+
             Case Else
 
                 Return 0

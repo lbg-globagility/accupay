@@ -117,7 +117,17 @@ Namespace Global.AccuPay.Payroll
 
             ElseIf calculationBasis = PhilHealthCalculationBasis.BasicMinusDeductions Then
 
-                basisPay = If(previousPaystub?.TotalDaysPayWithoutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithoutOvertimeAndLeave
+                basisPay = If(previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave, 0) + paystub.TotalDaysPayWithOutOvertimeAndLeave
+
+            ElseIf calculationBasis = PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium Then
+
+                Dim totalHours = If(previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave, 0) + paystub.TotalWorkedHoursWithoutOvertimeAndLeave
+
+                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
+                Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+
+                basisPay = totalHours * hourlyRate
 
             End If
 

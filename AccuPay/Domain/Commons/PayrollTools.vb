@@ -354,7 +354,17 @@ Public Class PayrollTools
         End If
 
     End Sub
+
     Public Shared Async Function ValidatePayPeriodAction(payPeriodId As Integer?) As Task(Of Boolean)
+
+        Dim sys_ownr As New SystemOwner
+
+        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+
+            'Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
+            Return True
+
+        End If
 
         Using context As New PayrollContext
 
