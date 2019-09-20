@@ -43,7 +43,7 @@ IF countchildposition = -1 THEN
     SET countchildposition = 1;
 
 END IF;
-
+/*
 UPDATE employee e
 INNER JOIN position ps
 ON ps.DivisionId = NEW.RowID
@@ -52,7 +52,7 @@ SET e.PayFrequencyID = NEW.PayFrequencyID,
     e.LateGracePeriod = NEW.GracePeriod
 WHERE e.OrganizationID = NEW.OrganizationID AND
     e.PositionID = ps.RowID;
-
+*/
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;
