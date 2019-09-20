@@ -204,7 +204,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
             Dim payToNextCutOff = PayrollTools.GetNextPayPeriod(payrollSummaDateSelection.PayPeriodToID)
 
             Dim payrollPeriodCell = worksheet.Cells(3, 1)
-            Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayToDate.ToShortDateString)}"
+            Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payToNextCutOff?.PayToDate Is Nothing, "", payToNextCutOff.PayToDate.ToShortDateString)}"
             payrollPeriodCell.Value = payrollPeriodDescription
 
             rowIndex = 5
