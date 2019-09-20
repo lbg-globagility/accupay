@@ -1,0 +1,1 @@
+INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES (0, 'ShowCoveredPeriod', 'Payroll Summary Policy', 'Yes', NOW(), '1', NOW(), '1', '1');

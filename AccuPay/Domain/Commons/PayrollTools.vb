@@ -395,4 +395,26 @@ Public Class PayrollTools
 
     End Function
 
+    Public Shared Function GetNextPayPeriod(payPeriodId As Integer?) As PayPeriod
+
+        If payPeriodId Is Nothing Then Return Nothing
+
+        Using context As New PayrollContext
+
+            Dim currentPayPeriod = context.PayPeriods.
+                        FirstOrDefault(Function(p) p.RowID.Value = payPeriodId.Value)
+
+            If currentPayPeriod Is Nothing Then Return Nothing
+
+            Return context.PayPeriods.
+                                Where(Function(p) p.OrganizationID.Value = currentPayPeriod.OrganizationID.Value).
+                                Where(Function(p) p.PayFrequencyID.Value = currentPayPeriod.PayFrequencyID.Value).
+                                Where(Function(p) p.PayFromDate > currentPayPeriod.PayFromDate).
+                                OrderBy(Function(p) p.PayFromDate).
+                                FirstOrDefault
+
+        End Using
+
+    End Function
+
 End Class
