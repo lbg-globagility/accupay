@@ -261,18 +261,18 @@ Namespace Benchmark
 
         End Sub
 
-        Private Function ComputeFinalRoundedRate(value As Decimal, Optional isActual As Boolean = False) As Decimal
+        Private Function ComputeFinalRoundedRate(value As Decimal, Optional isActual As Boolean = False, Optional decimalPlace As Integer = 2) As Decimal
 
             Dim finalRate = If(isActual, Me.ActualHourlyRate, Me.HourlyRate)
 
-            Return AccuMath.CommercialRound(value * finalRate)
+            Return AccuMath.CommercialRound(value * finalRate, decimalPlace)
 
         End Function
 
         Private Sub ComputeRegularPays(payRate As OvertimeRate, allowanceForOvertimePolicy As Boolean, regularHours As Decimal, overtimeHours As Decimal, leaveHours As Decimal)
             Me.RegularHours = regularHours
-            Me.RegularPay = ComputeFinalRoundedRate(Me.RegularHours)
-            Me.ActualRegularPay = ComputeFinalRoundedRate(Me.RegularHours, isActual:=True)
+            Me.RegularPay = ComputeFinalRoundedRate(Me.RegularHours, decimalPlace:=4)
+            Me.ActualRegularPay = ComputeFinalRoundedRate(Me.RegularHours, isActual:=True, decimalPlace:=4)
 
             Me.OvertimeHours = overtimeHours
             Me.OvertimePay = ComputeFinalRoundedRate(Me.OvertimeHours * payRate.Overtime.Rate)

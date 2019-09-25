@@ -250,8 +250,8 @@ Public Class BenchmarkPaystubRateTest
 
         Dim overtimeRate = 1.25
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate, 4))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate, 4))
 
         Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * actualHourlyRate * overtimeRate))
@@ -270,8 +270,8 @@ Public Class BenchmarkPaystubRateTest
 
         Dim overtimeRate = 1.25
 
-        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate))
-        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.RegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * hourlyRate, 4))
+        Assert.AreEqual(_benchmarkPaystubRate.ActualRegularPay, AccuMath.CommercialRound(_benchmarkPaystubRate.RegularHours * actualHourlyRate, 4))
 
         Assert.AreEqual(_benchmarkPaystubRate.OvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimeHours * hourlyRate * overtimeRate))
         Assert.AreEqual(_benchmarkPaystubRate.ActualOvertimePay, AccuMath.CommercialRound(_benchmarkPaystubRate.OvertimePay))
