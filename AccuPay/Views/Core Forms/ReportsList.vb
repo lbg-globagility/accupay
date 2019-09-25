@@ -8,6 +8,8 @@ Public Class ReportsList
 
     Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
 
+    Private Const ActualDescription As String = "(Actual)"
+
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim providers = New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
@@ -59,13 +61,18 @@ Public Class ReportsList
 
         If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
 
-            Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
-
-            Dim summaryListItem = New ListViewItem(summaryProvider.Name)
-            summaryListItem.Tag = summaryProvider
-            lvMainMenu.Items.Add(summaryListItem)
+            lvMainMenu.Items.Add(CreateNewListViewItem("(Declared)"))
+            lvMainMenu.Items.Add(CreateNewListViewItem(ActualDescription))
         End If
     End Sub
+
+    Private Shared Function CreateNewListViewItem(suffix As String) As ListViewItem
+        Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
+
+        Dim summaryListItem = New ListViewItem(summaryProvider.Name & " " & suffix)
+        summaryListItem.Tag = summaryProvider
+        Return summaryListItem
+    End Function
 
     Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
         Return New Collection(Of IReportProvider) From {
@@ -117,7 +124,9 @@ Public Class ReportsList
 
                     Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)
 
-                    payrollSummary.IsActual = False
+                    Dim isActual = n_listviewitem.Text.EndsWith(ActualDescription)
+
+                    payrollSummary.IsActual = isActual
 
                     payrollSummary.Run()
                 Else
