@@ -14,7 +14,11 @@ Namespace Global.AccuPay.Payroll
                            paystub As Paystub)
             Dim totalEarnings As Decimal
 
-            If employee.IsFixed Then
+            If employee.IsDaily OrElse (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark Then
+
+                totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
+
+            ElseIf employee.IsFixed Then
 
                 Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual:=True)
                 Dim basicPay = monthlyRate / 2
@@ -41,11 +45,6 @@ Namespace Global.AccuPay.Payroll
 
                     totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay - paystub.Actual.BasicDeductions
                 End If
-
-            ElseIf employee.IsDaily Then
-
-                totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
-
             End If
 
             paystub.Actual.TotalEarnings = AccuMath.CommercialRound(totalEarnings)
