@@ -30,6 +30,10 @@ Namespace Global.AccuPay.Entity
 
         Public Overridable Property PayAmount As Decimal
 
+        'this might throw an error when accessed.
+        'it thrown an error when used in Gotesco project.
+        'currently no code references this property so this is not an issue.
+        'String is the recommended data type for Undeclared
         Public Overridable Property Undeclared As Char
 
         <ForeignKey("ProductID")>
