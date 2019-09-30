@@ -371,6 +371,12 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Domain\User.vb" />
+    <Compile Include="Reports\Reports\Cinema%27s Tardiness Report1.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Cinema%27s Tardiness Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -378,6 +384,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
+    <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\rpt\rpt\DefaultPaySlipFormat.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1800,6 +1807,10 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Reports\Reports\Cinema%27s Tardiness Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
