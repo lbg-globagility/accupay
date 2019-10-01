@@ -377,6 +377,7 @@
       <DependentUpon>Cinema%27s Tardiness Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
