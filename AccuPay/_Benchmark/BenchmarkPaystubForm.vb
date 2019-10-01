@@ -77,10 +77,14 @@ Public Class BenchmarkPaystubForm
 
     End Sub
 
-    Private Async Function RefreshForm() As Task
+    Private Async Function RefreshForm(Optional refreshPayPeriod As Boolean = True) As Task
         InitializeControls()
 
-        Await GetCutOffPeriod()
+        If refreshPayPeriod Then
+
+            Await GetCutOffPeriod()
+
+        End If
 
         If _currentPayPeriod Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
@@ -698,7 +702,7 @@ Public Class BenchmarkPaystubForm
 
         Await ResetLeaveTransaction(employee)
 
-        Await RefreshForm()
+        Await RefreshForm(refreshPayPeriod:=False)
 
         MessageBoxHelper.Information("Done! " & vbNewLine + vbNewLine & $"Go to Payroll transactions to process the payslip of {employee.FullNameLastNameFirst} [{employee.EmployeeNo}] again.", "Delete Paystub")
 
@@ -736,7 +740,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub RefreshFormButton_Click(sender As Object, e As EventArgs) Handles RefreshFormButton.Click
 
-        Await RefreshForm()
+        Await RefreshForm(refreshPayPeriod:=False)
 
     End Sub
 

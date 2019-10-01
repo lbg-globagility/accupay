@@ -81,7 +81,7 @@ Public Class BenchmarkPayrollForm
 
     End Sub
 
-    Private Async Function RefreshForm() As Task
+    Private Async Function RefreshForm(Optional refreshPayPeriod As Boolean = True) As Task
         InitializeControls()
 
         _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
@@ -99,7 +99,11 @@ Public Class BenchmarkPayrollForm
         OtherIncomeComboBox.DataSource = _benchmarkPayrollHelper.IncomeList
         OtherIncomeComboBox.SelectedIndex = -1
 
-        Await GetCutOffPeriod()
+        If refreshPayPeriod Then
+
+            Await GetCutOffPeriod()
+
+        End If
 
         If _currentPayPeriod Is Nothing Then
             MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
@@ -642,7 +646,7 @@ Public Class BenchmarkPayrollForm
 
                 BenchmarkPayrollGeneration.Save(_payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
 
-                Await RefreshForm()
+                Await RefreshForm(refreshPayPeriod:=False)
 
                 MessageBoxHelper.Information($"Payroll for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}] was generated successfully.", "Payroll Generation")
 
@@ -798,7 +802,7 @@ Public Class BenchmarkPayrollForm
 
     Private Async Sub RefreshFormButton_Click(sender As Object, e As EventArgs) Handles RefreshFormButton.Click
 
-        Await RefreshForm()
+        Await RefreshForm(refreshPayPeriod:=False)
 
     End Sub
 
