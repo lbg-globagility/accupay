@@ -395,7 +395,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
-<<<<<<< HEAD
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
     <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
@@ -403,9 +402,6 @@
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-=======
-    <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
->>>>>>> master
     <Compile Include="Reports\rpt\rpt\DefaultPaySlipFormat.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
