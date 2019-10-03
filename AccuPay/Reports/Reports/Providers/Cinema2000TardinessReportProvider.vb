@@ -1,4 +1,6 @@
-﻿Imports CrystalDecisions.CrystalReports.Engine
+﻿Imports AccuPay.Entity
+Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.EntityFrameworkCore
 
 Public Class Cinema2000TardinessReportProvider
     Implements IReportProvider
@@ -7,7 +9,7 @@ Public Class Cinema2000TardinessReportProvider
 
     Public Async Sub Run() Implements IReportProvider.Run
 
-        Dim firstDate As New Date(2019, 10, 1)
+        Dim firstDate As New Date(2019, 9, 1)
 
         Try
 
@@ -23,7 +25,7 @@ Public Class Cinema2000TardinessReportProvider
 
             txtAddress.Text = PayrollTools.GetOrganizationAddress()
 
-            Dim tardinessReportModels = Await GetTardinessReportModels()
+            Dim tardinessReportModels = Await GetTardinessReportModels(firstDate)
 
             report.SetDataSource(tardinessReportModels)
 
@@ -36,8 +38,216 @@ Public Class Cinema2000TardinessReportProvider
 
     End Sub
 
-    Private Async Function GetTardinessReportModels() As Threading.Tasks.Task(Of List(Of CinemaTardinessReportModel))
+    Private Async Function GetTardinessReportModels([date] As Date) As Threading.Tasks.Task(Of List(Of CinemaTardinessReportModel))
 
+        Dim firstDayOfTheMonth = New Date([date].Year, [date].Month, 1)
+        Dim lastDayOfTheMonth = New Date([date].Year, [date].Month, Date.DaysInMonth([date].Year, [date].Month))
+
+        Dim previousMonth = [date].Month - 1
+        Dim lastDayOfThePreviousMonth = New Date([date].Year, previousMonth, Date.DaysInMonth([date].Year, previousMonth))
+
+        'if the firstDayOfTheMonth is 09/01/2019, lastYearDate is 10/01/2018
+        Dim firstDayOneYear = New Date(firstDayOfTheMonth.Year - 1, firstDayOfTheMonth.Month + 1, 1)
+
+        Dim tardinessReportModels As New List(Of CinemaTardinessReportModel)
+
+        '#1. Get all the employee that have lates on the selected month
+        '#2. If the affected employee has no record on the database for tardiness (for this year) yet, create a tardiness record for the employee
+        '#3. Get all the tardiness record of the affected employees
+        '#4. Update the value of [NumberOfOffense] from the data retrieved from #3
+
+        Using context As New PayrollContext
+
+            '#1.
+            tardinessReportModels = Await context.TimeEntries.
+                                            Include(Function(t) t.Employee).
+                                            Where(Function(t) t.Date >= firstDayOfTheMonth AndAlso t.Date <= lastDayOfTheMonth).
+                                            Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
+                                            Where(Function(t) t.LateHours > 0).
+                                            GroupBy(Function(t) t.Employee).
+                                            Select(Function(gt) New CinemaTardinessReportModel With {
+                                                    .EmployeeId = gt.Key.RowID.Value,
+                                                    .EmployeeName = $"{gt.Key.LastName}, {gt.Key.FirstName}{If(gt.Key.MiddleInitial Is Nothing, "", ", " & gt.Key.MiddleInitial)}",
+                                                    .Days = gt.Count(),
+                                                    .Hours = gt.Sum(Function(t) t.LateHours)
+                                                    }).
+                                            ToListAsync
+
+            '#2
+            'this list contains the first offense dates per employee within the year of the report
+            Dim employeeTardinessDates = Await GetEmployeeTardinessRecordList(
+                                                firstDayOfTheMonth,
+                                                lastDayOfTheMonth,
+                                                firstDayOneYear,
+                                                tardinessReportModels,
+                                                context)
+
+            If tardinessReportModels.Count <> employeeTardinessDates.Count Then
+                Throw New Exception("Error creating new tardiness records.")
+            End If
+
+            '#3
+            Dim earliestFirstOffenseDate = employeeTardinessDates.
+                                            OrderBy(Function(t) t.FirstOffenseDate).
+                                            FirstOrDefault?.FirstOffenseDate
+
+            If earliestFirstOffenseDate Is Nothing Then
+                Throw New Exception("Error creating new tardiness records.")
+            End If
+
+            Dim previousOffenseList = Await context.TimeEntries.
+                                            Include(Function(t) t.Employee).
+                                            Where(Function(t) t.Date >= earliestFirstOffenseDate.Value AndAlso t.Date <= lastDayOfThePreviousMonth).
+                                            Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
+                                            Where(Function(t) t.LateHours > 0).
+                                            ToListAsync
+
+            For Each tardinessReportModel In tardinessReportModels
+
+                Dim employeeTardinessDate = employeeTardinessDates.
+                                                Where(Function(e) e.EmployeeId = tardinessReportModel.EmployeeId).
+                                                FirstOrDefault?.FirstOffenseDate
+
+                If employeeTardinessDate Is Nothing Then
+                    Throw New Exception("Error creating new tardiness records.")
+                End If
+
+                Dim employeeOffenseList = previousOffenseList.
+                                            Where(Function(o) o.EmployeeID = tardinessReportModel.EmployeeId).
+                                            Where(Function(o) o.Date >= employeeTardinessDate).
+                                            Where(Function(o) o.Date <= lastDayOfThePreviousMonth).
+                                            ToList
+
+                Dim breaker1 = 1
+
+            Next
+
+            Dim breaker = 1
+
+        End Using
+
+        'tardinessReportModels = GetSampleTardinessReportModels()
+
+        Return tardinessReportModels
+
+    End Function
+
+    Private Async Function GetEmployeeTardinessRecordList(
+                            firstDayOfTheMonth As Date,
+                            lastDayOfTheMonth As Date,
+                            firstDayOneYear As Date,
+                            tardinessReportModels As List(Of CinemaTardinessReportModel),
+                            context As PayrollContext) _
+                            As Threading.Tasks.Task(Of List(Of EmployeeTardinessDate))
+
+        Dim employeeIds = tardinessReportModels.Select(Function(t) t.EmployeeId).ToArray
+        'Original span [10/01/2018 to 09/30/2019]
+        'Get the records that is within 2 years from now
+        'ex. 11/01/2017 - 09/30/2019
+        'because for example if there is a first offense tardiness record for Jan. 2018
+        'That should only reset on Jan. 2019
+        'That employee's tardiness span would be from Jan. 2019 to Sep. 2019
+        'So the offenses that the employee got from Oct. 2018 to Dec. 2018 should not be included in this report
+        'Those offenses will be included on the span of Jan. 2018 to Dec. 2018
+
+        'Example 2
+        '--
+        'Jan 2018 to Dec 2018
+        'Dec 2017 to Nov 2018
+        'Nov 2017 to Oct 2018
+        '-------------------------
+        'Oct 2017 to Sept 2018
+        '--
+
+        'The [Nov. 2017 to Oct. 2018] timespan can still affect our September 2019 report
+        'since if there is a first offense tardiness record on November 2017
+        'an offense recorded on October 2018 would fit in that time span
+        'that employees tardiness record would reset on November 2018
+        'so the September 2019 report should not count that October 2018 offense
+
+        Dim firstDayTwoYearsBefore = New Date(firstDayOfTheMonth.Year - 2, firstDayOfTheMonth.Month + 2, 1)
+
+        Await context.TardinessRecords.LoadAsync()
+
+        Dim employeeTardinessRecords = context.TardinessRecords.Local.
+                                                Where(Function(t) employeeIds.Contains(t.EmployeeId)).
+                                                Where(Function(t) t.FirstOffenseDate >= firstDayTwoYearsBefore).
+                                                Where(Function(t) t.FirstOffenseDate <= lastDayOfTheMonth).
+                                                ToList
+
+        Dim employeesWithNoTardinessRecordsYet = employeeIds.Except(employeeTardinessRecords.Select(Function(t) t.EmployeeId))
+
+        For Each employeeId In employeesWithNoTardinessRecordsYet
+
+            context.TardinessRecords.Add(New TardinessRecord With {
+                .EmployeeId = employeeId,
+                .FirstOffenseDate = firstDayOfTheMonth,
+                .Year = firstDayOfTheMonth.Year
+            })
+
+        Next
+
+        employeeTardinessRecords = context.TardinessRecords.Local.
+                                            Where(Function(t) employeeIds.Contains(t.EmployeeId)).
+                                            Where(Function(t) t.FirstOffenseDate >= firstDayTwoYearsBefore).
+                                            Where(Function(t) t.FirstOffenseDate <= lastDayOfTheMonth).
+                                            ToList
+
+        If employeeIds.Count <> employeeTardinessRecords.Count Then
+            Throw New Exception("Error creating new tardiness records.")
+        End If
+
+        'This will create the employee tardiness date within the year of the reports
+        Dim employeeTardinessDates = CreateEmployeeTardinessDates(employeeTardinessRecords, firstDayOneYear)
+
+        If employeeIds.Count <> employeeTardinessDates.Count Then
+            Throw New Exception("Error creating new tardiness records.")
+        End If
+
+        Return employeeTardinessDates
+    End Function
+
+    Private Function CreateEmployeeTardinessDates(
+                        employeeTardinessRecords As List(Of TardinessRecord),
+                        firstDayOneYear As Date) _
+                        As List(Of EmployeeTardinessDate)
+
+        Dim employeeTardinessDates As New List(Of EmployeeTardinessDate)
+        Dim groupedTardinessRecords = employeeTardinessRecords.GroupBy(Function(e) e.EmployeeId)
+
+        For Each groupedTardinessRecord In groupedTardinessRecords
+
+            Dim latestTardinessRecordDate = groupedTardinessRecord.
+                                                OrderByDescending(Function(t) t.FirstOffenseDate).
+                                                FirstOrDefault
+
+            If latestTardinessRecordDate Is Nothing Then Continue For
+
+            'if the latest tardiness record is from last 2 years, get its equivalent date for this year
+            'Ex: Tardiness Report is Septemper 2019
+            'firstDayOneYear would be 10/01/2018
+            'if firstOffenseDate is 09/01/2018
+            'it will reset to 09/01/2019
+            'so the employee will start gaining new tardiness offense on 09/01/2019
+
+            Dim tardinessRecordDate = latestTardinessRecordDate.FirstOffenseDate
+
+            If latestTardinessRecordDate.FirstOffenseDate < firstDayOneYear Then
+                tardinessRecordDate = latestTardinessRecordDate.FirstOffenseDate.AddYears(1)
+            End If
+
+            employeeTardinessDates.Add(New EmployeeTardinessDate With {
+                .EmployeeId = groupedTardinessRecord.Key,
+                .FirstOffenseDate = tardinessRecordDate
+            })
+
+        Next
+
+        Return employeeTardinessDates
+
+    End Function
+
+    Private Shared Function GetSampleTardinessReportModels() As List(Of CinemaTardinessReportModel)
         Dim tardinessReportModels As New List(Of CinemaTardinessReportModel)
 
         tardinessReportModels.Add(
@@ -71,9 +281,37 @@ Public Class Cinema2000TardinessReportProvider
                 .Hours = 0,
                 .NumberOfOffense = 0
         })
-
         Return tardinessReportModels
-
     End Function
+
+    Private Class EmployeeTardinessDate
+
+        Public Property EmployeeId As Integer
+
+        Private _firstOffenseDate As Date
+
+        Public Property FirstOffenseDate() As Date 'First offense within the year
+            Get
+                Return _firstOffenseDate
+            End Get
+            Set(ByVal value As Date)
+                'always convert to first day of the month
+                _firstOffenseDate = New Date(value.Year, value.Month, 1)
+            End Set
+        End Property
+
+    End Class
+
+    Private Class OffensePerMonth
+
+        Public Property EmployeeId As Integer
+
+        Public Property Days As Integer
+
+        Public Property Hours As Decimal
+
+        Public Property Month As Integer
+
+    End Class
 
 End Class

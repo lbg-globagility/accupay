@@ -16,39 +16,39 @@ Public Class PayrollContext
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
 
-    Public Overridable Property Salaries As DbSet(Of Salary)
-
-    Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
-
-    Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
-
-    Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
-
-    Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
-
-    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
-
-    Public Overridable Property TimeLogs As DbSet(Of TimeLog)
-
     Public Overridable Property Categories As DbSet(Of Category)
-
-    Public Overridable Property Products As DbSet(Of Product)
-
-    Public Overridable Property Paystubs As DbSet(Of Paystub)
-
-    Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
-
-    Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
-
-    Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
-
-    Public Overridable Property ThirteenthMonthPays As DbSet(Of ThirteenthMonthPay)
 
     Public Overridable Property JobCategories As DbSet(Of JobCategory)
 
     Public Overridable Property JobLevels As DbSet(Of JobLevel)
 
+    Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
+
+    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
+
+    Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
+
+    Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
+
+    Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
+
+    Public Overridable Property Paystubs As DbSet(Of Paystub)
+
+    Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
+
     Public Overridable Property Positions As DbSet(Of Position)
+
+    Public Overridable Property Products As DbSet(Of Product)
+
+    Public Overridable Property Salaries As DbSet(Of Salary)
+
+    Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
+
+    Public Overridable Property ThirteenthMonthPays As DbSet(Of ThirteenthMonthPay)
+
+    Public Overridable Property TimeLogs As DbSet(Of TimeLog)
+
+    Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
 
     Public Overridable Property Employees As DbSet(Of Employee)
 
@@ -100,6 +100,8 @@ Public Class PayrollContext
 
     Public Overridable Property Users As DbSet(Of User)
 
+    Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
+
     Public Sub New()
     End Sub
 
@@ -125,6 +127,9 @@ Public Class PayrollContext
         modelBuilder.Entity(Of Paystub).
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
+
+        modelBuilder.Entity(Of TardinessRecord)().
+            HasKey(Function(t) New With {t.EmployeeId, t.Year})
     End Sub
 
 End Class

@@ -1,5 +1,6 @@
 ﻿Public Class CinemaTardinessReportModel
 
+    Public Property EmployeeId As Integer
     Public Property EmployeeName As String
     Public Property Days As Decimal
     Public Property Hours As Decimal
