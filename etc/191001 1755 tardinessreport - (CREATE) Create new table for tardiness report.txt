@@ -1,0 +1,10 @@
+CREATE TABLE `tardinessrecord` (
+	`Year` YEAR NOT NULL,
+	`EmployeeId` INT(11) NOT NULL,
+	`FirstOffenseDate` DATE NOT NULL,
+	PRIMARY KEY (`Year`, `EmployeeId`),
+	INDEX `FK_tardinessrecord_employee_EmployeeId` (`EmployeeId`),
+	CONSTRAINT `FK_tardinessrecord_employee_EmployeeId` FOREIGN KEY (`EmployeeId`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE
+)
+ENGINE=InnoDB
+;

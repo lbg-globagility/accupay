@@ -107,6 +107,7 @@
   <ItemGroup>
     <Compile Include="BenchmarkPaystubRateTest.vb" />
     <Compile Include="CalendarTest.vb" />
+    <Compile Include="CinemaTardinessReportModelTest.vb" />
     <Compile Include="CurrentShiftTest.vb" />
     <Compile Include="EnumsTest.vb" />
     <Compile Include="Import Logs\ITimeAnalyzer.vb" />

@@ -134,6 +134,9 @@ Namespace Global.AccuPay.Entity
 
         Public Property HasShift As Boolean
 
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
+
         Public Sub New()
         End Sub
 
