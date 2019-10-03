@@ -379,6 +379,7 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Domain\User.vb" />
+    <Compile Include="Reports\Reports\DataModel\PaystubPayslipModel.vb" />
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -386,6 +387,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
+    <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\rpt\rpt\DefaultPaySlipFormat.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1841,6 +1849,10 @@
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\AdjustmentForm.resx">
       <DependentUpon>AdjustmentForm.vb</DependentUpon>

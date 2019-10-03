@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Views.Payroll
 
 Public Class ReportsList
 
@@ -61,17 +62,30 @@ Public Class ReportsList
 
         If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
 
-            lvMainMenu.Items.Add(CreateNewListViewItem("(Declared)"))
-            lvMainMenu.Items.Add(CreateNewListViewItem(ActualDescription))
+            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
+            lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
+
+            'Payslip
+            Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
+            lvMainMenu.Items.Add(CreateNewListViewItem(payslipProvider, payslipProvider.Name))
         End If
     End Sub
 
-    Private Shared Function CreateNewListViewItem(suffix As String) As ListViewItem
+    Private Shared Function CreatePayrollSummaryListViewItem(suffix As String) As ListViewItem
+
         Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
 
-        Dim summaryListItem = New ListViewItem(summaryProvider.Name & " " & suffix)
-        summaryListItem.Tag = summaryProvider
-        Return summaryListItem
+        Dim reportName = summaryProvider.Name & " " & suffix
+        Return CreateNewListViewItem(summaryProvider, reportName)
+    End Function
+
+    Private Shared Function CreateNewListViewItem(
+                                reportProvider As IReportProvider,
+                                reportName As String) As ListViewItem
+
+        Dim listItem = New ListViewItem(reportName)
+        listItem.Tag = reportProvider
+        Return listItem
     End Function
 
     Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
@@ -137,6 +151,11 @@ Public Class ReportsList
                 MsgBox($"Report Is Not Yet Done: {ex.Message}", MsgBoxStyle.OkOnly)
             End Try
         End If
+    End Sub
+
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+        Dim n_PrintAllPaySlipOfficialFormat As _
+            New PrintAllPaySlipOfficialFormat(20561, 1)
     End Sub
 
 End Class
