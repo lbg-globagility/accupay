@@ -45,7 +45,7 @@ Partial Class ReportsList
         Me.Button1.Name = "Button1"
         Me.Button1.Size = New System.Drawing.Size(190, 47)
         Me.Button1.TabIndex = 2
-        Me.Button1.Text = "July 1-15 Payroll Summary for Benchmark Phils. Trading Co. Inc."
+        Me.Button1.Text = "(Old Payslip) July 1-15 for Benchmark Phils. Trading Co. Inc."
         Me.Button1.UseVisualStyleBackColor = True
         '
         'ReportsList

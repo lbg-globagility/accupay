@@ -37,41 +37,49 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
 
         Dim paystubPayslipModels As New List(Of PaystubPayslipModel)
 
+        CreateSampleModels(paystubPayslipModels)
+
+        Return Task.Run(Function()
+                            Return paystubPayslipModels
+                        End Function)
+    End Function
+
+    Private Shared Sub CreateSampleModels(paystubPayslipModels As List(Of PaystubPayslipModel))
         paystubPayslipModels.Add(
-            New PaystubPayslipModel() With {
-                .EmployeeNumber = "169899",
-                .EmployeeName = "Josh Santos",
-                .RegularPay = 20000,
-                .BasicHours = 96,
-                .BasicPay = 18200,
-                .Allowance = 2000,
-                .Ecola = 0.6,
-                .AbsentHours = 16,
-                .AbsentAmount = 1400,
-                .LateAndUndertimeHours = 4,
-                .LateAndUndertimeAmount = 350,
-                .GrossPay = 18000,
-                .SSSAmount = 480,
-                .PhilHealthAmount = 187.5,
-                .PagibigAmount = 100,
-                .TaxWithheldAmount = 0.5,
-                .NetPay = 17500,
-                .OvertimeHours = 2,
-                .OvertimePay = 671,
-                .RegularHolidayHours = 8,
-                .RegularHolidayPay = 1074,
-                .Loans = New List(Of PaystubPayslipModel.Loan) From {
-                    New PaystubPayslipModel.Loan("SSS Loan", 888888, 88888888),
-                    New PaystubPayslipModel.Loan("123456789012345678901234567890", 888881, 88888881),
-                    New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882)
-                },
-                .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
-                    New PaystubPayslipModel.Adjustment("sOT Adjustment", 50),
-                    New PaystubPayslipModel.Adjustment("sUniform", -10000),
-                    New PaystubPayslipModel.Adjustment("sSalary Adjustment", 88888),
-                    New PaystubPayslipModel.Adjustment("sCellphone", -8888888)
-                }
-            }.CreateSummaries())
+                    New PaystubPayslipModel() With {
+                        .EmployeeNumber = "169899",
+                        .EmployeeName = "Josh Santos",
+                        .RegularPay = 20000,
+                        .BasicHours = 96,
+                        .BasicPay = 18200,
+                        .Allowance = 2000,
+                        .Ecola = 0.6,
+                        .AbsentHours = 16,
+                        .AbsentAmount = 1400,
+                        .LateAndUndertimeHours = 4,
+                        .LateAndUndertimeAmount = 350,
+                        .GrossPay = 18000,
+                        .SSSAmount = 480,
+                        .PhilHealthAmount = 187.5,
+                        .PagibigAmount = 100,
+                        .TaxWithheldAmount = 0.5,
+                        .NetPay = 17500,
+                        .OvertimeHours = 2,
+                        .OvertimePay = 671,
+                        .RegularHolidayHours = 8,
+                        .RegularHolidayPay = 1074,
+                        .Loans = New List(Of PaystubPayslipModel.Loan) From {
+                            New PaystubPayslipModel.Loan("SSS Loan", 888888, 88888888),
+                            New PaystubPayslipModel.Loan("123456789012345678901234567890", 888881, 88888881),
+                            New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882)
+                        },
+                        .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
+                            New PaystubPayslipModel.Adjustment("sOT Adjustment", 50),
+                            New PaystubPayslipModel.Adjustment("sUniform", -10000),
+                            New PaystubPayslipModel.Adjustment("sSalary Adjustment", 88888),
+                            New PaystubPayslipModel.Adjustment("sCellphone", -8888888)
+                        }
+                    }.CreateSummaries())
 
         paystubPayslipModels.Add(
             New PaystubPayslipModel() With {
@@ -266,10 +274,6 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                     New PaystubPayslipModel.Adjustment("Cellphone", -88888885)
                 }
         }.CreateSummaries())
-
-        Return Task.Run(Function()
-                            Return paystubPayslipModels
-                        End Function)
-    End Function
+    End Sub
 
 End Class
