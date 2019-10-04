@@ -237,6 +237,12 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
+        Dim sys_ownr As New SystemOwner
+
+        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+            worksheet.Cells.Style.Font.Name = "Book Antiqua"
+        End If
+
         Dim organizationCell = worksheet.Cells(1, 1)
         organizationCell.Value = orgNam.ToUpper()
         organizationCell.Style.Font.Bold = True
