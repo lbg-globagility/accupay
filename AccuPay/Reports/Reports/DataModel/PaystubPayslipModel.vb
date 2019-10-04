@@ -1,4 +1,5 @@
 ﻿Imports System.Text
+Imports AccuPay.Extensions
 
 Public Class PaystubPayslipModel
 
@@ -30,10 +31,154 @@ Public Class PaystubPayslipModel
 
     Public Property NetPay As Decimal
 
-    Public Property TotalOvertimeHours As Decimal
-    Public Property TotalOvertimePay As Decimal
+    Public Function CreateSummaries() As PaystubPayslipModel
+
+        Return Me.CreateOvertimeSummaryColumns().
+                    CreateLoanSummaryColumns().
+                    CreateAdjustmentSummaryColumns()
+
+    End Function
+
+    Public ReadOnly Property TotalDeductions As Decimal
+        Get
+            Return SSSAmount + PhilHealthAmount + PagibigAmount + TaxWithheldAmount + TotalLoans
+        End Get
+    End Property
+
+#Region "Loans and Adjustments"
+
+    Public Property Loans As List(Of Loan)
+    Public Property Adjustments As List(Of Adjustment)
+
+    Public ReadOnly Property TotalLoans As Decimal
+        Get
+            Return Loans.Sum(Function(l) l.Amount)
+        End Get
+    End Property
+
+    Public ReadOnly Property TotalAdjustments As Decimal
+        Get
+            Return Adjustments.Sum(Function(l) l.Amount)
+        End Get
+    End Property
+
+    Private _loanNamesSummary As String
+
+    Public ReadOnly Property LoanNamesSummary As String
+        Get
+            Return _loanNamesSummary
+        End Get
+    End Property
+
+    Private _loanAmountsSummary As String
+
+    Public ReadOnly Property LoanAmountsSummary As String
+        Get
+            Return _loanAmountsSummary
+        End Get
+    End Property
+
+    Private _loanBalancesSummary As String
+
+    Public ReadOnly Property LoanBalancesSummary As String
+        Get
+            Return _loanBalancesSummary
+        End Get
+    End Property
+
+    Private _adjustmentNamesSummary As String
+
+    Public ReadOnly Property AdjustmentNamesSummary As String
+        Get
+            Return _adjustmentNamesSummary
+        End Get
+    End Property
+
+    Private _adjustmentAmountsSummary As String
+
+    Public ReadOnly Property AdjustmentAmountsSummary As String
+        Get
+            Return _adjustmentAmountsSummary
+        End Get
+    End Property
+
+    Public Function CreateLoanSummaryColumns() As PaystubPayslipModel
+
+        _loanNamesSummary = ""
+        _loanAmountsSummary = ""
+        _loanBalancesSummary = ""
+
+        Dim loanNamesSummaryBuilder As New StringBuilder
+        Dim loanAmountsSummaryBuilder As New StringBuilder
+        Dim loanBalancesSummaryBuilder As New StringBuilder
+
+        Dim rightSideSummaryMaxCharacters = 15
+
+        For Each loan In Loans
+
+            If loan.Amount <> 0 Then
+
+                loanNamesSummaryBuilder.AppendLine(loan.Name.Ellipsis(rightSideSummaryMaxCharacters))
+                loanAmountsSummaryBuilder.AppendLine(loan.Amount.ToString(MoneyFormat))
+                loanBalancesSummaryBuilder.AppendLine(loan.Balance.ToString(MoneyFormat))
+
+            End If
+
+        Next
+
+        _loanNamesSummary = loanNamesSummaryBuilder.ToString
+        _loanAmountsSummary = loanAmountsSummaryBuilder.ToString
+        _loanBalancesSummary = loanBalancesSummaryBuilder.ToString
+
+        Return Me
+    End Function
+
+    Public Function CreateAdjustmentSummaryColumns() As PaystubPayslipModel
+
+        _adjustmentNamesSummary = ""
+        _adjustmentAmountsSummary = ""
+
+        Dim adjustmentNamesSummaryBuilder As New StringBuilder
+        Dim adjustmentAmountsSummaryBuilder As New StringBuilder
+
+        Dim rightSideSummaryMaxCharacters = 25
+
+        For Each adjustment In Adjustments
+
+            If adjustment.Amount <> 0 Then
+
+                adjustmentNamesSummaryBuilder.AppendLine(adjustment.Name.Ellipsis(rightSideSummaryMaxCharacters))
+                adjustmentAmountsSummaryBuilder.AppendLine(adjustment.Amount.ToString(MoneyFormat))
+
+            End If
+
+        Next
+
+        _adjustmentNamesSummary = adjustmentNamesSummaryBuilder.ToString
+        _adjustmentAmountsSummary = adjustmentAmountsSummaryBuilder.ToString
+
+        Return Me
+    End Function
+
+#End Region
 
 #Region "Overtimes Breakdowns and Summary"
+
+    Private _totalOvertimeHours As Decimal
+
+    Public ReadOnly Property TotalOvertimeHours As Decimal
+        Get
+            Return _totalOvertimeHours
+        End Get
+    End Property
+
+    Private _totalOvertimePay As Decimal
+
+    Public ReadOnly Property TotalOvertimePay As Decimal
+        Get
+            Return _totalOvertimePay
+        End Get
+    End Property
 
     Private _overtimeNamesSummary As String
 
@@ -61,8 +206,8 @@ Public Class PaystubPayslipModel
 
     Public Function CreateOvertimeSummaryColumns() As PaystubPayslipModel
 
-        TotalOvertimeHours = 0
-        TotalOvertimePay = 0
+        _totalOvertimeHours = 0
+        _totalOvertimePay = 0
 
         Dim overtimeNamesSummaryBuilder As New StringBuilder
         Dim overtimeHoursSummaryBuilder As New StringBuilder
@@ -73,184 +218,184 @@ Public Class PaystubPayslipModel
             overtimeNamesSummaryBuilder.AppendLine("Overtime")
             overtimeHoursSummaryBuilder.AppendLine(OvertimeHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(OvertimePay.ToString(MoneyFormat))
-            TotalOvertimeHours += OvertimeHours
-            TotalOvertimePay += OvertimePay
+            _totalOvertimeHours += OvertimeHours
+            _totalOvertimePay += OvertimePay
         End If
         If NightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Night Diff")
             overtimeHoursSummaryBuilder.AppendLine(NightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(NightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += NightDiffHours
-            TotalOvertimePay += NightDiffPay
+            _totalOvertimeHours += NightDiffHours
+            _totalOvertimePay += NightDiffPay
         End If
         If NightDiffOvertimePay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Night Diff OT")
             overtimeHoursSummaryBuilder.AppendLine(NightDiffOvertimeHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(NightDiffOvertimePay.ToString(MoneyFormat))
-            TotalOvertimeHours += NightDiffOvertimeHours
-            TotalOvertimePay += NightDiffOvertimePay
+            _totalOvertimeHours += NightDiffOvertimeHours
+            _totalOvertimePay += NightDiffOvertimePay
         End If
         If RestDayPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Rest Day")
             overtimeHoursSummaryBuilder.AppendLine(RestDayHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RestDayPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RestDayHours
-            TotalOvertimePay += RestDayPay
+            _totalOvertimeHours += RestDayHours
+            _totalOvertimePay += RestDayPay
         End If
         If RestDayOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Rest Day OT")
             overtimeHoursSummaryBuilder.AppendLine(RestDayOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RestDayOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RestDayOTHours
-            TotalOvertimePay += RestDayOTPay
+            _totalOvertimeHours += RestDayOTHours
+            _totalOvertimePay += RestDayOTPay
         End If
         If SpecialHolidayPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Special Holiday")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayHours
-            TotalOvertimePay += SpecialHolidayPay
+            _totalOvertimeHours += SpecialHolidayHours
+            _totalOvertimePay += SpecialHolidayPay
         End If
         If SpecialHolidayOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Special Holiday OT")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayOTHours
-            TotalOvertimePay += SpecialHolidayOTPay
+            _totalOvertimeHours += SpecialHolidayOTHours
+            _totalOvertimePay += SpecialHolidayOTPay
         End If
         If RegularHolidayPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Regular Holiday")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayHours
-            TotalOvertimePay += RegularHolidayPay
+            _totalOvertimeHours += RegularHolidayHours
+            _totalOvertimePay += RegularHolidayPay
         End If
         If RegularHolidayOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Regular Holiday OT")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayOTHours
-            TotalOvertimePay += RegularHolidayOTPay
+            _totalOvertimeHours += RegularHolidayOTHours
+            _totalOvertimePay += RegularHolidayOTPay
         End If
         If RestDayNightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Rest Day ND")
             overtimeHoursSummaryBuilder.AppendLine(RestDayNightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RestDayNightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RestDayNightDiffHours
-            TotalOvertimePay += RestDayNightDiffPay
+            _totalOvertimeHours += RestDayNightDiffHours
+            _totalOvertimePay += RestDayNightDiffPay
         End If
         If RestDayNightDiffOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("Rest Day ND OT")
             overtimeHoursSummaryBuilder.AppendLine(RestDayNightDiffOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RestDayNightDiffOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RestDayNightDiffOTHours
-            TotalOvertimePay += RestDayNightDiffOTPay
+            _totalOvertimeHours += RestDayNightDiffOTHours
+            _totalOvertimePay += RestDayNightDiffOTPay
         End If
         If SpecialHolidayNightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi ND")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayNightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayNightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayNightDiffHours
-            TotalOvertimePay += SpecialHolidayNightDiffPay
+            _totalOvertimeHours += SpecialHolidayNightDiffHours
+            _totalOvertimePay += SpecialHolidayNightDiffPay
         End If
         If SpecialHolidayNightDiffOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi ND OT")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayNightDiffOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayNightDiffOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayNightDiffOTHours
-            TotalOvertimePay += SpecialHolidayNightDiffOTPay
+            _totalOvertimeHours += SpecialHolidayNightDiffOTHours
+            _totalOvertimePay += SpecialHolidayNightDiffOTPay
         End If
         If SpecialHolidayRestDayPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi RD")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayRestDayHours
-            TotalOvertimePay += SpecialHolidayRestDayPay
+            _totalOvertimeHours += SpecialHolidayRestDayHours
+            _totalOvertimePay += SpecialHolidayRestDayPay
         End If
         If SpecialHolidayRestDayOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi RD OT")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayRestDayOTHours
-            TotalOvertimePay += SpecialHolidayRestDayOTPay
+            _totalOvertimeHours += SpecialHolidayRestDayOTHours
+            _totalOvertimePay += SpecialHolidayRestDayOTPay
         End If
         If SpecialHolidayRestDayNightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi RD ND")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayRestDayNightDiffHours
-            TotalOvertimePay += SpecialHolidayRestDayNightDiffPay
+            _totalOvertimeHours += SpecialHolidayRestDayNightDiffHours
+            _totalOvertimePay += SpecialHolidayRestDayNightDiffPay
         End If
         If SpecialHolidayRestDayNightDiffOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("S. Holi RD ND OT")
             overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += SpecialHolidayRestDayNightDiffOTHours
-            TotalOvertimePay += SpecialHolidayRestDayNightDiffOTPay
+            _totalOvertimeHours += SpecialHolidayRestDayNightDiffOTHours
+            _totalOvertimePay += SpecialHolidayRestDayNightDiffOTPay
         End If
         If RegularHolidayNightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. ND")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayNightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayNightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayNightDiffHours
-            TotalOvertimePay += RegularHolidayNightDiffPay
+            _totalOvertimeHours += RegularHolidayNightDiffHours
+            _totalOvertimePay += RegularHolidayNightDiffPay
         End If
         If RegularHolidayNightDiffOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. ND OT")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayNightDiffOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayNightDiffOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayNightDiffOTHours
-            TotalOvertimePay += RegularHolidayNightDiffOTPay
+            _totalOvertimeHours += RegularHolidayNightDiffOTHours
+            _totalOvertimePay += RegularHolidayNightDiffOTPay
         End If
         If RegularHolidayRestDayPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayRestDayHours
-            TotalOvertimePay += RegularHolidayRestDayPay
+            _totalOvertimeHours += RegularHolidayRestDayHours
+            _totalOvertimePay += RegularHolidayRestDayPay
         End If
         If RegularHolidayRestDayOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD OT")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayRestDayOTHours
-            TotalOvertimePay += RegularHolidayRestDayOTPay
+            _totalOvertimeHours += RegularHolidayRestDayOTHours
+            _totalOvertimePay += RegularHolidayRestDayOTPay
         End If
         If RegularHolidayRestDayNightDiffPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD ND")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayRestDayNightDiffHours
-            TotalOvertimePay += RegularHolidayRestDayNightDiffPay
+            _totalOvertimeHours += RegularHolidayRestDayNightDiffHours
+            _totalOvertimePay += RegularHolidayRestDayNightDiffPay
         End If
         If RegularHolidayRestDayNightDiffOTPay <> 0 Then
 
             overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD ND OT")
             overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffOTHours.ToString(MoneyFormat))
             overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffOTPay.ToString(MoneyFormat))
-            TotalOvertimeHours += RegularHolidayRestDayNightDiffOTHours
-            TotalOvertimePay += RegularHolidayRestDayNightDiffOTPay
+            _totalOvertimeHours += RegularHolidayRestDayNightDiffOTHours
+            _totalOvertimePay += RegularHolidayRestDayNightDiffOTPay
         End If
 
         _overtimeNamesSummary = overtimeNamesSummaryBuilder.ToString
@@ -314,6 +459,42 @@ Public Class PaystubPayslipModel
         Public Property Name As String
         Public Property Hours As Decimal
         Public Property Amount As Decimal
+
+    End Class
+
+    Public Class Loan
+
+        Public Property Name As String
+
+        Public Property Amount As Decimal
+
+        Public Property Balance As Decimal
+
+        Sub New(name As String, amount As Decimal, balance As Decimal)
+
+            Me.Name = name
+
+            Me.Amount = amount
+
+            Me.Balance = balance
+
+        End Sub
+
+    End Class
+
+    Public Class Adjustment
+
+        Public Property Name As String
+
+        Public Property Amount As Decimal
+
+        Sub New(name As String, amount As Decimal)
+
+            Me.Name = name
+
+            Me.Amount = amount
+
+        End Sub
 
     End Class
 

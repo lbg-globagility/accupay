@@ -59,8 +59,19 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 .OvertimeHours = 2,
                 .OvertimePay = 671,
                 .RegularHolidayHours = 8,
-                .RegularHolidayPay = 1074
-            }.CreateOvertimeSummaryColumns())
+                .RegularHolidayPay = 1074,
+                .Loans = New List(Of PaystubPayslipModel.Loan) From {
+                    New PaystubPayslipModel.Loan("SSS Loan", 888888, 88888888),
+                    New PaystubPayslipModel.Loan("123456789012345678901234567890", 888881, 88888881),
+                    New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882)
+                },
+                .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
+                    New PaystubPayslipModel.Adjustment("sOT Adjustment", 50),
+                    New PaystubPayslipModel.Adjustment("sUniform", -10000),
+                    New PaystubPayslipModel.Adjustment("sSalary Adjustment", 88888),
+                    New PaystubPayslipModel.Adjustment("sCellphone", -8888888)
+                }
+            }.CreateSummaries())
 
         paystubPayslipModels.Add(
             New PaystubPayslipModel() With {
@@ -84,8 +95,19 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 .SpecialHolidayRestDayNightDiffOTHours = 3,
                 .SpecialHolidayRestDayNightDiffOTPay = 210,
                 .RegularHolidayRestDayNightDiffOTHours = 7,
-                .RegularHolidayRestDayNightDiffOTPay = 480
-        }.CreateOvertimeSummaryColumns())
+                .RegularHolidayRestDayNightDiffOTPay = 480,
+                .Loans = New List(Of PaystubPayslipModel.Loan) From {
+                    New PaystubPayslipModel.Loan("SSS Loan", 888888, 88888888),
+                    New PaystubPayslipModel.Loan("Pagibig Loan", 888888, 88888888),
+                    New PaystubPayslipModel.Loan("123456789012345678901234567890", 888888, 88888888)
+                },
+                .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
+                    New PaystubPayslipModel.Adjustment("OT Adjustments", 500),
+                    New PaystubPayslipModel.Adjustment("Uniforms", -100500),
+                    New PaystubPayslipModel.Adjustment("Salary Adjustments", 888883),
+                    New PaystubPayslipModel.Adjustment("123456789012345678901234567890", -88888885)
+                }
+        }.CreateSummaries())
 
         paystubPayslipModels.Add(
             New PaystubPayslipModel() With {
@@ -151,8 +173,20 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 .RegularHolidayRestDayNightDiffHours = 10,
                 .RegularHolidayRestDayNightDiffPay = 5000.789,
                 .RegularHolidayRestDayNightDiffOTHours = 10,
-                .RegularHolidayRestDayNightDiffOTPay = 5000.789
-        }.CreateOvertimeSummaryColumns())
+                .RegularHolidayRestDayNightDiffOTPay = 5000.789,
+                .Loans = New List(Of PaystubPayslipModel.Loan) From {
+                    New PaystubPayslipModel.Loan("SSS Loan", 888888, 88888888),
+                    New PaystubPayslipModel.Loan("Pagibig Loan", 888881, 88888881),
+                    New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882),
+                    New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882)
+                },
+                .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
+                    New PaystubPayslipModel.Adjustment("OT Adjustment", 50),
+                    New PaystubPayslipModel.Adjustment("Uniform", -10050),
+                    New PaystubPayslipModel.Adjustment("Salary Adjustment", 88883),
+                    New PaystubPayslipModel.Adjustment("Cellphone", -8888885)
+                }
+        }.CreateSummaries())
 
         paystubPayslipModels.Add(
             New PaystubPayslipModel() With {
@@ -218,8 +252,20 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 .RegularHolidayRestDayNightDiffHours = 10,
                 .RegularHolidayRestDayNightDiffPay = 5000.789,
                 .RegularHolidayRestDayNightDiffOTHours = 10,
-                .RegularHolidayRestDayNightDiffOTPay = 5000.789
-        }.CreateOvertimeSummaryColumns())
+                .RegularHolidayRestDayNightDiffOTPay = 5000.789,
+                .Loans = New List(Of PaystubPayslipModel.Loan) From {
+                    New PaystubPayslipModel.Loan("SSS Loan", 500, 10000),
+                    New PaystubPayslipModel.Loan("Pagibig Loan", 3000, 100500),
+                    New PaystubPayslipModel.Loan("Car Loan", 888883, 88888882),
+                    New PaystubPayslipModel.Loan("Battery Loan", 888884, 88888885)
+                },
+                .Adjustments = New List(Of PaystubPayslipModel.Adjustment) From {
+                    New PaystubPayslipModel.Adjustment("OT Adjustment", 500),
+                    New PaystubPayslipModel.Adjustment("Uniform", -100500),
+                    New PaystubPayslipModel.Adjustment("Salary Adjustment", 888883),
+                    New PaystubPayslipModel.Adjustment("Cellphone", -88888885)
+                }
+        }.CreateSummaries())
 
         Return Task.Run(Function()
                             Return paystubPayslipModels

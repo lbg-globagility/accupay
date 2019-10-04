@@ -28,6 +28,23 @@ Namespace Global.AccuPay.Extensions
             Return ObjectUtils.ToNullableDecimal(num)
         End Function
 
+        <Extension()>
+        Public Function Ellipsis(input As String, maxCharacters As Integer) As String
+
+            If String.IsNullOrWhiteSpace(input) Then Return input
+
+            If input.Length > maxCharacters Then
+
+                Dim ellipsisString = "..."
+
+                Return input.Substring(0, maxCharacters - ellipsisString.Length) & ellipsisString
+
+            End If
+
+            Return input
+
+        End Function
+
     End Module
 
 End Namespace
