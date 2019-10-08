@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports AccuPay.SimplifiedEntities
 Imports Microsoft.EntityFrameworkCore
 
@@ -56,7 +57,7 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
-        _payFrequencyId = PayrollTools.PayFrequencyMonthlyId
+        _payFrequencyId = PayFrequencyType.SemiMonthly
 
         Await LoadPayPeriods()
 
@@ -207,7 +208,7 @@ Public Class DateRangePickerDialog
 
         Public ReadOnly Property Period As String
             Get
-                If PayPeriod.IsMonthly Then
+                If PayPeriod.IsSemiMonthly Then
                     Dim month = New Date(PayPeriod.Year, PayPeriod.Month, 1)
                     Dim halfNo = String.Empty
 

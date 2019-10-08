@@ -17,9 +17,8 @@ Public Class PayrollTools
 
     Public Const DivisorToDailyRate As Integer = 8
 
-    Public Const PayFrequencyMonthlyId As Integer = 1
+    Public Const SemiMonthlyPayPeriodsPerMonth As Integer = 2
 
-    Public Const PayFrequencyWeeklyId As Integer = 4
     Private Const threeDays As Integer = 3
 
     Public Shared Function GetEmployeeMonthlyRate(
@@ -183,7 +182,7 @@ Public Class PayrollTools
 
                 Dim payPeriodThisDay = Await context.PayPeriods.
                                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(p) p.IsMonthly).
+                                        Where(Function(p) p.IsSemiMonthly).
                                         Where(Function(p) p.PayToDate >= today).
                                         Where(Function(p) p.PayFromDate <= today).
                                         OrderByDescending(Function(p) p.PayToDate).
@@ -203,7 +202,7 @@ Public Class PayrollTools
                 Return Await context.PayPeriods.
                         Where(Function(p) p.Year = workingYearThisDay.Value).
                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                        Where(Function(p) p.IsMonthly).
+                        Where(Function(p) p.IsSemiMonthly).
                         Where(Function(p) p.PayToDate < Date.Now).
                         OrderByDescending(Function(p) p.PayToDate).
                         FirstOrDefaultAsync
@@ -287,7 +286,7 @@ Public Class PayrollTools
 
         Return Await context.PayPeriods.
                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                        Where(Function(p) p.IsMonthly).
+                        Where(Function(p) p.IsSemiMonthly).
                         Where(Function(p) p.Year = currentPayPeriodYear.Value).
                         Where(Function(p) p.IsFirstPayPeriodOfTheYear).
                         FirstOrDefaultAsync

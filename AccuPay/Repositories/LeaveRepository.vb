@@ -364,7 +364,7 @@ Namespace Global.AccuPay.Repository
 
             Dim currentPayPeriod = context.PayPeriods.
                                                     Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                                    Where(Function(p) p.IsMonthly).
+                                                    Where(Function(p) p.IsSemiMonthly).
                                                     Where(Function(p) p.IsBetween(leave.StartDate)).
                                                     FirstOrDefault
 
@@ -372,7 +372,7 @@ Namespace Global.AccuPay.Repository
 
             Dim lastDayOfTheYear = context.PayPeriods.
                                                     Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                                    Where(Function(p) p.IsMonthly).
+                                                    Where(Function(p) p.IsSemiMonthly).
                                                     Where(Function(p) p.Year = currentPayPeriod.Year).
                                                     Where(Function(p) p.IsLastPayPeriodOfTheYear).
                                                     FirstOrDefault?.PayToDate

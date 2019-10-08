@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Enums
 
 Namespace Global.AccuPay.Entity
 
@@ -177,7 +178,7 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsWeeklyPaid As Boolean
             Get
-                Return PayFrequencyID.Value = 4
+                Return PayFrequencyID.Value = PayFrequencyType.Weekly
             End Get
         End Property
 

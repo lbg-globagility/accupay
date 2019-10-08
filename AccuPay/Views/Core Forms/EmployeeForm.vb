@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -3402,8 +3403,8 @@ Public Class EmployeeForm
 
             Dim payFrequencies = Await (New PayFrequencyRepository()).GetAllAsync()
             _payFrequencies = payFrequencies.
-                Where(Function(p) p.RowID = PayrollTools.PayFrequencyMonthlyId OrElse
-                                    p.RowID = PayrollTools.PayFrequencyWeeklyId).ToList
+                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
+                                    p.RowID = PayFrequencyType.Weekly).ToList
 
             cboPayFreq.ValueMember = "RowID"
             cboPayFreq.DisplayMember = "Type"

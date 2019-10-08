@@ -24,6 +24,8 @@ Namespace Global.AccuPay.Loans
 
         Public Overridable Property EmployeeID As Integer?
 
+        Public Overridable Property PaystubID As Integer?
+
         Public Overridable Property LoanPayPeriodLeft As Integer
 
         <Column("EmployeeLoanRecordID")>
@@ -41,6 +43,8 @@ Namespace Global.AccuPay.Loans
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
 
+        <ForeignKey("PaystubID")>
+        Public Overridable Property Paystub As Paystub
 
         Public ReadOnly Property PayPeriodPayToDate() As Date?
             Get

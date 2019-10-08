@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports AccuPay.Utils
 
 Public Class PayPeriodStatusData
@@ -31,8 +32,8 @@ Public Class PayPeriodStatusData
         Using context As New PayrollContext
 
             Dim payFrequencyId = If(payFreqType = "WEEKLY",
-                                        PayrollTools.PayFrequencyWeeklyId,
-                                        PayrollTools.PayFrequencyMonthlyId)
+                                        PayFrequencyType.Weekly,
+                                        PayFrequencyType.SemiMonthly)
 
             Return context.PayPeriods.
                     Where(Function(p) p.OrganizationID.Value = ObjectUtils.ToNullableInteger(orgztnID)).

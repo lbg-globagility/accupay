@@ -1,5 +1,8 @@
 ﻿Imports System.Text
 Imports AccuPay.Extensions
+Imports AccuPay.Entity
+Imports AccuPay.Enums
+Imports AccuPay.Loans
 
 Public Class PaystubPayslipModel
 
@@ -9,29 +12,152 @@ Public Class PaystubPayslipModel
     Public Property EmployeeNumber As String
     Public Property EmployeeName As String
     Public Property RegularPay As Decimal
+
     Public Property BasicHours As Decimal
-    Public Property BasicPay As Decimal
+
+    Private _basicPay As Decimal
+
+    Public ReadOnly Property BasicPay As Decimal
+        Get
+            Return _basicPay
+        End Get
+    End Property
+
     Public Property Allowance As Decimal
     Public Property Ecola As Decimal
     Public Property AbsentHours As Decimal
+
+    Private _absentAmount As Decimal
+
     Public Property AbsentAmount As Decimal
+        Set(value As Decimal)
+
+            _absentAmount = Negative(value)
+        End Set
+        Get
+            Return _absentAmount
+        End Get
+    End Property
+
     Public Property LateAndUndertimeHours As Decimal
+
+    Private _lateAndUndertimeAmount As Decimal
+
     Public Property LateAndUndertimeAmount As Decimal
+        Set(value As Decimal)
+
+            _lateAndUndertimeAmount = Negative(value)
+        End Set
+        Get
+            Return _lateAndUndertimeAmount
+        End Get
+    End Property
+
     Public Property GrossPay As Decimal
+
+    Private _SSSAmount As Decimal
+
     Public Property SSSAmount As Decimal
+        Set(value As Decimal)
+
+            _SSSAmount = Negative(value)
+        End Set
+        Get
+            Return _SSSAmount
+        End Get
+    End Property
+
+    Private _philHealthAmount As Decimal
+
     Public Property PhilHealthAmount As Decimal
+        Set(value As Decimal)
+
+            _philHealthAmount = Negative(value)
+        End Set
+        Get
+            Return _philHealthAmount
+        End Get
+    End Property
+
+    Private _pagibigAmount As Decimal
+
     Public Property PagibigAmount As Decimal
+        Set(value As Decimal)
+
+            _pagibigAmount = Negative(value)
+        End Set
+        Get
+            Return _pagibigAmount
+        End Get
+    End Property
+
+    Private _taxWithheldAmount As Decimal
+
     Public Property TaxWithheldAmount As Decimal
+        Set(value As Decimal)
+
+            _taxWithheldAmount = Negative(value)
+        End Set
+        Get
+            Return _taxWithheldAmount
+        End Get
+    End Property
+
     Public Property LeaveHours As Decimal
     Public Property LeavePay As Decimal
 
-    'total overtime and night differential
-    'total loan
-    'total deduction (Formula)
-
     Public Property NetPay As Decimal
 
-    Public Function CreateSummaries() As PaystubPayslipModel
+    Public ReadOnly Property Employee As Employee
+
+    Sub New(employee As Employee)
+
+        Me.Employee = employee
+
+    End Sub
+
+    Private Function Negative(num As Decimal) As Decimal
+
+        If num > 0 Then
+
+            Return num * -1
+
+        End If
+
+        Return num
+
+    End Function
+
+    Public Function ComputeBasicPay(salary As Decimal, Optional workHours As Decimal = 0) As Decimal
+
+        If Employee.IsMonthly OrElse Employee.IsFixed Then
+
+            If Employee.PayFrequencyID.Value = PayFrequencyType.Monthly Then
+
+                Return salary
+
+            ElseIf Employee.PayFrequencyID.Value = PayFrequencyType.SemiMonthly Then
+
+                Return salary / PayrollTools.SemiMonthlyPayPeriodsPerMonth
+            Else
+
+                Throw New Exception("GetBasicPay is implemented on monthly and semimonthly only")
+
+            End If
+
+        ElseIf Employee.IsDaily Then
+
+            Return workHours * (salary / PayrollTools.WorkHoursPerDay)
+
+        End If
+
+        Return 0
+
+    End Function
+
+    Public Function CreateSummaries(salary As Decimal) As PaystubPayslipModel
+
+        _basicPay = ComputeBasicPay(salary)
 
         Return Me.CreateOvertimeSummaryColumns().
                     CreateLoanSummaryColumns().
@@ -41,7 +167,7 @@ Public Class PaystubPayslipModel
 
     Public ReadOnly Property TotalDeductions As Decimal
         Get
-            Return SSSAmount + PhilHealthAmount + PagibigAmount + TaxWithheldAmount + TotalLoans
+            Return Negative(SSSAmount + PhilHealthAmount + PagibigAmount + TaxWithheldAmount + TotalLoans)
         End Get
     End Property
 
@@ -52,7 +178,7 @@ Public Class PaystubPayslipModel
 
     Public ReadOnly Property TotalLoans As Decimal
         Get
-            Return Loans.Sum(Function(l) l.Amount)
+            Return Negative(Loans.Sum(Function(l) l.Amount))
         End Get
     End Property
 
@@ -470,6 +596,12 @@ Public Class PaystubPayslipModel
 
         Public Property Balance As Decimal
 
+        Sub New(loan As LoanTransaction)
+
+            Me.New(loan.LoanSchedule?.LoanType?.PartNo, loan.Amount, loan.TotalBalance)
+
+        End Sub
+
         Sub New(name As String, amount As Decimal, balance As Decimal)
 
             Me.Name = name
@@ -487,6 +619,12 @@ Public Class PaystubPayslipModel
         Public Property Name As String
 
         Public Property Amount As Decimal
+
+        Sub New(adjustment As IAdjustment)
+
+            Me.New(adjustment.Product?.PartNo, adjustment.PayAmount)
+
+        End Sub
 
         Sub New(name As String, amount As Decimal)
 

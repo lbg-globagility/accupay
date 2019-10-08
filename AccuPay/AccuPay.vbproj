@@ -321,6 +321,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Core\Enums\FormMode.vb" />
+    <Compile Include="Core\Enums\PayFrequencyType.vb" />
     <Compile Include="Core\PayPeriodStatusData.vb" />
     <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />

@@ -1,0 +1,18 @@
+ALTER TABLE `scheduledloansperpayperiod`
+	ADD COLUMN `PaystubID` INT(11) NULL DEFAULT NULL AFTER `EmployeeLoanRecordID`,
+	ADD CONSTRAINT `FK_scheduledloansperpayperiod_paystub` FOREIGN KEY (`PaystubID`) REFERENCES `paystub` (`RowID`);
+
+
+ALTER TABLE `scheduledloansperpayperiod`
+	DROP INDEX `UniqueKeys`,
+	ADD UNIQUE INDEX `AK_scheduledloansperpayperiod_OrganizationID_PyPrdD_EmplyLnRcrdD` (`OrganizationID`, `PayPeriodID`, `EmployeeLoanRecordID`);
+
+ALTER TABLE `scheduledloansperpayperiod`
+	ADD UNIQUE INDEX `AK_scheduledloansperpayperiod_EmployeeLoanRecordID_PaystubID` (`EmployeeLoanRecordID`, `PaystubID`);
+
+UPDATE scheduledloansperpayperiod s
+INNER JOIN paystub p
+ON s.PayPeriodID = p.PayPeriodID
+AND s.EmployeeID = p.EmployeeID
+SET s.PaystubID = p.RowID
+;

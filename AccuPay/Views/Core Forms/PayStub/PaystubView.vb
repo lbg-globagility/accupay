@@ -361,7 +361,7 @@ Public Class PaystubView
         End Sub
 
         Public Function GetPeriod() As String
-            If Item.IsMonthly Then
+            If Item.IsSemiMonthly Then
                 Dim month = New Date(Item.Year, Item.Month, 1)
                 Dim halfNo = String.Empty
 

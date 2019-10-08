@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Enums
 Imports AccuPay.SimplifiedEntities
 
 Namespace Global.AccuPay.Entity
@@ -55,15 +56,15 @@ Namespace Global.AccuPay.Entity
         Public Property WTaxWeeklyAgentContribSched As Boolean
         Public Property IsClosed As Boolean
 
-        Public ReadOnly Property IsMonthly As Boolean
+        Public ReadOnly Property IsSemiMonthly As Boolean
             Get
-                Return PayFrequencyID.Value = PayrollTools.PayFrequencyMonthlyId
+                Return PayFrequencyID.Value = PayFrequencyType.SemiMonthly
             End Get
         End Property
 
         Public ReadOnly Property IsWeekly As Boolean
             Get
-                Return PayFrequencyID.Value = PayrollTools.PayFrequencyWeeklyId
+                Return PayFrequencyID.Value = PayFrequencyType.Weekly
             End Get
         End Property
 
