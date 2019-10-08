@@ -128,7 +128,7 @@ Public Class PaystubPayslipModel
 
     End Function
 
-    Public Function ComputeBasicPay(salary As Decimal, Optional workHours As Decimal = 0) As Decimal
+    Public Function ComputeBasicPay(salary As Decimal, workHours As Decimal) As Decimal
 
         If Employee.IsMonthly OrElse Employee.IsFixed Then
 
@@ -155,9 +155,9 @@ Public Class PaystubPayslipModel
 
     End Function
 
-    Public Function CreateSummaries(salary As Decimal) As PaystubPayslipModel
+    Public Function CreateSummaries(salary As Decimal, workHours As Decimal) As PaystubPayslipModel
 
-        _basicPay = ComputeBasicPay(salary)
+        _basicPay = ComputeBasicPay(salary, workHours)
 
         Return Me.CreateOvertimeSummaryColumns().
                     CreateLoanSummaryColumns().

@@ -291,16 +291,16 @@ Namespace Benchmark
         Private Sub ComputeDeductions(lateHours As Decimal, undertimeHours As Decimal, absentHours As Decimal)
             'Deductions
             Me.LateHours = lateHours
-            Me.LateDeduction = ComputeFinalRoundedRate(Me.LateHours)
-            Me.ActualLateDeduction = ComputeFinalRoundedRate(Me.LateHours, isActual:=True)
+            Me.LateDeduction = ComputeFinalRoundedRate(Me.LateHours, decimalPlace:=4)
+            Me.ActualLateDeduction = ComputeFinalRoundedRate(Me.LateHours, decimalPlace:=4, isActual:=True)
 
             Me.UndertimeHours = undertimeHours
-            Me.UndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours)
-            Me.ActualUndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours, isActual:=True)
+            Me.UndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours, decimalPlace:=4)
+            Me.ActualUndertimeDeduction = ComputeFinalRoundedRate(Me.UndertimeHours, decimalPlace:=4, isActual:=True)
 
             Me.AbsentHours = absentHours
-            Me.AbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours)
-            Me.ActualAbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours, isActual:=True)
+            Me.AbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours, decimalPlace:=4)
+            Me.ActualAbsenceDeduction = ComputeFinalRoundedRate(Me.AbsentHours, decimalPlace:=4, isActual:=True)
         End Sub
 
         Private Function GetNightDifferentialRate(basicRate As Decimal, nightDifferentialRate As Decimal) As Decimal

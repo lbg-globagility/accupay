@@ -153,9 +153,4 @@ Public Class ReportsList
         End If
     End Sub
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        Dim n_PrintAllPaySlipOfficialFormat As _
-            New PrintAllPaySlipOfficialFormat(20561, 1)
-    End Sub
-
 End Class

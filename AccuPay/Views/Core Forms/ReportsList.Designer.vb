@@ -23,7 +23,6 @@ Partial Class ReportsList
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.lvMainMenu = New System.Windows.Forms.ListView()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'lvMainMenu
@@ -39,22 +38,12 @@ Partial Class ReportsList
         Me.lvMainMenu.UseCompatibleStateImageBehavior = False
         Me.lvMainMenu.View = System.Windows.Forms.View.List
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(460, 237)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(190, 47)
-        Me.Button1.TabIndex = 2
-        Me.Button1.Text = "(Old Payslip) July 1-15 for Benchmark Phils. Trading Co. Inc."
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'ReportsList
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(697, 432)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.lvMainMenu)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.KeyPreview = True
@@ -64,5 +53,4 @@ Partial Class ReportsList
 
     End Sub
     Friend WithEvents lvMainMenu As System.Windows.Forms.ListView
-    Friend WithEvents Button1 As Button
 End Class

@@ -1,6 +1,7 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore
 
@@ -11,12 +12,13 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
 
     Public Async Sub Run() Implements IReportProvider.Run
 
-        Dim payPeriod As New PayPeriod With
-        {
-            .RowID = 20574,
-            .PayFromDate = New Date(2019, 9, 1),
-            .PayToDate = New Date(2019, 9, 15)
-        }
+        Dim form As New selectPayPeriod()
+        form.GeneratePayroll = False
+        form.ShowDialog()
+
+        Dim payPeriod As PayPeriod = form.PayPeriod
+
+        If payPeriod Is Nothing Then Return
 
         Dim paystubModels = Await GeneratePaystubModels(payPeriod)
 
@@ -164,7 +166,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 paystubPayslipModel.RegularHolidayRestDayNightDiffOTHours = paystub.RegularHolidayRestDayNightDiffOTHours
                 paystubPayslipModel.RegularHolidayRestDayNightDiffOTPay = If(isActual, paystub.Actual.RegularHolidayRestDayNightDiffOTPay, paystub.RegularHolidayRestDayNightDiffOTPay)
 
-                paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(salary))
+                paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(salary, paystub.BasicHours))
 
             Next
 

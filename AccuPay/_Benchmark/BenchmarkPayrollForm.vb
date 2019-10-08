@@ -460,7 +460,7 @@ Public Class BenchmarkPayrollForm
 
         Dim regularDays = AccuMath.CommercialRound(RegularDaysTextBox.Text.ToDecimal, 4)
         RegularDaysTextBox.Text = regularDays.ToString
-        Dim lateDays = AccuMath.CommercialRound(LateTextBox.Text.ToDecimal)
+        Dim lateDays = AccuMath.CommercialRound(LateTextBox.Text.ToDecimal, 4)
         LateTextBox.Text = lateDays.ToString
         Dim leaveDays = AccuMath.CommercialRound(LeaveTextBox.Text.ToDecimal)
         LeaveTextBox.Text = leaveDays.ToString
