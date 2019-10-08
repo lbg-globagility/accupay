@@ -9,7 +9,13 @@ Public Class Cinema2000TardinessReportProvider
 
     Public Async Sub Run() Implements IReportProvider.Run
 
-        Dim firstDate As New Date(2019, 9, 1)
+        Dim n_selectMonth As New selectMonth
+
+        If Not n_selectMonth.ShowDialog = Windows.Forms.DialogResult.OK Then
+            Return
+        End If
+
+        Dim firstDate = CDate(n_selectMonth.MonthValue)
 
         Try
 
@@ -104,9 +110,15 @@ Public Class Cinema2000TardinessReportProvider
 
             For Each tardinessReportModel In tardinessReportModels
 
+                If tardinessReportModel.Days >= CinemaTardinessReportModel.DaysLateLimit Then
+
+                    tardinessReportModel.NumberOfOffense += 1
+
+                End If
+
                 Dim employeeTardinessDate = employeeTardinessDates.
-                                                Where(Function(e) e.EmployeeId = tardinessReportModel.EmployeeId).
-                                                FirstOrDefault?.FirstOffenseDate
+                                                    Where(Function(e) e.EmployeeId = tardinessReportModel.EmployeeId).
+                                                    FirstOrDefault?.FirstOffenseDate
 
                 If employeeTardinessDate Is Nothing Then
                     Throw New Exception("Error creating new tardiness records.")
@@ -118,11 +130,23 @@ Public Class Cinema2000TardinessReportProvider
                                             Where(Function(o) o.Date <= lastDayOfThePreviousMonth).
                                             ToList
 
-                Dim breaker1 = 1
+                Dim employeeOffenseListPerMonth = employeeOffenseList.
+                                                    GroupBy(Function(o) o.Date.Month).
+                                                    Select(Function(m) New CinemaTardinessReportModel.PerMonth With {
+                                                        .EmployeeId = tardinessReportModel.EmployeeId,
+                                                        .Month = m.Key,
+                                                        .Days = m.Count(),
+                                                        .Hours = m.Sum(Function(t) t.LateHours)
+                                                    }).
+                                                    ToList
+
+                Dim previousNumberOfOffense = employeeOffenseListPerMonth.
+                                                Where(Function(o) o.Days >= CinemaTardinessReportModel.DaysLateLimit).
+                                                Count
+
+                tardinessReportModel.NumberOfOffense += previousNumberOfOffense
 
             Next
-
-            Dim breaker = 1
 
         End Using
 
