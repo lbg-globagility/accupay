@@ -1,5 +1,7 @@
 ﻿Public Class CinemaTardinessReportModel
 
+    Public Const DaysLateLimit As Integer = 8
+
     Public Property EmployeeId As Integer
     Public Property EmployeeName As String
     Public Property Days As Decimal
@@ -63,5 +65,13 @@
             End If
         End Get
     End Property
+
+    Public Class PerMonth
+        Public Property EmployeeId As Integer
+        Public Property Month As Integer
+        Public Property Days As Integer
+        Public Property Hours As Integer
+
+    End Class
 
 End Class
