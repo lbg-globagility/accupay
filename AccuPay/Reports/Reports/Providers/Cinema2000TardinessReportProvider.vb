@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Entity
+Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore
 
@@ -17,6 +18,16 @@ Public Class Cinema2000TardinessReportProvider
 
         Dim firstDate = CDate(n_selectMonth.MonthValue)
 
+        Dim isLimitedReport As Boolean = False
+
+        Dim question = $"Do you want to show only employees with 8 or more days late for {firstDate.ToString("MMMM")} {firstDate.Year}?"
+        If MessageBoxHelper.Confirm(Of Boolean) _
+            (question, "Filter Tardiness Report", messageBoxIcon:=MessageBoxIcon.Question) Then
+
+            isLimitedReport = True
+
+        End If
+
         Try
 
             Dim report = New Cinemas_Tardiness_Report
@@ -31,7 +42,7 @@ Public Class Cinema2000TardinessReportProvider
 
             txtAddress.Text = PayrollTools.GetOrganizationAddress()
 
-            Dim tardinessReportModels = Await GetTardinessReportModels(firstDate)
+            Dim tardinessReportModels = Await GetTardinessReportModels(firstDate, isLimitedReport)
 
             report.SetDataSource(tardinessReportModels)
 
@@ -44,7 +55,7 @@ Public Class Cinema2000TardinessReportProvider
 
     End Sub
 
-    Private Async Function GetTardinessReportModels([date] As Date) As Threading.Tasks.Task(Of List(Of CinemaTardinessReportModel))
+    Private Async Function GetTardinessReportModels([date] As Date, isLimitedReport As Boolean) As Threading.Tasks.Task(Of List(Of CinemaTardinessReportModel))
 
         Dim firstDayOfTheMonth = New Date([date].Year, [date].Month, 1)
         Dim lastDayOfTheMonth = New Date([date].Year, [date].Month, Date.DaysInMonth([date].Year, [date].Month))
@@ -62,10 +73,12 @@ Public Class Cinema2000TardinessReportProvider
         '#3. Get all the tardiness record of the affected employees
         '#4. Update the value of [NumberOfOffense] from the data retrieved from #3
 
+        Dim daysRequirement = If(isLimitedReport, CinemaTardinessReportModel.DaysLateLimit, 0)
+
         Using context As New PayrollContext
 
             '#1.
-            tardinessReportModels = Await context.TimeEntries.
+            Dim tardinessReportModelQuery = context.TimeEntries.
                                             Include(Function(t) t.Employee).
                                             Where(Function(t) t.Date >= firstDayOfTheMonth AndAlso t.Date <= lastDayOfTheMonth).
                                             Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
@@ -76,8 +89,14 @@ Public Class Cinema2000TardinessReportProvider
                                                     .EmployeeName = $"{gt.Key.LastName}, {gt.Key.FirstName}{If(gt.Key.MiddleInitial Is Nothing, "", ", " & gt.Key.MiddleInitial)}",
                                                     .Days = gt.Count(),
                                                     .Hours = gt.Sum(Function(t) t.LateHours)
-                                                    }).
-                                            ToListAsync
+                                            })
+
+            If isLimitedReport Then
+                tardinessReportModelQuery = tardinessReportModelQuery.
+                        Where(Function(t) t.Days >= CinemaTardinessReportModel.DaysLateLimit)
+            End If
+
+            tardinessReportModels = Await tardinessReportModelQuery.ToListAsync
 
             '#2
             'this list contains the first offense dates per employee within the year of the report
@@ -98,7 +117,9 @@ Public Class Cinema2000TardinessReportProvider
                                             FirstOrDefault?.FirstOffenseDate
 
             If earliestFirstOffenseDate Is Nothing Then
-                Throw New Exception("Error creating new tardiness records.")
+
+                earliestFirstOffenseDate = firstDayOfTheMonth
+
             End If
 
             Dim previousOffenseList = Await context.TimeEntries.
@@ -108,6 +129,7 @@ Public Class Cinema2000TardinessReportProvider
                                             Where(Function(t) t.LateHours > 0).
                                             ToListAsync
 
+            '#4
             For Each tardinessReportModel In tardinessReportModels
 
                 If tardinessReportModel.Days >= CinemaTardinessReportModel.DaysLateLimit Then
