@@ -58,6 +58,8 @@ Public Class PayStubForm
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
+    Private _showActual As Boolean
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         SplitContainer1.SplitterWidth = 6
@@ -72,8 +74,6 @@ Public Class PayStubForm
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
-
-        setProperInterfaceBaseOnCurrentSystemOwner()
 
         For Each txtbx In Panel6.Controls.OfType(Of TextBox)
             AddHandler txtbx.TextChanged, AddressOf NumberFieldFormatter
@@ -147,6 +147,42 @@ Public Class PayStubForm
 
         dgvAdjustments.AutoGenerateColumns = False
 
+        ShowOrHideActual()
+
+    End Sub
+
+    Private Sub ShowOrHideActual()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showActual = (settings.GetBoolean("Policy.HideActual", False) = True)
+
+            PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
+            PayrollSummaryActualToolStripMenuItem.Visible = showActual
+
+            PayslipDeclaredToolStripMenuItem.Visible = showActual
+            PayslipActualToolStripMenuItem.Visible = showActual
+
+            If showActual = False Then
+
+                Dim str_empty As String = String.Empty
+
+                TabPage1.Text = str_empty
+
+                TabPage4.Text = str_empty
+
+                AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+            Else
+
+                RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
+                RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+
+            End If
+
+            _showActual = showActual
+
+        End Using
     End Sub
 
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
@@ -906,7 +942,7 @@ Public Class PayStubForm
         showAuditTrail.BringToFront()
     End Sub
 
-    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem3.Click, ActualToolStripMenuItem3.Click
+    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
 
         Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
@@ -1683,7 +1719,7 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem2.Click, ActualToolStripMenuItem2.Click
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
         Dim n_PrintAllPaySlipOfficialFormat As _
@@ -1721,25 +1757,6 @@ Public Class PayStubForm
             Me.Enabled = True
             dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
         End If
-    End Sub
-
-    Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
-        Static _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
-
-        If _bool Then
-
-            Dim str_empty As String = String.Empty
-
-            TabPage1.Text = str_empty
-
-            TabPage4.Text = str_empty
-
-            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-        Else
-
-        End If
-
     End Sub
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
@@ -1933,6 +1950,31 @@ Public Class PayStubForm
         End If
 
         DeletePayrollToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
+
+        If _showActual = False Then
+
+            Dim n_PrintAllPaySlipOfficialFormat As _
+            New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
+                                              IsPrintingAsActual:=False)
+
+        End If
+    End Sub
+
+    Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
+
+        If _showActual = False Then
+
+            Dim psefr As New PayrollSummaryExcelFormatReportProvider
+
+            psefr.IsActual = False
+
+            psefr.Run()
+
+        End If
+
     End Sub
 
 End Class

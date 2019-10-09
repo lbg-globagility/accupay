@@ -23,17 +23,17 @@ Partial Class PayStubForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PayStubForm))
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpayper = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.PayDateFrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -275,11 +275,11 @@ Partial Class PayStubForm
         Me.GeneratePayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ManagePayrollToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
         Me.PrintPaySlipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayslipDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayslipActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeclaredToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -361,14 +361,14 @@ Partial Class PayStubForm
         Me.dgvpayper.ColumnHeadersHeight = 34
         Me.dgvpayper.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpayper.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.PayDateFrom, Me.PayDateTo, Me.Column2, Me.Column3, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle11.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle11.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle11.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle11.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle11.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpayper.DefaultCellStyle = DataGridViewCellStyle11
         Me.dgvpayper.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvpayper.Location = New System.Drawing.Point(10, 204)
         Me.dgvpayper.MultiSelect = False
@@ -519,14 +519,14 @@ Partial Class PayStubForm
         Me.dgvemployees.ColumnHeadersHeight = 34
         Me.dgvemployees.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvemployees.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.RowID, Me.EmployeeID, Me.FirstName, Me.MiddleName, Me.LastName, Me.EmployeeType, Me.Position, Me.Division})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle13.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle13.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle13.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle13.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle13.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvemployees.DefaultCellStyle = DataGridViewCellStyle13
         Me.dgvemployees.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvemployees.Location = New System.Drawing.Point(103, 104)
         Me.dgvemployees.MultiSelect = False
@@ -546,8 +546,8 @@ Partial Class PayStubForm
         '
         'EmployeeID
         '
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle12.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.EmployeeID.DefaultCellStyle = DataGridViewCellStyle12
         Me.EmployeeID.HeaderText = "Employee ID"
         Me.EmployeeID.Name = "EmployeeID"
         Me.EmployeeID.ReadOnly = True
@@ -2444,36 +2444,36 @@ Partial Class PayStubForm
         Me.dgvAdjustments.AllowUserToOrderColumns = True
         Me.dgvAdjustments.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvAdjustments.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle14.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle14.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle14
         Me.dgvAdjustments.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvAdjustments.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.psaRowID, Me.cboProducts, Me.DataGridViewTextBoxColumn66, Me.DataGridViewTextBoxColumn64, Me.Column15, Me.IsAdjustmentActual})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvAdjustments.DefaultCellStyle = DataGridViewCellStyle17
         Me.dgvAdjustments.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvAdjustments.Location = New System.Drawing.Point(746, 19)
         Me.dgvAdjustments.MultiSelect = False
         Me.dgvAdjustments.Name = "dgvAdjustments"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAdjustments.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
         Me.dgvAdjustments.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvAdjustments.Size = New System.Drawing.Size(626, 154)
         Me.dgvAdjustments.TabIndex = 506
@@ -2497,8 +2497,8 @@ Partial Class PayStubForm
         'DataGridViewTextBoxColumn66
         '
         Me.DataGridViewTextBoxColumn66.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn66.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn66.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn66.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn66.Name = "DataGridViewTextBoxColumn66"
@@ -2512,8 +2512,8 @@ Partial Class PayStubForm
         '
         'Column15
         '
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        Me.Column15.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        Me.Column15.DefaultCellStyle = DataGridViewCellStyle16
         Me.Column15.FillWeight = 10.0!
         Me.Column15.HeaderText = ""
         Me.Column15.LinkBehavior = System.Windows.Forms.LinkBehavior.HoverUnderline
@@ -3042,47 +3042,47 @@ Partial Class PayStubForm
         '
         'PrintPaySlipToolStripMenuItem
         '
-        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem2, Me.ActualToolStripMenuItem2})
+        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayslipDeclaredToolStripMenuItem, Me.PayslipActualToolStripMenuItem})
         Me.PrintPaySlipToolStripMenuItem.Image = CType(resources.GetObject("PrintPaySlipToolStripMenuItem.Image"), System.Drawing.Image)
         Me.PrintPaySlipToolStripMenuItem.Name = "PrintPaySlipToolStripMenuItem"
         Me.PrintPaySlipToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.PrintPaySlipToolStripMenuItem.Text = "Print Payslips"
         '
-        'DeclaredToolStripMenuItem2
+        'PayslipDeclaredToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem2.Tag = "0"
-        Me.DeclaredToolStripMenuItem2.Text = "Declared"
+        Me.PayslipDeclaredToolStripMenuItem.Name = "PayslipDeclaredToolStripMenuItem"
+        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayslipDeclaredToolStripMenuItem.Tag = "0"
+        Me.PayslipDeclaredToolStripMenuItem.Text = "Declared"
         '
-        'ActualToolStripMenuItem2
+        'PayslipActualToolStripMenuItem
         '
-        Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem2.Tag = "1"
-        Me.ActualToolStripMenuItem2.Text = "Actual"
+        Me.PayslipActualToolStripMenuItem.Name = "PayslipActualToolStripMenuItem"
+        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayslipActualToolStripMenuItem.Tag = "1"
+        Me.PayslipActualToolStripMenuItem.Text = "Actual"
         '
         'PrintPayrollSummaryToolStripMenuItem
         '
-        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem3, Me.ActualToolStripMenuItem3})
+        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollSummaryDeclaredToolStripMenuItem, Me.PayrollSummaryActualToolStripMenuItem})
         Me.PrintPayrollSummaryToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.timeattendance
         Me.PrintPayrollSummaryToolStripMenuItem.Name = "PrintPayrollSummaryToolStripMenuItem"
         Me.PrintPayrollSummaryToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.PrintPayrollSummaryToolStripMenuItem.Text = "Print Payroll Summary"
         '
-        'DeclaredToolStripMenuItem3
+        'PayrollSummaryDeclaredToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem3.Name = "DeclaredToolStripMenuItem3"
-        Me.DeclaredToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem3.Tag = "0"
-        Me.DeclaredToolStripMenuItem3.Text = "Declared"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
-        'ActualToolStripMenuItem3
+        'PayrollSummaryActualToolStripMenuItem
         '
-        Me.ActualToolStripMenuItem3.Name = "ActualToolStripMenuItem3"
-        Me.ActualToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem3.Tag = "1"
-        Me.ActualToolStripMenuItem3.Text = "Actual"
+        Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
+        Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
         'DeletePayrollToolStripMenuItem
         '
@@ -3368,8 +3368,8 @@ Partial Class PayStubForm
         '
         'DataGridViewTextBoxColumn18
         '
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle19.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn18.HeaderText = "Employee ID"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
@@ -3420,8 +3420,8 @@ Partial Class PayStubForm
         'DataGridViewTextBoxColumn26
         '
         Me.DataGridViewTextBoxColumn26.DataPropertyName = "PayAmount"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle10
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn26.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn26.FillWeight = 15.0!
         Me.DataGridViewTextBoxColumn26.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn26.Name = "DataGridViewTextBoxColumn26"
@@ -3764,11 +3764,11 @@ Partial Class PayStubForm
     Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
     Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton
     Friend WithEvents PrintPaySlipToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeclaredToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents PayslipDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PayslipActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PrintPayrollSummaryToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeclaredToolStripMenuItem3 As ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents PayrollSummaryDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PayrollSummaryActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ClosePayrollToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ReopenPayrollToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GeneratePayrollToolStripButton As ToolStripButton

@@ -83,12 +83,26 @@ Public Class TimeEntrySummaryForm
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
 
-        CheckIfMoneyColumnsAreGoingToBeHidden()
+        UpdateFormBaseOnPolicy()
 
         LoadYears()
     End Sub
 
-    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
+    Private Sub UpdateFormBaseOnPolicy()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showActual = (settings.GetBoolean("Policy.HideActual", False) = True)
+
+            actualButton.Visible = showActual
+
+            CheckIfMoneyColumnsAreGoingToBeHidden(settings)
+
+        End Using
+    End Sub
+
+    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden(settings As ListOfValueCollection)
         Using context As New PayrollContext
 
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
@@ -97,8 +111,6 @@ Public Class TimeEntrySummaryForm
 
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
