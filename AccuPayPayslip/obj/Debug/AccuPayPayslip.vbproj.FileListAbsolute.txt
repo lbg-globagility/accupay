@@ -1,0 +1,4 @@
+E:\Programs\_accupay_from_origin\AccuPayPayslip\obj\Debug\AccuPayPayslip.vbprojAssemblyReference.cache
+E:\Programs\_accupay_from_origin\AccuPayPayslip\obj\Debug\AccuPayPayslip.Resources.resources
+E:\Programs\_accupay_from_origin\AccuPayPayslip\obj\Debug\AccuPayPayslip.vbproj.GenerateResource.cache
+E:\Programs\_accupay_from_origin\AccuPayPayslip\obj\Debug\AccuPayPayslip.vbproj.CoreCompileInputs.cache

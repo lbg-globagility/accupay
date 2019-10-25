@@ -338,14 +338,12 @@
     <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
-    <Compile Include="Core\Utilities\ObjectUtils.vb" />
     <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
     <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
-    <Compile Include="Domain\Commons\AccuMath.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
@@ -399,7 +397,6 @@
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
-    <Compile Include="SimplifiedEntities\Interface\IPayPeriod.vb" />
     <Compile Include="Views\Core Forms\AddBranchForm.Designer.vb">
       <DependentUpon>AddBranchForm.vb</DependentUpon>
     </Compile>
@@ -527,7 +524,6 @@
     <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />
     <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
-    <Compile Include="Core\Utilities\TypeTools.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
     <Compile Include="Repositories\CategoryRepository.vb" />
@@ -785,7 +781,6 @@
     <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
     <Compile Include="Domain\Shifts\Shift.vb" />
     <Compile Include="Domain\TimeEntry\CurrentShift.vb" />
-    <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Domain\TimeEntry\TimeEmployeeNo.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
@@ -813,8 +808,6 @@
     <Compile Include="Domain\TimeEntry\TimePeriod.vb" />
     <Compile Include="Domain\TimeLogs\TimeLog.vb" />
     <Compile Include="Domain\Payroll\PayrollResources.vb" />
-    <Compile Include="Core\Utilities\TimeUtility.vb" />
-    <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />
     <Compile Include="Domain\TimeEntry\TimeLogsTempIn.vb" />
     <Compile Include="Domain\TimeEntry\TimeLogsTempOut.vb" />
@@ -831,15 +824,10 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportAllowance.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOB.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOvertime.vb" />
-    <Compile Include="Core\DB\MySQL\IMySQLCommander.vb" />
-    <Compile Include="Core\DB\MySQL\MySQLCommander.vb" />
-    <Compile Include="Core\DB\MySQL\MySQLExecuteCommand.vb" />
-    <Compile Include="Core\DB\MySQL\SQL.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\SystemOwner.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Core\Utilities\StringUtils.vb" />
     <Compile Include="Views\Employees\NewEmployeeForm.Designer.vb">
       <DependentUpon>NewEmployeeForm.vb</DependentUpon>
     </Compile>
@@ -1603,20 +1591,12 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
-    <Compile Include="Core\DB\DataBaseConnection.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
-    <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
-    <Compile Include="Core\DB\ExecSQLProcedure.vb" />
-    <Compile Include="Core\DB\ExecuteQuery.vb" />
     <Compile Include="Domain\Commons\FileObserver.vb" />
     <Compile Include="Domain\Loans\ImportLoans.vb" />
     <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
-    <Compile Include="Core\DB\ReadSQLFunction.vb" />
-    <Compile Include="Core\DB\ReadSQLFunctionV2.vb" />
-    <Compile Include="Core\DB\ReadSQLProcedureToDatatable.vb" />
-    <Compile Include="Core\DB\SQLQueryToDatatable.vb" />
     <Compile Include="Domain\TimeLogs\TimeInTimeOutParser.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Domain\Commons\UserAccessRights.vb" />
@@ -2564,7 +2544,24 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Accupay.Data\Accupay.Data.vbproj">
+      <Project>{617d3634-7409-4f28-9571-7cedf9c389ed}</Project>
+      <Name>Accupay.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Accupay.DB\Accupay.DB.vbproj">
+      <Project>{2e134199-5c8f-4425-8b40-4566b4ea87da}</Project>
+      <Name>Accupay.DB</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Accupay.Utils\Accupay.Utils.vbproj">
+      <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
+      <Name>Accupay.Utils</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccupayReference\AccupayReference.vbproj">
+      <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
+      <Name>AccupayReference</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

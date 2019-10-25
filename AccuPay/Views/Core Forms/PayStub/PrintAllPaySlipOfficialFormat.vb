@@ -1,8 +1,6 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
+﻿Imports AccuPay.DB
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
-Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Views.Payroll
 

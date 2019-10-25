@@ -14,7 +14,7 @@ Namespace Global.AccuPay.Utils
                 _logger.Error(errorMessageTitle, exception)
             End If
 
-            MsgBox("Something went wrong while executing the last task. Please contact " & My.Resources.AppCreator & " for assistance.",
+            MsgBox("Something went wrong while executing the last task. Please contact Globagility Inc. for assistance.",
                    MsgBoxStyle.OkOnly,
                    title)
         End Sub

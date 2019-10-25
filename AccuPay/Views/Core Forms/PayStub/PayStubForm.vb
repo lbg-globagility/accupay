@@ -7,6 +7,7 @@ Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Views.Payroll
 Imports AccuPay.Utils
 Imports AccuPay.Entity
+Imports AccuPay.DB
 
 Public Class PayStubForm
 

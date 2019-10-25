@@ -10,6 +10,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports AccuPay.DB
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
@@ -1939,7 +1940,7 @@ Public Class EmployeeForm
 
                 End If
 
-                Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
                 Dim employee As Employee = Nothing
                 Using context = New PayrollContext()
                     employee = (From emp In context.Employees.
