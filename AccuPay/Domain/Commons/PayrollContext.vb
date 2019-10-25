@@ -1,11 +1,9 @@
-Imports System.Data.Common
-Imports System.Data.Entity
 Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports AccuPay.JobLevels
-Imports PayrollSys
+Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
+Imports PayrollSys
 
 Public Class PayrollContext
     Inherits DbContext

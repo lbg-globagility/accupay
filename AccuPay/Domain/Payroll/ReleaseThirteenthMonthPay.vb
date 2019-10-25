@@ -1,7 +1,8 @@
 ﻿Option Strict On
 
-Imports System.Data.Entity
+Imports AccuPay.DB
 Imports AccuPay.Entity
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
 Public Class ReleaseThirteenthMonthPay

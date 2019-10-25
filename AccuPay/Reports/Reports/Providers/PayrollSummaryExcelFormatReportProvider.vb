@@ -8,6 +8,7 @@ Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
+Imports AccuPay.DB
 
 Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider

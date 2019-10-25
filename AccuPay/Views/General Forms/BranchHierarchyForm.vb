@@ -1,4 +1,5 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.DB
+Imports Femiani.Forms.UI.Input
 
 Class BranchHierarchyForm
 
@@ -238,7 +239,7 @@ Class BranchHierarchyForm
             If hasErrorOnSaving = False Then
                 ReloadHierarchy()
             End If
-            
+
         End If
 
         tsbtnNewBranch.Enabled = True
@@ -268,7 +269,6 @@ Class BranchHierarchyForm
                     End If
 
                 End With
-
             Else
                 Continue For
             End If
@@ -295,7 +295,6 @@ Class BranchHierarchyForm
                                                     .Cells("brName").Value)
 
                             .Cells("brRowID").Value = n_ReadSQLFunction.ReturnValue
-
                         Else
 
                             If ValNoComma(.Cells("ChangeIndicator").Value) > 0 Then
@@ -314,7 +313,6 @@ Class BranchHierarchyForm
                         End If
 
                     End With
-
                 Else
 
                     Continue For
@@ -322,7 +320,6 @@ Class BranchHierarchyForm
                 End If
 
             Next
-
         Else
 
         End If
@@ -409,11 +406,9 @@ Class BranchHierarchyForm
         If data_priorvalue = dgvbranch.Item(e.ColumnIndex, e.RowIndex).Value Then
 
             dgvbranch.Item("ChangeIndicator", e.RowIndex).Value = 1
-
         Else
 
         End If
-
 
     End Sub
 
@@ -477,7 +472,6 @@ Class BranchHierarchyForm
             And btnRefresh.Enabled Then
 
             btnRefresh_Click(btnRefresh, New EventArgs)
-
         Else
 
             txtSearchBox.Tag = Nothing
@@ -525,7 +519,6 @@ Class BranchHierarchyForm
                         curr_rowindx = currrow_indx
 
                         dgvbranch.Tag = .Cells("brRowID").Value
-
                     Else
 
                     End If
@@ -533,7 +526,6 @@ Class BranchHierarchyForm
                 End With
 
             End If
-
         Else
             dgvbranch.Tag = Nothing
         End If
@@ -573,7 +565,6 @@ Class BranchHierarchyForm
             AddHandler dgvbranch.SelectionChanged, AddressOf dgvbranch_CurrentCellChanged
 
             dgvbranch_CurrentCellChanged(dgvbranch, New EventArgs)
-
         Else
 
             'RemoveHandler dgvbranch.CurrentCellChanged, AddressOf dgvbranch_CurrentCellChanged
@@ -630,7 +621,6 @@ Class BranchHierarchyForm
         If e.Error IsNot Nothing Then
 
         ElseIf e.Cancelled Then
-
         Else
 
             txtSearchBox.Enabled = True
@@ -732,7 +722,6 @@ Class BranchHierarchyForm
         dgvEmp.Rows.Clear()
 
         If tvAreaBranch.Nodes.Count = 0 Then
-
         Else
 
             If e.Node IsNot Nothing Then
@@ -749,11 +738,9 @@ Class BranchHierarchyForm
                     cboxArea.SelectedValue = e_nodTag("AreaID")
 
                     LoadEmployees(e_nodTag("RowID"))
-
                 Else
 
                 End If
-
             Else
 
             End If
@@ -810,7 +797,6 @@ Class BranchHierarchyForm
             End If
 
             'ContextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Default)
-
         Else
 
         End If
@@ -848,10 +834,10 @@ Class BranchHierarchyForm
 
                 Dim div_and_pos_name As New DataTable
 
-                Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT ps.PositionName AS psName" & _
-                                               ",dv.Name AS dvName" & _
-                                               " FROM position ps" & _
-                                               " LEFT JOIN `division` dv ON dv.RowID='" & .EmpDivisionIDValue & "'" & _
+                Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT ps.PositionName AS psName" &
+                                               ",dv.Name AS dvName" &
+                                               " FROM position ps" &
+                                               " LEFT JOIN `division` dv ON dv.RowID='" & .EmpDivisionIDValue & "'" &
                                                " WHERE ps.RowID='" & .EmpPositionIDValue & "';")
 
                 div_and_pos_name = n_SQLQueryToDatatable.ResultTable

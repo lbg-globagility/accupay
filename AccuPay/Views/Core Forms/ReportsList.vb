@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.DB
 
 Public Class ReportsList
 

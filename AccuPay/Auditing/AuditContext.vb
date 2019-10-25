@@ -1,6 +1,3 @@
-Imports System
-Imports System.Data.Entity
-Imports System.Linq
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Auditing

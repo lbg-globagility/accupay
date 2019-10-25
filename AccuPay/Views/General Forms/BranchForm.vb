@@ -1,4 +1,5 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.DB
+Imports Femiani.Forms.UI.Input
 
 Class BranchForm
 
@@ -178,7 +179,6 @@ Class BranchForm
                     End If
 
                 End With
-
             Else
                 Continue For
             End If
@@ -205,7 +205,6 @@ Class BranchForm
                                                     .Cells("brName").Value)
 
                             .Cells("brRowID").Value = n_ReadSQLFunction.ReturnValue
-
                         Else
 
                             If ValNoComma(.Cells("ChangeIndicator").Value) > 0 Then
@@ -224,7 +223,6 @@ Class BranchForm
                         End If
 
                     End With
-
                 Else
 
                     Continue For
@@ -232,7 +230,6 @@ Class BranchForm
                 End If
 
             Next
-
         Else
 
         End If
@@ -311,11 +308,9 @@ Class BranchForm
         If data_priorvalue = dgvbranch.Item(e.ColumnIndex, e.RowIndex).Value Then
 
             dgvbranch.Item("ChangeIndicator", e.RowIndex).Value = 1
-
         Else
 
         End If
-
 
     End Sub
 
@@ -379,7 +374,6 @@ Class BranchForm
             And btnRefresh.Enabled Then
 
             btnRefresh_Click(btnRefresh, New EventArgs)
-
         Else
 
             txtSearchBox.Tag = Nothing
@@ -427,7 +421,6 @@ Class BranchForm
                         curr_rowindx = currrow_indx
 
                         dgvbranch.Tag = .Cells("brRowID").Value
-
                     Else
 
                     End If
@@ -435,7 +428,6 @@ Class BranchForm
                 End With
 
             End If
-
         Else
             dgvbranch.Tag = Nothing
         End If
@@ -475,7 +467,6 @@ Class BranchForm
             AddHandler dgvbranch.SelectionChanged, AddressOf dgvbranch_CurrentCellChanged
 
             dgvbranch_CurrentCellChanged(dgvbranch, New EventArgs)
-
         Else
 
             'RemoveHandler dgvbranch.CurrentCellChanged, AddressOf dgvbranch_CurrentCellChanged
@@ -532,7 +523,6 @@ Class BranchForm
         If e.Error IsNot Nothing Then
 
         ElseIf e.Cancelled Then
-
         Else
 
             txtSearchBox.Enabled = True

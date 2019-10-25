@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.DB
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore

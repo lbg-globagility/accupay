@@ -1,6 +1,4 @@
-﻿Imports Acupay
-
-Public Class AgencyFeeReportProvider
+﻿Public Class AgencyFeeReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Agency Fee" Implements IReportProvider.Name

@@ -1,4 +1,4 @@
-﻿
+﻿Imports AccuPay.DB
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
@@ -45,7 +45,6 @@ Public Class CashOutUnusedLeave
             _isVLOnly = _leaveType.DisplayValue = LeaveType.Vacation.ToString()
 
             _isSLOnly = _leaveType.DisplayValue = LeaveType.Sick.ToString()
-
 
             Dim _amountTreatment = listOfValues.Where(Function(l) Equals(l.LIC, "AmountTreatment")).FirstOrDefault
 
@@ -238,7 +237,6 @@ Public Class CashOutUnusedLeave
                         Next
 
                         CreateLeaveTransaction(context, LeaveTransactionType.Debit, ll, payperiod, leaveBalance)
-
                     Else
 
                         Continue For

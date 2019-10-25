@@ -1,7 +1,8 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.DB
 Imports AccuPay.Entity
-Imports AccuPay.SimplifiedEntities
 Imports MySql.Data.MySqlClient
 
 Public Class PayrollSummaDateSelection

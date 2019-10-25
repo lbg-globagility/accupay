@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay.DB
+Imports AccuPay.Utils
 
 Public Class UsersForm
     Dim isNew As Integer = 0

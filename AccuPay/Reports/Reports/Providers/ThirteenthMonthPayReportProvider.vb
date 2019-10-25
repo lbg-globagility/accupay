@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.DB
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class ThirteenthMonthPayReportProvider

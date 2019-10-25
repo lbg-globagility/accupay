@@ -1,6 +1,5 @@
-﻿Imports Acupay
-
-Imports CrystalDecisions.CrystalReports.Engine
+﻿Imports CrystalDecisions.CrystalReports.Engine
+Imports AccuPay.DB
 
 Public Class EmployeeIdentificationNumberReportProvider
     Implements IReportProvider

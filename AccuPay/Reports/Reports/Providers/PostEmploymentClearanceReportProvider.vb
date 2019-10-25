@@ -1,6 +1,4 @@
-﻿Imports Acupay
-
-Public Class PostEmploymentClearanceReportProvider
+﻿Public Class PostEmploymentClearanceReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Post Employment Clearance" Implements IReportProvider.Name

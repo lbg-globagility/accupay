@@ -1,4 +1,5 @@
 ﻿Imports System.Threading
+Imports AccuPay.DB
 
 Public Class BonusGenerator
 
@@ -385,7 +386,6 @@ Public Class BonusGenerator
                 If sql.HasError Then
                     Throw sql.ErrorException
                 End If
-
             Catch ex As Exception
                 MsgBox(getErrExcptn(ex, Name))
             End Try
@@ -439,8 +439,6 @@ Public Class BonusGenerator
 
     Private Sub dgvPayPeriodList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvPayPeriodList.CellContentClick
 
-
-
     End Sub
 
     Private Sub dgvPayPeriodList_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgvPayPeriodList.RowsRemoved
@@ -464,7 +462,7 @@ Public Class BonusGenerator
             With dgvPayPeriodList.CurrentRow
 
                 dgvPayPeriodList.Tag = .Cells("ppRowID").Value
-                
+
                 bonPayFromDate = dgvPayPeriodList.Item(1, .Index).Value
 
                 bonPayToDate = dgvPayPeriodList.Item(2, .Index).Value
@@ -500,7 +498,6 @@ Public Class BonusGenerator
 
             End With
             'MsgBox("dgvEmployeeList_SelectionChanged")
-
         Else
 
         End If
@@ -614,11 +611,9 @@ Public Class BonusGenerator
 
             hasNoRowSelected = (dgvEmployeeList.CurrentRow Is Nothing) _
                                 Or (dgvPayPeriodList.Tag = Nothing)
-
         Catch ex As Exception
 
             MsgBox(getErrExcptn(ex, Me.Name))
-
         Finally
 
             If hasNoRowSelected = False Then
@@ -670,4 +665,5 @@ Public Class BonusGenerator
     Private Sub Panel1_Paint(sender As Object, e As PaintEventArgs) Handles Panel1.Paint
 
     End Sub
+
 End Class

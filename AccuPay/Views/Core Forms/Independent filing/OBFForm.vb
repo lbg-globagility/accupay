@@ -1,4 +1,5 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.DB
+Imports Femiani.Forms.UI.Input
 
 Public Class OBFForm
 
@@ -44,7 +45,6 @@ Public Class OBFForm
         If Panel1.Enabled = True Then
 
             e.Cancel = False
-
         Else
 
             e.Cancel = True
@@ -57,22 +57,22 @@ Public Class OBFForm
 
     Private Sub OBFForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;", _
+        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;",
                        cboOrganization)
 
         If n_OBFRowID <> Nothing Then
 
             Dim dtOBFRow As New DataTable
 
-            dtOBFRow = _
-            retAsDatTbl("SELECT eob.*" & _
-                        ",e.EmployeeID AS EmpID" & _
-                        ",IFNULL(og.Name,'') AS OrgName" & _
-                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OBFStartTime" & _
-                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OBFEndTime" & _
-                        " FROM employeeofficialbusiness eob" & _
-                        " LEFT JOIN employee e ON e.RowID=eob.EmployeeID" & _
-                        " LEFT JOIN organization og ON og.RowID=eob.OrganizationID" & _
+            dtOBFRow =
+            retAsDatTbl("SELECT eob.*" &
+                        ",e.EmployeeID AS EmpID" &
+                        ",IFNULL(og.Name,'') AS OrgName" &
+                        ",TIME_FORMAT(eo.OTStartTime,'%r') AS OBFStartTime" &
+                        ",TIME_FORMAT(eo.OTEndTime,'%r') AS OBFEndTime" &
+                        " FROM employeeofficialbusiness eob" &
+                        " LEFT JOIN employee e ON e.RowID=eob.EmployeeID" &
+                        " LEFT JOIN organization og ON og.RowID=eob.OrganizationID" &
                         " WHERE eob.RowID='" & n_OBFRowID & "';")
 
             If dtOBFRow IsNot Nothing Then
@@ -231,13 +231,13 @@ Public Class OBFForm
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -267,7 +267,6 @@ Public Class OBFForm
         If n_OBFRowID = Nothing Then
 
             n_OBFRowID = INSUPD_employeeoffbusi()
-
         Else
 
             INSUPD_employeeoffbusi()
@@ -320,7 +319,6 @@ Public Class OBFForm
 
     End Sub
 
-
     '*******************************LOAD ALL NAMES*************************************
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -345,9 +343,9 @@ Public Class OBFForm
         '                            " FROM employee" & _
         '                            " GROUP BY CONCAT(LastName,', ',FirstName,IF(MiddleName = '', '', CONCAT(', ',MiddleName)));")
         'CONCAT(e.LastName,', ',e.FirstName, IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))
-        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" & _
-                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" & _
-                                    " WHERE og.NoPurpose='0'" & _
+        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" &
+                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" &
+                                    " WHERE og.NoPurpose='0'" &
                                     " GROUP BY e.OrganizationID,e.EmployeeID;").ResultTable
 
         If dtempfullname IsNot Nothing Then
@@ -382,9 +380,8 @@ Public Class OBFForm
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
-            
+
             TxtEmployeeFullName1.Enabled = True
 
             TxtEmployeeFullName1.Text = ""
@@ -422,7 +419,6 @@ Public Class OBFForm
         If TxtEmployeeFullName1.Text.Trim.Length = 0 Then
 
             cboxEmployees.Text = String.Empty
-
         Else
 
             cboxEmployees.Text = TxtEmployeeFullName1.Text
@@ -440,7 +436,6 @@ Public Class OBFForm
             If chkOBTimeIn.Checked Then
                 dtpOBFStartTime.Focus()
             End If
-
         Else
             chkOBTimeIn.Checked = True
 
@@ -469,7 +464,6 @@ Public Class OBFForm
             Else
 
             End If
-
         Else
             chkOBTimeOut.Checked = True
 
@@ -480,7 +474,6 @@ Public Class OBFForm
     Private Sub dtpOBFEndTime_GotFocus(sender As Object, e As EventArgs) Handles dtpOBFEndTime.GotFocus
         chkOBTimeOut_CheckedChanged(dtpOBFEndTime, New EventArgs)
     End Sub
-
 
     Private Sub dtpOBFStartTime_ValueChanged(sender As Object, e As EventArgs) Handles dtpOBFStartTime.ValueChanged
 
@@ -530,7 +523,6 @@ Public Class OBFForm
 
                 sender.Text = valtime
                 sender.Tag = True
-
             Catch ex As Exception
 
                 Try
@@ -542,17 +534,14 @@ Public Class OBFForm
 
                     sender.Text = valtime
                     sender.Tag = True
-
                 Catch ex_1 As Exception
 
                     sender.Tag = False
                     ErrorProvider1.SetError(sender,
                                              ex.Message)
-
                 Finally
 
                 End Try
-
             Finally
 
             End Try

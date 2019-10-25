@@ -1,4 +1,5 @@
 ﻿Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.DB
 
 Public Class viewtotallow
     Dim categallowID As Object = Nothing
@@ -70,7 +71,6 @@ Public Class viewtotallow
                     dgvempallowance.Rows.Add(row_array)
                 Next
             End If
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Name))
 

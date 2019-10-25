@@ -1,4 +1,5 @@
-﻿Imports AccuPay.JobLevels
+﻿Imports AccuPay.DB
+Imports AccuPay.JobLevels
 Imports Femiani.Forms.UI.Input
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
@@ -980,4 +981,5 @@ Public Class EmpPosition
             ErrorProvider1.Dispose()
         End If
     End Sub
+
 End Class

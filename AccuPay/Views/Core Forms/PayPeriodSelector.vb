@@ -1,4 +1,6 @@
-﻿Public Class PayPeriodSelector
+﻿Imports AccuPay.DB
+
+Public Class PayPeriodSelector
 
     Sub New()
 
@@ -77,7 +79,6 @@
             btnCancel_Click(btnCancel, New EventArgs)
 
             Return True
-
         Else
             Return MyBase.ProcessCmdKey(msg, keyData)
 
@@ -156,7 +157,6 @@
                 n_PayPeriodRowID = .CurrentRow.Cells("RowID").Value
 
             End With
-
         Else
             n_PayPeriodRowID = Nothing
         End If
@@ -173,7 +173,7 @@
         Dim curr_lnklbl As New LinkLabel
         curr_lnklbl = DirectCast(sender, LinkLabel)
 
-        Dim _year As Integer = Convert.ToInt32 (curr_lnklbl.text)
+        Dim _year As Integer = Convert.ToInt32(curr_lnklbl.Text)
 
         linkNxt.Text =
             (Convert.ToInt32(linkNxt.Text) + Convert.ToInt32(curr_lnklbl.Tag))

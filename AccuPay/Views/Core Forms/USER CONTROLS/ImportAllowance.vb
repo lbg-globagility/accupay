@@ -1,4 +1,5 @@
-﻿
+﻿Imports AccuPay.DB
+
 Public Class ImportAllowance
 
     Dim dt As New DataSet

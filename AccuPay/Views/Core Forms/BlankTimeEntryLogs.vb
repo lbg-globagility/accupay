@@ -1,4 +1,5 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports AccuPay.DB
+Imports MySql.Data.MySqlClient
 
 Public Class BlankTimeEntryLogs
 
@@ -82,7 +83,7 @@ Public Class BlankTimeEntryLogs
 
             With dgvetentdet
 
-                Dim rowindx = _
+                Dim rowindx =
                     .Rows.Add(rowArray)
 
                 If drow("TimeIn") = Nothing Then
@@ -124,8 +125,8 @@ Public Class BlankTimeEntryLogs
         Dim colName As String = dgvetentdet.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvetentdet.RowCount <> 0 Then
@@ -170,8 +171,8 @@ Public Class BlankTimeEntryLogs
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                        dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                        dateobj.ToString.Contains("P") Or
                         dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -239,8 +240,8 @@ Public Class BlankTimeEntryLogs
         Dim colName As String = dgvetentdet.Columns(e.ColumnIndex).Name
         Dim rowindx = e.RowIndex
 
-        Static num As Integer = If(reset_static = -1, _
-                                   -1, _
+        Static num As Integer = If(reset_static = -1,
+                                   -1,
                                    num)
 
         If dgvetentdet.RowCount <> 0 Then
@@ -287,8 +288,8 @@ Public Class BlankTimeEntryLogs
                         Dim ampm As String = Nothing
 
                         Try
-                            If dateobj.ToString.Contains("A") Or _
-                                dateobj.ToString.Contains("P") Or _
+                            If dateobj.ToString.Contains("A") Or
+                                dateobj.ToString.Contains("P") Or
                                 dateobj.ToString.Contains("M") Then
 
                                 ampm = " " & StrReverse(getStrBetween(StrReverse(dateobj.ToString), "", ":"))
@@ -323,7 +324,6 @@ Public Class BlankTimeEntryLogs
                             dgvetentdet.Item(colName, rowindx).Style.BackColor = Color.White
                             dgvetentdet.Item(colName, rowindx).Style.ForeColor = Color.Black
                             dgvetentdet.Item(colName, rowindx).Style.SelectionBackColor = Color.FromArgb(51, 153, 255)
-
                         Catch ex As Exception
                             Try
                                 dateobj = dateobj.ToString.Replace(":", " ")
@@ -341,7 +341,6 @@ Public Class BlankTimeEntryLogs
                                 dgvetentdet.Item(colName, rowindx).Style.BackColor = Color.White
                                 dgvetentdet.Item(colName, rowindx).Style.ForeColor = Color.Black
                                 dgvetentdet.Item(colName, rowindx).Style.SelectionBackColor = Color.FromArgb(51, 153, 255)
-
                             Catch ex_1 As Exception
                                 haserrinput = 1
                                 dgvetentdet.Item(colName, rowindx).ErrorText = "     Invalid time value"
@@ -416,33 +415,33 @@ Public Class BlankTimeEntryLogs
                 If .IsNewRow = False Then
                     Dim RowID = Nothing
 
-                    Dim time_i = If(.Cells("Column3").Value = Nothing, _
-                                    Nothing, _
+                    Dim time_i = If(.Cells("Column3").Value = Nothing,
+                                    Nothing,
                                     Format(CDate(Trim(.Cells("Column3").Value)), "HH:mm:ss"))
 
-                    Dim time_o = If(.Cells("Column4").Value = Nothing, _
-                                    Nothing, _
+                    Dim time_o = If(.Cells("Column4").Value = Nothing,
+                                    Nothing,
                                     Format(CDate(Trim(.Cells("Column4").Value)), "HH:mm:ss"))
 
                     If listofEditRow.Contains(.Cells("Column1").Value) Then
                         Dim etent_date = Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd")
 
                         RowID = .Cells("Column1").Value
-                        INSUPD_employeetimeentrydetails(RowID, _
-                                                        .Cells("Column2").Value, _
-                                                        time_i, _
-                                                        time_o, _
-                                                        Trim(etent_date), _
+                        INSUPD_employeetimeentrydetails(RowID,
+                                                        .Cells("Column2").Value,
+                                                        time_i,
+                                                        time_o,
+                                                        Trim(etent_date),
                                                         .Cells("Column6").Value)
                     Else
                         If .Cells("Column1").Value = Nothing Then
-                            newRowID = _
-                            INSUPD_employeetimeentrydetails(, _
-                                                            .Cells("Column2").Value, _
-                                                            time_i, _
-                                                            time_o, _
-                                                            Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"), _
-                                                            .Cells("Column6").Value, _
+                            newRowID =
+                            INSUPD_employeetimeentrydetails(,
+                                                            .Cells("Column2").Value,
+                                                            time_i,
+                                                            time_o,
+                                                            Format(CDate(.Cells("Column5").Value), "yyyy-MM-dd"),
+                                                            .Cells("Column6").Value,
                                                             .Cells("DataCreated").Value)
 
                             .Cells("Column1").Value = newRowID
@@ -472,13 +471,13 @@ Public Class BlankTimeEntryLogs
 
     End Sub
 
-    Function INSUPD_employeetimeentrydetails(Optional etentd_RowID As Object = Nothing, _
-                                             Optional etentd_EmployeeID As Object = Nothing, _
-                                             Optional etentd_TimeIn As Object = Nothing, _
-                                             Optional etentd_TimeOut As Object = Nothing, _
-                                             Optional etentd_Date As Object = Nothing, _
-                                             Optional etentd_TimeScheduleType As Object = Nothing, _
-                                             Optional etentd_Created As Object = Nothing, _
+    Function INSUPD_employeetimeentrydetails(Optional etentd_RowID As Object = Nothing,
+                                             Optional etentd_EmployeeID As Object = Nothing,
+                                             Optional etentd_TimeIn As Object = Nothing,
+                                             Optional etentd_TimeOut As Object = Nothing,
+                                             Optional etentd_Date As Object = Nothing,
+                                             Optional etentd_TimeScheduleType As Object = Nothing,
+                                             Optional etentd_Created As Object = Nothing,
                                              Optional etentd_TimeEntryStatus As Object = Nothing,
                                              Optional EditAsUnique As String = "0") As Object
         Dim params(9, 2) As Object
@@ -548,7 +547,7 @@ Public Class BlankTimeEntryLogs
                 .Parameters.AddWithValue("etentd_TimeScheduleType", If(etentd_TimeScheduleType = Nothing, String.Empty, Trim(etentd_TimeScheduleType)))
 
                 .Parameters.AddWithValue("etentd_TimeEntryStatus", If(etentd_TimeEntryStatus = Nothing, String.Empty, etentd_TimeEntryStatus))
-                
+
                 .Parameters.AddWithValue("EditAsUnique", EditAsUnique)
                 '##############################################
                 Dim branc_code = New ExecuteQuery("SELECT b.BranchCode FROM branch b LEFT JOIN employeetimeentrydetails etd ON etd.ChargeToDivisionID=b.RowID AND etd.RowID='" & ValNoComma(etentd_RowID) & "' AND etd.OrganizationID=b.OrganizationID WHERE b.OrganizationID='" & orgztnID & "' LIMIT 1;").Result
@@ -586,7 +585,7 @@ Public Class BlankTimeEntryLogs
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
         If formuserprivilege.Count = 0 Then
-            
+
             tsbtnSave.Visible = 0
 
             dontUpdate = 1
@@ -619,7 +618,6 @@ Public Class BlankTimeEntryLogs
         If isShowAsDialog Then
 
             Me.DialogResult = Windows.Forms.DialogResult.OK
-
         Else
 
             Me.DialogResult = Windows.Forms.DialogResult.Cancel

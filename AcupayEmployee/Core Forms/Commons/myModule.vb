@@ -111,13 +111,11 @@ Module myModule
             conn.ConnectionString = n_DataBaseConnection.GetStringMySQLConnectionString
 
             hasERR = 0
-
         Catch ex As Exception
 
             hasERR = 1
 
             MsgBox(ex.Message & " ERR_NO 77-10 : dbconn", MsgBoxStyle.Critical, "Server Connection")
-
         Finally
             'REG_EDIT_DBCONNECTION()
 
@@ -145,7 +143,7 @@ Module myModule
         'Return MsgBox(mystr, , "Unexpected Message")
     End Function
 
-    Function retAsDatTbl(ByVal _quer As String, _
+    Function retAsDatTbl(ByVal _quer As String,
                          Optional dgv As DataGridView = Nothing) As Object
 
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable(_quer)
@@ -156,7 +154,7 @@ Module myModule
 
     Public hasERR As SByte
 
-    Public Function EXECQUER(ByVal cmdsql As String, _
+    Public Function EXECQUER(ByVal cmdsql As String,
                              Optional errorthrower As String = Nothing) As Object 'String
 
         Dim n_ExecuteQuery As New ExecuteQuery(cmdsql)
@@ -326,6 +324,7 @@ Module myModule
             Return Nothing
         End Try
     End Function
+
     Public tsb_shmabut As New ToolStripButton
 
     Public txtSimpleSearch As New TextBox
@@ -368,9 +367,9 @@ Module myModule
 
     End Function
 
-    Public Function INSGet_View(ByVal ViewName As String) As String '                             ' & orgztnID 
-        Dim _str = EXECQUER("INSERT INTO view (ViewName,OrganizationID) VALUES('" & ViewName & "',1" & _
-                                            ");SELECT RowID FROM view WHERE ViewName='" & ViewName & _
+    Public Function INSGet_View(ByVal ViewName As String) As String '                             ' & orgztnID
+        Dim _str = EXECQUER("INSERT INTO view (ViewName,OrganizationID) VALUES('" & ViewName & "',1" &
+                                            ");SELECT RowID FROM view WHERE ViewName='" & ViewName &
                                                 "' AND OrganizationID='" & orgztnID & "' LIMIT 1;") '" & orgztnID & "
         Return _str
     End Function
@@ -445,9 +444,9 @@ Module myModule
 
     Public OrgPic As Byte()
 
-    Function EXEC_INSUPD_PROCEDURE(Optional ParamsCollection As Array = Nothing, _
-                      Optional ProcedureName As String = Nothing, _
-                      Optional returnName As String = Nothing, _
+    Function EXEC_INSUPD_PROCEDURE(Optional ParamsCollection As Array = Nothing,
+                      Optional ProcedureName As String = Nothing,
+                      Optional returnName As String = Nothing,
                      Optional MySql_DbType As MySqlDbType = MySqlDbType.Int32) As Object
         Dim return_value = Nothing
         Try
@@ -491,6 +490,7 @@ Module myModule
     End Function
 
 #Region "Reminders"
+
     '**********need to know**********
     '1.) User
     '   - RowID
@@ -501,7 +501,7 @@ Module myModule
     '   - RowID
     '   - Organization Name
 
-    '3.) Employee TabControl - Name 
+    '3.) Employee TabControl - Name
 
     '4.) how to call INSERT Row employeesalary
 
@@ -546,7 +546,7 @@ Module myModule
 
     End Function
 
-    Function ObjectCopyToClipBoard(Optional KeyEvArgs As KeyEventArgs = Nothing, _
+    Function ObjectCopyToClipBoard(Optional KeyEvArgs As KeyEventArgs = Nothing,
                                    Optional objObject As Object = Nothing) As Boolean
 
         Dim returnvalue As Boolean = False
@@ -556,11 +556,9 @@ Module myModule
             returnvalue = True
 
             objObject.Copy()
-
         Else
 
             returnvalue = False
-
 
         End If
 
@@ -595,7 +593,6 @@ Module myModule
                     new_listofStr.Add(ParamString)
 
                 End If
-
             Else
 
                 For combicount = 2 To 5
@@ -615,7 +612,6 @@ Module myModule
                         End If
 
                         Exit For
-
                     Else
 
                         Dim splitDispName = Split(ParamString, " ")
@@ -684,7 +680,6 @@ Module myModule
                 Next
 
             End If
-
         Catch ex As Exception
 
             MsgBox(getErrExcptn(ex, "myModule"))
@@ -707,7 +702,7 @@ Module myModule
             Dim strdaylen = Trim(ParamDate.Day).Length
 
             Dim strmonth, strday As String
-            
+
             If strmonthlen = 1 Then
                 strmonth = "0" & Trim(ParamDate.Month)
             Else
@@ -721,7 +716,6 @@ Module myModule
             End If
 
             returnvalue = ParamDate.Year & "-" & strmonth & "-" & strday
-
         Catch ex As Exception
             returnvalue = Nothing
             MsgBox(getErrExcptn(ex, "MYSQLDateFormat"), , CStr(ParamDate))

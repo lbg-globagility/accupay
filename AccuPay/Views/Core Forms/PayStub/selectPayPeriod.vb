@@ -1,7 +1,7 @@
-﻿Imports AccuPay.Entity
-Imports AccuPay.SimplifiedEntities
+﻿Imports AccuPay.Data
+Imports AccuPay.DB
+Imports AccuPay.Entity
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class selectPayPeriod
 

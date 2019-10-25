@@ -1,5 +1,6 @@
 ﻿Imports System.Configuration
 Imports System.Threading
+Imports AccuPay.DB
 Imports AccuPay.Utils
 Imports Indigo
 Imports MySql.Data.MySqlClient

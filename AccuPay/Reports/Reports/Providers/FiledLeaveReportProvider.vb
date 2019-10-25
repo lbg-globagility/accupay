@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.DB
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class FiledLeaveReportProvider
@@ -59,7 +60,6 @@ Public Class FiledLeaveReportProvider
         Dim dateFromTitle = dateFrom?.ToString("MMMM dd, yyyy")
         Dim dateToTitle = dateTo?.ToString("MMMM dd, yyyy")
         title.Text = $"From {dateFromTitle} to {dateToTitle}"
-
 
         Dim sql As New SQL(orgNameAddressSql,
                            New Object() {orgztnID})

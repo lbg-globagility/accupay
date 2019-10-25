@@ -1,4 +1,6 @@
-﻿Public Class DepartmentMinWages
+﻿Imports AccuPay.DB
+
+Public Class DepartmentMinWages
 
     Dim deptRowID As Object = Nothing
 
@@ -69,11 +71,10 @@
             If dgvrow.IsNewRow Then
 
                 Continue For
-
             Else
 
                 With dgvrow
-                    
+
                     Dim n_ReadSQLFunction As _
                         New ReadSQLFunction("INSUPD_divisionminimumwage",
                                             "returnvalue",
@@ -118,7 +119,6 @@
             Me.Close()
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -146,7 +146,6 @@
         Dim dgv_currRow = dgvMinimumWages.CurrentRow
 
         If dgv_currRow.IsNewRow Then
-
         Else
 
             Dim prompt = MessageBox.Show("Are you sure you want to delete this item ?",

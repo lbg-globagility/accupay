@@ -1,4 +1,4 @@
-﻿Imports Acupay
+﻿Imports AccuPay.DB
 
 Public Class EmploymentRecordReportProvider
     Implements IReportProvider

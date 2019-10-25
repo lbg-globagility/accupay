@@ -1,4 +1,6 @@
-﻿Public Class EmployeeBonusForm
+﻿Imports AccuPay.DB
+
+Public Class EmployeeBonusForm
 
     Dim n_EmployeeRowID As Object = Nothing
 
@@ -71,9 +73,8 @@
             If dgvpayperiod.RowCount > 0 Then
                 dgvpayperiod_CellContentClick(dgvpayperiod, New DataGridViewCellEventArgs(ppProperDateFrom.Index, dgvpayperiod.CurrentRow.Index))
             End If
-            
-            Return True
 
+            Return True
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -100,7 +101,6 @@
 
         If HasSelection Then
             Me.DialogResult = Windows.Forms.DialogResult.OK
-
         Else
             Me.DialogResult = Windows.Forms.DialogResult.Cancel
 
@@ -216,7 +216,6 @@
 
         ElseIf TypeOf (dgvempbon.Item(e.ColumnIndex, e.RowIndex)) Is DataGridViewCheckBoxCell Then
             SelectionValueBeforeEdit = CBool(dgvempbon.Item(e.ColumnIndex, e.RowIndex).Value)
-
         Else
 
         End If
@@ -229,7 +228,6 @@
 
             If bon_Type.Index = e.ColumnIndex Then
                 dgvempbon.Item("bon_prodid", e.RowIndex).Value = DirectCast(dgvempbon.Item("bon_type", e.RowIndex), DataGridViewComboBoxCell).Value
-
             Else
 
             End If
@@ -242,7 +240,6 @@
             'Else
             isSelectionChanged = (SelectionValueBeforeEdit <> CBool(dgvempbon.Item(e.ColumnIndex, e.RowIndex).Value))
             'End If
-            
         Else
 
         End If
@@ -330,7 +327,6 @@
 
         If e.ColumnIndex > -1 _
             And e.RowIndex > -1 Then
-
         Else
 
         End If

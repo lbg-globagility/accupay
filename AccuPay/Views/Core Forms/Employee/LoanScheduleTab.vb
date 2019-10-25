@@ -1,11 +1,8 @@
 ﻿Option Strict On
 
-Imports System.Data.Entity
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
-
 
 Public Class LoanScheduleTab
 
@@ -24,8 +21,6 @@ Public Class LoanScheduleTab
         InitializeComponent()
         dgvLoanList.AutoGenerateColumns = False
     End Sub
-
-
 
     Private Sub ChangeMode(mode As FormMode)
         _mode = mode
@@ -53,7 +48,6 @@ Public Class LoanScheduleTab
                 btnCancel.Enabled = True
         End Select
     End Sub
-
 
     Private Sub LoadLoanSched()
         'If _employee Is Nothing Then
@@ -98,6 +92,7 @@ Public Class LoanScheduleTab
 
         AddHandler dgvLoanList.SelectionChanged, AddressOf dgvLoanList_SelectionChanged
     End Sub
+
     Private Sub SelectLoanSchedule(loansched As LoanSchedule)
         _currentLoanschedule = loansched
 
@@ -119,12 +114,12 @@ Public Class LoanScheduleTab
 
         SelectLoanSchedule(loansched)
     End Sub
+
     'Not use for now
     Public Sub SetEmployee(employee As Employee)
         If _mode = FormMode.Creating Then
             EnableLoanScheduleGrid()
         End If
-
 
         _employee = employee
         txtFNameLoan.Text = $"{employee.FirstName} {employee.LastName}"
@@ -135,6 +130,7 @@ Public Class LoanScheduleTab
         LoadLoanSched()
 
     End Sub
+
     Private Sub DisableLoanScheduleGrid()
         RemoveHandler dgvLoanList.SelectionChanged, AddressOf dgvLoanList_SelectionChanged
         dgvLoanList.ClearSelection()
@@ -170,7 +166,6 @@ Public Class LoanScheduleTab
     End Sub
 
     Private Sub DisplayLoan()
-
 
         cboloantype.SelectedItem = _currentLoanschedule.LoanTypeID
 
@@ -241,14 +236,11 @@ Public Class LoanScheduleTab
             cboloantype.Items.Add(strval.PartNo)
         Next
 
-
         Using context = New PayrollContext()
             Dim listOfValues = (From emp In context.Employees.
                                     Include(Function(emp) emp.Position)
                                 Where CBool(emp.RowID = empNo)).
                                FirstOrDefault()
-
-
 
             txtFNameLoan.Text = $"{listOfValues.FirstName} {listOfValues.LastName}"
             txtEmpIDLoan.Text = $"ID# {listOfValues.EmployeeNo}, {listOfValues?.Position.Name}, {listOfValues.EmployeeType} Salary"
@@ -258,6 +250,6 @@ Public Class LoanScheduleTab
 
         LoadLoanSched()
 
-
     End Sub
+
 End Class

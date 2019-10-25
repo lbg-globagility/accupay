@@ -1,4 +1,5 @@
-﻿
+﻿Imports AccuPay.DB
+
 Public Class ImportOvertime
 
     Dim dt As New DataSet
@@ -26,8 +27,6 @@ Public Class ImportOvertime
         Dim listof_sql As New List(Of SQL)
 
         Try
-
-
 
             Dim str_query_import_loan As String =
             String.Concat("CALL IMPORT_overtime(",

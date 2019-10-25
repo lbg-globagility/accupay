@@ -2,7 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Data
 Imports Microsoft.EntityFrameworkCore
 
 Public Class DateRangePickerDialog

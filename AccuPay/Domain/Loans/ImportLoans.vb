@@ -1,4 +1,5 @@
-﻿
+﻿Imports AccuPay.DB
+
 Public Class ImportLoans
 
     Private Data_Set As DataSet = Nothing
@@ -77,7 +78,7 @@ Public Class ImportLoans
                     'DBNull.Value,
                     'drow(2))
                     i += 1
-                    'n_ReadSQLFunctionV2.HasError And 
+                    'n_ReadSQLFunctionV2.HasError And
                     'If n_ReadSQLFunctionV2.ErrorMessage.Length > 0 Then
                     If n_ReadSQLFunctionV2.HasError Then
                         MsgBox("Error at row index " & i & vbNewLine & n_ReadSQLFunctionV2.ErrorMessage)
