@@ -174,17 +174,22 @@ Public Class PayrollTools
     Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(
                                     Optional payperiods As IList(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
 
+        'replace this with a policy
+        'fourlinq can use this feature also
+        'for clients that has the same attendance and payroll period
+        Dim isBenchmarkOwner = ((New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark)
+
+        Dim currentDay = Date.Today.ToMinimumHourValue
+
         If payperiods Is Nothing OrElse payperiods.Count = 0 Then
 
             Using context = New PayrollContext()
 
-                Dim today = Date.Today.ToMinimumHourValue
-
                 Dim payPeriodThisDay = Await context.PayPeriods.
                                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                                         Where(Function(p) p.IsSemiMonthly).
-                                        Where(Function(p) p.PayToDate >= today).
-                                        Where(Function(p) p.PayFromDate <= today).
+                                        Where(Function(p) p.PayToDate >= currentDay).
+                                        Where(Function(p) p.PayFromDate <= currentDay).
                                         OrderByDescending(Function(p) p.PayToDate).
                                         FirstOrDefaultAsync
 
@@ -199,20 +204,37 @@ Public Class PayrollTools
 
                 End If
 
-                Return Await context.PayPeriods.
+                Dim query = context.PayPeriods.
                         Where(Function(p) p.Year = workingYearThisDay.Value).
                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                        Where(Function(p) p.IsSemiMonthly).
-                        Where(Function(p) p.PayToDate < Date.Now).
+                        Where(Function(p) p.IsSemiMonthly)
+
+                If isBenchmarkOwner Then
+
+                    query = query.Where(Function(p) currentDay >= p.PayFromDate).
+                                    Where(Function(p) currentDay <= p.PayToDate)
+                Else
+                    query = query.Where(Function(p) p.PayToDate < currentDay)
+                End If
+
+                Return Await query.
                         OrderByDescending(Function(p) p.PayToDate).
                         FirstOrDefaultAsync
 
             End Using
         Else
 
-            Return payperiods.
-                Where(Function(p) p.PayToDate < Date.Now).
-                LastOrDefault
+            If isBenchmarkOwner Then
+
+                Return payperiods.
+                    Where(Function(p) currentDay >= p.PayFromDate AndAlso currentDay <= p.PayToDate).
+                    LastOrDefault
+            Else
+
+                Return payperiods.
+                    Where(Function(p) p.PayToDate < currentDay).
+                    LastOrDefault
+            End If
 
         End If
 
