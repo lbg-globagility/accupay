@@ -106,9 +106,13 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 paystubPayslipModel.Allowance = paystub.TotalAllowance - paystub.Ecola
                 paystubPayslipModel.Ecola = If(ecola Is Nothing, 0, ecola.PayAmount)
                 paystubPayslipModel.AbsentHours = paystub.AbsentHours + If(paystub.Employee.IsMonthly, paystub.LeaveHours, 0)
-                paystubPayslipModel.AbsentAmount = If(isActual, paystub.Actual.AbsenceDeduction, paystub.AbsenceDeduction)
+                paystubPayslipModel.AbsentAmount = If(isActual,
+                            paystub.Actual.AbsenceDeduction + If(paystub.Employee.IsMonthly, paystub.Actual.LeavePay, 0),
+                            paystub.AbsenceDeduction + If(paystub.Employee.IsMonthly, paystub.LeavePay, 0))
                 paystubPayslipModel.LateAndUndertimeHours = paystub.LateHours + paystub.UndertimeHours
                 paystubPayslipModel.LateAndUndertimeAmount = If(isActual, paystub.Actual.LateDeduction + paystub.UndertimeDeduction, paystub.LateDeduction + paystub.UndertimeDeduction)
+                paystubPayslipModel.LeaveHours = paystub.LeaveHours
+                paystubPayslipModel.LeavePay = If(isActual, paystub.Actual.LeavePay, paystub.LeavePay)
                 paystubPayslipModel.GrossPay = If(isActual, paystub.Actual.GrossPay, paystub.GrossPay)
                 paystubPayslipModel.SSSAmount = paystub.SssEmployeeShare
                 paystubPayslipModel.PhilHealthAmount = paystub.PhilHealthEmployeeShare
