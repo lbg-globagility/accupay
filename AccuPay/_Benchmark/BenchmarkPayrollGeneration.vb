@@ -152,8 +152,8 @@ Namespace Benchmark
 
             paystub.EmployeeID = employee.RowID
 
-            ComputeBasicHoursAndBasicPay(paystub, employee)
             ComputeHoursAndPay(paystub)
+            ComputeBasicHoursAndBasicPay(paystub, employee) 'this should be on the top of ComputeHoursAndPay(). This needs the regular hours, late, UT and absent hours before it computes
 
             'Compute AccuPay allowance
             Dim ecolaAllowance = ComputeEcola(paystub)
@@ -175,13 +175,17 @@ Namespace Benchmark
 
         Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
 
-            Dim cutOffsPerMonth As Integer = 2
+            If employee.IsPremiumInclusive Then
 
-            Dim workDaysThisCutOff = PayrollTools.
-                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / cutOffsPerMonth
+                Dim workDaysThisCutOff = PayrollTools.
+                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / PayrollTools.SemiMonthlyPayPeriodsPerMonth
 
-            paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
+                paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
+            Else
 
+                paystub.BasicHours = paystub.RegularHours + paystub.UndertimeHours + paystub.LateHours + paystub.AbsentHours
+
+            End If
             paystub.BasicPay = paystub.BasicHours * _employeeRate.HourlyRate
 
         End Sub
@@ -259,7 +263,8 @@ Namespace Benchmark
             regularHolidayRestDayHours:=regularHolidayRestDayHours,
             regularHolidayRestDayOTHours:=regularHolidayRestDayOTHours,
             regularHolidayRestDayNightDiffHours:=regularHolidayRestDayNightDiffHours,
-            regularHolidayRestDayNightDiffOTHours:=regularHolidayRestDayNightDiffOTHours
+            regularHolidayRestDayNightDiffOTHours:=regularHolidayRestDayNightDiffOTHours,
+            isHolidayInclusive:=_employeeRate.Employee.IsPremiumInclusive
         )
 
             paystub.RegularHours = _employeeRate.RegularHours

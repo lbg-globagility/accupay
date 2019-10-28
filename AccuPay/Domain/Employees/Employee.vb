@@ -182,6 +182,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsPremiumInclusive As Boolean
+            Get
+                Return IsMonthly OrElse IsFixed
+            End Get
+        End Property
+
         Public ReadOnly Property FullNameLastNameFirst As String
             Get
                 Return $"{LastName}, {FirstName}"

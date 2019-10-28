@@ -90,6 +90,11 @@ Public Class SssCalculator
 
                 Dim totalHours = If(previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave, 0) + paystub.TotalWorkedHoursWithoutOvertimeAndLeave
 
+                If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
+
+                    totalHours = If(previousPaystub?.RegularHours, 0) + paystub.RegularHours
+                End If
+
                 Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
                 Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
                 Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)

@@ -288,13 +288,13 @@ Public Class BenchmarkPaystubRateTest
         Dim hourlyRate = 67.125
         Dim actualHourlyRate = 75
 
-        Assert.AreEqual(_benchmarkPaystubRate.LateDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.LateHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.LateDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.LateHours * hourlyRate), 4)
         Assert.AreEqual(_benchmarkPaystubRate.ActualLateDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.LateHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.UndertimeDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.UndertimeHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.UndertimeDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.UndertimeHours * hourlyRate), 4)
         Assert.AreEqual(_benchmarkPaystubRate.ActualUndertimeDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.UndertimeHours * actualHourlyRate))
 
-        Assert.AreEqual(_benchmarkPaystubRate.AbsenceDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.AbsentHours * hourlyRate))
+        Assert.AreEqual(_benchmarkPaystubRate.AbsenceDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.AbsentHours * hourlyRate), 4)
         Assert.AreEqual(_benchmarkPaystubRate.ActualAbsenceDeduction, AccuMath.CommercialRound(_benchmarkPaystubRate.AbsentHours * actualHourlyRate))
 
     End Sub

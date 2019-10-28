@@ -45,6 +45,12 @@ Namespace Global.AccuPay.Payroll
                 Case ThirteenthMonthCalculationBasis.DailyRate
 
                     Dim hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave
+
+                    If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
+
+                        hoursWorked = paystub.RegularHours
+                    End If
+
                     Dim daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay
 
                     Dim dailyRate = PayrollTools.GetDailyRate(salary, employee)

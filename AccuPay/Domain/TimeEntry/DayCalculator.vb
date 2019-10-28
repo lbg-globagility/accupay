@@ -512,7 +512,7 @@ Public Class DayCalculator
         timeEntry.OvertimePay = timeEntry.OvertimeHours * hourlyRate * payrate.OvertimeRate
 
         Dim restDayRate = payrate.RestDayRate
-        If _policy.RestDayInclusive And (_employee.IsMonthly Or _employee.IsFixed) Then
+        If _policy.RestDayInclusive AndAlso _employee.IsPremiumInclusive Then
             restDayRate -= 1
         End If
         timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * restDayRate
@@ -559,7 +559,7 @@ Public Class DayCalculator
             timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * holidayOTRate
             timeEntry.RegularHolidayOTPay = timeEntry.RegularHolidayOTHours * hourlyRate * holidayOTRate
 
-            Dim isHolidayPayInclusive = _employee.IsMonthly Or _employee.IsFixed
+            Dim isHolidayPayInclusive = _employee.IsPremiumInclusive
 
             If _employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday Then
                 holidayRate = If(isHolidayPayInclusive, holidayRate - 1, holidayRate)
