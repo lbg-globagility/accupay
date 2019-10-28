@@ -75,23 +75,30 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                                         Where(Function(a) a.Paystub.PayPeriodID = payPeriod.RowID.Value).
                                         ToListAsync
 
+            Dim employeeSalaries = Await context.Salaries.
+                                        Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                                        Where(Function(s) s.EffectiveFrom <= payPeriod.PayToDate).
+                                        Where(Function(s) payPeriod.PayFromDate <= If(s.EffectiveTo, payPeriod.PayFromDate)).
+                                        ToListAsync
+
+            Dim ecolas = Await context.AllowanceItems.
+                                        Include(Function(p) p.Allowance).
+                                        Include(Function(p) p.Allowance.Product).
+                                        Where(Function(p) p.Allowance.Product.PartNo.ToUpper = ProductConstant.ECOLA.ToUpper).
+                                        ToListAsync
+
             For Each paystub In paystubs
 
                 Dim employeeId = paystub.EmployeeID.Value
 
-                Dim employeeSalary = Await context.Salaries.
-                                        Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(s) s.EffectiveFrom <= payPeriod.PayToDate).
-                                        Where(Function(s) payPeriod.PayFromDate <= If(s.EffectiveTo, payPeriod.PayFromDate)).
-                                        FirstOrDefaultAsync(Function(s) s.EmployeeID.Value = employeeId)
+                Dim employeeSalary = employeeSalaries.
+                                        FirstOrDefault(Function(s) s.EmployeeID.Value = employeeId)
+
+                paystub.Ecola = If(ecolas.
+                                Where(Function(e) e.PaystubID.Value = paystub.RowID.Value).
+                                FirstOrDefault?.Amount, 0)
 
                 Dim salary = If(isActual, employeeSalary.TotalSalary, employeeSalary.BasicSalary)
-
-                Dim ecola = Await context.PaystubItems.
-                                    Include(Function(p) p.Product).
-                                    Where(Function(p) p.PayStubID.Value = paystub.RowID.Value).
-                                    Where(Function(p) p.Product.PartNo.ToUpper = ProductConstant.ECOLA.ToUpper).
-                                    FirstOrDefaultAsync
 
                 Dim allAdjustments As List(Of PaystubPayslipModel.Adjustment) = GetEmployeeAdjustments(actualAdjustments, employeeId)
                 allAdjustments.AddRange(GetEmployeeAdjustments(adjustments, employeeId))
@@ -104,7 +111,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                 paystubPayslipModel.RegularPay = salary
                 paystubPayslipModel.BasicHours = paystub.BasicHours
                 paystubPayslipModel.Allowance = paystub.TotalAllowance - paystub.Ecola
-                paystubPayslipModel.Ecola = If(ecola Is Nothing, 0, ecola.PayAmount)
+                paystubPayslipModel.Ecola = paystub.Ecola
                 paystubPayslipModel.AbsentHours = paystub.AbsentHours + If(paystub.Employee.IsMonthly, paystub.LeaveHours, 0)
                 paystubPayslipModel.AbsentAmount = If(isActual,
                             paystub.Actual.AbsenceDeduction + If(paystub.Employee.IsMonthly, paystub.Actual.LeavePay, 0),

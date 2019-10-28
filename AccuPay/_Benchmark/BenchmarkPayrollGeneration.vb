@@ -379,7 +379,9 @@ Namespace Benchmark
 
         Private Function ComputeEcola(paystub As Paystub) As AllowanceItem
 
-            Dim totalDaysWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave / BenchmarkPaystubRate.WorkHoursPerDay
+            Dim totalHoursWorkedForEcola = paystub.TotalWorkedHoursWithoutOvertimeAndLeave + paystub.LeaveHours
+
+            Dim totalDaysWorked = totalHoursWorkedForEcola / BenchmarkPaystubRate.WorkHoursPerDay
 
             paystub.Ecola = totalDaysWorked * If(_ecola?.Amount, 0)
 
