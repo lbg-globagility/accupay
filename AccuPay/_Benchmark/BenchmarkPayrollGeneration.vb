@@ -386,6 +386,12 @@ Namespace Benchmark
 
             Dim totalHoursWorkedForEcola = paystub.TotalWorkedHoursWithoutOvertimeAndLeave + paystub.LeaveHours
 
+            If _employeeRate.Employee.IsPremiumInclusive Then
+
+                totalHoursWorkedForEcola = paystub.RegularHours + paystub.LeaveHours
+
+            End If
+
             Dim totalDaysWorked = totalHoursWorkedForEcola / BenchmarkPaystubRate.WorkHoursPerDay
 
             paystub.Ecola = totalDaysWorked * If(_ecola?.Amount, 0)
