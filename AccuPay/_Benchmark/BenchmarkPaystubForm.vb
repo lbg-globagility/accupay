@@ -395,7 +395,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.Overtime,
                                     paystub.OvertimeHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.NightDiffPay <> 0 Then
@@ -404,7 +405,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.NightDifferential,
                                     paystub.NightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.NightDiffOvertimePay <> 0 Then
@@ -413,7 +415,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.NightDifferentialOvertime,
                                     paystub.NightDiffOvertimeHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayPay <> 0 Then
@@ -422,7 +425,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RestDay,
                                     paystub.RestDayHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayOTPay <> 0 Then
@@ -431,7 +435,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RestDayOvertime,
                                     paystub.RestDayOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayNightDiffPay <> 0 Then
@@ -440,7 +445,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RestDayNightDifferential,
                                     paystub.RestDayNightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RestDayNightDiffOTPay <> 0 Then
@@ -449,7 +455,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RestDayNightDifferentialOvertime,
                                     paystub.RestDayNightDiffOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayPay <> 0 Then
@@ -458,7 +465,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHoliday,
                                     paystub.SpecialHolidayHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayOTPay <> 0 Then
@@ -467,7 +475,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayOvertime,
                                     paystub.SpecialHolidayOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayNightDiffPay <> 0 Then
@@ -476,7 +485,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayNightDifferential,
                                     paystub.SpecialHolidayNightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayNightDiffOTPay <> 0 Then
@@ -485,7 +495,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayNightDifferentialOvertime,
                                     paystub.SpecialHolidayNightDiffOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayPay <> 0 Then
@@ -494,7 +505,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayRestDay,
                                     paystub.SpecialHolidayRestDayHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayOTPay <> 0 Then
@@ -503,7 +515,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayRestDayOvertime,
                                     paystub.SpecialHolidayRestDayOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayNightDiffPay <> 0 Then
@@ -512,7 +525,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayRestDayNightDifferential,
                                     paystub.SpecialHolidayRestDayNightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.SpecialHolidayRestDayNightDiffOTPay <> 0 Then
@@ -521,7 +535,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.SpecialHolidayRestDayNightDifferentialOvertime,
                                     paystub.SpecialHolidayRestDayNightDiffOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayPay <> 0 Then
@@ -530,7 +545,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHoliday,
                                     paystub.RegularHolidayHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayOTPay <> 0 Then
@@ -539,7 +555,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayOvertime,
                                     paystub.RegularHolidayOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayNightDiffPay <> 0 Then
@@ -548,7 +565,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayNightDifferential,
                                     paystub.RegularHolidayNightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayNightDiffOTPay <> 0 Then
@@ -557,7 +575,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayNightDifferentialOvertime,
                                     paystub.RegularHolidayNightDiffOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayPay <> 0 Then
@@ -566,7 +585,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayRestDay,
                                     paystub.RegularHolidayRestDayHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayOTPay <> 0 Then
@@ -575,7 +595,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayRestDayOvertime,
                                     paystub.RegularHolidayRestDayOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayNightDiffPay <> 0 Then
@@ -584,7 +605,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayRestDayNightDifferential,
                                     paystub.RegularHolidayRestDayNightDiffHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
         End If
 
         If paystub.RegularHolidayRestDayNightDiffOTPay <> 0 Then
@@ -593,7 +615,8 @@ Public Class BenchmarkPaystubForm
                                     _overtimeRate.RegularHolidayRestDayNightDifferentialOvertime,
                                     paystub.RegularHolidayRestDayNightDiffOTHours,
                                     False,
-                                    payPerHour))
+                                    payPerHour,
+                                    employeeRate.Employee.IsPremiumInclusive))
 
         End If
 

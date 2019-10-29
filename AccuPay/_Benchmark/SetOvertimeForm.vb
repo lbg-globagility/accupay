@@ -9,11 +9,16 @@ Public Class SetOvertimeForm
 
     Public Property Overtimes As List(Of OvertimeInput)
 
-    Private _payPerHour As Decimal
+    Private ReadOnly _payPerHour As Decimal
 
-    Private _overtimeRateList As New List(Of Rate)
+    Private ReadOnly _overtimeRateList As New List(Of Rate)
 
-    Sub New(payPerHour As Decimal, overtimeRateList As List(Of Rate), Optional overtimes As List(Of OvertimeInput) = Nothing)
+    Private ReadOnly _isHolidayInclusive As Boolean
+
+    Sub New(payPerHour As Decimal,
+            overtimeRateList As List(Of Rate),
+            Optional overtimes As List(Of OvertimeInput) = Nothing,
+            Optional isHolidayInclusive As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -28,6 +33,7 @@ Public Class SetOvertimeForm
         _payPerHour = payPerHour
 
         _overtimeRateList = overtimeRateList
+        Me._isHolidayInclusive = isHolidayInclusive
     End Sub
 
     Private Sub BackButton_Click(sender As Object, e As EventArgs) Handles BackButton.Click
@@ -158,7 +164,7 @@ Public Class SetOvertimeForm
 
         End If
 
-        Me.Overtimes.Add(New OvertimeInput(overtimeRate, input, isDay, _payPerHour))
+        Me.Overtimes.Add(New OvertimeInput(overtimeRate, input, isDay, _payPerHour, _isHolidayInclusive))
 
         RefreshGridView()
 

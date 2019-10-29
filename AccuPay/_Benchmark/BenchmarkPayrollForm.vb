@@ -630,7 +630,10 @@ Public Class BenchmarkPayrollForm
 
     Private Sub SetOvertimeButton_Click(sender As Object, e As EventArgs) Handles SetOvertimeButton.Click
 
-        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate, _overtimeRate.OvertimeRateList, _overtimes)
+        Dim form As New SetOvertimeForm(_employeeRate.HourlyRate,
+                                        _overtimeRate.OvertimeRateList,
+                                        _overtimes,
+                                        _employeeRate.Employee.IsPremiumInclusive)
         form.ShowDialog()
 
         _overtimes = form.Overtimes

@@ -8,14 +8,16 @@ Namespace Benchmark
 
         Public Property Input As Decimal
         Public Property IsDay As Boolean
+        Public Property IsHolidayInclusive As Boolean
 
         Private Property _payPerHour As Decimal
 
-        Sub New(overtimeType As Rate, input As Decimal, isDay As Boolean, payperHour As Decimal)
+        Sub New(overtimeType As Rate, input As Decimal, isDay As Boolean, payperHour As Decimal, Optional isHolidayInclusive As Boolean = False)
 
             Me.OvertimeType = overtimeType
             Me.Input = input
             Me.IsDay = isDay
+            Me.IsHolidayInclusive = isHolidayInclusive
 
             _payPerHour = payperHour
 
@@ -35,7 +37,8 @@ Namespace Benchmark
 
         Public ReadOnly Property Amount As Decimal
             Get
-                Dim rate = If(OvertimeType.BaseRate Is Nothing, OvertimeType.Rate, OvertimeType.Rate - OvertimeType.BaseRate.Rate)
+                Dim overtimeRate = If(IsHolidayInclusive, OvertimeType.Rate - 1, OvertimeType.Rate)
+                Dim rate = If(OvertimeType.BaseRate Is Nothing, overtimeRate, overtimeRate - OvertimeType.BaseRate.Rate)
 
                 Return AccuMath.CommercialRound((Hours * rate * _payPerHour))
             End Get
