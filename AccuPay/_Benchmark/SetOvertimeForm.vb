@@ -164,7 +164,16 @@ Public Class SetOvertimeForm
 
         End If
 
-        Me.Overtimes.Add(New OvertimeInput(overtimeRate, input, isDay, _payPerHour, _isHolidayInclusive))
+        Dim isHolidayInclusive = _isHolidayInclusive
+
+        'Rest day is always exclusive for Daily or Monthly
+        If overtimeRate.Name = AccuPay.OvertimeRate.RestDayDescription Then
+
+            isHolidayInclusive = False
+
+        End If
+
+        Me.Overtimes.Add(New OvertimeInput(overtimeRate, input, isDay, _payPerHour, isHolidayInclusive))
 
         RefreshGridView()
 

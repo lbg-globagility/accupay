@@ -672,16 +672,14 @@ Namespace Benchmark
                         restDayOTHours As Decimal,
                         Optional isRestDayInclusive As Boolean = False)
 
-            Dim restDayRate = If(isRestDayInclusive, payRate.RestDay.Rate - 1, payRate.RestDay.Rate)
-
             Me.RestDayHours = restDayHours
-            Me.RestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * restDayRate)
+            Me.RestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.Rate)
 
             Me.RestDayOTHours = restDayOTHours
             Me.RestDayOTPay = ComputeFinalRoundedRate(Me.RestDayOTHours * payRate.RestDayOvertime.Rate)
 
             If allowanceForRestDayPolicy Then
-                Me.ActualRestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * restDayRate, isActual:=True)
+                Me.ActualRestDayPay = ComputeFinalRoundedRate(Me.RestDayHours * payRate.RestDay.Rate, isActual:=True)
             Else
                 Me.ActualRestDayPay = Me.RestDayPay
             End If

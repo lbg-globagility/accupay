@@ -426,7 +426,7 @@ Public Class BenchmarkPaystubForm
                                     paystub.RestDayHours,
                                     False,
                                     payPerHour,
-                                    employeeRate.Employee.IsPremiumInclusive))
+                                    False))
         End If
 
         If paystub.RestDayOTPay <> 0 Then

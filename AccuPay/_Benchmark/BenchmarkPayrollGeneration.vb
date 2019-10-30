@@ -388,7 +388,7 @@ Namespace Benchmark
 
             If _employeeRate.Employee.IsPremiumInclusive Then
 
-                totalHoursWorkedForEcola = paystub.RegularHours + paystub.LeaveHours
+                totalHoursWorkedForEcola = paystub.RegularHours + paystub.RestDayHours + paystub.LeaveHours
 
             End If
 
