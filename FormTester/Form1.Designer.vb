@@ -24,6 +24,7 @@ Partial Class Form1
     Private Sub InitializeComponent()
         Me.PrintPayslipButton = New System.Windows.Forms.Button()
         Me.EmployeesTextBox = New System.Windows.Forms.TextBox()
+        Me.PDFPayslipButton = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'PrintPayslipButton
@@ -42,11 +43,21 @@ Partial Class Form1
         Me.EmployeesTextBox.Size = New System.Drawing.Size(253, 20)
         Me.EmployeesTextBox.TabIndex = 1
         '
+        'PDFPayslipButton
+        '
+        Me.PDFPayslipButton.Location = New System.Drawing.Point(196, 114)
+        Me.PDFPayslipButton.Name = "PDFPayslipButton"
+        Me.PDFPayslipButton.Size = New System.Drawing.Size(99, 23)
+        Me.PDFPayslipButton.TabIndex = 2
+        Me.PDFPayslipButton.Text = "View Payslip PDF"
+        Me.PDFPayslipButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.Controls.Add(Me.PDFPayslipButton)
         Me.Controls.Add(Me.EmployeesTextBox)
         Me.Controls.Add(Me.PrintPayslipButton)
         Me.Name = "Form1"
@@ -58,4 +69,5 @@ Partial Class Form1
 
     Friend WithEvents PrintPayslipButton As Button
     Friend WithEvents EmployeesTextBox As TextBox
+    Friend WithEvents PDFPayslipButton As Button
 End Class

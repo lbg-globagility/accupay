@@ -48,3 +48,9 @@ E:\Programs\_accupay_from_origin\FormTester\obj\Debug\FormTester.vbproj.CopyComp
 E:\Programs\_accupay_from_origin\FormTester\obj\Debug\FormTester.exe
 E:\Programs\_accupay_from_origin\FormTester\obj\Debug\FormTester.xml
 E:\Programs\_accupay_from_origin\FormTester\obj\Debug\FormTester.pdb
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.Charting.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.xml
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.Charting.xml
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\de\PdfSharp.resources.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\de\PdfSharp.Charting.resources.dll
