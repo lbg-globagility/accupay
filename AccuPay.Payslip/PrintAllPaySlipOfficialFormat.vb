@@ -1,36 +1,49 @@
-﻿Imports Accupay.Data
+﻿Imports System.IO
+Imports Accupay.Data
 Imports Accupay.DB
 Imports CrystalDecisions.CrystalReports.Engine
+Imports CrystalDecisions.Shared
+Imports PdfSharp.Pdf
+Imports PdfSharp.Pdf.IO
+Imports PdfSharp.Pdf.Security
 
-Public Class PrintAllPaySlipOfficialFormat
-
-    Private _payPeriodId As Object = Nothing
-
-    Private n_IsPrintingAsActual As SByte = 0
-
-    Sub New(payPeriodId As Integer,
-        IsPrintingAsActual As SByte)
-
-        _payPeriodId = payPeriodId
-
-        n_IsPrintingAsActual = IsPrintingAsActual
-
-    End Sub
+Public Class PayslipCreator
 
     Const customDateFormat As String = "'%c/%e/%Y'"
 
-    Private catchdt As New DataTable
-
     Private sys_ownr As New Reference.BaseSystemOwner
 
-    Public Function GetReportDocument(
+    Private _payPeriodId As Object = Nothing
+
+    Private _isActual As SByte = 0
+
+    Private _reportDocument As ReportClass
+
+    Private _pdfFile As String
+
+    Sub New(payPeriodId As Integer, isActual As SByte)
+
+        _payPeriodId = payPeriodId
+        _isActual = isActual
+    End Sub
+
+    Public Function GetReportDocument()
+        Return _reportDocument
+    End Function
+
+    Public Function GetPDF()
+        Return _pdfFile
+    End Function
+
+    Public Function CreateReportDocument(
                         orgNam As String,
                         orgztnID As Integer,
                         nextPayPeriod As IPayPeriod,
-                        Optional employeeIds As Integer() = Nothing) As ReportClass
+                        Optional employeeIds As Integer() = Nothing) As PayslipCreator
 
         'filter employees, print and email payslip is tested on cinema only
         'test this before deploying
+        Dim catchdt As New DataTable
 
         Dim rptdoc As Object = Nothing
 
@@ -39,7 +52,7 @@ Public Class PrintAllPaySlipOfficialFormat
         If Reference.BaseSystemOwner.Goldwings = current_system_owner Then
 
             Dim n_SQLQueryToDatatable As _
-                   New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & n_IsPrintingAsActual & ");")
+                   New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
 
             catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -131,7 +144,7 @@ Public Class PrintAllPaySlipOfficialFormat
         Else
 
             Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & _payPeriodId & "," & n_IsPrintingAsActual & ");")
+            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
 
             catchdt = n_SQLQueryToDatatable.ResultTable
 
@@ -155,8 +168,50 @@ Public Class PrintAllPaySlipOfficialFormat
 
         rptdoc.SetDataSource(catchdt)
 
-        Return rptdoc
+        _reportDocument = rptdoc
 
+        Return Me
+
+    End Function
+
+    Public Function GeneratePDF(saveFolderPath As String, fileName As String) As PayslipCreator
+
+        Dim pdfFullPath As String = Path.Combine(saveFolderPath, fileName)
+
+        Dim CrExportOptions As CrystalDecisions.[Shared].ExportOptions
+        Dim CrDiskFileDestinationOptions As DiskFileDestinationOptions = New DiskFileDestinationOptions()
+        Dim CrFormatTypeOptions As PdfRtfWordFormatOptions = New PdfRtfWordFormatOptions()
+        CrDiskFileDestinationOptions.DiskFileName = pdfFullPath
+        CrExportOptions = _reportDocument.ExportOptions
+
+        CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile
+        CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat
+        CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions
+        CrExportOptions.FormatOptions = CrFormatTypeOptions
+
+        _reportDocument.Export()
+
+        _pdfFile = pdfFullPath
+
+        Return Me
+    End Function
+
+    Public Function AddPdfPassword(password As String) As PayslipCreator
+        Dim document As PdfDocument = PdfReader.Open(_pdfFile)
+        Dim securitySettings As PdfSecuritySettings = document.SecuritySettings
+        securitySettings.UserPassword = password
+        securitySettings.OwnerPassword = password
+        securitySettings.PermitAccessibilityExtractContent = False
+        securitySettings.PermitAnnotations = False
+        securitySettings.PermitAssembleDocument = False
+        securitySettings.PermitExtractContent = False
+        securitySettings.PermitFormsFill = True
+        securitySettings.PermitFullQualityPrint = False
+        securitySettings.PermitModifyDocument = False
+        securitySettings.PermitPrint = True
+        document.Save(_pdfFile)
+
+        Return Me
     End Function
 
 End Class

@@ -1725,7 +1725,7 @@ Public Class PayStubForm
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
         Dim n_PrintAllPaySlipOfficialFormat As _
-            New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
+            New PayslipCreator(ValNoComma(paypRowID),
                                               IsActualFlag)
     End Sub
 
@@ -1958,13 +1958,11 @@ Public Class PayStubForm
 
         If _showActual = False Then
 
-            Dim n_PrintAllPaySlipOfficialFormat As _
-            New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
-                                              IsPrintingAsActual:=False)
+            Dim payslipCreator As New PayslipCreator(ValNoComma(paypRowID), isActual:=False)
 
             Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
 
-            Dim reportDocument = n_PrintAllPaySlipOfficialFormat.GetReportDocument(orgNam, orgztnID, nextPayPeriod)
+            Dim reportDocument = payslipCreator.CreateReportDocument(orgNam, orgztnID, nextPayPeriod)
 
             Dim crvwr As New CrysRepForm
             crvwr.crysrepvwr.ReportSource = reportDocument

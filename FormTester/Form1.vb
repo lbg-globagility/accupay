@@ -58,9 +58,7 @@ Public Class Form1
     End Sub
 
     Private Function GetPayslipReport() As CrystalDecisions.CrystalReports.Engine.ReportClass
-        Dim n_PrintAllPaySlipOfficialFormat As _
-                    New PrintAllPaySlipOfficialFormat(619,
-                                                      IsPrintingAsActual:=False)
+        Dim payslipCreator As New PayslipCreator(619, isActual:=False)
 
         Dim nextPayPeriod As New PayPeriod With {
         .RowID = 620,
@@ -70,8 +68,35 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        Dim reportDocument = n_PrintAllPaySlipOfficialFormat.GetReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds)
+        Dim reportDocument = payslipCreator.
+                CreateReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds).
+                GetReportDocument()
+
         Return reportDocument
     End Function
+
+    Private Sub ViewPayslipFromLibraryButton_Click(sender As Object, e As EventArgs) Handles ViewPayslipFromLibraryButton.Click
+        Dim payslipCreator As New PayslipCreator(619, isActual:=False)
+
+        Dim nextPayPeriod As New PayPeriod With {
+        .RowID = 620,
+        .PayFromDate = New Date(2019, 10, 1),
+        .PayToDate = New Date(2019, 10, 15)
+        }
+
+        Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
+
+        Dim saveFolderPath = "E:\Downloads"
+        Dim fileName = FileNameTextBox.Text
+        Dim password = PasswordTextBox.Text
+
+        Dim reportDocument = payslipCreator.
+                CreateReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds).
+                GeneratePDF(saveFolderPath, fileName).
+                AddPdfPassword(password).
+                GetPDF()
+
+        MessageBox.Show("Finished")
+    End Sub
 
 End Class

@@ -25,11 +25,16 @@ Partial Class Form1
         Me.PrintPayslipButton = New System.Windows.Forms.Button()
         Me.EmployeesTextBox = New System.Windows.Forms.TextBox()
         Me.PDFPayslipButton = New System.Windows.Forms.Button()
+        Me.ViewPayslipFromLibraryButton = New System.Windows.Forms.Button()
+        Me.FileNameTextBox = New System.Windows.Forms.TextBox()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.PasswordTextBox = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'PrintPayslipButton
         '
-        Me.PrintPayslipButton.Location = New System.Drawing.Point(105, 114)
+        Me.PrintPayslipButton.Location = New System.Drawing.Point(55, 112)
         Me.PrintPayslipButton.Name = "PrintPayslipButton"
         Me.PrintPayslipButton.Size = New System.Drawing.Size(75, 23)
         Me.PrintPayslipButton.TabIndex = 0
@@ -38,25 +43,71 @@ Partial Class Form1
         '
         'EmployeesTextBox
         '
-        Me.EmployeesTextBox.Location = New System.Drawing.Point(105, 88)
+        Me.EmployeesTextBox.Location = New System.Drawing.Point(55, 86)
         Me.EmployeesTextBox.Name = "EmployeesTextBox"
-        Me.EmployeesTextBox.Size = New System.Drawing.Size(253, 20)
+        Me.EmployeesTextBox.Size = New System.Drawing.Size(359, 20)
         Me.EmployeesTextBox.TabIndex = 1
         '
         'PDFPayslipButton
         '
-        Me.PDFPayslipButton.Location = New System.Drawing.Point(196, 114)
+        Me.PDFPayslipButton.Location = New System.Drawing.Point(141, 112)
         Me.PDFPayslipButton.Name = "PDFPayslipButton"
         Me.PDFPayslipButton.Size = New System.Drawing.Size(99, 23)
         Me.PDFPayslipButton.TabIndex = 2
         Me.PDFPayslipButton.Text = "View Payslip PDF"
         Me.PDFPayslipButton.UseVisualStyleBackColor = True
         '
+        'ViewPayslipFromLibraryButton
+        '
+        Me.ViewPayslipFromLibraryButton.Location = New System.Drawing.Point(251, 112)
+        Me.ViewPayslipFromLibraryButton.Name = "ViewPayslipFromLibraryButton"
+        Me.ViewPayslipFromLibraryButton.Size = New System.Drawing.Size(163, 23)
+        Me.ViewPayslipFromLibraryButton.TabIndex = 3
+        Me.ViewPayslipFromLibraryButton.Text = "View Payslip PDF (from library)"
+        Me.ViewPayslipFromLibraryButton.UseVisualStyleBackColor = True
+        '
+        'FileNameTextBox
+        '
+        Me.FileNameTextBox.Location = New System.Drawing.Point(187, 35)
+        Me.FileNameTextBox.Name = "FileNameTextBox"
+        Me.FileNameTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.FileNameTextBox.TabIndex = 4
+        '
+        'Label1
+        '
+        Me.Label1.AutoSize = True
+        Me.Label1.Location = New System.Drawing.Point(52, 38)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(129, 13)
+        Me.Label1.TabIndex = 5
+        Me.Label1.Text = "PDF filename (from library)"
+        '
+        'PasswordTextBox
+        '
+        Me.PasswordTextBox.Location = New System.Drawing.Point(187, 60)
+        Me.PasswordTextBox.Name = "PasswordTextBox"
+        Me.PasswordTextBox.Size = New System.Drawing.Size(100, 20)
+        Me.PasswordTextBox.TabIndex = 6
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(129, 63)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(52, 13)
+        Me.Label2.TabIndex = 7
+        Me.Label2.Text = "password"
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.PasswordTextBox)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.FileNameTextBox)
+        Me.Controls.Add(Me.ViewPayslipFromLibraryButton)
         Me.Controls.Add(Me.PDFPayslipButton)
         Me.Controls.Add(Me.EmployeesTextBox)
         Me.Controls.Add(Me.PrintPayslipButton)
@@ -70,4 +121,9 @@ Partial Class Form1
     Friend WithEvents PrintPayslipButton As Button
     Friend WithEvents EmployeesTextBox As TextBox
     Friend WithEvents PDFPayslipButton As Button
+    Friend WithEvents ViewPayslipFromLibraryButton As Button
+    Friend WithEvents FileNameTextBox As TextBox
+    Friend WithEvents Label1 As Label
+    Friend WithEvents PasswordTextBox As TextBox
+    Friend WithEvents Label2 As Label
 End Class

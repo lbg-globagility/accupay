@@ -138,3 +138,9 @@ E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\Accupay.Payslip.vbpro
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.pdb
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.xml
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.xml
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.resources.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.Charting.resources.dll
