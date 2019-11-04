@@ -173,6 +173,7 @@ SELECT ps.RowID
 , ps.LeaveHours `COL80`
 , ps.LeavePay `COL81`
 
+, e.RowID `EmployeeRowID`
 
 FROM paystub ps
 

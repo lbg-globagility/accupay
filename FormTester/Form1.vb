@@ -2,7 +2,7 @@
 
 Public Class Form1
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles PrintPayslipButton.Click
 
         Dim n_PrintAllPaySlipOfficialFormat As _
             New PrintAllPaySlipOfficialFormat(619,
@@ -14,7 +14,9 @@ Public Class Form1
         .PayToDate = New Date(2019, 10, 15)
         }
 
-        Dim reportDocument = n_PrintAllPaySlipOfficialFormat.GetReportDocument("Cinema 2000s", 2, nextPayPeriod)
+        Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
+
+        Dim reportDocument = n_PrintAllPaySlipOfficialFormat.GetReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds)
 
         Dim crvwr As New CrystalReportsFormViewer
         crvwr.CrystalReportViewer1.ReportSource = reportDocument

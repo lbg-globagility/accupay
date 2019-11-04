@@ -26,7 +26,11 @@ Public Class PrintAllPaySlipOfficialFormat
     Public Function GetReportDocument(
                         orgNam As String,
                         orgztnID As Integer,
-                        nextPayPeriod As IPayPeriod) As ReportClass
+                        nextPayPeriod As IPayPeriod,
+                        Optional employeeIds As Integer() = Nothing) As ReportClass
+
+        'filter employees, print and email payslip is tested on cinema only
+        'test this before deploying
 
         Dim rptdoc As Object = Nothing
 
@@ -64,8 +68,6 @@ Public Class PrintAllPaySlipOfficialFormat
 
             catchdt = _sql.GetFoundRows.Tables(0)
 
-            'rptdoc = New HyundaiPayslip1
-
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
@@ -83,6 +85,16 @@ Public Class PrintAllPaySlipOfficialFormat
                             params)
 
             catchdt = _sql.GetFoundRows.Tables(0)
+
+            If employeeIds IsNot Nothing AndAlso employeeIds.Count > 0 Then
+
+                catchdt = catchdt.AsEnumerable().
+                    Where(Function(r) employeeIds.Contains(r.Field(Of Integer)("EmployeeRowID"))).
+                    CopyToDataTable
+
+            End If
+
+            'rptdoc = New HyundaiPayslip1
 
             rptdoc = New TwoEmpIn1PaySlip
 
