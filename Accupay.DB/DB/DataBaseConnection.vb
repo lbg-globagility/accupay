@@ -126,7 +126,7 @@ Public Class DataBaseConnection
 
             db_connectinstring = connstringresult
         Catch ex As Exception
-            MsgBox(getErrExcptn(ex, "DataBaseConnection"))
+            'MsgBox(getErrExcptn(ex, "DataBaseConnection"))
         Finally
             regKey.Close()
 

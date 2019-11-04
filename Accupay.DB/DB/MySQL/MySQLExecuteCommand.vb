@@ -7,7 +7,7 @@ Public Class MySQLExecuteCommand
 
     Private mysql_cmd As IMySQLCommander
 
-    Private prepared_mysqlcmd As MySqlCommand
+    Public prepared_mysqlcmd As MySqlCommand
 
     Private is_user_defined_dbobj As Boolean = False
 

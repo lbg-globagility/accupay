@@ -8,6 +8,7 @@ Imports AccuPay.Views.Payroll
 Imports AccuPay.Utils
 Imports AccuPay.Entity
 Imports AccuPay.DB
+Imports AccuPay.Payslip
 
 Public Class PayStubForm
 
@@ -1960,6 +1961,14 @@ Public Class PayStubForm
             Dim n_PrintAllPaySlipOfficialFormat As _
             New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
                                               IsPrintingAsActual:=False)
+
+            Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+
+            Dim reportDocument = n_PrintAllPaySlipOfficialFormat.GetReportDocument(orgNam, orgztnID, nextPayPeriod)
+
+            Dim crvwr As New CrysRepForm
+            crvwr.crysrepvwr.ReportSource = reportDocument
+            crvwr.Show()
 
         End If
     End Sub

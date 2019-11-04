@@ -19,7 +19,6 @@ Public Class SQLQueryToDatatable
 
             priv_conn.ConnectionString = mysql_conn_text &
                 "default command timeout=" & cmd_time_out & ";"
-
         Else
 
             priv_conn.ConnectionString = mysql_conn_text
@@ -54,7 +53,6 @@ Public Class SQLQueryToDatatable
                 priv_da.Fill(n_ResultTable)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             MsgBox(getErrExcptn(ex, MyBase.ToString))

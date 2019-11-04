@@ -1,7 +1,6 @@
 E:\Programs\_accupay_from_origin\Accupay.Data\bin\Debug\netstandard2.0\Accupay.Data.deps.json
 E:\Programs\_accupay_from_origin\Accupay.Data\bin\Debug\netstandard2.0\Accupay.Data.dll
 E:\Programs\_accupay_from_origin\Accupay.Data\bin\Debug\netstandard2.0\Accupay.Data.pdb
-E:\Programs\_accupay_from_origin\Accupay.Data\obj\Debug\netstandard2.0\Accupay.Data.vbprojAssemblyReference.cache
 E:\Programs\_accupay_from_origin\Accupay.Data\obj\Debug\netstandard2.0\Accupay.Data.vbproj.CoreCompileInputs.cache
 E:\Programs\_accupay_from_origin\Accupay.Data\obj\Debug\netstandard2.0\Accupay.Data.AssemblyInfoInputs.cache
 E:\Programs\_accupay_from_origin\Accupay.Data\obj\Debug\netstandard2.0\Accupay.Data.AssemblyInfo.vb

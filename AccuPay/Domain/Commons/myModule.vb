@@ -5,7 +5,6 @@ Imports CrystalDecisions.Shared
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports Excel = Microsoft.Office.Interop.Excel
-Imports AccuPay.DB
 
 Module myModule
     Public conn As New MySqlConnection
@@ -87,6 +86,8 @@ Module myModule
 
     Public backgroundworking As SByte = 0
 
+    Public db_connectinstring = ""
+
     Public MachineLocalization As New DataTable
 
     Public AppFilePath As String = Application.StartupPath
@@ -156,11 +157,11 @@ Module myModule
 
             Select Case Val(CommandType)
                 Case 0
-                    cmd.CommandType = System.Data.CommandType.Text
+                    cmd.CommandType = CommandType.Text
                 Case 1
                     'cmd = New MySqlCommand(_quer, conn)
                     cmd.Parameters.Clear()
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure
+                    cmd.CommandType = CommandType.StoredProcedure
                     '.Parameters.AddWithValue(ParamName, ParamValue)
                     For indx = 0 To Params.GetUpperBound(0) - 1
                         Dim paramName As String = Params(indx, 0)
@@ -2085,11 +2086,11 @@ Module myModule
 
             Select Case Val(CommandType)
                 Case 0
-                    cmd.CommandType = System.Data.CommandType.Text
+                    cmd.CommandType = CommandType.Text
                 Case 1
                     'cmd = New MySqlCommand(_quer, conn)
                     cmd.Parameters.Clear()
-                    cmd.CommandType = System.Data.CommandType.StoredProcedure
+                    cmd.CommandType = CommandType.StoredProcedure
                     '.Parameters.AddWithValue(ParamName, ParamValue)
                     For indx = 0 To Params.GetUpperBound(0) - 1
                         Dim paramName As String = Params(indx, 0)

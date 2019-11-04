@@ -320,6 +320,20 @@
     <Compile Include="Auditing\Forms\TimeLogForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Core\DB\DataBaseConnection.vb" />
+    <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
+    <Compile Include="Core\DB\ExecSQLProcedure.vb" />
+    <Compile Include="Core\DB\ExecuteQuery.vb" />
+    <Compile Include="Core\DB\MySQL\IMySQLCommander.vb" />
+    <Compile Include="Core\DB\MySQL\MySQLCommander.vb" />
+    <Compile Include="Core\DB\MySQL\MySQLExecuteCommand.vb" />
+    <Compile Include="Core\DB\MySQL\SQL.vb" />
+    <Compile Include="Core\DB\ReadSQLFunction.vb" />
+    <Compile Include="Core\DB\ReadSQLFunctionV2.vb" />
+    <Compile Include="Core\DB\ReadSQLProcedureToDatatable.vb" />
+    <Compile Include="Core\DB\SQLQueryToDatatable.vb" />
+    <Compile Include="Core\DB\SqlReaderExtensions.vb" />
+    <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\PayPeriodStatusData.vb" />
     <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
@@ -454,7 +468,6 @@
     <Compile Include="Views\Core Forms\Employee\Import\ImportLeaveForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\PayStub\PrintAllPaySlipOfficialFormat.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.Designer.vb">
       <DependentUpon>TimeAttendanceLogListForm.vb</DependentUpon>
     </Compile>
@@ -2549,9 +2562,9 @@
       <Project>{617d3634-7409-4f28-9571-7cedf9c389ed}</Project>
       <Name>Accupay.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.DB\Accupay.DB.vbproj">
-      <Project>{2e134199-5c8f-4425-8b40-4566b4ea87da}</Project>
-      <Name>Accupay.DB</Name>
+    <ProjectReference Include="..\Accupay.Payslip\Accupay.Payslip.vbproj">
+      <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
+      <Name>Accupay.Payslip</Name>
     </ProjectReference>
     <ProjectReference Include="..\Accupay.Reference\Accupay.Reference.vbproj">
       <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>

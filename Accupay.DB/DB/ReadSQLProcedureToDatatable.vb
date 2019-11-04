@@ -80,7 +80,6 @@ Public Class ReadSQLProcedureToDatatable
                 priv_da.Fill(n_ResultTable)
 
             End With
-
         Catch ex As Exception
             _hasError = True
             MsgBox(getErrExcptn(ex, MyBase.ToString), , SQLProcedureName)

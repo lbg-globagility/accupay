@@ -45,7 +45,7 @@ Public Class TwoEmpIn1PaySlip
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "AccuPay.TwoEmpIn1PaySlip.rpt"
+            Return "Accupay.Payslip.TwoEmpIn1PaySlip.rpt"
         End Get
         Set
             'Do nothing
@@ -78,7 +78,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property PayslipHeader() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection6() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(3)
         End Get
@@ -86,7 +86,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Section3() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection12() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(4)
         End Get
@@ -94,7 +94,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection1() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection2() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(5)
         End Get
@@ -102,7 +102,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property AdjustmentDetails() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection13() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(6)
         End Get
@@ -110,7 +110,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property AdjustmentTotal() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection14() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(7)
         End Get
@@ -118,7 +118,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property LoanDetails() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection15() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(8)
         End Get
@@ -126,7 +126,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property LoanTotal() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection16() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(9)
         End Get
@@ -134,7 +134,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property LeaveDetails() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection17() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(10)
         End Get
@@ -142,7 +142,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property AllowanceDetails() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection18() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(11)
         End Get
@@ -150,7 +150,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property AllowanceTotal() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection19() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(12)
         End Get
@@ -158,7 +158,7 @@ Public Class TwoEmpIn1PaySlip
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection6() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection20() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(13)
         End Get

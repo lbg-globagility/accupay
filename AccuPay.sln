@@ -23,6 +23,8 @@ Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Accupay.Utils", "Accupay.Ut
 EndProject
 Project("{778DAE3C-4631-46EA-AA77-85C1314464D9}") = "Accupay.Data", "Accupay.Data\Accupay.Data.vbproj", "{617D3634-7409-4F28-9571-7CEDF9C389ED}"
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "FormTester", "FormTester\FormTester.vbproj", "{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -103,6 +105,14 @@ Global
 		{617D3634-7409-4F28-9571-7CEDF9C389ED}.Release|Any CPU.Build.0 = Release|Any CPU
 		{617D3634-7409-4F28-9571-7CEDF9C389ED}.Release|x86.ActiveCfg = Release|Any CPU
 		{617D3634-7409-4F28-9571-7CEDF9C389ED}.Release|x86.Build.0 = Release|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Debug|x86.Build.0 = Debug|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Release|x86.ActiveCfg = Release|Any CPU
+		{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
