@@ -22,20 +22,20 @@ Partial Class TimeLogsForm2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.MainSplitContainer = New System.Windows.Forms.SplitContainer()
         Me.EmployeeTreeView1 = New AccuPay.EmployeeTreeView()
@@ -380,9 +380,9 @@ Partial Class TimeLogsForm2
         'colDay
         '
         Me.colDay.DataPropertyName = "DateIn"
-        DataGridViewCellStyle15.Format = "ddd"
-        DataGridViewCellStyle15.NullValue = Nothing
-        Me.colDay.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle1.Format = "ddd"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.colDay.DefaultCellStyle = DataGridViewCellStyle1
         Me.colDay.FillWeight = 28.62944!
         Me.colDay.HeaderText = "Day"
         Me.colDay.Name = "colDay"
@@ -404,8 +404,8 @@ Partial Class TimeLogsForm2
         'colTimeIn
         '
         Me.colTimeIn.DataPropertyName = "TimeIn"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colTimeIn.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colTimeIn.DefaultCellStyle = DataGridViewCellStyle2
         Me.colTimeIn.FillWeight = 28.0!
         Me.colTimeIn.HeaderText = "Time In"
         Me.colTimeIn.Name = "colTimeIn"
@@ -435,9 +435,9 @@ Partial Class TimeLogsForm2
         '
         'colDecrement
         '
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle17.NullValue = "-"
-        Me.colDecrement.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle3.NullValue = "-"
+        Me.colDecrement.DefaultCellStyle = DataGridViewCellStyle3
         Me.colDecrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.colDecrement.HeaderText = ""
         Me.colDecrement.Name = "colDecrement"
@@ -446,9 +446,9 @@ Partial Class TimeLogsForm2
         '
         'colIncrement
         '
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle18.NullValue = "+"
-        Me.colIncrement.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle4.NullValue = "+"
+        Me.colIncrement.DefaultCellStyle = DataGridViewCellStyle4
         Me.colIncrement.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.colIncrement.HeaderText = ""
         Me.colIncrement.Name = "colIncrement"
@@ -458,8 +458,8 @@ Partial Class TimeLogsForm2
         'colTimeOut
         '
         Me.colTimeOut.DataPropertyName = "TimeOut"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.colTimeOut.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.colTimeOut.DefaultCellStyle = DataGridViewCellStyle5
         Me.colTimeOut.HeaderText = "Time Out"
         Me.colTimeOut.Name = "colTimeOut"
         Me.colTimeOut.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
@@ -486,11 +486,11 @@ Partial Class TimeLogsForm2
         'colDelete
         '
         Me.colDelete.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle20.NullValue = Nothing
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.Color.Transparent
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.Color.Transparent
-        Me.colDelete.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle6.NullValue = Nothing
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.Color.Transparent
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.Color.Transparent
+        Me.colDelete.DefaultCellStyle = DataGridViewCellStyle6
         Me.colDelete.HeaderText = ""
         Me.colDelete.Image = Global.AccuPay.My.Resources.Resources.baseline_delete_forever_black_18dp
         Me.colDelete.Name = "colDelete"
@@ -501,11 +501,11 @@ Partial Class TimeLogsForm2
         'colRestore
         '
         Me.colRestore.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle21.NullValue = Nothing
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.Color.Transparent
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.Color.Transparent
-        Me.colRestore.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle7.NullValue = Nothing
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.Color.Transparent
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.Color.Transparent
+        Me.colRestore.DefaultCellStyle = DataGridViewCellStyle7
         Me.colRestore.HeaderText = ""
         Me.colRestore.Image = Global.AccuPay.My.Resources.Resources.baseline_undo_black_18dp
         Me.colRestore.Name = "colRestore"
@@ -639,9 +639,9 @@ Partial Class TimeLogsForm2
         '
         Me.DataGridViewTextBoxColumn4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
         Me.DataGridViewTextBoxColumn4.DataPropertyName = "FullName"
-        DataGridViewCellStyle22.Format = "ddd"
-        DataGridViewCellStyle22.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle8.Format = "ddd"
+        DataGridViewCellStyle8.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle8
         Me.DataGridViewTextBoxColumn4.FillWeight = 28.62944!
         Me.DataGridViewTextBoxColumn4.HeaderText = "Day"
         Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
@@ -652,9 +652,9 @@ Partial Class TimeLogsForm2
         '
         Me.DataGridViewTextBoxColumn5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "DateIn"
-        DataGridViewCellStyle23.Format = "ddd"
-        DataGridViewCellStyle23.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle9.Format = "ddd"
+        DataGridViewCellStyle9.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn5.FillWeight = 28.62944!
         Me.DataGridViewTextBoxColumn5.HeaderText = "Date In"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
@@ -664,9 +664,9 @@ Partial Class TimeLogsForm2
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "TimeIn"
-        DataGridViewCellStyle24.Format = "ddd"
-        DataGridViewCellStyle24.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle10.Format = "ddd"
+        DataGridViewCellStyle10.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle10
         Me.DataGridViewTextBoxColumn6.FillWeight = 28.62944!
         Me.DataGridViewTextBoxColumn6.HeaderText = "Time In"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
@@ -678,8 +678,8 @@ Partial Class TimeLogsForm2
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "TimeOut"
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle11
         Me.DataGridViewTextBoxColumn7.FillWeight = 28.62944!
         Me.DataGridViewTextBoxColumn7.HeaderText = "Date Out"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
@@ -692,8 +692,8 @@ Partial Class TimeLogsForm2
         'DataGridViewTextBoxColumn8
         '
         Me.DataGridViewTextBoxColumn8.DataPropertyName = "IsExisting"
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn8.FillWeight = 28.0!
         Me.DataGridViewTextBoxColumn8.HeaderText = "Time Out"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
@@ -717,8 +717,8 @@ Partial Class TimeLogsForm2
         'DataGridViewTextBoxColumn10
         '
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "TimeOut"
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle27
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn10.HeaderText = "HasChanged"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
@@ -730,8 +730,8 @@ Partial Class TimeLogsForm2
         'DataGridViewTextBoxColumn11
         '
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "IsExisting"
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle28
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn11.HeaderText = "IsExisting"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         Me.DataGridViewTextBoxColumn11.ReadOnly = True

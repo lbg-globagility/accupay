@@ -60,7 +60,7 @@ Public Class Form1
 
     Private Function GetPayslipReport() As CrystalDecisions.CrystalReports.Engine.ReportClass
         Dim currentPayPeriod As New PayPeriod With {
-            .RowID = 619,
+            .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
         }
@@ -68,7 +68,7 @@ Public Class Form1
         Dim payslipCreator As New PayslipCreator(currentPayPeriod, isActual:=False)
 
         Dim nextPayPeriod As New PayPeriod With {
-        .RowID = 620,
+        .RowID = 621,
         .PayFromDate = New Date(2019, 10, 16),
         .PayToDate = New Date(2019, 10, 31)
         }
@@ -131,14 +131,14 @@ Public Class Form1
 
     Private Function GetPDF() As String
         Dim currentPayPeriod As New PayPeriod With {
-            .RowID = 619,
+            .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
         }
         Dim payslipCreator As New PayslipCreator(currentPayPeriod, isActual:=False)
 
         Dim nextPayPeriod As New PayPeriod With {
-        .RowID = 620,
+        .RowID = 621,
         .PayFromDate = New Date(2019, 10, 16),
         .PayToDate = New Date(2019, 10, 31)
         }
@@ -158,13 +158,13 @@ Public Class Form1
 
     Private Sub OfficialPayslipButton_Click(sender As Object, e As EventArgs) Handles OfficialPayslipButton.Click
         Dim currentPayPeriod As New PayPeriod With {
-            .RowID = 619,
+            .RowID = 620,
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
         }
 
         Dim nextPayPeriod As New PayPeriod With {
-            .RowID = 620,
+            .RowID = 621,
             .PayFromDate = New Date(2019, 10, 16),
             .PayToDate = New Date(2019, 10, 31)
         }
@@ -180,7 +180,7 @@ Public Class Form1
         End If
 
         Dim saveFolderPath = "E:\Downloads"
-        Dim fileName = $"Payslip-{currentPayPeriod.PayToDate.ToString("yyyy-MM-dd")}.pdf"
+        Dim fileName = $"Payslip-{currentPayPeriod.PayToDate.ToString("yyyy-MM-dd")}-11.pdf"
         Dim password = CDate(employee("Birthdate")).ToString("MMddyyyy")
 
         payslipCreator.GeneratePDF(saveFolderPath, fileName).

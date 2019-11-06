@@ -104,6 +104,8 @@ E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.Crys
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.ReportSource.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.Shared.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.Windows.Forms.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\MySql.Data.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.ReportAppServer.DataDefModel.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\CrystalDecisions.ReportAppServer.ClientDoc.dll
@@ -127,9 +129,13 @@ E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Accupay.Data.pdb
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Accupay.DB.pdb
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Accupay.DB.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Accupay.Reference.pdb
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.xml
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\MySql.Data.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Google.Protobuf.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\Renci.SshNet.xml
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.resources.dll
+E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.Charting.resources.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\Accupay.Payslip.vbprojAssemblyReference.cache
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\Accupay.Payslip.Resources.resources
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\Accupay.Payslip.vbproj.GenerateResource.cache
@@ -138,9 +144,3 @@ E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\Accupay.Payslip.vbpro
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.dll
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.xml
 E:\Programs\_accupay_from_origin\Accupay.Payslip\obj\Debug\AccuPayPayslip.pdb
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.dll
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.dll
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.xml
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\PdfSharp.Charting.xml
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.resources.dll
-E:\Programs\_accupay_from_origin\Accupay.Payslip\bin\Debug\de\PdfSharp.Charting.resources.dll

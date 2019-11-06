@@ -1726,8 +1726,15 @@ Public Class PayStubForm
 
         Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
 
-        Dim n_PrintAllPaySlipOfficialFormat As _
-            New PayslipCreator(payPeriod, IsActualFlag)
+        Dim payslipCreator As New PayslipCreator(payPeriod, isActual:=IsActualFlag)
+
+        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+
+        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
+
+        Dim crvwr As New CrysRepForm
+        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+        crvwr.Show()
     End Sub
 
     Private Function GetCurrentPayPeriod() As PayPeriod
@@ -1981,7 +1988,7 @@ Public Class PayStubForm
             Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
 
             Dim crvwr As New CrysRepForm
-            crvwr.crysrepvwr.ReportSource = reportDocument
+            crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
             crvwr.Show()
 
         End If
