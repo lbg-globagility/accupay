@@ -27,11 +27,11 @@ Public Class PayslipCreator
         _isActual = isActual
     End Sub
 
-    Public Function GetReportDocument()
+    Public Function GetReportDocument() As ReportClass
         Return _reportDocument
     End Function
 
-    Public Function GetPDF()
+    Public Function GetPDF() As String
         Return _pdfFile
     End Function
 

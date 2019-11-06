@@ -77,25 +77,7 @@ Public Class Form1
     End Function
 
     Private Sub ViewPayslipFromLibraryButton_Click(sender As Object, e As EventArgs) Handles ViewPayslipFromLibraryButton.Click
-        Dim payslipCreator As New PayslipCreator(619, isActual:=False)
-
-        Dim nextPayPeriod As New PayPeriod With {
-        .RowID = 620,
-        .PayFromDate = New Date(2019, 10, 1),
-        .PayToDate = New Date(2019, 10, 15)
-        }
-
-        Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
-
-        Dim saveFolderPath = "E:\Downloads"
-        Dim fileName = FileNameTextBox.Text
-        Dim password = PasswordTextBox.Text
-
-        Dim reportDocument = payslipCreator.
-                CreateReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds).
-                GeneratePDF(saveFolderPath, fileName).
-                AddPdfPassword(password).
-                GetPDF()
+        Dim pdfFile = GetPDF()
 
         MessageBox.Show("Finished")
     End Sub
@@ -119,5 +101,50 @@ Public Class Form1
         MessageBox.Show("Sent!")
 
     End Sub
+
+    Private Sub EmailPayslipButton_Click(sender As Object, e As EventArgs) Handles EmailPayslipButton.Click
+        Dim pdfFile = GetPDF()
+
+        Dim emailSender As New EmailSender(New EmailConfig())
+
+        Dim sendTo = SendToTextBox.Text
+        Dim subject = SubjectTextBox.Text
+        Dim body = BodyTextBox.Text
+
+        Dim attachments As String() = New String() {pdfFile}
+
+        If Not String.IsNullOrWhiteSpace(AttachmentTextBox.Text) Then
+            attachments = AttachmentTextBox.Text.Split(","c).ToArray()
+        End If
+
+        emailSender.SendEmail(sendTo, subject, body, attachments)
+
+        MessageBox.Show("Sent!")
+
+        MessageBox.Show("Finished")
+
+    End Sub
+
+    Private Function GetPDF() As String
+        Dim payslipCreator As New PayslipCreator(619, isActual:=False)
+
+        Dim nextPayPeriod As New PayPeriod With {
+        .RowID = 620,
+        .PayFromDate = New Date(2019, 10, 1),
+        .PayToDate = New Date(2019, 10, 15)
+        }
+
+        Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
+
+        Dim saveFolderPath = "E:\Downloads"
+        Dim fileName = FileNameTextBox.Text
+        Dim password = PasswordTextBox.Text
+
+        Return payslipCreator.
+                CreateReportDocument("Cinema 2000s", 2, nextPayPeriod, employeeIds).
+                GeneratePDF(saveFolderPath, fileName).
+                AddPdfPassword(password).
+                GetPDF()
+    End Function
 
 End Class

@@ -40,6 +40,7 @@ Partial Class Form1
         Me.Label6 = New System.Windows.Forms.Label()
         Me.AttachmentTextBox = New System.Windows.Forms.TextBox()
         Me.SendEmailButton = New System.Windows.Forms.Button()
+        Me.EmailPayslipButton = New System.Windows.Forms.Button()
         Me.tableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -208,11 +209,21 @@ Partial Class Form1
         Me.SendEmailButton.Text = "Send Email"
         Me.SendEmailButton.UseVisualStyleBackColor = True
         '
+        'EmailPayslipButton
+        '
+        Me.EmailPayslipButton.Location = New System.Drawing.Point(150, 141)
+        Me.EmailPayslipButton.Name = "EmailPayslipButton"
+        Me.EmailPayslipButton.Size = New System.Drawing.Size(158, 23)
+        Me.EmailPayslipButton.TabIndex = 9
+        Me.EmailPayslipButton.Text = "Send Payslip Through Email"
+        Me.EmailPayslipButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.Controls.Add(Me.EmailPayslipButton)
         Me.Controls.Add(Me.tableLayoutPanel1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.PasswordTextBox)
@@ -249,4 +260,5 @@ Partial Class Form1
     Private WithEvents Label6 As Label
     Private WithEvents AttachmentTextBox As TextBox
     Private WithEvents SendEmailButton As Button
+    Friend WithEvents EmailPayslipButton As Button
 End Class
