@@ -1724,10 +1724,24 @@ Public Class PayStubForm
     Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
+        Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
+
         Dim n_PrintAllPaySlipOfficialFormat As _
-            New PayslipCreator(ValNoComma(paypRowID),
-                                              IsActualFlag)
+            New PayslipCreator(payPeriod, IsActualFlag)
     End Sub
+
+    Private Function GetCurrentPayPeriod() As PayPeriod
+        Dim payPeriod As PayPeriod = Nothing
+
+        Using context As New PayrollContext
+
+            payPeriod = context.PayPeriods.
+                FirstOrDefault(Function(p) p.RowID.Value = ValNoComma(paypRowID))
+
+        End Using
+
+        Return payPeriod
+    End Function
 
     Sub ProgressCounter(result As PayrollGeneration.Result)
         If result.Status = PayrollGeneration.ResultStatus.Success Then
@@ -1958,11 +1972,13 @@ Public Class PayStubForm
 
         If _showActual = False Then
 
-            Dim payslipCreator As New PayslipCreator(ValNoComma(paypRowID), isActual:=False)
+            Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
+
+            Dim payslipCreator As New PayslipCreator(payPeriod, isActual:=False)
 
             Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
 
-            Dim reportDocument = payslipCreator.CreateReportDocument(orgNam, orgztnID, nextPayPeriod)
+            Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
 
             Dim crvwr As New CrysRepForm
             crvwr.crysrepvwr.ReportSource = reportDocument

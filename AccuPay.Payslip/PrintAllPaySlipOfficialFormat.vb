@@ -13,7 +13,9 @@ Public Class PayslipCreator
 
     Private sys_ownr As New Reference.BaseSystemOwner
 
-    Private _payPeriodId As Object = Nothing
+    Private _currentPayPeriod As IPayPeriod
+
+    Private _payPeriodId As Integer?
 
     Private _isActual As SByte = 0
 
@@ -21,9 +23,14 @@ Public Class PayslipCreator
 
     Private _pdfFile As String
 
-    Sub New(payPeriodId As Integer, isActual As SByte)
+    Private _payslipDatatable As DataTable
 
-        _payPeriodId = payPeriodId
+    Sub New(payPeriod As IPayPeriod, isActual As SByte)
+
+        _currentPayPeriod = payPeriod
+
+        _payPeriodId = _currentPayPeriod?.RowID
+
         _isActual = isActual
     End Sub
 
@@ -35,17 +42,25 @@ Public Class PayslipCreator
         Return _pdfFile
     End Function
 
+    Public Function GetPayslipDatatable() As DataTable
+        Return _payslipDatatable
+    End Function
+
+    Public Function GetFirstEmployee() As DataRow
+        Return If(_payslipDatatable.Rows.Count > 0, _payslipDatatable(0), Nothing)
+    End Function
+
     Public Function CreateReportDocument(
-                        orgNam As String,
                         orgztnID As Integer,
                         nextPayPeriod As IPayPeriod,
                         Optional employeeIds As Integer() = Nothing) As PayslipCreator
 
         'filter employees, print and email payslip is tested on cinema only
         'test this before deploying
-        Dim catchdt As New DataTable
-
         Dim rptdoc As Object = Nothing
+
+        Dim organizationName = New SQL($"SELECT Name FROM organization WHERE RowID = {orgztnID}").
+                                    GetFoundRow?.ToString
 
         Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
@@ -54,13 +69,13 @@ Public Class PayslipCreator
             Dim n_SQLQueryToDatatable As _
                    New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
 
-            catchdt = n_SQLQueryToDatatable.ResultTable
+            _payslipDatatable = n_SQLQueryToDatatable.ResultTable
 
             'rptdoc = New OfficialPaySlipFormat
 
             With rptdoc.ReportDefinition.Sections(2)
                 Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
-                objText.Text = orgNam.ToUpper
+                objText.Text = organizationName.ToUpper
 
                 objText = .ReportObjects("txtPayPeriod")
 
@@ -79,12 +94,12 @@ Public Class PayslipCreator
             Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, NULL);",
                            params)
 
-            catchdt = _sql.GetFoundRows.Tables(0)
+            _payslipDatatable = _sql.GetFoundRows.Tables(0)
 
             Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-            objText.Text = orgNam.ToUpper
+            objText.Text = organizationName.ToUpper
 
         ElseIf Reference.BaseSystemOwner.Cinema2000 = current_system_owner Then
 
@@ -97,11 +112,11 @@ Public Class PayslipCreator
             Dim _sql As New SQL(str_query,
                             params)
 
-            catchdt = _sql.GetFoundRows.Tables(0)
+            _payslipDatatable = _sql.GetFoundRows.Tables(0)
 
             If employeeIds IsNot Nothing AndAlso employeeIds.Count > 0 Then
 
-                catchdt = catchdt.AsEnumerable().
+                _payslipDatatable = _payslipDatatable.AsEnumerable().
                     Where(Function(r) employeeIds.Contains(r.Field(Of Integer)("EmployeeRowID"))).
                     CopyToDataTable
 
@@ -125,7 +140,7 @@ Public Class PayslipCreator
             objText.Text = String.Empty
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgName")
-            objText.Text = orgNam.ToUpper
+            objText.Text = organizationName.ToUpper
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgAddress")
             objText.Text = Convert.ToString(New SQL(String.Concat("SELECT CONCAT_WS(', ',",
@@ -146,13 +161,13 @@ Public Class PayslipCreator
             Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
 
-            catchdt = n_SQLQueryToDatatable.ResultTable
+            _payslipDatatable = n_SQLQueryToDatatable.ResultTable
 
             Dim rptPayslip As New TwoEmpIn1PaySlip
 
             With rptPayslip.Section2
                 Dim objText As TextObject = .ReportObjects("txtOrganizName")
-                objText.Text = orgNam.ToUpper
+                objText.Text = organizationName.ToUpper
 
                 objText = .ReportObjects("txtPayPeriod")
 
@@ -166,7 +181,7 @@ Public Class PayslipCreator
             rptdoc = rptPayslip
         End If
 
-        rptdoc.SetDataSource(catchdt)
+        rptdoc.SetDataSource(_payslipDatatable)
 
         _reportDocument = rptdoc
 
