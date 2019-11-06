@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports Accupay.Payslip
 Imports CrystalDecisions.Shared
+Imports GlobagilityShared.EmailSender
 Imports PdfSharp.Pdf
 Imports PdfSharp.Pdf.IO
 Imports PdfSharp.Pdf.Security
@@ -97,6 +98,26 @@ Public Class Form1
                 GetPDF()
 
         MessageBox.Show("Finished")
+    End Sub
+
+    Private Sub SendEmailButton_Click(sender As Object, e As EventArgs) Handles SendEmailButton.Click
+
+        Dim emailSender As New EmailSender(New EmailConfig())
+
+        Dim sendTo = SendToTextBox.Text
+        Dim subject = SubjectTextBox.Text
+        Dim body = BodyTextBox.Text
+
+        Dim attachments As String() = Nothing
+
+        If Not String.IsNullOrWhiteSpace(AttachmentTextBox.Text) Then
+            attachments = AttachmentTextBox.Text.Split(","c).ToArray()
+        End If
+
+        emailSender.SendEmail(sendTo, subject, body, attachments)
+
+        MessageBox.Show("Sent!")
+
     End Sub
 
 End Class

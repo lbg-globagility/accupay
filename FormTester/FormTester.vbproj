@@ -52,6 +52,9 @@
     <Reference Include="CrystalDecisions.ReportSource, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Shared, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
     <Reference Include="CrystalDecisions.Windows.Forms, Version=13.0.2000.0, Culture=neutral, PublicKeyToken=692fbea5521e1304, processorArchitecture=MSIL" />
+    <Reference Include="GlobagilityShared.EmailSender">
+      <HintPath>..\..\GlobagilityShared\GlobagilityShared.EmailSender\bin\Release\netstandard2.0\GlobagilityShared.EmailSender.dll</HintPath>
+    </Reference>
     <Reference Include="PdfSharp, Version=1.50.5147.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.dll</HintPath>
     </Reference>
@@ -59,6 +62,7 @@
       <HintPath>..\packages\PDFsharp.1.50.5147\lib\net20\PdfSharp.Charting.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -90,6 +94,7 @@
     <Compile Include="CrystalReportsFormViewer.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EmailConfig.vb" />
     <Compile Include="Form1.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +134,9 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Email.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>
@@ -149,6 +157,10 @@
     <ProjectReference Include="..\Accupay.Payslip\Accupay.Payslip.vbproj">
       <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
       <Name>Accupay.Payslip</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Accupay.Utils\Accupay.Utils.vbproj">
+      <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
+      <Name>Accupay.Utils</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

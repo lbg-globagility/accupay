@@ -30,6 +30,17 @@ Partial Class Form1
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PasswordTextBox = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.tableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.BodyTextBox = New System.Windows.Forms.TextBox()
+        Me.label3 = New System.Windows.Forms.Label()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.SendToTextBox = New System.Windows.Forms.TextBox()
+        Me.SubjectTextBox = New System.Windows.Forms.TextBox()
+        Me.Label6 = New System.Windows.Forms.Label()
+        Me.AttachmentTextBox = New System.Windows.Forms.TextBox()
+        Me.SendEmailButton = New System.Windows.Forms.Button()
+        Me.tableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
         'PrintPayslipButton
@@ -98,11 +109,111 @@ Partial Class Form1
         Me.Label2.TabIndex = 7
         Me.Label2.Text = "password"
         '
+        'tableLayoutPanel1
+        '
+        Me.tableLayoutPanel1.ColumnCount = 2
+        Me.tableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.tableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
+        Me.tableLayoutPanel1.Controls.Add(Me.BodyTextBox, 1, 2)
+        Me.tableLayoutPanel1.Controls.Add(Me.label3, 0, 2)
+        Me.tableLayoutPanel1.Controls.Add(Me.Label4, 0, 0)
+        Me.tableLayoutPanel1.Controls.Add(Me.Label5, 0, 1)
+        Me.tableLayoutPanel1.Controls.Add(Me.SendToTextBox, 1, 0)
+        Me.tableLayoutPanel1.Controls.Add(Me.SubjectTextBox, 1, 1)
+        Me.tableLayoutPanel1.Controls.Add(Me.Label6, 0, 3)
+        Me.tableLayoutPanel1.Controls.Add(Me.AttachmentTextBox, 1, 3)
+        Me.tableLayoutPanel1.Controls.Add(Me.SendEmailButton, 1, 4)
+        Me.tableLayoutPanel1.Location = New System.Drawing.Point(55, 216)
+        Me.tableLayoutPanel1.Name = "tableLayoutPanel1"
+        Me.tableLayoutPanel1.RowCount = 5
+        Me.tableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.tableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.tableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.tableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.tableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.tableLayoutPanel1.Size = New System.Drawing.Size(351, 138)
+        Me.tableLayoutPanel1.TabIndex = 8
+        '
+        'BodyTextBox
+        '
+        Me.BodyTextBox.Location = New System.Drawing.Point(178, 55)
+        Me.BodyTextBox.Name = "BodyTextBox"
+        Me.BodyTextBox.Size = New System.Drawing.Size(170, 20)
+        Me.BodyTextBox.TabIndex = 5
+        '
+        'label3
+        '
+        Me.label3.AutoSize = True
+        Me.label3.Location = New System.Drawing.Point(3, 52)
+        Me.label3.Name = "label3"
+        Me.label3.Size = New System.Drawing.Size(34, 13)
+        Me.label3.TabIndex = 4
+        Me.label3.Text = "Body:"
+        '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(3, 0)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(23, 13)
+        Me.Label4.TabIndex = 0
+        Me.Label4.Text = "To:"
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(3, 26)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(46, 13)
+        Me.Label5.TabIndex = 1
+        Me.Label5.Text = "Subject:"
+        '
+        'SendToTextBox
+        '
+        Me.SendToTextBox.Location = New System.Drawing.Point(178, 3)
+        Me.SendToTextBox.Name = "SendToTextBox"
+        Me.SendToTextBox.Size = New System.Drawing.Size(170, 20)
+        Me.SendToTextBox.TabIndex = 2
+        Me.SendToTextBox.Text = "jsantos.globagility@gmail.com"
+        '
+        'SubjectTextBox
+        '
+        Me.SubjectTextBox.Location = New System.Drawing.Point(178, 29)
+        Me.SubjectTextBox.Name = "SubjectTextBox"
+        Me.SubjectTextBox.Size = New System.Drawing.Size(170, 20)
+        Me.SubjectTextBox.TabIndex = 3
+        '
+        'Label6
+        '
+        Me.Label6.AutoSize = True
+        Me.Label6.Location = New System.Drawing.Point(3, 78)
+        Me.Label6.Name = "Label6"
+        Me.Label6.Size = New System.Drawing.Size(107, 13)
+        Me.Label6.TabIndex = 7
+        Me.Label6.Text = "Attachment (filepath):"
+        '
+        'AttachmentTextBox
+        '
+        Me.AttachmentTextBox.Location = New System.Drawing.Point(178, 81)
+        Me.AttachmentTextBox.Name = "AttachmentTextBox"
+        Me.AttachmentTextBox.Size = New System.Drawing.Size(170, 20)
+        Me.AttachmentTextBox.TabIndex = 8
+        '
+        'SendEmailButton
+        '
+        Me.SendEmailButton.Location = New System.Drawing.Point(178, 107)
+        Me.SendEmailButton.Name = "SendEmailButton"
+        Me.SendEmailButton.Size = New System.Drawing.Size(75, 23)
+        Me.SendEmailButton.TabIndex = 9
+        Me.SendEmailButton.Text = "Send Email"
+        Me.SendEmailButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.Controls.Add(Me.tableLayoutPanel1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.PasswordTextBox)
         Me.Controls.Add(Me.Label1)
@@ -113,6 +224,8 @@ Partial Class Form1
         Me.Controls.Add(Me.PrintPayslipButton)
         Me.Name = "Form1"
         Me.Text = "Form1"
+        Me.tableLayoutPanel1.ResumeLayout(False)
+        Me.tableLayoutPanel1.PerformLayout()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -126,4 +239,14 @@ Partial Class Form1
     Friend WithEvents Label1 As Label
     Friend WithEvents PasswordTextBox As TextBox
     Friend WithEvents Label2 As Label
+    Private WithEvents tableLayoutPanel1 As TableLayoutPanel
+    Private WithEvents BodyTextBox As TextBox
+    Private WithEvents label3 As Label
+    Private WithEvents Label4 As Label
+    Private WithEvents Label5 As Label
+    Private WithEvents SendToTextBox As TextBox
+    Private WithEvents SubjectTextBox As TextBox
+    Private WithEvents Label6 As Label
+    Private WithEvents AttachmentTextBox As TextBox
+    Private WithEvents SendEmailButton As Button
 End Class

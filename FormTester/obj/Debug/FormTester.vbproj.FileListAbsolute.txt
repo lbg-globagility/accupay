@@ -54,3 +54,8 @@ E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.xml
 E:\Programs\_accupay_from_origin\FormTester\bin\Debug\PdfSharp.Charting.xml
 E:\Programs\_accupay_from_origin\FormTester\bin\Debug\de\PdfSharp.resources.dll
 E:\Programs\_accupay_from_origin\FormTester\bin\Debug\de\PdfSharp.Charting.resources.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\Accupay.Utils.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\GlobagilityShared.EmailSender.dll
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\Accupay.Utils.pdb
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\GlobagilityShared.EmailSender.pdb
+E:\Programs\_accupay_from_origin\FormTester\bin\Debug\Email.config
