@@ -1,15 +1,15 @@
 {
   "format": 1,
   "restore": {
-    "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.vbproj": {}
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj": {}
   },
   "projects": {
-    "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.vbproj": {
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.vbproj",
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj",
         "projectName": "Accupay.Data",
-        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.vbproj",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj",
         "packagesPath": "C:\\Users\\GLOBAL-I-PC\\.nuget\\packages\\",
         "outputPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\obj\\",
         "projectStyle": "PackageReference",
@@ -31,7 +31,11 @@
         },
         "frameworks": {
           "netstandard2.0": {
-            "projectReferences": {}
+            "projectReferences": {
+              "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj"
+              }
+            }
           }
         },
         "warningProperties": {
@@ -48,6 +52,10 @@
               "target": "Package",
               "version": "[2.0.3, )",
               "autoReferenced": true
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[2.1.2, )"
             }
           },
           "imports": [
@@ -56,6 +64,17 @@
           "assetTargetFallback": true,
           "warn": true
         }
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj",
+        "projectName": "Accupay.DB",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj"
+      },
+      "frameworks": {
+        "net461": {}
       }
     }
   }

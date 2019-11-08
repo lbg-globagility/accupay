@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports Accupay.Data.Repositories
 Imports Accupay.Payslip
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
@@ -206,6 +207,16 @@ HRD"
         emailSender.SendEmail(sendTo, subject, body, attachments)
 
         MessageBox.Show("Finished")
+
+    End Sub
+
+    Private Sub QueryPaystubButton_Click(sender As Object, e As EventArgs) Handles QueryPaystubButton.Click
+
+        Dim repo As New PaystubEmailRepository()
+
+        Dim paystubEmail = repo.FirstWithPaystubDetails()
+
+        MessageBox.Show(paystubEmail.PaystubId)
 
     End Sub
 

@@ -67,7 +67,7 @@ Public Class DataBaseConnection
 
     End Property
 
-    Function GetStringMySQLConnectionString() As String
+    Function GetStringMySQLConnectionString(Optional updateModuleVariables As Boolean = True) As String
 
         Dim ver = Nothing
 
@@ -100,31 +100,35 @@ Public Class DataBaseConnection
                 regKey.GetValue("password") & ";" &
                 regKey.GetValue("database") & ";"
 
-            sys_servername = regKey.GetValue("server")
+            Dim server As String = regKey.GetValue("server")
+            Dim userId As String = regKey.GetValue("user id")
+            Dim password As String = regKey.GetValue("password")
+            Dim database As String = regKey.GetValue("database")
+            Dim apppath As String = regKey.GetValue("apppath")
 
-            sys_userid = regKey.GetValue("user id")
+            connstringresult = "server=" & server &
+                ";user id=" & userId &
+                ";password=" & password &
+                ";database=" & database & ";"
 
-            sys_password = regKey.GetValue("password")
+            n_NameOfServer = server
+            n_IDOfUser = userId
+            n_PasswordOfDatabase = password
+            n_NameOfDatabase = database
 
-            sys_db = regKey.GetValue("database")
+            'did this so that professional code can access this shit
+            'visual basic modules are fucking trash
+            If updateModuleVariables Then
 
-            sys_apppath = regKey.GetValue("apppath")
+                sys_servername = server
+                sys_userid = userId
+                sys_password = password
+                sys_db = database
+                sys_apppath = apppath
+                installerpath = sys_apppath
+                db_connectinstring = connstringresult
 
-            installerpath = sys_apppath
-
-            n_NameOfServer = sys_servername
-            n_IDOfUser = sys_userid
-            n_PasswordOfDatabase = sys_password
-            n_NameOfDatabase = sys_db
-
-            installerpath = regKey.GetValue("apppath")
-
-            connstringresult = "server=" & sys_servername &
-                ";user id=" & sys_userid &
-                ";password=" & sys_password &
-                ";database=" & sys_db & ";"
-
-            db_connectinstring = connstringresult
+            End If
         Catch ex As Exception
             'MsgBox(getErrExcptn(ex, "DataBaseConnection"))
         Finally

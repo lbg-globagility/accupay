@@ -1,0 +1,275 @@
+{
+  "format": 1,
+  "restore": {
+    "E:\\Programs\\_accupay_from_origin\\AccupayWindowsService\\AccupayWindowsService.csproj": {}
+  },
+  "projects": {
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj",
+        "projectName": "Accupay.Data",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj",
+        "packagesPath": "C:\\Users\\GLOBAL-I-PC\\.nuget\\packages\\",
+        "outputPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\GLOBAL-I-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {
+              "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[2.1.2, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj",
+        "projectName": "Accupay.DB",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj"
+      },
+      "frameworks": {
+        "net461": {}
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Payslip\\Accupay.Payslip.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Payslip\\Accupay.Payslip.vbproj",
+        "projectName": "Accupay.Payslip",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Payslip\\Accupay.Payslip.vbproj",
+        "frameworks": {
+          "net461": {
+            "projectReferences": {
+              "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj"
+              },
+              "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.DB\\Accupay.DB.vbproj"
+              },
+              "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\Accupay.Reference.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\Accupay.Reference.vbproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net461": {}
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\Accupay.Reference.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\Accupay.Reference.vbproj",
+        "projectName": "Accupay.Reference",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\Accupay.Reference.vbproj",
+        "packagesPath": "C:\\Users\\GLOBAL-I-PC\\.nuget\\packages\\",
+        "outputPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Reference\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\GLOBAL-I-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\Accupay.Utils.vbproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\Accupay.Utils.vbproj",
+        "projectName": "Accupay.Utils",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\Accupay.Utils.vbproj",
+        "packagesPath": "C:\\Users\\GLOBAL-I-PC\\.nuget\\packages\\",
+        "outputPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\",
+          "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\GLOBAL-I-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netstandard2.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netstandard2.0": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netstandard2.0": {
+          "dependencies": {
+            "NETStandard.Library": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[2.0.3, )",
+              "autoReferenced": true
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[12.0.2, )"
+            }
+          },
+          "imports": [
+            "net461"
+          ],
+          "assetTargetFallback": true,
+          "warn": true
+        }
+      }
+    },
+    "E:\\Programs\\_accupay_from_origin\\AccupayWindowsService\\AccupayWindowsService.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "E:\\Programs\\_accupay_from_origin\\AccupayWindowsService\\AccupayWindowsService.csproj",
+        "projectName": "AccupayWindowsService",
+        "projectPath": "E:\\Programs\\_accupay_from_origin\\AccupayWindowsService\\AccupayWindowsService.csproj",
+        "packagesPath": "C:\\Users\\GLOBAL-I-PC\\.nuget\\packages\\",
+        "outputPath": "E:\\Programs\\_accupay_from_origin\\AccupayWindowsService\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Microsoft\\Xamarin\\NuGet\\"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\GLOBAL-I-PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net472"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net472": {
+            "projectReferences": {
+              "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Data\\Accupay.Data.csproj"
+              },
+              "E:\\Programs\\_accupay_from_origin\\Accupay.Payslip\\Accupay.Payslip.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Payslip\\Accupay.Payslip.vbproj"
+              },
+              "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\Accupay.Utils.vbproj": {
+                "projectPath": "E:\\Programs\\_accupay_from_origin\\Accupay.Utils\\Accupay.Utils.vbproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net472": {}
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
+      }
+    }
+  }
+}

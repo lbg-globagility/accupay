@@ -42,6 +42,7 @@ Partial Class Form1
         Me.SendEmailButton = New System.Windows.Forms.Button()
         Me.EmailPayslipButton = New System.Windows.Forms.Button()
         Me.OfficialPayslipButton = New System.Windows.Forms.Button()
+        Me.QueryPaystubButton = New System.Windows.Forms.Button()
         Me.tableLayoutPanel1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -228,11 +229,21 @@ Partial Class Form1
         Me.OfficialPayslipButton.Text = "Send Official Payslip"
         Me.OfficialPayslipButton.UseVisualStyleBackColor = True
         '
+        'QueryPaystubButton
+        '
+        Me.QueryPaystubButton.Location = New System.Drawing.Point(61, 394)
+        Me.QueryPaystubButton.Name = "QueryPaystubButton"
+        Me.QueryPaystubButton.Size = New System.Drawing.Size(120, 23)
+        Me.QueryPaystubButton.TabIndex = 10
+        Me.QueryPaystubButton.Text = "Query Paystub Email"
+        Me.QueryPaystubButton.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(485, 450)
+        Me.Controls.Add(Me.QueryPaystubButton)
         Me.Controls.Add(Me.OfficialPayslipButton)
         Me.Controls.Add(Me.EmailPayslipButton)
         Me.Controls.Add(Me.tableLayoutPanel1)
@@ -273,4 +284,5 @@ Partial Class Form1
     Private WithEvents SendEmailButton As Button
     Friend WithEvents EmailPayslipButton As Button
     Friend WithEvents OfficialPayslipButton As Button
+    Private WithEvents QueryPaystubButton As Button
 End Class

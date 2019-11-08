@@ -1,0 +1,12 @@
+CREATE TABLE `paystubemailhistory` (
+	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
+	`PaystubID` INT(10) NOT NULL,
+	`ReferenceNumber` VARCHAR(50) NOT NULL COMMENT 'Used as file name of the PDF',
+	`SentDateTime` DATETIME NOT NULL,
+	`SentBy` INT(10) NOT NULL,
+	`Created` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+	PRIMARY KEY (`RowID`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;

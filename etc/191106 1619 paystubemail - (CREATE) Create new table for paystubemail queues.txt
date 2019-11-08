@@ -1,0 +1,17 @@
+CREATE TABLE `paystubemail` (
+	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
+	`PaystubID` INT(10) NOT NULL,
+	`Status` ENUM('WAITING','PROCESSING','FAILED') NOT NULL DEFAULT 'WAITING',
+	`ProcessingStarted` DATETIME NULL DEFAULT NULL,
+	`Created` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+	`CreatedBy` INT(10) NOT NULL,
+	PRIMARY KEY (`RowID`),
+	UNIQUE INDEX `AK_paystubemail_PaystubID_Status` (`PaystubID`, `Status`),
+	INDEX `FK_paystubemail_user_CreatedBy` (`CreatedBy`),
+	CONSTRAINT `FK_paystubemail_paystub_PaystubId` FOREIGN KEY (`PaystubID`) REFERENCES `paystub` (`RowID`) ON DELETE CASCADE,
+	CONSTRAINT `FK_paystubemail_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`)
+)
+COMMENT='WAITING, PROCESSING, FAILED\r\nReferenceNumber = Filename of the PDF'
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;

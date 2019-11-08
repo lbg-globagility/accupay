@@ -174,8 +174,6 @@ SELECT ps.RowID
 , ps.LeavePay `COL81`
 
 , e.RowID `EmployeeRowID`
-, e.EmailAddress
-, e.Birthdate
 
 FROM paystub ps
 

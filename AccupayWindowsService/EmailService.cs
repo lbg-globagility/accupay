@@ -1,16 +1,19 @@
-﻿using Accupay.Payslip;
+﻿using Accupay.Data.Repositories;
+using Accupay.Payslip;
 using Accupay.Utils;
 using GlobagilityShared.EmailSender;
 using System;
 using System.IO;
 using System.ServiceProcess;
 using System.Timers;
+using System.Linq;
+using System.Data;
 
 namespace AccupayWindowsService
 {
     //  C:\Windows\Microsoft.NET\Framework\v4.0.30319
-    //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
     //  installUtil /u E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+    //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
     public partial class EmailService : ServiceBase
     {
         private Timer _emailTimer;
@@ -48,55 +51,65 @@ namespace AccupayWindowsService
 
         private void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
         {
+            Accupay.Data.Entities.PaystubEmail paystubEmail = null;
+
             try
             {
                 WriteToFile("--OnElapsedTimeEmail--");
 
-                var currentPayPeriod = new PayPeriod
+                var repo = new PaystubEmailRepository();
+
+                paystubEmail = repo.FirstWithPaystubDetails();
+                if (paystubEmail == null)
                 {
-                    RowID = 620,
-                    PayFromDate = new DateTime(2019, 10, 1),
-                    PayToDate = new DateTime(2019, 10, 15)
-                };
-
-                var nextPayPeriod = new PayPeriod
+                    WriteToFile("No queued email.");
+                    return;
+                }
+                else
                 {
-                    RowID = 621,
-                    PayFromDate = new DateTime(2019, 10, 16),
-                    PayToDate = new DateTime(2019, 10, 31)
-                };
+                    paystubEmail.SetStatusToProcessing();
+                }
 
-                var employeeId = 3;
-                var organizationId = 2;
+                var paystubEmailLog = $"[paystubId: {paystubEmail.Paystub?.RowID}]";
+                var errorTitle = $"[Error] {paystubEmailLog}";
 
-                var employeeIds = new int[] { employeeId };
-                var employeeLog = $"[employeeId: {employeeId}]";
-                var errorTitle = $"[Error] {employeeLog}";
+                var currentPayPeriod = paystubEmail.Paystub?.PayPeriod;
+                var nextPayPeriod = currentPayPeriod.NextPayPeriod();
+                var employeeId = paystubEmail.Paystub?.Employee?.RowID;
+                var employee = paystubEmail.Paystub?.Employee;
+                var organizationId = paystubEmail.Paystub?.OrganizationID;
+
+                if (Validate(errorTitle,
+                    currentPayPeriod,
+                    nextPayPeriod,
+                    employeeId,
+                    organizationId) == false)
+                {
+                    paystubEmail.ResetStatus();
+                    return;
+                }
+
+                var employeeIds = new int[] { employeeId.Value };
 
                 var payslipCreator = new PayslipCreator(currentPayPeriod, isActual: 0)
-                                            .CreateReportDocument(organizationId, nextPayPeriod, employeeIds);
+                                            .CreateReportDocument(organizationId.Value, nextPayPeriod, employeeIds);
 
-                var employee = payslipCreator.GetFirstEmployee();
-
-                if (employee == null)
+                if (payslipCreator.GetPayslipDatatable()
+                                    .AsEnumerable()
+                                    .Where(x => x.Field<int>("EmployeeRowID") == employeeId.Value)
+                                    .Any() == false)
                 {
-                    WriteToFile($"{errorTitle} Cannot fetch employee from datatable. [organizationId: {organizationId}, payperiodId: {currentPayPeriod?.RowID}]");
+                    paystubEmail.ResetStatus();
+                    WriteToFile($"{errorTitle} Cannot find employee in the payslip report datatable.");
                     return;
                 }
 
                 string saveFolderPath = GetOrCreateDirectory(PayslipsFolderName);
-                var employeeNumber = employee["COL1"] == null ? "" : employee["COL1"].ToString();
+                var employeeNumber = employee.EmployeeNo ?? "";
                 var fileName = $"Payslip-{currentPayPeriod.PayToDate.ToString("yyyy-MM-dd")}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
-                var birthDate = ObjectUtils.ToNullableDateTime(employee["Birthdate"]);
+                var birthDate = employee.BirthDate;
 
-                if (employee == null)
-                {
-                    string birthDateString = employee["Birthdate"] == null ? "<null>" : employee["Birthdate"].ToString();
-                    WriteToFile($"{errorTitle} Cannot parse. [birthdate: {birthDateString}]");
-                    return;
-                }
-
-                string password = birthDate.Value.ToString("MMddyyyy");
+                string password = birthDate.ToString("MMddyyyy");
 
                 payslipCreator.GeneratePDF(saveFolderPath, fileName)
                                 .AddPdfPassword(password);
@@ -105,16 +118,10 @@ namespace AccupayWindowsService
 
                 var cutoffDate = nextPayPeriod.PayToDate.ToString("MMMM d, yyyy");
 
-                if (employee["EmailAddress"] == null)
+                if (string.IsNullOrWhiteSpace(employee.EmailAddress))
                 {
-                    WriteToFile($"{errorTitle} Email address is null.");
-                    return;
-                }
-
-                var sendTo = employee["EmailAddress"].ToString();
-                if (string.IsNullOrWhiteSpace(sendTo))
-                {
-                    WriteToFile($"{errorTitle} Email address is empty.");
+                    paystubEmail.ResetStatus();
+                    WriteToFile($"{errorTitle} Email address is null or empty.");
                     return;
                 }
 
@@ -130,16 +137,54 @@ namespace AccupayWindowsService
 
                 var attachments = new string[] { pdfFile };
 
-                WriteToFile($"{employeeLog} Sending...");
+                WriteToFile($"{paystubEmailLog} Sending...");
 
-                _emailSender.SendEmail(sendTo, subject, body, attachments);
+                _emailSender.SendEmail(employee.EmailAddress, subject, body, attachments);
 
-                WriteToFile($"{employeeLog} Email Sent! [Email address: {sendTo}]");
+                WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
+
+                paystubEmail.Finish(fileName);
             }
             catch (Exception ex)
             {
+                if (paystubEmail != null)
+                {
+                    paystubEmail.ResetStatus();
+                }
+
                 WriteToFile(ex.Message);
+                WriteToFile(ex.StackTrace);
             }
+        }
+
+        private bool Validate(string errorTitle,
+                            Accupay.Data.Entities.PayPeriod currentPayPeriod,
+                            Accupay.Data.Entities.PayPeriod nextPayPeriod,
+                            int? employeeId,
+                            int? organizationId)
+        {
+            if (currentPayPeriod == null)
+            {
+                WriteToFile($"{errorTitle} currentPayPeriod is null.");
+                return false;
+            }
+            if (nextPayPeriod == null)
+            {
+                WriteToFile($"{errorTitle} nextPayPeriod is null.");
+                return false;
+            }
+            if (employeeId == null)
+            {
+                WriteToFile($"{errorTitle} employeeId is null.");
+                return false;
+            }
+            if (organizationId == null)
+            {
+                WriteToFile($"{errorTitle} organizationId is null.");
+                return false;
+            }
+
+            return true;
         }
 
         private void WriteToFile(string Message)

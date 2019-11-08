@@ -2,6 +2,9 @@
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+    <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{3D3B41E9-D6A0-49CD-A213-FAFFCD12619B}</ProjectGuid>
@@ -150,8 +153,8 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.Data\Accupay.Data.vbproj">
-      <Project>{617d3634-7409-4f28-9571-7cedf9c389ed}</Project>
+    <ProjectReference Include="..\Accupay.Data\Accupay.Data.csproj">
+      <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>Accupay.Data</Name>
     </ProjectReference>
     <ProjectReference Include="..\Accupay.Payslip\Accupay.Payslip.vbproj">

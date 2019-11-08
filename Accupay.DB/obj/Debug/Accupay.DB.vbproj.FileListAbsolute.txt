@@ -23,7 +23,6 @@ E:\Programs\_accupay_from_origin\Accupay.DB\bin\Debug\stdole.dll
 E:\Programs\_accupay_from_origin\Accupay.DB\bin\Debug\Google.Protobuf.xml
 E:\Programs\_accupay_from_origin\Accupay.DB\bin\Debug\MySql.Data.xml
 E:\Programs\_accupay_from_origin\Accupay.DB\bin\Debug\Renci.SshNet.xml
-E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbprojAssemblyReference.cache
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.Resources.resources
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbproj.GenerateResource.cache
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbproj.CoreCompileInputs.cache
@@ -31,3 +30,4 @@ E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbproj.CopyComp
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.dll
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.xml
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.pdb
+E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbprojAssemblyReference.cache
