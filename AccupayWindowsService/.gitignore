@@ -1,3 +1,5 @@
 Email.config
-bin/Debug/Logs
-bin/Debug/Payslips
+/bin
+/obj
+/Output
+*.user
