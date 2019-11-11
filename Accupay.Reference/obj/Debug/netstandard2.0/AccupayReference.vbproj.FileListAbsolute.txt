@@ -1,9 +1,0 @@
-E:\Programs\_accupay_from_origin\AccupayReference\bin\Debug\netstandard2.0\AccupayReference.deps.json
-E:\Programs\_accupay_from_origin\AccupayReference\bin\Debug\netstandard2.0\AccupayReference.dll
-E:\Programs\_accupay_from_origin\AccupayReference\bin\Debug\netstandard2.0\AccupayReference.pdb
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.vbprojAssemblyReference.cache
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.vbproj.CoreCompileInputs.cache
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.AssemblyInfoInputs.cache
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.AssemblyInfo.vb
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.dll
-E:\Programs\_accupay_from_origin\AccupayReference\obj\Debug\netstandard2.0\AccupayReference.pdb
