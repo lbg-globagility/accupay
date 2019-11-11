@@ -1,1 +1,0 @@
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`) VALUES ('0', 'HideActual', 'Policy', 'Yes', NOW(), '1', NOW(), '1', '1');

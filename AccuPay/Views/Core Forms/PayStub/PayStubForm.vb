@@ -150,6 +150,7 @@ Public Class PayStubForm
         dgvAdjustments.AutoGenerateColumns = False
 
         ShowOrHideActual()
+        ShowOrHideEmailPayslip()
 
     End Sub
 
@@ -185,6 +186,20 @@ Public Class PayStubForm
             _showActual = showActual
 
         End Using
+    End Sub
+
+    Private Sub ShowOrHideEmailPayslip()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim emailPayslip = (settings.GetBoolean("Payroll Policy.EmailPayslip", False) = True)
+
+            ManagePayslipsToolStripMenuItem.Visible = emailPayslip
+            PrintPaySlipToolStripMenuItem.Visible = Not emailPayslip
+
+        End Using
+
     End Sub
 
     Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
