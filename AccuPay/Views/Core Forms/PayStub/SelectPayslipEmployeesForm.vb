@@ -50,6 +50,21 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+
+            If showActual = False Then
+
+                PayslipTypePanel.Visible = False
+                PayslipTypeComboBox.Text = Declared
+
+            End If
+
+        End Using
+
     End Sub
 
     Private Async Function GetCurrentPayPeriod() As Task(Of PayPeriod)

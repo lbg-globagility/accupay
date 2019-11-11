@@ -158,7 +158,7 @@ Public Class PayStubForm
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
-            Dim showActual = (settings.GetBoolean("Policy.HideActual", False) = True)
+            Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
 
             PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
             PayrollSummaryActualToolStripMenuItem.Visible = showActual

@@ -37,7 +37,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.RefreshEmailStatusButton = New System.Windows.Forms.Button()
         Me.PreviewButton = New System.Windows.Forms.Button()
-        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.PayslipTypePanel = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PayslipTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.CancelButton = New System.Windows.Forms.Button()
@@ -66,7 +66,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
-        Me.Panel2.SuspendLayout()
+        Me.PayslipTypePanel.SuspendLayout()
         CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -74,7 +74,7 @@ Partial Class SelectPayslipEmployeesForm
         '
         Me.Panel1.Controls.Add(Me.RefreshEmailStatusButton)
         Me.Panel1.Controls.Add(Me.PreviewButton)
-        Me.Panel1.Controls.Add(Me.Panel2)
+        Me.Panel1.Controls.Add(Me.PayslipTypePanel)
         Me.Panel1.Controls.Add(Me.CancelButton)
         Me.Panel1.Controls.Add(Me.SendEmailsButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
@@ -104,16 +104,16 @@ Partial Class SelectPayslipEmployeesForm
         Me.PreviewButton.Text = "&Preview"
         Me.PreviewButton.UseVisualStyleBackColor = True
         '
-        'Panel2
+        'PayslipTypePanel
         '
-        Me.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.Panel2.Controls.Add(Me.Label1)
-        Me.Panel2.Controls.Add(Me.PayslipTypeComboBox)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Left
-        Me.Panel2.Location = New System.Drawing.Point(0, 0)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(456, 50)
-        Me.Panel2.TabIndex = 6
+        Me.PayslipTypePanel.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.PayslipTypePanel.Controls.Add(Me.Label1)
+        Me.PayslipTypePanel.Controls.Add(Me.PayslipTypeComboBox)
+        Me.PayslipTypePanel.Dock = System.Windows.Forms.DockStyle.Left
+        Me.PayslipTypePanel.Location = New System.Drawing.Point(0, 0)
+        Me.PayslipTypePanel.Name = "PayslipTypePanel"
+        Me.PayslipTypePanel.Size = New System.Drawing.Size(456, 50)
+        Me.PayslipTypePanel.TabIndex = 6
         '
         'Label1
         '
@@ -412,8 +412,8 @@ Partial Class SelectPayslipEmployeesForm
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "Select Employees Form"
         Me.Panel1.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel2.PerformLayout()
+        Me.PayslipTypePanel.ResumeLayout(False)
+        Me.PayslipTypePanel.PerformLayout()
         CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
@@ -422,7 +422,7 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents CancelButton As Button
     Friend WithEvents SendEmailsButton As Button
-    Friend WithEvents Panel2 As Panel
+    Friend WithEvents PayslipTypePanel As Panel
     Friend WithEvents Label1 As Label
     Friend WithEvents PayslipTypeComboBox As ComboBox
     Friend WithEvents PreviewButton As Button
