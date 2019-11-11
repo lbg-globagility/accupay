@@ -232,13 +232,13 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.Data\Accupay.Data.csproj">
+    <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
       <Project>{9CAD162B-FA9F-4B09-950C-B2E9D7C766FC}</Project>
-      <Name>Accupay.Data</Name>
+      <Name>AccuPay.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Utils\Accupay.Utils.vbproj">
+    <ProjectReference Include="..\Accupay.Utils\AccuPay.Utils.vbproj">
       <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
-      <Name>Accupay.Utils</Name>
+      <Name>AccuPay.Utils</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay\AccuPay.vbproj">
       <Project>{81373c7b-f3b6-4e8b-a202-869962273ba8}</Project>

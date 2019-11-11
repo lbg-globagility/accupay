@@ -7,7 +7,7 @@
     <ProjectGuid>{2E134199-5C8F-4425-8B40-4566B4EA87DA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <RootNamespace>Accupay.DB</RootNamespace>
-    <AssemblyName>Accupay.DB</AssemblyName>
+    <AssemblyName>AccuPay.DB</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
@@ -20,7 +20,7 @@
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>Accupay.DB.xml</DocumentationFile>
+    <DocumentationFile>AccuPay.DB.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -29,7 +29,7 @@
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>Accupay.DB.xml</DocumentationFile>
+    <DocumentationFile>AccuPay.DB.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

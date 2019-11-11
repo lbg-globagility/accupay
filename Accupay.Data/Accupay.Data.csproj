@@ -9,6 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.DB\Accupay.DB.vbproj" />
+    <ProjectReference Include="..\Accupay.DB\AccuPay.DB.vbproj" />
   </ItemGroup>
 </Project>
