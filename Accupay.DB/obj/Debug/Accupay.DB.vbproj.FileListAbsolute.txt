@@ -30,4 +30,3 @@ E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbproj.CopyComp
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.dll
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.xml
 E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.pdb
-E:\Programs\_accupay_from_origin\Accupay.DB\obj\Debug\Accupay.DB.vbprojAssemblyReference.cache

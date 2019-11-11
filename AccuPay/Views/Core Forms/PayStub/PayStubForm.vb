@@ -1721,22 +1721,6 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
-        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
-
-        Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
-
-        Dim payslipCreator As New PayslipCreator(payPeriod, isActual:=IsActualFlag)
-
-        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
-
-        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
-
-        Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-        crvwr.Show()
-    End Sub
-
     Private Function GetCurrentPayPeriod() As PayPeriod
         Dim payPeriod As PayPeriod = Nothing
 
@@ -1979,19 +1963,29 @@ Public Class PayStubForm
 
         If _showActual = False Then
 
-            Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
-
-            Dim payslipCreator As New PayslipCreator(payPeriod, isActual:=False)
-
-            Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
-
-            Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
-
-            Dim crvwr As New CrysRepForm
-            crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-            crvwr.Show()
+            PrintPayslip(isActual:=0)
 
         End If
+    End Sub
+
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
+        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
+
+        PrintPayslip(IsActualFlag)
+    End Sub
+
+    Private Sub PrintPayslip(isActual As SByte)
+        Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
+
+        Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
+
+        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+
+        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
+
+        Dim crvwr As New CrysRepForm
+        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+        crvwr.Show()
     End Sub
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
@@ -2005,6 +1999,24 @@ Public Class PayStubForm
             psefr.Run()
 
         End If
+
+    End Sub
+
+    Private Sub ManageEmailPayslipsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles ManagePrintPayslipsToolStripMenuItem.Click,
+                ManageEmailPayslipsToolStripMenuItem.Click
+
+        Dim form As SelectPayslipEmployeesForm
+
+        Dim payPeriodId = ValNoComma(paypRowID)
+
+        If sender Is ManageEmailPayslipsToolStripMenuItem Then
+            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=True)
+        Else
+            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=False)
+        End If
+
+        form.ShowDialog()
 
     End Sub
 

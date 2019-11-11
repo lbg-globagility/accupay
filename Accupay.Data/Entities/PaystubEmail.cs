@@ -6,7 +6,7 @@ using System.Linq;
 namespace Accupay.Data.Entities
 {
     [Table("paystubemail")]
-    public class PaystubEmail
+    public class PaystubEmail : IPaystubEmail
     {
         public const string StatusWaiting = "WAITING";
         public const string StatusProcessing = "PROCESSING";

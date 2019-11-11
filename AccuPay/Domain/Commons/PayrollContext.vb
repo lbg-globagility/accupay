@@ -28,6 +28,10 @@ Public Class PayrollContext
 
     Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
 
+    Public Overridable Property PaystubEmailHistories As DbSet(Of PaystubEmailHistory)
+
+    Public Overridable Property PaystubEmails As DbSet(Of PaystubEmail)
+
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property Paystubs As DbSet(Of Paystub)

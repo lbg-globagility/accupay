@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace Accupay.Data.Entities
 {
     [Table("employee")]
-    public class Employee
+    public class Employee : IEmployee
     {
         [Key]
         public int? RowID { get; set; }

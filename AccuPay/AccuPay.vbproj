@@ -375,6 +375,8 @@
     <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
+    <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
+    <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\BreakTimeBracketHelper.vb" />
@@ -466,6 +468,12 @@
       <DependentUpon>ImportLeaveForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\Import\ImportLeaveForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayslipEmployeesForm.Designer.vb">
+      <DependentUpon>SelectPayslipEmployeesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayslipEmployeesForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeAttendanceLogListForm.Designer.vb">
@@ -1837,6 +1845,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\Import\ImportOvertimeForm.resx">
       <DependentUpon>ImportOvertimeForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayslipEmployeesForm.resx">
+      <DependentUpon>SelectPayslipEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\TimeLogsForm2.resx">
       <DependentUpon>TimeLogsForm2.vb</DependentUpon>
