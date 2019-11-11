@@ -10,6 +10,7 @@ namespace Accupay.Data
         int CreatedBy { get; set; }
         int PaystubID { get; set; }
         DateTime? ProcessingStarted { get; set; }
+        string ErrorLogMessage { get; set; }
         string Status { get; set; }
     }
 }

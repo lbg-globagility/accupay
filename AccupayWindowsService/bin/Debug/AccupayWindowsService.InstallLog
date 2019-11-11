@@ -504,3 +504,203 @@ Affected parameters are:
    logtoconsole = 
    logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
    assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Warning: The source AccuPay Email Service is not registered on the local machine.
+Service AccuPay Email Service is being removed from the system...
+An exception occurred during the uninstallation of the System.ServiceProcess.ServiceInstaller installer.
+System.ComponentModel.Win32Exception: The specified service does not exist as an installed service
+An exception occurred while uninstalling. This exception will be ignored and the uninstall will continue. However, the application might not be fully uninstalled after the uninstall is complete.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Uninstalling assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Removing EventLog source AccuPay Email Service.
+Service AccuPay Email Service is being removed from the system...
+Service AccuPay Email Service was successfully removed from the system.
+Installing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+Installing service AccuPay Email Service...
+Service AccuPay Email Service has been successfully installed.
+Creating EventLog source AccuPay Email Service in log Application...
+Committing assembly 'E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe'.
+Affected parameters are:
+   logtoconsole = 
+   logfile = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.InstallLog
+   assemblypath = E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe

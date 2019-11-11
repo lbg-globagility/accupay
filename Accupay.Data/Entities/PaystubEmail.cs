@@ -16,19 +16,20 @@ namespace Accupay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; set; }
 
-        public int PaystubID { get; set; }
-        public string Status { get; set; }
-        public DateTime? ProcessingStarted { get; set; }
-
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int CreatedBy { get; set; }
 
+        public int PaystubID { get; set; }
+        public DateTime? ProcessingStarted { get; set; }
+        public string ErrorLogMessage { get; set; }
+        public string Status { get; set; }
+
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }
 
-        public void ResetStatus()
+        public void SetStatusToFailed(string errorLogMessage)
         {
             using (var context = new PayrollContext())
             {
@@ -37,7 +38,8 @@ namespace Accupay.Data.Entities
 
                 if (paystubEmail != null)
                 {
-                    paystubEmail.Status = StatusWaiting;
+                    paystubEmail.Status = StatusFailed;
+                    paystubEmail.ErrorLogMessage = errorLogMessage;
                     context.SaveChanges();
                 }
             }
@@ -59,7 +61,7 @@ namespace Accupay.Data.Entities
             }
         }
 
-        public void Finish(string fileName)
+        public void Finish(string fileName, string emailAddress)
         {
             using (var context = new PayrollContext())
             {
@@ -73,6 +75,7 @@ namespace Accupay.Data.Entities
                     paystubEmailHistory.ReferenceNumber = fileName;
                     paystubEmailHistory.SentDateTime = DateTime.Now;
                     paystubEmailHistory.SentBy = this.CreatedBy;
+                    paystubEmailHistory.EmailAddress = emailAddress;
 
                     context.PaystubEmailHistories.Add(paystubEmailHistory);
                     context.PaystubEmails.Remove(paystubEmail);

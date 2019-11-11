@@ -6,3 +6,4 @@ E:\Programs\_accupay_from_origin\Accupay.Reference\obj\Debug\netstandard2.0\Accu
 E:\Programs\_accupay_from_origin\Accupay.Reference\obj\Debug\netstandard2.0\Accupay.Reference.AssemblyInfo.vb
 E:\Programs\_accupay_from_origin\Accupay.Reference\obj\Debug\netstandard2.0\Accupay.Reference.dll
 E:\Programs\_accupay_from_origin\Accupay.Reference\obj\Debug\netstandard2.0\Accupay.Reference.pdb
+E:\Programs\_accupay_from_origin\Accupay.Reference\obj\Debug\netstandard2.0\Accupay.Reference.vbprojAssemblyReference.cache

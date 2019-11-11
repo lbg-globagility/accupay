@@ -214,7 +214,7 @@ HRD"
 
         Dim repo As New PaystubEmailRepository()
 
-        Dim paystubEmail = repo.FirstWithPaystubDetails()
+        Dim paystubEmail = repo.FirstOnQueueWithPaystubDetails()
 
         MessageBox.Show(paystubEmail.PaystubId)
 

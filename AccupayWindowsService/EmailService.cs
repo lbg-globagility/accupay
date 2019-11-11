@@ -59,7 +59,7 @@ namespace AccupayWindowsService
 
                 var repo = new PaystubEmailRepository();
 
-                paystubEmail = repo.FirstWithPaystubDetails();
+                paystubEmail = repo.FirstOnQueueWithPaystubDetails();
                 if (paystubEmail == null)
                 {
                     WriteToFile("No queued email.");
@@ -79,13 +79,16 @@ namespace AccupayWindowsService
                 var employee = paystubEmail.Paystub?.Employee;
                 var organizationId = paystubEmail.Paystub?.OrganizationID;
 
-                if (Validate(errorTitle,
-                    currentPayPeriod,
-                    nextPayPeriod,
-                    employeeId,
-                    organizationId) == false)
+                var validationErrorMessage = GetErrorMessage(errorTitle,
+                                                            currentPayPeriod,
+                                                            nextPayPeriod,
+                                                            employeeId,
+                                                            organizationId);
+
+                if (string.IsNullOrWhiteSpace(validationErrorMessage) == false)
                 {
-                    paystubEmail.ResetStatus();
+                    WriteToFile(validationErrorMessage);
+                    paystubEmail.SetStatusToFailed(validationErrorMessage);
                     return;
                 }
 
@@ -99,14 +102,15 @@ namespace AccupayWindowsService
                                     .Where(x => x.Field<int>("EmployeeRowID") == employeeId.Value)
                                     .Any() == false)
                 {
-                    paystubEmail.ResetStatus();
-                    WriteToFile($"{errorTitle} Cannot find employee in the payslip report datatable.");
+                    validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
+                    WriteToFile(validationErrorMessage);
+                    paystubEmail.SetStatusToFailed(validationErrorMessage);
                     return;
                 }
 
                 string saveFolderPath = GetOrCreateDirectory(PayslipsFolderName);
                 var employeeNumber = employee.EmployeeNo ?? "";
-                var fileName = $"Payslip-{currentPayPeriod.PayToDate.ToString("yyyy-MM-dd")}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
+                var fileName = $"Payslip-{nextPayPeriod.PayToDate.ToString("yyyy-MM-dd")}-{employeeNumber}-{DateTimeOffset.UtcNow.ToUnixTimeSeconds()}.pdf";
                 var birthDate = employee.BirthDate;
 
                 string password = birthDate.ToString("MMddyyyy");
@@ -120,8 +124,9 @@ namespace AccupayWindowsService
 
                 if (string.IsNullOrWhiteSpace(employee.EmailAddress))
                 {
-                    paystubEmail.ResetStatus();
-                    WriteToFile($"{errorTitle} Email address is null or empty.");
+                    validationErrorMessage = $"{errorTitle} Email address is null or empty.";
+                    WriteToFile(validationErrorMessage);
+                    paystubEmail.SetStatusToFailed(validationErrorMessage);
                     return;
                 }
 
@@ -143,48 +148,47 @@ namespace AccupayWindowsService
 
                 WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
 
-                paystubEmail.Finish(fileName);
+                paystubEmail.Finish(fileName, employee.EmailAddress);
             }
             catch (Exception ex)
             {
-                if (paystubEmail != null)
-                {
-                    paystubEmail.ResetStatus();
-                }
-
                 WriteToFile(ex.Message);
                 WriteToFile(ex.StackTrace);
+
+                if (paystubEmail != null)
+                {
+                    string validationErrorMessage = $"[System Error] {ex.Message}";
+                    paystubEmail.SetStatusToFailed(validationErrorMessage);
+                }
             }
         }
 
-        private bool Validate(string errorTitle,
+        private string GetErrorMessage(string errorTitle,
                             Accupay.Data.Entities.PayPeriod currentPayPeriod,
                             Accupay.Data.Entities.PayPeriod nextPayPeriod,
                             int? employeeId,
                             int? organizationId)
         {
+            string errorMessage = string.Empty;
+
             if (currentPayPeriod == null)
             {
-                WriteToFile($"{errorTitle} currentPayPeriod is null.");
-                return false;
+                errorMessage = $"{errorTitle} currentPayPeriod is null.";
             }
             if (nextPayPeriod == null)
             {
-                WriteToFile($"{errorTitle} nextPayPeriod is null.");
-                return false;
+                errorMessage = $"{errorTitle} nextPayPeriod is null.";
             }
             if (employeeId == null)
             {
-                WriteToFile($"{errorTitle} employeeId is null.");
-                return false;
+                errorMessage = $"{errorTitle} employeeId is null.";
             }
             if (organizationId == null)
             {
-                WriteToFile($"{errorTitle} organizationId is null.");
-                return false;
+                errorMessage = $"{errorTitle} organizationId is null.";
             }
 
-            return true;
+            return errorMessage;
         }
 
         private void WriteToFile(string Message)

@@ -1,13 +1,14 @@
 CREATE TABLE `paystubemail` (
 	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
-	`PaystubID` INT(10) NOT NULL,
-	`Status` ENUM('WAITING','PROCESSING','FAILED') NOT NULL DEFAULT 'WAITING',
-	`ProcessingStarted` DATETIME NULL DEFAULT NULL,
 	`Created` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
 	`CreatedBy` INT(10) NOT NULL,
+	`PaystubID` INT(10) NOT NULL,
+	`ProcessingStarted` DATETIME NULL DEFAULT NULL,
+	`ErrorLogMessage` VARCHAR(200) NULL DEFAULT NULL,
+	`Status` ENUM('WAITING','PROCESSING','FAILED') NOT NULL DEFAULT 'WAITING',
 	PRIMARY KEY (`RowID`),
-	UNIQUE INDEX `AK_paystubemail_PaystubID_Status` (`PaystubID`, `Status`),
 	INDEX `FK_paystubemail_user_CreatedBy` (`CreatedBy`),
+	INDEX `FK_paystubemail_paystub_PaystubId` (`PaystubID`),
 	CONSTRAINT `FK_paystubemail_paystub_PaystubId` FOREIGN KEY (`PaystubID`) REFERENCES `paystub` (`RowID`) ON DELETE CASCADE,
 	CONSTRAINT `FK_paystubemail_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`)
 )

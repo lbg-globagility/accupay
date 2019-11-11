@@ -12,15 +12,15 @@ Namespace Global.AccuPay.Entity
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer Implements IPaystubEmail.RowID
 
-        Public Property PaystubID As Integer Implements IPaystubEmail.PaystubID
-
-        Public Property Status As String Implements IPaystubEmail.Status
-        Public Property ProcessingStarted As Date? Implements IPaystubEmail.ProcessingStarted
-
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property Created As Date Implements IPaystubEmail.Created
 
         Public Property CreatedBy As Integer Implements IPaystubEmail.CreatedBy
+        Public Property PaystubID As Integer Implements IPaystubEmail.PaystubID
+        Public Property ProcessingStarted As Date? Implements IPaystubEmail.ProcessingStarted
+
+        Public Property ErrorLogMessage As String Implements IPaystubEmail.ErrorLogMessage
+        Public Property Status As String Implements IPaystubEmail.Status
 
         <ForeignKey("PaystubID")>
         Public Property Paystub As Paystub

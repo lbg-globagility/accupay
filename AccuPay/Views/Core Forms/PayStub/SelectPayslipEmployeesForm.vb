@@ -39,9 +39,12 @@ Public Class SelectPayslipEmployeesForm
 
         PayslipTypeComboBox.DataSource = PayslipTypes
 
-        ProceedButton.Visible = _isEmail
-        EmailStatusColumn.Visible = _isEmail
+        SendEmailsButton.Visible = _isEmail
         RefreshEmailStatusButton.Visible = _isEmail
+
+        EmailAddressColumn.Visible = _isEmail
+        EmailStatusColumn.Visible = _isEmail
+        ErrorLogMessageColumn.Visible = _isEmail
 
         _currentPayPeriod = Await GetCurrentPayPeriod()
 
@@ -72,8 +75,11 @@ Public Class SelectPayslipEmployeesForm
             For Each paystub In employees
                 employeeModels.Add(New EmployeeModel With {
                     .EmployeeId = paystub.EmployeeID.Value,
+                    .EmailAddress = If(String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress),
+                                        Nothing,
+                                        paystub.Employee.EmailAddress),
                     .PaystubId = paystub.RowID.Value,
-                    .IsSelected = True,
+                    .IsSelected = If(Not _isEmail, True, (Not String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress))),
                     .EmployeeNumber = paystub.Employee.EmployeeNo,
                     .FirstName = paystub.Employee.FirstName,
                     .MiddleName = paystub.Employee.MiddleName,
@@ -100,6 +106,8 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Function RefreshEmailStatus() As Task
 
+        If Not _isEmail Then Return
+
         If _employeeModels.Count = 0 Then Return
 
         Using context As New PayrollContext
@@ -124,16 +132,21 @@ Public Class SelectPayslipEmployeesForm
                                 FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
                 Dim queue = paystubEmails.
+                                OrderByDescending(Function(h) h.Created).
                                 FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
                 checkBoxCell.Style.BackColor = Color.White
                 checkBoxCell.ReadOnly = False
+
+                employee.EmailStatus = "-"
+                employee.ErrorLogMessage = Nothing
 
                 If history IsNot Nothing Then
 
                     employee.IsSelected = False
                     employee.EmailStatus = AccuPay.Data.Entities.PaystubEmailHistory.StatusSent
                     employee.SentDateTime = history.SentDateTime
+                    employee.EmailAddress = history.EmailAddress
 
                     row.DefaultCellStyle.BackColor = Color.Green
                     row.DefaultCellStyle.ForeColor = Color.White
@@ -162,12 +175,29 @@ Public Class SelectPayslipEmployeesForm
                             row.DefaultCellStyle.BackColor = Color.Red
                             row.DefaultCellStyle.ForeColor = Color.White
 
+                            employee.ErrorLogMessage = queue.ErrorLogMessage
+
+                            If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
+
+                                employee.IsSelected = False
+                                checkBoxCell.Style.BackColor = Color.Black
+                                checkBoxCell.ReadOnly = True
+
+                            End If
+
                     End Select
                 Else
 
                     row.DefaultCellStyle.BackColor = Color.White
                     row.DefaultCellStyle.ForeColor = Color.Black
 
+                    If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
+
+                        employee.IsSelected = False
+                        checkBoxCell.Style.BackColor = Color.Black
+                        checkBoxCell.ReadOnly = True
+
+                    End If
                 End If
 
                 index += 1
@@ -182,12 +212,15 @@ Public Class SelectPayslipEmployeesForm
         Dim selectedEmployeesCount = _employeeModels.Where(Function(e) e.IsSelected).Count
 
         PreviewButton.Enabled = selectedEmployeesCount > 0
-        ProceedButton.Enabled = selectedEmployeesCount > 0
-        RefreshEmailStatusButton.Enabled = selectedEmployeesCount > 0
+        SendEmailsButton.Enabled = selectedEmployeesCount > 0
+
+        SendEmailsButton.Text = $"&Send Emails ({selectedEmployeesCount})"
+
     End Sub
 
     Private Class EmployeeModel
         Public Property EmployeeId As Integer
+        Public Property EmailAddress As String
         Public Property PaystubId As Integer
         Public Property IsSelected As Boolean
         Public Property EmployeeNumber As String
@@ -200,14 +233,11 @@ Public Class SelectPayslipEmployeesForm
         Public Property DivisionName As String
         Public Property EmailStatus As String
         Public Property SentDateTime As Date?
+        Public Property ErrorLogMessage As String
     End Class
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Me.Close()
-    End Sub
-
-    Private Sub EmployeesDataGrid_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles EmployeesDataGrid.CellClick
-        EnableDisableButtons()
     End Sub
 
     Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles PreviewButton.Click
@@ -230,7 +260,7 @@ Public Class SelectPayslipEmployeesForm
         crvwr.Show()
     End Sub
 
-    Private Async Sub ProceedButton_Click(sender As Object, e As EventArgs) Handles ProceedButton.Click
+    Private Async Sub ProceedButton_Click(sender As Object, e As EventArgs) Handles SendEmailsButton.Click
 
         Dim employees = _employeeModels.Where(Function(m) m.IsSelected).ToList
 
@@ -250,12 +280,23 @@ Public Class SelectPayslipEmployeesForm
 
         End Using
 
+        Await RefreshEmailStatus()
+
+        EnableDisableButtons()
+
         MessageBoxHelper.Information($"{employees.Count} email(s) were added to queue. You can click refresh to check the updated status of the emails.")
 
     End Sub
 
     Private Async Sub RefreshEmailStatusButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailStatusButton.Click
         Await RefreshEmailStatus()
+
+        EnableDisableButtons()
+    End Sub
+
+    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeesDataGrid.CellMouseUp
+
+        EnableDisableButtons()
     End Sub
 
 End Class
