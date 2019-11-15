@@ -221,7 +221,7 @@ Public Class TimeEntrySummaryForm
             LoadTimeEntries()
         End If
 
-        If _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing Then
+        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
 
             tsBtnDeleteTimeEntry.Visible = True
             regenerateTimeEntryButton.Visible = True
@@ -925,7 +925,7 @@ Public Class TimeEntrySummaryForm
 
         _selectedPayPeriod = payPeriod
 
-        If _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing Then
+        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
 
             tsBtnDeleteTimeEntry.Visible = True
             regenerateTimeEntryButton.Visible = True
