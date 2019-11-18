@@ -211,7 +211,7 @@ Public Class Cinema2000TardinessReportProvider
         'that employees tardiness record would reset on November 2018
         'so the September 2019 report should not count that October 2018 offense
 
-        Dim firstDayTwoYearsBefore = New Date(firstDayOfTheMonth.Year - 2, firstDayOfTheMonth.Month + 2, 1)
+        Dim firstDayTwoYearsBefore = firstDayOfTheMonth.AddMonths(-22) '-22 because -2years which is -24 months +2months (Nov17-Sep19 span)
 
         Await context.TardinessRecords.LoadAsync()
 
