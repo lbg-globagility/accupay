@@ -11,6 +11,15 @@ using System.Data;
 
 namespace AccupayWindowsService
 {
+    // Steps to install the windows service to client
+    // 1. Build the project
+    // 2. Compressed the files in the AccupayWindowsService\bin\Debug (except for the Payslip and Logs folders)
+    // 3. Paste the zip file to clients server
+    // 4. Open command prompt in server as Administrator and type `cd C:\Windows\Microsoft.NET\Framework\v4.0.30319`
+    // 5. Before installing the service, make sure to stop the service if it is running and uninstall it by typing `installUtil /u {path to .exe}\AccupayWindowsService.exe` ex. installUtil /u C:\AccupayWindowsService\AccupayWindowsService.exe
+    // 6. Then install the service installUtil {path to .exe}\AccupayWindowsService.exe` ex. installUtil C:\AccupayWindowsService\AccupayWindowsService.exe
+    // 7. Make sure the service is started.
+
     //  C:\Windows\Microsoft.NET\Framework\v4.0.30319
     //  installUtil /u E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
     //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
@@ -129,7 +138,7 @@ namespace AccupayWindowsService
 
                 var body = $"Please see attached payslip for {cutoffDate}. " +
                     $"\n\n" +
-                    $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02011988\"" +
+                    $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02021988\"" +
                     $"\n\n" +
                     $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary." +
                     $"\n\n" +
