@@ -21,7 +21,6 @@ namespace AccupayWindowsService
 
         private const string PayslipsFolderName = "Payslips";
         private const string LogsFolderName = "Logs";
-        private readonly string PayslipsFolder;
 
         public EmailService()
         {
@@ -29,10 +28,6 @@ namespace AccupayWindowsService
 
             _emailTimer = new Timer();
             _emailSender = new EmailSender(new EmailConfig());
-
-            PayslipsFolder = Path.Combine(
-                                Directory.GetParent(Environment.CurrentDirectory).Parent.FullName,
-                                PayslipsFolderName);
         }
 
         protected override void OnStart(string[] args)
@@ -133,7 +128,9 @@ namespace AccupayWindowsService
                 var subject = $"Payslip for {cutoffDate}";
 
                 var body = $"Please see attached payslip for {cutoffDate}. " +
-                    $"\n\n\n" +
+                    $"\n\n" +
+                    $"Your payslip is password-protected to ensure the security of your account. The default password is your date of birth with the following format mmddyyyy. For example, if your birthday is February 2, 1988, your password is \"02011988\"" +
+                    $"\n\n" +
                     $"Kindly contact the Human Resources Dept. at 571-2000 local 102 or e-mail at hrd@cinema2000.com.ph for any inquiries or corrections regarding your salary." +
                     $"\n\n" +
                     $"Thank you," +
