@@ -24,15 +24,16 @@ Public Class DateRangePickerDialog
     Private _rowId As Integer
 
     Private _passedPayPeriod As IPayPeriod
+    Private ReadOnly _removePayPeriodValidation As Boolean
 
-    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
         _passedPayPeriod = passedPayPeriod
-
+        _removePayPeriodValidation = removePayPeriodValidation
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -161,7 +162,7 @@ Public Class DateRangePickerDialog
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If Await PayrollTools.
+        If _removePayPeriodValidation = False AndAlso Await PayrollTools.
                     ValidatePayPeriodAction(_currentPayperiod.RowID) = False Then Return
 
         DialogResult = DialogResult.OK
