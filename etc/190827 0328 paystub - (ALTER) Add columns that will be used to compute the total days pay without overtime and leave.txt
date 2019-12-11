@@ -1,4 +1,0 @@
-ALTER TABLE `paystub`
-	ADD COLUMN `SpecialHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `HolidayPay`;
-ALTER TABLE `paystub`
-	ADD COLUMN `RegularHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayPay`;
