@@ -246,6 +246,17 @@ Namespace Global.AccuPay.Repository
         End Function
 
         Private Async Function SaveAsyncFunction(leave As Leave, context As PayrollContext) As Task
+
+            If context.Leaves.
+                Where(Function(l) If(leave.RowID Is Nothing, True, Nullable.Equals(leave.RowID, l.RowID) = False)).
+                Where(Function(l) l.EmployeeID.Value = leave.EmployeeID.Value).
+                Where(Function(l) (leave.StartDate >= l.StartDate AndAlso leave.StartDate <= l.EndDate.Value) OrElse
+                                    (leave.EndDate.Value >= l.StartDate AndAlso leave.EndDate.Value <= l.EndDate.Value)).
+                Any() Then
+
+                Throw New ArgumentException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}")
+            End If
+
             If leave.RowID Is Nothing Then
 
                 context.Leaves.Add(leave)

@@ -24,7 +24,7 @@ Public Class EmployeeLoansForm
 
     Private _currentloanSchedules As New List(Of LoanSchedule)
 
-    Private _unchangedLoanSchedules As New List(Of LoanSchedule)
+    Private _changedLoanSchedules As New List(Of LoanSchedule)
 
     Private _currentLoanTransactions As New List(Of LoanTransaction)
 
@@ -220,7 +220,7 @@ Public Class EmployeeLoansForm
 
         If changedLoanSchedules.Count < 1 Then
 
-            MessageBoxHelper.Warning("No unchanged loans!", messageTitle)
+            MessageBoxHelper.Warning("No changed loans!", messageTitle)
             Return
         End If
 
@@ -332,7 +332,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Me._currentloanSchedules = Me._unchangedLoanSchedules.CloneListJson()
+        Me._currentloanSchedules = Me._changedLoanSchedules.CloneListJson()
 
         LoanScheduleBindingSource.DataSource = Me._currentloanSchedules
 
@@ -531,7 +531,7 @@ Public Class EmployeeLoansForm
 
         Me._currentloanSchedules = loanSchedules.Where(statusFilter).ToList
 
-        Me._unchangedLoanSchedules = Me._currentloanSchedules.CloneListJson()
+        Me._changedLoanSchedules = Me._currentloanSchedules.CloneListJson()
 
         LoanScheduleBindingSource.DataSource = Me._currentloanSchedules
 
@@ -617,7 +617,7 @@ Public Class EmployeeLoansForm
     Private Sub PopulateLoanScheduleForm(loanSchedule As LoanSchedule)
         Me._currentLoanSchedule = loanSchedule
 
-        Dim originalLoanSchedule = Me._unchangedLoanSchedules.
+        Dim originalLoanSchedule = Me._changedLoanSchedules.
             FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentLoanSchedule.RowID))
 
         Dim isUneditable As Boolean = False
@@ -757,7 +757,7 @@ Public Class EmployeeLoansForm
     Private Function CheckIfLoanScheduleIsChanged(newLoanSchedule As LoanSchedule) As Boolean
 
         Dim oldLoanSchedule =
-            Me._unchangedLoanSchedules.
+            Me._changedLoanSchedules.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLoanSchedule.RowID))
 
         If oldLoanSchedule Is Nothing Then Return False
