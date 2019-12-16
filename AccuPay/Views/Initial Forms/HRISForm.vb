@@ -333,8 +333,6 @@ Public Class HRISForm
 
                 If user.UserLevel = UserLevel.Five Then
 
-                    LoansToolStripMenuItem.Visible = False
-                    AllowanceToolStripMenuItem.Visible = False
                     OvertimeToolStripMenuItem.Visible = False
 
                 End If
@@ -406,16 +404,6 @@ Public Class HRISForm
     Private Sub EmployeeExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmployeeExperimentalToolStripMenuItem.Click
         ChangeForm(NewEmployeeForm, "Position")
         previousForm = NewEmployeeForm
-    End Sub
-
-    Private Sub HrisToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoansToolStripMenuItem.Click
-        ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
-        previousForm = EmployeeLoansForm
-    End Sub
-
-    Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
-        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
-        previousForm = EmployeeAllowanceForm
     End Sub
 
 End Class

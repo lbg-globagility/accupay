@@ -448,7 +448,7 @@ Public Class EmployeeLoansForm
 
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 

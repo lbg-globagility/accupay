@@ -98,7 +98,6 @@
     Private Sub PayrollForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         setProperInterfaceBaseOnCurrentSystemOwner()
 
-
         If Not Debugger.IsAttached Then
             PaystubExperimentalToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False
@@ -145,20 +144,26 @@
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
 
-        Dim _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+        Dim showBonusForm As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
-        If _bool Then
-            BonusToolStripMenuItem.Visible = (Not _bool)
-        Else
-
-        End If
+        BonusToolStripMenuItem.Visible = showBonusForm
 
     End Sub
 
     Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
         ChangeForm(PaystubView, "Employee Pay Slip")
         previousForm = PaystubView
+    End Sub
+
+    Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
+        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
+        previousForm = EmployeeAllowanceForm
+    End Sub
+
+    Private Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
+        ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
+        previousForm = EmployeeLoansForm
     End Sub
 
 End Class

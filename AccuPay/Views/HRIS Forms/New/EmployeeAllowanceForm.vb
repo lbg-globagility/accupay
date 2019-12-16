@@ -342,7 +342,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 
