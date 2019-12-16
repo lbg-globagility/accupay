@@ -8,6 +8,7 @@ Public Class FiledLeaveReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Filed Leave" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private orgNameAddressSql As String =
         "SELECT

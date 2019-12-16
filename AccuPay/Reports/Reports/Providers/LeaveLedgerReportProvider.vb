@@ -14,6 +14,7 @@ Public Class LeaveLedgerReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Leave Ledger" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Property IsNewReport As Boolean = True
 
@@ -101,7 +102,6 @@ Public Class LeaveLedgerReportProvider
                                         Where(Function(t) employeeIds.Contains(t.EmployeeID)).
                                         OrderBy(Function(l) l.Date).
                                         ToListAsync
-
 
             For Each employee In employees
 
@@ -192,7 +192,6 @@ Public Class LeaveLedgerReportProvider
             timeEntries = timeEntries.
                             Where(Function(t) t.Date >= resetDate).
                             ToList
-
         Else
             'if it was not reset during the report period, get the last leavetransaction before the report period
             leaveBeginningTransaction = oldLeaveTransactions.LastOrDefault
@@ -200,7 +199,6 @@ Public Class LeaveLedgerReportProvider
         End If
 
         Dim leaveBeginningBalance = If(leaveBeginningTransaction?.Balance, 0)
-
 
         'get total availed leave
         Dim totalAvailedLeave As Decimal = 0

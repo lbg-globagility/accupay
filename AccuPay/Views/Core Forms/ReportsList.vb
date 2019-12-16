@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.DB
 
 Public Class ReportsList
 
@@ -33,6 +32,9 @@ Public Class ReportsList
         'New PayrollLedgerReportProvider(),
 
         For Each provider In providers
+
+            If provider.IsHidden Then Continue For
+
             Dim dataTable = New SqlToDataTable($"
                 SELECT l.DisplayValue
                 FROM listofval l

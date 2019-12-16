@@ -6,6 +6,7 @@ Public Class Employee201ReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employee 201" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private ReadOnly _employeeID As Integer?
 

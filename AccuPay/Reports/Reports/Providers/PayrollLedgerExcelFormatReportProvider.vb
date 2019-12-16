@@ -12,6 +12,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private dateFrom, dateTo As Date
 
     Public Property Name As String = "Payroll Ledger" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",

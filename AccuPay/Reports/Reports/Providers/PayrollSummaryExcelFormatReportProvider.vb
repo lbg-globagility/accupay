@@ -14,6 +14,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private Const adjustmentColumn As String = "(Adj.)"
     Private Const totalAdjustmentColumn As String = "Adj."

@@ -7,6 +7,7 @@ Public Class TaxReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Tax Monthly Report" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
         Dim n_selectMonth As New selectMonth
@@ -17,7 +18,7 @@ Public Class TaxReportProvider
 
         Dim month = CDate(n_selectMonth.MonthFirstDate)
 
-        Dim payPeriods As List(Of payperiod)
+        Dim payPeriods As List(Of PayPeriod)
         Using context = New PayrollContext()
             payPeriods = context.PayPeriods.
                 Where(Function(p) p.Month = month.Month).

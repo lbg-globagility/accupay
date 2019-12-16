@@ -7,6 +7,7 @@ Public Class LoanSummaryByEmployeeReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Loan Summary by Employee" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
 

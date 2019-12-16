@@ -7,6 +7,7 @@ Public Class ThirteenthMonthPayReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Thirteenth Month Pay (Detailed)" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
 

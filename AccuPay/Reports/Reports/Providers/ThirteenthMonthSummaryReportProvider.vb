@@ -4,6 +4,7 @@ Public Class ThirteenthMonthSummaryReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Thirteenth Month Pay (Summary)" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
         Dim payperiodSelector As New PayrollSummaDateSelection()

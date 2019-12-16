@@ -6,6 +6,7 @@ Public Class PhilHealthReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "PhilHealth Monthly Report" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private Sub Run() Implements IReportProvider.Run
         Dim n_selectMonth As New selectMonth

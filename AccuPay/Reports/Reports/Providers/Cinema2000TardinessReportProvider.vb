@@ -7,6 +7,7 @@ Public Class Cinema2000TardinessReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Tardiness Report" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Async Sub Run() Implements IReportProvider.Run
 
