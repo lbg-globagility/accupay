@@ -61,6 +61,7 @@ Partial Class GeneralForm
         Me.ListOfValueToolStripMenuItem.Name = "ListOfValueToolStripMenuItem"
         Me.ListOfValueToolStripMenuItem.Size = New System.Drawing.Size(82, 20)
         Me.ListOfValueToolStripMenuItem.Text = "List of value"
+        Me.ListOfValueToolStripMenuItem.Visible = False
         '
         'OrganizationToolStripMenuItem
         '
@@ -84,19 +85,20 @@ Partial Class GeneralForm
         'PhilHealthTableToolStripMenuItem
         '
         Me.PhilHealthTableToolStripMenuItem.Name = "PhilHealthTableToolStripMenuItem"
-        Me.PhilHealthTableToolStripMenuItem.Size = New System.Drawing.Size(158, 22)
+        Me.PhilHealthTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PhilHealthTableToolStripMenuItem.Text = "PhilHealth table"
+        Me.PhilHealthTableToolStripMenuItem.Visible = False
         '
         'SSSTableToolStripMenuItem
         '
         Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
-        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(158, 22)
+        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.SSSTableToolStripMenuItem.Text = "SSS table"
         '
         'WithholdingTaxToolStripMenuItem
         '
         Me.WithholdingTaxToolStripMenuItem.Name = "WithholdingTaxToolStripMenuItem"
-        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(158, 22)
+        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.WithholdingTaxToolStripMenuItem.Text = "Withholding tax"
         '
         'DutyShiftingToolStripMenuItem
