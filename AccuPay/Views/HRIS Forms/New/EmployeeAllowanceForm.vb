@@ -24,7 +24,7 @@ Public Class EmployeeAllowanceForm
 
     Private _currentAllowances As New List(Of Allowance)
 
-    Private _unchangedAllowances As New List(Of Allowance)
+    Private _changedAllowances As New List(Of Allowance)
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -139,7 +139,7 @@ Public Class EmployeeAllowanceForm
 
         If changedAllowances.Count < 1 Then
 
-            MessageBoxHelper.Warning("No unchanged allowances!", messageTitle)
+            MessageBoxHelper.Warning("No changed allowances!", messageTitle)
             Return
         End If
 
@@ -245,7 +245,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Me._currentAllowances = Me._unchangedAllowances.CloneListJson()
+        Me._currentAllowances = Me._changedAllowances.CloneListJson()
 
         AllowancesBindingSource.DataSource = Me._currentAllowances
 
@@ -342,7 +342,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 
@@ -392,7 +392,7 @@ Public Class EmployeeAllowanceForm
                                 OrderByDescending(Function(a) a.EffectiveStartDate).
                                 ToList)
 
-        Me._unchangedAllowances = Me._currentAllowances.CloneListJson()
+        Me._changedAllowances = Me._currentAllowances.CloneListJson()
 
         AllowancesBindingSource.DataSource = Me._currentAllowances
 
@@ -427,7 +427,7 @@ Public Class EmployeeAllowanceForm
     Private Sub PopulateAllowanceForm(allowance As Allowance)
         Me._currentAllowance = allowance
 
-        Dim originalAllowance = Me._unchangedAllowances.
+        Dim originalAllowance = Me._changedAllowances.
             FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentAllowance.RowID))
 
         txtallowamt.DataBindings.Clear()
@@ -485,7 +485,7 @@ Public Class EmployeeAllowanceForm
         If _currentAllowance Is Nothing Then Return False
 
         Dim oldAllowance =
-            Me._unchangedAllowances.
+            Me._changedAllowances.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
 
         If oldAllowance Is Nothing Then Return False

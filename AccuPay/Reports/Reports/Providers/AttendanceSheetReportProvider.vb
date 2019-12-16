@@ -6,6 +6,7 @@ Public Class AttendanceSheetReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Attendance Sheet" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
         Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection

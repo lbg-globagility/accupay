@@ -1,4 +1,4 @@
-﻿Public Class PayRateForm
+Public Class PayRateForm
     Dim view_ID As Integer = Nothing
 
     Dim _now

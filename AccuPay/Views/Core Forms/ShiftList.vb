@@ -1,4 +1,5 @@
 ﻿Imports System.Threading
+Imports AccuPay.DB
 
 Public Class ShiftList
 
@@ -61,7 +62,6 @@ Public Class ShiftList
 
         If keyData = Keys.Escape Then
 
-
             Me.Close()
 
             Return True
@@ -74,7 +74,6 @@ Public Class ShiftList
                 Dim dgv_currRow = dgvcalendar.CurrentRow
 
                 dgvcalendar_CellDoubleClick(dgvcalendar, New DataGridViewCellEventArgs(shTimeFrom.Index, dgv_currRow.Index))
-
             Catch ex As Exception
 
                 MsgBox(getErrExcptn(ex, Me.Name))
@@ -82,7 +81,6 @@ Public Class ShiftList
             End Try
 
             Return False
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -152,7 +150,7 @@ Public Class ShiftList
                 dtshift = n_SQLQueryToDatatable.ResultTable
 
                 For Each drow As DataRow In dtshift.Rows
-                    
+
                     If IsDBNull(drow("TimeFrom")) = False Then
                         n_TimFromValue = drow("TimeFrom")
                     End If
@@ -166,7 +164,6 @@ Public Class ShiftList
                 Me.DialogResult = Windows.Forms.DialogResult.OK
 
             End With
-
         Else
 
             Me.DialogResult = Windows.Forms.DialogResult.Cancel

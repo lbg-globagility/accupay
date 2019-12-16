@@ -1,4 +1,5 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.DB
+Imports Femiani.Forms.UI.Input
 
 Class AreaForm
 
@@ -176,7 +177,6 @@ Class AreaForm
                     End If
 
                 End With
-
             Else
                 Continue For
             End If
@@ -203,7 +203,6 @@ Class AreaForm
                                                     DBNull.Value)
 
                             .Cells("arRowID").Value = n_ReadSQLFunction.ReturnValue
-
                         Else
 
                             If ValNoComma(.Cells("ChangeIndicator").Value) > 0 Then
@@ -222,7 +221,6 @@ Class AreaForm
                         End If
 
                     End With
-
                 Else
 
                     Continue For
@@ -230,7 +228,6 @@ Class AreaForm
                 End If
 
             Next
-
         Else
 
         End If
@@ -309,11 +306,9 @@ Class AreaForm
         If data_priorvalue = dgvarea.Item(e.ColumnIndex, e.RowIndex).Value Then
 
             dgvarea.Item("ChangeIndicator", e.RowIndex).Value = 1
-
         Else
 
         End If
-
 
     End Sub
 
@@ -377,7 +372,6 @@ Class AreaForm
             And btnRefresh.Enabled Then
 
             btnRefresh_Click(btnRefresh, New EventArgs)
-
         Else
 
             txtSearchBox.Tag = Nothing
@@ -425,7 +419,6 @@ Class AreaForm
                         curr_rowindx = currrow_indx
 
                         dgvarea.Tag = .Cells("arRowID").Value
-
                     Else
 
                     End If
@@ -433,7 +426,6 @@ Class AreaForm
                 End With
 
             End If
-
         Else
             dgvarea.Tag = Nothing
         End If
@@ -473,7 +465,6 @@ Class AreaForm
             AddHandler dgvarea.SelectionChanged, AddressOf dgvarea_CurrentCellChanged
 
             dgvarea_CurrentCellChanged(dgvarea, New EventArgs)
-
         Else
 
             'RemoveHandler dgvarea.CurrentCellChanged, AddressOf dgvarea_CurrentCellChanged
@@ -528,7 +519,6 @@ Class AreaForm
         If e.Error IsNot Nothing Then
 
         ElseIf e.Cancelled Then
-
         Else
 
             txtSearchBox.Enabled = True
@@ -568,7 +558,6 @@ Class AreaForm
             End If
 
             'ContextMenuStrip1.Show(MousePosition, ToolStripDropDownDirection.Default)
-
         Else
 
         End If
@@ -606,10 +595,10 @@ Class AreaForm
 
                 Dim div_and_pos_name As New DataTable
 
-                Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT ps.PositionName AS psName" & _
-                                               ",dv.Name AS dvName" & _
-                                               " FROM position ps" & _
-                                               " LEFT JOIN `division` dv ON dv.RowID='" & .EmpDivisionIDValue & "'" & _
+                Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT ps.PositionName AS psName" &
+                                               ",dv.Name AS dvName" &
+                                               " FROM position ps" &
+                                               " LEFT JOIN `division` dv ON dv.RowID='" & .EmpDivisionIDValue & "'" &
                                                " WHERE ps.RowID='" & .EmpPositionIDValue & "';")
 
                 div_and_pos_name = n_SQLQueryToDatatable.ResultTable

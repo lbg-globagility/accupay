@@ -3,6 +3,7 @@
 Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
+Imports AccuPay.DB
 
 Namespace TimeEntrySummary
 
@@ -145,6 +146,7 @@ Namespace TimeEntrySummary
                 Return Date.Parse(time.ToString())
             End If
         End Function
+
         Private Async Function GetPayPeriods(organizationID As Integer,
                                              year As Integer,
                                              salaryType As Integer) As Task(Of Collection(Of PayPeriod))

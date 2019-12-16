@@ -2,6 +2,7 @@
 
 Imports AccuPay
 Imports AccuPay.Entity
+Imports AccuPay.Utils
 
 Public Class AgencyFeeCalculator
 

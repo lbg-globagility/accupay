@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
@@ -56,6 +56,9 @@ Namespace Global.AccuPay.Entity
 
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
+
+        <ForeignKey("ReferenceID")>
+        Public Overridable Property Leave As Leave
 
         Public ReadOnly Property IsCredit As Boolean
             Get

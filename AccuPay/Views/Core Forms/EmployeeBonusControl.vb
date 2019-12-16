@@ -1,4 +1,5 @@
-﻿
+﻿Imports AccuPay.DB
+
 Public Class EmployeeBonusControl
 
     Dim n_EmployeeRowID As Object = Nothing
@@ -131,7 +132,6 @@ Public Class EmployeeBonusControl
                 Exit For
             Next
             Me.DialogResult = DialogResult.OK
-
         Else
             Me.DialogResult = DialogResult.Cancel
 
@@ -265,7 +265,6 @@ Public Class EmployeeBonusControl
 
         ElseIf TypeOf (dgvempbon.Item(e.ColumnIndex, e.RowIndex)) Is DataGridViewCheckBoxCell Then
             SelectionValueBeforeEdit = CBool(dgvempbon.Item(e.ColumnIndex, e.RowIndex).Value)
-
         Else
 
         End If
@@ -278,7 +277,6 @@ Public Class EmployeeBonusControl
 
             If bon_Type.Index = e.ColumnIndex Then
                 dgvempbon.Item("bon_prodid", e.RowIndex).Value = DirectCast(dgvempbon.Item("bon_type", e.RowIndex), DataGridViewComboBoxCell).Value
-
             Else
 
             End If
@@ -292,7 +290,6 @@ Public Class EmployeeBonusControl
             'Next
 
             SupplyBonusComments(e.RowIndex)
-
         Else
 
         End If
@@ -316,10 +313,8 @@ Public Class EmployeeBonusControl
         Try
             has_valid_dgvrow = (dgvempbon.CurrentRow IsNot Nothing)
             dgvcurrrow = dgvempbon.CurrentRow
-
         Catch ex As Exception
             has_valid_dgvrow = False
-
         Finally
 
             If has_valid_dgvrow Then
@@ -328,7 +323,6 @@ Public Class EmployeeBonusControl
 
                     cboBonusPotentPayment.SelectedIndex =
                         Convert.ToInt16(dgvcurrrow.Cells("bonpotent").Value)
-
                 Else
 
                     cboBonusPotentPayment.SelectedIndex = -1
@@ -396,7 +390,6 @@ Public Class EmployeeBonusControl
                                 MessageBoxIcon.Information)
 
                 cboBonusPotentPayment.Focus()
-
             Else
 
                 Me.Close()
@@ -466,9 +459,7 @@ Public Class EmployeeBonusControl
             If has_valid_dgvrow Then
                 row_index = dgvempbon.CurrentRow.Index
             End If
-
         Catch ex As Exception
-
         Finally
 
             SupplyBonusComments(row_index)

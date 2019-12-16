@@ -1,14 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utils
-Imports Globagility.AccuPay
-Imports Globagility.AccuPay.ShiftSchedules
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -16,8 +12,8 @@ Public Class ShiftScheduleForm
 
 #Region "VariableDeclarations"
 
-    Private Const ENABLED_TEXT As String = "Enable"
-    Private Const DISABLED_TEXT As String = "Disable"
+    Private Const ENABLED_TEXT As String = "Enabled"
+    Private Const DISABLED_TEXT As String = "Disabled"
 
     Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
 

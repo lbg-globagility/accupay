@@ -14,7 +14,7 @@ Public Class PayrollContext
     Private ReadOnly _loggerFactory As ILoggerFactory
 
     Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
-        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
+       New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
     Public Overridable Property Agencies As DbSet(Of Agency)
 
@@ -33,6 +33,10 @@ Public Class PayrollContext
     Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
 
     Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
+
+    Public Overridable Property PaystubEmailHistories As DbSet(Of PaystubEmailHistory)
+
+    Public Overridable Property PaystubEmails As DbSet(Of PaystubEmail)
 
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 

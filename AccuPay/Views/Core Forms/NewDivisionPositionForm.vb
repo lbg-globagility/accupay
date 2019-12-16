@@ -87,7 +87,6 @@ Public Class NewDivisionPositionForm
             Dim selectedDivision = _divisions.
                     FirstOrDefault(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id))
 
-
             If selectedDivision Is Nothing Then Return
 
             ShowDivisionForm(selectedDivision)
@@ -96,7 +95,6 @@ Public Class NewDivisionPositionForm
 
             Dim selectedPosition = _positions.
                     FirstOrDefault(Function(d) Nullable.Equals(d.RowID, selectedNodeData.Id))
-
 
             If selectedPosition Is Nothing Then Return
 
@@ -189,16 +187,16 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Dim unchangedPosition = _positions.
+        Dim changedPosition = _positions.
         FirstOrDefault(Function(p) Nullable.Equals(p.RowID, Me._currentPosition.RowID))
 
-        If unchangedPosition Is Nothing Then
+        If changedPosition Is Nothing Then
             MessageBoxHelper.Warning("No position selected!")
 
             Return
         End If
 
-        SetPosition(unchangedPosition)
+        SetPosition(changedPosition)
 
     End Sub
 
@@ -236,16 +234,16 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Dim unchangedDivision = _divisions.
+        Dim changedDivision = _divisions.
         FirstOrDefault(Function(p) Nullable.Equals(p.RowID, Me._currentDivision.RowID))
 
-        If unchangedDivision Is Nothing Then
+        If changedDivision Is Nothing Then
             MessageBoxHelper.Warning("No division selected!")
 
             Return
         End If
 
-        SetDivision(unchangedDivision)
+        SetDivision(changedDivision)
     End Sub
 
     Private Async Sub AddDivisionLocationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AddDivisionLocationToolStripMenuItem.Click
@@ -327,6 +325,7 @@ Public Class NewDivisionPositionForm
     End Sub
 
 #Region "Private Methods"
+
     Private Sub HideFormsTabControlHeader()
         FormsTabControl.Appearance = TabAppearance.FlatButtons
         FormsTabControl.ItemSize = New Size(0, 1)
@@ -430,11 +429,9 @@ Public Class NewDivisionPositionForm
 
             If parentDivisionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
 
-
                 For j = parentDivisionNode.Nodes.Count - 1 To 0 Step -1
 
                     Dim divisionNode = parentDivisionNode.Nodes(j)
-
 
                     If divisionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
 
@@ -445,7 +442,6 @@ Public Class NewDivisionPositionForm
                             If positionNode.Text.ToUpper.Contains(SearchToolStripTextBox.Text.ToUpper) = False Then
 
                                 positionNode.Remove()
-
                             Else
 
                                 Continue For
@@ -456,7 +452,6 @@ Public Class NewDivisionPositionForm
                         If divisionNode.Nodes.Count = 0 Then
                             divisionNode.Remove()
                         End If
-
                     Else
 
                         Continue For
@@ -470,19 +465,15 @@ Public Class NewDivisionPositionForm
                     If nodes.Count = 1 Then
 
                         nodes.Clear()
-
                     Else
                         parentDivisionNode.Remove()
                     End If
 
-
                 End If
-
             Else
 
                 Continue For
             End If
-
 
         Next
 
@@ -493,7 +484,6 @@ Public Class NewDivisionPositionForm
         Return nodes
 
     End Function
-
 
     Private Function CreateNode(
                         RowId As Integer?,
@@ -645,7 +635,6 @@ Public Class NewDivisionPositionForm
         End If
 
         Return Nothing
-
 
     End Function
 
@@ -862,7 +851,6 @@ Public Class NewDivisionPositionForm
             End If
         End If
 
-
         HRISForm.listHRISForm.Remove(Me.Name)
     End Sub
 
@@ -871,4 +859,5 @@ Public Class NewDivisionPositionForm
         LoadTreeView()
 
     End Sub
+
 End Class

@@ -94,13 +94,10 @@ Public Class DataBaseConnection
 
             End If
 
-
-            ver = regKey.GetValue("server") & ";" & _
-                regKey.GetValue("user id") & ";" & _
-                regKey.GetValue("password") & ";" & _
+            ver = regKey.GetValue("server") & ";" &
+                regKey.GetValue("user id") & ";" &
+                regKey.GetValue("password") & ";" &
                 regKey.GetValue("database") & ";"
-
-
 
             sys_servername = regKey.GetValue("server")
 
@@ -119,19 +116,16 @@ Public Class DataBaseConnection
             n_PasswordOfDatabase = sys_password
             n_NameOfDatabase = sys_db
 
-
             installerpath = regKey.GetValue("apppath")
 
-            connstringresult = "server=" & sys_servername & _
-                ";user id=" & sys_userid & _
-                ";password=" & sys_password & _
+            connstringresult = "server=" & sys_servername &
+                ";user id=" & sys_userid &
+                ";password=" & sys_password &
                 ";database=" & sys_db & ";"
 
             db_connectinstring = connstringresult
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, "DataBaseConnection"))
-
         Finally
             regKey.Close()
 

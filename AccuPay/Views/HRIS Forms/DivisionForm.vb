@@ -1,5 +1,6 @@
 ﻿Imports Microsoft.Win32
 Imports AccuPay.Entity
+Imports AccuPay.DB
 
 Public Class DivisionForm
 
@@ -20,7 +21,6 @@ Public Class DivisionForm
     Dim dontUpdate As SByte = 0
 
     Dim view_ID As Integer = Nothing
-
 
     Dim divisiontable As New DataTable
 
@@ -182,7 +182,6 @@ Public Class DivisionForm
         Next
     End Sub
 
-
     'Private Sub AddNode(parentNode As String, nodeText As String)
     '    Dim node As New List(Of TreeNode)
     '    node.AddRange(TreeView1.Nodes.Find(parentNode, True))
@@ -208,11 +207,9 @@ Public Class DivisionForm
     '            Dim dv2 As New DataTable
     '            dv2 = getDataTableForSQL("Select * from division Where ParentDivisionID = '" & Val(dvID2) & "' And OrganizationID = '" & z_OrganizationID & "' And DivisionType = 'Sub branch'")
 
-
     '            For Each drow2 As DataRow In dv2.Rows
     '                AddNode(drow("Name").ToString, drow2("Name").ToString)
     '            Next
-
 
     '        Next
 
@@ -253,11 +250,9 @@ Public Class DivisionForm
         txttinno.Clear()
         txturl.Clear()
 
-
         txtgraceperiod.Clear()
 
         txtmindayperyear.Clear()
-
 
         cbophhdeductsched.Text = String.Empty
 
@@ -266,7 +261,6 @@ Public Class DivisionForm
         cbosssdeductsched.Text = String.Empty
 
         cboTaxDeductSched.Text = String.Empty
-
 
         txtvlallow.Clear()
 
@@ -284,8 +278,6 @@ Public Class DivisionForm
         Me.Close()
 
     End Sub
-
-
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         cleartext()
@@ -308,8 +300,6 @@ Public Class DivisionForm
 
     End Sub
 
-
-
     Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
 
         If cbopayfrequency.SelectedValue = Nothing Then
@@ -329,7 +319,6 @@ Public Class DivisionForm
                 Dim dv As String = getStringItem("Select RowID from division Where Name = '" & cmbDivision.Text & "' And OrganizationID = '" & z_OrganizationID & "' AND ParentDivisionID IS NULL LIMIT 1;")
                 parentDivisionId = Val(dv)
             End If
-
 
             Dim isSaved As Boolean = SP_Division(Trim(txtname.Text), Trim(txtmainphone.Text), Trim(txtfaxno.Text), Trim(txtemailaddr.Text), Trim(txtaltemailaddr.Text),
                                     Trim(txtaltphone.Text), Trim(txturl.Text), z_datetime, z_User, z_datetime, z_User, Trim(txttinno.Text),
@@ -454,7 +443,6 @@ Public Class DivisionForm
         If bgworkDelDeptShift.IsBusy Then
 
             e.Cancel = True
-
         Else
 
             If previousForm IsNot Nothing Then
@@ -463,13 +451,11 @@ Public Class DivisionForm
                 End If
             End If
 
-
             HRISForm.listHRISForm.Remove(Me.Name)
 
         End If
 
     End Sub
-
 
     Private Sub DivisionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -500,7 +486,6 @@ Public Class DivisionForm
             btnNew.Visible = 0
             btnSave.Visible = 0
             btnDelete.Visible = 0
-
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
@@ -560,6 +545,7 @@ Public Class DivisionForm
         Next
 
     End Sub
+
     Private Sub dgvDivisionList_CellClick(sender As Object, e As DataGridViewCellEventArgs)
 
         'fillSelectedDivision()
@@ -608,30 +594,25 @@ Public Class DivisionForm
                         e.Handled = True
 
                         onedot = 2
-
                     Else
                         e.Handled = False
 
                         onedot = 0
 
                     End If
-
                 Else
                     If txtgraceperiod.Text.Contains(".") Then
                         e.Handled = True
-
                     Else
                         e.Handled = False
 
                     End If
 
                 End If
-
             Else
                 e.Handled = False
 
             End If
-
         Else
             e.Handled = True
 
@@ -681,7 +662,6 @@ Public Class DivisionForm
             If modcent = 0 Then
 
                 pagination -= 20
-
             Else
 
                 pagination -= modcent
@@ -700,7 +680,6 @@ Public Class DivisionForm
 
             If modcent = 0 Then
                 pagination += 20
-
             Else
                 pagination -= modcent
 
@@ -709,8 +688,6 @@ Public Class DivisionForm
             End If
         ElseIf sendrname = "Last" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 20 FROM employee WHERE OrganizationID=" & orgztnID & ";"))
-
-
 
             Dim remender = lastpage Mod 1
 
@@ -768,17 +745,14 @@ Public Class DivisionForm
             txtDivLocName.Text = ""
 
             currentDivisionRowID = Nothing
-
         Else
 
             If TypeOf currentNode.Tag Is DataRow Then
-
 
                 Dim user_doing_works_in_shift As Boolean = False
 
                 If CustomColoredTabControl1.SelectedIndex = 2 Then
                     user_doing_works_in_shift = True
-
                 Else
 
                     CustomColoredTabControl1.SelectedIndex = 0
@@ -826,7 +800,6 @@ Public Class DivisionForm
 
                 cboTaxDeductSched.Text = n_drow("WTaxDeductSched").ToString
 
-
                 txtvlallow.Text = n_drow("DefaultVacationLeave").ToString
 
                 txtslallow.Text = n_drow("DefaultSickLeave").ToString
@@ -838,7 +811,6 @@ Public Class DivisionForm
                 txtotherallow.Text = n_drow("DefaultOtherLeave").ToString
 
                 cbopayfrequency.Text = n_drow("PayFrequencyType").ToString
-
 
                 cbophhdeductsched2.Text = n_drow("PhHealthDeductSchedAgency").ToString
 
@@ -853,7 +825,6 @@ Public Class DivisionForm
                 If IsDBNull(n_drow("AutomaticOvertimeFiling")) Then
 
                     chkbxautomaticOT.Checked = False
-
                 Else
 
                     chkbxautomaticOT.Checked = Convert.ToInt16(n_drow("AutomaticOvertimeFiling"))
@@ -898,7 +869,6 @@ Public Class DivisionForm
         Catch ex As Exception
             currentNode = Nothing
             MsgBox(getErrExcptn(ex, Me.Name))
-
         Finally
             RemoveHandler CustomColoredTabControl1.Selecting, AddressOf CustomColoredTabControl1_Selecting
 
@@ -914,13 +884,11 @@ Public Class DivisionForm
                 And e.TabPageIndex <> 1 Then
 
                 e.Cancel = False
-
             Else
 
                 e.Cancel = True
 
             End If
-
         Catch ex As Exception
 
             e.Cancel = True
@@ -955,7 +923,6 @@ Public Class DivisionForm
         If tsbtnNewDivLoc.Enabled = False Then
 
             LoadDivision()
-
         Else
             currentNode.Text = NewValueString & Space(5)
 
@@ -1012,7 +979,6 @@ Public Class DivisionForm
                 ii += 1
 
             Next
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
@@ -1051,7 +1017,6 @@ Public Class DivisionForm
                                                  ptY)
 
                 n_ShiftList.BringToFront()
-
             Else
 
                 'For i = 0 To ii
@@ -1098,7 +1063,6 @@ Public Class DivisionForm
                                 .Tag = Nothing
 
                                 .Value = Nothing
-
                             Else
 
                                 .Tag = i1
@@ -1253,7 +1217,6 @@ Public Class DivisionForm
             '                 " LIMIT 1);").Result
 
             If shiftbydayIsExists Then
-
             Else
 
             End If
@@ -1337,7 +1300,6 @@ Public Class DivisionForm
         ElseIf e.Cancelled Then
             MessageBox.Show("Process has been cancelled.")
         Else
-
 
             'bgworkUpdateEmployeeShiftIDOfEmployeetimeentry.RunWorkerAsync()
 
@@ -1521,7 +1483,6 @@ Public Class DivisionForm
         Try
             booleanresult = bgworkDelDeptShift.IsBusy
         Catch ex As Exception
-
         Finally
             ToolStrip3.Enabled = Not booleanresult
         End Try
@@ -1544,15 +1505,12 @@ Public Class DivisionForm
     Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
 
         If currentDivisionRowID = Nothing Then
-
         Else
 
             Dim n_DepartmentMinWages As _
                 New DepartmentMinWages(currentDivisionRowID)
 
             If n_DepartmentMinWages.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-
 
             End If
 
@@ -1572,7 +1530,6 @@ Public Class DivisionForm
             TabPage3.Text = String.Empty
 
             AddHandler TabControl1.Selecting, AddressOf TabControl1_Selecting
-
         Else
 
         End If
@@ -1627,7 +1584,6 @@ Public Class DivisionForm
             once = True
 
             'PopulateComboBoxWithWeeklyGovtDeductScheds(tbpAgencyWeekly)
-
         Else
 
         End If
@@ -1664,7 +1620,6 @@ Public Class DivisionForm
             once = True
 
             'PopulateComboBoxWithWeeklyGovtDeductScheds(tbpDefaultWeekly)
-
         Else
 
         End If
@@ -1718,4 +1673,5 @@ Public Class DivisionForm
             ErrorProvider1.Dispose()
         End If
     End Sub
+
 End Class

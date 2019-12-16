@@ -157,11 +157,11 @@ Module myModule
 
             Select Case Val(CommandType)
                 Case 0
-                    cmd.CommandType = Data.CommandType.Text
+                    cmd.CommandType = CommandType.Text
                 Case 1
                     'cmd = New MySqlCommand(_quer, conn)
                     cmd.Parameters.Clear()
-                    cmd.CommandType = Data.CommandType.StoredProcedure
+                    cmd.CommandType = CommandType.StoredProcedure
                     '.Parameters.AddWithValue(ParamName, ParamValue)
                     For indx = 0 To Params.GetUpperBound(0) - 1
                         Dim paramName As String = Params(indx, 0)
@@ -2086,11 +2086,11 @@ Module myModule
 
             Select Case Val(CommandType)
                 Case 0
-                    cmd.CommandType = Data.CommandType.Text
+                    cmd.CommandType = CommandType.Text
                 Case 1
                     'cmd = New MySqlCommand(_quer, conn)
                     cmd.Parameters.Clear()
-                    cmd.CommandType = Data.CommandType.StoredProcedure
+                    cmd.CommandType = CommandType.StoredProcedure
                     '.Parameters.AddWithValue(ParamName, ParamValue)
                     For indx = 0 To Params.GetUpperBound(0) - 1
                         Dim paramName As String = Params(indx, 0)

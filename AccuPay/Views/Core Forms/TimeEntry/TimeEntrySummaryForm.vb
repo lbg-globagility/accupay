@@ -7,11 +7,12 @@ Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Data
 Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
+Imports AccuPay.DB
 
 Public Class TimeEntrySummaryForm
 
@@ -83,12 +84,26 @@ Public Class TimeEntrySummaryForm
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
 
-        CheckIfMoneyColumnsAreGoingToBeHidden()
+        UpdateFormBaseOnPolicy()
 
         LoadYears()
     End Sub
 
-    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
+    Private Sub UpdateFormBaseOnPolicy()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showActual = (settings.GetBoolean("Policy.HideActual", True) = True)
+
+            actualButton.Visible = showActual
+
+            CheckIfMoneyColumnsAreGoingToBeHidden(settings)
+
+        End Using
+    End Sub
+
+    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden(settings As ListOfValueCollection)
         Using context As New PayrollContext
 
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
@@ -97,8 +112,6 @@ Public Class TimeEntrySummaryForm
 
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -192,16 +205,11 @@ Public Class TimeEntrySummaryForm
         Next
 
         If _selectedPayPeriod Is Nothing Then
+            Dim dateToday = DateTime.Today
 
             Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payPeriods))
 
-            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod?.RowID))
-
-            If _selectedPayPeriod Is Nothing Then
-
-                Return
-
-            End If
+            _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 
             Dim rowIdx = (_selectedPayPeriod.OrdinalValue - 1) Mod numOfRows
             Dim payPeriodCell = payPeriodsDataGridView.Rows(rowIdx).Cells(_selectedPayPeriod.Month - 1)
@@ -213,7 +221,7 @@ Public Class TimeEntrySummaryForm
             LoadTimeEntries()
         End If
 
-        If _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Closed Then
+        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
 
             tsBtnDeleteTimeEntry.Visible = True
             regenerateTimeEntryButton.Visible = True
@@ -854,12 +862,6 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
-
-        If _selectedPayPeriod Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-            Return
-        End If
 
         If Await PayrollTools.
                     ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
@@ -1569,12 +1571,6 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-        If _selectedPayPeriod Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-            Return
-        End If
-
         If Await PayrollTools.
                     ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
 
@@ -1590,8 +1586,8 @@ Public Class TimeEntrySummaryForm
         Using command = New MySqlCommand(query,
                                          New MySqlConnection(mysql_conn_text))
             With command
-                .Parameters.AddWithValue("@dateFrom", _selectedPayPeriod.PayFromDate)
-                .Parameters.AddWithValue("@dateTo", _selectedPayPeriod.PayToDate)
+                .Parameters.AddWithValue("@dateFrom", _selectedPayPeriod?.PayFromDate)
+                .Parameters.AddWithValue("@dateTo", _selectedPayPeriod?.PayToDate)
                 .Parameters.AddWithValue("@employeePrimKey", _selectedEmployee?.RowID)
 
                 Await .Connection.OpenAsync()

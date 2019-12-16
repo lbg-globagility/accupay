@@ -3,12 +3,12 @@
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Loans
 Imports AccuPay.ModelData
 Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports log4net
 Imports PayrollSys

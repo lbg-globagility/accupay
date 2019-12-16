@@ -1,11 +1,13 @@
 ﻿Option Strict On
-Imports Acupay
+
+Imports AccuPay.DB
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class LateUTAbsentSummaryReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Late, Undertime and Absent Summary" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
 

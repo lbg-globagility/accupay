@@ -1,11 +1,14 @@
 ﻿Option Strict On
 
+Imports AccuPay.Entity
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.EntityFrameworkCore
 
 Public Class FiledLeaveReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Filed Leave" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private orgNameAddressSql As String =
         "SELECT
@@ -34,32 +37,25 @@ Public Class FiledLeaveReportProvider
 			        FROM address) a ON a.RowID=og.PrimaryAddressID
         WHERE og.RowID = ?ogId;"
 
-    Public Sub Run() Implements IReportProvider.Run
+    Public Async Sub Run() Implements IReportProvider.Run
         Dim dateSelector As New PayrollSummaDateSelection()
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
         End If
 
-        Dim dateFrom = dateSelector.DateFrom
-        Dim dateTo = dateSelector.DateTo
+        Dim dateFrom = dateSelector.DateFrom.Value
+        Dim dateTo = dateSelector.DateTo.Value
 
-        Dim params = New Object(,) {
-            {"OrganizationID", orgztnID},
-            {"PayDateFrom", dateSelector.DateFrom},
-            {"PayDateTo", dateSelector.DateTo}
-        }
-
-        Dim data = DirectCast(callProcAsDatTab(params, "RPT_FiledLeave"), DataTable)
+        Dim data = Await CreateFiledLeaveDataTable(dateFrom, dateTo)
 
         Dim report = New FiledLeaveReport()
         report.SetDataSource(data)
 
         Dim title = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("txtCutoffDate"), TextObject)
-        Dim dateFromTitle = dateFrom?.ToString("MMMM dd, yyyy")
-        Dim dateToTitle = dateTo?.ToString("MMMM dd, yyyy")
+        Dim dateFromTitle = dateFrom.ToString("MMMM dd, yyyy")
+        Dim dateToTitle = dateTo.ToString("MMMM dd, yyyy")
         title.Text = $"From {dateFromTitle} to {dateToTitle}"
-
 
         Dim sql As New SQL(orgNameAddressSql,
                            New Object() {orgztnID})
@@ -76,5 +72,56 @@ Public Class FiledLeaveReportProvider
         viewer.crysrepvwr.ReportSource = report
         viewer.Show()
     End Sub
+
+    Public Async Function CreateFiledLeaveDataTable(startDate As Date, endDate As Date) As Threading.Tasks.Task(Of DataTable)
+
+        Dim datatable As New DataTable
+
+        datatable.Columns.Add("DatCol1")
+        datatable.Columns.Add("DatCol2")
+        datatable.Columns.Add("DatCol3")
+        datatable.Columns.Add("DatCol11")
+        datatable.Columns.Add("DatCol12")
+        datatable.Columns.Add("DatCol13")
+        datatable.Columns.Add("DatCol14")
+        datatable.Columns.Add("DatCol15")
+        datatable.Columns.Add("DatCol16")
+
+        Using context As New PayrollContext
+
+            Dim leaveTransactions = Await context.LeaveTransactions.
+                                    Include(Function(l) l.Employee).
+                                    Include(Function(l) l.LeaveLedger.Product).
+                                    Include(Function(l) l.Leave).
+                                    Where(Function(l) l.TransactionDate >= startDate).
+                                    Where(Function(l) l.TransactionDate <= endDate).
+                                    Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
+                                    Where(Function(l) l.Type = LeaveTransactionType.Debit).
+                                    Where(Function(l) l.Amount <> 0).
+            OrderBy(Function(l) l.TransactionDate).
+                                    ToListAsync
+
+            For Each transaction In leaveTransactions
+
+                Dim newRow = datatable.NewRow()
+
+                newRow("DatCol1") = transaction.EmployeeID
+                newRow("DatCol2") = transaction.Employee.EmployeeNo
+                newRow("DatCol3") = transaction.Employee.FullNameWithMiddleInitialLastNameFirst
+                newRow("DatCol11") = transaction.TransactionDate.ToString("dddd")
+                newRow("DatCol12") = transaction.TransactionDate.ToString("MM/dd/yyyy")
+                newRow("DatCol13") = transaction.LeaveLedger.Product.PartNo
+                newRow("DatCol14") = transaction.Amount
+                newRow("DatCol15") = transaction.Amount / PayrollTools.WorkHoursPerDay
+                newRow("DatCol16") = transaction.Leave?.Reason
+
+                datatable.Rows.Add(newRow)
+            Next
+
+        End Using
+
+        Return datatable
+
+    End Function
 
 End Class

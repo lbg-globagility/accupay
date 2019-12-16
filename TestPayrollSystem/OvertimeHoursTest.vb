@@ -1,4 +1,6 @@
 ﻿Option Strict On
+
+Imports AccuPay.Utils
 Imports AccuPay
 Imports AccuPay.Entity
 

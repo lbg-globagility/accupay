@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Runtime.CompilerServices
+Imports AccuPay.Utils
 
 Namespace Global.AccuPay.Extensions
     Public Module DecimalExtensions

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay.DB
+Imports AccuPay.Utils
 
 Public Class UsersForm
     Dim isNew As Integer = 0
@@ -350,8 +351,8 @@ Public Class UsersForm
                 UserLevelComboBox.Visible = False
                 UserLevelDescriptionColumn.Visible = False
 
-                UserPrivilegeLabel.Visible = True
-                dgvPrivilege.Visible = True
+                UserPrivilegeLabel.Visible = False
+                dgvPrivilege.Visible = False
 
             End If
 

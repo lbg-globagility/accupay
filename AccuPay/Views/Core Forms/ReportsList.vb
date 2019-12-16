@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports AccuPay.Views.Payroll
@@ -33,7 +33,8 @@ Public Class ReportsList
             New LateUTAbsentSummaryReportProvider(),
             New AgencyFeeReportProvider(),
             New PayrollLedgerExcelFormatReportProvider(),
-            New LoanLedgerReportProvider()
+            New LoanLedgerReportProvider(),
+            New Cinema2000TardinessReportProvider()
         }
         'New PayrollLedgerReportProvider(),
 
@@ -42,6 +43,9 @@ Public Class ReportsList
         End If
 
         For Each provider In providers
+
+            If provider.IsHidden Then Continue For
+
             Dim dataTable = New SqlToDataTable($"
                 SELECT l.DisplayValue
                 FROM listofval l

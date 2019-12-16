@@ -4,6 +4,7 @@ Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
 Imports AccuPay.Entity
+Imports AccuPay.DB
 
 Public Class EmployeeShiftEntryForm
 
@@ -603,7 +604,6 @@ Public Class EmployeeShiftEntryForm
         Dim n_ShiftEntryForm As New ShiftEntryForm
         n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
         n_ShiftEntryForm.StartPosition = FormStartPosition.CenterScreen
-
 
         If n_ShiftEntryForm.ShowDialog = Windows.Forms.DialogResult.OK Then
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then

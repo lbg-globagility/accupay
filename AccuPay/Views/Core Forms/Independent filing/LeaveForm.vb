@@ -1,4 +1,5 @@
 ﻿Imports System.Threading
+Imports AccuPay.DB
 Imports Femiani.Forms.UI.Input
 
 Public Class LeaveForm
@@ -48,7 +49,6 @@ Public Class LeaveForm
         If Panel1.Enabled = True Then
 
             e.Cancel = False
-
         Else
 
             e.Cancel = True
@@ -64,29 +64,29 @@ Public Class LeaveForm
         'enlistToCboBox("SELECT DISTINCT(DisplayValue) FROM listofval WHERE Type='Leave Type' AND Active='Yes';", _
         '               cboleavetypes)
 
-        enlistToCboBox("SELECT p.PartNo" & _
-                        " FROM product p" & _
-                        " INNER JOIN category c ON c.RowID=p.CategoryID" & _
-                        " WHERE c.CategoryName='Leave Type'" & _
-                        " AND p.OrganizationID='" & orgztnID & "';", _
+        enlistToCboBox("SELECT p.PartNo" &
+                        " FROM product p" &
+                        " INNER JOIN category c ON c.RowID=p.CategoryID" &
+                        " WHERE c.CategoryName='Leave Type'" &
+                        " AND p.OrganizationID='" & orgztnID & "';",
                        cboleavetypes)
 
-        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;", _
+        enlistToCboBox("SELECT Name FROM organization WHERE NoPurpose='0' ORDER BY Name;",
                        cboOrganization)
 
         If n_LeaveRowID <> Nothing Then
 
             Dim dtLeaveRow As New DataTable
 
-            dtLeaveRow = _
-            New SQLQueryToDatatable("SELECT el.*" & _
-                        ",e.EmployeeID AS EmpID" & _
-                        ",IFNULL(og.Name,'') AS OrgName" & _
-                        ",TIME_FORMAT(el.LeaveStartTime,'%r') AS LvStartTime" & _
-                        ",TIME_FORMAT(el.LeaveEndTime,'%r') AS LvEndTime" & _
-                        " FROM employeeleave el" & _
-                        " LEFT JOIN employee e ON e.RowID=el.EmployeeID" & _
-                        " LEFT JOIN organization og ON og.RowID=el.OrganizationID" & _
+            dtLeaveRow =
+            New SQLQueryToDatatable("SELECT el.*" &
+                        ",e.EmployeeID AS EmpID" &
+                        ",IFNULL(og.Name,'') AS OrgName" &
+                        ",TIME_FORMAT(el.LeaveStartTime,'%r') AS LvStartTime" &
+                        ",TIME_FORMAT(el.LeaveEndTime,'%r') AS LvEndTime" &
+                        " FROM employeeleave el" &
+                        " LEFT JOIN employee e ON e.RowID=el.EmployeeID" &
+                        " LEFT JOIN organization og ON og.RowID=el.OrganizationID" &
                         " WHERE el.RowID='" & n_LeaveRowID & "';").ResultTable
 
             If dtLeaveRow IsNot Nothing Then
@@ -262,13 +262,13 @@ Public Class LeaveForm
 
                 'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                   endtime.ToString.Length - i)
                                           )
                                )
 
-                amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                amTime = If(getStrBetween(amTime, "", ":") = "12",
+                            24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                             amTime)
 
                 retrnObj = amTime
@@ -289,7 +289,7 @@ Public Class LeaveForm
 
         'LeaveRowID
         If n_LeaveRowID = Nothing Then
-            n_LeaveRowID = _
+            n_LeaveRowID =
                 INSUPD_employeeleave()
         Else
             INSUPD_employeeleave()
@@ -322,7 +322,6 @@ Public Class LeaveForm
     Private Sub TxtEmployeeNumber1_GotFocus(sender As Object, e As EventArgs) Handles TxtEmployeeNumber1.GotFocus
 
         If TxtEmployeeFullName1.RowIDValue.Length = 0 Then
-
         Else
 
             'Dim selectEmpID = EXECQUER("SELECT EmployeeID FROM employee WHERE RowID='" & TxtEmployeeFullName1.RowIDValue & "' LIMIT 1;")
@@ -406,7 +405,6 @@ Public Class LeaveForm
         LeaveTypeValue = ""
 
         If ogleavetype Is Nothing Then
-
         Else
 
             If ogleavetype.Columns.Count > 0 Then
@@ -451,9 +449,9 @@ Public Class LeaveForm
 
         Dim dtempfullname As New DataTable
         'CONCAT(e.LastName,', ',e.FirstName, IF(e.MiddleName = '', '', CONCAT(', ',e.MiddleName)))
-        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" & _
-                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" & _
-                                    " WHERE og.NoPurpose='0'" & _
+        dtempfullname = New SQLQueryToDatatable("SELECT e.RowID, CONCAT_WS(', ', e.LastName, e.FirstName, IF(LENGTH(TRIM(e.MiddleName)) = 0, NULL, e.MiddleName)) `EmpFullName`" &
+                                    " FROM employee e INNER JOIN organization og ON og.RowID=e.OrganizationID" &
+                                    " WHERE og.NoPurpose='0'" &
                                     " GROUP BY e.OrganizationID,e.EmployeeID;").ResultTable
 
         If dtempfullname IsNot Nothing Then
@@ -490,7 +488,6 @@ Public Class LeaveForm
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
 
             TxtEmployeeFullName1.Enabled = True
@@ -545,7 +542,6 @@ Public Class LeaveForm
         If TxtEmployeeFullName1.Text.Trim.Length = 0 Then
 
             cboxEmployees.Text = String.Empty
-
         Else
 
             cboxEmployees.Text = TxtEmployeeFullName1.Text

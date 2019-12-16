@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Entity
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
 Public Class PreviewLeaveBalanceForm
@@ -21,7 +22,6 @@ Public Class PreviewLeaveBalanceForm
             Dim leaveAllowanceAmountBasis = basis.GetValue("LeaveAllowanceAmountBasis")
 
             If RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.NumberOfService.ToString = leaveAllowanceAmountBasis Then
-
             Else
                 policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default
             End If
@@ -41,7 +41,7 @@ Public Class PreviewLeaveBalanceForm
         Dim result As DialogResult
         Dim isOk As Boolean = False
 
-        Using dialog = New DateRangePickerDialog()
+        Using dialog = New DateRangePickerDialog(removePayPeriodValidation:=True)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -59,8 +59,9 @@ Public Class PreviewLeaveBalanceForm
                 If policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default Then
 
                     Await RenewLeaveBalances()
-                End If
 
+                    MessageBoxHelper.Information($"Leave balances of the employees of {orgNam} were successfully reset.")
+                End If
             Else
 
             End If
@@ -110,13 +111,11 @@ Public Class PreviewLeaveBalanceForm
             Dim vacationLeaveTransactions = New List(Of LeaveTransaction)
             Dim sickLeaveTransactions = New List(Of LeaveTransaction)
 
-
             For Each employee In _employeeModels
                 Dim employeeId = employee.RowID
 
                 Dim leaveLedgerId As Integer
                 Dim ll As LeaveLedger
-
 
                 'Vacation Leave
                 ll = GetLeaveLedger(leaveLedgers, vacationLeaveTypeId, employeeId)
@@ -125,7 +124,6 @@ Public Class PreviewLeaveBalanceForm
                 ll.LastTransaction = CreateCreditLeaveTransaction(context, employee, employeeId, leaveLedgerId, LeaveType.VacationLeave)
                 ll.LastUpd = Date.Now
                 vacationLeaveTransactions.Add(ll.LastTransaction)
-
 
                 'Sick Leave
                 ll = GetLeaveLedger(leaveLedgers, sickLeaveTypeId, employeeId)
@@ -136,7 +134,6 @@ Public Class PreviewLeaveBalanceForm
                 sickLeaveTransactions.Add(ll.LastTransaction)
 
             Next
-
 
             Dim empProfiles = Await context.Employees.Where(Function(e) employeeIds.Any(Function(id) Nullable.Equals(id, e.RowID))).ToListAsync()
 

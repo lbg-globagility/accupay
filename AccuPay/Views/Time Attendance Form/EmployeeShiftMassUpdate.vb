@@ -1,6 +1,7 @@
 ﻿Imports MySql.Data.MySqlClient
 Imports Microsoft.Win32
 Imports Indigo.CollapsibleGroupBox
+Imports AccuPay.DB
 
 Public Class EmployeeShiftMassUpdate
     Dim IsNew As Integer = 0
@@ -169,7 +170,7 @@ Public Class EmployeeShiftMassUpdate
 
         'cboshiftlist.ContextMenu = New ContextMenu
 
-        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p')) FROM shift WHERE OrganizationID='" & orgztnID & "' ORDER BY TimeFrom,TimeTo;", _
+        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p')) FROM shift WHERE OrganizationID='" & orgztnID & "' ORDER BY TimeFrom,TimeTo;",
                        cboshiftlist)
 
         view_ID = VIEW_privilege("Employee Shift", orgztnID)
@@ -179,7 +180,6 @@ Public Class EmployeeShiftMassUpdate
         If formuserprivilege.Count = 0 Then
 
             btnSave.Visible = 0
-
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
@@ -189,13 +189,11 @@ Public Class EmployeeShiftMassUpdate
                     Exit For
                 Else
                     If drow("Creates").ToString = "N" Then
-
                     Else
 
                     End If
 
                     If drow("Deleting").ToString = "N" Then
-
                     Else
 
                     End If
@@ -290,7 +288,6 @@ Public Class EmployeeShiftMassUpdate
                                 includedEmployees.Add(.Item("c_ID", e.RowIndex).Value)
 
                             End If
-
                         Else
 
                             If includedEmployees.Contains(.Item("c_ID", e.RowIndex).Value) Then
@@ -302,19 +299,16 @@ Public Class EmployeeShiftMassUpdate
                             End If
 
                         End If
-
                     Catch ex As Exception
                         MsgBox(getErrExcptn(ex, Me.Name))
                     Finally
 
                     End Try
-
                 Else
 
                 End If
 
             End With
-
         Else
 
         End If
@@ -383,10 +377,10 @@ Public Class EmployeeShiftMassUpdate
 
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then
 
-                enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))" & _
-                               " FROM shift" & _
-                               " WHERE OrganizationID='" & orgztnID & "'" & _
-                               " ORDER BY TimeFrom,TimeTo;", _
+                enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', TIME_FORMAT(TimeTo,'%l:%i %p'))" &
+                               " FROM shift" &
+                               " WHERE OrganizationID='" & orgztnID & "'" &
+                               " ORDER BY TimeFrom,TimeTo;",
                                cboshiftlist)
 
                 cboshiftlist.Text = Format(CDate(n_ShiftEntryForm.ShiftTimeFrom), machineShortTime) & " TO " & Format(CDate(n_ShiftEntryForm.ShiftTimeTo), machineShortTime)
@@ -404,7 +398,7 @@ Public Class EmployeeShiftMassUpdate
         IsNew = 0
         dgvEmpList.Enabled = 1
 
-        Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index, _
+        Dim dgvceleventarg As New DataGridViewCellEventArgs(c_EmployeeID.Index,
                                                             0) 'dgvEmpList.CurrentRow.Index
 
         If dgvEmpList.RowCount > -1 Then
@@ -470,7 +464,7 @@ Public Class EmployeeShiftMassUpdate
 
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -503,12 +497,11 @@ Public Class EmployeeShiftMassUpdate
         'i_DateFrom
         'i_DateTo
 
-        Dim catchDT = _
-                    getWorkBookAsDataSet(filepath, _
+        Dim catchDT =
+                    getWorkBookAsDataSet(filepath,
                                          Me.Name)
 
         If catchDT Is Nothing Then
-
         Else
 
             'For Each dtbl As DataTable In catchDT.Tables
@@ -557,11 +550,11 @@ Public Class EmployeeShiftMassUpdate
                         time_to = DBNull.Value
                     End Try
 
-                    IMPORT_employeeshift(drow(0), _
-                                         time_from, _
-                                         time_to, _
-                                         drow(3), _
-                                         drow(4), _
+                    IMPORT_employeeshift(drow(0),
+                                         time_from,
+                                         time_to,
+                                         drow(3),
+                                         drow(4),
                                          drow(5))
 
                     Dim progressresult = (i / dtEmpShift.Rows.Count) * 100
@@ -598,10 +591,10 @@ Public Class EmployeeShiftMassUpdate
 
         backgroundworking = 0
 
-        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', IF(TimeTo IS NULL, '', TIME_FORMAT(TimeTo,'%l:%i %p')))" & _
-                       " FROM shift" & _
-                       " WHERE OrganizationID='" & orgztnID & "'" & _
-                       " ORDER BY TimeFrom,TimeTo;", _
+        enlistToCboBox("SELECT CONCAT(TIME_FORMAT(TimeFrom,'%l:%i %p'), ' TO ', IF(TimeTo IS NULL, '', TIME_FORMAT(TimeTo,'%l:%i %p')))" &
+                       " FROM shift" &
+                       " WHERE OrganizationID='" & orgztnID & "'" &
+                       " ORDER BY TimeFrom,TimeTo;",
                        cboshiftlist)
 
         If dgvEmpList.RowCount <> 0 Then
@@ -617,11 +610,11 @@ Public Class EmployeeShiftMassUpdate
 
     Dim dataread As MySqlDataReader
 
-    Private Sub IMPORT_employeeshift(Optional i_EmployeeID As Object = Nothing, _
-                                     Optional i_TimeFrom As Object = Nothing, _
-                                     Optional i_TimeTo As Object = Nothing, _
-                                     Optional i_DateFrom As Object = Nothing, _
-                                     Optional i_DateTo As Object = Nothing, _
+    Private Sub IMPORT_employeeshift(Optional i_EmployeeID As Object = Nothing,
+                                     Optional i_TimeFrom As Object = Nothing,
+                                     Optional i_TimeTo As Object = Nothing,
+                                     Optional i_DateFrom As Object = Nothing,
+                                     Optional i_DateTo As Object = Nothing,
                                      Optional i_SchedType As Object = Nothing)
 
         Try
@@ -680,7 +673,6 @@ Public Class EmployeeShiftMassUpdate
                 .ExecuteNonQuery()
 
             End With
-
         Catch ex As Exception
 
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -730,24 +722,22 @@ Public Class EmployeeShiftMassUpdate
 
                     'MsgBox(Trim(StrReverse(StrReverse("3:15 AM").ToString.Substring(i, ("3:15 AM").ToString.Length - i))).Length)
 
-                    Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i, _
+                    Dim amTime As String = Trim(StrReverse(StrReverse(endtime.ToString).Substring(i,
                                                                                       endtime.ToString.Length - i)
                                               )
                                    )
 
-                    amTime = If(getStrBetween(amTime, "", ":") = "12", _
-                                24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")), _
+                    amTime = If(getStrBetween(amTime, "", ":") = "12",
+                                24 & ":" & StrReverse(getStrBetween(StrReverse(amTime), "", ":")),
                                 amTime)
 
                     retrnObj = amTime
-
                 Else
                     retrnObj = endtime
 
                 End If
 
             End If
-
         Catch ex As Exception
             retrnObj = DBNull.Value
         End Try
@@ -803,7 +793,6 @@ Public Class EmployeeShiftMassUpdate
             If once = 0 Then
 
                 once = 1
-
             Else
 
                 divisionRowID = CInt(ValNoComma(e.Node.Tag))
@@ -864,13 +853,11 @@ Public Class EmployeeShiftMassUpdate
                 Me.Close()
 
                 Return False
-
             Else
 
                 Return MyBase.ProcessCmdKey(msg, keyData)
 
             End If
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)

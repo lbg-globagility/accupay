@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Benchmark
-Imports AccuPay.Entity
+Imports Accupay.Utils
+Imports Accupay
+Imports Accupay.Benchmark
+Imports Accupay.Entity
 Imports PayrollSys
 
 <TestFixture>

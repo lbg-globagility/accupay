@@ -6,6 +6,7 @@ Public Class LoanSummaryByTypeReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Loan Summary by Type" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
         Dim dateSelector As New PayrollSummaDateSelection
@@ -36,7 +37,6 @@ Public Class LoanSummaryByTypeReportProvider
         }
 
         Dim data = DirectCast(callProcAsDatTab(params, "RPT_LoansByType"), DataTable)
-
 
         report.SetDataSource(data)
 

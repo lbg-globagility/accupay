@@ -24,10 +24,6 @@ Partial Class PreviewLeaveBalanceForm
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvEmployees = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Panel1 = New System.Windows.Forms.Panel()
-        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
-        Me.btnClose = New System.Windows.Forms.Button()
-        Me.btnReset = New System.Windows.Forms.Button()
         Me.eRowId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eId = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eLastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -36,6 +32,10 @@ Partial Class PreviewLeaveBalanceForm
         Me.eVacationLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eSickLeaveAllowance = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eSickLeaveBalance = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.btnClose = New System.Windows.Forms.Button()
+        Me.btnReset = New System.Windows.Forms.Button()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnSaveEmp = New System.Windows.Forms.ToolStripButton()
         CType(Me.dgvEmployees, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -71,44 +71,6 @@ Partial Class PreviewLeaveBalanceForm
         Me.dgvEmployees.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvEmployees.Size = New System.Drawing.Size(768, 415)
         Me.dgvEmployees.TabIndex = 138
-        '
-        'Panel1
-        '
-        Me.Panel1.Controls.Add(Me.ProgressBar1)
-        Me.Panel1.Controls.Add(Me.btnClose)
-        Me.Panel1.Controls.Add(Me.btnReset)
-        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.Panel1.Location = New System.Drawing.Point(0, 415)
-        Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(768, 35)
-        Me.Panel1.TabIndex = 139
-        '
-        'ProgressBar1
-        '
-        Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Left
-        Me.ProgressBar1.Location = New System.Drawing.Point(0, 0)
-        Me.ProgressBar1.Name = "ProgressBar1"
-        Me.ProgressBar1.Size = New System.Drawing.Size(100, 35)
-        Me.ProgressBar1.TabIndex = 1
-        Me.ProgressBar1.Visible = False
-        '
-        'btnClose
-        '
-        Me.btnClose.Location = New System.Drawing.Point(681, 6)
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(75, 23)
-        Me.btnClose.TabIndex = 0
-        Me.btnClose.Text = "Close"
-        Me.btnClose.UseVisualStyleBackColor = True
-        '
-        'btnReset
-        '
-        Me.btnReset.Location = New System.Drawing.Point(488, 6)
-        Me.btnReset.Name = "btnReset"
-        Me.btnReset.Size = New System.Drawing.Size(187, 23)
-        Me.btnReset.TabIndex = 0
-        Me.btnReset.Text = "Select effecitivity date and &Reset"
-        Me.btnReset.UseVisualStyleBackColor = True
         '
         'eRowId
         '
@@ -169,6 +131,44 @@ Partial Class PreviewLeaveBalanceForm
         Me.eSickLeaveBalance.HeaderText = "Sick Leave Balance"
         Me.eSickLeaveBalance.Name = "eSickLeaveBalance"
         Me.eSickLeaveBalance.ReadOnly = True
+        '
+        'Panel1
+        '
+        Me.Panel1.Controls.Add(Me.ProgressBar1)
+        Me.Panel1.Controls.Add(Me.btnClose)
+        Me.Panel1.Controls.Add(Me.btnReset)
+        Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.Panel1.Location = New System.Drawing.Point(0, 415)
+        Me.Panel1.Name = "Panel1"
+        Me.Panel1.Size = New System.Drawing.Size(768, 35)
+        Me.Panel1.TabIndex = 139
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Dock = System.Windows.Forms.DockStyle.Left
+        Me.ProgressBar1.Location = New System.Drawing.Point(0, 0)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(100, 35)
+        Me.ProgressBar1.TabIndex = 1
+        Me.ProgressBar1.Visible = False
+        '
+        'btnClose
+        '
+        Me.btnClose.Location = New System.Drawing.Point(681, 6)
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(75, 23)
+        Me.btnClose.TabIndex = 0
+        Me.btnClose.Text = "Close"
+        Me.btnClose.UseVisualStyleBackColor = True
+        '
+        'btnReset
+        '
+        Me.btnReset.Location = New System.Drawing.Point(488, 6)
+        Me.btnReset.Name = "btnReset"
+        Me.btnReset.Size = New System.Drawing.Size(187, 23)
+        Me.btnReset.TabIndex = 0
+        Me.btnReset.Text = "Select effectivity date and &Reset"
+        Me.btnReset.UseVisualStyleBackColor = True
         '
         'ToolStrip1
         '

@@ -1,4 +1,4 @@
-﻿Public Class PayrollForm
+Public Class PayrollForm
 
     Public listPayrollForm As New List(Of String)
 
@@ -156,14 +156,10 @@
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
 
-        Dim _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+        Dim showBonusForm As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
-        If _bool Then
-            BonusToolStripMenuItem.Visible = (Not _bool)
-        Else
-
-        End If
+        If showBonusForm Then BonusToolStripMenuItem.Visible = showBonusForm
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
@@ -174,6 +170,7 @@
             BonusToolStripMenuItem.Visible = False
             WithholdingTaxToolStripMenuItem.Visible = False
             PaystubExperimentalToolStripMenuItem.Visible = False
+            AllowanceToolStripMenuItem.Visible = False
         Else
             BenchmarkPaystubToolStripMenuItem.Visible = False
         End If
@@ -183,6 +180,18 @@
     Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
         ChangeForm(PaystubView, "Employee Pay Slip")
         previousForm = PaystubView
+    End Sub
+
+    Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
+        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
+        previousForm = EmployeeAllowanceForm
+    End Sub
+
+    Private Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
+        ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
+        ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
+        previousForm = BenchmarkPaystubForm
+        previousForm = EmployeeLoansForm
     End Sub
 
     Private Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click

@@ -1,4 +1,4 @@
-﻿Imports MySql.Data.MySqlClient
+Imports MySql.Data.MySqlClient
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports log4net
@@ -7,6 +7,8 @@ Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Views.Payroll
 Imports AccuPay.Utils
 Imports AccuPay.Entity
+Imports AccuPay.DB
+Imports AccuPay.Payslip
 
 Public Class PayStubForm
 
@@ -57,6 +59,8 @@ Public Class PayStubForm
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
+
+    Private _showActual As Boolean
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -146,6 +150,57 @@ Public Class PayStubForm
                                                   " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
 
         dgvAdjustments.AutoGenerateColumns = False
+
+        ShowOrHideActual()
+        ShowOrHideEmailPayslip()
+
+    End Sub
+
+    Private Sub ShowOrHideActual()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+
+            PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
+            PayrollSummaryActualToolStripMenuItem.Visible = showActual
+
+            PayslipDeclaredToolStripMenuItem.Visible = showActual
+            PayslipActualToolStripMenuItem.Visible = showActual
+
+            If showActual = False Then
+
+                Dim str_empty As String = String.Empty
+
+                TabPage1.Text = str_empty
+
+                TabPage4.Text = str_empty
+
+                AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+            Else
+
+                RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
+                RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+
+            End If
+
+            _showActual = showActual
+
+        End Using
+    End Sub
+
+    Private Sub ShowOrHideEmailPayslip()
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim emailPayslip = (settings.GetBoolean("Payroll Policy.EmailPayslip", False) = True)
+
+            ManagePayslipsToolStripMenuItem.Visible = emailPayslip
+            PrintPaySlipToolStripMenuItem.Visible = Not emailPayslip
+
+        End Using
 
     End Sub
 
@@ -906,7 +961,7 @@ Public Class PayStubForm
         showAuditTrail.BringToFront()
     End Sub
 
-    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem3.Click, ActualToolStripMenuItem3.Click
+    Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
 
         Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
@@ -1670,13 +1725,18 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem2.Click, ActualToolStripMenuItem2.Click
-        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
+    Private Function GetCurrentPayPeriod() As PayPeriod
+        Dim payPeriod As PayPeriod = Nothing
 
-        Dim n_PrintAllPaySlipOfficialFormat As _
-            New PrintAllPaySlipOfficialFormat(ValNoComma(paypRowID),
-                                              IsActualFlag)
-    End Sub
+        Using context As New PayrollContext
+
+            payPeriod = context.PayPeriods.
+                FirstOrDefault(Function(p) p.RowID.Value = ValNoComma(paypRowID))
+
+        End Using
+
+        Return payPeriod
+    End Function
 
     Sub ProgressCounter(result As PayrollGeneration.Result)
         If result.Status = PayrollGeneration.ResultStatus.Success Then
@@ -1706,22 +1766,14 @@ Public Class PayStubForm
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
-        Static _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
-
-        If _bool Then
-
-            Dim str_empty As String = String.Empty
-
-            TabPage1.Text = str_empty
-
-            TabPage4.Text = str_empty
-
-            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-        Else
-
-        End If
-
+       Static _bool As Boolean =
+           (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+       If _bool Then
+           Dim str_empty As String = String.Empty
+           TabPage1.Text = str_empty
+           TabPage4.Text = str_empty
+           AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+       End If
     End Sub
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
@@ -1915,6 +1967,67 @@ Public Class PayStubForm
         End If
 
         DeletePayrollToolStripMenuItem.Enabled = True
+    End Sub
+
+    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
+
+        If _showActual = False Then
+
+            PrintPayslip(isActual:=0)
+
+        End If
+    End Sub
+
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
+        Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
+
+        PrintPayslip(IsActualFlag)
+    End Sub
+
+    Private Sub PrintPayslip(isActual As SByte)
+        Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
+
+        Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
+
+        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+
+        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
+
+        Dim crvwr As New CrysRepForm
+        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+        crvwr.Show()
+    End Sub
+
+    Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
+
+        If _showActual = False Then
+
+            Dim psefr As New PayrollSummaryExcelFormatReportProvider
+
+            psefr.IsActual = False
+
+            psefr.Run()
+
+        End If
+
+    End Sub
+
+    Private Sub ManageEmailPayslipsToolStripMenuItem_Click(sender As Object, e As EventArgs) _
+        Handles ManagePrintPayslipsToolStripMenuItem.Click,
+                ManageEmailPayslipsToolStripMenuItem.Click
+
+        Dim form As SelectPayslipEmployeesForm
+
+        Dim payPeriodId = ValNoComma(paypRowID)
+
+        If sender Is ManageEmailPayslipsToolStripMenuItem Then
+            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=True)
+        Else
+            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=False)
+        End If
+
+        form.ShowDialog()
+
     End Sub
 
 End Class

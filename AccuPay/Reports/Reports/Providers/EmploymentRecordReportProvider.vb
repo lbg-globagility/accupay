@@ -1,9 +1,10 @@
-﻿Imports Acupay
+﻿Imports AccuPay.DB
 
 Public Class EmploymentRecordReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employees' Employment Record" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
 

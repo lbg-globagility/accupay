@@ -1,4 +1,6 @@
-﻿Public Class ShiftEntryForm
+﻿Imports AccuPay.DB
+
+Public Class ShiftEntryForm
 
     Private IsNew As Integer
 
@@ -47,8 +49,8 @@
 
     Private Sub fillshiftentry()
         Dim maxidonshift As DataTable = getDataTableForSQL($"
-                SELECT  MAX(RowId)   
-                FROM shift 
+                SELECT  MAX(RowId)
+                FROM shift
                 WHERE
                     OrganizationID = '{z_OrganizationID}'
                 ")
@@ -78,7 +80,7 @@
                         dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
                     End If
                 ElseIf IsNew = 1 Then
-                        If .Item("RowID").ToString = maxid.ToString Then
+                    If .Item("RowID").ToString = maxid.ToString Then
                         dgvshiftentry.Rows(n).Selected = True
                         dgvshiftentry.CurrentCell = dgvshiftentry.Rows(n).Cells(0)
                     End If
@@ -93,10 +95,8 @@
             End With
         Next
 
-
         'SecondSelector = 0
         'maxid = 0
-
 
         'If Selector = Nothing Then
 
@@ -104,7 +104,6 @@
         '    dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Selected = True
         '    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Cells(0)
         'End If
-
 
     End Sub
 
@@ -147,7 +146,6 @@
             'btnNew.Visible = 0
             'btnSave.Visible = 0
             'btnDelete.Visible = 0
-
         Else
             For Each drow In formuserprivilege
                 If drow("ReadOnly").ToString = "Y" Then
@@ -231,7 +229,6 @@
             dgvshiftentry.Tag = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
             chkHidden.Checked = Convert.ToInt16(dgvshiftentry.CurrentRow.Cells(IsHidden.Index).Value)
 
-
             SecondSelector = dgvshiftentry.CurrentRow.Cells(c_rowid.Index).Value
         Catch ex As Exception
             my_RowID = Nothing
@@ -263,7 +260,6 @@
     Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
         IsNew = 1
         btnNew.Enabled = False
-
 
     End Sub
 
@@ -297,7 +293,6 @@
         End If
     End Sub
 
-
     Private Sub tsbtnSaveShift_Click(sender As Object, e As EventArgs) Handles tsbtnSaveShift.Click
         Dim timeFrom = dtpTimeFrom.Value.ToString("HH:mm")
         Dim timeTo = dtpTimeTo.Value.ToString("HH:mm")
@@ -317,7 +312,6 @@
 
         If IsNew = 1 Then
 
-
             ' /test fix bugs
 
             Dim timeFrom12Hour = dtpTimeFrom.Value.ToString("hh:mm")
@@ -325,7 +319,6 @@
 
             Dim breaktimeFrom12Hour = dtpBreakTimeFrom.Value.ToString("hh:mm")
             Dim breaktimeto12Hour = dtpBreakTimeTo.Value.ToString("hh:mm")
-
 
             ' Has a lunch break
             If chkHasLunchBreak.Checked Then
@@ -360,10 +353,10 @@
                 SELECT *
                 FROM shift
                 WHERE TimeFrom = '{timeFrom}' AND
-                TimeTo = '{timeTo}' AND            
+                TimeTo = '{timeTo}' AND
                 BreaktimeFrom IS NULL  AND
                 BreaktimeTo IS NULL  AND
-                 
+
                     OrganizationID = '{z_OrganizationID}'
                 ")
 
@@ -380,7 +373,6 @@
 
                     fillshiftentry()
                     IsNew = 0
-
 
                 End If
             End If
@@ -421,7 +413,6 @@
             Dim breaktimeFrom12Hour = dtpBreakTimeFrom.Value.ToString("hh:mm")
             Dim breaktimeto12Hour = dtpBreakTimeTo.Value.ToString("hh:mm")
 
-
             ' Has a lunch break
             If chkHasLunchBreak.Checked Then
 
@@ -444,17 +435,16 @@
                     fillshiftentry()
                     IsNew = 0
 
-
                 End If
             Else
                 Dim existingShifts4updatehasnolunch As DataTable = getDataTableForSQL($"
                 SELECT *
                 FROM shift
                 WHERE TimeFrom = '{timeFrom}' AND
-                TimeTo = '{timeTo}' AND            
+                TimeTo = '{timeTo}' AND
                 BreaktimeFrom IS NULL  AND
                 BreaktimeTo IS NULL  AND
-                 
+
                     OrganizationID = '{z_OrganizationID}'
                 ")
 
@@ -475,8 +465,6 @@
 
             ' /end test fix bugs
 
-
-
             '/previous codes
             'Dim str_quer As String = "UPDATE shift SET LastUpd = CURRENT_TIMESTAMP()" &
             '        ", LastUpdBy = '" & z_User & "'" &
@@ -486,8 +474,6 @@
             '        ", Hidden=" & Convert.ToInt16(chkHidden.Checked) &
             '        " WHERE RowID = '" & dgvshiftentry.Tag & "';"
             'Dim n_ExecuteQuery As New ExecuteQuery(str_quer)
-
-
 
             'If n_ExecuteQuery.HasError = False Then
             '    myBalloon("Successfully Updated", "Updating...", btnSave, , -65)
@@ -503,14 +489,13 @@
             '/ end previous codes
         End If
 
-            tsbtnNewShift.Enabled = True
+        tsbtnNewShift.Enabled = True
     End Sub
 
     Private Sub tsbtnCancelShift_Click(sender As Object, e As EventArgs) Handles tsbtnCancelShift.Click
         tsbtnNewShift.Enabled = True
 
         IsNew = 0
-
 
         fillshiftentry()
 
@@ -619,4 +604,5 @@
     Private Sub dtpBreakTimeFrom_ValueChanged_1(sender As Object, e As EventArgs) Handles dtpBreakTimeFrom.ValueChanged
 
     End Sub
+
 End Class

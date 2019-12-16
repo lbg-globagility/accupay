@@ -1,4 +1,4 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class EmployeeForm
     Inherits System.Windows.Forms.Form
 
@@ -1752,6 +1752,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.SplitContainer2.IsSplitterFixed = True
         Me.SplitContainer2.Location = New System.Drawing.Point(3, 28)
         Me.SplitContainer2.Name = "SplitContainer2"
         Me.SplitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal
@@ -1868,6 +1869,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label315)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LinkLabel2)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label365)
+        Me.SplitContainer2.Panel1MinSize = 0
         '
         'SplitContainer2.Panel2
         '
@@ -1877,8 +1879,11 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.txtCell)
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
+        Me.SplitContainer2.Panel2.Enabled = False
+        Me.SplitContainer2.Panel2Collapsed = True
+        Me.SplitContainer2.Panel2MinSize = 0
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 255
+        Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3218,7 +3223,7 @@ Partial Class EmployeeForm
         Me.dgvDepen.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvDepen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDepen.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvDepen.Location = New System.Drawing.Point(0, 25)
+        Me.dgvDepen.Location = New System.Drawing.Point(0, 0)
         Me.dgvDepen.MultiSelect = False
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing

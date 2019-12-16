@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
@@ -13,7 +13,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
-
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
+    
     Private Const adjustmentColumn As String = "(Adj.)"
 
     Private Const totalAdjustmentColumn As String = "Adj."

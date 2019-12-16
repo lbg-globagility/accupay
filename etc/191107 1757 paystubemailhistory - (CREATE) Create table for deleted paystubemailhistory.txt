@@ -1,0 +1,17 @@
+CREATE TABLE `paystubemailhistory` (
+	`RowID` INT(10) NOT NULL AUTO_INCREMENT,
+	`Created` TIMESTAMP NOT NULL DEFAULT current_timestamp(),
+	`SentBy` INT(10) NOT NULL,
+	`PaystubID` INT(10) NOT NULL,
+	`ReferenceNumber` VARCHAR(50) NOT NULL COMMENT 'Used as file name of the PDF',
+	`SentDateTime` DATETIME NOT NULL,
+	`EmailAddress` VARCHAR(100) NOT NULL,
+	PRIMARY KEY (`RowID`),
+	INDEX `FK_paystubemailhistory_user_SentBy` (`SentBy`),
+	INDEX `FK_paystubemailhistory_paystub_PaystubID` (`PaystubID`),
+	CONSTRAINT `FK_paystubemailhistory_paystub_PaystubID` FOREIGN KEY (`PaystubID`) REFERENCES `paystub` (`RowID`) ON DELETE CASCADE,
+	CONSTRAINT `FK_paystubemailhistory_user_SentBy` FOREIGN KEY (`SentBy`) REFERENCES `user` (`RowID`)
+)
+COLLATE='latin1_swedish_ci'
+ENGINE=InnoDB
+;

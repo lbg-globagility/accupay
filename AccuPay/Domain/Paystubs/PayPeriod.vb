@@ -1,9 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Enums
-Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Data
 
 Namespace Global.AccuPay.Entity
 
@@ -58,13 +57,13 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsSemiMonthly As Boolean
             Get
-                Return PayFrequencyID.Value = PayFrequencyType.SemiMonthly
+                Return PayFrequencyID.Value = PayrollTools.PayFrequencySemiMonthlyId
             End Get
         End Property
 
         Public ReadOnly Property IsWeekly As Boolean
             Get
-                Return PayFrequencyID.Value = PayFrequencyType.Weekly
+                Return PayFrequencyID.Value = PayrollTools.PayFrequencyWeeklyId
             End Get
         End Property
 

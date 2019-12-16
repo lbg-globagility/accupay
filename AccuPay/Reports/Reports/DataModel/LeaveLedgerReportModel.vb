@@ -1,4 +1,6 @@
-﻿Public Class LeaveLedgerReportModel
+﻿Imports AccuPay.Utils
+
+Public Class LeaveLedgerReportModel
 
     Public Property EmployeeNumber As String
 
@@ -34,6 +36,7 @@
     End Property
 
     Private _beginningBalance As Decimal
+
     Public Property BeginningBalance() As Decimal
         Get
             Return _beginningBalance
@@ -44,6 +47,7 @@
     End Property
 
     Private _availedLeave As Decimal
+
     Public Property AvailedLeave() As Decimal
         Get
             Return _availedLeave
@@ -76,6 +80,5 @@
             Return EndingBalance / 8
         End Get
     End Property
-
 
 End Class

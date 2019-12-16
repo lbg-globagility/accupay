@@ -1,9 +1,8 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Enums
-Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Data
 Imports Microsoft.EntityFrameworkCore
 
 Public Class DateRangePickerDialog
@@ -25,15 +24,16 @@ Public Class DateRangePickerDialog
     Private _rowId As Integer
 
     Private _passedPayPeriod As IPayPeriod
+    Private ReadOnly _removePayPeriodValidation As Boolean
 
-    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing)
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
         _passedPayPeriod = passedPayPeriod
-
+        _removePayPeriodValidation = removePayPeriodValidation
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -57,7 +57,7 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
-        _payFrequencyId = PayFrequencyType.SemiMonthly
+        _payFrequencyId = PayrollTools.PayFrequencySemiMonthlyId
 
         Await LoadPayPeriods()
 
@@ -82,7 +82,7 @@ Public Class DateRangePickerDialog
         End If
 
         Dim currentPayPeriodModel = _payperiodModels.
-                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod?.RowID)).
+                                Where(Function(p) Nullable.Equals(p.RowID, currentPayPeriod.RowID)).
                                 LastOrDefault
 
         If currentPayPeriodModel Is Nothing Then Return
@@ -162,7 +162,7 @@ Public Class DateRangePickerDialog
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If Await PayrollTools.
+        If _removePayPeriodValidation = False AndAlso Await PayrollTools.
                     ValidatePayPeriodAction(_currentPayperiod.RowID) = False Then Return
 
         DialogResult = DialogResult.OK

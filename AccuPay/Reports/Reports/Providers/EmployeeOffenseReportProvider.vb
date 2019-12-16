@@ -6,6 +6,7 @@ Public Class EmployeeOffenseReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employee Offenses" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
         Dim payperiodSelector = New PayrollSummaDateSelection()

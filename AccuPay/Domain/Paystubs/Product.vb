@@ -48,6 +48,7 @@ Namespace Global.AccuPay.Entity
         <NotMapped>
         Public Overridable Property Catalog As String
 
+        <NotMapped>
         Public Overridable Property Comments As String
 
         Public Overridable Property Status As String

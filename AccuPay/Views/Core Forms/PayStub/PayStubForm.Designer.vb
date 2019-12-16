@@ -274,12 +274,15 @@ Partial Class PayStubForm
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.GeneratePayrollToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ManagePayrollToolStripDropDownButton = New System.Windows.Forms.ToolStripDropDownButton()
+        Me.ManagePayslipsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ManagePrintPayslipsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ManageEmailPayslipsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrintPaySlipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeclaredToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayslipDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayslipActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DeclaredToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ActualToolStripMenuItem3 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -3033,56 +3036,76 @@ Partial Class PayStubForm
         '
         'ManagePayrollToolStripDropDownButton
         '
-        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
         Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
         Me.ManagePayrollToolStripDropDownButton.Size = New System.Drawing.Size(118, 22)
         Me.ManagePayrollToolStripDropDownButton.Text = "Manage Payroll"
         '
+        'ManagePayslipsToolStripMenuItem
+        '
+        Me.ManagePayslipsToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePrintPayslipsToolStripMenuItem, Me.ManageEmailPayslipsToolStripMenuItem})
+        Me.ManagePayslipsToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.payroll
+        Me.ManagePayslipsToolStripMenuItem.Name = "ManagePayslipsToolStripMenuItem"
+        Me.ManagePayslipsToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.ManagePayslipsToolStripMenuItem.Text = "Manage Payslips"
+        '
+        'ManagePrintPayslipsToolStripMenuItem
+        '
+        Me.ManagePrintPayslipsToolStripMenuItem.Name = "ManagePrintPayslipsToolStripMenuItem"
+        Me.ManagePrintPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManagePrintPayslipsToolStripMenuItem.Text = "Print Payslips"
+        '
+        'ManageEmailPayslipsToolStripMenuItem
+        '
+        Me.ManageEmailPayslipsToolStripMenuItem.Name = "ManageEmailPayslipsToolStripMenuItem"
+        Me.ManageEmailPayslipsToolStripMenuItem.Size = New System.Drawing.Size(148, 22)
+        Me.ManageEmailPayslipsToolStripMenuItem.Text = "Email Payslips"
+        '
         'PrintPaySlipToolStripMenuItem
         '
-        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem2, Me.ActualToolStripMenuItem2})
+        Me.PrintPaySlipToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayslipDeclaredToolStripMenuItem, Me.PayslipActualToolStripMenuItem})
         Me.PrintPaySlipToolStripMenuItem.Image = CType(resources.GetObject("PrintPaySlipToolStripMenuItem.Image"), System.Drawing.Image)
         Me.PrintPaySlipToolStripMenuItem.Name = "PrintPaySlipToolStripMenuItem"
         Me.PrintPaySlipToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.PrintPaySlipToolStripMenuItem.Text = "Print Payslips"
         '
-        'DeclaredToolStripMenuItem2
+        'PayslipDeclaredToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem2.Name = "DeclaredToolStripMenuItem2"
-        Me.DeclaredToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem2.Tag = "0"
-        Me.DeclaredToolStripMenuItem2.Text = "Declared"
+        Me.PayslipDeclaredToolStripMenuItem.Name = "PayslipDeclaredToolStripMenuItem"
+        Me.PayslipDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayslipDeclaredToolStripMenuItem.Tag = "0"
+        Me.PayslipDeclaredToolStripMenuItem.Text = "Declared"
         '
-        'ActualToolStripMenuItem2
+        'PayslipActualToolStripMenuItem
         '
-        Me.ActualToolStripMenuItem2.Name = "ActualToolStripMenuItem2"
-        Me.ActualToolStripMenuItem2.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem2.Tag = "1"
-        Me.ActualToolStripMenuItem2.Text = "Actual"
+        Me.PayslipActualToolStripMenuItem.Name = "PayslipActualToolStripMenuItem"
+        Me.PayslipActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayslipActualToolStripMenuItem.Tag = "1"
+        Me.PayslipActualToolStripMenuItem.Text = "Actual"
         '
         'PrintPayrollSummaryToolStripMenuItem
         '
-        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeclaredToolStripMenuItem3, Me.ActualToolStripMenuItem3})
+        Me.PrintPayrollSummaryToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.PayrollSummaryDeclaredToolStripMenuItem, Me.PayrollSummaryActualToolStripMenuItem})
         Me.PrintPayrollSummaryToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.timeattendance
         Me.PrintPayrollSummaryToolStripMenuItem.Name = "PrintPayrollSummaryToolStripMenuItem"
         Me.PrintPayrollSummaryToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.PrintPayrollSummaryToolStripMenuItem.Text = "Print Payroll Summary"
         '
-        'DeclaredToolStripMenuItem3
+        'PayrollSummaryDeclaredToolStripMenuItem
         '
-        Me.DeclaredToolStripMenuItem3.Name = "DeclaredToolStripMenuItem3"
-        Me.DeclaredToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
-        Me.DeclaredToolStripMenuItem3.Tag = "0"
-        Me.DeclaredToolStripMenuItem3.Text = "Declared"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
-        'ActualToolStripMenuItem3
+        'PayrollSummaryActualToolStripMenuItem
         '
-        Me.ActualToolStripMenuItem3.Name = "ActualToolStripMenuItem3"
-        Me.ActualToolStripMenuItem3.Size = New System.Drawing.Size(120, 22)
-        Me.ActualToolStripMenuItem3.Tag = "1"
-        Me.ActualToolStripMenuItem3.Text = "Actual"
+        Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
+        Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
         'DeletePayrollToolStripMenuItem
         '
@@ -3764,11 +3787,11 @@ Partial Class PayStubForm
     Friend WithEvents DataGridViewTextBoxColumn28 As DataGridViewTextBoxColumn
     Friend WithEvents ManagePayrollToolStripDropDownButton As ToolStripDropDownButton
     Friend WithEvents PrintPaySlipToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeclaredToolStripMenuItem2 As ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem2 As ToolStripMenuItem
+    Friend WithEvents PayslipDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PayslipActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents PrintPayrollSummaryToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DeclaredToolStripMenuItem3 As ToolStripMenuItem
-    Friend WithEvents ActualToolStripMenuItem3 As ToolStripMenuItem
+    Friend WithEvents PayrollSummaryDeclaredToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents PayrollSummaryActualToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ClosePayrollToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ReopenPayrollToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GeneratePayrollToolStripButton As ToolStripButton
@@ -3777,4 +3800,7 @@ Partial Class PayStubForm
     Friend WithEvents CashOutUnusedLeavesToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents RegeneratePayrollToolStripMenuItem As ToolStripButton
     Friend WithEvents DeletePayrollToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ManagePayslipsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
 End Class

@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Extensions
 Imports AccuPay.Repository
-Imports AccuPay.SimplifiedEntities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -18,6 +18,10 @@ Public Class PayrollTools
     Public Const DivisorToDailyRate As Integer = 8
 
     Public Const SemiMonthlyPayPeriodsPerMonth As Integer = 2
+
+    Public Const PayFrequencySemiMonthlyId As Integer = 1
+
+    Public Const PayFrequencyWeeklyId As Integer = 4
 
     Private Const threeDays As Integer = 3
 
@@ -172,71 +176,39 @@ Public Class PayrollTools
     End Function
 
     Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(
-                                    Optional payperiods As IList(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
+                                    Optional payperiods As IEnumerable(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
 
-        'replace this with a policy
-        'fourlinq can use this feature also
-        'for clients that has the same attendance and payroll period
-        Dim isBenchmarkOwner = ((New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark)
+        Return Await Task.Run(Function()
 
-        Dim currentDay = Date.Today.ToMinimumHourValue
+                                  'replace this with a policy
+                                  'fourlinq can use this feature also
+                                  'for clients that has the same attendance and payroll period
+                                  Dim isBenchmarkOwner = ((New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark)
 
-        If payperiods Is Nothing OrElse payperiods.Count = 0 Then
+                                  Dim currentDay = Date.Today.ToMinimumHourValue
 
-            Using context = New PayrollContext()
+                                  Using context = New PayrollContext()
 
-                Dim payPeriodThisDay = Await context.PayPeriods.
-                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(p) p.IsSemiMonthly).
-                                        Where(Function(p) p.PayToDate >= currentDay).
-                                        Where(Function(p) p.PayFromDate <= currentDay).
-                                        OrderByDescending(Function(p) p.PayToDate).
-                                        FirstOrDefaultAsync
+                                      If payperiods Is Nothing OrElse payperiods.Count = 0 Then
+                                          payperiods = context.PayPeriods.
+                                     Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                     Where(Function(p) p.IsSemiMonthly)
+                                      End If
 
-                'This is done to ensure that we get the correct year.
-                'For scenarios like The first cutoff for 2019 is Dec. 16-31, 2018
-                'workingYearThisDay for December 16 should be 2019, not 2018.
-                Dim workingYearThisDay = payPeriodThisDay?.Year
+                                      If isBenchmarkOwner Then
 
-                If workingYearThisDay Is Nothing Then
+                                          Return payperiods.
+                                     Where(Function(p) currentDay >= p.PayFromDate AndAlso currentDay <= p.PayToDate).
+                                     LastOrDefault
+                                      Else
 
-                    Return Nothing
+                                          Return payperiods.
+                                     Where(Function(p) p.PayToDate < currentDay).
+                                     LastOrDefault
+                                      End If
+                                  End Using
 
-                End If
-
-                Dim query = context.PayPeriods.
-                        Where(Function(p) p.Year = workingYearThisDay.Value).
-                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                        Where(Function(p) p.IsSemiMonthly)
-
-                If isBenchmarkOwner Then
-
-                    query = query.Where(Function(p) currentDay >= p.PayFromDate).
-                                    Where(Function(p) currentDay <= p.PayToDate)
-                Else
-                    query = query.Where(Function(p) p.PayToDate < currentDay)
-                End If
-
-                Return Await query.
-                        OrderByDescending(Function(p) p.PayToDate).
-                        FirstOrDefaultAsync
-
-            End Using
-        Else
-
-            If isBenchmarkOwner Then
-
-                Return payperiods.
-                    Where(Function(p) currentDay >= p.PayFromDate AndAlso currentDay <= p.PayToDate).
-                    LastOrDefault
-            Else
-
-                Return payperiods.
-                    Where(Function(p) p.PayToDate < currentDay).
-                    LastOrDefault
-            End If
-
-        End If
+                              End Function)
 
     End Function
 

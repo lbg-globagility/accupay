@@ -1,34 +1,35 @@
-﻿Imports Femiani.Forms.UI.Input
+﻿Imports AccuPay.DB
+Imports Femiani.Forms.UI.Input
 
 Public Class EmployeeSelection
 
-    Dim loadEmpQuery = "SELECT" & _
-                        " emp.RowID" & _
-                        ",emp.EmployeeID" & _
-                        ",emp.FirstName" & _
-                        ",emp.MiddleName" & _
-                        ",emp.LastName" & _
-                        ",emp.Surname" & _
-                        ",emp.Nickname" & _
-                        ",emp.TINNo" & _
-                        ",emp.SSSNo" & _
-                        ",emp.HDMFNo" & _
-                        ",emp.PhilHealthNo" & _
-                        ",COALESCE(pos.PositionName,'') 'PositionName'" & _
-                        ",COALESCE(emp.PositionID,'') 'PositionID'" & _
-                        ",emp.EmploymentStatus" & _
-                        ",emp.HomeAddress" & _
-                        ",IF(emp.Gender='M','Male','Female') 'Gender'" & _
-                        ",emp.MaritalStatus" & _
-                        ",emp.NoOfDependents" & _
-                        ",COALESCE(DATE_FORMAT(emp.Birthdate,'%m/%d%Y'),'') 'Birthdate'" & _
-                        ",COALESCE(DATE_FORMAT(emp.StartDate,'%m/%d/%Y'),'') 'StartDate'" & _
-                        ",payf.PayFrequencyType 'PayFrequency'" & _
-                        ",emp.PayFrequencyID" & _
-                        ",IFNULL(pos.DivisionId,'') 'DivisionId'" & _
-                        ",emp.Image" & _
-                        " FROM employee emp" & _
-                        " LEFT JOIN position pos ON pos.RowID=emp.PositionID" & _
+    Dim loadEmpQuery = "SELECT" &
+                        " emp.RowID" &
+                        ",emp.EmployeeID" &
+                        ",emp.FirstName" &
+                        ",emp.MiddleName" &
+                        ",emp.LastName" &
+                        ",emp.Surname" &
+                        ",emp.Nickname" &
+                        ",emp.TINNo" &
+                        ",emp.SSSNo" &
+                        ",emp.HDMFNo" &
+                        ",emp.PhilHealthNo" &
+                        ",COALESCE(pos.PositionName,'') 'PositionName'" &
+                        ",COALESCE(emp.PositionID,'') 'PositionID'" &
+                        ",emp.EmploymentStatus" &
+                        ",emp.HomeAddress" &
+                        ",IF(emp.Gender='M','Male','Female') 'Gender'" &
+                        ",emp.MaritalStatus" &
+                        ",emp.NoOfDependents" &
+                        ",COALESCE(DATE_FORMAT(emp.Birthdate,'%m/%d%Y'),'') 'Birthdate'" &
+                        ",COALESCE(DATE_FORMAT(emp.StartDate,'%m/%d/%Y'),'') 'StartDate'" &
+                        ",payf.PayFrequencyType 'PayFrequency'" &
+                        ",emp.PayFrequencyID" &
+                        ",IFNULL(pos.DivisionId,'') 'DivisionId'" &
+                        ",emp.Image" &
+                        " FROM employee emp" &
+                        " LEFT JOIN position pos ON pos.RowID=emp.PositionID" &
                         " LEFT JOIN payfrequency payf ON payf.RowID=emp.PayFrequencyID"
 
     Dim n_ERowID As String = String.Empty
@@ -202,7 +203,6 @@ Public Class EmployeeSelection
 
             End If
 
-
         End If
 
         dgvEmployee.Rows.Clear()
@@ -259,7 +259,6 @@ Public Class EmployeeSelection
                 End If
 
             End With
-
         Else
 
         End If
@@ -335,7 +334,6 @@ Public Class EmployeeSelection
         If autcomptxtagency.Text.Trim.Length = 0 Then
 
             LoadEmployees()
-
         Else
 
             LoadEmployees("(EmployeeID ='" & autcomptxtagency.Text.Trim & "' OR FirstName ='" & autcomptxtagency.Text.Trim & "' OR LastName='" & autcomptxtagency.Text.Trim & "')")
@@ -389,7 +387,7 @@ Public Class EmployeeSelection
 
     Dim theSearchQuery5 As String = Nothing
 
-    Private Sub cbosearch1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cbosearch1.KeyPress, cbosearch2.KeyPress, cbosearch3.KeyPress, _
+    Private Sub cbosearch1_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cbosearch1.KeyPress, cbosearch2.KeyPress, cbosearch3.KeyPress,
                                                                                       cbosearch4.KeyPress, cbosearch5.KeyPress
         Dim e_asc As String = Asc(e.KeyChar)
 
@@ -407,9 +405,9 @@ Public Class EmployeeSelection
 
     End Sub
 
-    Private Sub cbosearch1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbosearch1.SelectedIndexChanged, cbosearch2.SelectedIndexChanged, cbosearch3.SelectedIndexChanged, _
-                                                                                          cbosearch4.SelectedIndexChanged, cbosearch5.SelectedIndexChanged, _
-                                                                                          cbosearch1.SelectedValueChanged, cbosearch2.SelectedValueChanged, cbosearch3.SelectedValueChanged, _
+    Private Sub cbosearch1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbosearch1.SelectedIndexChanged, cbosearch2.SelectedIndexChanged, cbosearch3.SelectedIndexChanged,
+                                                                                          cbosearch4.SelectedIndexChanged, cbosearch5.SelectedIndexChanged,
+                                                                                          cbosearch1.SelectedValueChanged, cbosearch2.SelectedValueChanged, cbosearch3.SelectedValueChanged,
                                                                                           cbosearch4.SelectedValueChanged, cbosearch5.SelectedValueChanged
         Dim senderSelIndx = DirectCast(sender, ComboBox)
 
@@ -708,7 +706,7 @@ Public Class EmployeeSelection
 
     Dim previousSearch As String = Nothing
 
-    Private Sub PaginationEmployee(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Prev.LinkClicked, Nxt.LinkClicked, _
+    Private Sub PaginationEmployee(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles Prev.LinkClicked, Nxt.LinkClicked,
                                                                                                  First.LinkClicked, Last.LinkClicked
 
         Dim sender_linklabel = DirectCast(sender, LinkLabel)
@@ -725,7 +723,6 @@ Public Class EmployeeSelection
             If modcent = 0 Then
 
                 pagination -= 20
-
             Else
 
                 pagination -= modcent
@@ -744,7 +741,6 @@ Public Class EmployeeSelection
 
             If modcent = 0 Then
                 pagination += 20
-
             Else
                 pagination -= modcent
 
@@ -756,10 +752,8 @@ Public Class EmployeeSelection
         ElseIf sender_linklabel.Name = "Last" Then
             Dim lastpage = Val(EXECQUER("SELECT COUNT(RowID) / 20 FROM employee WHERE OrganizationID=" & orgztnID & ";"))
 
-
-
             Dim remender = lastpage Mod 1
-            
+
             pagination = (lastpage - remender) * 20
 
             If pagination - 20 < 20 Then
@@ -811,7 +805,6 @@ Public Class EmployeeSelection
             '    'SendKeys.Send("{DOWN}")
 
             '    Return MyBase.ProcessCmdKey(msg, keyData)
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)
@@ -859,7 +852,6 @@ Public Class EmployeeSelection
         ElseIf e.Cancelled Then
 
             MessageBox.Show("Background work cancelled.")
-
         Else
 
         End If

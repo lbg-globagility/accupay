@@ -1,8 +1,6 @@
 ﻿Option Strict On
 
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports System.ComponentModel.DataAnnotations
-Imports Acupay
 Imports AccuPay.Entity
 
 Namespace Global.AccuPay.JobLevels

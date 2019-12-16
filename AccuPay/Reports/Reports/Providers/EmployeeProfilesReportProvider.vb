@@ -1,12 +1,14 @@
 ﻿Option Strict On
+
 Imports System.IO
-Imports CrystalDecisions.CrystalReports.Engine
+Imports AccuPay.DB
 Imports OfficeOpenXml
 
 Public Class EmployeeProfilesReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employee Personal Information" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"}

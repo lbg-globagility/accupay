@@ -1,11 +1,11 @@
-﻿Imports Acupay
-
-Imports CrystalDecisions.CrystalReports.Engine
+﻿Imports CrystalDecisions.CrystalReports.Engine
+Imports AccuPay.DB
 
 Public Class EmployeeIdentificationNumberReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employee's Identification Number" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Sub Run() Implements IReportProvider.Run
 

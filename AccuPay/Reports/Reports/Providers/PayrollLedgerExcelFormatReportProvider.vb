@@ -1,6 +1,6 @@
-﻿
-Imports System.Collections.ObjectModel
+﻿Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.DB
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -12,6 +12,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
     Private dateFrom, dateTo As Date
 
     Public Property Name As String = "Payroll Ledger" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private basic_alphabet() As String =
         New String() {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z",
@@ -110,7 +111,6 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
             dateFrom = periodSelector.DateFrom
             dateTo = periodSelector.DateTo
-
         Else
             boolResult = False
         End If
@@ -432,6 +432,7 @@ Public Class PayrollLedgerExcelFormatReportProvider
     End Function
 
     Private Class ReportColumn
+
         Public Sub New(name As String, source As String, Optional type As ColumnType = ColumnType.Numeric)
             Me.Name = name
             Me.SourceName = source

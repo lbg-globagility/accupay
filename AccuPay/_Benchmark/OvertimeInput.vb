@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Utils
+
 Namespace Benchmark
 
     Public Class OvertimeInput

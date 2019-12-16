@@ -1,4 +1,4 @@
-﻿'Imports Emgu.Util
+'Imports Emgu.Util
 'Imports Emgu.CV
 'Imports Emgu.CV.OCR
 'Imports Emgu.CV.
@@ -4646,15 +4646,13 @@ Public Class EmployeeForm
         End If
 
         Dim success = Await NewSaveLeave()
-        'Dim hasError = OldSaveLeave()
-
-        listofEditRowleave.Clear()
 
         If success Then
             '                                           'dgvEmp
             InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
 
             dgvEmp_SelectionChanged(sender, e)
+            listofEditRowleave.Clear()
 
         End If
 
@@ -4671,7 +4669,7 @@ Public Class EmployeeForm
             .LastUpdBy = z_User,
             .StartTime = MilitTime(row.Cells("elv_StartTime").Value).ToString().ToNullableTimeSpan(),
             .EndTime = MilitTime(row.Cells("elv_EndTime").Value).ToString().ToNullableTimeSpan(),
-            .LeaveType = row.Cells("elv_Type").Value,
+            .leavetype = row.Cells("elv_Type").Value,
             .EmployeeID = dgvEmp.CurrentRow.Cells("RowID").Value,
             .StartDate = ObjectUtils.ToDateTime(row.Cells("elv_StartDate").Value),
             .EndDate = ObjectUtils.ToNullableDateTime(row.Cells("elv_EndDate").Value),
@@ -4713,8 +4711,9 @@ Public Class EmployeeForm
                 Else
                     If listofEditRowleave.Contains(row.Cells("elv_RowID").Value) Then
 
-                        If row.Cells("elv_StartTime").Value <> Nothing And row.Cells("elv_EndTime").Value <> Nothing _
-                            And row.Cells("elv_StartDate").Value <> Nothing And row.Cells("elv_EndDate").Value <> Nothing Then
+                        If String.IsNullOrWhiteSpace(row.Cells("elv_StartDate").Value) = False AndAlso String.IsNullOrWhiteSpace(row.Cells("elv_EndDate").Value) = False AndAlso
+                            ((String.IsNullOrWhiteSpace(row.Cells("elv_StartTime").Value) AndAlso String.IsNullOrWhiteSpace(row.Cells("elv_EndTime").Value)) OrElse
+                            (String.IsNullOrWhiteSpace(row.Cells("elv_StartTime").Value) = False AndAlso String.IsNullOrWhiteSpace(row.Cells("elv_EndTime").Value) = False)) Then
 
                             Dim leave = CreateLeaveObject(leaveId, row)
 
@@ -4732,7 +4731,9 @@ Public Class EmployeeForm
             If leaves.Any Then
 
                 Await leaveRepository.SaveManyAsync(leaves)
-
+            Else
+                MessageBoxHelper.Warning("No altered employee leaves to save.")
+                Return False
             End If
 
             Return True
@@ -4746,128 +4747,6 @@ Public Class EmployeeForm
 
         Return False
 
-    End Function
-
-    'TBDeleted
-    Private Function OldSaveLeave() As Boolean
-        Dim param(13, 2) As Object
-
-        param(0, 0) = "elv_RowID"
-        param(1, 0) = "elv_OrganizationID"
-        param(2, 0) = "elv_LeaveStartTime"
-        param(3, 0) = "elv_LeaveType"
-        param(4, 0) = "elv_CreatedBy"
-        param(5, 0) = "elv_LastUpdBy"
-        param(6, 0) = "elv_EmployeeID"
-        param(7, 0) = "elv_LeaveEndTime"
-        param(8, 0) = "elv_LeaveStartDate"
-        param(9, 0) = "elv_LeaveEndDate"
-        param(10, 0) = "elv_Reason"
-        param(11, 0) = "elv_Comments"
-        param(12, 0) = "elv_Image"
-        param(13, 0) = "elv_Status"
-
-        For Each r As DataGridViewRow In dgvempleave.Rows
-
-            Dim elv_rowid = If(ValNoComma(r.Cells("elv_RowID").Value) = 0, DBNull.Value, r.Cells("elv_RowID").Value)
-
-            If Val(r.Cells("elv_RowID").Value) = 0 And
-                tsbtnNewLeave.Visible = True Then
-
-                If r.IsNewRow = False Then
-
-                    If r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
-
-                        param(0, 1) = DBNull.Value
-                        param(1, 1) = orgztnID
-                        param(2, 1) = MilitTime(r.Cells("elv_StartTime").Value) 'If(r.Cells("Column3").Value = Nothing, DBNull.Value, r.Cells("Column3").Value) 'Start time
-                        param(3, 1) = If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value) 'Leave type
-                        param(4, 1) = z_User 'CreatedBy
-                        param(5, 1) = z_User 'LastUpdBy
-                        param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                        param(7, 1) = MilitTime(r.Cells("elv_EndTime").Value) 'If(r.Cells("Column4").Value = Nothing, DBNull.Value, r.Cells("Column4").Value) 'End time
-                        param(8, 1) = If(r.Cells("elv_StartDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_StartDate").Value), "yyyy-MM-dd")) 'Start date
-                        param(9, 1) = If(r.Cells("elv_EndDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_EndDate").Value), "yyyy-MM-dd")) 'End date
-                        param(10, 1) = If(r.Cells("elv_Reason").Value = Nothing, "", r.Cells("elv_Reason").Value) 'Reason
-                        param(11, 1) = If(r.Cells("elv_Comment").Value = Nothing, "", r.Cells("elv_Comment").Value) 'Comments
-
-                        Dim imageobj As Object = If(r.Cells("elv_Image").Value Is Nothing,
-                                                    DBNull.Value,
-                                                    r.Cells("elv_Image").Value) 'Image
-
-                        param(12, 1) = imageobj
-
-                        param(13, 1) = If(r.Cells("elv_Status").Value = Nothing, "", r.Cells("elv_Status").Value)
-
-                        r.Cells("elv_RowID").Value =
-                            New ReadSQLFunction("INSUPD_employeeleave",
-                                                    "empleaveID",
-                                                elv_rowid,
-                                                orgztnID,
-                                                MilitTime(r.Cells("elv_StartTime").Value),
-                                                If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value),
-                                                z_User,
-                                                z_User,
-                                                dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                MilitTime(r.Cells("elv_EndTime").Value),
-                                                If(r.Cells("elv_StartDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_StartDate").Value), "yyyy-MM-dd")),
-                                                If(r.Cells("elv_EndDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_EndDate").Value), "yyyy-MM-dd")),
-                                                If(r.Cells("elv_Reason").Value = Nothing, "", r.Cells("elv_Reason").Value),
-                                                If(r.Cells("elv_Comment").Value = Nothing, "", r.Cells("elv_Comment").Value),
-                                                DBNull.Value,
-                                                If(r.Cells("elv_Status").Value = Nothing, "", r.Cells("elv_Status").Value)).ReturnValue
-
-                    End If
-
-                End If
-            Else
-
-                If listofEditRowleave.Contains(r.Cells("elv_RowID").Value) Then
-                    If r.Cells("elv_StartTime").Value <> Nothing And r.Cells("elv_EndTime").Value <> Nothing _
-                        And r.Cells("elv_StartDate").Value <> Nothing And r.Cells("elv_EndDate").Value <> Nothing Then
-
-                        param(0, 1) = r.Cells("elv_RowID").Value
-                        param(1, 1) = orgztnID
-                        param(2, 1) = MilitTime(r.Cells("elv_StartTime").Value) 'If(r.Cells("Column3").Value = Nothing, DBNull.Value, r.Cells("Column3").Value) 'Start time
-                        param(3, 1) = If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value) 'Leave type
-                        param(4, 1) = z_User 'CreatedBy
-                        param(5, 1) = z_User 'LastUpdBy
-                        param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                        param(7, 1) = MilitTime(r.Cells("elv_EndTime").Value)  'End time
-                        param(8, 1) = If(r.Cells("elv_StartDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_StartDate").Value), "yyyy-MM-dd")) 'Start date
-                        param(9, 1) = If(r.Cells("elv_EndDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_EndDate").Value), "yyyy-MM-dd")) 'End date
-                        param(10, 1) = If(r.Cells("elv_Reason").Value = Nothing, "", r.Cells("elv_Reason").Value) 'Reason
-                        param(11, 1) = If(r.Cells("elv_Comment").Value = Nothing, "", r.Cells("elv_Comment").Value) 'Comments
-                        param(12, 1) = If(r.Cells("elv_Image").Value Is Nothing, DBNull.Value, r.Cells("elv_Image").Value)
-
-                        param(13, 1) = If(r.Cells("elv_Status").Value = Nothing, "", r.Cells("elv_Status").Value)
-
-                        'EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeleave", "empleaveID")
-
-                        Dim n_ReadSQLFunction As _
-                            New ReadSQLFunction("INSUPD_employeeleave",
-                                                    "empleaveID",
-                                                elv_rowid,
-                                                orgztnID,
-                                                MilitTime(r.Cells("elv_StartTime").Value),
-                                                If(r.Cells("elv_Type").Value = Nothing, DBNull.Value, r.Cells("elv_Type").Value),
-                                                z_User,
-                                                z_User,
-                                                dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                MilitTime(r.Cells("elv_EndTime").Value),
-                                                If(r.Cells("elv_StartDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_StartDate").Value), "yyyy-MM-dd")),
-                                                If(r.Cells("elv_EndDate").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("elv_EndDate").Value), "yyyy-MM-dd")),
-                                                If(r.Cells("elv_Reason").Value = Nothing, "", r.Cells("elv_Reason").Value),
-                                                If(r.Cells("elv_Comment").Value = Nothing, "", r.Cells("elv_Comment").Value),
-                                                DBNull.Value,
-                                                If(r.Cells("elv_Status").Value = Nothing, "", r.Cells("elv_Status").Value))
-
-                    End If
-                End If
-            End If
-        Next
-
-        Return hasERR = 0 ' Return true if no errors
     End Function
 
     Sub INSUPD_employeeattachments(Optional eatta_RowID As Object = Nothing,

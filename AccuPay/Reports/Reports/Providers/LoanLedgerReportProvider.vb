@@ -6,6 +6,7 @@ Public Class LoanLedgerReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Loan Ledger" Implements IReportProvider.Name
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Private orgNameAddressSql As String =
         "SELECT

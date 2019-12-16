@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Utils
@@ -9,6 +10,8 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Implements IReportProvider
 
     Public Property Name As String = "Payslip" Implements IReportProvider.Name
+
+    Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Async Sub Run() Implements IReportProvider.Run
 

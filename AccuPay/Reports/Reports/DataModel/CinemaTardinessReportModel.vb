@@ -61,7 +61,8 @@
             ElseIf NumberOfOffense > 5 Then
 
                 Return "HR: FOR IMMEDIATE ACTION"
-
+            Else
+                Return ""
             End If
         End Get
     End Property

@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.Specialized
 Imports System.Configuration
+Imports AccuPay.DB
 Imports AccuPay.Repository
 
 Public Class TimeAttendForm
