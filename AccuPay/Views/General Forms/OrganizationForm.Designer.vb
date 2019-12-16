@@ -24,6 +24,8 @@ Partial Class OrganizationForm
     Private Sub InitializeComponent()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.SplitContainer1 = New System.Windows.Forms.SplitContainer()
+        Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
+        Me.Label71 = New System.Windows.Forms.Label()
         Me.txtZIP = New System.Windows.Forms.TextBox()
         Me.txtRDO = New System.Windows.Forms.TextBox()
         Me.Label68 = New System.Windows.Forms.Label()
@@ -167,8 +169,6 @@ Partial Class OrganizationForm
         Me.txtSearch = New System.Windows.Forms.TextBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label35 = New System.Windows.Forms.Label()
-        Me.Label71 = New System.Windows.Forms.Label()
-        Me.IsAgencyCheckBox = New System.Windows.Forms.CheckBox()
         Me.Panel1.SuspendLayout()
         CType(Me.SplitContainer1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SplitContainer1.Panel1.SuspendLayout()
@@ -324,9 +324,28 @@ Partial Class OrganizationForm
         Me.SplitContainer1.Panel2.Controls.Add(Me.cmbsalutationCB)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label12)
         Me.SplitContainer1.Panel2.Controls.Add(Me.Label11)
+        Me.SplitContainer1.Panel2Collapsed = True
         Me.SplitContainer1.Size = New System.Drawing.Size(1011, 585)
         Me.SplitContainer1.SplitterDistance = 527
         Me.SplitContainer1.TabIndex = 310
+        '
+        'IsAgencyCheckBox
+        '
+        Me.IsAgencyCheckBox.AutoSize = True
+        Me.IsAgencyCheckBox.Location = New System.Drawing.Point(186, 307)
+        Me.IsAgencyCheckBox.Name = "IsAgencyCheckBox"
+        Me.IsAgencyCheckBox.Size = New System.Drawing.Size(15, 14)
+        Me.IsAgencyCheckBox.TabIndex = 377
+        Me.IsAgencyCheckBox.UseVisualStyleBackColor = True
+        '
+        'Label71
+        '
+        Me.Label71.AutoSize = True
+        Me.Label71.Location = New System.Drawing.Point(15, 307)
+        Me.Label71.Name = "Label71"
+        Me.Label71.Size = New System.Drawing.Size(57, 13)
+        Me.Label71.TabIndex = 376
+        Me.Label71.Text = "Is Agency:"
         '
         'txtZIP
         '
@@ -371,6 +390,7 @@ Partial Class OrganizationForm
         Me.cboTaxDeductSched.Name = "cboTaxDeductSched"
         Me.cboTaxDeductSched.Size = New System.Drawing.Size(245, 21)
         Me.cboTaxDeductSched.TabIndex = 369
+        Me.cboTaxDeductSched.Visible = False
         '
         'Label69
         '
@@ -380,6 +400,7 @@ Partial Class OrganizationForm
         Me.Label69.Size = New System.Drawing.Size(186, 13)
         Me.Label69.TabIndex = 370
         Me.Label69.Text = "Withholding Tax deduction schedule :"
+        Me.Label69.Visible = False
         '
         'Label67
         '
@@ -390,6 +411,7 @@ Partial Class OrganizationForm
         Me.Label67.Size = New System.Drawing.Size(49, 13)
         Me.Label67.TabIndex = 368
         Me.Label67.Text = "minute(s)"
+        Me.Label67.Visible = False
         '
         'Label66
         '
@@ -399,6 +421,7 @@ Partial Class OrganizationForm
         Me.Label66.Size = New System.Drawing.Size(166, 13)
         Me.Label66.TabIndex = 367
         Me.Label66.Text = "Number of days of work per year :"
+        Me.Label66.Visible = False
         '
         'txtmindayperyear
         '
@@ -407,6 +430,7 @@ Partial Class OrganizationForm
         Me.txtmindayperyear.Name = "txtmindayperyear"
         Me.txtmindayperyear.Size = New System.Drawing.Size(76, 20)
         Me.txtmindayperyear.TabIndex = 366
+        Me.txtmindayperyear.Visible = False
         '
         'Label143
         '
@@ -416,6 +440,7 @@ Partial Class OrganizationForm
         Me.Label143.Size = New System.Drawing.Size(114, 13)
         Me.Label143.TabIndex = 365
         Me.Label143.Text = "Grace period (minute) :"
+        Me.Label143.Visible = False
         '
         'txtGracePeriod
         '
@@ -425,6 +450,7 @@ Partial Class OrganizationForm
         Me.txtGracePeriod.ShortcutsEnabled = False
         Me.txtGracePeriod.Size = New System.Drawing.Size(41, 20)
         Me.txtGracePeriod.TabIndex = 364
+        Me.txtGracePeriod.Visible = False
         '
         'cbohdmfdeductsched
         '
@@ -435,6 +461,7 @@ Partial Class OrganizationForm
         Me.cbohdmfdeductsched.Name = "cbohdmfdeductsched"
         Me.cbohdmfdeductsched.Size = New System.Drawing.Size(245, 21)
         Me.cbohdmfdeductsched.TabIndex = 362
+        Me.cbohdmfdeductsched.Visible = False
         '
         'lblhdmfdeductsched
         '
@@ -444,6 +471,7 @@ Partial Class OrganizationForm
         Me.lblhdmfdeductsched.Size = New System.Drawing.Size(152, 13)
         Me.lblhdmfdeductsched.TabIndex = 363
         Me.lblhdmfdeductsched.Text = "PAGIBIG deduction shcedule :"
+        Me.lblhdmfdeductsched.Visible = False
         '
         'cbosssdeductsched
         '
@@ -454,6 +482,7 @@ Partial Class OrganizationForm
         Me.cbosssdeductsched.Name = "cbosssdeductsched"
         Me.cbosssdeductsched.Size = New System.Drawing.Size(245, 21)
         Me.cbosssdeductsched.TabIndex = 360
+        Me.cbosssdeductsched.Visible = False
         '
         'Label65
         '
@@ -463,6 +492,7 @@ Partial Class OrganizationForm
         Me.Label65.Size = New System.Drawing.Size(130, 13)
         Me.Label65.TabIndex = 361
         Me.Label65.Text = "SSS deduction schedule :"
+        Me.Label65.Visible = False
         '
         'cbophhdeductsched
         '
@@ -473,6 +503,7 @@ Partial Class OrganizationForm
         Me.cbophhdeductsched.Name = "cbophhdeductsched"
         Me.cbophhdeductsched.Size = New System.Drawing.Size(245, 21)
         Me.cbophhdeductsched.TabIndex = 358
+        Me.cbophhdeductsched.Visible = False
         '
         'Label64
         '
@@ -482,59 +513,65 @@ Partial Class OrganizationForm
         Me.Label64.Size = New System.Drawing.Size(157, 13)
         Me.Label64.TabIndex = 359
         Me.Label64.Text = "PhilHealth deduction schedule :"
+        Me.Label64.Visible = False
         '
         'nightshiftto
         '
         Me.nightshiftto.CustomFormat = "hh:mm tt"
         Me.nightshiftto.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightshiftto.Location = New System.Drawing.Point(519, 417)
+        Me.nightshiftto.Location = New System.Drawing.Point(519, 271)
         Me.nightshiftto.Name = "nightshiftto"
         Me.nightshiftto.Size = New System.Drawing.Size(83, 20)
         Me.nightshiftto.TabIndex = 325
+        Me.nightshiftto.Visible = False
         '
         'nightshiftfrom
         '
         Me.nightshiftfrom.CustomFormat = "hh:mm tt"
         Me.nightshiftfrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightshiftfrom.Location = New System.Drawing.Point(408, 417)
+        Me.nightshiftfrom.Location = New System.Drawing.Point(408, 271)
         Me.nightshiftfrom.Name = "nightshiftfrom"
         Me.nightshiftfrom.Size = New System.Drawing.Size(83, 20)
         Me.nightshiftfrom.TabIndex = 324
+        Me.nightshiftfrom.Visible = False
         '
         'Label61
         '
         Me.Label61.AutoSize = True
         Me.Label61.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label61.Location = New System.Drawing.Point(497, 423)
+        Me.Label61.Location = New System.Drawing.Point(497, 277)
         Me.Label61.Name = "Label61"
         Me.Label61.Size = New System.Drawing.Size(16, 13)
         Me.Label61.TabIndex = 357
         Me.Label61.Text = "to"
+        Me.Label61.Visible = False
         '
         'Label62
         '
         Me.Label62.AutoSize = True
         Me.Label62.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label62.Location = New System.Drawing.Point(375, 423)
+        Me.Label62.Location = New System.Drawing.Point(375, 277)
         Me.Label62.Name = "Label62"
         Me.Label62.Size = New System.Drawing.Size(27, 13)
         Me.Label62.TabIndex = 356
         Me.Label62.Text = "from"
+        Me.Label62.Visible = False
         '
         'Label63
         '
         Me.Label63.AutoSize = True
-        Me.Label63.Location = New System.Drawing.Point(364, 400)
+        Me.Label63.Location = New System.Drawing.Point(364, 254)
         Me.Label63.Name = "Label63"
         Me.Label63.Size = New System.Drawing.Size(54, 13)
         Me.Label63.TabIndex = 355
         Me.Label63.Text = "Night shift"
+        Me.Label63.Visible = False
         '
         'nightdiffshiftto
         '
         Me.nightdiffshiftto.CustomFormat = "hh:mm tt"
         Me.nightdiffshiftto.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftto.Location = New System.Drawing.Point(519, 372)
+        Me.nightdiffshiftto.Location = New System.Drawing.Point(519, 231)
         Me.nightdiffshiftto.Name = "nightdiffshiftto"
         Me.nightdiffshiftto.Size = New System.Drawing.Size(83, 20)
         Me.nightdiffshiftto.TabIndex = 323
@@ -543,7 +580,7 @@ Partial Class OrganizationForm
         '
         Me.nightdiffshiftfrom.CustomFormat = "hh:mm tt"
         Me.nightdiffshiftfrom.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(408, 372)
+        Me.nightdiffshiftfrom.Location = New System.Drawing.Point(408, 231)
         Me.nightdiffshiftfrom.Name = "nightdiffshiftfrom"
         Me.nightdiffshiftfrom.Size = New System.Drawing.Size(83, 20)
         Me.nightdiffshiftfrom.TabIndex = 322
@@ -552,7 +589,7 @@ Partial Class OrganizationForm
         '
         Me.Label60.AutoSize = True
         Me.Label60.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label60.Location = New System.Drawing.Point(497, 378)
+        Me.Label60.Location = New System.Drawing.Point(497, 237)
         Me.Label60.Name = "Label60"
         Me.Label60.Size = New System.Drawing.Size(16, 13)
         Me.Label60.TabIndex = 352
@@ -562,7 +599,7 @@ Partial Class OrganizationForm
         '
         Me.Label59.AutoSize = True
         Me.Label59.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!)
-        Me.Label59.Location = New System.Drawing.Point(375, 378)
+        Me.Label59.Location = New System.Drawing.Point(375, 237)
         Me.Label59.Name = "Label59"
         Me.Label59.Size = New System.Drawing.Size(27, 13)
         Me.Label59.TabIndex = 351
@@ -571,7 +608,7 @@ Partial Class OrganizationForm
         'Label58
         '
         Me.Label58.AutoSize = True
-        Me.Label58.Location = New System.Drawing.Point(364, 355)
+        Me.Label58.Location = New System.Drawing.Point(364, 214)
         Me.Label58.Name = "Label58"
         Me.Label58.Size = New System.Drawing.Size(105, 13)
         Me.Label58.TabIndex = 350
@@ -592,12 +629,13 @@ Partial Class OrganizationForm
         Me.GroupBox1.Controls.Add(Me.Label86)
         Me.GroupBox1.Controls.Add(Me.txtslallow)
         Me.GroupBox1.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GroupBox1.Location = New System.Drawing.Point(367, 221)
+        Me.GroupBox1.Location = New System.Drawing.Point(367, 300)
         Me.GroupBox1.Name = "GroupBox1"
         Me.GroupBox1.Size = New System.Drawing.Size(257, 126)
         Me.GroupBox1.TabIndex = 321
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "Leave"
+        Me.GroupBox1.Visible = False
         '
         'Label56
         '
@@ -1620,24 +1658,6 @@ Partial Class OrganizationForm
         Me.Label35.TabIndex = 312
         Me.Label35.Text = "ORGANIZATION"
         Me.Label35.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'Label71
-        '
-        Me.Label71.AutoSize = True
-        Me.Label71.Location = New System.Drawing.Point(15, 307)
-        Me.Label71.Name = "Label71"
-        Me.Label71.Size = New System.Drawing.Size(57, 13)
-        Me.Label71.TabIndex = 376
-        Me.Label71.Text = "Is Agency:"
-        '
-        'IsAgencyCheckBox
-        '
-        Me.IsAgencyCheckBox.AutoSize = True
-        Me.IsAgencyCheckBox.Location = New System.Drawing.Point(186, 307)
-        Me.IsAgencyCheckBox.Name = "IsAgencyCheckBox"
-        Me.IsAgencyCheckBox.Size = New System.Drawing.Size(15, 14)
-        Me.IsAgencyCheckBox.TabIndex = 377
-        Me.IsAgencyCheckBox.UseVisualStyleBackColor = True
         '
         'OrganizationForm
         '
