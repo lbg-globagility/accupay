@@ -1027,59 +1027,6 @@ Partial Class EmployeeForm
         Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SalaryTab = New AccuPay.SalaryTab()
-        Me.DataGridViewTextBoxColumn162 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn163 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn164 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn165 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn166 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn167 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn168 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn169 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn170 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn171 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn172 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn173 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn174 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn175 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn176 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn177 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn178 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn179 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn180 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn181 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn182 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn183 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn184 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn185 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn186 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn187 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn188 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn189 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn190 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn191 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn192 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn193 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn194 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eawar_DateAwarded = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_IssuingAuth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_CertNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ecert_Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmplyeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_name = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EducationalType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_school = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_degree = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_course = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -1146,6 +1093,59 @@ Partial Class EmployeeForm
         Me.AgencyRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.BranchID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn162 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn163 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn164 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn165 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn166 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn167 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn168 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn169 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn170 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn171 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn172 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn173 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn174 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn175 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn176 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn177 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn178 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn179 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn180 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn181 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn182 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn183 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn184 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn185 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn186 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn187 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn188 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn189 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn190 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn191 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn192 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn193 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn194 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eawar_DateAwarded = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_IssuingAuth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_CertNum = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ecert_Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmplyeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EducationalType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_school = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_degree = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_course = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1746,6 +1746,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Cursor = System.Windows.Forms.Cursors.Default
         Me.SplitContainer2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.SplitContainer2.FixedPanel = System.Windows.Forms.FixedPanel.Panel2
+        Me.SplitContainer2.IsSplitterFixed = True
         Me.SplitContainer2.Location = New System.Drawing.Point(3, 28)
         Me.SplitContainer2.Name = "SplitContainer2"
         Me.SplitContainer2.Orientation = System.Windows.Forms.Orientation.Horizontal
@@ -1861,6 +1862,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label315)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LinkLabel2)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label365)
+        Me.SplitContainer2.Panel1MinSize = 0
         '
         'SplitContainer2.Panel2
         '
@@ -1870,8 +1872,11 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.Controls.Add(Me.txtCell)
         Me.SplitContainer2.Panel2.Controls.Add(Me.lblforballoon1)
         Me.SplitContainer2.Panel2.Cursor = System.Windows.Forms.Cursors.Default
+        Me.SplitContainer2.Panel2.Enabled = False
+        Me.SplitContainer2.Panel2Collapsed = True
+        Me.SplitContainer2.Panel2MinSize = 0
         Me.SplitContainer2.Size = New System.Drawing.Size(854, 455)
-        Me.SplitContainer2.SplitterDistance = 258
+        Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
         '
@@ -3162,12 +3167,12 @@ Partial Class EmployeeForm
         Me.dgvDepen.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvDepen.Dock = System.Windows.Forms.DockStyle.Fill
         Me.dgvDepen.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvDepen.Location = New System.Drawing.Point(0, 25)
+        Me.dgvDepen.Location = New System.Drawing.Point(0, 0)
         Me.dgvDepen.MultiSelect = False
         Me.dgvDepen.Name = "dgvDepen"
         Me.dgvDepen.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvDepen.RowTemplate.DefaultCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDepen.Size = New System.Drawing.Size(852, 163)
+        Me.dgvDepen.Size = New System.Drawing.Size(835, 36)
         Me.dgvDepen.TabIndex = 116
         '
         'Colmn2
@@ -3238,9 +3243,10 @@ Partial Class EmployeeForm
         Me.ToolStrip4.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewDepen, Me.tsbtnSaveDepen, Me.ToolStripButton1, Me.ToolStripButton6, Me.tsbtnImportDependents, Me.ToolStripProgressBar1})
         Me.ToolStrip4.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip4.Name = "ToolStrip4"
-        Me.ToolStrip4.Size = New System.Drawing.Size(852, 25)
+        Me.ToolStrip4.Size = New System.Drawing.Size(835, 25)
         Me.ToolStrip4.TabIndex = 114
         Me.ToolStrip4.Text = "ToolStrip4"
+        Me.ToolStrip4.Visible = False
         '
         'tsbtnNewDepen
         '
@@ -10194,6 +10200,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn161.HeaderText = "Last Update by"
         Me.DataGridViewTextBoxColumn161.Name = "DataGridViewTextBoxColumn161"
         Me.DataGridViewTextBoxColumn161.ReadOnly = True
+        Me.DataGridViewTextBoxColumn161.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn161.Visible = False
         '
         'Colmn0
@@ -10847,341 +10854,6 @@ Partial Class EmployeeForm
         Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
         Me.SalaryTab.TabIndex = 0
         '
-        'DataGridViewTextBoxColumn162
-        '
-        Me.DataGridViewTextBoxColumn162.HeaderText = "PositionID"
-        Me.DataGridViewTextBoxColumn162.Name = "DataGridViewTextBoxColumn162"
-        Me.DataGridViewTextBoxColumn162.ReadOnly = True
-        Me.DataGridViewTextBoxColumn162.Visible = False
-        '
-        'DataGridViewTextBoxColumn163
-        '
-        Me.DataGridViewTextBoxColumn163.HeaderText = "PayFrequencyID"
-        Me.DataGridViewTextBoxColumn163.Name = "DataGridViewTextBoxColumn163"
-        Me.DataGridViewTextBoxColumn163.ReadOnly = True
-        Me.DataGridViewTextBoxColumn163.Visible = False
-        '
-        'DataGridViewTextBoxColumn164
-        '
-        Me.DataGridViewTextBoxColumn164.HeaderText = "EmployeeType"
-        Me.DataGridViewTextBoxColumn164.Name = "DataGridViewTextBoxColumn164"
-        Me.DataGridViewTextBoxColumn164.ReadOnly = True
-        Me.DataGridViewTextBoxColumn164.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn164.Visible = False
-        '
-        'DataGridViewTextBoxColumn165
-        '
-        Me.DataGridViewTextBoxColumn165.HeaderText = "LeaveBalance"
-        Me.DataGridViewTextBoxColumn165.Name = "DataGridViewTextBoxColumn165"
-        Me.DataGridViewTextBoxColumn165.Visible = False
-        '
-        'DataGridViewTextBoxColumn166
-        '
-        Me.DataGridViewTextBoxColumn166.HeaderText = "Sick leave balance"
-        Me.DataGridViewTextBoxColumn166.Name = "DataGridViewTextBoxColumn166"
-        Me.DataGridViewTextBoxColumn166.Visible = False
-        '
-        'DataGridViewTextBoxColumn167
-        '
-        Me.DataGridViewTextBoxColumn167.HeaderText = "Maternity leave balance"
-        Me.DataGridViewTextBoxColumn167.Name = "DataGridViewTextBoxColumn167"
-        Me.DataGridViewTextBoxColumn167.Visible = False
-        '
-        'DataGridViewTextBoxColumn168
-        '
-        Me.DataGridViewTextBoxColumn168.HeaderText = "LeaveAllowance"
-        Me.DataGridViewTextBoxColumn168.Name = "DataGridViewTextBoxColumn168"
-        Me.DataGridViewTextBoxColumn168.Visible = False
-        '
-        'DataGridViewTextBoxColumn169
-        '
-        Me.DataGridViewTextBoxColumn169.HeaderText = "Sick leave allowance"
-        Me.DataGridViewTextBoxColumn169.Name = "DataGridViewTextBoxColumn169"
-        Me.DataGridViewTextBoxColumn169.Visible = False
-        '
-        'DataGridViewTextBoxColumn170
-        '
-        Me.DataGridViewTextBoxColumn170.HeaderText = "Maternity leave allowance"
-        Me.DataGridViewTextBoxColumn170.Name = "DataGridViewTextBoxColumn170"
-        Me.DataGridViewTextBoxColumn170.Visible = False
-        '
-        'DataGridViewTextBoxColumn171
-        '
-        Me.DataGridViewTextBoxColumn171.HeaderText = "LeavePerPayPeriod"
-        Me.DataGridViewTextBoxColumn171.Name = "DataGridViewTextBoxColumn171"
-        Me.DataGridViewTextBoxColumn171.Visible = False
-        '
-        'DataGridViewTextBoxColumn172
-        '
-        Me.DataGridViewTextBoxColumn172.HeaderText = "Sick leave per pay period"
-        Me.DataGridViewTextBoxColumn172.Name = "DataGridViewTextBoxColumn172"
-        Me.DataGridViewTextBoxColumn172.Visible = False
-        '
-        'DataGridViewTextBoxColumn173
-        '
-        Me.DataGridViewTextBoxColumn173.HeaderText = "Maternity leavle per pay period"
-        Me.DataGridViewTextBoxColumn173.Name = "DataGridViewTextBoxColumn173"
-        Me.DataGridViewTextBoxColumn173.Visible = False
-        '
-        'DataGridViewTextBoxColumn174
-        '
-        Me.DataGridViewTextBoxColumn174.HeaderText = "flingstatusRowID"
-        Me.DataGridViewTextBoxColumn174.Name = "DataGridViewTextBoxColumn174"
-        Me.DataGridViewTextBoxColumn174.Visible = False
-        '
-        'DataGridViewTextBoxColumn175
-        '
-        Me.DataGridViewTextBoxColumn175.HeaderText = "Is included in Alpha list"
-        Me.DataGridViewTextBoxColumn175.Name = "DataGridViewTextBoxColumn175"
-        Me.DataGridViewTextBoxColumn175.Visible = False
-        '
-        'DataGridViewTextBoxColumn176
-        '
-        Me.DataGridViewTextBoxColumn176.HeaderText = "Work Days Per Year"
-        Me.DataGridViewTextBoxColumn176.Name = "DataGridViewTextBoxColumn176"
-        '
-        'DataGridViewTextBoxColumn177
-        '
-        Me.DataGridViewTextBoxColumn177.HeaderText = "Rest Day"
-        Me.DataGridViewTextBoxColumn177.Name = "DataGridViewTextBoxColumn177"
-        '
-        'DataGridViewTextBoxColumn178
-        '
-        Me.DataGridViewTextBoxColumn178.HeaderText = "ATM No."
-        Me.DataGridViewTextBoxColumn178.Name = "DataGridViewTextBoxColumn178"
-        '
-        'DataGridViewTextBoxColumn179
-        '
-        Me.DataGridViewTextBoxColumn179.HeaderText = "Bank Name"
-        Me.DataGridViewTextBoxColumn179.Name = "DataGridViewTextBoxColumn179"
-        '
-        'DataGridViewTextBoxColumn180
-        '
-        Me.DataGridViewTextBoxColumn180.HeaderText = "Other leave per pay period"
-        Me.DataGridViewTextBoxColumn180.Name = "DataGridViewTextBoxColumn180"
-        '
-        'DataGridViewTextBoxColumn181
-        '
-        Me.DataGridViewTextBoxColumn181.HeaderText = "Other Leave Allowance"
-        Me.DataGridViewTextBoxColumn181.Name = "DataGridViewTextBoxColumn181"
-        '
-        'DataGridViewTextBoxColumn182
-        '
-        Me.DataGridViewTextBoxColumn182.HeaderText = "Other Leave Balance"
-        Me.DataGridViewTextBoxColumn182.Name = "DataGridViewTextBoxColumn182"
-        '
-        'DataGridViewTextBoxColumn183
-        '
-        Me.DataGridViewTextBoxColumn183.HeaderText = "CalcHoliday"
-        Me.DataGridViewTextBoxColumn183.Name = "DataGridViewTextBoxColumn183"
-        Me.DataGridViewTextBoxColumn183.Visible = False
-        '
-        'DataGridViewTextBoxColumn184
-        '
-        Me.DataGridViewTextBoxColumn184.HeaderText = "CalcSpecialHoliday"
-        Me.DataGridViewTextBoxColumn184.Name = "DataGridViewTextBoxColumn184"
-        Me.DataGridViewTextBoxColumn184.Visible = False
-        '
-        'DataGridViewTextBoxColumn185
-        '
-        Me.DataGridViewTextBoxColumn185.HeaderText = "CalcNightDiff"
-        Me.DataGridViewTextBoxColumn185.Name = "DataGridViewTextBoxColumn185"
-        Me.DataGridViewTextBoxColumn185.Visible = False
-        '
-        'DataGridViewTextBoxColumn186
-        '
-        Me.DataGridViewTextBoxColumn186.HeaderText = "CalcNightDiffOT"
-        Me.DataGridViewTextBoxColumn186.Name = "DataGridViewTextBoxColumn186"
-        Me.DataGridViewTextBoxColumn186.Visible = False
-        '
-        'DataGridViewTextBoxColumn187
-        '
-        Me.DataGridViewTextBoxColumn187.HeaderText = "CalcRestDay"
-        Me.DataGridViewTextBoxColumn187.Name = "DataGridViewTextBoxColumn187"
-        Me.DataGridViewTextBoxColumn187.Visible = False
-        '
-        'DataGridViewTextBoxColumn188
-        '
-        Me.DataGridViewTextBoxColumn188.HeaderText = "CalcRestDayOT"
-        Me.DataGridViewTextBoxColumn188.Name = "DataGridViewTextBoxColumn188"
-        Me.DataGridViewTextBoxColumn188.Visible = False
-        '
-        'DataGridViewTextBoxColumn189
-        '
-        Me.DataGridViewTextBoxColumn189.HeaderText = "LateGracePeriod"
-        Me.DataGridViewTextBoxColumn189.Name = "DataGridViewTextBoxColumn189"
-        '
-        'DataGridViewTextBoxColumn190
-        '
-        Me.DataGridViewTextBoxColumn190.HeaderText = "RevealInPayroll"
-        Me.DataGridViewTextBoxColumn190.Name = "DataGridViewTextBoxColumn190"
-        Me.DataGridViewTextBoxColumn190.Visible = False
-        '
-        'DataGridViewTextBoxColumn191
-        '
-        Me.DataGridViewTextBoxColumn191.HeaderText = "OffSetBal"
-        Me.DataGridViewTextBoxColumn191.Name = "DataGridViewTextBoxColumn191"
-        Me.DataGridViewTextBoxColumn191.Visible = False
-        '
-        'DataGridViewTextBoxColumn192
-        '
-        Me.DataGridViewTextBoxColumn192.HeaderText = "AgencyName"
-        Me.DataGridViewTextBoxColumn192.Name = "DataGridViewTextBoxColumn192"
-        Me.DataGridViewTextBoxColumn192.Visible = False
-        '
-        'DataGridViewTextBoxColumn193
-        '
-        Me.DataGridViewTextBoxColumn193.HeaderText = "AgencyRowID"
-        Me.DataGridViewTextBoxColumn193.Name = "DataGridViewTextBoxColumn193"
-        Me.DataGridViewTextBoxColumn193.Visible = False
-        '
-        'DataGridViewTextBoxColumn194
-        '
-        Me.DataGridViewTextBoxColumn194.HeaderText = "IMAGE"
-        Me.DataGridViewTextBoxColumn194.Name = "DataGridViewTextBoxColumn194"
-        Me.DataGridViewTextBoxColumn194.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridViewTextBoxColumn194.Visible = False
-        '
-        'eawar_RowID
-        '
-        Me.eawar_RowID.HeaderText = "RowID"
-        Me.eawar_RowID.Name = "eawar_RowID"
-        Me.eawar_RowID.ReadOnly = True
-        Me.eawar_RowID.Visible = False
-        '
-        'eawar_EmployeeID
-        '
-        Me.eawar_EmployeeID.HeaderText = "EmployeeID"
-        Me.eawar_EmployeeID.Name = "eawar_EmployeeID"
-        Me.eawar_EmployeeID.ReadOnly = True
-        Me.eawar_EmployeeID.Visible = False
-        '
-        'eawar_Type
-        '
-        Me.eawar_Type.HeaderText = "Award Type"
-        Me.eawar_Type.MaxInputLength = 500
-        Me.eawar_Type.Name = "eawar_Type"
-        Me.eawar_Type.Width = 220
-        '
-        'eawar_Description
-        '
-        DataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle62
-        Me.eawar_Description.HeaderText = "Award Description"
-        Me.eawar_Description.MaxInputLength = 500
-        Me.eawar_Description.Name = "eawar_Description"
-        Me.eawar_Description.Width = 220
-        '
-        'eawar_DateAwarded
-        '
-        Me.eawar_DateAwarded.HeaderText = "Date awarded"
-        Me.eawar_DateAwarded.MaxInputLength = 500
-        Me.eawar_DateAwarded.Name = "eawar_DateAwarded"
-        Me.eawar_DateAwarded.Width = 220
-        '
-        'ecert_RowID
-        '
-        Me.ecert_RowID.HeaderText = "RowID"
-        Me.ecert_RowID.Name = "ecert_RowID"
-        Me.ecert_RowID.ReadOnly = True
-        Me.ecert_RowID.Visible = False
-        '
-        'ecert_EmployeeID
-        '
-        Me.ecert_EmployeeID.HeaderText = "EmployeeID"
-        Me.ecert_EmployeeID.Name = "ecert_EmployeeID"
-        Me.ecert_EmployeeID.ReadOnly = True
-        Me.ecert_EmployeeID.Visible = False
-        '
-        'ecert_Type
-        '
-        Me.ecert_Type.HeaderText = "Certification Type"
-        Me.ecert_Type.MaxInputLength = 50
-        Me.ecert_Type.Name = "ecert_Type"
-        Me.ecert_Type.Width = 180
-        '
-        'ecert_IssuingAuth
-        '
-        DataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle63
-        Me.ecert_IssuingAuth.HeaderText = "Issuing Authority"
-        Me.ecert_IssuingAuth.MaxInputLength = 50
-        Me.ecert_IssuingAuth.Name = "ecert_IssuingAuth"
-        Me.ecert_IssuingAuth.Width = 180
-        '
-        'ecert_CertNum
-        '
-        Me.ecert_CertNum.HeaderText = "Certification No."
-        Me.ecert_CertNum.MaxInputLength = 50
-        Me.ecert_CertNum.Name = "ecert_CertNum"
-        Me.ecert_CertNum.Width = 180
-        '
-        'ecert_Comments
-        '
-        DataGridViewCellStyle64.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle64
-        Me.ecert_Comments.HeaderText = "Comments"
-        Me.ecert_Comments.MaxInputLength = 2000
-        Me.ecert_Comments.Name = "ecert_Comments"
-        Me.ecert_Comments.Width = 190
-        '
-        'c_EmplyeeID
-        '
-        Me.c_EmplyeeID.HeaderText = "Employee ID"
-        Me.c_EmplyeeID.Name = "c_EmplyeeID"
-        Me.c_EmplyeeID.ReadOnly = True
-        Me.c_EmplyeeID.Visible = False
-        '
-        'c_name
-        '
-        Me.c_name.HeaderText = "Name"
-        Me.c_name.Name = "c_name"
-        Me.c_name.ReadOnly = True
-        Me.c_name.Visible = False
-        '
-        'c_EducationalType
-        '
-        Me.c_EducationalType.HeaderText = "Educational Type"
-        Me.c_EducationalType.Name = "c_EducationalType"
-        Me.c_EducationalType.ReadOnly = True
-        '
-        'c_school
-        '
-        Me.c_school.HeaderText = "School"
-        Me.c_school.Name = "c_school"
-        Me.c_school.ReadOnly = True
-        '
-        'c_degree
-        '
-        Me.c_degree.HeaderText = "Degree"
-        Me.c_degree.Name = "c_degree"
-        Me.c_degree.ReadOnly = True
-        '
-        'c_course
-        '
-        Me.c_course.HeaderText = "Course"
-        Me.c_course.Name = "c_course"
-        Me.c_course.ReadOnly = True
-        '
-        'c_minor
-        '
-        Me.c_minor.HeaderText = "Major"
-        Me.c_minor.Name = "c_minor"
-        Me.c_minor.ReadOnly = True
-        '
-        'c_Remarks
-        '
-        Me.c_Remarks.HeaderText = "Remarks"
-        Me.c_Remarks.Name = "c_Remarks"
-        Me.c_Remarks.ReadOnly = True
-        '
-        'c_RowID1
-        '
-        Me.c_RowID1.HeaderText = "Column1"
-        Me.c_RowID1.Name = "c_RowID1"
-        Me.c_RowID1.ReadOnly = True
-        Me.c_RowID1.Visible = False
-        '
         'RowID
         '
         Me.RowID.HeaderText = "RowID"
@@ -11607,6 +11279,341 @@ Partial Class EmployeeForm
         Me.Column37.ReadOnly = True
         Me.Column37.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.Column37.Visible = False
+        '
+        'DataGridViewTextBoxColumn162
+        '
+        Me.DataGridViewTextBoxColumn162.HeaderText = "PositionID"
+        Me.DataGridViewTextBoxColumn162.Name = "DataGridViewTextBoxColumn162"
+        Me.DataGridViewTextBoxColumn162.ReadOnly = True
+        Me.DataGridViewTextBoxColumn162.Visible = False
+        '
+        'DataGridViewTextBoxColumn163
+        '
+        Me.DataGridViewTextBoxColumn163.HeaderText = "PayFrequencyID"
+        Me.DataGridViewTextBoxColumn163.Name = "DataGridViewTextBoxColumn163"
+        Me.DataGridViewTextBoxColumn163.ReadOnly = True
+        Me.DataGridViewTextBoxColumn163.Visible = False
+        '
+        'DataGridViewTextBoxColumn164
+        '
+        Me.DataGridViewTextBoxColumn164.HeaderText = "EmployeeType"
+        Me.DataGridViewTextBoxColumn164.Name = "DataGridViewTextBoxColumn164"
+        Me.DataGridViewTextBoxColumn164.ReadOnly = True
+        Me.DataGridViewTextBoxColumn164.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn164.Visible = False
+        '
+        'DataGridViewTextBoxColumn165
+        '
+        Me.DataGridViewTextBoxColumn165.HeaderText = "LeaveBalance"
+        Me.DataGridViewTextBoxColumn165.Name = "DataGridViewTextBoxColumn165"
+        Me.DataGridViewTextBoxColumn165.Visible = False
+        '
+        'DataGridViewTextBoxColumn166
+        '
+        Me.DataGridViewTextBoxColumn166.HeaderText = "Sick leave balance"
+        Me.DataGridViewTextBoxColumn166.Name = "DataGridViewTextBoxColumn166"
+        Me.DataGridViewTextBoxColumn166.Visible = False
+        '
+        'DataGridViewTextBoxColumn167
+        '
+        Me.DataGridViewTextBoxColumn167.HeaderText = "Maternity leave balance"
+        Me.DataGridViewTextBoxColumn167.Name = "DataGridViewTextBoxColumn167"
+        Me.DataGridViewTextBoxColumn167.Visible = False
+        '
+        'DataGridViewTextBoxColumn168
+        '
+        Me.DataGridViewTextBoxColumn168.HeaderText = "LeaveAllowance"
+        Me.DataGridViewTextBoxColumn168.Name = "DataGridViewTextBoxColumn168"
+        Me.DataGridViewTextBoxColumn168.Visible = False
+        '
+        'DataGridViewTextBoxColumn169
+        '
+        Me.DataGridViewTextBoxColumn169.HeaderText = "Sick leave allowance"
+        Me.DataGridViewTextBoxColumn169.Name = "DataGridViewTextBoxColumn169"
+        Me.DataGridViewTextBoxColumn169.Visible = False
+        '
+        'DataGridViewTextBoxColumn170
+        '
+        Me.DataGridViewTextBoxColumn170.HeaderText = "Maternity leave allowance"
+        Me.DataGridViewTextBoxColumn170.Name = "DataGridViewTextBoxColumn170"
+        Me.DataGridViewTextBoxColumn170.Visible = False
+        '
+        'DataGridViewTextBoxColumn171
+        '
+        Me.DataGridViewTextBoxColumn171.HeaderText = "LeavePerPayPeriod"
+        Me.DataGridViewTextBoxColumn171.Name = "DataGridViewTextBoxColumn171"
+        Me.DataGridViewTextBoxColumn171.Visible = False
+        '
+        'DataGridViewTextBoxColumn172
+        '
+        Me.DataGridViewTextBoxColumn172.HeaderText = "Sick leave per pay period"
+        Me.DataGridViewTextBoxColumn172.Name = "DataGridViewTextBoxColumn172"
+        Me.DataGridViewTextBoxColumn172.Visible = False
+        '
+        'DataGridViewTextBoxColumn173
+        '
+        Me.DataGridViewTextBoxColumn173.HeaderText = "Maternity leavle per pay period"
+        Me.DataGridViewTextBoxColumn173.Name = "DataGridViewTextBoxColumn173"
+        Me.DataGridViewTextBoxColumn173.Visible = False
+        '
+        'DataGridViewTextBoxColumn174
+        '
+        Me.DataGridViewTextBoxColumn174.HeaderText = "flingstatusRowID"
+        Me.DataGridViewTextBoxColumn174.Name = "DataGridViewTextBoxColumn174"
+        Me.DataGridViewTextBoxColumn174.Visible = False
+        '
+        'DataGridViewTextBoxColumn175
+        '
+        Me.DataGridViewTextBoxColumn175.HeaderText = "Is included in Alpha list"
+        Me.DataGridViewTextBoxColumn175.Name = "DataGridViewTextBoxColumn175"
+        Me.DataGridViewTextBoxColumn175.Visible = False
+        '
+        'DataGridViewTextBoxColumn176
+        '
+        Me.DataGridViewTextBoxColumn176.HeaderText = "Work Days Per Year"
+        Me.DataGridViewTextBoxColumn176.Name = "DataGridViewTextBoxColumn176"
+        '
+        'DataGridViewTextBoxColumn177
+        '
+        Me.DataGridViewTextBoxColumn177.HeaderText = "Rest Day"
+        Me.DataGridViewTextBoxColumn177.Name = "DataGridViewTextBoxColumn177"
+        '
+        'DataGridViewTextBoxColumn178
+        '
+        Me.DataGridViewTextBoxColumn178.HeaderText = "ATM No."
+        Me.DataGridViewTextBoxColumn178.Name = "DataGridViewTextBoxColumn178"
+        '
+        'DataGridViewTextBoxColumn179
+        '
+        Me.DataGridViewTextBoxColumn179.HeaderText = "Bank Name"
+        Me.DataGridViewTextBoxColumn179.Name = "DataGridViewTextBoxColumn179"
+        '
+        'DataGridViewTextBoxColumn180
+        '
+        Me.DataGridViewTextBoxColumn180.HeaderText = "Other leave per pay period"
+        Me.DataGridViewTextBoxColumn180.Name = "DataGridViewTextBoxColumn180"
+        '
+        'DataGridViewTextBoxColumn181
+        '
+        Me.DataGridViewTextBoxColumn181.HeaderText = "Other Leave Allowance"
+        Me.DataGridViewTextBoxColumn181.Name = "DataGridViewTextBoxColumn181"
+        '
+        'DataGridViewTextBoxColumn182
+        '
+        Me.DataGridViewTextBoxColumn182.HeaderText = "Other Leave Balance"
+        Me.DataGridViewTextBoxColumn182.Name = "DataGridViewTextBoxColumn182"
+        '
+        'DataGridViewTextBoxColumn183
+        '
+        Me.DataGridViewTextBoxColumn183.HeaderText = "CalcHoliday"
+        Me.DataGridViewTextBoxColumn183.Name = "DataGridViewTextBoxColumn183"
+        Me.DataGridViewTextBoxColumn183.Visible = False
+        '
+        'DataGridViewTextBoxColumn184
+        '
+        Me.DataGridViewTextBoxColumn184.HeaderText = "CalcSpecialHoliday"
+        Me.DataGridViewTextBoxColumn184.Name = "DataGridViewTextBoxColumn184"
+        Me.DataGridViewTextBoxColumn184.Visible = False
+        '
+        'DataGridViewTextBoxColumn185
+        '
+        Me.DataGridViewTextBoxColumn185.HeaderText = "CalcNightDiff"
+        Me.DataGridViewTextBoxColumn185.Name = "DataGridViewTextBoxColumn185"
+        Me.DataGridViewTextBoxColumn185.Visible = False
+        '
+        'DataGridViewTextBoxColumn186
+        '
+        Me.DataGridViewTextBoxColumn186.HeaderText = "CalcNightDiffOT"
+        Me.DataGridViewTextBoxColumn186.Name = "DataGridViewTextBoxColumn186"
+        Me.DataGridViewTextBoxColumn186.Visible = False
+        '
+        'DataGridViewTextBoxColumn187
+        '
+        Me.DataGridViewTextBoxColumn187.HeaderText = "CalcRestDay"
+        Me.DataGridViewTextBoxColumn187.Name = "DataGridViewTextBoxColumn187"
+        Me.DataGridViewTextBoxColumn187.Visible = False
+        '
+        'DataGridViewTextBoxColumn188
+        '
+        Me.DataGridViewTextBoxColumn188.HeaderText = "CalcRestDayOT"
+        Me.DataGridViewTextBoxColumn188.Name = "DataGridViewTextBoxColumn188"
+        Me.DataGridViewTextBoxColumn188.Visible = False
+        '
+        'DataGridViewTextBoxColumn189
+        '
+        Me.DataGridViewTextBoxColumn189.HeaderText = "LateGracePeriod"
+        Me.DataGridViewTextBoxColumn189.Name = "DataGridViewTextBoxColumn189"
+        '
+        'DataGridViewTextBoxColumn190
+        '
+        Me.DataGridViewTextBoxColumn190.HeaderText = "RevealInPayroll"
+        Me.DataGridViewTextBoxColumn190.Name = "DataGridViewTextBoxColumn190"
+        Me.DataGridViewTextBoxColumn190.Visible = False
+        '
+        'DataGridViewTextBoxColumn191
+        '
+        Me.DataGridViewTextBoxColumn191.HeaderText = "OffSetBal"
+        Me.DataGridViewTextBoxColumn191.Name = "DataGridViewTextBoxColumn191"
+        Me.DataGridViewTextBoxColumn191.Visible = False
+        '
+        'DataGridViewTextBoxColumn192
+        '
+        Me.DataGridViewTextBoxColumn192.HeaderText = "AgencyName"
+        Me.DataGridViewTextBoxColumn192.Name = "DataGridViewTextBoxColumn192"
+        Me.DataGridViewTextBoxColumn192.Visible = False
+        '
+        'DataGridViewTextBoxColumn193
+        '
+        Me.DataGridViewTextBoxColumn193.HeaderText = "AgencyRowID"
+        Me.DataGridViewTextBoxColumn193.Name = "DataGridViewTextBoxColumn193"
+        Me.DataGridViewTextBoxColumn193.Visible = False
+        '
+        'DataGridViewTextBoxColumn194
+        '
+        Me.DataGridViewTextBoxColumn194.HeaderText = "IMAGE"
+        Me.DataGridViewTextBoxColumn194.Name = "DataGridViewTextBoxColumn194"
+        Me.DataGridViewTextBoxColumn194.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn194.Visible = False
+        '
+        'eawar_RowID
+        '
+        Me.eawar_RowID.HeaderText = "RowID"
+        Me.eawar_RowID.Name = "eawar_RowID"
+        Me.eawar_RowID.ReadOnly = True
+        Me.eawar_RowID.Visible = False
+        '
+        'eawar_EmployeeID
+        '
+        Me.eawar_EmployeeID.HeaderText = "EmployeeID"
+        Me.eawar_EmployeeID.Name = "eawar_EmployeeID"
+        Me.eawar_EmployeeID.ReadOnly = True
+        Me.eawar_EmployeeID.Visible = False
+        '
+        'eawar_Type
+        '
+        Me.eawar_Type.HeaderText = "Award Type"
+        Me.eawar_Type.MaxInputLength = 500
+        Me.eawar_Type.Name = "eawar_Type"
+        Me.eawar_Type.Width = 220
+        '
+        'eawar_Description
+        '
+        DataGridViewCellStyle62.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eawar_Description.DefaultCellStyle = DataGridViewCellStyle62
+        Me.eawar_Description.HeaderText = "Award Description"
+        Me.eawar_Description.MaxInputLength = 500
+        Me.eawar_Description.Name = "eawar_Description"
+        Me.eawar_Description.Width = 220
+        '
+        'eawar_DateAwarded
+        '
+        Me.eawar_DateAwarded.HeaderText = "Date awarded"
+        Me.eawar_DateAwarded.MaxInputLength = 500
+        Me.eawar_DateAwarded.Name = "eawar_DateAwarded"
+        Me.eawar_DateAwarded.Width = 220
+        '
+        'ecert_RowID
+        '
+        Me.ecert_RowID.HeaderText = "RowID"
+        Me.ecert_RowID.Name = "ecert_RowID"
+        Me.ecert_RowID.ReadOnly = True
+        Me.ecert_RowID.Visible = False
+        '
+        'ecert_EmployeeID
+        '
+        Me.ecert_EmployeeID.HeaderText = "EmployeeID"
+        Me.ecert_EmployeeID.Name = "ecert_EmployeeID"
+        Me.ecert_EmployeeID.ReadOnly = True
+        Me.ecert_EmployeeID.Visible = False
+        '
+        'ecert_Type
+        '
+        Me.ecert_Type.HeaderText = "Certification Type"
+        Me.ecert_Type.MaxInputLength = 50
+        Me.ecert_Type.Name = "ecert_Type"
+        Me.ecert_Type.Width = 180
+        '
+        'ecert_IssuingAuth
+        '
+        DataGridViewCellStyle63.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_IssuingAuth.DefaultCellStyle = DataGridViewCellStyle63
+        Me.ecert_IssuingAuth.HeaderText = "Issuing Authority"
+        Me.ecert_IssuingAuth.MaxInputLength = 50
+        Me.ecert_IssuingAuth.Name = "ecert_IssuingAuth"
+        Me.ecert_IssuingAuth.Width = 180
+        '
+        'ecert_CertNum
+        '
+        Me.ecert_CertNum.HeaderText = "Certification No."
+        Me.ecert_CertNum.MaxInputLength = 50
+        Me.ecert_CertNum.Name = "ecert_CertNum"
+        Me.ecert_CertNum.Width = 180
+        '
+        'ecert_Comments
+        '
+        DataGridViewCellStyle64.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.ecert_Comments.DefaultCellStyle = DataGridViewCellStyle64
+        Me.ecert_Comments.HeaderText = "Comments"
+        Me.ecert_Comments.MaxInputLength = 2000
+        Me.ecert_Comments.Name = "ecert_Comments"
+        Me.ecert_Comments.Width = 190
+        '
+        'c_EmplyeeID
+        '
+        Me.c_EmplyeeID.HeaderText = "Employee ID"
+        Me.c_EmplyeeID.Name = "c_EmplyeeID"
+        Me.c_EmplyeeID.ReadOnly = True
+        Me.c_EmplyeeID.Visible = False
+        '
+        'c_name
+        '
+        Me.c_name.HeaderText = "Name"
+        Me.c_name.Name = "c_name"
+        Me.c_name.ReadOnly = True
+        Me.c_name.Visible = False
+        '
+        'c_EducationalType
+        '
+        Me.c_EducationalType.HeaderText = "Educational Type"
+        Me.c_EducationalType.Name = "c_EducationalType"
+        Me.c_EducationalType.ReadOnly = True
+        '
+        'c_school
+        '
+        Me.c_school.HeaderText = "School"
+        Me.c_school.Name = "c_school"
+        Me.c_school.ReadOnly = True
+        '
+        'c_degree
+        '
+        Me.c_degree.HeaderText = "Degree"
+        Me.c_degree.Name = "c_degree"
+        Me.c_degree.ReadOnly = True
+        '
+        'c_course
+        '
+        Me.c_course.HeaderText = "Course"
+        Me.c_course.Name = "c_course"
+        Me.c_course.ReadOnly = True
+        '
+        'c_minor
+        '
+        Me.c_minor.HeaderText = "Major"
+        Me.c_minor.Name = "c_minor"
+        Me.c_minor.ReadOnly = True
+        '
+        'c_Remarks
+        '
+        Me.c_Remarks.HeaderText = "Remarks"
+        Me.c_Remarks.Name = "c_Remarks"
+        Me.c_Remarks.ReadOnly = True
+        '
+        'c_RowID1
+        '
+        Me.c_RowID1.HeaderText = "Column1"
+        Me.c_RowID1.Name = "c_RowID1"
+        Me.c_RowID1.ReadOnly = True
+        Me.c_RowID1.Visible = False
         '
         'EmployeeForm
         '
