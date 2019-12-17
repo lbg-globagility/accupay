@@ -49,7 +49,7 @@ Namespace Global.AccuPay.Payroll
 
                     If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
 
-                        hoursWorked = paystub.RegularHours + paystub.RestDayHours
+                        hoursWorked = paystub.RegularHoursAndTotalRestDay
                     End If
 
                     Dim daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay

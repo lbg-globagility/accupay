@@ -320,7 +320,7 @@ Partial Class BenchmarkPaystubForm
         '
         Me.TotalDeductionsLabel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TotalDeductionsLabel.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.TotalDeductionsLabel.Location = New System.Drawing.Point(21, 261)
+        Me.TotalDeductionsLabel.Location = New System.Drawing.Point(4, 261)
         Me.TotalDeductionsLabel.Name = "TotalDeductionsLabel"
         Me.TotalDeductionsLabel.Size = New System.Drawing.Size(203, 20)
         Me.TotalDeductionsLabel.TabIndex = 28
@@ -345,7 +345,7 @@ Partial Class BenchmarkPaystubForm
         Me.Panel13.BackColor = System.Drawing.Color.Gray
         Me.Panel13.Location = New System.Drawing.Point(9, 44)
         Me.Panel13.Name = "Panel13"
-        Me.Panel13.Size = New System.Drawing.Size(210, 2)
+        Me.Panel13.Size = New System.Drawing.Size(193, 2)
         Me.Panel13.TabIndex = 10
         '
         'Label12
@@ -371,7 +371,7 @@ Partial Class BenchmarkPaystubForm
         Me.DeductionsTabPage.Location = New System.Drawing.Point(4, 24)
         Me.DeductionsTabPage.Name = "DeductionsTabPage"
         Me.DeductionsTabPage.Padding = New System.Windows.Forms.Padding(3)
-        Me.DeductionsTabPage.Size = New System.Drawing.Size(225, 288)
+        Me.DeductionsTabPage.Size = New System.Drawing.Size(208, 288)
         Me.DeductionsTabPage.TabIndex = 0
         Me.DeductionsTabPage.Text = "DEDUCTIONS"
         Me.DeductionsTabPage.UseVisualStyleBackColor = True
@@ -415,7 +415,7 @@ Partial Class BenchmarkPaystubForm
         Me.DeductionsGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.DeductionsGridView.RowHeadersVisible = False
         Me.DeductionsGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.DeductionsGridView.Size = New System.Drawing.Size(210, 206)
+        Me.DeductionsGridView.Size = New System.Drawing.Size(193, 206)
         Me.DeductionsGridView.TabIndex = 24
         '
         'DeductionsGridViewColumn1
@@ -467,7 +467,7 @@ Partial Class BenchmarkPaystubForm
         Me.UndeclaredTabPage.Controls.Add(Me.Label131)
         Me.UndeclaredTabPage.Location = New System.Drawing.Point(4, 24)
         Me.UndeclaredTabPage.Name = "UndeclaredTabPage"
-        Me.UndeclaredTabPage.Size = New System.Drawing.Size(225, 288)
+        Me.UndeclaredTabPage.Size = New System.Drawing.Size(208, 288)
         Me.UndeclaredTabPage.TabIndex = 2
         Me.UndeclaredTabPage.Text = "UNDECLARED"
         Me.UndeclaredTabPage.UseVisualStyleBackColor = True
@@ -491,7 +491,7 @@ Partial Class BenchmarkPaystubForm
         Me.TotalUnderclaredTextBox.Location = New System.Drawing.Point(149, 229)
         Me.TotalUnderclaredTextBox.Name = "TotalUnderclaredTextBox"
         Me.TotalUnderclaredTextBox.ReadOnly = True
-        Me.TotalUnderclaredTextBox.Size = New System.Drawing.Size(66, 22)
+        Me.TotalUnderclaredTextBox.Size = New System.Drawing.Size(49, 22)
         Me.TotalUnderclaredTextBox.TabIndex = 85
         '
         'Label2
@@ -513,7 +513,7 @@ Partial Class BenchmarkPaystubForm
         Me.Panel44.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.Panel44.Location = New System.Drawing.Point(0, 209)
         Me.Panel44.Name = "Panel44"
-        Me.Panel44.Size = New System.Drawing.Size(559, 1)
+        Me.Panel44.Size = New System.Drawing.Size(542, 1)
         Me.Panel44.TabIndex = 83
         '
         'Label1
@@ -522,7 +522,7 @@ Partial Class BenchmarkPaystubForm
         Me.Label1.AutoSize = True
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(182, 167)
+        Me.Label1.Location = New System.Drawing.Point(165, 167)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(39, 18)
         Me.Label1.TabIndex = 50
@@ -534,7 +534,7 @@ Partial Class BenchmarkPaystubForm
         Me.Label207.AutoSize = True
         Me.Label207.Font = New System.Drawing.Font("Microsoft Sans Serif", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label207.ForeColor = System.Drawing.Color.FromArgb(CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer), CType(CType(64, Byte), Integer))
-        Me.Label207.Location = New System.Drawing.Point(182, 142)
+        Me.Label207.Location = New System.Drawing.Point(165, 142)
         Me.Label207.Name = "Label207"
         Me.Label207.Size = New System.Drawing.Size(40, 18)
         Me.Label207.TabIndex = 49
@@ -560,7 +560,7 @@ Partial Class BenchmarkPaystubForm
         Me.HolidayAndLeaveAmountTextBox.Location = New System.Drawing.Point(150, 166)
         Me.HolidayAndLeaveAmountTextBox.Name = "HolidayAndLeaveAmountTextBox"
         Me.HolidayAndLeaveAmountTextBox.ReadOnly = True
-        Me.HolidayAndLeaveAmountTextBox.Size = New System.Drawing.Size(33, 22)
+        Me.HolidayAndLeaveAmountTextBox.Size = New System.Drawing.Size(14, 22)
         Me.HolidayAndLeaveAmountTextBox.TabIndex = 47
         '
         'Label129
@@ -583,7 +583,7 @@ Partial Class BenchmarkPaystubForm
         Me.HolidayAndLeaveDaysTextBox.Location = New System.Drawing.Point(150, 141)
         Me.HolidayAndLeaveDaysTextBox.Name = "HolidayAndLeaveDaysTextBox"
         Me.HolidayAndLeaveDaysTextBox.ReadOnly = True
-        Me.HolidayAndLeaveDaysTextBox.Size = New System.Drawing.Size(33, 22)
+        Me.HolidayAndLeaveDaysTextBox.Size = New System.Drawing.Size(14, 22)
         Me.HolidayAndLeaveDaysTextBox.TabIndex = 29
         '
         'Panel24
@@ -593,7 +593,7 @@ Partial Class BenchmarkPaystubForm
         Me.Panel24.BackColor = System.Drawing.Color.Gray
         Me.Panel24.Location = New System.Drawing.Point(9, 44)
         Me.Panel24.Name = "Panel24"
-        Me.Panel24.Size = New System.Drawing.Size(212, 2)
+        Me.Panel24.Size = New System.Drawing.Size(195, 2)
         Me.Panel24.TabIndex = 7
         '
         'Label77
@@ -638,7 +638,7 @@ Partial Class BenchmarkPaystubForm
         Me.RegularDaysTextBox.Location = New System.Drawing.Point(150, 66)
         Me.RegularDaysTextBox.Name = "RegularDaysTextBox"
         Me.RegularDaysTextBox.ReadOnly = True
-        Me.RegularDaysTextBox.Size = New System.Drawing.Size(66, 22)
+        Me.RegularDaysTextBox.Size = New System.Drawing.Size(49, 22)
         Me.RegularDaysTextBox.TabIndex = 25
         '
         'UndeclaredGrossPayTextBox
@@ -650,7 +650,7 @@ Partial Class BenchmarkPaystubForm
         Me.UndeclaredGrossPayTextBox.Location = New System.Drawing.Point(150, 116)
         Me.UndeclaredGrossPayTextBox.Name = "UndeclaredGrossPayTextBox"
         Me.UndeclaredGrossPayTextBox.ReadOnly = True
-        Me.UndeclaredGrossPayTextBox.Size = New System.Drawing.Size(66, 22)
+        Me.UndeclaredGrossPayTextBox.Size = New System.Drawing.Size(49, 22)
         Me.UndeclaredGrossPayTextBox.TabIndex = 27
         '
         'UndeclaredPerDayTextBox
@@ -662,7 +662,7 @@ Partial Class BenchmarkPaystubForm
         Me.UndeclaredPerDayTextBox.Location = New System.Drawing.Point(150, 91)
         Me.UndeclaredPerDayTextBox.Name = "UndeclaredPerDayTextBox"
         Me.UndeclaredPerDayTextBox.ReadOnly = True
-        Me.UndeclaredPerDayTextBox.Size = New System.Drawing.Size(66, 22)
+        Me.UndeclaredPerDayTextBox.Size = New System.Drawing.Size(49, 22)
         Me.UndeclaredPerDayTextBox.TabIndex = 26
         '
         'Label131
@@ -687,7 +687,7 @@ Partial Class BenchmarkPaystubForm
         Me.InputsTabControl.Location = New System.Drawing.Point(430, 245)
         Me.InputsTabControl.Name = "InputsTabControl"
         Me.InputsTabControl.SelectedIndex = 0
-        Me.InputsTabControl.Size = New System.Drawing.Size(233, 316)
+        Me.InputsTabControl.Size = New System.Drawing.Size(216, 316)
         Me.InputsTabControl.TabIndex = 49
         '
         'Label96
@@ -1024,7 +1024,7 @@ Partial Class BenchmarkPaystubForm
         Me.SummaryGroupBox.Controls.Add(Me.Label91)
         Me.SummaryGroupBox.Controls.Add(Me.Label96)
         Me.SummaryGroupBox.Controls.Add(Me.Label92)
-        Me.SummaryGroupBox.Location = New System.Drawing.Point(714, 20)
+        Me.SummaryGroupBox.Location = New System.Drawing.Point(697, 20)
         Me.SummaryGroupBox.Name = "SummaryGroupBox"
         Me.SummaryGroupBox.Size = New System.Drawing.Size(333, 541)
         Me.SummaryGroupBox.TabIndex = 50
@@ -1414,7 +1414,7 @@ Partial Class BenchmarkPaystubForm
         Me.GroupBox10.Controls.Add(Me.PictureBox34)
         Me.GroupBox10.Location = New System.Drawing.Point(430, 20)
         Me.GroupBox10.Name = "GroupBox10"
-        Me.GroupBox10.Size = New System.Drawing.Size(233, 221)
+        Me.GroupBox10.Size = New System.Drawing.Size(216, 221)
         Me.GroupBox10.TabIndex = 51
         Me.GroupBox10.TabStop = False
         '
@@ -1457,7 +1457,7 @@ Partial Class BenchmarkPaystubForm
         Me.OvertimeGridView.RowHeadersDefaultCellStyle = DataGridViewCellStyle12
         Me.OvertimeGridView.RowHeadersVisible = False
         Me.OvertimeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.OvertimeGridView.Size = New System.Drawing.Size(210, 143)
+        Me.OvertimeGridView.Size = New System.Drawing.Size(193, 143)
         Me.OvertimeGridView.TabIndex = 40
         '
         'Column1
@@ -1499,7 +1499,7 @@ Partial Class BenchmarkPaystubForm
         Me.Panel30.BackColor = System.Drawing.Color.Gray
         Me.Panel30.Location = New System.Drawing.Point(13, 54)
         Me.Panel30.Name = "Panel30"
-        Me.Panel30.Size = New System.Drawing.Size(210, 2)
+        Me.Panel30.Size = New System.Drawing.Size(193, 2)
         Me.Panel30.TabIndex = 7
         '
         'Label172

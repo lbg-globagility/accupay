@@ -1766,14 +1766,14 @@ Public Class PayStubForm
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
-       Static _bool As Boolean =
-           (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
-       If _bool Then
-           Dim str_empty As String = String.Empty
-           TabPage1.Text = str_empty
-           TabPage4.Text = str_empty
-           AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-       End If
+        Static _bool As Boolean =
+            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+        If _bool Then
+            Dim str_empty As String = String.Empty
+            TabPage1.Text = str_empty
+            TabPage4.Text = str_empty
+            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+        End If
     End Sub
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)

@@ -126,8 +126,7 @@ Namespace Global.AccuPay.Payroll
 
                 If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
 
-                    totalHours = If(previousPaystub?.RegularHours, 0) + If(previousPaystub?.RestDayHours, 0) +
-                                paystub.RegularHours + paystub.RestDayHours
+                    totalHours = If(previousPaystub?.RegularHoursAndTotalRestDay, 0) + paystub.RegularHoursAndTotalRestDay
                 End If
 
                 Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)

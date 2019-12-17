@@ -120,7 +120,7 @@ Namespace Global.AccuPay.Repository
                 Include(Function(a) a.Product).
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
                 Where(Function(a) a.EffectiveStartDate <= _payDateTo).
-                Where(Function(a) _payDateFrom <= If(a.EffectiveEndDate, Date.Now))
+                Where(Function(a) If(a.EffectiveEndDate Is Nothing, True, _payDateFrom <= a.EffectiveEndDate.Value))
         End Function
 
         Private Sub Insert(

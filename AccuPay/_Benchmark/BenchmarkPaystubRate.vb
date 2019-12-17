@@ -416,7 +416,7 @@ Namespace Benchmark
             Me.ActualSpecialHolidayOTPay = Me.SpecialHolidayOTPay
 
             Me.SpecialHolidayRestDayHours = specialHolidayRestDayHours
-            Me.SpecialHolidayRestDayPay = ComputeSpecialHolidayRestDayPay(payRate, employeeEntitledForSpecialHolidayPay, isHolidayInclusive:=isHolidayInclusive)
+            Me.SpecialHolidayRestDayPay = ComputeSpecialHolidayRestDayPay(payRate, employeeEntitledForSpecialHolidayPay)
             Me.ActualSpecialHolidayRestDayPay = Me.SpecialHolidayRestDayPay
 
             Me.SpecialHolidayRestDayOTHours = specialHolidayRestDayOTHours
@@ -432,7 +432,7 @@ Namespace Benchmark
             Me.ActualRegularHolidayOTPay = Me.RegularHolidayOTPay
 
             Me.RegularHolidayRestDayHours = regularHolidayRestDayHours
-            Me.RegularHolidayRestDayPay = ComputeRegularHolidayRestDayPay(payRate, employeeEntitledForRegularHolidayPay, isHolidayInclusive:=isHolidayInclusive)
+            Me.RegularHolidayRestDayPay = ComputeRegularHolidayRestDayPay(payRate, employeeEntitledForRegularHolidayPay)
             Me.ActualRegularHolidayRestDayPay = Me.RegularHolidayRestDayPay
 
             Me.RegularHolidayRestDayOTHours = regularHolidayRestDayOTHours
@@ -446,7 +446,8 @@ Namespace Benchmark
                 allowanceForHolidayPolicy:=allowanceForHolidayPolicy,
                 allowanceForRestDayPolicy:=allowanceForRestDayPolicy,
                 allowanceForRestDayOTPolicy:=allowanceForRestDayOTPolicy,
-                allowanceForOvertimePolicy:=allowanceForOvertimePolicy)
+                allowanceForOvertimePolicy:=allowanceForOvertimePolicy,
+                isHolidayInclusive:=isHolidayInclusive)
         End Sub
 
         Private Function ComputeSpecialHolidayPay(
@@ -483,16 +484,13 @@ Namespace Benchmark
         Private Function ComputeSpecialHolidayRestDayPay(
                             payRate As OvertimeRate,
                             employeeEntitledForSpecialHolidayPay As Boolean,
-                            Optional isActual As Boolean = False,
-                            Optional isHolidayInclusive As Boolean = False) As Decimal
-
-            Dim specialHolidayRestDayRate = If(isHolidayInclusive, payRate.SpecialHolidayRestDay.Rate - 1, payRate.SpecialHolidayRestDay.Rate)
+                            Optional isActual As Boolean = False) As Decimal
 
             Return ComputeFinalRoundedRate((
                     Me.SpecialHolidayRestDayHours *
                         GetRateWithCondition(
                                 payRate.RestDay.Rate,
-                                specialHolidayRestDayRate,
+                                payRate.SpecialHolidayRestDay.Rate,
                                 employeeEntitledForSpecialHolidayPay)),
                    isActual)
         End Function
@@ -545,16 +543,13 @@ Namespace Benchmark
         Private Function ComputeRegularHolidayRestDayPay(
                             payRate As OvertimeRate,
                             employeeEntitledForRegularHolidayPay As Boolean,
-                            Optional isActual As Boolean = False,
-                            Optional isHolidayInclusive As Boolean = False) As Decimal
-
-            Dim regularHolidayRestDayRate = If(isHolidayInclusive, payRate.RegularHolidayRestDay.Rate - 1, payRate.RegularHolidayRestDay.Rate)
+                            Optional isActual As Boolean = False) As Decimal
 
             Return ComputeFinalRoundedRate((
                     Me.RegularHolidayRestDayHours *
                         GetRateWithCondition(
                                 payRate.RestDay.Rate,
-                                regularHolidayRestDayRate,
+                                payRate.RegularHolidayRestDay.Rate,
                                 employeeEntitledForRegularHolidayPay)),
                    isActual)
         End Function
@@ -589,8 +584,7 @@ Namespace Benchmark
                     Me.ActualSpecialHolidayRestDayPay = ComputeSpecialHolidayRestDayPay(
                                                             payRate,
                                                             employeeEntitledForSpecialHolidayPay,
-                                                            isActual:=True,
-                                                            isHolidayInclusive:=isHolidayInclusive)
+                                                            isActual:=True)
                 End If
 
                 If allowanceForRestDayOTPolicy Then
@@ -611,8 +605,7 @@ Namespace Benchmark
                     Me.ActualSpecialHolidayRestDayPay = ComputeSpecialHolidayRestDayPay(
                                                             payRate,
                                                             employeeEntitledForSpecialHolidayPay,
-                                                            isActual:=True,
-                                                            isHolidayInclusive:=isHolidayInclusive)
+                                                            isActual:=True)
                     Me.ActualSpecialHolidayRestDayOTPay = ComputeSpecialHolidayRestDayOTPay(payRate, employeeEntitledForSpecialHolidayPay, isActual:=True)
                     Me.ActualSpecialHolidayOTPay = ComputeSpecialOTPay(payRate, employeeEntitledForSpecialHolidayPay, isActual:=True)
                     Me.ActualSpecialHolidayPay = ComputeSpecialHolidayPay(
@@ -630,8 +623,7 @@ Namespace Benchmark
                     Me.ActualRegularHolidayRestDayPay = ComputeRegularHolidayRestDayPay(
                                                             payRate,
                                                             employeeEntitledForRegularHolidayPay,
-                                                            isActual:=True,
-                                                            isHolidayInclusive:=isHolidayInclusive)
+                                                            isActual:=True)
                 End If
 
                 If allowanceForRestDayOTPolicy Then
@@ -652,8 +644,7 @@ Namespace Benchmark
                     Me.ActualRegularHolidayRestDayPay = ComputeRegularHolidayRestDayPay(
                                                             payRate,
                                                             employeeEntitledForRegularHolidayPay,
-                                                            isActual:=True,
-                                                            isHolidayInclusive:=isHolidayInclusive)
+                                                            isActual:=True)
                     Me.ActualRegularHolidayRestDayOTPay = GetRegularHolidayRestDayOTPay(payRate, employeeEntitledForRegularHolidayPay, isActual:=True)
                     Me.ActualRegularHolidayOTPay = ComputeRegularHolidayOTPay(payRate, employeeEntitledForRegularHolidayPay, isActual:=True)
                     Me.ActualRegularHolidayPay = ComputeRegularHolidayPay(

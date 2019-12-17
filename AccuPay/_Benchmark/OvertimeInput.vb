@@ -12,7 +12,16 @@ Namespace Benchmark
         Public Property IsDay As Boolean
         Public Property IsHolidayInclusive As Boolean
 
+        'premium days that can include the regular pay
+        'RegularHoliday, SpecialHoliday
+        Public Property IsHolidayThatIsNotRestDay As Boolean
+
         Private Property _payPerHour As Decimal
+
+        Public Shared NotRestDayHolidays As String() = {
+            OvertimeRate.RegularHolidayDescription,
+            OvertimeRate.SpecialHolidayDescription
+        }
 
         Sub New(overtimeType As Rate, input As Decimal, isDay As Boolean, payperHour As Decimal, Optional isHolidayInclusive As Boolean = False)
 
@@ -22,6 +31,8 @@ Namespace Benchmark
             Me.IsHolidayInclusive = isHolidayInclusive
 
             _payPerHour = payperHour
+
+            Me.IsHolidayThatIsNotRestDay = NotRestDayHolidays.Contains(overtimeType.Name)
 
         End Sub
 
@@ -39,7 +50,7 @@ Namespace Benchmark
 
         Public ReadOnly Property Amount As Decimal
             Get
-                Dim overtimeRate = If(IsHolidayInclusive, OvertimeType.Rate - 1, OvertimeType.Rate)
+                Dim overtimeRate = If(IsHolidayInclusive AndAlso IsHolidayThatIsNotRestDay, OvertimeType.Rate - 1, OvertimeType.Rate)
                 Dim rate = If(OvertimeType.BaseRate Is Nothing, overtimeRate, overtimeRate - OvertimeType.BaseRate.Rate)
 
                 Return AccuMath.CommercialRound((Hours * rate * _payPerHour))

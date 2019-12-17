@@ -3,7 +3,6 @@
 Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.SimplifiedEntities
 
 Namespace Benchmark
 
@@ -389,7 +388,7 @@ Namespace Benchmark
 
             If _employeeRate.Employee.IsPremiumInclusive Then
 
-                totalHoursWorkedForEcola = paystub.RegularHours + paystub.RestDayHours + paystub.LeaveHours
+                totalHoursWorkedForEcola = paystub.RegularHoursAndTotalRestDay + paystub.LeaveHours
 
             End If
 
