@@ -18,7 +18,7 @@ Public Class PayrollTools
     Public Const PayFrequencyMonthlyId As Integer = 1
 
     Public Const PayFrequencyWeeklyId As Integer = 4
-    Private Const threeDays As Integer = 3
+    Private Const fourDays As Integer = 4
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
@@ -83,7 +83,7 @@ Public Class PayrollTools
                             currentTimeEntries As IList(Of TimeEntry),
                             payratesCalendar As PayratesCalendar) As Boolean
 
-        Dim threeDaysPrior = threeDays * -1
+        Dim threeDaysPrior = fourDays * -1
         Dim lastPotentialEntry = currentDate.Date.AddDays(threeDaysPrior)
 
         Dim lastTimeEntries = currentTimeEntries.
@@ -127,7 +127,7 @@ Public Class PayrollTools
                             currentTimeEntries As IList(Of TimeEntry),
                             payratesCalendar As PayratesCalendar) As Boolean
 
-        Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(threeDays)
+        Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(fourDays)
 
         Dim postTimeEntries = currentTimeEntries.
             Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= thirdDateAfterCurrDate).
