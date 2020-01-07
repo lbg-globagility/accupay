@@ -326,13 +326,19 @@ Public Class DayCalculator
 
                         latePeriod = latePeriods(0)
 
+                        'this is an in between undertime and will
+                        'be added on to the end of the day undertime
                         inBetweenUndertimePeriod = latePeriods(1)
                     ElseIf latePeriods.Count = 1 Then
 
+                        'check if the late is a late or undertime
                         If leavePeriod.Start <= shiftPeriod.Start OrElse
                         (dutyPeriod IsNot Nothing AndAlso dutyPeriod.Start <= shiftPeriod.Start) Then
 
-                            inBetweenUndertimePeriod = latePeriods(1)
+                            latePeriod = Nothing
+                            'this is an in between undertime and will
+                            'be added on to the end of the day undertime
+                            inBetweenUndertimePeriod = latePeriods(0)
                         Else
 
                             latePeriod = latePeriods(0)
