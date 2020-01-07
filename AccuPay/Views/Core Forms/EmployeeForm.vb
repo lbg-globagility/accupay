@@ -860,10 +860,10 @@ Public Class EmployeeForm
                            cboPayFreq.SelectedValue,
                            ValNoComma(txtNumDepen.Text),
                            image_object,
-                           ValNoComma(txtvlpayp.Text),
-                           ValNoComma(txtslpayp.Text),
-                           ValNoComma(txtmlpayp.Text),
-                           ValNoComma(txtothrpayp.Text),
+                           0,'ValNoComma(txtvlpayp.Text),
+                           0,'ValNoComma(txtslpayp.Text),
+                           0,'ValNoComma(txtmlpayp.Text),
+                           0,'ValNoComma(txtothrpayp.Text),
                            Convert.ToInt16(chkutflag.Checked),
                            Convert.ToInt16(chkotflag.Checked),
                            ValNoComma(txtvlbal.Text),
@@ -1021,8 +1021,6 @@ Public Class EmployeeForm
             .Cells("ATMNo").Value = txtATM.Text
 
             .Cells("BankName").Value = cbobank.Text
-
-            .Cells("OtherPayP").Value = txtothrpayp.Text
 
             .Cells("OtherLeaveAllowance").Value = txtothrallow.Text
 
@@ -1768,10 +1766,6 @@ Public Class EmployeeForm
                     txtslbal.Text = .Cells("slbalance").Value
                     txtmlbal.Text = .Cells("mlbalance").Value
 
-                    txtvlpayp.Text = .Cells("Column33").Value
-                    txtslpayp.Text = .Cells("slpayp").Value
-                    txtmlpayp.Text = .Cells("mlpayp").Value
-
                     chkutflag.Checked = If(.Cells("Column23").Value = 1, True, False)
                     chkotflag.Checked = If(.Cells("Column24").Value = 1, True, False)
 
@@ -1780,7 +1774,6 @@ Public Class EmployeeForm
                     cboDayOfRest.Text = String.Empty
                     cboDayOfRest.Text = .Cells("DayOfRest").Value
                     txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
-                    txtothrpayp.Text = .Cells("OtherPayP").Value
                     txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
                     txtothrbal.Text = .Cells("OtherLeaveBalance").Value
                     If IsDBNull(.Cells("ATMNo").Value) OrElse .Cells("ATMNo").Value = Nothing OrElse .Cells("ATMNo").Value Is Nothing Then
@@ -1868,10 +1861,6 @@ Public Class EmployeeForm
                     txtvlbalLeave.Text = .Cells("Column35").Value
                     txtslbalLeave.Text = .Cells("slbalance").Value
                     txtmlbalLeave.Text = .Cells("mlbalance").Value
-
-                    txtvlpaypLeave.Text = .Cells("Column33").Value
-                    txtslpaypLeave.Text = .Cells("slpayp").Value
-                    txtmlpaypLeave.Text = .Cells("mlpayp").Value
 
                     pbEmpPicLeave.Image = Nothing
                     pbEmpPicLeave.Image = EmployeeImage
@@ -1993,7 +1982,6 @@ Public Class EmployeeForm
                     clearObjControl(SplitContainer2.Panel1)
                     clearObjControl(tbpleaveallow)
                     clearObjControl(tbpleavebal)
-                    clearObjControl(tbpleavepayp)
                     chkutflag.Checked = 0
                     chkotflag.Checked = 0
                     listofEditDepen.Clear()
@@ -2030,9 +2018,6 @@ Public Class EmployeeForm
                     txtvlbalLeave.Text = ""
                     txtslbalLeave.Text = ""
                     txtmlbalLeave.Text = ""
-                    txtvlpaypLeave.Text = ""
-                    txtslpaypLeave.Text = ""
-                    txtmlpaypLeave.Text = ""
                     dgvempleave.Rows.Clear()
 
                 Case GetDisciplinaryActionTabPageIndex() 'Disciplinary Action
@@ -2149,9 +2134,6 @@ Public Class EmployeeForm
             txtslallow.Text = If(IsDBNull(drow("sl_allowance")), 0.0, drow("sl_allowance"))
             txtmlallow.Text = If(IsDBNull(drow("ml_allowance")), 0.0, drow("ml_allowance"))
 
-            txtvlpayp.Text = If(IsDBNull(drow("vl_payp")), 0.0, drow("vl_payp"))
-            txtslpayp.Text = If(IsDBNull(drow("sl_payp")), 0.0, drow("sl_payp"))
-            txtmlpayp.Text = If(IsDBNull(drow("ml_payp")), 0.0, drow("ml_payp"))
         Next
         dtpempstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
@@ -3522,75 +3504,6 @@ Public Class EmployeeForm
         tbpEmployee.Text = "PERSON"
     End Sub
 
-    Private Sub tbpleavepayp_Enter(sender As Object, e As EventArgs) Handles tbpleavepayp.Enter
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once = 1
-
-            OjbAssignNoContextMenu(txtvlpayp)
-
-            OjbAssignNoContextMenu(txtslpayp)
-
-            OjbAssignNoContextMenu(txtmlpayp)
-
-            OjbAssignNoContextMenu(txtothrpayp)
-
-        End If
-
-    End Sub
-
-    Private Sub txtvlpayp_Leave(sender As Object, e As EventArgs) Handles txtvlpayp.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtvlpayp.Text) * count_payp
-
-        txtvlallow.Text = ValNoComma(calc_result)
-
-    End Sub
-
-    Private Sub txtslpayp_Leave(sender As Object, e As EventArgs) Handles txtslpayp.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtslpayp.Text) * count_payp
-
-        txtslallow.Text = ValNoComma(calc_result)
-
-    End Sub
-
-    Private Sub txtmlpayp_Leave(sender As Object, e As EventArgs) Handles txtmlpayp.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtmlpayp.Text) * count_payp
-
-        txtmlallow.Text = ValNoComma(calc_result)
-
-    End Sub
-
-    Private Sub txtothrpayp_Leave(sender As Object, e As EventArgs) Handles txtothrpayp.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtothrpayp.Text) * count_payp
-
-        txtothrallow.Text = ValNoComma(calc_result)
-
-    End Sub
-
-    Private Sub txtvlallow_Leave(sender As Object, e As EventArgs) Handles txtvlallow.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtvlallow.Text) / count_payp
-
-        txtvlpayp.Text = ValNoComma(calc_result)
-
-    End Sub
-
     Private Sub txtvlallow_KeyPress(sender As Object, e As KeyPressEventArgs) _
         Handles txtvlallow.KeyPress, LeaveAllowanceTextBox.KeyPress
 
@@ -3628,16 +3541,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtslallow_Leave(sender As Object, e As EventArgs) Handles txtslallow.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtslallow.Text) / count_payp
-
-        txtslpayp.Text = ValNoComma(calc_result)
-
-    End Sub
-
     Private Sub txtslallow_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtslallow.KeyPress
         Dim e_KAsc As String = Asc(e.KeyChar)
 
@@ -3668,26 +3571,6 @@ Public Class EmployeeForm
         Else
             e.Handled = True
         End If
-
-    End Sub
-
-    Private Sub txtmlallow_Leave(sender As Object, e As EventArgs) Handles txtmlallow.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtmlallow.Text) / count_payp
-
-        txtmlpayp.Text = ValNoComma(calc_result)
-
-    End Sub
-
-    Private Sub txtothrallow_Leave(sender As Object, e As EventArgs) Handles txtothrallow.Leave
-
-        Dim count_payp = payp_count()
-
-        Dim calc_result = Val(txtothrallow.Text) / count_payp
-
-        txtothrpayp.Text = ValNoComma(calc_result)
 
     End Sub
 
@@ -3853,102 +3736,6 @@ Public Class EmployeeForm
             e.Handled = True
         End If
 
-    End Sub
-
-    Private Sub txtvlpayp_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtvlpayp.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtvlpayp.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtvlpayp.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-        Else
-            e.Handled = True
-        End If
-    End Sub
-
-    Private Sub txtslpayp_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtslpayp.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtslpayp.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtslpayp.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-        Else
-            e.Handled = True
-        End If
-    End Sub
-
-    Private Sub txtmlpayp_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtmlpayp.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtmlpayp.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtmlpayp.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-        Else
-            e.Handled = True
-        End If
     End Sub
 
     Private Sub txtOTgrace_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtOTgrace.KeyPress
@@ -4669,7 +4456,7 @@ Public Class EmployeeForm
             .LastUpdBy = z_User,
             .StartTime = MilitTime(row.Cells("elv_StartTime").Value).ToString().ToNullableTimeSpan(),
             .EndTime = MilitTime(row.Cells("elv_EndTime").Value).ToString().ToNullableTimeSpan(),
-            .leavetype = row.Cells("elv_Type").Value,
+            .LeaveType = row.Cells("elv_Type").Value,
             .EmployeeID = dgvEmp.CurrentRow.Cells("RowID").Value,
             .StartDate = ObjectUtils.ToDateTime(row.Cells("elv_StartDate").Value),
             .EndDate = ObjectUtils.ToNullableDateTime(row.Cells("elv_EndDate").Value),
@@ -12451,39 +12238,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub txtothrpayp_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtothrpayp.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtothrpayp.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtothrpayp.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-        Else
-            e.Handled = True
-        End If
-
-    End Sub
-
     Private Sub rdbDirectDepo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbDirectDepo.CheckedChanged
 
         Dim checkstate = rdbDirectDepo.Checked
@@ -12698,11 +12452,9 @@ Public Class EmployeeForm
 
         Label148.Text = label_gender
         Label149.Text = label_gender
-        Label152.Text = label_gender
 
         Label104.Text = label_gender
         Label105.Text = label_gender
-        Label119.Text = label_gender
 
     End Sub
 
