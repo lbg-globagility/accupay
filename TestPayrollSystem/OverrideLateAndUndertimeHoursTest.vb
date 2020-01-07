@@ -561,9 +561,49 @@ Public Class OverrideLateAndUndertimeHoursTest
 #Region "Duty then leave with overlap"
 
     <Test>
-    Public Sub ShouldHaveLateAndUndertime_WithDutyAndLeaveOverlap()
+    Public Sub ShouldHaveLate__WithDutyAndLeaveOverlap()
 
         Dim lateHours = 2
+        Dim undertimeHours = 0
+
+        '9am-6pm
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '11am-1:30pm (2 hours late = 9am-11pm)
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 11, 0, 0),
+                        New Date(2019, 6, 24, 13, 30, 0))
+
+        '1pm-6pm
+        Dim leavePeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 13, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '12pm-1pm
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
+    Public Sub ShouldHaveUndertime__WithDutyAndLeaveOverlap()
+
+        Dim lateHours = 0
         Dim undertimeHours = 4
 
         '9am-6pm
@@ -571,12 +611,12 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '11am-1:30pm
+        '9am-1:30pm
         Dim dutyPeriod = New TimePeriod(
-                        New Date(2019, 6, 24, 11, 0, 0),
+                        New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 13, 30, 0))
 
-        '1pm-2pm
+        '1pm-2pm (4 hours undertime = 2pm-6pm)
         Dim leavePeriod = New TimePeriod(
                         New Date(2019, 6, 24, 13, 0, 0),
                         New Date(2019, 6, 24, 14, 0, 0))
@@ -601,7 +641,47 @@ Public Class OverrideLateAndUndertimeHoursTest
     End Sub
 
     <Test>
-    Public Sub ShouldHaveInBetweenUndertime_WithDutyAndLeaveOverlap()
+    Public Sub ShouldHaveLateAndUndertime_WithDutyAndLeaveOverlap()
+
+        Dim lateHours = 2
+        Dim undertimeHours = 4
+
+        '9am-6pm
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '11am-1:30pm (2 hours late = 9am-11am)
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 11, 0, 0),
+                        New Date(2019, 6, 24, 13, 30, 0))
+
+        '1pm-2pm (4 hours undertime = 2pm-6pm)
+        Dim leavePeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 13, 0, 0),
+                        New Date(2019, 6, 24, 14, 0, 0))
+
+        '12pm-1pm
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
+    Public Sub ShouldNotHaveInBetweenUndertime_WithDutyAndLeaveOverlap()
 
         Dim lateHours = 0
         Dim undertimeHours = 0
@@ -641,7 +721,7 @@ Public Class OverrideLateAndUndertimeHoursTest
     End Sub
 
     <Test>
-    Public Sub ShouldHaveLateAndInBetweenUndertime_WithDutyAndLeaveOverlap()
+    Public Sub ShouldHaveLateAndNoInBetweenUndertime_WithDutyAndLeaveOverlap()
 
         Dim lateHours = 1.5
         Dim undertimeHours = 0
@@ -651,7 +731,7 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '10:30am-4pm
+        '10:30am-4pm (1.5 hours late = 9am-10:30am)
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 10, 30, 0),
                         New Date(2019, 6, 24, 16, 0, 0))
@@ -691,12 +771,12 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '10:30am-4pm
+        '10:30am-4pm (1.5 hours late = 9am-10:30am)
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 10, 30, 0),
                         New Date(2019, 6, 24, 16, 0, 0))
 
-        '3:30pm-5:45pm
+        '3:30pm-5:45pm (0.25 hours late = 5:45pm-6pm)
         Dim leavePeriod = New TimePeriod(
                         New Date(2019, 6, 24, 15, 30, 0),
                         New Date(2019, 6, 24, 17, 45, 0))
@@ -725,6 +805,86 @@ Public Class OverrideLateAndUndertimeHoursTest
 #Region "Leave first then duty with overlap"
 
     <Test>
+    Public Sub ShouldHaveLate_WithLeaveFirstThenDutyOverlap()
+
+        Dim lateHours = 2
+        Dim undertimeHours = 0
+
+        '9am-6pm
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '11am-1:30pm (2 hours late = 9am-11pm)
+        Dim leavePeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 11, 0, 0),
+                        New Date(2019, 6, 24, 13, 30, 0))
+
+        '1pm-6pm
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 13, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '12pm-1pm
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
+    Public Sub ShouldHaveUndertime_WithLeaveFirstThenDutyOverlap()
+
+        Dim lateHours = 0
+        Dim undertimeHours = 4
+
+        '9am-6pm
+        Dim shiftPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 18, 0, 0))
+
+        '9am-1:30pm
+        Dim leavePeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 9, 0, 0),
+                        New Date(2019, 6, 24, 13, 30, 0))
+
+        '1pm-2pm (4 hours undertime = 2pm-6pm)
+        Dim dutyPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 13, 0, 0),
+                        New Date(2019, 6, 24, 14, 0, 0))
+
+        '12pm-1pm
+        Dim breakPeriod = New TimePeriod(
+                        New Date(2019, 6, 24, 12, 0, 0),
+                        New Date(2019, 6, 24, 13, 0, 0))
+
+        Dim computeBreakTimeLatePolicy As Boolean = False
+
+        Dim output = DayCalculator.ComputeLateAndUndertimeHours(
+                                        shiftPeriod,
+                                        dutyPeriod,
+                                        leavePeriod,
+                                        breakPeriod,
+                                        computeBreakTimeLatePolicy)
+
+        Assert.AreEqual(output.Item1, lateHours)
+        Assert.AreEqual(output.Item2, undertimeHours)
+
+    End Sub
+
+    <Test>
     Public Sub ShouldHaveLateAndUndertime_WithLeaveFirstThenDutyOverlap()
 
         Dim lateHours = 2
@@ -735,12 +895,12 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '1pm-2pm
+        '1pm-2pm (4 hours undertime = 2pm-6pm)
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 13, 0, 0),
                         New Date(2019, 6, 24, 14, 0, 0))
 
-        '11am-1:30pm
+        '11am-1:30pm (2 hours late = 9am-11am)
         Dim leavePeriod = New TimePeriod(
                         New Date(2019, 6, 24, 11, 0, 0),
                         New Date(2019, 6, 24, 13, 30, 0))
@@ -765,7 +925,7 @@ Public Class OverrideLateAndUndertimeHoursTest
     End Sub
 
     <Test>
-    Public Sub ShouldHaveInBetweenUndertime_WithLeaveFirstThenDutyOverlap()
+    Public Sub ShouldNotHaveInBetweenUndertime_WithLeaveFirstThenDutyOverlap()
 
         Dim lateHours = 0
         Dim undertimeHours = 0
@@ -805,7 +965,7 @@ Public Class OverrideLateAndUndertimeHoursTest
     End Sub
 
     <Test>
-    Public Sub ShouldHaveLateAndInBetweenUndertime_WithLeaveFirstThenDutyOverlap()
+    Public Sub ShouldHaveLateAndNoInBetweenUndertime_WithLeaveFirstThenDutyOverlap()
 
         Dim lateHours = 1.5
         Dim undertimeHours = 0
@@ -820,7 +980,7 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 15, 30, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '10:30am-4pm
+        '10:30am-4pm (1.5 hours late = 9am-10:30am)
         Dim leavePeriod = New TimePeriod(
                         New Date(2019, 6, 24, 10, 30, 0),
                         New Date(2019, 6, 24, 16, 0, 0))
@@ -855,12 +1015,12 @@ Public Class OverrideLateAndUndertimeHoursTest
                         New Date(2019, 6, 24, 9, 0, 0),
                         New Date(2019, 6, 24, 18, 0, 0))
 
-        '3:30pm-5:45pm
+        '3:30pm-5:45pm (0.25 hours late = 5:45pm-6pm)
         Dim dutyPeriod = New TimePeriod(
                         New Date(2019, 6, 24, 15, 30, 0),
                         New Date(2019, 6, 24, 17, 45, 0))
 
-        '10:30am-4pm
+        '10:30am-4pm (1.5 hours late = 9am-10:30am)
         Dim leavePeriod = New TimePeriod(
                         New Date(2019, 6, 24, 10, 30, 0),
                         New Date(2019, 6, 24, 16, 0, 0))
