@@ -280,14 +280,14 @@ Public Class DayCalculator
         Dim latePeriods = GetLateAndUndertimePeriods(shiftPeriod, dutyPeriod, leavePeriod, shiftAndDutyDifference)
 
         Dim latePeriod As TimePeriod = latePeriods.Item1
-        Dim undertimeHoursAfterLeaveBeforeDutyTimePeriod As TimePeriod = latePeriods.Item2
+        Dim inBetweenUndertimePeriod As TimePeriod = latePeriods.Item2
         Dim undertimePeriod As TimePeriod = latePeriods.Item3
 
         Dim inBetweenUndertimeHours As Decimal = 0
 
-        If undertimeHoursAfterLeaveBeforeDutyTimePeriod IsNot Nothing Then
+        If inBetweenUndertimePeriod IsNot Nothing Then
 
-            inBetweenUndertimeHours = ComputeHoursNotCoveredByLeave(breakPeriod, computeBreakTimeLatePolicy, undertimeHoursAfterLeaveBeforeDutyTimePeriod, leavePeriod)
+            inBetweenUndertimeHours = ComputeHoursNotCoveredByLeave(breakPeriod, computeBreakTimeLatePolicy, inBetweenUndertimePeriod, leavePeriod)
 
         End If
 
