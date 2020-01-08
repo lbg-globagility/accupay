@@ -5770,7 +5770,6 @@ Public Class EmployeeForm
         If succeed Then _
             SearchEmployee_Click(Button4, New EventArgs) : _
             InfoBalloon("Imported successfully.", "Done Importing Employee Leave(s)", lblforballoon, 0, -69)
-
     End Sub
 
 #End Region 'Leave

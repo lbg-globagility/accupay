@@ -1,7 +1,4 @@
-﻿Imports System.Collections.Specialized
-Imports System.Configuration
-Imports AccuPay.DB
-Imports AccuPay.Repository
+﻿Imports AccuPay.Repository
 
 Public Class TimeAttendForm
 
@@ -105,7 +102,7 @@ Public Class TimeAttendForm
 
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim checker = FeatureListChecker.Instance
-        OvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
+        MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
         LoadShiftSchedulePolicyAsync()
     End Sub
@@ -160,7 +157,7 @@ Public Class TimeAttendForm
         previousForm = TimeEntrySummaryForm
     End Sub
 
-    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+    Private Sub MassOvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MassOvertimeToolStripMenuItem.Click
         ChangeForm(MassOvertimeForm, "Employee Time Entry Logs")
         previousForm = MassOvertimeForm
     End Sub
@@ -170,9 +167,24 @@ Public Class TimeAttendForm
         previousForm = ShiftScheduleForm
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles TimeLogsToolStripMenuItem.Click
         ChangeForm(TimeLogsForm2, "Employee Time Entry logs")
         previousForm = TimeLogsForm2
+    End Sub
+
+    Private Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click
+        ChangeForm(EmployeeLeavesForm, "Employee Leaves")
+        previousForm = EmployeeLeavesForm
+    End Sub
+
+    Private Sub OfficialBusinessToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
+        ChangeForm(OfficialBusinessForm, "Employee Official Business")
+        previousForm = OfficialBusinessForm
+    End Sub
+
+    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+        ChangeForm(EmployeeOvertimeForm, "Employee Overtimes")
+        previousForm = EmployeeOvertimeForm
     End Sub
 
 End Class
