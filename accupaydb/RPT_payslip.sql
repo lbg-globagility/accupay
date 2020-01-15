@@ -341,7 +341,7 @@ LEFT JOIN (
 			  ) semimonth_allow
        ON semimonth_allow.EmployeeID=ps.EmployeeID
 
-INNER JOIN (SELECT ps.RowID
+/*INNER JOIN (SELECT ps.RowID
             ,ps.EmployeeID
             ,SUM(ps.TotalTaxableSalary) `TotalTaxableSalary`
             ,SUM(ps.TotalEmpWithholdingTax) `TotalEmpWithholdingTax`
@@ -353,7 +353,7 @@ INNER JOIN (SELECT ps.RowID
             AND (ps.PayFromDate >= min_date_thisyear AND ps.PayToDate <= max_date_thisyear)
             GROUP BY ps.EmployeeID
             ) pstub
-        ON pstub.EmployeeID=ps.EmployeeID
+        ON pstub.EmployeeID=ps.EmployeeID*/
 
 LEFT JOIN (SELECT lt.*
 			  , GROUP_CONCAT(p.PartNo) `LeaveTypes`
