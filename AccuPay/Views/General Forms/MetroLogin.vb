@@ -1,7 +1,4 @@
-﻿Imports System.Linq.Expressions
-Imports System.Xml
-Imports AccuPay.DB
-Imports AccuPay.Utils
+﻿Imports AccuPay.Utils
 
 Public Class MetroLogin
 
@@ -10,178 +7,6 @@ Public Class MetroLogin
         ReloadOrganization()
 
         MyBase.OnLoad(e)
-
-    End Sub
-
-    Private xm_datafile As String = String.Concat(sys_db, "_xmlschemadata.xml")
-
-    Private xm_schemafile As String = String.Concat(sys_db, "_xmlschema.xml")
-
-    Private Sub Write_XML()
-
-        Dim ds As New DataSet(sys_db)
-
-        Dim e_table As New SQLQueryToDatatable("SELECT * FROM goldwingspayrolldb_curr.agency WHERE OrganizationID=3 AND IsActive=1;")
-
-        Dim catchdt As New DataTable
-        catchdt = e_table.ResultTable
-        catchdt.TableName = "agency"
-
-        ds.Tables.Add(catchdt)
-
-        catchdt = New SQLQueryToDatatable("SELECT e.EmployeeID,e.FirstName,e.LastName,e.AgencyID FROM goldwingspayrolldb_curr.employee e WHERE e.OrganizationID=3 AND e.AgencyID IS NOT NULL LIMIT 40;").ResultTable
-        catchdt.TableName = "employee"
-
-        ds.Tables.Add(catchdt)
-
-        ds.Relations.Add("EmployeeAgency",
-                           ds.Tables(0).Columns(0),
-                           ds.Tables(1).Columns(3), True)
-        'Column must belong to a table.
-
-        Dim str_writer As New System.IO.StringWriter()
-        'catchdt.WriteXmlSchema(writer, False)
-        'catchdt.WriteXml(writer, True)
-        ds.WriteXml(str_writer) ', "EmployeeAgency"
-
-        'Console.WriteLine(str_writer.ToString())
-
-        If str_writer IsNot Nothing Then
-            str_writer.Dispose()
-        End If
-
-        ds.WriteXmlSchema(xm_schemafile)
-        ds.WriteXml(xm_datafile)
-
-    End Sub
-
-    Dim xmlsett As XmlWriterSettings
-
-    Private Sub Write_XML2()
-
-        Dim ds As New DataSet(sys_db)
-
-        Dim e_table As New SQLQueryToDatatable("SELECT * FROM agency WHERE OrganizationID=3 AND IsActive=1;")
-
-        Dim catchdt As New DataTable
-        catchdt = e_table.ResultTable
-        catchdt.TableName = "agency"
-
-        ds.Tables.Add(catchdt)
-
-        Dim xmlfilename As String = "nested.xml"
-
-        ds.WriteXml(xmlfilename)
-
-        ds.Dispose()
-
-        ds = New DataSet(String.Concat(sys_db, 2))
-
-        ds.ReadXml(xmlfilename)
-
-        xmlsett.Indent = True
-
-        Dim xmlwrit As XmlWriter = XmlWriter.Create("goldwingspayrolldb_curr_xmlschemadata.xml", xmlsett)
-
-        With xmlwrit
-            .WriteStartDocument()
-
-            .WriteAttributeString("Key", "Value")
-
-            .WriteEndDocument()
-
-            .Close()
-        End With
-
-    End Sub
-
-    Sub Mein()
-
-        Dim writer As XmlWriter = Nothing
-
-        writer = XmlWriter.Create("sampledata.xml")
-
-        ' Write the root element.
-        writer.WriteStartElement("book")
-
-        ' Write the xmlns:bk="urn:book" namespace declaration.
-        writer.WriteAttributeString("xmlns", "bk", Nothing, "urn:book")
-
-        ' Write the bk:ISBN="1-800-925" attribute.
-        writer.WriteAttributeString("ISBN", "urn:book", "1-800-925")
-
-        writer.WriteElementString("price", "19.95")
-
-        ' Write the close tag for the root element.
-        writer.WriteEndElement()
-
-        ' Write the XML to file and close the writer.
-        writer.Flush()
-        writer.Close()
-
-    End Sub
-
-    Dim xmdoc As New XmlDocument
-
-    Sub Read_XML()
-
-        'xmdoc.Load(xm_datafile)
-
-        ''Dim xmnodelist As XmlNode
-
-        ''xmnodelist = xmdoc.ChildNodes
-
-        'For Each xmnod As XmlNodeList In xmdoc.ChildNodes
-
-        'Next
-
-        'For Each xmnod As XmlNodeList In xmdoc.ChildNodes
-        '    Console.WriteLine(xmnod.ToString())
-
-        'Next
-
-        'For Each node As XmlElement In nodelist
-        '    Console.WriteLine(node("agency").InnerText)
-
-        'Next
-
-        '# ###########################
-
-        'check if file myxml.xml is existing
-
-        'create a new xmltextreader object
-        'this is the object that we will loop and will be used to read the xml file
-        Dim document As XmlReader = New XmlTextReader(xm_datafile)
-
-        'loop through the xml file
-        While (document.Read())
-
-            Dim type = document.NodeType
-
-            'Console.WriteLine(Convert.ToString(type.ToString))
-
-            'if node type was element
-            If (type = XmlNodeType.Element) Then
-
-                ''if the loop found a <FirstName> tag
-                'If (document.Name = "FirstName") Then
-
-                '    Console.WriteLine(document.ReadInnerXml.ToString())
-
-                'End If
-
-                ''if the loop found a <LastName tag
-                'If (document.Name = "LastName") Then
-
-                'Console.WriteLine(document.ReadInnerXml)
-                Console.WriteLine(document.ReadOuterXml)
-                'Console.WriteLine(document.ReadElementContentAsString)
-
-                'End If
-
-            End If
-
-        End While
 
     End Sub
 
@@ -277,8 +102,6 @@ Public Class MetroLogin
         End If
 
     End Sub
-
-    Private Const err_log_limit As SByte = 3 'the max limit of failed log in attempts
 
     Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
 
@@ -460,50 +283,16 @@ Public Class MetroLogin
     End Function
 
     Function UserAuthentication(Optional pass_word As Object = Nothing)
-        'Optional user_id As Object = Nothing
-
-        Dim returnvalue As Integer = 0
-
-        'Dim params(1, 2) As Object
-
-        'params(0, 0) = "user_name"
-        'params(1, 0) = "pass_word"
-
-        'Dim n_EncryptData As New EncryptData(txtbxUserID.Text)
-
-        'params(0, 1) = n_EncryptData.ResultValue
-
-        'n_EncryptData = New EncryptData(txtbxPword.Text)
-
-        'params(1, 1) = n_EncryptData.ResultValue
-
-        Dim returnobj = Nothing
-        'EXEC_INSUPD_PROCEDURE(params,
-        '                      "UserAuthentication",
-        '                      "returnvaue")
-
-        Dim pass_wordValue As Object
-
-        If pass_word = Nothing Then
-
-            pass_wordValue = Nothing
-        Else
-
-            pass_wordValue = pass_word
-        End If
-
         Dim n_ReadSQLFunction As New ReadSQLFunction("UserAuthentication",
                                                      "returnvaue",
                                                      New EncryptData(txtbxUserID.Text).ResultValue,
-                                                     pass_wordValue,
-                                                     orgztnID) 'New EncryptData(txtbxPword.Text).ResultValue
+                                                     pass_word,
+                                                     orgztnID)
 
-        returnobj = n_ReadSQLFunction.ReturnValue
-
-        returnvalue = ValNoComma(returnobj)
+        Dim returnobj = n_ReadSQLFunction.ReturnValue
+        Dim returnvalue = ValNoComma(returnobj)
 
         Return returnvalue
-
     End Function
 
     Private Sub cbxorganiz_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbxorganiz.SelectedIndexChanged
@@ -534,10 +323,6 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Sub cbxorganiz_SelectedValueChanged(sender As Object, e As EventArgs) Handles cbxorganiz.SelectedValueChanged
-
-    End Sub
-
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
@@ -562,10 +347,6 @@ Public Class MetroLogin
         '    cbxorganiz.Enabled = Convert.ToBoolean(0)
         'End If
         '# ####################################### #
-
-    End Sub
-
-    Private Sub MetroLogin_Resize(sender As Object, e As EventArgs) Handles Me.Resize
 
     End Sub
 
@@ -605,10 +386,6 @@ Public Class MetroLogin
             End If
 
         End If
-
-    End Sub
-
-    Private Sub txtbxUserID_Click(sender As Object, e As EventArgs) Handles txtbxUserID.Click
 
     End Sub
 
@@ -711,27 +488,5 @@ Friend Class EncryptData
         Return Encryped
 
     End Function
-
-    Private Sub SampleExpression()
-        ' Creating an expression tree.
-        Dim expr As Expression(Of Func(Of Integer, Boolean)) =
-            Function(num) num < 5
-
-        ' Compiling the expression tree into a delegate.
-        Dim result As Func(Of Integer, Boolean) = expr.Compile()
-
-        ' Invoking the delegate and writing the result to the console.
-        Console.WriteLine(result(4))
-
-        ' Prints True.
-
-        ' You can also use simplified syntax
-        ' to compile and run an expression tree.
-        ' The following line can replace two previous statements.
-        Console.WriteLine(expr.Compile()(4))
-
-        ' Also prints True.
-
-    End Sub
 
 End Class
