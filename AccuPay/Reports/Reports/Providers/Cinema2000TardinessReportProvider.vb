@@ -6,6 +6,8 @@ Imports Microsoft.EntityFrameworkCore
 Public Class Cinema2000TardinessReportProvider
     Implements IReportProvider
 
+    Private Const JanuaryMonth As Integer = 1
+    Private Const DecemberMonth As Integer = 12
     Public Property Name As String = "Tardiness Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
@@ -64,8 +66,14 @@ Public Class Cinema2000TardinessReportProvider
         Dim previousMonth = [date].Month - 1
         Dim lastDayOfThePreviousMonth = New Date([date].Year, previousMonth, Date.DaysInMonth([date].Year, previousMonth))
 
-        'if the firstDayOfTheMonth is 09/01/2019, lastYearDate is 10/01/2018
-        Dim firstDayOneYear = New Date(firstDayOfTheMonth.Year - 1, firstDayOfTheMonth.Month + 1, 1)
+        Dim firstDayOneYear As Date
+        If firstDayOfTheMonth.Month = DecemberMonth Then
+            'if the firstDayOfTheMonth is 12/01/2019, lastYearDate is 1/01/2019
+            firstDayOneYear = New Date(firstDayOfTheMonth.Year, JanuaryMonth, 1)
+        Else
+            'if the firstDayOfTheMonth is 09/01/2019, lastYearDate is 10/01/2018
+            firstDayOneYear = New Date(firstDayOfTheMonth.Year - 1, firstDayOfTheMonth.Month + 1, 1)
+        End If
 
         Dim tardinessReportModels As New List(Of CinemaTardinessReportModel)
 
