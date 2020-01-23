@@ -280,9 +280,9 @@ Public Class TimeEntryGenerator
         Next
 
         PostLegalHolidayCheck(timeEntries, payrateCalendar, timeEntryPolicy)
-
         timeEntries.ForEach(Sub(t)
                                 t.RegularHolidayPay += t.BasicRegularHolidayPay
+                                t.TotalDayPay += t.BasicRegularHolidayPay
                             End Sub)
 
         If employee.IsUnderAgency Then
