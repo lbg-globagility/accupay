@@ -104,9 +104,11 @@ Public Class PayrollTools
                 Continue For
             End If
 
+            Dim totalDayPay = lastTimeEntry.GetTotalDayPay()
+
             If lastTimeEntry.IsRestDay Then
 
-                If lastTimeEntry.TotalDayPay > 0 Then
+                If totalDayPay > 0 Then
                     Return True
                 End If
 
@@ -115,7 +117,7 @@ Public Class PayrollTools
 
             Dim payRate = payratesCalendar.Find(lastTimeEntry.Date)
             If payRate.IsHoliday Then
-                If lastTimeEntry.TotalDayPay > 0 Then
+                If totalDayPay > 0 Then
                     Return True
                 End If
 
@@ -146,9 +148,11 @@ Public Class PayrollTools
                 Continue For
             End If
 
+            Dim totalDayPay = timeEntry.GetTotalDayPay()
+
             If timeEntry.IsRestDay Then
 
-                If timeEntry.TotalDayPay > 0 Then
+                If totalDayPay > 0 Then
                     Return True
                 End If
 
@@ -157,7 +161,7 @@ Public Class PayrollTools
 
             Dim payRate = payratesCalendar.Find(timeEntry.Date)
             If payRate.IsRegularHoliday Then
-                If timeEntry.TotalDayPay > 0 Then
+                If totalDayPay > 0 Then
                     Return True
                 End If
 
