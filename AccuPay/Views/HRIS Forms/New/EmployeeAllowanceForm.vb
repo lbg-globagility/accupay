@@ -18,7 +18,7 @@ Public Class EmployeeAllowanceForm
 
     Private _employees As New List(Of Employee)
 
-    Private _AllEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Employee)
 
     Private _currentAllowance As Allowance
 
@@ -42,7 +42,7 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
+    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(searchTextBox.Text.ToLower())
@@ -511,7 +511,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._AllEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
                             OrderBy(Function(e) e.LastName).
                             ToList
 
@@ -521,10 +521,10 @@ Public Class EmployeeAllowanceForm
 
         If cbShowAll.Checked Then
 
-            Me._employees = Me._AllEmployees
+            Me._employees = Me._allEmployees
         Else
 
-            Me._employees = Me._AllEmployees.Where(Function(e) e.IsActive).ToList
+            Me._employees = Me._allEmployees.Where(Function(e) e.IsActive).ToList
 
         End If
 

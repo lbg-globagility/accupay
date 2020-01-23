@@ -173,17 +173,17 @@ Public Class TimeAttendForm
     End Sub
 
     Private Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click
-        ChangeForm(EmployeeLeavesForm, "Employee Leaves")
+        ChangeForm(EmployeeLeavesForm, "Employee Leave")
         previousForm = EmployeeLeavesForm
     End Sub
 
     Private Sub OfficialBusinessToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
-        ChangeForm(OfficialBusinessForm, "Employee Official Business")
+        ChangeForm(OfficialBusinessForm, "Official Business filing")
         previousForm = OfficialBusinessForm
     End Sub
 
     Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
-        ChangeForm(EmployeeOvertimeForm, "Employee Overtimes")
+        ChangeForm(EmployeeOvertimeForm, "Employee Overtime")
         previousForm = EmployeeOvertimeForm
     End Sub
 

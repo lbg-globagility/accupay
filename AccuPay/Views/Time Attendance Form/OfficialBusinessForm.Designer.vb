@@ -47,7 +47,7 @@ Partial Class OfficialBusinessForm
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.AllowanceDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.AttachmentPictureBox = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -102,7 +102,7 @@ Partial Class OfficialBusinessForm
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
-        Me.AllowanceDetailsTabLayout.SuspendLayout()
+        Me.DetailsTabLayout.SuspendLayout()
         CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -210,7 +210,7 @@ Partial Class OfficialBusinessForm
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
         Me.pnlForm.Controls.Add(Me.OvertimeGridView)
-        Me.pnlForm.Controls.Add(Me.AllowanceDetailsTabLayout)
+        Me.pnlForm.Controls.Add(Me.DetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlForm.Location = New System.Drawing.Point(0, 25)
@@ -359,42 +359,42 @@ Partial Class OfficialBusinessForm
         '
         'AllowanceDetailsTabLayout
         '
-        Me.AllowanceDetailsTabLayout.ColumnCount = 4
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
-        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(8, 101)
-        Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
-        Me.AllowanceDetailsTabLayout.RowCount = 8
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.AllowanceDetailsTabLayout.Size = New System.Drawing.Size(701, 193)
-        Me.AllowanceDetailsTabLayout.TabIndex = 4
+        Me.DetailsTabLayout.ColumnCount = 4
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
+        Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
+        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
+        Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
+        Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
+        Me.DetailsTabLayout.Location = New System.Drawing.Point(8, 101)
+        Me.DetailsTabLayout.Name = "AllowanceDetailsTabLayout"
+        Me.DetailsTabLayout.RowCount = 8
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.DetailsTabLayout.Size = New System.Drawing.Size(701, 193)
+        Me.DetailsTabLayout.TabIndex = 4
         '
         'AttachmentPictureBox
         '
@@ -402,7 +402,7 @@ Partial Class OfficialBusinessForm
         Me.AttachmentPictureBox.Location = New System.Drawing.Point(465, 19)
         Me.AttachmentPictureBox.Margin = New System.Windows.Forms.Padding(10, 3, 3, 3)
         Me.AttachmentPictureBox.Name = "AttachmentPictureBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
+        Me.DetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
         Me.AttachmentPictureBox.Size = New System.Drawing.Size(209, 137)
         Me.AttachmentPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.AttachmentPictureBox.TabIndex = 518
@@ -434,7 +434,7 @@ Partial Class OfficialBusinessForm
         Me.CommentTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 3, 0)
         Me.CommentTextBox.Multiline = True
         Me.CommentTextBox.Name = "CommentTextBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.CommentTextBox, 3)
+        Me.DetailsTabLayout.SetRowSpan(Me.CommentTextBox, 3)
         Me.CommentTextBox.ShortcutsEnabled = False
         Me.CommentTextBox.Size = New System.Drawing.Size(160, 74)
         Me.CommentTextBox.TabIndex = 9
@@ -445,7 +445,7 @@ Partial Class OfficialBusinessForm
         Me.ReasonTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 2, 0)
         Me.ReasonTextBox.Multiline = True
         Me.ReasonTextBox.Name = "ReasonTextBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.ReasonTextBox, 3)
+        Me.DetailsTabLayout.SetRowSpan(Me.ReasonTextBox, 3)
         Me.ReasonTextBox.ShortcutsEnabled = False
         Me.ReasonTextBox.Size = New System.Drawing.Size(160, 74)
         Me.ReasonTextBox.TabIndex = 8
@@ -872,8 +872,8 @@ Partial Class OfficialBusinessForm
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
-        Me.AllowanceDetailsTabLayout.ResumeLayout(False)
-        Me.AllowanceDetailsTabLayout.PerformLayout()
+        Me.DetailsTabLayout.ResumeLayout(False)
+        Me.DetailsTabLayout.PerformLayout()
         CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
@@ -919,7 +919,7 @@ Partial Class OfficialBusinessForm
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
-    Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
+    Friend WithEvents DetailsTabLayout As TableLayoutPanel
     Friend WithEvents AttachmentPictureBox As PictureBox
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label

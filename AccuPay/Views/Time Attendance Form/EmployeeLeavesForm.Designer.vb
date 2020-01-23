@@ -22,9 +22,9 @@ Partial Class EmployeeLeavesForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
@@ -45,9 +45,35 @@ Partial Class EmployeeLeavesForm
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
-        Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
-        Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.AllowanceDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.LeavesGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.TabControl4 = New System.Windows.Forms.TabControl()
+        Me.TabPage7 = New System.Windows.Forms.TabPage()
+        Me.Label131 = New System.Windows.Forms.Label()
+        Me.Label132 = New System.Windows.Forms.Label()
+        Me.VacationLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
+        Me.Label117 = New System.Windows.Forms.Label()
+        Me.Label118 = New System.Windows.Forms.Label()
+        Me.SickLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
+        Me.TabPage6 = New System.Windows.Forms.TabPage()
+        Me.Label11 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
+        Me.VacationLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
+        Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Label10 = New System.Windows.Forms.Label()
+        Me.StatusComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.AttachmentPictureBox = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
@@ -74,26 +100,11 @@ Partial Class EmployeeLeavesForm
         Me.ClearButton = New System.Windows.Forms.Button()
         Me.DownloadButton = New System.Windows.Forms.Button()
         Me.ChangeButton = New System.Windows.Forms.Button()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.StatusComboBox = New System.Windows.Forms.ComboBox()
-        Me.TabControl4 = New System.Windows.Forms.TabControl()
-        Me.TabPage7 = New System.Windows.Forms.TabPage()
-        Me.Label131 = New System.Windows.Forms.Label()
-        Me.Label132 = New System.Windows.Forms.Label()
-        Me.VacationLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
-        Me.Label117 = New System.Windows.Forms.Label()
-        Me.Label118 = New System.Windows.Forms.Label()
-        Me.SickLeaveBalanceTextBox = New System.Windows.Forms.TextBox()
-        Me.TabPage6 = New System.Windows.Forms.TabPage()
-        Me.Label11 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
-        Me.VacationLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
-        Me.OvertimeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
+        Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -105,35 +116,24 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
         Me.pnlSearch.SuspendLayout()
         Me.pnlMain.SuspendLayout()
         Me.pnlForm.SuspendLayout()
-        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.AllowanceDetailsTabLayout.SuspendLayout()
+        CType(Me.LeavesGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.TabControl4.SuspendLayout()
+        Me.TabPage7.SuspendLayout()
+        Me.TabPage6.SuspendLayout()
+        Me.DetailsTabLayout.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        Me.Panel5.SuspendLayout()
-        Me.TabControl4.SuspendLayout()
-        Me.TabPage7.SuspendLayout()
-        Me.TabPage6.SuspendLayout()
-        CType(Me.OvertimeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'EmployeeInfoTabLayout
@@ -333,9 +333,9 @@ Partial Class EmployeeLeavesForm
         '
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
-        Me.pnlForm.Controls.Add(Me.OvertimeGridView)
+        Me.pnlForm.Controls.Add(Me.LeavesGridView)
         Me.pnlForm.Controls.Add(Me.TabControl4)
-        Me.pnlForm.Controls.Add(Me.AllowanceDetailsTabLayout)
+        Me.pnlForm.Controls.Add(Me.DetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlForm.Location = New System.Drawing.Point(0, 25)
@@ -343,87 +343,325 @@ Partial Class EmployeeLeavesForm
         Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
         '
-        'ShowAllCheckBox
+        'LeavesGridView
         '
-        Me.ShowAllCheckBox.AutoSize = True
-        Me.ShowAllCheckBox.Location = New System.Drawing.Point(8, 97)
-        Me.ShowAllCheckBox.Name = "ShowAllCheckBox"
-        Me.ShowAllCheckBox.Size = New System.Drawing.Size(128, 17)
-        Me.ShowAllCheckBox.TabIndex = 1
-        Me.ShowAllCheckBox.Text = "Show All Employees"
-        Me.ShowAllCheckBox.UseVisualStyleBackColor = True
+        Me.LeavesGridView.AllowUserToAddRows = False
+        Me.LeavesGridView.AllowUserToDeleteRows = False
+        Me.LeavesGridView.AllowUserToOrderColumns = True
+        Me.LeavesGridView.AllowUserToResizeColumns = False
+        Me.LeavesGridView.AllowUserToResizeRows = False
+        Me.LeavesGridView.BackgroundColor = System.Drawing.Color.White
+        Me.LeavesGridView.ColumnHeadersHeight = 34
+        Me.LeavesGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.LeavesGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.LeavesGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.LeavesGridView.Location = New System.Drawing.Point(28, 350)
+        Me.LeavesGridView.MultiSelect = False
+        Me.LeavesGridView.Name = "LeavesGridView"
+        Me.LeavesGridView.ReadOnly = True
+        Me.LeavesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.LeavesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.LeavesGridView.Size = New System.Drawing.Size(784, 250)
+        Me.LeavesGridView.TabIndex = 6
         '
-        'EmployeesDataGridView
+        'Column8
         '
-        Me.EmployeesDataGridView.AllowUserToAddRows = False
-        Me.EmployeesDataGridView.AllowUserToDeleteRows = False
-        Me.EmployeesDataGridView.AllowUserToOrderColumns = True
-        Me.EmployeesDataGridView.AllowUserToResizeRows = False
-        Me.EmployeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.EmployeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.EmployeesDataGridView.BackgroundColor = System.Drawing.Color.White
-        Me.EmployeesDataGridView.ColumnHeadersHeight = 34
-        Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle5
-        Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
-        Me.EmployeesDataGridView.MultiSelect = False
-        Me.EmployeesDataGridView.Name = "EmployeesDataGridView"
-        Me.EmployeesDataGridView.ReadOnly = True
-        Me.EmployeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
-        Me.EmployeesDataGridView.TabIndex = 2
+        Me.Column8.HeaderText = "Leave type"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
         '
-        'AllowanceDetailsTabLayout
+        'Column2
         '
-        Me.AllowanceDetailsTabLayout.ColumnCount = 4
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel5, 2, 3)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label9, 2, 2)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
-        Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(8, 101)
-        Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
-        Me.AllowanceDetailsTabLayout.RowCount = 8
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
-        Me.AllowanceDetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.AllowanceDetailsTabLayout.Size = New System.Drawing.Size(701, 193)
-        Me.AllowanceDetailsTabLayout.TabIndex = 4
+        Me.Column2.DataPropertyName = "OTStartTime"
+        Me.Column2.HeaderText = "Start time"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "OTEndTime"
+        Me.Column4.HeaderText = "End time"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "OTStartDate"
+        Me.Column1.HeaderText = "Start date"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "OTEndDate"
+        Me.Column3.HeaderText = "End date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Status"
+        Me.Column7.HeaderText = "Status"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Reason"
+        Me.Column5.HeaderText = "Reason"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Comments"
+        Me.Column6.HeaderText = "Comments"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'TabControl4
+        '
+        Me.TabControl4.Controls.Add(Me.TabPage7)
+        Me.TabControl4.Controls.Add(Me.TabPage6)
+        Me.TabControl4.Location = New System.Drawing.Point(711, 118)
+        Me.TabControl4.Name = "TabControl4"
+        Me.TabControl4.SelectedIndex = 0
+        Me.TabControl4.Size = New System.Drawing.Size(190, 148)
+        Me.TabControl4.TabIndex = 5
+        '
+        'TabPage7
+        '
+        Me.TabPage7.Controls.Add(Me.Label131)
+        Me.TabPage7.Controls.Add(Me.Label132)
+        Me.TabPage7.Controls.Add(Me.VacationLeaveBalanceTextBox)
+        Me.TabPage7.Controls.Add(Me.Label117)
+        Me.TabPage7.Controls.Add(Me.Label118)
+        Me.TabPage7.Controls.Add(Me.SickLeaveBalanceTextBox)
+        Me.TabPage7.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage7.Name = "TabPage7"
+        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage7.Size = New System.Drawing.Size(182, 122)
+        Me.TabPage7.TabIndex = 1
+        Me.TabPage7.Text = "Leave balance"
+        Me.TabPage7.UseVisualStyleBackColor = True
+        '
+        'Label131
+        '
+        Me.Label131.AutoSize = True
+        Me.Label131.Location = New System.Drawing.Point(108, 75)
+        Me.Label131.Name = "Label131"
+        Me.Label131.Size = New System.Drawing.Size(43, 13)
+        Me.Label131.TabIndex = 161
+        Me.Label131.Text = "hour(s)"
+        '
+        'Label132
+        '
+        Me.Label132.AutoSize = True
+        Me.Label132.Location = New System.Drawing.Point(108, 32)
+        Me.Label132.Name = "Label132"
+        Me.Label132.Size = New System.Drawing.Size(43, 13)
+        Me.Label132.TabIndex = 162
+        Me.Label132.Text = "hour(s)"
+        '
+        'VacationLeaveBalanceTextBox
+        '
+        Me.VacationLeaveBalanceTextBox.BackColor = System.Drawing.Color.White
+        Me.VacationLeaveBalanceTextBox.Location = New System.Drawing.Point(18, 29)
+        Me.VacationLeaveBalanceTextBox.MaxLength = 50
+        Me.VacationLeaveBalanceTextBox.Name = "VacationLeaveBalanceTextBox"
+        Me.VacationLeaveBalanceTextBox.ReadOnly = True
+        Me.VacationLeaveBalanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.VacationLeaveBalanceTextBox.TabIndex = 0
+        '
+        'Label117
+        '
+        Me.Label117.AutoSize = True
+        Me.Label117.Location = New System.Drawing.Point(15, 56)
+        Me.Label117.Name = "Label117"
+        Me.Label117.Size = New System.Drawing.Size(27, 13)
+        Me.Label117.TabIndex = 151
+        Me.Label117.Text = "Sick"
+        '
+        'Label118
+        '
+        Me.Label118.AutoSize = True
+        Me.Label118.Location = New System.Drawing.Point(15, 13)
+        Me.Label118.Name = "Label118"
+        Me.Label118.Size = New System.Drawing.Size(51, 13)
+        Me.Label118.TabIndex = 150
+        Me.Label118.Text = "Vacation"
+        '
+        'SickLeaveBalanceTextBox
+        '
+        Me.SickLeaveBalanceTextBox.BackColor = System.Drawing.Color.White
+        Me.SickLeaveBalanceTextBox.Location = New System.Drawing.Point(18, 72)
+        Me.SickLeaveBalanceTextBox.MaxLength = 50
+        Me.SickLeaveBalanceTextBox.Name = "SickLeaveBalanceTextBox"
+        Me.SickLeaveBalanceTextBox.ReadOnly = True
+        Me.SickLeaveBalanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.SickLeaveBalanceTextBox.TabIndex = 1
+        '
+        'TabPage6
+        '
+        Me.TabPage6.Controls.Add(Me.Label11)
+        Me.TabPage6.Controls.Add(Me.Label12)
+        Me.TabPage6.Controls.Add(Me.VacationLeaveAllowanceTextBox)
+        Me.TabPage6.Controls.Add(Me.Label13)
+        Me.TabPage6.Controls.Add(Me.Label14)
+        Me.TabPage6.Controls.Add(Me.SickLeaveAllowanceTextBox)
+        Me.TabPage6.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage6.Name = "TabPage6"
+        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage6.Size = New System.Drawing.Size(182, 122)
+        Me.TabPage6.TabIndex = 0
+        Me.TabPage6.Text = "Leave allowance"
+        Me.TabPage6.UseVisualStyleBackColor = True
+        '
+        'Label11
+        '
+        Me.Label11.AutoSize = True
+        Me.Label11.Location = New System.Drawing.Point(108, 75)
+        Me.Label11.Name = "Label11"
+        Me.Label11.Size = New System.Drawing.Size(43, 13)
+        Me.Label11.TabIndex = 167
+        Me.Label11.Text = "hour(s)"
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Location = New System.Drawing.Point(108, 32)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(43, 13)
+        Me.Label12.TabIndex = 168
+        Me.Label12.Text = "hour(s)"
+        '
+        'VacationLeaveAllowanceTextBox
+        '
+        Me.VacationLeaveAllowanceTextBox.BackColor = System.Drawing.Color.White
+        Me.VacationLeaveAllowanceTextBox.Location = New System.Drawing.Point(18, 29)
+        Me.VacationLeaveAllowanceTextBox.MaxLength = 50
+        Me.VacationLeaveAllowanceTextBox.Name = "VacationLeaveAllowanceTextBox"
+        Me.VacationLeaveAllowanceTextBox.ReadOnly = True
+        Me.VacationLeaveAllowanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.VacationLeaveAllowanceTextBox.TabIndex = 163
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Location = New System.Drawing.Point(15, 56)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(27, 13)
+        Me.Label13.TabIndex = 166
+        Me.Label13.Text = "Sick"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Location = New System.Drawing.Point(15, 13)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(51, 13)
+        Me.Label14.TabIndex = 165
+        Me.Label14.Text = "Vacation"
+        '
+        'SickLeaveAllowanceTextBox
+        '
+        Me.SickLeaveAllowanceTextBox.BackColor = System.Drawing.Color.White
+        Me.SickLeaveAllowanceTextBox.Location = New System.Drawing.Point(18, 72)
+        Me.SickLeaveAllowanceTextBox.MaxLength = 50
+        Me.SickLeaveAllowanceTextBox.Name = "SickLeaveAllowanceTextBox"
+        Me.SickLeaveAllowanceTextBox.ReadOnly = True
+        Me.SickLeaveAllowanceTextBox.Size = New System.Drawing.Size(87, 22)
+        Me.SickLeaveAllowanceTextBox.TabIndex = 164
+        '
+        'DetailsTabLayout
+        '
+        Me.DetailsTabLayout.ColumnCount = 4
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.Panel5, 2, 3)
+        Me.DetailsTabLayout.Controls.Add(Me.Label9, 2, 2)
+        Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
+        Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
+        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
+        Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
+        Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
+        Me.DetailsTabLayout.Location = New System.Drawing.Point(8, 101)
+        Me.DetailsTabLayout.Name = "DetailsTabLayout"
+        Me.DetailsTabLayout.RowCount = 8
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.DetailsTabLayout.Size = New System.Drawing.Size(701, 193)
+        Me.DetailsTabLayout.TabIndex = 4
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.Label10)
+        Me.Panel5.Controls.Add(Me.StatusComboBox)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel5.Location = New System.Drawing.Point(315, 64)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(140, 32)
+        Me.Panel5.TabIndex = 11
+        '
+        'Label10
+        '
+        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label10.Location = New System.Drawing.Point(3, 4)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(13, 13)
+        Me.Label10.TabIndex = 507
+        Me.Label10.Text = "*"
+        '
+        'StatusComboBox
+        '
+        Me.StatusComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.StatusComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.StatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.StatusComboBox.FormattingEnabled = True
+        Me.StatusComboBox.Location = New System.Drawing.Point(20, 2)
+        Me.StatusComboBox.Name = "StatusComboBox"
+        Me.StatusComboBox.Size = New System.Drawing.Size(110, 21)
+        Me.StatusComboBox.TabIndex = 11
+        '
+        'Label9
+        '
+        Me.Label9.AutoSize = True
+        Me.Label9.Location = New System.Drawing.Point(335, 48)
+        Me.Label9.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(39, 13)
+        Me.Label9.TabIndex = 520
+        Me.Label9.Text = "Status"
         '
         'AttachmentPictureBox
         '
@@ -431,7 +669,7 @@ Partial Class EmployeeLeavesForm
         Me.AttachmentPictureBox.Location = New System.Drawing.Point(465, 19)
         Me.AttachmentPictureBox.Margin = New System.Windows.Forms.Padding(10, 3, 3, 3)
         Me.AttachmentPictureBox.Name = "AttachmentPictureBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
+        Me.DetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
         Me.AttachmentPictureBox.Size = New System.Drawing.Size(209, 137)
         Me.AttachmentPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
         Me.AttachmentPictureBox.TabIndex = 518
@@ -463,7 +701,7 @@ Partial Class EmployeeLeavesForm
         Me.CommentTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 3, 0)
         Me.CommentTextBox.Multiline = True
         Me.CommentTextBox.Name = "CommentTextBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.CommentTextBox, 3)
+        Me.DetailsTabLayout.SetRowSpan(Me.CommentTextBox, 3)
         Me.CommentTextBox.ShortcutsEnabled = False
         Me.CommentTextBox.Size = New System.Drawing.Size(160, 74)
         Me.CommentTextBox.TabIndex = 9
@@ -474,7 +712,7 @@ Partial Class EmployeeLeavesForm
         Me.ReasonTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 2, 0)
         Me.ReasonTextBox.Multiline = True
         Me.ReasonTextBox.Name = "ReasonTextBox"
-        Me.AllowanceDetailsTabLayout.SetRowSpan(Me.ReasonTextBox, 3)
+        Me.DetailsTabLayout.SetRowSpan(Me.ReasonTextBox, 3)
         Me.ReasonTextBox.ShortcutsEnabled = False
         Me.ReasonTextBox.Size = New System.Drawing.Size(160, 74)
         Me.ReasonTextBox.TabIndex = 8
@@ -506,6 +744,7 @@ Partial Class EmployeeLeavesForm
         Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
         Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.ShowCheckBox = True
         Me.EndTimePicker.ShowUpDown = True
         Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
         Me.EndTimePicker.TabIndex = 7
@@ -527,6 +766,7 @@ Partial Class EmployeeLeavesForm
         Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
         Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.ShowCheckBox = True
         Me.StartTimePicker.ShowUpDown = True
         Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
         Me.StartTimePicker.TabIndex = 6
@@ -689,229 +929,67 @@ Partial Class EmployeeLeavesForm
         Me.ChangeButton.Text = "Change"
         Me.ChangeButton.UseVisualStyleBackColor = True
         '
-        'Label9
+        'ShowAllCheckBox
         '
-        Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(335, 48)
-        Me.Label9.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(39, 13)
-        Me.Label9.TabIndex = 520
-        Me.Label9.Text = "Status"
+        Me.ShowAllCheckBox.AutoSize = True
+        Me.ShowAllCheckBox.Location = New System.Drawing.Point(8, 97)
+        Me.ShowAllCheckBox.Name = "ShowAllCheckBox"
+        Me.ShowAllCheckBox.Size = New System.Drawing.Size(128, 17)
+        Me.ShowAllCheckBox.TabIndex = 1
+        Me.ShowAllCheckBox.Text = "Show All Employees"
+        Me.ShowAllCheckBox.UseVisualStyleBackColor = True
         '
-        'Panel5
+        'EmployeesDataGridView
         '
-        Me.Panel5.Controls.Add(Me.Label10)
-        Me.Panel5.Controls.Add(Me.StatusComboBox)
-        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(315, 64)
-        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(140, 32)
-        Me.Panel5.TabIndex = 11
+        Me.EmployeesDataGridView.AllowUserToAddRows = False
+        Me.EmployeesDataGridView.AllowUserToDeleteRows = False
+        Me.EmployeesDataGridView.AllowUserToOrderColumns = True
+        Me.EmployeesDataGridView.AllowUserToResizeRows = False
+        Me.EmployeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.EmployeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.EmployeesDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.EmployeesDataGridView.ColumnHeadersHeight = 34
+        Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
+        Me.EmployeesDataGridView.MultiSelect = False
+        Me.EmployeesDataGridView.Name = "EmployeesDataGridView"
+        Me.EmployeesDataGridView.ReadOnly = True
+        Me.EmployeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
+        Me.EmployeesDataGridView.TabIndex = 2
         '
-        'Label10
+        'cemp_EmployeeID
         '
-        Me.Label10.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label10.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label10.Location = New System.Drawing.Point(3, 4)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(13, 13)
-        Me.Label10.TabIndex = 507
-        Me.Label10.Text = "*"
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
         '
-        'StatusComboBox
+        'cemp_LastName
         '
-        Me.StatusComboBox.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.StatusComboBox.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.StatusComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.StatusComboBox.FormattingEnabled = True
-        Me.StatusComboBox.Location = New System.Drawing.Point(20, 2)
-        Me.StatusComboBox.Name = "StatusComboBox"
-        Me.StatusComboBox.Size = New System.Drawing.Size(110, 21)
-        Me.StatusComboBox.TabIndex = 11
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
         '
-        'TabControl4
+        'cemp_FirstName
         '
-        Me.TabControl4.Controls.Add(Me.TabPage7)
-        Me.TabControl4.Controls.Add(Me.TabPage6)
-        Me.TabControl4.Location = New System.Drawing.Point(711, 118)
-        Me.TabControl4.Name = "TabControl4"
-        Me.TabControl4.SelectedIndex = 0
-        Me.TabControl4.Size = New System.Drawing.Size(190, 148)
-        Me.TabControl4.TabIndex = 5
-        '
-        'TabPage7
-        '
-        Me.TabPage7.Controls.Add(Me.Label131)
-        Me.TabPage7.Controls.Add(Me.Label132)
-        Me.TabPage7.Controls.Add(Me.VacationLeaveBalanceTextBox)
-        Me.TabPage7.Controls.Add(Me.Label117)
-        Me.TabPage7.Controls.Add(Me.Label118)
-        Me.TabPage7.Controls.Add(Me.SickLeaveBalanceTextBox)
-        Me.TabPage7.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage7.Name = "TabPage7"
-        Me.TabPage7.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage7.Size = New System.Drawing.Size(182, 122)
-        Me.TabPage7.TabIndex = 1
-        Me.TabPage7.Text = "Leave balance"
-        Me.TabPage7.UseVisualStyleBackColor = True
-        '
-        'Label131
-        '
-        Me.Label131.AutoSize = True
-        Me.Label131.Location = New System.Drawing.Point(108, 75)
-        Me.Label131.Name = "Label131"
-        Me.Label131.Size = New System.Drawing.Size(43, 13)
-        Me.Label131.TabIndex = 161
-        Me.Label131.Text = "hour(s)"
-        '
-        'Label132
-        '
-        Me.Label132.AutoSize = True
-        Me.Label132.Location = New System.Drawing.Point(108, 32)
-        Me.Label132.Name = "Label132"
-        Me.Label132.Size = New System.Drawing.Size(43, 13)
-        Me.Label132.TabIndex = 162
-        Me.Label132.Text = "hour(s)"
-        '
-        'VacationLeaveBalanceTextBox
-        '
-        Me.VacationLeaveBalanceTextBox.BackColor = System.Drawing.Color.White
-        Me.VacationLeaveBalanceTextBox.Location = New System.Drawing.Point(18, 29)
-        Me.VacationLeaveBalanceTextBox.MaxLength = 50
-        Me.VacationLeaveBalanceTextBox.Name = "VacationLeaveBalanceTextBox"
-        Me.VacationLeaveBalanceTextBox.ReadOnly = True
-        Me.VacationLeaveBalanceTextBox.Size = New System.Drawing.Size(87, 22)
-        Me.VacationLeaveBalanceTextBox.TabIndex = 0
-        '
-        'Label117
-        '
-        Me.Label117.AutoSize = True
-        Me.Label117.Location = New System.Drawing.Point(15, 56)
-        Me.Label117.Name = "Label117"
-        Me.Label117.Size = New System.Drawing.Size(27, 13)
-        Me.Label117.TabIndex = 151
-        Me.Label117.Text = "Sick"
-        '
-        'Label118
-        '
-        Me.Label118.AutoSize = True
-        Me.Label118.Location = New System.Drawing.Point(15, 13)
-        Me.Label118.Name = "Label118"
-        Me.Label118.Size = New System.Drawing.Size(51, 13)
-        Me.Label118.TabIndex = 150
-        Me.Label118.Text = "Vacation"
-        '
-        'SickLeaveBalanceTextBox
-        '
-        Me.SickLeaveBalanceTextBox.BackColor = System.Drawing.Color.White
-        Me.SickLeaveBalanceTextBox.Location = New System.Drawing.Point(18, 72)
-        Me.SickLeaveBalanceTextBox.MaxLength = 50
-        Me.SickLeaveBalanceTextBox.Name = "SickLeaveBalanceTextBox"
-        Me.SickLeaveBalanceTextBox.ReadOnly = True
-        Me.SickLeaveBalanceTextBox.Size = New System.Drawing.Size(87, 22)
-        Me.SickLeaveBalanceTextBox.TabIndex = 1
-        '
-        'TabPage6
-        '
-        Me.TabPage6.Controls.Add(Me.Label11)
-        Me.TabPage6.Controls.Add(Me.Label12)
-        Me.TabPage6.Controls.Add(Me.VacationLeaveAllowanceTextBox)
-        Me.TabPage6.Controls.Add(Me.Label13)
-        Me.TabPage6.Controls.Add(Me.Label14)
-        Me.TabPage6.Controls.Add(Me.SickLeaveAllowanceTextBox)
-        Me.TabPage6.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage6.Name = "TabPage6"
-        Me.TabPage6.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage6.Size = New System.Drawing.Size(182, 122)
-        Me.TabPage6.TabIndex = 0
-        Me.TabPage6.Text = "Leave allowance"
-        Me.TabPage6.UseVisualStyleBackColor = True
-        '
-        'Label11
-        '
-        Me.Label11.AutoSize = True
-        Me.Label11.Location = New System.Drawing.Point(108, 75)
-        Me.Label11.Name = "Label11"
-        Me.Label11.Size = New System.Drawing.Size(43, 13)
-        Me.Label11.TabIndex = 167
-        Me.Label11.Text = "hour(s)"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.Location = New System.Drawing.Point(108, 32)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(43, 13)
-        Me.Label12.TabIndex = 168
-        Me.Label12.Text = "hour(s)"
-        '
-        'VacationLeaveAllowanceTextBox
-        '
-        Me.VacationLeaveAllowanceTextBox.BackColor = System.Drawing.Color.White
-        Me.VacationLeaveAllowanceTextBox.Location = New System.Drawing.Point(18, 29)
-        Me.VacationLeaveAllowanceTextBox.MaxLength = 50
-        Me.VacationLeaveAllowanceTextBox.Name = "VacationLeaveAllowanceTextBox"
-        Me.VacationLeaveAllowanceTextBox.ReadOnly = True
-        Me.VacationLeaveAllowanceTextBox.Size = New System.Drawing.Size(87, 22)
-        Me.VacationLeaveAllowanceTextBox.TabIndex = 163
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.Location = New System.Drawing.Point(15, 56)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(27, 13)
-        Me.Label13.TabIndex = 166
-        Me.Label13.Text = "Sick"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.Location = New System.Drawing.Point(15, 13)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(51, 13)
-        Me.Label14.TabIndex = 165
-        Me.Label14.Text = "Vacation"
-        '
-        'SickLeaveAllowanceTextBox
-        '
-        Me.SickLeaveAllowanceTextBox.BackColor = System.Drawing.Color.White
-        Me.SickLeaveAllowanceTextBox.Location = New System.Drawing.Point(18, 72)
-        Me.SickLeaveAllowanceTextBox.MaxLength = 50
-        Me.SickLeaveAllowanceTextBox.Name = "SickLeaveAllowanceTextBox"
-        Me.SickLeaveAllowanceTextBox.ReadOnly = True
-        Me.SickLeaveAllowanceTextBox.Size = New System.Drawing.Size(87, 22)
-        Me.SickLeaveAllowanceTextBox.TabIndex = 164
-        '
-        'OvertimeGridView
-        '
-        Me.OvertimeGridView.AllowUserToAddRows = False
-        Me.OvertimeGridView.AllowUserToDeleteRows = False
-        Me.OvertimeGridView.AllowUserToOrderColumns = True
-        Me.OvertimeGridView.AllowUserToResizeColumns = False
-        Me.OvertimeGridView.AllowUserToResizeRows = False
-        Me.OvertimeGridView.BackgroundColor = System.Drawing.Color.White
-        Me.OvertimeGridView.ColumnHeadersHeight = 34
-        Me.OvertimeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle4
-        Me.OvertimeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.OvertimeGridView.Location = New System.Drawing.Point(28, 350)
-        Me.OvertimeGridView.MultiSelect = False
-        Me.OvertimeGridView.Name = "OvertimeGridView"
-        Me.OvertimeGridView.ReadOnly = True
-        Me.OvertimeGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.OvertimeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.OvertimeGridView.Size = New System.Drawing.Size(784, 250)
-        Me.OvertimeGridView.TabIndex = 6
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -967,10 +1045,10 @@ Partial Class EmployeeLeavesForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -1005,82 +1083,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn11.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Leave type"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "OTStartTime"
-        Me.Column2.HeaderText = "Start time"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "OTEndTime"
-        Me.Column4.HeaderText = "End time"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "OTStartDate"
-        Me.Column1.HeaderText = "Start date"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "OTEndDate"
-        Me.Column3.HeaderText = "End date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Status"
-        Me.Column7.HeaderText = "Status"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Reason"
-        Me.Column5.HeaderText = "Reason"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Comments"
-        Me.Column6.HeaderText = "Comments"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
         'EmployeeLeavesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1106,21 +1108,21 @@ Partial Class EmployeeLeavesForm
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
         Me.pnlForm.ResumeLayout(False)
-        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.AllowanceDetailsTabLayout.ResumeLayout(False)
-        Me.AllowanceDetailsTabLayout.PerformLayout()
-        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
-        Me.Panel1.ResumeLayout(False)
-        Me.Panel4.ResumeLayout(False)
-        Me.Panel5.ResumeLayout(False)
+        CType(Me.LeavesGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl4.ResumeLayout(False)
         Me.TabPage7.ResumeLayout(False)
         Me.TabPage7.PerformLayout()
         Me.TabPage6.ResumeLayout(False)
         Me.TabPage6.PerformLayout()
-        CType(Me.OvertimeGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.DetailsTabLayout.ResumeLayout(False)
+        Me.DetailsTabLayout.PerformLayout()
+        Me.Panel5.ResumeLayout(False)
+        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel1.ResumeLayout(False)
+        Me.Panel4.ResumeLayout(False)
+        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1160,7 +1162,7 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents ShowAllCheckBox As CheckBox
     Friend WithEvents EmployeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
-    Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
+    Friend WithEvents DetailsTabLayout As TableLayoutPanel
     Friend WithEvents AttachmentPictureBox As PictureBox
     Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
@@ -1206,7 +1208,7 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents Label13 As Label
     Friend WithEvents Label14 As Label
     Friend WithEvents SickLeaveAllowanceTextBox As TextBox
-    Friend WithEvents OvertimeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents LeavesGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents Column8 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
