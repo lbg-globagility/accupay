@@ -22,31 +22,22 @@ Partial Class OfficialBusinessForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Me.components = New System.ComponentModel.Container()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
         Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
-        Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.FirstNameTextBox = New System.Windows.Forms.TextBox()
-        Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
-        Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
-        Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
-        Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
-        Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
-        Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.CloseButton = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
-        Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.OfficialBusinessGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.AttachmentPictureBox = New System.Windows.Forms.PictureBox()
         Me.Label8 = New System.Windows.Forms.Label()
@@ -74,7 +65,20 @@ Partial Class OfficialBusinessForm
         Me.ClearButton = New System.Windows.Forms.Button()
         Me.DownloadButton = New System.Windows.Forms.Button()
         Me.ChangeButton = New System.Windows.Forms.Button()
-        Me.OvertimeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
+        Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
+        Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
+        Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
+        Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator9 = New System.Windows.Forms.ToolStripSeparator()
+        Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator10 = New System.Windows.Forms.ToolStripSeparator()
+        Me.CancelToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.CloseButton = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
+        Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -85,6 +89,7 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OfficialBusinessListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -92,23 +97,21 @@ Partial Class OfficialBusinessForm
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlSearch.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
         Me.pnlForm.SuspendLayout()
-        Me.EmployeeInfoTabLayout.SuspendLayout()
-        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ToolStrip12.SuspendLayout()
+        CType(Me.OfficialBusinessGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
         CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
-        CType(Me.OvertimeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.EmployeeInfoTabLayout.SuspendLayout()
+        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ToolStrip12.SuspendLayout()
+        CType(Me.OfficialBusinessListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'FormTitleLabel
@@ -174,14 +177,14 @@ Partial Class OfficialBusinessForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -191,6 +194,27 @@ Partial Class OfficialBusinessForm
         Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
         Me.EmployeesDataGridView.TabIndex = 2
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'pnlMain
         '
@@ -209,7 +233,7 @@ Partial Class OfficialBusinessForm
         '
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
-        Me.pnlForm.Controls.Add(Me.OvertimeGridView)
+        Me.pnlForm.Controls.Add(Me.OfficialBusinessGridView)
         Me.pnlForm.Controls.Add(Me.DetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
         Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
@@ -218,146 +242,35 @@ Partial Class OfficialBusinessForm
         Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
         '
-        'EmployeeInfoTabLayout
+        'OfficialBusinessGridView
         '
-        Me.EmployeeInfoTabLayout.BackColor = System.Drawing.Color.White
-        Me.EmployeeInfoTabLayout.ColumnCount = 2
-        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121.0!))
-        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 861.0!))
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.FirstNameTextBox, 1, 0)
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNumberTextBox, 1, 1)
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeePictureBox, 0, 0)
-        Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 9)
-        Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
-        Me.EmployeeInfoTabLayout.RowCount = 2
-        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(827, 88)
-        Me.EmployeeInfoTabLayout.TabIndex = 3
+        Me.OfficialBusinessGridView.AllowUserToAddRows = False
+        Me.OfficialBusinessGridView.AllowUserToDeleteRows = False
+        Me.OfficialBusinessGridView.AllowUserToOrderColumns = True
+        Me.OfficialBusinessGridView.AllowUserToResizeColumns = False
+        Me.OfficialBusinessGridView.AllowUserToResizeRows = False
+        Me.OfficialBusinessGridView.BackgroundColor = System.Drawing.Color.White
+        Me.OfficialBusinessGridView.ColumnHeadersHeight = 34
+        Me.OfficialBusinessGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OfficialBusinessGridView.DefaultCellStyle = DataGridViewCellStyle2
+        Me.OfficialBusinessGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.OfficialBusinessGridView.Location = New System.Drawing.Point(28, 350)
+        Me.OfficialBusinessGridView.MultiSelect = False
+        Me.OfficialBusinessGridView.Name = "OfficialBusinessGridView"
+        Me.OfficialBusinessGridView.ReadOnly = True
+        Me.OfficialBusinessGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.OfficialBusinessGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.OfficialBusinessGridView.Size = New System.Drawing.Size(784, 250)
+        Me.OfficialBusinessGridView.TabIndex = 12
         '
-        'FirstNameTextBox
-        '
-        Me.FirstNameTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.FirstNameTextBox.BackColor = System.Drawing.Color.White
-        Me.FirstNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.FirstNameTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.FirstNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.FirstNameTextBox.Location = New System.Drawing.Point(124, 13)
-        Me.FirstNameTextBox.MaxLength = 250
-        Me.FirstNameTextBox.Name = "FirstNameTextBox"
-        Me.FirstNameTextBox.ReadOnly = True
-        Me.FirstNameTextBox.Size = New System.Drawing.Size(668, 28)
-        Me.FirstNameTextBox.TabIndex = 0
-        '
-        'EmployeeNumberTextBox
-        '
-        Me.EmployeeNumberTextBox.BackColor = System.Drawing.Color.White
-        Me.EmployeeNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.EmployeeNumberTextBox.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeeNumberTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.EmployeeNumberTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.EmployeeNumberTextBox.Location = New System.Drawing.Point(124, 47)
-        Me.EmployeeNumberTextBox.MaxLength = 50
-        Me.EmployeeNumberTextBox.Multiline = True
-        Me.EmployeeNumberTextBox.Name = "EmployeeNumberTextBox"
-        Me.EmployeeNumberTextBox.ReadOnly = True
-        Me.EmployeeNumberTextBox.Size = New System.Drawing.Size(855, 38)
-        Me.EmployeeNumberTextBox.TabIndex = 1
-        '
-        'EmployeePictureBox
-        '
-        Me.EmployeePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.EmployeePictureBox.Location = New System.Drawing.Point(28, 3)
-        Me.EmployeePictureBox.Margin = New System.Windows.Forms.Padding(28, 3, 3, 3)
-        Me.EmployeePictureBox.Name = "EmployeePictureBox"
-        Me.EmployeeInfoTabLayout.SetRowSpan(Me.EmployeePictureBox, 2)
-        Me.EmployeePictureBox.Size = New System.Drawing.Size(88, 82)
-        Me.EmployeePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.EmployeePictureBox.TabIndex = 382
-        Me.EmployeePictureBox.TabStop = False
-        '
-        'ToolStrip12
-        '
-        Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton})
-        Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
-        Me.ToolStrip12.Name = "ToolStrip12"
-        Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
-        Me.ToolStrip12.TabIndex = 3
-        Me.ToolStrip12.Text = "ToolStrip12"
-        '
-        'NewToolStripButton
-        '
-        Me.NewToolStripButton.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.NewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.NewToolStripButton.Name = "NewToolStripButton"
-        Me.NewToolStripButton.Size = New System.Drawing.Size(51, 22)
-        Me.NewToolStripButton.Text = "&New"
-        '
-        'SaveToolStripButton
-        '
-        Me.SaveToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.SaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.SaveToolStripButton.Name = "SaveToolStripButton"
-        Me.SaveToolStripButton.Size = New System.Drawing.Size(51, 22)
-        Me.SaveToolStripButton.Text = "&Save"
-        '
-        'ToolStripSeparator9
-        '
-        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
-        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
-        '
-        'DeleteToolStripButton
-        '
-        Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.DeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.DeleteToolStripButton.Name = "DeleteToolStripButton"
-        Me.DeleteToolStripButton.Size = New System.Drawing.Size(60, 22)
-        Me.DeleteToolStripButton.Text = "&Delete"
-        '
-        'ToolStripSeparator10
-        '
-        Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
-        Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
-        '
-        'CancelToolStripButton
-        '
-        Me.CancelToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CancelToolStripButton.Name = "CancelToolStripButton"
-        Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.CancelToolStripButton.Text = "Cancel"
-        '
-        'CloseButton
-        '
-        Me.CloseButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.CloseButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.CloseButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.CloseButton.Name = "CloseButton"
-        Me.CloseButton.Size = New System.Drawing.Size(56, 22)
-        Me.CloseButton.Text = "Close"
-        '
-        'ToolStripButton25
-        '
-        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton25.Name = "ToolStripButton25"
-        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton25.Text = "ToolStripButton1"
-        Me.ToolStripButton25.ToolTipText = "Show audit trails"
-        '
-        'ImportToolStripButton
-        '
-        Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
-        Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ImportToolStripButton.Name = "ImportToolStripButton"
-        Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
-        Me.ImportToolStripButton.Text = "Import"
-        Me.ImportToolStripButton.ToolTipText = "Import loans"
-        '
-        'AllowanceDetailsTabLayout
+        'DetailsTabLayout
         '
         Me.DetailsTabLayout.ColumnCount = 4
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
@@ -382,7 +295,7 @@ Partial Class OfficialBusinessForm
         Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
         Me.DetailsTabLayout.Location = New System.Drawing.Point(8, 101)
-        Me.DetailsTabLayout.Name = "AllowanceDetailsTabLayout"
+        Me.DetailsTabLayout.Name = "DetailsTabLayout"
         Me.DetailsTabLayout.RowCount = 8
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16.0!))
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 32.0!))
@@ -662,33 +575,144 @@ Partial Class OfficialBusinessForm
         Me.ChangeButton.Text = "Change"
         Me.ChangeButton.UseVisualStyleBackColor = True
         '
-        'OvertimeGridView
+        'EmployeeInfoTabLayout
         '
-        Me.OvertimeGridView.AllowUserToAddRows = False
-        Me.OvertimeGridView.AllowUserToDeleteRows = False
-        Me.OvertimeGridView.AllowUserToOrderColumns = True
-        Me.OvertimeGridView.AllowUserToResizeColumns = False
-        Me.OvertimeGridView.AllowUserToResizeRows = False
-        Me.OvertimeGridView.BackgroundColor = System.Drawing.Color.White
-        Me.OvertimeGridView.ColumnHeadersHeight = 34
-        Me.OvertimeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle23
-        Me.OvertimeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.OvertimeGridView.Location = New System.Drawing.Point(28, 350)
-        Me.OvertimeGridView.MultiSelect = False
-        Me.OvertimeGridView.Name = "OvertimeGridView"
-        Me.OvertimeGridView.ReadOnly = True
-        Me.OvertimeGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.OvertimeGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.OvertimeGridView.Size = New System.Drawing.Size(784, 250)
-        Me.OvertimeGridView.TabIndex = 12
+        Me.EmployeeInfoTabLayout.BackColor = System.Drawing.Color.White
+        Me.EmployeeInfoTabLayout.ColumnCount = 2
+        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121.0!))
+        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 861.0!))
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNameTextBox, 1, 0)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNumberTextBox, 1, 1)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeePictureBox, 0, 0)
+        Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 9)
+        Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
+        Me.EmployeeInfoTabLayout.RowCount = 2
+        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
+        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
+        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(827, 88)
+        Me.EmployeeInfoTabLayout.TabIndex = 3
+        '
+        'EmployeeNameTextBox
+        '
+        Me.EmployeeNameTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.EmployeeNameTextBox.BackColor = System.Drawing.Color.White
+        Me.EmployeeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.EmployeeNameTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.EmployeeNameTextBox.Location = New System.Drawing.Point(124, 13)
+        Me.EmployeeNameTextBox.MaxLength = 250
+        Me.EmployeeNameTextBox.Name = "EmployeeNameTextBox"
+        Me.EmployeeNameTextBox.ReadOnly = True
+        Me.EmployeeNameTextBox.Size = New System.Drawing.Size(668, 28)
+        Me.EmployeeNameTextBox.TabIndex = 0
+        '
+        'EmployeeNumberTextBox
+        '
+        Me.EmployeeNumberTextBox.BackColor = System.Drawing.Color.White
+        Me.EmployeeNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.EmployeeNumberTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeNumberTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNumberTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.EmployeeNumberTextBox.Location = New System.Drawing.Point(124, 47)
+        Me.EmployeeNumberTextBox.MaxLength = 50
+        Me.EmployeeNumberTextBox.Multiline = True
+        Me.EmployeeNumberTextBox.Name = "EmployeeNumberTextBox"
+        Me.EmployeeNumberTextBox.ReadOnly = True
+        Me.EmployeeNumberTextBox.Size = New System.Drawing.Size(855, 38)
+        Me.EmployeeNumberTextBox.TabIndex = 1
+        '
+        'EmployeePictureBox
+        '
+        Me.EmployeePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.EmployeePictureBox.Location = New System.Drawing.Point(28, 3)
+        Me.EmployeePictureBox.Margin = New System.Windows.Forms.Padding(28, 3, 3, 3)
+        Me.EmployeePictureBox.Name = "EmployeePictureBox"
+        Me.EmployeeInfoTabLayout.SetRowSpan(Me.EmployeePictureBox, 2)
+        Me.EmployeePictureBox.Size = New System.Drawing.Size(88, 82)
+        Me.EmployeePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.EmployeePictureBox.TabIndex = 382
+        Me.EmployeePictureBox.TabStop = False
+        '
+        'ToolStrip12
+        '
+        Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
+        Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton})
+        Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
+        Me.ToolStrip12.Name = "ToolStrip12"
+        Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
+        Me.ToolStrip12.TabIndex = 3
+        Me.ToolStrip12.Text = "ToolStrip12"
+        '
+        'NewToolStripButton
+        '
+        Me.NewToolStripButton.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.NewToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.NewToolStripButton.Name = "NewToolStripButton"
+        Me.NewToolStripButton.Size = New System.Drawing.Size(51, 22)
+        Me.NewToolStripButton.Text = "&New"
+        '
+        'SaveToolStripButton
+        '
+        Me.SaveToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.SaveToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.SaveToolStripButton.Name = "SaveToolStripButton"
+        Me.SaveToolStripButton.Size = New System.Drawing.Size(51, 22)
+        Me.SaveToolStripButton.Text = "&Save"
+        '
+        'ToolStripSeparator9
+        '
+        Me.ToolStripSeparator9.Name = "ToolStripSeparator9"
+        Me.ToolStripSeparator9.Size = New System.Drawing.Size(6, 25)
+        '
+        'DeleteToolStripButton
+        '
+        Me.DeleteToolStripButton.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.DeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteToolStripButton.Name = "DeleteToolStripButton"
+        Me.DeleteToolStripButton.Size = New System.Drawing.Size(60, 22)
+        Me.DeleteToolStripButton.Text = "&Delete"
+        '
+        'ToolStripSeparator10
+        '
+        Me.ToolStripSeparator10.Name = "ToolStripSeparator10"
+        Me.ToolStripSeparator10.Size = New System.Drawing.Size(6, 25)
+        '
+        'CancelToolStripButton
+        '
+        Me.CancelToolStripButton.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.CancelToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CancelToolStripButton.Name = "CancelToolStripButton"
+        Me.CancelToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.CancelToolStripButton.Text = "Cancel"
+        '
+        'CloseButton
+        '
+        Me.CloseButton.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CloseButton.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.CloseButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(56, 22)
+        Me.CloseButton.Text = "Close"
+        '
+        'ToolStripButton25
+        '
+        Me.ToolStripButton25.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripButton25.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton25.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton25.Name = "ToolStripButton25"
+        Me.ToolStripButton25.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton25.Text = "ToolStripButton1"
+        Me.ToolStripButton25.ToolTipText = "Show audit trails"
+        '
+        'ImportToolStripButton
+        '
+        Me.ImportToolStripButton.Image = Global.AccuPay.My.Resources.Resources.Add
+        Me.ImportToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ImportToolStripButton.Name = "ImportToolStripButton"
+        Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
+        Me.ImportToolStripButton.Text = "Import"
+        Me.ImportToolStripButton.ToolTipText = "Import loans"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -744,10 +768,10 @@ Partial Class OfficialBusinessForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle24.Format = "N2"
-        DataGridViewCellStyle24.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -778,28 +802,28 @@ Partial Class OfficialBusinessForm
         '
         'Column2
         '
-        Me.Column2.DataPropertyName = "OTStartTime"
+        Me.Column2.DataPropertyName = "StartTime"
         Me.Column2.HeaderText = "Start time"
         Me.Column2.Name = "Column2"
         Me.Column2.ReadOnly = True
         '
         'Column4
         '
-        Me.Column4.DataPropertyName = "OTEndTime"
+        Me.Column4.DataPropertyName = "EndTime"
         Me.Column4.HeaderText = "End time"
         Me.Column4.Name = "Column4"
         Me.Column4.ReadOnly = True
         '
         'Column1
         '
-        Me.Column1.DataPropertyName = "OTStartDate"
+        Me.Column1.DataPropertyName = "StartDate"
         Me.Column1.HeaderText = "Start date"
         Me.Column1.Name = "Column1"
         Me.Column1.ReadOnly = True
         '
         'Column3
         '
-        Me.Column3.DataPropertyName = "OTEndDate"
+        Me.Column3.DataPropertyName = "EndDate"
         Me.Column3.HeaderText = "End date"
         Me.Column3.Name = "Column3"
         Me.Column3.ReadOnly = True
@@ -825,27 +849,6 @@ Partial Class OfficialBusinessForm
         Me.Column6.Name = "Column6"
         Me.Column6.ReadOnly = True
         '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
-        '
         'OfficialBusinessForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -867,11 +870,7 @@ Partial Class OfficialBusinessForm
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
         Me.pnlForm.ResumeLayout(False)
-        Me.EmployeeInfoTabLayout.ResumeLayout(False)
-        Me.EmployeeInfoTabLayout.PerformLayout()
-        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ToolStrip12.ResumeLayout(False)
-        Me.ToolStrip12.PerformLayout()
+        CType(Me.OfficialBusinessGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
         CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
@@ -879,7 +878,12 @@ Partial Class OfficialBusinessForm
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
-        CType(Me.OvertimeGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.EmployeeInfoTabLayout.ResumeLayout(False)
+        Me.EmployeeInfoTabLayout.PerformLayout()
+        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ToolStrip12.ResumeLayout(False)
+        Me.ToolStrip12.PerformLayout()
+        CType(Me.OfficialBusinessListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -897,7 +901,7 @@ Partial Class OfficialBusinessForm
     Friend WithEvents pnlMain As Panel
     Friend WithEvents pnlForm As Panel
     Friend WithEvents EmployeeInfoTabLayout As TableLayoutPanel
-    Friend WithEvents FirstNameTextBox As TextBox
+    Friend WithEvents EmployeeNameTextBox As TextBox
     Friend WithEvents EmployeeNumberTextBox As TextBox
     Friend WithEvents EmployeePictureBox As PictureBox
     Friend WithEvents ToolStrip12 As ToolStrip
@@ -946,7 +950,9 @@ Partial Class OfficialBusinessForm
     Friend WithEvents ClearButton As Button
     Friend WithEvents DownloadButton As Button
     Friend WithEvents ChangeButton As Button
-    Friend WithEvents OvertimeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents OfficialBusinessGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents OfficialBusinessListBindingSource As BindingSource
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
     Friend WithEvents Column1 As DataGridViewTextBoxColumn
@@ -954,5 +960,4 @@ Partial Class OfficialBusinessForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
 End Class

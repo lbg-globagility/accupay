@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 
@@ -11,11 +12,17 @@ Public Class OfficialBusinessForm
 
     Private _currentOfficialBusiness As OfficialBusiness
 
+    Private _currentOfficialBusinesses As New List(Of OfficialBusiness)
+
+    Private _changedOfficialBusinesses As New List(Of OfficialBusiness)
+
+    Private _officialBusinessRepository As New OfficialBusinessRepository
+
     Private _employeeRepository As New EmployeeRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
-    Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeComponentSettings()
 
@@ -56,7 +63,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub InitializeComponentSettings()
-        OvertimeGridView.AutoGenerateColumns = False
+        OfficialBusinessGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
     End Sub
 
@@ -126,6 +133,44 @@ Public Class OfficialBusinessForm
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
         Await ShowEmployeeList()
+    End Sub
+
+    Private Function GetSelectedEmployee() As Employee
+        If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
+
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
+    End Function
+
+    Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
+        If currentEmployee Is Nothing Then Return
+
+        Me._currentOfficialBusinesses = (Await _officialBusinessRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+                                OrderByDescending(Function(a) a.StartDate).
+                                ToList
+
+        Me._changedOfficialBusinesses = Me._currentOfficialBusinesses.CloneListJson()
+
+        OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
+
+        OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+
+    End Function
+
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+
+        ResetForm()
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then Return
+
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
+
+        Await LoadOfficialBusinesses(currentEmployee)
+
     End Sub
 
 End Class

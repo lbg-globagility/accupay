@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 
@@ -10,6 +11,12 @@ Public Class EmployeeOvertimeForm
     Private _allEmployees As New List(Of Employee)
 
     Private _currentOvertime As Overtime
+
+    Private _currentOvertimes As New List(Of Overtime)
+
+    Private _changedOvertimes As New List(Of Overtime)
+
+    Private _overtimeRepository As New OvertimeRepository
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -126,6 +133,44 @@ Public Class EmployeeOvertimeForm
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
         Await ShowEmployeeList()
+    End Sub
+
+    Private Function GetSelectedEmployee() As Employee
+        If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
+
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
+    End Function
+
+    Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
+        If currentEmployee Is Nothing Then Return
+
+        Me._currentOvertimes = (Await _overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+                                OrderByDescending(Function(a) a.OTStartDate).
+                                ToList
+
+        Me._changedOvertimes = Me._currentOvertimes.CloneListJson()
+
+        OvertimeListBindingSource.DataSource = Me._currentOvertimes
+
+        OvertimeGridView.DataSource = OvertimeListBindingSource
+
+    End Function
+
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+
+        ResetForm()
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then Return
+
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
+
+        Await LoadOvertimes(currentEmployee)
+
     End Sub
 
 End Class

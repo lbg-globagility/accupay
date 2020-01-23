@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 
@@ -10,6 +11,12 @@ Public Class EmployeeLeavesForm
     Private _allEmployees As New List(Of Employee)
 
     Private _currentLeave As Leave
+
+    Private _currentLeaves As New List(Of Leave)
+
+    Private _changedLeaves As New List(Of Leave)
+
+    Private _leaveRepository As New LeaveRepository
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -57,7 +64,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub InitializeComponentSettings()
-        LeavesGridView.AutoGenerateColumns = False
+        LeaveGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
     End Sub
 
@@ -130,6 +137,44 @@ Public Class EmployeeLeavesForm
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
         Await ShowEmployeeList()
+    End Sub
+
+    Private Function GetSelectedEmployee() As Employee
+        If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
+
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
+    End Function
+
+    Private Async Function LoadLeaves(currentEmployee As Employee) As Task
+        If currentEmployee Is Nothing Then Return
+
+        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+                                OrderByDescending(Function(a) a.StartDate).
+                                ToList
+
+        Me._changedLeaves = Me._currentLeaves.CloneListJson()
+
+        LeaveListBindingSource.DataSource = Me._currentLeaves
+
+        LeaveGridView.DataSource = LeaveListBindingSource
+
+    End Function
+
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+
+        ResetForm()
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then Return
+
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
+
+        Await LoadLeaves(currentEmployee)
+
     End Sub
 
 End Class

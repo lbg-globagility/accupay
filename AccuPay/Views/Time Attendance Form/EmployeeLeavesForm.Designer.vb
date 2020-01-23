@@ -22,12 +22,13 @@ Partial Class EmployeeLeavesForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
-        Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
         Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -45,15 +46,7 @@ Partial Class EmployeeLeavesForm
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
-        Me.LeavesGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LeaveGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.TabControl4 = New System.Windows.Forms.TabControl()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
         Me.Label131 = New System.Windows.Forms.Label()
@@ -116,13 +109,22 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
         Me.pnlSearch.SuspendLayout()
         Me.pnlMain.SuspendLayout()
         Me.pnlForm.SuspendLayout()
-        CType(Me.LeavesGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.LeaveGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl4.SuspendLayout()
         Me.TabPage7.SuspendLayout()
         Me.TabPage6.SuspendLayout()
@@ -134,6 +136,7 @@ Partial Class EmployeeLeavesForm
         Me.Panel1.SuspendLayout()
         Me.Panel4.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'EmployeeInfoTabLayout
@@ -142,8 +145,8 @@ Partial Class EmployeeLeavesForm
         Me.EmployeeInfoTabLayout.ColumnCount = 2
         Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121.0!))
         Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 861.0!))
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNumberTextBox, 1, 0)
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.txtEmployeeNumber, 1, 1)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNameTextBox, 1, 0)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNumberTextBox, 1, 1)
         Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeePictureBox, 0, 0)
         Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 9)
         Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
@@ -153,34 +156,34 @@ Partial Class EmployeeLeavesForm
         Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(827, 88)
         Me.EmployeeInfoTabLayout.TabIndex = 3
         '
+        'EmployeeNameTextBox
+        '
+        Me.EmployeeNameTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.EmployeeNameTextBox.BackColor = System.Drawing.Color.White
+        Me.EmployeeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.EmployeeNameTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.EmployeeNameTextBox.Location = New System.Drawing.Point(124, 13)
+        Me.EmployeeNameTextBox.MaxLength = 250
+        Me.EmployeeNameTextBox.Name = "EmployeeNameTextBox"
+        Me.EmployeeNameTextBox.ReadOnly = True
+        Me.EmployeeNameTextBox.Size = New System.Drawing.Size(668, 28)
+        Me.EmployeeNameTextBox.TabIndex = 0
+        '
         'EmployeeNumberTextBox
         '
-        Me.EmployeeNumberTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.EmployeeNumberTextBox.BackColor = System.Drawing.Color.White
         Me.EmployeeNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.EmployeeNumberTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.EmployeeNumberTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.EmployeeNumberTextBox.Location = New System.Drawing.Point(124, 13)
-        Me.EmployeeNumberTextBox.MaxLength = 250
+        Me.EmployeeNumberTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeNumberTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNumberTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.EmployeeNumberTextBox.Location = New System.Drawing.Point(124, 47)
+        Me.EmployeeNumberTextBox.MaxLength = 50
+        Me.EmployeeNumberTextBox.Multiline = True
         Me.EmployeeNumberTextBox.Name = "EmployeeNumberTextBox"
         Me.EmployeeNumberTextBox.ReadOnly = True
-        Me.EmployeeNumberTextBox.Size = New System.Drawing.Size(668, 28)
-        Me.EmployeeNumberTextBox.TabIndex = 0
-        '
-        'txtEmployeeNumber
-        '
-        Me.txtEmployeeNumber.BackColor = System.Drawing.Color.White
-        Me.txtEmployeeNumber.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmployeeNumber.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEmployeeNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmployeeNumber.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmployeeNumber.Location = New System.Drawing.Point(124, 47)
-        Me.txtEmployeeNumber.MaxLength = 50
-        Me.txtEmployeeNumber.Multiline = True
-        Me.txtEmployeeNumber.Name = "txtEmployeeNumber"
-        Me.txtEmployeeNumber.ReadOnly = True
-        Me.txtEmployeeNumber.Size = New System.Drawing.Size(855, 38)
-        Me.txtEmployeeNumber.TabIndex = 1
+        Me.EmployeeNumberTextBox.Size = New System.Drawing.Size(855, 38)
+        Me.EmployeeNumberTextBox.TabIndex = 1
         '
         'EmployeePictureBox
         '
@@ -333,7 +336,7 @@ Partial Class EmployeeLeavesForm
         '
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
-        Me.pnlForm.Controls.Add(Me.LeavesGridView)
+        Me.pnlForm.Controls.Add(Me.LeaveGridView)
         Me.pnlForm.Controls.Add(Me.TabControl4)
         Me.pnlForm.Controls.Add(Me.DetailsTabLayout)
         Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
@@ -343,16 +346,16 @@ Partial Class EmployeeLeavesForm
         Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
         '
-        'LeavesGridView
+        'LeaveGridView
         '
-        Me.LeavesGridView.AllowUserToAddRows = False
-        Me.LeavesGridView.AllowUserToDeleteRows = False
-        Me.LeavesGridView.AllowUserToOrderColumns = True
-        Me.LeavesGridView.AllowUserToResizeColumns = False
-        Me.LeavesGridView.AllowUserToResizeRows = False
-        Me.LeavesGridView.BackgroundColor = System.Drawing.Color.White
-        Me.LeavesGridView.ColumnHeadersHeight = 34
-        Me.LeavesGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
+        Me.LeaveGridView.AllowUserToAddRows = False
+        Me.LeaveGridView.AllowUserToDeleteRows = False
+        Me.LeaveGridView.AllowUserToOrderColumns = True
+        Me.LeaveGridView.AllowUserToResizeColumns = False
+        Me.LeaveGridView.AllowUserToResizeRows = False
+        Me.LeaveGridView.BackgroundColor = System.Drawing.Color.White
+        Me.LeaveGridView.ColumnHeadersHeight = 34
+        Me.LeaveGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -360,71 +363,16 @@ Partial Class EmployeeLeavesForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.LeavesGridView.DefaultCellStyle = DataGridViewCellStyle1
-        Me.LeavesGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.LeavesGridView.Location = New System.Drawing.Point(28, 350)
-        Me.LeavesGridView.MultiSelect = False
-        Me.LeavesGridView.Name = "LeavesGridView"
-        Me.LeavesGridView.ReadOnly = True
-        Me.LeavesGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.LeavesGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.LeavesGridView.Size = New System.Drawing.Size(784, 250)
-        Me.LeavesGridView.TabIndex = 6
-        '
-        'Column8
-        '
-        Me.Column8.HeaderText = "Leave type"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "OTStartTime"
-        Me.Column2.HeaderText = "Start time"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "OTEndTime"
-        Me.Column4.HeaderText = "End time"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "OTStartDate"
-        Me.Column1.HeaderText = "Start date"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "OTEndDate"
-        Me.Column3.HeaderText = "End date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Status"
-        Me.Column7.HeaderText = "Status"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Reason"
-        Me.Column5.HeaderText = "Reason"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Comments"
-        Me.Column6.HeaderText = "Comments"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
+        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.LeaveGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.LeaveGridView.Location = New System.Drawing.Point(28, 350)
+        Me.LeaveGridView.MultiSelect = False
+        Me.LeaveGridView.Name = "LeaveGridView"
+        Me.LeaveGridView.ReadOnly = True
+        Me.LeaveGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.LeaveGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.LeaveGridView.Size = New System.Drawing.Size(784, 250)
+        Me.LeaveGridView.TabIndex = 6
         '
         'TabControl4
         '
@@ -1083,6 +1031,62 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn11.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "LeaveType"
+        Me.Column8.HeaderText = "Leave type"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "StartTime"
+        Me.Column2.HeaderText = "Start time"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EndTime"
+        Me.Column4.HeaderText = "End time"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "StartDate"
+        Me.Column1.HeaderText = "Start date"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "EndDate"
+        Me.Column3.HeaderText = "End date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Status"
+        Me.Column7.HeaderText = "Status"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Reason"
+        Me.Column5.HeaderText = "Reason"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Comments"
+        Me.Column6.HeaderText = "Comments"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
         'EmployeeLeavesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1108,7 +1112,7 @@ Partial Class EmployeeLeavesForm
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
         Me.pnlForm.ResumeLayout(False)
-        CType(Me.LeavesGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.LeaveGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.TabControl4.ResumeLayout(False)
         Me.TabPage7.ResumeLayout(False)
         Me.TabPage7.PerformLayout()
@@ -1123,14 +1127,15 @@ Partial Class EmployeeLeavesForm
         Me.Panel1.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
 
     Friend WithEvents EmployeeInfoTabLayout As TableLayoutPanel
+    Friend WithEvents EmployeeNameTextBox As TextBox
     Friend WithEvents EmployeeNumberTextBox As TextBox
-    Friend WithEvents txtEmployeeNumber As TextBox
     Friend WithEvents EmployeePictureBox As PictureBox
     Friend WithEvents ToolStrip12 As ToolStrip
     Friend WithEvents NewToolStripButton As ToolStripButton
@@ -1208,7 +1213,10 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents Label13 As Label
     Friend WithEvents Label14 As Label
     Friend WithEvents SickLeaveAllowanceTextBox As TextBox
-    Friend WithEvents LeavesGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents LeaveGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
+    Friend WithEvents LeaveListBindingSource As BindingSource
     Friend WithEvents Column8 As DataGridViewTextBoxColumn
     Friend WithEvents Column2 As DataGridViewTextBoxColumn
     Friend WithEvents Column4 As DataGridViewTextBoxColumn
@@ -1217,6 +1225,4 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
 End Class

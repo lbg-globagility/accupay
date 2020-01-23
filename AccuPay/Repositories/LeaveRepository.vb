@@ -1,12 +1,11 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.ModelData
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
-Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Extensions
-Imports AccuPay.SimplifiedEntities
+Imports AccuPay.Helpers
+Imports AccuPay.ModelData
+Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository
 
@@ -18,6 +17,20 @@ Namespace Global.AccuPay.Repository
                     ProductConstant.SICK_LEAVE,
                     ProductConstant.VACATION_LEAVE
             }
+
+        Public Async Function GetByEmployeeAsync(
+            employeeId As Integer?) As _
+            Task(Of IEnumerable(Of Leave))
+
+            Using context = New PayrollContext()
+
+                Return Await context.Leaves.
+                        Where(Function(l) l.EmployeeID.Value = employeeId.Value).
+                        ToListAsync
+
+            End Using
+
+        End Function
 
         Public Async Function SaveManyAsync(leaves As List(Of Leave)) As Task
 
