@@ -179,6 +179,7 @@ Public Class Cinema2000TardinessReportProvider
 
             Next
 
+            Await context.SaveChangesAsync()
         End Using
 
         'tardinessReportModels = GetSampleTardinessReportModels()
