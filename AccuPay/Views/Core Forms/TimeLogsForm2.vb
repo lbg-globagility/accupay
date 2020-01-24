@@ -823,7 +823,8 @@ Public Class TimeLogsForm2
             For Each model In toSaveList
                 Dim seek = existingRecords.
                     Where(Function(tl) tl.EmployeeID.Value = model.EmployeeID).
-                    Where(Function(tl) tl.LogDate = model.DateIn)
+                    Where(Function(tl) tl.LogDate = model.DateIn).
+                    OrderByDescending(Function(tl) tl.LastUpd)
 
                 Dim exists = seek.Any
                 Dim timeLog = seek.FirstOrDefault
