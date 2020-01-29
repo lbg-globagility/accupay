@@ -427,9 +427,6 @@ Public Class EmployeeAllowanceForm
     Private Sub PopulateAllowanceForm(allowance As Allowance)
         Me._currentAllowance = allowance
 
-        Dim originalAllowance = Me._changedAllowances.
-            FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentAllowance.RowID))
-
         txtallowamt.DataBindings.Clear()
         txtallowamt.DataBindings.Add("Text", Me._currentAllowance, "Amount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 

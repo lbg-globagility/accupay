@@ -20,11 +20,15 @@ Public Class OfficialBusinessForm
 
     Private _employeeRepository As New EmployeeRepository
 
+    Private _productRepository As New ProductRepository
+
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeComponentSettings()
+
+        LoadStatusList()
 
         Await LoadEmployees()
         Await ShowEmployeeList()
@@ -65,6 +69,12 @@ Public Class OfficialBusinessForm
     Private Sub InitializeComponentSettings()
         OfficialBusinessGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
+    End Sub
+
+    Private Sub LoadStatusList()
+
+        StatusComboBox.DataSource = _officialBusinessRepository.GetStatusList()
+
     End Sub
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
@@ -156,7 +166,7 @@ Public Class OfficialBusinessForm
 
     End Function
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
 
         ResetForm()
 
@@ -171,6 +181,53 @@ Public Class OfficialBusinessForm
 
         Await LoadOfficialBusinesses(currentEmployee)
 
+    End Sub
+
+    Private Function GetSelectedOfficialBusiness() As OfficialBusiness
+        Return CType(OfficialBusinessGridView.CurrentRow.DataBoundItem, OfficialBusiness)
+    End Function
+
+    Private Sub PopulateOfficialBusinessForm(officialBusiness As OfficialBusiness)
+        Me._currentOfficialBusiness = officialBusiness
+
+        StartDatePicker.DataBindings.Clear()
+        StartDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndDatePicker.DataBindings.Clear()
+        EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        StartTimePicker.DataBindings.Clear()
+        StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndTimePicker.DataBindings.Clear()
+        EndTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        ReasonTextBox.DataBindings.Clear()
+        ReasonTextBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Reason")
+
+        CommentTextBox.DataBindings.Clear()
+        CommentTextBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Comments")
+
+        StatusComboBox.DataBindings.Clear()
+        StatusComboBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Status")
+
+        DetailsTabLayout.Enabled = True
+
+    End Sub
+
+    Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OfficialBusinessGridView.SelectionChanged
+        ResetForm()
+
+        If OfficialBusinessGridView.CurrentRow Is Nothing Then Return
+
+        Dim currentOfficialBusiness As OfficialBusiness = GetSelectedOfficialBusiness()
+
+        Dim currentEmployee = GetSelectedEmployee()
+        If currentOfficialBusiness IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
+           Nullable.Equals(currentOfficialBusiness.EmployeeID, currentEmployee.RowID) Then
+
+            PopulateOfficialBusinessForm(currentOfficialBusiness)
+        End If
     End Sub
 
 End Class

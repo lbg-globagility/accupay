@@ -20,11 +20,16 @@ Public Class EmployeeLeavesForm
 
     Private _employeeRepository As New EmployeeRepository
 
+    Private _productRepository As New ProductRepository
+
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeComponentSettings()
+
+        LoadStatusList()
+        Await LoadLeaveTypes()
 
         Await LoadEmployees()
         Await ShowEmployeeList()
@@ -66,6 +71,12 @@ Public Class EmployeeLeavesForm
     Private Sub InitializeComponentSettings()
         LeaveGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
+    End Sub
+
+    Private Sub LoadStatusList()
+
+        StatusComboBox.DataSource = _leaveRepository.GetStatusList()
+
     End Sub
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
@@ -160,7 +171,7 @@ Public Class EmployeeLeavesForm
 
     End Function
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
 
         ResetForm()
 
@@ -176,5 +187,69 @@ Public Class EmployeeLeavesForm
         Await LoadLeaves(currentEmployee)
 
     End Sub
+
+    Private Function GetSelectedLeave() As Leave
+        Return CType(LeaveGridView.CurrentRow.DataBoundItem, Leave)
+    End Function
+
+    Private Sub PopulateLeaveForm(leave As Leave)
+        Me._currentLeave = leave
+
+        StartDatePicker.DataBindings.Clear()
+        StartDatePicker.DataBindings.Add("Value", Me._currentLeave, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndDatePicker.DataBindings.Clear()
+        EndDatePicker.DataBindings.Add("Value", Me._currentLeave, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        StartTimePicker.DataBindings.Clear()
+        StartTimePicker.DataBindings.Add("Value", Me._currentLeave, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndTimePicker.DataBindings.Clear()
+        EndTimePicker.DataBindings.Add("Value", Me._currentLeave, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        ReasonTextBox.DataBindings.Clear()
+        ReasonTextBox.DataBindings.Add("Text", Me._currentLeave, "Reason")
+
+        CommentTextBox.DataBindings.Clear()
+        CommentTextBox.DataBindings.Add("Text", Me._currentLeave, "Comments")
+
+        LeaveTypeComboBox.DataBindings.Clear()
+        LeaveTypeComboBox.DataBindings.Add("Text", Me._currentLeave, "LeaveType")
+
+        StatusComboBox.DataBindings.Clear()
+        StatusComboBox.DataBindings.Add("Text", Me._currentLeave, "Status")
+
+        DetailsTabLayout.Enabled = True
+
+    End Sub
+
+    Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
+        ResetForm()
+
+        If LeaveGridView.CurrentRow Is Nothing Then Return
+
+        Dim currentLeave As Leave = GetSelectedLeave()
+
+        Dim currentEmployee = GetSelectedEmployee()
+        If currentLeave IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
+           Nullable.Equals(currentLeave.EmployeeID, currentEmployee.RowID) Then
+
+            PopulateLeaveForm(currentLeave)
+        End If
+    End Sub
+
+    Private Async Function LoadLeaveTypes() As Task
+
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+
+        leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
+                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
+                                                ToList
+
+        Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
+
+        LeaveTypeComboBox.DataSource = leaveTypes
+
+    End Function
 
 End Class

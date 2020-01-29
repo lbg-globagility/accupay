@@ -20,11 +20,15 @@ Public Class EmployeeOvertimeForm
 
     Private _employeeRepository As New EmployeeRepository
 
+    Private _productRepository As New ProductRepository
+
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         InitializeComponentSettings()
+
+        LoadStatusList()
 
         Await LoadEmployees()
         Await ShowEmployeeList()
@@ -65,6 +69,12 @@ Public Class EmployeeOvertimeForm
     Private Sub InitializeComponentSettings()
         OvertimeGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
+    End Sub
+
+    Private Sub LoadStatusList()
+
+        StatusComboBox.DataSource = _overtimeRepository.GetStatusList()
+
     End Sub
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
@@ -156,7 +166,7 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
 
         ResetForm()
 
@@ -171,6 +181,53 @@ Public Class EmployeeOvertimeForm
 
         Await LoadOvertimes(currentEmployee)
 
+    End Sub
+
+    Private Function GetSelectedOvertime() As Overtime
+        Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Overtime)
+    End Function
+
+    Private Sub PopulateOvertimeForm(overtime As Overtime)
+        Me._currentOvertime = overtime
+
+        StartDatePicker.DataBindings.Clear()
+        StartDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndDatePicker.DataBindings.Clear()
+        EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        StartTimePicker.DataBindings.Clear()
+        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        EndTimePicker.DataBindings.Clear()
+        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+
+        ReasonTextBox.DataBindings.Clear()
+        ReasonTextBox.DataBindings.Add("Text", Me._currentOvertime, "Reason")
+
+        CommentTextBox.DataBindings.Clear()
+        CommentTextBox.DataBindings.Add("Text", Me._currentOvertime, "Comments")
+
+        StatusComboBox.DataBindings.Clear()
+        StatusComboBox.DataBindings.Add("Text", Me._currentOvertime, "Status")
+
+        DetailsTabLayout.Enabled = True
+
+    End Sub
+
+    Private Sub OvertimeGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OvertimeGridView.SelectionChanged
+        ResetForm()
+
+        If OvertimeGridView.CurrentRow Is Nothing Then Return
+
+        Dim currentOvertime As Overtime = GetSelectedOvertime()
+
+        Dim currentEmployee = GetSelectedEmployee()
+        If currentOvertime IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
+           Nullable.Equals(currentOvertime.EmployeeID, currentEmployee.RowID) Then
+
+            PopulateOvertimeForm(currentOvertime)
+        End If
     End Sub
 
 End Class

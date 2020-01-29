@@ -9,11 +9,12 @@ Namespace Global.AccuPay.Repository
 
         Public Async Function GetLoanTypeId() As Task(Of Integer?)
 
-            Return Await GetCategoryId("Loan Type")
+            Return Await GetCategoryId(ProductConstant.LEAVE_TYPE_CATEGORY)
 
         End Function
 
 #Region "Private Functions"
+
         Private Async Function GetCategoryId(categoryName As String) As Task(Of Integer?)
 
             Using context = New PayrollContext()
@@ -27,6 +28,7 @@ Namespace Global.AccuPay.Repository
             End Using
 
         End Function
+
 #End Region
 
     End Class

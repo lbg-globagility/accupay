@@ -8,6 +8,10 @@ Namespace Global.AccuPay.Entity
     <Table("employeeleave")>
     Public Class Leave
 
+        Public Const StatusApproved = "Approved"
+
+        Public Const StatusPending = "Pending"
+
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Overridable Property RowID As Integer?
@@ -49,6 +53,27 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property Image As Byte()
 
         Public Overridable Property Status As String
+
+        <NotMapped>
+        Public Property StartTimeFull As Date
+            Get
+                Return If(StartTime Is Nothing, Nothing, StartDate.Date.Add(StartTime.Value))
+            End Get
+            Set(value As Date)
+                StartTime = value.TimeOfDay
+            End Set
+        End Property
+
+        <NotMapped>
+        Public Property EndTimeFull As Date
+            Get
+                Return If(EndTime Is Nothing, Nothing,
+                            If(EndDate Is Nothing, StartDate, EndDate.Value).Date.Add(EndTime.Value))
+            End Get
+            Set(value As Date)
+                EndTime = value.TimeOfDay
+            End Set
+        End Property
 
     End Class
 

@@ -11,12 +11,17 @@ Namespace Global.AccuPay.Repository
 
     Public Class LeaveRepository
 
-        Private Const STATUS_APPROVED As String = "Approved"
-
         Private VALIDATABLE_TYPES As New List(Of String) From {
                     ProductConstant.SICK_LEAVE,
                     ProductConstant.VACATION_LEAVE
             }
+
+        Public Function GetStatusList() As List(Of String)
+            Return New List(Of String) From {
+                    Leave.StatusPending,
+                    Leave.StatusApproved
+            }
+        End Function
 
         Public Async Function GetByEmployeeAsync(
             employeeId As Integer?) As _
@@ -277,7 +282,7 @@ Namespace Global.AccuPay.Repository
         End Sub
 
         Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Employee, leave As Leave) As Task
-            If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
+            If leave.Status.Trim.ToLower = Leave.StatusApproved.ToLower AndAlso
                                     policy.ValidateLeaveBalance AndAlso
                                     VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
 
@@ -394,7 +399,7 @@ Namespace Global.AccuPay.Repository
 
             Return context.Leaves.Local.
                         Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
-                        Where(Function(l) l.Status.Trim.ToUpper = STATUS_APPROVED.ToUpper).
+                        Where(Function(l) l.Status.Trim.ToUpper = Leave.StatusApproved.ToUpper).
                         Where(Function(l) l.LeaveType = leave.LeaveType).
                         Where(Function(l) l.StartDate >= firstDayOfTheYear.Value).
                         Where(Function(l) l.StartDate <= lastDayOfTheYear.Value).

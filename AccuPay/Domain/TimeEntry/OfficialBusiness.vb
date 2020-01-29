@@ -7,7 +7,9 @@ Imports AccuPay.Entity
 <Table("employeeofficialbusiness")>
 Public Class OfficialBusiness
 
-    Public Const StatusApproved As String = "Approved"
+    Public Const StatusApproved = "Approved"
+
+    Public Const StatusPending = "Pending"
 
     <Key>
     <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
@@ -48,5 +50,25 @@ Public Class OfficialBusiness
     Public Property Reason As String
 
     Public Property Comments As String
+
+    <NotMapped>
+    Public Property StartTimeFull As Date
+        Get
+            Return If(StartTime Is Nothing, Nothing, StartDate.Date.Add(StartTime.Value))
+        End Get
+        Set(value As Date)
+            StartTime = value.TimeOfDay
+        End Set
+    End Property
+
+    <NotMapped>
+    Public Property EndTimeFull As Date
+        Get
+            Return If(EndTime Is Nothing, Nothing, EndDate.Date.Add(EndTime.Value))
+        End Get
+        Set(value As Date)
+            EndTime = value.TimeOfDay
+        End Set
+    End Property
 
 End Class

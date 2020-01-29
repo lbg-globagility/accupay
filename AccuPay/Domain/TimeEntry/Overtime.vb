@@ -50,8 +50,32 @@ Public Class Overtime
     <NotMapped>
     Public Overridable Property [End] As Date?
 
+    Public Overridable Property Reason As String
+
+    Public Overridable Property Comments As String
+
     Public Sub New()
         Status = StatusPending
     End Sub
+
+    <NotMapped>
+    Public Property OTStartTimeFull As Date
+        Get
+            Return If(OTStartTime Is Nothing, Nothing, OTStartDate.Date.Add(OTStartTime.Value))
+        End Get
+        Set(value As Date)
+            OTStartTime = value.TimeOfDay
+        End Set
+    End Property
+
+    <NotMapped>
+    Public Property OTEndTimeFull As Date
+        Get
+            Return If(OTEndTime Is Nothing, Nothing, OTEndDate.Date.Add(OTEndTime.Value))
+        End Get
+        Set(value As Date)
+            OTEndTime = value.TimeOfDay
+        End Set
+    End Property
 
 End Class

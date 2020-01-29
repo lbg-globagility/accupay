@@ -234,11 +234,11 @@ Public Class ImportLeaveForm
 
     Private Class LeaveModel
         Implements IExcelRowRecord
-        Private Const PENDING_STATUS As String = "Pending"
+        Private Const PENDING_STATUS As String = AccuPay.Entity.Leave.StatusPending
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private Const REASON_LENGTH As Integer = 500
         Private Const COMMENT_LENGTH As Integer = 2000
-        Private VALID_STATUS As String() = {"approved", "pending"}
+        Private VALID_STATUS As String() = {AccuPay.Entity.Leave.StatusApproved.ToLower, AccuPay.Entity.Leave.StatusPending.ToLower} '{"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean

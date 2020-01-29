@@ -47,6 +47,14 @@ Partial Class EmployeeLeavesForm
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
         Me.LeaveGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl4 = New System.Windows.Forms.TabControl()
         Me.TabPage7 = New System.Windows.Forms.TabPage()
         Me.Label131 = New System.Windows.Forms.Label()
@@ -110,14 +118,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -373,6 +373,62 @@ Partial Class EmployeeLeavesForm
         Me.LeaveGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.LeaveGridView.Size = New System.Drawing.Size(784, 250)
         Me.LeaveGridView.TabIndex = 6
+        '
+        'Column8
+        '
+        Me.Column8.DataPropertyName = "LeaveType"
+        Me.Column8.HeaderText = "Leave type"
+        Me.Column8.Name = "Column8"
+        Me.Column8.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "StartTime"
+        Me.Column2.HeaderText = "Start time"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EndTime"
+        Me.Column4.HeaderText = "End time"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "StartDate"
+        Me.Column1.HeaderText = "Start date"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "EndDate"
+        Me.Column3.HeaderText = "End date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Status"
+        Me.Column7.HeaderText = "Status"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Reason"
+        Me.Column5.HeaderText = "Reason"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Comments"
+        Me.Column6.HeaderText = "Comments"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
         '
         'TabControl4
         '
@@ -1030,62 +1086,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "Comments"
         Me.DataGridViewTextBoxColumn11.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        '
-        'Column8
-        '
-        Me.Column8.DataPropertyName = "LeaveType"
-        Me.Column8.HeaderText = "Leave type"
-        Me.Column8.Name = "Column8"
-        Me.Column8.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "StartTime"
-        Me.Column2.HeaderText = "Start time"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EndTime"
-        Me.Column4.HeaderText = "End time"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "StartDate"
-        Me.Column1.HeaderText = "Start date"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "EndDate"
-        Me.Column3.HeaderText = "End date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Status"
-        Me.Column7.HeaderText = "Status"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Reason"
-        Me.Column5.HeaderText = "Reason"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Comments"
-        Me.Column6.HeaderText = "Comments"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
         '
         'EmployeeLeavesForm
         '

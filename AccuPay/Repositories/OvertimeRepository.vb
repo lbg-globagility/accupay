@@ -7,6 +7,13 @@ Namespace Global.AccuPay.Repository
 
     Public Class OvertimeRepository
 
+        Public Function GetStatusList() As List(Of String)
+            Return New List(Of String) From {
+                    Overtime.StatusPending,
+                    Overtime.StatusApproved
+            }
+        End Function
+
         Public Async Function GetByEmployeeAsync(
             employeeId As Integer?) As _
             Task(Of IEnumerable(Of Overtime))
