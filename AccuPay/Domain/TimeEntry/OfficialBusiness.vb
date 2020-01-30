@@ -2,7 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Entity
+Imports AccuPay.Extensions
 
 <Table("employeeofficialbusiness")>
 Public Class OfficialBusiness
@@ -70,5 +70,34 @@ Public Class OfficialBusiness
             EndTime = value.TimeOfDay
         End Set
     End Property
+
+    Public Function Validate() As String
+
+        If StartTime Is Nothing Then
+
+            Return "Start Time cannot be empty."
+        End If
+
+        If EndTime Is Nothing Then
+
+            Return "End Time cannot be empty."
+        End If
+
+        If StartDate.Date.Add(StartTime.Value.StripSeconds) >= EndDate.Date.Add(EndTime.Value.StripSeconds) Then
+
+            Return "Start date and time cannot be greater than or equal to End date and time."
+
+        End If
+
+        If Not {StatusPending, StatusApproved}.Contains(Status) Then
+
+            Return "Status is not valid."
+
+        End If
+
+        'Means no error
+        Return Nothing
+
+    End Function
 
 End Class

@@ -75,13 +75,10 @@ Public Class ImportOBForm
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
 
-            If String.IsNullOrWhiteSpace(record.Type) Then
-
-                record.ErrorMessage = "OB Type cannot be blank."
-
-                rejectedRecords.Add(record)
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
                 Continue For
+
             End If
 
             Dim officialbusType As New ListOfValue
@@ -236,5 +233,33 @@ Public Class ImportOBForm
         DownloadTemplateHelper.DownloadExcel(ExcelTemplates.OfficialBusiness)
 
     End Sub
+
+    Private Function CheckIfRecordIsValid(record As OBRowRecord, rejectedRecords As List(Of OBRowRecord)) As Boolean
+
+        If String.IsNullOrWhiteSpace(record.Type) Then
+
+            record.ErrorMessage = "OB Type cannot be blank."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Dim officialBusiness = record.ToOfficialBusiness()
+
+        If officialBusiness Is Nothing Then
+            record.ErrorMessage = "Cannot parse data."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Dim validationErrorMessage = officialBusiness.Validate()
+
+        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+            record.ErrorMessage = validationErrorMessage
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Return True
+    End Function
 
 End Class

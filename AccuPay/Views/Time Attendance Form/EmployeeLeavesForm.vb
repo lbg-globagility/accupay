@@ -68,6 +68,10 @@ Public Class EmployeeLeavesForm
         End If
     End Sub
 
+    Private Sub ShowBalloonInfo(content As String, title As String)
+        myBalloon(content, title, FormTitleLabel, 400)
+    End Sub
+
     Private Sub InitializeComponentSettings()
         LeaveGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
@@ -223,6 +227,20 @@ Public Class EmployeeLeavesForm
 
     End Sub
 
+    Private Async Function LoadLeaveTypes() As Task
+
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+
+        leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
+                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
+                                                ToList
+
+        Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
+
+        LeaveTypeComboBox.DataSource = leaveTypes
+
+    End Function
+
     Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
         ResetForm()
 
@@ -238,18 +256,28 @@ Public Class EmployeeLeavesForm
         End If
     End Sub
 
-    Private Async Function LoadLeaveTypes() As Task
+    Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
-        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+        Dim employee As Employee = GetSelectedEmployee()
 
-        leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
-                                                Where(Function(a) a.PartNo.Trim <> String.Empty).
-                                                ToList
+        If employee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
 
-        Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
+            Return
+        End If
 
-        LeaveTypeComboBox.DataSource = leaveTypes
+        Dim form As New AddLeaveForm(employee)
+        form.ShowDialog()
 
-    End Function
+        If form.IsSaved Then
+
+            Await LoadLeaves(employee)
+
+            If form.ShowBalloonSuccess Then
+                ShowBalloonInfo("Leave Successfully Added", "Saved")
+            End If
+        End If
+
+    End Sub
 
 End Class

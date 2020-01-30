@@ -33,4 +33,11 @@ Module TimeSpanExtensions
         Return timeSpanInput.Add(New TimeSpan(0, value * MINUTES_PER_HOUR, 0))
     End Function
 
+    <Extension()>
+    Public Function StripSeconds(timeSpanInput As TimeSpan) As TimeSpan
+
+        Return New TimeSpan(timeSpanInput.Hours, timeSpanInput.Minutes, 0)
+
+    End Function
+
 End Module

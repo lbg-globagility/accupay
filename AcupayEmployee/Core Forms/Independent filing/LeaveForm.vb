@@ -73,7 +73,7 @@ Public Class LeaveForm
                     .EndDate = dtpendate.Value,
                     .Reason = txtreason.Text,
                     .Comments = txtcomments.Text,
-                    .Status = AccuPay.Entity.Leave.StatusPending
+                    .Status = "Pending"
                 }
 
                 Dim ledger = context.LeaveLedgers.Include(Function(l) l.LastTransaction).

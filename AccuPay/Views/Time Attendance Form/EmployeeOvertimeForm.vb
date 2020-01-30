@@ -66,6 +66,10 @@ Public Class EmployeeOvertimeForm
         End Using
     End Sub
 
+    Private Sub ShowBalloonInfo(content As String, title As String)
+        myBalloon(content, title, FormTitleLabel, 400)
+    End Sub
+
     Private Sub InitializeComponentSettings()
         OvertimeGridView.AutoGenerateColumns = False
         EmployeesDataGridView.AutoGenerateColumns = False
@@ -228,6 +232,30 @@ Public Class EmployeeOvertimeForm
 
             PopulateOvertimeForm(currentOvertime)
         End If
+    End Sub
+
+    Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
+
+        Dim employee As Employee = GetSelectedEmployee()
+
+        If employee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+
+            Return
+        End If
+
+        Dim form As New AddOvertimeForm(employee)
+        form.ShowDialog()
+
+        If form.IsSaved Then
+
+            Await LoadOvertimes(employee)
+
+            If form.ShowBalloonSuccess Then
+                ShowBalloonInfo("Overtime Successfully Added", "Saved")
+            End If
+        End If
+
     End Sub
 
 End Class
