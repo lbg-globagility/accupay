@@ -172,6 +172,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AccuMathTest.vb" />
     <Compile Include="BenchmarkPaystubRateTest.vb" />
     <Compile Include="CalendarTest.vb" />
     <Compile Include="CinemaTardinessReportModelTest.vb" />
