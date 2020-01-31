@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class AddressClass
+﻿Public Class AddressClass
 
     'SELECT  `RowID`,  `StreetAddress1`,  `StreetAddress2`,  `CityTown`,  `Country`,  `State`,  `CreatedBy`,  `LastUpdBy`,  `Created`,  `LastUpd`,  `ZipCode`,  `Barangay` FROM `rbxpayroll`.`address`
 

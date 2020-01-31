@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports CrystalDecisions.CrystalReports.Engine
-Imports AccuPay.DB
 
 Public Class LoanSummaryByEmployeeReportProvider
     Implements IReportProvider

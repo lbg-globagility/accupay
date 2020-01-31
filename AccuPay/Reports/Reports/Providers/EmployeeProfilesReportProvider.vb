@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.DB
 Imports OfficeOpenXml
 
 Public Class EmployeeProfilesReportProvider

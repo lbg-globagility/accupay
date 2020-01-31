@@ -1,8 +1,5 @@
 ﻿Option Strict On
 
-Imports CrystalDecisions.CrystalReports.Engine
-Imports AccuPay.DB
-
 Public Class SalaryIncreaseHistoryReportProvider
     Implements IReportProvider
 

@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class ShiftEntryForm
+﻿Public Class ShiftEntryForm
 
     Private IsNew As Integer
 

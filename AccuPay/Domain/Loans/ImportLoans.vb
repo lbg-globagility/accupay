@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class ImportLoans
+﻿Public Class ImportLoans
 
     Private Data_Set As DataSet = Nothing
 

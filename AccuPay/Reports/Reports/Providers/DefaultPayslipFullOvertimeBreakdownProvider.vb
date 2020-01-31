@@ -1,8 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore
 

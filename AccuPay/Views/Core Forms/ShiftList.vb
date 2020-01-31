@@ -1,7 +1,4 @@
-﻿Imports System.Threading
-Imports AccuPay.DB
-
-Public Class ShiftList
+﻿Public Class ShiftList
 
     Dim isShowAsDialog As Boolean = False
 

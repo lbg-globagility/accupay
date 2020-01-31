@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class EmployeeBonusForm
+﻿Public Class EmployeeBonusForm
 
     Dim n_EmployeeRowID As Object = Nothing
 
