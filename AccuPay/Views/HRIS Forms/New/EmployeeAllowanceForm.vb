@@ -2,9 +2,9 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports AccuPay.Utilities.Extensions
 
 Public Class EmployeeAllowanceForm
 

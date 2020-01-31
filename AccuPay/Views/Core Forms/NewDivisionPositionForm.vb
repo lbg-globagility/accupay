@@ -3,9 +3,9 @@
 Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class NewDivisionPositionForm

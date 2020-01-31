@@ -1,14 +1,13 @@
-Imports MySql.Data.MySqlClient
+Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports log4net
-Imports System.Collections.Concurrent
-Imports Microsoft.EntityFrameworkCore
-Imports AccuPay.Views.Payroll
-Imports AccuPay.Utils
 Imports AccuPay.Entity
-Imports AccuPay.DB
 Imports AccuPay.Payslip
+Imports AccuPay.Utilities
+Imports AccuPay.Utils
+Imports log4net
+Imports Microsoft.EntityFrameworkCore
+Imports MySql.Data.MySqlClient
 
 Public Class PayStubForm
 

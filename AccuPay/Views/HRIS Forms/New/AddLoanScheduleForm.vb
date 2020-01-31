@@ -2,6 +2,7 @@
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 
 Public Class AddLoanScheduleForm

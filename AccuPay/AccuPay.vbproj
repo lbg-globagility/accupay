@@ -343,12 +343,6 @@
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
-    <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\DecimalExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\ModuleClass.vb" />
-    <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
     <Compile Include="Core\Utilities\Helper\NameHelper.vb" />
@@ -2700,9 +2694,9 @@
       <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
       <Name>AccuPay.Reference</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Utils\AccuPay.Utils.vbproj">
-      <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
-      <Name>AccuPay.Utils</Name>
+    <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
+      <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
+      <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

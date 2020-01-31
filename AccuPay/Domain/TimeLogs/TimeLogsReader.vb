@@ -3,8 +3,8 @@
 Imports System.IO
 Imports System.Text.RegularExpressions
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 
 Namespace Global.AccuPay.Helper.TimeLogsReader
 

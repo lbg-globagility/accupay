@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 
 Public Class CurrentShift
 
@@ -171,7 +171,7 @@ Public Class CurrentShift
             Dim nextDay = Me.Date.AddDays(1)
             Dim breakDate = If(shiftSchedule.BreakStartTime > shiftSchedule.StartTime, Me.Date, nextDay)
 
-            Dim breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(shiftSchedule.BreakLength)
+            Dim breakTimeEnd = shiftSchedule.BreakStartTime.Value.AddHours(Convert.ToInt32(shiftSchedule.BreakLength))
             Me.BreakPeriod = TimePeriod.FromTime(shiftSchedule.BreakStartTime.Value, breakTimeEnd, breakDate)
         End If
     End Sub

@@ -1,8 +1,6 @@
-﻿Imports AccuPay.DB
+﻿Imports System.Threading.Tasks
 Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
-Imports System.IO
-Imports System.Threading.Tasks
 
 Public Class ProductControlForm
 

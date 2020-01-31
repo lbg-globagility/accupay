@@ -1,6 +1,5 @@
-﻿Imports Microsoft.Win32
-Imports AccuPay.Entity
-Imports AccuPay.DB
+﻿Imports AccuPay.Entity
+Imports Microsoft.Win32
 
 Public Class DivisionForm
 

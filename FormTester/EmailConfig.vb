@@ -1,5 +1,5 @@
 ﻿Imports System.Configuration
-Imports Accupay.Utils
+Imports Accupay.Utilities
 Imports GlobagilityShared.EmailSender
 
 Public Class EmailConfig

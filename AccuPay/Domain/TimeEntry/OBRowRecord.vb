@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Attributes
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 Public Class OBRowRecord
     Implements IExcelRowRecord

@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Extensions
 Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Utilities.Extensions
 
 Namespace Global.AccuPay.Repository
 

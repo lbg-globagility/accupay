@@ -1,7 +1,4 @@
-﻿Imports System.Threading
-Imports AccuPay.DB
-
-Public Class BonusGenerator
+﻿Public Class BonusGenerator
 
     Sub New()
 

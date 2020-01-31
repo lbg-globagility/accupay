@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class DepartmentMinWages
+﻿Public Class DepartmentMinWages
 
     Dim deptRowID As Object = Nothing
 

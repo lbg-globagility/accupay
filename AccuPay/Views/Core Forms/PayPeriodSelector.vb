@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class PayPeriodSelector
+﻿Public Class PayPeriodSelector
 
     Sub New()
 

@@ -1,7 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.DB
 Imports AccuPay.Entity
 Imports MySql.Data.MySqlClient
 

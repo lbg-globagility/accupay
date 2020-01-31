@@ -1,7 +1,6 @@
-﻿Imports MySql.Data.MySqlClient
+﻿Imports Indigo.CollapsibleGroupBox
 Imports Microsoft.Win32
-Imports Indigo.CollapsibleGroupBox
-Imports AccuPay.DB
+Imports MySql.Data.MySqlClient
 
 Public Class EmployeeShiftMassUpdate
     Dim IsNew As Integer = 0

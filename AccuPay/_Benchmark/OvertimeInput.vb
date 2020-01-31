@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 Namespace Benchmark
 

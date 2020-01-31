@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Text.RegularExpressions
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 Namespace Global.AccuPay.Domain.TimeLogs
 

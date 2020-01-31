@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll

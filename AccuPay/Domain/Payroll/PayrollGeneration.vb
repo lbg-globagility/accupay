@@ -3,7 +3,7 @@ Option Strict On
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys

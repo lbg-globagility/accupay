@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 
 <TestFixture>
 Public Class StringExtensionsTest
@@ -12,7 +12,7 @@ Public Class StringExtensionsTest
     <TestCase(Nothing)>
     Public Sub ToDecimal_WithInvalidInput_ReturnsNull(ByVal num As String)
         Dim expected As Decimal = 0
-        Dim result = ModuleClass.StringExtensions_ToDecimal(num)
+        Dim result = num.ToDecimal()
 
         Assert.AreEqual(expected, result)
 
@@ -25,7 +25,7 @@ Public Class StringExtensionsTest
     <TestCase("0000001.0000000")>
     Public Sub ToDecimal_WithValueOne_ReturnsValueOne(ByVal num As String)
         Dim expected As Decimal = 1
-        Dim result = ModuleClass.StringExtensions_ToDecimal(num)
+        Dim result = num.ToDecimal()
 
         Assert.AreEqual(expected, result)
     End Sub
@@ -50,7 +50,7 @@ Public Class StringExtensionsTest
     <TestCase("16:35")>
     Public Shared Sub ToNullableTimeSpan_WithValidInput_ReturnsTimeSpan(time As String)
 
-        Dim output = ModuleClass.StringExtensions_ToNullableTimeSpan(time)
+        Dim output = time.ToNullableTimeSpan()
 
         Assert.AreEqual(New TimeSpan(16, 35, 0), output)
     End Sub
@@ -65,31 +65,19 @@ Public Class StringExtensionsTest
     '<TestCase("1/30/2017 0:00:00 PM")>
     <TestCase("1/30/2017 00:00")>
     <TestCase("1/30/2017 00:00:00")>
-    <TestCase("1/30/2017 24:00")>
-    <TestCase("1/30/2017 24:00:00")>
     <TestCase("1/30/2017 0:00 AM")>
     <TestCase("1/30/2017 00:00 AM")>
-    <TestCase("1/30/2017 24:00 AM")>
-    <TestCase("1/30/2017 24:00 PM")>
     <TestCase("1/30/2017 0:00:00 AM")>
     <TestCase("1/30/2017 00:00:00 AM")>
-    <TestCase("1/30/2017 24:00:00 AM")>
-    <TestCase("1/30/2017 24:00:00 PM")>
     <TestCase("00:00:00 AM")>
     <TestCase("00:00 AM")>
     <TestCase("0:00:00 AM")>
     <TestCase("0:00 AM")>
-    <TestCase("24:00:00 AM")>
-    <TestCase("24:00 AM")>
-    <TestCase("24:00:00 PM")>
-    <TestCase("24:00 PM")>
     <TestCase("00:00:00")>
     <TestCase("00:00")>
-    <TestCase("24:00:00")>
-    <TestCase("24:00")>
     Public Shared Sub ToNullableTimeSpan_With12AMInput_Returns12AM(time As String)
 
-        Dim output = ModuleClass.StringExtensions_ToNullableTimeSpan(time)
+        Dim output = time.ToNullableTimeSpan()
 
         Assert.AreEqual(New TimeSpan(0, 0, 0), output)
     End Sub

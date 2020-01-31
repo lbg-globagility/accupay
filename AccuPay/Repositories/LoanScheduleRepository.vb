@@ -3,7 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository

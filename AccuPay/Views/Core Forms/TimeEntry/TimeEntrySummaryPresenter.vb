@@ -1,9 +1,8 @@
 ﻿Option Strict On
 
-Imports MySql.Data.MySqlClient
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
-Imports AccuPay.DB
+Imports MySql.Data.MySqlClient
 
 Namespace TimeEntrySummary
 

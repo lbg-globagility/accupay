@@ -1,5 +1,4 @@
 ﻿Imports Microsoft.EntityFrameworkCore
-Imports AccuPay.DB
 
 Public Class viewtotallow
     Dim categallowID As Object = Nothing

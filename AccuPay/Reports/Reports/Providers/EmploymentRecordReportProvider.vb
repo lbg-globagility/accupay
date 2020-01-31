@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class EmploymentRecordReportProvider
+﻿Public Class EmploymentRecordReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Employees' Employment Record" Implements IReportProvider.Name

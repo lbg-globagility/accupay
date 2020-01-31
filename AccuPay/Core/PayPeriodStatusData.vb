@@ -1,6 +1,6 @@
 ﻿Imports AccuPay.Entity
 Imports AccuPay.Enums
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 Public Class PayPeriodStatusData
 

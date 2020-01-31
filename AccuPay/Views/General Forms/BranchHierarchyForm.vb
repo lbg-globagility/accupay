@@ -1,5 +1,4 @@
-﻿Imports AccuPay.DB
-Imports Femiani.Forms.UI.Input
+﻿Imports Femiani.Forms.UI.Input
 
 Class BranchHierarchyForm
 

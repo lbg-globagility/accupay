@@ -2,7 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 
 <Table("employeeovertime")>
 Public Class Overtime

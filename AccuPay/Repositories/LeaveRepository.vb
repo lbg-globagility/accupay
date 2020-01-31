@@ -2,9 +2,9 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Helpers
 Imports AccuPay.ModelData
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository

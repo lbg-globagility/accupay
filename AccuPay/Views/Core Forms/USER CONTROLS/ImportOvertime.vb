@@ -1,6 +1,4 @@
-﻿Imports AccuPay.DB
-
-Public Class ImportOvertime
+﻿Public Class ImportOvertime
 
     Dim dt As New DataSet
 

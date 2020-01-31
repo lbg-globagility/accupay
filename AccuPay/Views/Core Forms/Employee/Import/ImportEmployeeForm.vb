@@ -3,6 +3,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net

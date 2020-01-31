@@ -4,7 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
@@ -14,7 +14,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Public Property Name As String = "Payroll Summary" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
-    
+
     Private Const adjustmentColumn As String = "(Adj.)"
 
     Private Const totalAdjustmentColumn As String = "Adj."

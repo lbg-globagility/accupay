@@ -2,7 +2,7 @@
 
 Imports AccuPay
 Imports AccuPay.Entity
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports PayrollSys
 
 Namespace Global.Globagility.AccuPay.Government

@@ -3,6 +3,7 @@
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Tools
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.ShiftSchedules
