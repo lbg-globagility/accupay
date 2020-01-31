@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 <TestFixture>
 Public Class ObjectUtilsTest
@@ -344,28 +344,16 @@ Public Class ObjectUtilsTest
     '<TestCase("1/30/2017 0:00:00 PM")>
     <TestCase("1/30/2017 00:00")>
     <TestCase("1/30/2017 00:00:00")>
-    <TestCase("1/30/2017 24:00")>
-    <TestCase("1/30/2017 24:00:00")>
     <TestCase("1/30/2017 0:00 AM")>
     <TestCase("1/30/2017 00:00 AM")>
-    <TestCase("1/30/2017 24:00 AM")>
-    <TestCase("1/30/2017 24:00 PM")>
     <TestCase("1/30/2017 0:00:00 AM")>
     <TestCase("1/30/2017 00:00:00 AM")>
-    <TestCase("1/30/2017 24:00:00 AM")>
-    <TestCase("1/30/2017 24:00:00 PM")>
     <TestCase("00:00:00 AM")>
     <TestCase("00:00 AM")>
     <TestCase("0:00:00 AM")>
     <TestCase("0:00 AM")>
-    <TestCase("24:00:00 AM")>
-    <TestCase("24:00 AM")>
-    <TestCase("24:00:00 PM")>
-    <TestCase("24:00 PM")>
     <TestCase("00:00:00")>
     <TestCase("00:00")>
-    <TestCase("24:00:00")>
-    <TestCase("24:00")>
     Public Shared Sub ToNullableTimeSpan_With12AMInput_Returns12AM(input As Object)
 
         Dim output = ObjectUtils.ToNullableTimeSpan(input)

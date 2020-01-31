@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog

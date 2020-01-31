@@ -1,5 +1,5 @@
 ﻿Imports System.Text
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Loans

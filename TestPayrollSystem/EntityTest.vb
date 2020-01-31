@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Repositories
 Imports AccuPay
+Imports AccuPay.Utilities
 
 <TestFixture>
 Public Class EntityTest
@@ -25,11 +26,13 @@ Public Class EntityTest
     <Test>
     Public Sub TestEntity2()
 
-        Using context = New PayrollContext()
+        'Using context = New PayrollContext()
 
-            Assert.IsTrue(context.Paystubs.ToList.Count > 0)
+        '    Dim paystubCount = context.Paystubs.ToList.Count
 
-        End Using
+        '    Assert.IsTrue(context.Paystubs.ToList.Count > 0)
+
+        'End Using
 
     End Sub
 

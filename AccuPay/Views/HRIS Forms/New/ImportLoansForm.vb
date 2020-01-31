@@ -1,8 +1,8 @@
 ﻿Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Helpers
 Imports AccuPay.Loans
 Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans

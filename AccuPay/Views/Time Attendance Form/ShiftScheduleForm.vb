@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Tools
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.EntityFrameworkCore

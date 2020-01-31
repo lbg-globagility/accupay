@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay.Utilities
 
 Public Class LeaveLedgerReportModel
 

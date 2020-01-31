@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay
 Imports AccuPay.Entity
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports PayrollSys
 
 Public Class DayCalculator

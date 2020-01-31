@@ -1,12 +1,11 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.ModelData
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
+Imports AccuPay.ModelData
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.EntityFrameworkCore
-Imports AccuPay.Extensions
-Imports AccuPay.SimplifiedEntities
 
 Namespace Global.AccuPay.Repository
 

@@ -92,9 +92,9 @@
       <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
       <Name>AccuPay.Payslip</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Utils\AccuPay.Utils.vbproj">
-      <Project>{38893C65-F08B-493E-8AD1-803399C59281}</Project>
-      <Name>AccuPay.Utils</Name>
+    <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
+      <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
+      <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

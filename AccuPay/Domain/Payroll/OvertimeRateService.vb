@@ -1,5 +1,5 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 Imports Microsoft.EntityFrameworkCore
 
 Public Class OvertimeRateService

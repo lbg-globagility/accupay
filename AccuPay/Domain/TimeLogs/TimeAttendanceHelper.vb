@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
+Imports AccuPay.Utilities.Extensions
 
 Public Class TimeAttendanceHelper
     Implements ITimeAttendanceHelper

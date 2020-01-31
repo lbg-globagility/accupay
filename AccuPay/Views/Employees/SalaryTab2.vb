@@ -1,7 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Entity
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 Imports AccuPay.Views.Employees
 Imports PayrollSys
 
@@ -51,7 +51,7 @@ Public Class SalaryTab2
 
     Public Property BasicSalary As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtAmount.Text)
+            Return ObjectUtils.ToDecimal(txtAmount.Text)
         End Get
         Set(value As Decimal)
             txtAmount.Text = CStr(value)
@@ -60,7 +60,7 @@ Public Class SalaryTab2
 
     Public Property AllowanceSalary As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtAllowance.Text)
+            Return ObjectUtils.ToDecimal(txtAllowance.Text)
         End Get
         Set(value As Decimal)
             txtAllowance.Text = CStr(value)
@@ -69,7 +69,7 @@ Public Class SalaryTab2
 
     Public Property BasicPay As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtBasicPay.Text)
+            Return ObjectUtils.ToDecimal(txtBasicPay.Text)
         End Get
         Set(value As Decimal)
             txtBasicPay.Text = CStr(value)
@@ -78,7 +78,7 @@ Public Class SalaryTab2
 
     Public Property Sss As Decimal?
         Get
-            Return TypeTools.ParseDecimalOrNull(txtSss.Text)
+            Return ObjectUtils.ToNullableDecimal(txtSss.Text)
         End Get
         Set(value As Decimal?)
             txtSss.Text = If(value.HasValue, CStr(value), String.Empty)
@@ -87,7 +87,7 @@ Public Class SalaryTab2
 
     Public Property PhilHealth As Decimal?
         Get
-            Return TypeTools.ParseDecimalOrNull(txtPhilHealth.Text)
+            Return ObjectUtils.ToNullableDecimal(txtPhilHealth.Text)
         End Get
         Set(value As Decimal?)
             txtPhilHealth.Text = If(value.HasValue, CStr(value), String.Empty)
@@ -96,7 +96,7 @@ Public Class SalaryTab2
 
     Public Property PagIBIG As Decimal
         Get
-            Return TypeTools.ParseDecimal(txtPagIbig.Text)
+            Return ObjectUtils.ToDecimal(txtPagIbig.Text)
         End Get
         Set(value As Decimal)
             txtPagIbig.Text = CStr(value)
@@ -261,7 +261,7 @@ Public Class SalaryTab2
     End Sub
 
     Private Sub txtAmount_TextChanged(sender As Object, e As EventArgs)
-        Dim amount = TypeTools.ParseDecimal(txtAmount.Text)
+        Dim amount = ObjectUtils.ToDecimal(txtAmount.Text)
         RaiseEvent SalaryChanged(amount)
     End Sub
 

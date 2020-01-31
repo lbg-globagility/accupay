@@ -1,11 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore

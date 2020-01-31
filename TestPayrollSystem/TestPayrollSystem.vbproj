@@ -238,9 +238,9 @@
       <Project>{9CAD162B-FA9F-4B09-950C-B2E9D7C766FC}</Project>
       <Name>AccuPay.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Utils\AccuPay.Utils.vbproj">
-      <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
-      <Name>AccuPay.Utils</Name>
+    <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
+      <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
+      <Name>AccuPay.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay\AccuPay.vbproj">
       <Project>{81373c7b-f3b6-4e8b-a202-869962273ba8}</Project>

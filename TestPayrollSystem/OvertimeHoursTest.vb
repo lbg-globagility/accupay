@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
-Imports AccuPay.Utils
 Imports AccuPay
 Imports AccuPay.Entity
+Imports AccuPay.Utilities
 
 <TestFixture>
 Public Class OvertimeHoursTest

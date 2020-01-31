@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props" Condition="Exists('..\packages\Microsoft.EntityFrameworkCore.Design.2.1.1\build\net461\Microsoft.EntityFrameworkCore.Design.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -343,12 +343,6 @@
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
-    <Compile Include="Core\Utilities\Extensions\DateExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\DecimalExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\ModuleClass.vb" />
-    <Compile Include="Core\Utilities\Extensions\ObjectExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\StringExtensions.vb" />
-    <Compile Include="Core\Utilities\Extensions\TimeSpanExtensions.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
     <Compile Include="Core\Utilities\Helper\NameHelper.vb" />
@@ -431,35 +425,35 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
-   <Compile Include="_Benchmark\AdjustmentForm.Designer.vb">
-     <DependentUpon>AdjustmentForm.vb</DependentUpon>
-   </Compile>
-   <Compile Include="_Benchmark\AdjustmentForm.vb">
-     <SubType>Form</SubType>
-   </Compile>
-   <Compile Include="_Benchmark\AdjustmentInput.vb" />
-   <Compile Include="_Benchmark\BenchmarkPayrollForm.Designer.vb">
-     <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
-   </Compile>
-   <Compile Include="_Benchmark\BenchmarkPayrollForm.vb">
-     <SubType>Form</SubType>
-   </Compile>
-   <Compile Include="_Benchmark\BenchmarkPayrollGeneration.vb" />
-   <Compile Include="_Benchmark\BenchmarkPayrollHelper.vb" />
-   <Compile Include="_Benchmark\BenchmarkPaystubForm.Designer.vb">
-     <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
-   </Compile>
-   <Compile Include="_Benchmark\BenchmarkPaystubForm.vb">
-     <SubType>Form</SubType>
-   </Compile>
-   <Compile Include="_Benchmark\BenchmarkPaystubRate.vb" />
-   <Compile Include="_Benchmark\OvertimeInput.vb" />
-   <Compile Include="_Benchmark\SetOvertimeForm.Designer.vb">
-     <DependentUpon>SetOvertimeForm.vb</DependentUpon>
-   </Compile>
-   <Compile Include="_Benchmark\SetOvertimeForm.vb">
-     <SubType>Form</SubType>
-   </Compile>
+    <Compile Include="_Benchmark\AdjustmentForm.Designer.vb">
+      <DependentUpon>AdjustmentForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\AdjustmentForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Benchmark\AdjustmentInput.vb" />
+    <Compile Include="_Benchmark\BenchmarkPayrollForm.Designer.vb">
+      <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\BenchmarkPayrollForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Benchmark\BenchmarkPayrollGeneration.vb" />
+    <Compile Include="_Benchmark\BenchmarkPayrollHelper.vb" />
+    <Compile Include="_Benchmark\BenchmarkPaystubForm.Designer.vb">
+      <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\BenchmarkPaystubForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="_Benchmark\BenchmarkPaystubRate.vb" />
+    <Compile Include="_Benchmark\OvertimeInput.vb" />
+    <Compile Include="_Benchmark\SetOvertimeForm.Designer.vb">
+      <DependentUpon>SetOvertimeForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="_Benchmark\SetOvertimeForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\AddBranchForm.Designer.vb">
       <DependentUpon>AddBranchForm.vb</DependentUpon>
     </Compile>
@@ -1866,21 +1860,21 @@
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
-     <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-     <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
-   </EmbeddedResource>
-   <EmbeddedResource Include="_Benchmark\AdjustmentForm.resx">
-     <DependentUpon>AdjustmentForm.vb</DependentUpon>
-   </EmbeddedResource>
-   <EmbeddedResource Include="_Benchmark\BenchmarkPayrollForm.resx">
-     <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
-   </EmbeddedResource>
-   <EmbeddedResource Include="_Benchmark\BenchmarkPaystubForm.resx">
-     <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
-   </EmbeddedResource>
-   <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
-     <DependentUpon>SetOvertimeForm.vb</DependentUpon>
-   </EmbeddedResource>
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\AdjustmentForm.resx">
+      <DependentUpon>AdjustmentForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\BenchmarkPayrollForm.resx">
+      <DependentUpon>BenchmarkPayrollForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\BenchmarkPaystubForm.resx">
+      <DependentUpon>BenchmarkPaystubForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
+      <DependentUpon>SetOvertimeForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
@@ -2644,9 +2638,9 @@
       <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
       <Name>AccuPay.Reference</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Utils\AccuPay.Utils.vbproj">
-      <Project>{38893c65-f08b-493e-8ad1-803399c59281}</Project>
-      <Name>AccuPay.Utils</Name>
+    <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
+      <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
+      <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />

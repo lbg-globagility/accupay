@@ -1,6 +1,6 @@
 Imports AccuPay.Data
 Imports AccuPay.Entity
-Imports AccuPay.Utils
+Imports AccuPay.Utilities
 
 Public Class selectPayPeriod
 

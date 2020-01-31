@@ -6,6 +6,7 @@ Imports System.Text.RegularExpressions
 Imports AccuPay
 Imports AccuPay.Attributes
 Imports AccuPay.Helpers
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports OfficeOpenXml
 

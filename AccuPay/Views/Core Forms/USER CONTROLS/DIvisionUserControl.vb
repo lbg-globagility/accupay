@@ -1,5 +1,5 @@
 ﻿Imports AccuPay.Entity
-Imports AccuPay.Extensions
+Imports AccuPay.Utilities.Extensions
 
 Public Class DivisionUserControl
 
@@ -66,7 +66,6 @@ Public Class DivisionUserControl
         PrepareForm()
 
     End Sub
-
 
 #Region "Private Functions"
 
