@@ -23,16 +23,16 @@ Partial Class SelectPayslipEmployeesForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectPayslipEmployeesForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.RefreshEmailStatusButton = New System.Windows.Forms.Button()
@@ -43,17 +43,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.CancelButton = New System.Windows.Forms.Button()
         Me.SendEmailsButton = New System.Windows.Forms.Button()
         Me.EmployeesDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.lblStatus = New System.Windows.Forms.Label()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -65,6 +54,18 @@ Partial Class SelectPayslipEmployeesForm
         Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmailStatusColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ErrorLogMessageColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.lblStatus = New System.Windows.Forms.Label()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.RefreshEmailServiceButton = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.PayslipTypePanel.SuspendLayout()
         CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -72,6 +73,7 @@ Partial Class SelectPayslipEmployeesForm
         '
         'Panel1
         '
+        Me.Panel1.Controls.Add(Me.RefreshEmailServiceButton)
         Me.Panel1.Controls.Add(Me.RefreshEmailStatusButton)
         Me.Panel1.Controls.Add(Me.PreviewButton)
         Me.Panel1.Controls.Add(Me.PayslipTypePanel)
@@ -179,6 +181,103 @@ Partial Class SelectPayslipEmployeesForm
         Me.EmployeesDataGrid.Name = "EmployeesDataGrid"
         Me.EmployeesDataGrid.Size = New System.Drawing.Size(1084, 392)
         Me.EmployeesDataGrid.TabIndex = 1
+        '
+        'SelectedCheckBoxColumn
+        '
+        Me.SelectedCheckBoxColumn.DataPropertyName = "IsSelected"
+        Me.SelectedCheckBoxColumn.FillWeight = 13.21778!
+        Me.SelectedCheckBoxColumn.HeaderText = ""
+        Me.SelectedCheckBoxColumn.Name = "SelectedCheckBoxColumn"
+        Me.SelectedCheckBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "EmployeeNumber"
+        Me.Column1.FillWeight = 36.74457!
+        Me.Column1.HeaderText = "Employee Number"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "FirstName"
+        Me.Column6.FillWeight = 55.11684!
+        Me.Column6.HeaderText = "First Name"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "MiddleName"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle1
+        Me.Column2.FillWeight = 36.74457!
+        Me.Column2.HeaderText = "Middle Name"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "LastName"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle2
+        Me.Column3.FillWeight = 36.74457!
+        Me.Column3.HeaderText = "Last Name"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'EmailAddressColumn
+        '
+        Me.EmailAddressColumn.DataPropertyName = "EmailAddress"
+        DataGridViewCellStyle3.NullValue = "(No email address.)"
+        Me.EmailAddressColumn.DefaultCellStyle = DataGridViewCellStyle3
+        Me.EmailAddressColumn.HeaderText = "Email Address"
+        Me.EmailAddressColumn.Name = "EmailAddressColumn"
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EmployeeType"
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column4.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column4.FillWeight = 36.74457!
+        Me.Column4.HeaderText = "Employee Type"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "PositionName"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.Column5.DefaultCellStyle = DataGridViewCellStyle5
+        Me.Column5.FillWeight = 36.74457!
+        Me.Column5.HeaderText = "Position"
+        Me.Column5.MinimumWidth = 120
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "DivisionName"
+        Me.Column7.FillWeight = 36.74457!
+        Me.Column7.HeaderText = "Division"
+        Me.Column7.MinimumWidth = 120
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'EmailStatusColumn
+        '
+        Me.EmailStatusColumn.DataPropertyName = "EmailStatus"
+        Me.EmailStatusColumn.FillWeight = 36.74457!
+        Me.EmailStatusColumn.HeaderText = "Email Status"
+        Me.EmailStatusColumn.Name = "EmailStatusColumn"
+        Me.EmailStatusColumn.ReadOnly = True
+        '
+        'ErrorLogMessageColumn
+        '
+        Me.ErrorLogMessageColumn.DataPropertyName = "ErrorLogMessage"
+        Me.ErrorLogMessageColumn.HeaderText = "Last Error Log Message"
+        Me.ErrorLogMessageColumn.Name = "ErrorLogMessageColumn"
+        Me.ErrorLogMessageColumn.ReadOnly = True
         '
         'lblStatus
         '
@@ -298,102 +397,18 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 177
         '
-        'SelectedCheckBoxColumn
+        'Button1
         '
-        Me.SelectedCheckBoxColumn.DataPropertyName = "IsSelected"
-        Me.SelectedCheckBoxColumn.FillWeight = 13.21778!
-        Me.SelectedCheckBoxColumn.HeaderText = ""
-        Me.SelectedCheckBoxColumn.Name = "SelectedCheckBoxColumn"
-        Me.SelectedCheckBoxColumn.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "EmployeeNumber"
-        Me.Column1.FillWeight = 36.74457!
-        Me.Column1.HeaderText = "Employee Number"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "FirstName"
-        Me.Column6.FillWeight = 55.11684!
-        Me.Column6.HeaderText = "First Name"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "MiddleName"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle1
-        Me.Column2.FillWeight = 36.74457!
-        Me.Column2.HeaderText = "Middle Name"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "LastName"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle2
-        Me.Column3.FillWeight = 36.74457!
-        Me.Column3.HeaderText = "Last Name"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'EmailAddressColumn
-        '
-        Me.EmailAddressColumn.DataPropertyName = "EmailAddress"
-        DataGridViewCellStyle3.NullValue = "(No email address.)"
-        Me.EmailAddressColumn.DefaultCellStyle = DataGridViewCellStyle3
-        Me.EmailAddressColumn.HeaderText = "Email Address"
-        Me.EmailAddressColumn.Name = "EmailAddressColumn"
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EmployeeType"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column4.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column4.FillWeight = 36.74457!
-        Me.Column4.HeaderText = "Employee Type"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "PositionName"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        Me.Column5.DefaultCellStyle = DataGridViewCellStyle5
-        Me.Column5.FillWeight = 36.74457!
-        Me.Column5.HeaderText = "Position"
-        Me.Column5.MinimumWidth = 120
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "DivisionName"
-        Me.Column7.FillWeight = 36.74457!
-        Me.Column7.HeaderText = "Division"
-        Me.Column7.MinimumWidth = 120
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'EmailStatusColumn
-        '
-        Me.EmailStatusColumn.DataPropertyName = "EmailStatus"
-        Me.EmailStatusColumn.FillWeight = 36.74457!
-        Me.EmailStatusColumn.HeaderText = "Email Status"
-        Me.EmailStatusColumn.Name = "EmailStatusColumn"
-        Me.EmailStatusColumn.ReadOnly = True
-        '
-        'ErrorLogMessageColumn
-        '
-        Me.ErrorLogMessageColumn.DataPropertyName = "ErrorLogMessage"
-        Me.ErrorLogMessageColumn.HeaderText = "Last Error Log Message"
-        Me.ErrorLogMessageColumn.Name = "ErrorLogMessageColumn"
-        Me.ErrorLogMessageColumn.ReadOnly = True
+        Me.RefreshEmailServiceButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RefreshEmailServiceButton.BackColor = System.Drawing.Color.Red
+        Me.RefreshEmailServiceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.RefreshEmailServiceButton.ForeColor = System.Drawing.Color.White
+        Me.RefreshEmailServiceButton.Location = New System.Drawing.Point(481, 15)
+        Me.RefreshEmailServiceButton.Name = "Button1"
+        Me.RefreshEmailServiceButton.Size = New System.Drawing.Size(123, 23)
+        Me.RefreshEmailServiceButton.TabIndex = 9
+        Me.RefreshEmailServiceButton.Text = "Restart Email Service"
+        Me.RefreshEmailServiceButton.UseVisualStyleBackColor = False
         '
         'SelectPayslipEmployeesForm
         '
@@ -448,4 +463,5 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents EmailStatusColumn As DataGridViewTextBoxColumn
     Friend WithEvents ErrorLogMessageColumn As DataGridViewTextBoxColumn
+    Friend WithEvents RefreshEmailServiceButton As Button
 End Class

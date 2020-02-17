@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Payslip
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
@@ -41,6 +42,7 @@ Public Class SelectPayslipEmployeesForm
 
         SendEmailsButton.Visible = _isEmail
         RefreshEmailStatusButton.Visible = _isEmail
+        RefreshEmailServiceButton.Visible = _isEmail
 
         EmailAddressColumn.Visible = _isEmail
         EmailStatusColumn.Visible = _isEmail
@@ -312,6 +314,19 @@ Public Class SelectPayslipEmployeesForm
     Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeesDataGrid.CellMouseUp
 
         EnableDisableButtons()
+    End Sub
+
+    Private Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
+
+        Try
+            Dim windowsService = New WindowsServiceController("AccuPay Email Service")
+            windowsService.StartOrRestart()
+            MessageBoxHelper.Information("Service successfully restarted.")
+        Catch ex As Exception
+            MessageBoxHelper.ErrorMessage("An error occured trying to restart the service. Please restart the ""Accupay Windows Service"" manually or contact Globagility Inc. for assistance.")
+
+        End Try
+
     End Sub
 
 End Class
