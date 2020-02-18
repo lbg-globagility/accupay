@@ -241,7 +241,7 @@ Public Class EmployeeAllowanceForm
         End If
 
         If Me._currentAllowances Is Nothing Then
-            MessageBoxHelper.Warning("No allowances!")
+            MessageBoxHelper.Warning("No changed allowances!")
             Return
         End If
 

@@ -321,4 +321,30 @@ Public Class OfficialBusinessForm
 
     End Sub
 
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        If Me._currentOfficialBusinesses Is Nothing Then
+            MessageBoxHelper.Warning("No changed official business!")
+            Return
+        End If
+
+        Me._currentOfficialBusinesses = Me._changedOfficialBusinesses.CloneListJson()
+
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._currentOfficialBusinesses.Count - 1
+            Me._currentOfficialBusinesses(index).StartTime = Me._changedOfficialBusinesses(index).StartTime
+            Me._currentOfficialBusinesses(index).EndTime = Me._changedOfficialBusinesses(index).EndTime
+        Next
+
+        OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
+
+        OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+    End Sub
+
 End Class

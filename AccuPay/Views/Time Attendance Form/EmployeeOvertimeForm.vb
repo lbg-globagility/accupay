@@ -321,4 +321,30 @@ Public Class EmployeeOvertimeForm
 
     End Sub
 
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        If Me._currentOvertimes Is Nothing Then
+            MessageBoxHelper.Warning("No changed overtimes!")
+            Return
+        End If
+
+        Me._currentOvertimes = Me._changedOvertimes.CloneListJson()
+
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._currentOvertimes.Count - 1
+            Me._currentOvertimes(index).OTStartTime = Me._changedOvertimes(index).OTStartTime
+            Me._currentOvertimes(index).OTEndTime = Me._changedOvertimes(index).OTEndTime
+        Next
+
+        OvertimeListBindingSource.DataSource = Me._currentOvertimes
+
+        OvertimeGridView.DataSource = OvertimeListBindingSource
+    End Sub
+
 End Class

@@ -345,4 +345,30 @@ Public Class EmployeeLeavesForm
 
     End Sub
 
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        If Me._currentLeaves Is Nothing Then
+            MessageBoxHelper.Warning("No changed leaves!")
+            Return
+        End If
+
+        Me._currentLeaves = Me._changedLeaves.CloneListJson()
+
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._currentLeaves.Count - 1
+            Me._currentLeaves(index).StartTime = Me._changedLeaves(index).StartTime
+            Me._currentLeaves(index).EndTime = Me._changedLeaves(index).EndTime
+        Next
+
+        LeaveListBindingSource.DataSource = Me._currentLeaves
+
+        LeaveGridView.DataSource = LeaveListBindingSource
+    End Sub
+
 End Class
