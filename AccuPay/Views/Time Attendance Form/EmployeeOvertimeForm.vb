@@ -212,23 +212,6 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
-
-        ResetForm()
-
-        Dim currentEmployee = GetSelectedEmployee()
-
-        If currentEmployee Is Nothing Then Return
-
-        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
-        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
-
-        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
-
-        Await LoadOvertimes(currentEmployee)
-
-    End Sub
-
     Private Function GetSelectedOvertime() As Overtime
         Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Overtime)
     End Function
@@ -258,6 +241,36 @@ Public Class EmployeeOvertimeForm
         StatusComboBox.DataBindings.Add("Text", Me._currentOvertime, "Status")
 
         DetailsTabLayout.Enabled = True
+
+    End Sub
+
+    Private Async Function DeleteOvertime(currentEmployee As Employee, messageTitle As String) As Task
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                            Async Function()
+                                                Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID)
+
+                                                Await LoadOvertimes(currentEmployee)
+
+                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+
+                                            End Function)
+    End Function
+
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+
+        ResetForm()
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then Return
+
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
+
+        Await LoadOvertimes(currentEmployee)
 
     End Sub
 
@@ -345,6 +358,44 @@ Public Class EmployeeOvertimeForm
         OvertimeListBindingSource.DataSource = Me._currentOvertimes
 
         OvertimeGridView.DataSource = OvertimeListBindingSource
+    End Sub
+
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        Const messageTitle As String = "Delete Overtime"
+
+        If Me._currentOvertime Is Nothing OrElse
+            Me._currentOvertime.RowID Is Nothing Then
+            MessageBoxHelper.Warning("No overtime selected!")
+
+            Return
+        End If
+
+        Dim currentOvertime = Await _overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID)
+
+        If currentOvertime Is Nothing Then
+
+            MessageBoxHelper.Warning("Overtime not found in database! Please close this form then open again.")
+
+            Return
+        End If
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete this?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
+        Await DeleteOvertime(currentEmployee, messageTitle)
+
     End Sub
 
 End Class

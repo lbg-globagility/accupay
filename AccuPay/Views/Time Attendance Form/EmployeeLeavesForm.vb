@@ -285,6 +285,19 @@ Public Class EmployeeLeavesForm
 
     End Function
 
+    Private Async Function DeleteLeave(currentEmployee As Employee, messageTitle As String) As Task
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                            Async Function()
+                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
+
+                                                Await LoadLeaves(currentEmployee)
+
+                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+
+                                            End Function)
+    End Function
+
     Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
         ResetForm()
 
@@ -369,6 +382,44 @@ Public Class EmployeeLeavesForm
         LeaveListBindingSource.DataSource = Me._currentLeaves
 
         LeaveGridView.DataSource = LeaveListBindingSource
+    End Sub
+
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        Const messageTitle As String = "Delete Leave"
+
+        If Me._currentLeave Is Nothing OrElse
+            Me._currentLeave.RowID Is Nothing Then
+            MessageBoxHelper.Warning("No leave selected!")
+
+            Return
+        End If
+
+        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID)
+
+        If currentLeave Is Nothing Then
+
+            MessageBoxHelper.Warning("Leave not found in database! Please close this form then open again.")
+
+            Return
+        End If
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete this?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
+        Await DeleteLeave(currentEmployee, messageTitle)
+
     End Sub
 
 End Class

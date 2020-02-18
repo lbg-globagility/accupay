@@ -15,6 +15,17 @@ Namespace Global.AccuPay.Repository
             }
         End Function
 
+        Public Async Function GetByIdAsync(id As Integer?) As Task(Of Overtime)
+
+            Using context = New PayrollContext()
+
+                Return Await context.Overtimes.
+                    FirstOrDefaultAsync(Function(l) l.RowID.Value = id.Value)
+
+            End Using
+
+        End Function
+
         Public Async Function GetByEmployeeAsync(
             employeeId As Integer?) As _
             Task(Of IEnumerable(Of Overtime))
@@ -27,6 +38,18 @@ Namespace Global.AccuPay.Repository
 
             End Using
 
+        End Function
+
+        Public Async Function DeleteAsync(id As Integer?) As Task
+            Using context = New PayrollContext()
+
+                Dim overtime = Await GetByIdAsync(id)
+
+                context.Remove(overtime)
+
+                Await context.SaveChangesAsync()
+
+            End Using
         End Function
 
         Public Async Function SaveAsync(overtime As Overtime, Optional context As PayrollContext = Nothing) As Task

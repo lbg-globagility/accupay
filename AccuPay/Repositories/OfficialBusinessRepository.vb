@@ -15,6 +15,17 @@ Namespace Global.AccuPay.Repository
             }
         End Function
 
+        Public Async Function GetByIdAsync(id As Integer?) As Task(Of OfficialBusiness)
+
+            Using context = New PayrollContext()
+
+                Return Await context.OfficialBusinesses.
+                    FirstOrDefaultAsync(Function(l) l.RowID.Value = id.Value)
+
+            End Using
+
+        End Function
+
         Public Async Function GetByEmployeeAsync(
             employeeId As Integer?) As _
             Task(Of IEnumerable(Of OfficialBusiness))
@@ -27,6 +38,18 @@ Namespace Global.AccuPay.Repository
 
             End Using
 
+        End Function
+
+        Public Async Function DeleteAsync(id As Integer?) As Task
+            Using context = New PayrollContext()
+
+                Dim officialBusiness = Await GetByIdAsync(id)
+
+                context.Remove(officialBusiness)
+
+                Await context.SaveChangesAsync()
+
+            End Using
         End Function
 
         Public Async Function SaveAsync(officialBusiness As OfficialBusiness, Optional context As PayrollContext = Nothing) As Task

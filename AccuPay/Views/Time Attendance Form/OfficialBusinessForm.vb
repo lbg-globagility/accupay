@@ -261,6 +261,19 @@ Public Class OfficialBusinessForm
 
     End Sub
 
+    Private Async Function DeleteOfficialBusiness(currentEmployee As Employee, messageTitle As String) As Task
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                            Async Function()
+                                                Await _officialBusinessRepository.DeleteAsync(Me._currentOfficialBusiness.RowID)
+
+                                                Await LoadOfficialBusinesses(currentEmployee)
+
+                                                ShowBalloonInfo("Successfully Deleted.", messageTitle)
+
+                                            End Function)
+    End Function
+
     Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OfficialBusinessGridView.SelectionChanged
         ResetForm()
 
@@ -345,6 +358,44 @@ Public Class OfficialBusinessForm
         OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
 
         OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+    End Sub
+
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
+
+        Dim currentEmployee = GetSelectedEmployee()
+
+        If currentEmployee Is Nothing Then
+            MessageBoxHelper.Warning("No employee selected!")
+            Return
+        End If
+
+        Const messageTitle As String = "Delete Official Business"
+
+        If Me._currentOfficialBusiness Is Nothing OrElse
+            Me._currentOfficialBusiness.RowID Is Nothing Then
+            MessageBoxHelper.Warning("No official business selected!")
+
+            Return
+        End If
+
+        Dim currentOfficialBusiness = Await _officialBusinessRepository.GetByIdAsync(Me._currentOfficialBusiness.RowID)
+
+        If currentOfficialBusiness Is Nothing Then
+
+            MessageBoxHelper.Warning("Official Business not found in database! Please close this form then open again.")
+
+            Return
+        End If
+
+        If MessageBoxHelper.Confirm(Of Boolean) _
+        ($"Are you sure you want to delete this?", "Confirm Deletion") = False Then
+
+            Return
+        End If
+
+        'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
+        Await DeleteOfficialBusiness(currentEmployee, messageTitle)
+
     End Sub
 
 End Class
