@@ -427,6 +427,12 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
+    <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
+      <DependentUpon>NullableTimePicker.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>
     </Compile>
@@ -1900,6 +1906,9 @@
     <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
+      <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>

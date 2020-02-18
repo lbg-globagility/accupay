@@ -164,9 +164,51 @@ Public Class EmployeeOvertimeForm
 
         Me._changedOvertimes = Me._currentOvertimes.CloneListJson()
 
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._changedOvertimes.Count - 1
+            Me._changedOvertimes(index).OTStartTime = Me._currentOvertimes(index).OTStartTime
+            Me._changedOvertimes(index).OTEndTime = Me._currentOvertimes(index).OTEndTime
+        Next
+
         OvertimeListBindingSource.DataSource = Me._currentOvertimes
 
         OvertimeGridView.DataSource = OvertimeListBindingSource
+
+    End Function
+
+    Private Function CheckIfBothNullorBothHaveValue(object1 As Object, object2 As Object) As Boolean
+
+        Return (object1 Is Nothing AndAlso object2 Is Nothing) OrElse
+            (object1 IsNot Nothing AndAlso object2 IsNot Nothing)
+
+    End Function
+
+    Private Function CheckIfOvertimeIsChanged(newOvertime As Overtime) As Boolean
+        If Me._currentOvertime Is Nothing Then Return False
+
+        Dim oldOvertime =
+            Me._changedOvertimes.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOvertime.RowID))
+
+        If oldOvertime Is Nothing Then Return False
+
+        Dim hasChanged = False
+
+        If _
+            newOvertime.OTStartDate.Date <> oldOvertime.OTStartDate.Date OrElse
+            newOvertime.OTEndDate.Date <> oldOvertime.OTEndDate.Date OrElse
+            Not CheckIfBothNullorBothHaveValue(newOvertime.OTStartTime, oldOvertime.OTStartTime) OrElse
+            newOvertime.OTStartTime.StripSeconds <> oldOvertime.OTStartTime.StripSeconds OrElse
+            Not CheckIfBothNullorBothHaveValue(newOvertime.OTEndTime, oldOvertime.OTEndTime) OrElse
+            newOvertime.OTEndTime.StripSeconds <> oldOvertime.OTEndTime.StripSeconds OrElse
+            newOvertime.Reason <> oldOvertime.Reason OrElse
+            newOvertime.Comments <> oldOvertime.Comments OrElse
+            newOvertime.Status <> oldOvertime.Status Then
+
+            hasChanged = True
+        End If
+
+        Return hasChanged
 
     End Function
 
@@ -201,10 +243,10 @@ Public Class EmployeeOvertimeForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentOvertime, "Reason")
@@ -254,6 +296,27 @@ Public Class EmployeeOvertimeForm
             If form.ShowBalloonSuccess Then
                 ShowBalloonInfo("Overtime Successfully Added", "Saved")
             End If
+        End If
+
+    End Sub
+
+    Private Sub OvertimeListBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles OvertimeListBindingSource.CurrentItemChanged
+
+        Dim currentRow = OvertimeGridView.CurrentRow
+
+        If currentRow Is Nothing Then Return
+
+        If Me._currentOvertime Is Nothing Then Return
+
+        Dim hasChanged = CheckIfOvertimeIsChanged(Me._currentOvertime)
+
+        If hasChanged Then
+            currentRow.DefaultCellStyle.BackColor = Color.Yellow
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Red
+        Else
+            currentRow.DefaultCellStyle.BackColor = Color.White
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Black
+
         End If
 
     End Sub

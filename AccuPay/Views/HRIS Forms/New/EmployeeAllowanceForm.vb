@@ -434,7 +434,7 @@ Public Class EmployeeAllowanceForm
         dtpallowstartdate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         NullableDatePicker1.DataBindings.Clear()
-        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         cboallowtype.DataBindings.Clear()
         cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")

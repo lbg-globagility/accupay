@@ -164,9 +164,51 @@ Public Class OfficialBusinessForm
 
         Me._changedOfficialBusinesses = Me._currentOfficialBusinesses.CloneListJson()
 
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._changedOfficialBusinesses.Count - 1
+            Me._changedOfficialBusinesses(index).StartTime = Me._currentOfficialBusinesses(index).StartTime
+            Me._changedOfficialBusinesses(index).EndTime = Me._currentOfficialBusinesses(index).EndTime
+        Next
+
         OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
 
         OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+
+    End Function
+
+    Private Function CheckIfBothNullorBothHaveValue(object1 As Object, object2 As Object) As Boolean
+
+        Return (object1 Is Nothing AndAlso object2 Is Nothing) OrElse
+            (object1 IsNot Nothing AndAlso object2 IsNot Nothing)
+
+    End Function
+
+    Private Function CheckIfOfficialBusinessIsChanged(newOfficialBusiness As OfficialBusiness) As Boolean
+        If Me._currentOfficialBusiness Is Nothing Then Return False
+
+        Dim oldOfficialBusiness =
+            Me._changedOfficialBusinesses.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOfficialBusiness.RowID))
+
+        If oldOfficialBusiness Is Nothing Then Return False
+
+        Dim hasChanged = False
+
+        If _
+            newOfficialBusiness.StartDate.Date <> oldOfficialBusiness.StartDate.Date OrElse
+            newOfficialBusiness.EndDate.Date <> oldOfficialBusiness.EndDate.Date OrElse
+            Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.StartTime, oldOfficialBusiness.StartTime) OrElse
+            newOfficialBusiness.StartTime.StripSeconds <> oldOfficialBusiness.StartTime.StripSeconds OrElse
+            Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.EndTime, oldOfficialBusiness.EndTime) OrElse
+            newOfficialBusiness.EndTime.StripSeconds <> oldOfficialBusiness.EndTime.StripSeconds OrElse
+            newOfficialBusiness.Reason <> oldOfficialBusiness.Reason OrElse
+            newOfficialBusiness.Comments <> oldOfficialBusiness.Comments OrElse
+            newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
+
+            hasChanged = True
+        End If
+
+        Return hasChanged
 
     End Function
 
@@ -201,10 +243,10 @@ Public Class OfficialBusinessForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Reason")
@@ -254,6 +296,27 @@ Public Class OfficialBusinessForm
             If form.ShowBalloonSuccess Then
                 ShowBalloonInfo("Official Business Successfully Added", "Saved")
             End If
+        End If
+
+    End Sub
+
+    Private Sub OfficialBusinessListBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles OfficialBusinessListBindingSource.CurrentItemChanged
+
+        Dim currentRow = OfficialBusinessGridView.CurrentRow
+
+        If currentRow Is Nothing Then Return
+
+        If Me._currentOfficialBusiness Is Nothing Then Return
+
+        Dim hasChanged = CheckIfOfficialBusinessIsChanged(Me._currentOfficialBusiness)
+
+        If hasChanged Then
+            currentRow.DefaultCellStyle.BackColor = Color.Yellow
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Red
+        Else
+            currentRow.DefaultCellStyle.BackColor = Color.White
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Black
+
         End If
 
     End Sub

@@ -23,9 +23,9 @@ Partial Class EmployeeOvertimeForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -54,9 +54,7 @@ Partial Class EmployeeOvertimeForm
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.EndDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -97,6 +95,8 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.OvertimeListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.StartTimePicker = New AccuPay.NullableTimePicker()
+        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -326,6 +326,8 @@ Partial Class EmployeeOvertimeForm
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
@@ -333,9 +335,7 @@ Partial Class EmployeeOvertimeForm
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
-        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
         Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
@@ -432,18 +432,6 @@ Partial Class EmployeeOvertimeForm
         Me.Label5.TabIndex = 512
         Me.Label5.Text = "Reason"
         '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
-        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.ShowCheckBox = True
-        Me.EndTimePicker.ShowUpDown = True
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 7
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -453,18 +441,6 @@ Partial Class EmployeeOvertimeForm
         Me.Label4.Size = New System.Drawing.Size(52, 13)
         Me.Label4.TabIndex = 510
         Me.Label4.Text = "End time"
-        '
-        'StartTimePicker
-        '
-        Me.StartTimePicker.CustomFormat = "  hh:mm tt"
-        Me.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
-        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartTimePicker.Name = "StartTimePicker"
-        Me.StartTimePicker.ShowCheckBox = True
-        Me.StartTimePicker.ShowUpDown = True
-        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartTimePicker.TabIndex = 6
         '
         'Panel3
         '
@@ -634,14 +610,14 @@ Partial Class EmployeeOvertimeForm
         Me.OvertimeGridView.BackgroundColor = System.Drawing.Color.White
         Me.OvertimeGridView.ColumnHeadersHeight = 34
         Me.OvertimeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle7
         Me.OvertimeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.OvertimeGridView.Location = New System.Drawing.Point(28, 350)
         Me.OvertimeGridView.MultiSelect = False
@@ -724,14 +700,14 @@ Partial Class EmployeeOvertimeForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle8
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -817,10 +793,10 @@ Partial Class EmployeeOvertimeForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "N2"
-        DataGridViewCellStyle3.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle9.Format = "N2"
+        DataGridViewCellStyle9.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -849,6 +825,24 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn10.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        '
+        'StartTimePicker
+        '
+        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
+        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartTimePicker.TabIndex = 6
+        Me.StartTimePicker.Value = New Date(2020, 2, 18, 14, 17, 56, 179)
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
+        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 6
+        Me.EndTimePicker.Value = New Date(2020, 2, 18, 14, 19, 18, 0)
         '
         'EmployeeOvertimeForm
         '
@@ -927,9 +921,7 @@ Partial Class EmployeeOvertimeForm
     Friend WithEvents ReasonTextBox As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
-    Friend WithEvents EndTimePicker As DateTimePicker
     Friend WithEvents Label4 As Label
-    Friend WithEvents StartTimePicker As DateTimePicker
     Friend WithEvents Panel3 As Panel
     Friend WithEvents EndDatePicker As DateTimePicker
     Friend WithEvents Label1 As Label
@@ -961,4 +953,6 @@ Partial Class EmployeeOvertimeForm
     Friend WithEvents DownloadButton As Button
     Friend WithEvents ChangeButton As Button
     Friend WithEvents OvertimeListBindingSource As BindingSource
+    Friend WithEvents StartTimePicker As NullableTimePicker
+    Friend WithEvents EndTimePicker As NullableTimePicker
 End Class

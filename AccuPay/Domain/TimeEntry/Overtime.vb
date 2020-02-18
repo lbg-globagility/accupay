@@ -60,22 +60,22 @@ Public Class Overtime
     End Sub
 
     <NotMapped>
-    Public Property OTStartTimeFull As Date
+    Public Property OTStartTimeFull As Date?
         Get
             Return If(OTStartTime Is Nothing, Nothing, OTStartDate.Date.Add(OTStartTime.Value))
         End Get
-        Set(value As Date)
-            OTStartTime = value.TimeOfDay
+        Set(value As Date?)
+            OTStartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
         End Set
     End Property
 
     <NotMapped>
-    Public Property OTEndTimeFull As Date
+    Public Property OTEndTimeFull As Date?
         Get
             Return If(OTEndTime Is Nothing, Nothing, OTEndDate.Date.Add(OTEndTime.Value))
         End Get
-        Set(value As Date)
-            OTEndTime = value.TimeOfDay
+        Set(value As Date?)
+            OTEndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
         End Set
     End Property
 

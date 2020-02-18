@@ -169,6 +169,12 @@ Public Class EmployeeLeavesForm
 
         Me._changedLeaves = Me._currentLeaves.CloneListJson()
 
+        'cloning TimeSpans objects that are Nothing(null) results to default(T) which is {00:00:00}
+        For index As Integer = 0 To Me._changedLeaves.Count - 1
+            Me._changedLeaves(index).StartTime = Me._currentLeaves(index).StartTime
+            Me._changedLeaves(index).EndTime = Me._currentLeaves(index).EndTime
+        Next
+
         LeaveListBindingSource.DataSource = Me._currentLeaves
 
         LeaveGridView.DataSource = LeaveListBindingSource
@@ -203,13 +209,13 @@ Public Class EmployeeLeavesForm
         StartDatePicker.DataBindings.Add("Value", Me._currentLeave, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndDatePicker.DataBindings.Clear()
-        EndDatePicker.DataBindings.Add("Value", Me._currentLeave, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndDatePicker.DataBindings.Add("Value", Me._currentLeave, "ProperEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentLeave, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartTimePicker.DataBindings.Add("Value", Me._currentLeave, "StartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentLeave, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndTimePicker.DataBindings.Add("Value", Me._currentLeave, "EndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentLeave, "Reason")
@@ -238,6 +244,44 @@ Public Class EmployeeLeavesForm
         Dim leaveTypes = _productRepository.ConvertToStringList(leaveList)
 
         LeaveTypeComboBox.DataSource = leaveTypes
+
+    End Function
+
+    Private Function CheckIfBothNullorBothHaveValue(object1 As Object, object2 As Object) As Boolean
+
+        Return (object1 Is Nothing AndAlso object2 Is Nothing) OrElse
+            (object1 IsNot Nothing AndAlso object2 IsNot Nothing)
+
+    End Function
+
+    Private Function CheckIfLeaveIsChanged(newLeave As Leave) As Boolean
+        If Me._currentLeave Is Nothing Then Return False
+
+        Dim oldLeave =
+            Me._changedLeaves.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLeave.RowID))
+
+        If oldLeave Is Nothing Then Return False
+
+        Dim hasChanged = False
+
+        If _
+            newLeave.StartDate.Date <> oldLeave.StartDate.Date OrElse
+            Not CheckIfBothNullorBothHaveValue(newLeave.EndDate, oldLeave.EndDate) OrElse
+            newLeave.EndDate?.Date <> oldLeave.EndDate?.Date OrElse
+            Not CheckIfBothNullorBothHaveValue(newLeave.StartTime, oldLeave.StartTime) OrElse
+            newLeave.StartTime.StripSeconds <> oldLeave.StartTime.StripSeconds OrElse
+            Not CheckIfBothNullorBothHaveValue(newLeave.EndTime, oldLeave.EndTime) OrElse
+            newLeave.EndTime.StripSeconds <> oldLeave.EndTime.StripSeconds OrElse
+            newLeave.Reason <> oldLeave.Reason OrElse
+            newLeave.Comments <> oldLeave.Comments OrElse
+            newLeave.LeaveType <> oldLeave.LeaveType OrElse
+            newLeave.Status <> oldLeave.Status Then
+
+            hasChanged = True
+        End If
+
+        Return hasChanged
 
     End Function
 
@@ -276,6 +320,27 @@ Public Class EmployeeLeavesForm
             If form.ShowBalloonSuccess Then
                 ShowBalloonInfo("Leave Successfully Added", "Saved")
             End If
+        End If
+
+    End Sub
+
+    Private Sub LeaveListBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles LeaveListBindingSource.CurrentItemChanged
+
+        Dim currentRow = LeaveGridView.CurrentRow
+
+        If currentRow Is Nothing Then Return
+
+        If Me._currentLeave Is Nothing Then Return
+
+        Dim hasChanged = CheckIfLeaveIsChanged(Me._currentLeave)
+
+        If hasChanged Then
+            currentRow.DefaultCellStyle.BackColor = Color.Yellow
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Red
+        Else
+            currentRow.DefaultCellStyle.BackColor = Color.White
+            currentRow.DefaultCellStyle.SelectionForeColor = Color.Black
+
         End If
 
     End Sub

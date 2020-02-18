@@ -56,23 +56,23 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property Status As String
 
         <NotMapped>
-        Public Property StartTimeFull As Date
+        Public Property StartTimeFull As Date?
             Get
                 Return If(StartTime Is Nothing, Nothing, StartDate.Date.Add(StartTime.Value))
             End Get
-            Set(value As Date)
-                StartTime = value.TimeOfDay
+            Set(value As Date?)
+                StartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
             End Set
         End Property
 
         <NotMapped>
-        Public Property EndTimeFull As Date
+        Public Property EndTimeFull As Date?
             Get
                 Return If(EndTime Is Nothing, Nothing,
                             If(EndDate Is Nothing, StartDate, EndDate.Value).Date.Add(EndTime.Value))
             End Get
-            Set(value As Date)
-                EndTime = value.TimeOfDay
+            Set(value As Date?)
+                EndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
             End Set
         End Property
 
