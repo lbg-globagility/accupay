@@ -17,8 +17,6 @@ ALTER TABLE `paystub`
 ALTER TABLE `paystub`
 	ADD COLUMN `SpecialHolidayRestDayHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayNightDiffOTPay`;
 ALTER TABLE `paystub`
-	ADD COLUMN `SpecialHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayHours`;
-ALTER TABLE `paystub`
 	ADD COLUMN `SpecialHolidayRestDayOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayPay`;
 ALTER TABLE `paystub`
 	ADD COLUMN `SpecialHolidayRestDayOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `SpecialHolidayRestDayOTHours`;
@@ -40,8 +38,6 @@ ALTER TABLE `paystub`
 	ADD COLUMN `RegularHolidayNightDiffOTPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffOTHours`;
 ALTER TABLE `paystub`
 	ADD COLUMN `RegularHolidayRestDayHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayNightDiffOTPay`;
-ALTER TABLE `paystub`
-	ADD COLUMN `RegularHolidayRestDayPay` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayHours`;
 ALTER TABLE `paystub`
 	ADD COLUMN `RegularHolidayRestDayOTHours` DECIMAL(15,4) NOT NULL DEFAULT '0' AFTER `RegularHolidayRestDayPay`;
 ALTER TABLE `paystub`
