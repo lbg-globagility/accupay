@@ -52,6 +52,21 @@ Namespace Global.AccuPay.Repository
             End Using
         End Function
 
+        Public Async Function SaveManyAsync(currentOvertimes As List(Of Overtime)) As Task
+
+            Using context As New PayrollContext
+
+                For Each overtime In currentOvertimes
+
+                    Await Me.SaveAsync(overtime, context)
+
+                    Await context.SaveChangesAsync()
+                Next
+
+            End Using
+
+        End Function
+
         Public Async Function SaveAsync(overtime As Overtime, Optional context As PayrollContext = Nothing) As Task
 
             overtime.OrganizationID = z_OrganizationID

@@ -160,6 +160,11 @@ Public Class EmployeeLeavesForm
         Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
+    Private Sub ForceGridViewCommit()
+        'Workaround. Focus other control to lose focus on current control
+        EmployeeInfoTabLayout.Focus()
+    End Sub
+
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
@@ -420,6 +425,42 @@ Public Class EmployeeLeavesForm
         'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteLeave(currentEmployee, messageTitle)
 
+    End Sub
+
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
+        ForceGridViewCommit()
+
+        Dim changedLeaves As New List(Of Leave)
+
+        Dim messageTitle = "Update Leaves"
+
+        For Each item In Me._currentLeaves
+            If CheckIfLeaveIsChanged(item) Then
+                changedLeaves.Add(item)
+            End If
+        Next
+
+        If changedLeaves.Count < 1 Then
+
+            MessageBoxHelper.Warning("No changed leaves!", messageTitle)
+            Return
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                        Async Function()
+                                            Await _leaveRepository.SaveManyAsync(changedLeaves)
+
+                                            ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)
+
+                                            Dim currentEmployee = GetSelectedEmployee()
+
+                                            If currentEmployee IsNot Nothing Then
+
+                                                Await LoadLeaves(currentEmployee)
+
+                                            End If
+
+                                        End Function)
     End Sub
 
 End Class

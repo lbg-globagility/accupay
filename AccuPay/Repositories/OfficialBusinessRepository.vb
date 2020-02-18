@@ -52,6 +52,21 @@ Namespace Global.AccuPay.Repository
             End Using
         End Function
 
+        Public Async Function SaveManyAsync(currentOfficialBusinesses As List(Of OfficialBusiness)) As Task
+
+            Using context As New PayrollContext
+
+                For Each officialBusiness In currentOfficialBusinesses
+
+                    Await Me.SaveAsync(officialBusiness, context)
+
+                    Await context.SaveChangesAsync()
+                Next
+
+            End Using
+
+        End Function
+
         Public Async Function SaveAsync(officialBusiness As OfficialBusiness, Optional context As PayrollContext = Nothing) As Task
 
             officialBusiness.OrganizationID = z_OrganizationID

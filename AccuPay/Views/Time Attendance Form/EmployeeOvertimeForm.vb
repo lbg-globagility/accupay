@@ -155,6 +155,11 @@ Public Class EmployeeOvertimeForm
         Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
+    Private Sub ForceGridViewCommit()
+        'Workaround. Focus other control to lose focus on current control
+        EmployeeInfoTabLayout.Focus()
+    End Sub
+
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
@@ -396,6 +401,42 @@ Public Class EmployeeOvertimeForm
         'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteOvertime(currentEmployee, messageTitle)
 
+    End Sub
+
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
+        ForceGridViewCommit()
+
+        Dim changedOvertimes As New List(Of Overtime)
+
+        Dim messageTitle = "Update Overtimes"
+
+        For Each item In Me._currentOvertimes
+            If CheckIfOvertimeIsChanged(item) Then
+                changedOvertimes.Add(item)
+            End If
+        Next
+
+        If changedOvertimes.Count < 1 Then
+
+            MessageBoxHelper.Warning("No changed overtime!", messageTitle)
+            Return
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                        Async Function()
+                                            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
+
+                                            ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
+
+                                            Dim currentEmployee = GetSelectedEmployee()
+
+                                            If currentEmployee IsNot Nothing Then
+
+                                                Await LoadOvertimes(currentEmployee)
+
+                                            End If
+
+                                        End Function)
     End Sub
 
 End Class

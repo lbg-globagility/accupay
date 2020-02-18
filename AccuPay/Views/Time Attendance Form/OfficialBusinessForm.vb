@@ -155,6 +155,11 @@ Public Class OfficialBusinessForm
         Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
+    Private Sub ForceGridViewCommit()
+        'Workaround. Focus other control to lose focus on current control
+        EmployeeInfoTabLayout.Focus()
+    End Sub
+
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
@@ -396,6 +401,42 @@ Public Class OfficialBusinessForm
         'TODO: check if this is used in a closed payroll. If it is, prevent this from being deleted.
         Await DeleteOfficialBusiness(currentEmployee, messageTitle)
 
+    End Sub
+
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
+        ForceGridViewCommit()
+
+        Dim changedOfficialBusinesses As New List(Of OfficialBusiness)
+
+        Dim messageTitle = "Update Official Business"
+
+        For Each item In Me._currentOfficialBusinesses
+            If CheckIfOfficialBusinessIsChanged(item) Then
+                changedOfficialBusinesses.Add(item)
+            End If
+        Next
+
+        If changedOfficialBusinesses.Count < 1 Then
+
+            MessageBoxHelper.Warning("No changed official business!", messageTitle)
+            Return
+        End If
+
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                        Async Function()
+                                            Await _officialBusinessRepository.SaveManyAsync(changedOfficialBusinesses)
+
+                                            ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)
+
+                                            Dim currentEmployee = GetSelectedEmployee()
+
+                                            If currentEmployee IsNot Nothing Then
+
+                                                Await LoadOfficialBusinesses(currentEmployee)
+
+                                            End If
+
+                                        End Function)
     End Sub
 
 End Class
