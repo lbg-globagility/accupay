@@ -436,6 +436,13 @@ Public Class EmployeeLeavesForm
 
         For Each item In Me._currentLeaves
             If CheckIfLeaveIsChanged(item) Then
+
+                Dim validationErrorMessage = item.Validate()
+                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+                    MessageBoxHelper.ErrorMessage(validationErrorMessage)
+                    Return
+                End If
+
                 changedLeaves.Add(item)
             End If
         Next

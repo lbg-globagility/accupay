@@ -412,6 +412,13 @@ Public Class OfficialBusinessForm
 
         For Each item In Me._currentOfficialBusinesses
             If CheckIfOfficialBusinessIsChanged(item) Then
+
+                Dim validationErrorMessage = item.Validate()
+                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+                    MessageBoxHelper.ErrorMessage(validationErrorMessage)
+                    Return
+                End If
+
                 changedOfficialBusinesses.Add(item)
             End If
         Next

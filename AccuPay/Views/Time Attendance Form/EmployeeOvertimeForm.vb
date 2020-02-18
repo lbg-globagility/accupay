@@ -412,6 +412,13 @@ Public Class EmployeeOvertimeForm
 
         For Each item In Me._currentOvertimes
             If CheckIfOvertimeIsChanged(item) Then
+
+                Dim validationErrorMessage = item.Validate()
+                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+                    MessageBoxHelper.ErrorMessage(validationErrorMessage)
+                    Return
+                End If
+
                 changedOvertimes.Add(item)
             End If
         Next
