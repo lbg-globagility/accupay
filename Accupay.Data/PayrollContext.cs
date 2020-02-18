@@ -10,6 +10,7 @@ namespace Accupay.Data
         public virtual DbSet<Paystub> Paystubs { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

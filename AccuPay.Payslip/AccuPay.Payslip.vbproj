@@ -92,6 +92,9 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Reports\DefaultPayslipFormat.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\DS1.Designer.vb">
       <DependentUpon>DS1.xsd</DependentUpon>
       <AutoGen>True</AutoGen>
@@ -130,6 +133,9 @@
       <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <EmbeddedResource Include="Reports\DefaultPayslipFormat.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+    </EmbeddedResource>
     <None Include="Reports\DS1.xsc">
       <DependentUpon>DS1.xsd</DependentUpon>
     </None>

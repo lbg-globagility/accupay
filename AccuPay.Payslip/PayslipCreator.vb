@@ -11,7 +11,7 @@ Public Class PayslipCreator
 
     Const customDateFormat As String = "'%c/%e/%Y'"
 
-    Private sys_ownr As New Reference.BaseSystemOwner
+    Private sys_ownr As New Accupay.Data.SystemOwnerService
 
     Private _currentPayPeriod As IPayPeriod
 
@@ -163,7 +163,7 @@ Public Class PayslipCreator
 
             _payslipDatatable = n_SQLQueryToDatatable.ResultTable
 
-            Dim rptPayslip As New TwoEmpIn1PaySlip
+            Dim rptPayslip As New DefaultPayslipFormat
 
             With rptPayslip.Section2
                 Dim objText As TextObject = .ReportObjects("txtOrganizName")
