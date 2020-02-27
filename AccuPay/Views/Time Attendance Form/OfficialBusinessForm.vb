@@ -55,13 +55,19 @@ Public Class OfficialBusinessForm
         Close()
     End Sub
 
-    Private Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
+    Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
         Using form = New ImportOBForm()
             form.ShowDialog()
 
             If form.IsSaved Then
+                Dim currentEmployee = GetSelectedEmployee()
+
+                If currentEmployee IsNot Nothing Then
+
+                    Await LoadOfficialBusinesses(currentEmployee)
+
+                End If
                 myBalloon("Official businesses Successfully Imported", "Import Official Businesses", EmployeePictureBox, 100, -20)
-                'Refresh list
             End If
         End Using
     End Sub
@@ -140,9 +146,6 @@ Public Class OfficialBusinessForm
 
         StatusComboBox.SelectedIndex = -1
         StatusComboBox.DataBindings.Clear()
-
-        AttachmentPictureBox.Image = Nothing
-
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged

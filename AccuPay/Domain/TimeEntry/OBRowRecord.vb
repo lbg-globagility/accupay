@@ -33,6 +33,9 @@ Public Class OBRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
+    <Ignore>
+    Public Property Status As String
+
     Friend Function ToOfficialBusiness() As OfficialBusiness
 
         If StartDate Is Nothing OrElse StartDate Is Nothing Then
@@ -44,7 +47,8 @@ Public Class OBRowRecord
             .EndDate = EndDate.Value,
             .StartTime = StartTime,
             .EndTime = EndTime,
-            .EmployeeID = ObjectUtils.ToNullableInteger(EmployeeID)
+            .EmployeeID = ObjectUtils.ToNullableInteger(EmployeeID),
+            .Status = Status
         }
     End Function
 

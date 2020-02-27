@@ -23,9 +23,9 @@ Partial Class EmployeeLeavesForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -72,13 +72,10 @@ Partial Class EmployeeLeavesForm
         Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.StartTimePicker = New AccuPay.NullableTimePicker()
-        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.AttachmentPictureBox = New System.Windows.Forms.PictureBox()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CommentTextBox = New System.Windows.Forms.TextBox()
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
@@ -97,10 +94,6 @@ Partial Class EmployeeLeavesForm
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LeaveTypeComboBox = New System.Windows.Forms.ComboBox()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.ClearButton = New System.Windows.Forms.Button()
-        Me.DownloadButton = New System.Windows.Forms.Button()
-        Me.ChangeButton = New System.Windows.Forms.Button()
         Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
         Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -118,6 +111,7 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -130,11 +124,9 @@ Partial Class EmployeeLeavesForm
         Me.TabPage6.SuspendLayout()
         Me.DetailsTabLayout.SuspendLayout()
         Me.Panel5.SuspendLayout()
-        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        Me.Panel4.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -356,14 +348,14 @@ Partial Class EmployeeLeavesForm
         Me.LeaveGridView.BackgroundColor = System.Drawing.Color.White
         Me.LeaveGridView.ColumnHeadersHeight = 34
         Me.LeaveGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column8, Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.LeaveGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.LeaveGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.LeaveGridView.Location = New System.Drawing.Point(28, 350)
         Me.LeaveGridView.MultiSelect = False
@@ -434,7 +426,7 @@ Partial Class EmployeeLeavesForm
         '
         Me.TabControl4.Controls.Add(Me.TabPage7)
         Me.TabControl4.Controls.Add(Me.TabPage6)
-        Me.TabControl4.Location = New System.Drawing.Point(711, 118)
+        Me.TabControl4.Location = New System.Drawing.Point(540, 100)
         Me.TabControl4.Name = "TabControl4"
         Me.TabControl4.SelectedIndex = 0
         Me.TabControl4.Size = New System.Drawing.Size(190, 148)
@@ -586,17 +578,14 @@ Partial Class EmployeeLeavesForm
         '
         'DetailsTabLayout
         '
-        Me.DetailsTabLayout.ColumnCount = 4
+        Me.DetailsTabLayout.ColumnCount = 3
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
         Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
         Me.DetailsTabLayout.Controls.Add(Me.Panel5, 2, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label9, 2, 2)
-        Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
-        Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
         Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
@@ -609,7 +598,6 @@ Partial Class EmployeeLeavesForm
         Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
-        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
         Me.DetailsTabLayout.Location = New System.Drawing.Point(8, 101)
         Me.DetailsTabLayout.Name = "DetailsTabLayout"
         Me.DetailsTabLayout.RowCount = 8
@@ -622,7 +610,8 @@ Partial Class EmployeeLeavesForm
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.DetailsTabLayout.Size = New System.Drawing.Size(701, 193)
+        Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
+        Me.DetailsTabLayout.Size = New System.Drawing.Size(526, 193)
         Me.DetailsTabLayout.TabIndex = 4
         '
         'StartTimePicker
@@ -634,24 +623,15 @@ Partial Class EmployeeLeavesForm
         Me.StartTimePicker.TabIndex = 8
         Me.StartTimePicker.Value = New Date(2020, 2, 18, 13, 57, 0, 0)
         '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 8
-        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
-        '
         'Panel5
         '
         Me.Panel5.Controls.Add(Me.Label10)
         Me.Panel5.Controls.Add(Me.StatusComboBox)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(315, 64)
+        Me.Panel5.Location = New System.Drawing.Point(363, 64)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(140, 32)
+        Me.Panel5.Size = New System.Drawing.Size(163, 32)
         Me.Panel5.TabIndex = 11
         '
         'Label10
@@ -678,39 +658,17 @@ Partial Class EmployeeLeavesForm
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(335, 48)
+        Me.Label9.Location = New System.Drawing.Point(383, 48)
         Me.Label9.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(39, 13)
         Me.Label9.TabIndex = 520
         Me.Label9.Text = "Status"
         '
-        'AttachmentPictureBox
-        '
-        Me.AttachmentPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.AttachmentPictureBox.Location = New System.Drawing.Point(465, 19)
-        Me.AttachmentPictureBox.Margin = New System.Windows.Forms.Padding(10, 3, 3, 3)
-        Me.AttachmentPictureBox.Name = "AttachmentPictureBox"
-        Me.DetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
-        Me.AttachmentPictureBox.Size = New System.Drawing.Size(209, 137)
-        Me.AttachmentPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.AttachmentPictureBox.TabIndex = 518
-        Me.AttachmentPictureBox.TabStop = False
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(475, 0)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(66, 13)
-        Me.Label8.TabIndex = 517
-        Me.Label8.Text = "Attachment"
-        '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(335, 0)
+        Me.Label7.Location = New System.Drawing.Point(383, 0)
         Me.Label7.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(60, 13)
@@ -719,7 +677,7 @@ Partial Class EmployeeLeavesForm
         '
         'CommentTextBox
         '
-        Me.CommentTextBox.Location = New System.Drawing.Point(150, 112)
+        Me.CommentTextBox.Location = New System.Drawing.Point(171, 112)
         Me.CommentTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 3, 0)
         Me.CommentTextBox.Multiline = True
         Me.CommentTextBox.Name = "CommentTextBox"
@@ -730,7 +688,7 @@ Partial Class EmployeeLeavesForm
         '
         'ReasonTextBox
         '
-        Me.ReasonTextBox.Location = New System.Drawing.Point(150, 16)
+        Me.ReasonTextBox.Location = New System.Drawing.Point(171, 16)
         Me.ReasonTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 2, 0)
         Me.ReasonTextBox.Multiline = True
         Me.ReasonTextBox.Name = "ReasonTextBox"
@@ -742,7 +700,7 @@ Partial Class EmployeeLeavesForm
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(160, 96)
+        Me.Label6.Location = New System.Drawing.Point(181, 96)
         Me.Label6.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(61, 13)
@@ -752,7 +710,7 @@ Partial Class EmployeeLeavesForm
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(160, 0)
+        Me.Label5.Location = New System.Drawing.Point(181, 0)
         Me.Label5.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(45, 13)
@@ -777,7 +735,7 @@ Partial Class EmployeeLeavesForm
         Me.Panel3.Location = New System.Drawing.Point(0, 64)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(140, 32)
+        Me.Panel3.Size = New System.Drawing.Size(161, 32)
         Me.Panel3.TabIndex = 5
         '
         'EndDatePicker
@@ -826,7 +784,7 @@ Partial Class EmployeeLeavesForm
         Me.Panel2.Location = New System.Drawing.Point(0, 16)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(140, 32)
+        Me.Panel2.Size = New System.Drawing.Size(161, 32)
         Me.Panel2.TabIndex = 4
         '
         'StartDatePicker
@@ -862,10 +820,10 @@ Partial Class EmployeeLeavesForm
         Me.Panel1.Controls.Add(Me.Label2)
         Me.Panel1.Controls.Add(Me.LeaveTypeComboBox)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(315, 16)
+        Me.Panel1.Location = New System.Drawing.Point(363, 16)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(140, 32)
+        Me.Panel1.Size = New System.Drawing.Size(163, 32)
         Me.Panel1.TabIndex = 10
         '
         'Label2
@@ -888,44 +846,6 @@ Partial Class EmployeeLeavesForm
         Me.LeaveTypeComboBox.Name = "LeaveTypeComboBox"
         Me.LeaveTypeComboBox.Size = New System.Drawing.Size(110, 21)
         Me.LeaveTypeComboBox.TabIndex = 10
-        '
-        'Panel4
-        '
-        Me.Panel4.Controls.Add(Me.ClearButton)
-        Me.Panel4.Controls.Add(Me.DownloadButton)
-        Me.Panel4.Controls.Add(Me.ChangeButton)
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel4.Location = New System.Drawing.Point(458, 162)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(240, 28)
-        Me.Panel4.TabIndex = 12
-        '
-        'ClearButton
-        '
-        Me.ClearButton.Location = New System.Drawing.Point(147, 0)
-        Me.ClearButton.Name = "ClearButton"
-        Me.ClearButton.Size = New System.Drawing.Size(70, 23)
-        Me.ClearButton.TabIndex = 2
-        Me.ClearButton.Text = "Clear"
-        Me.ClearButton.UseVisualStyleBackColor = True
-        '
-        'DownloadButton
-        '
-        Me.DownloadButton.Location = New System.Drawing.Point(77, 0)
-        Me.DownloadButton.Name = "DownloadButton"
-        Me.DownloadButton.Size = New System.Drawing.Size(70, 23)
-        Me.DownloadButton.TabIndex = 1
-        Me.DownloadButton.Text = "Download"
-        Me.DownloadButton.UseVisualStyleBackColor = True
-        '
-        'ChangeButton
-        '
-        Me.ChangeButton.Location = New System.Drawing.Point(7, 0)
-        Me.ChangeButton.Name = "ChangeButton"
-        Me.ChangeButton.Size = New System.Drawing.Size(70, 23)
-        Me.ChangeButton.TabIndex = 0
-        Me.ChangeButton.Text = "Change"
-        Me.ChangeButton.UseVisualStyleBackColor = True
         '
         'ShowAllCheckBox
         '
@@ -950,14 +870,14 @@ Partial Class EmployeeLeavesForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -1043,10 +963,10 @@ Partial Class EmployeeLeavesForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "N2"
-        DataGridViewCellStyle9.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -1084,6 +1004,15 @@ Partial Class EmployeeLeavesForm
         'LeaveListBindingSource
         '
         '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
+        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 8
+        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
+        '
         'EmployeeLeavesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1118,11 +1047,9 @@ Partial Class EmployeeLeavesForm
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
         Me.Panel5.ResumeLayout(False)
-        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
-        Me.Panel4.ResumeLayout(False)
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
@@ -1165,8 +1092,6 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents EmployeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
     Friend WithEvents DetailsTabLayout As TableLayoutPanel
-    Friend WithEvents AttachmentPictureBox As PictureBox
-    Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents CommentTextBox As TextBox
     Friend WithEvents ReasonTextBox As TextBox
@@ -1185,10 +1110,6 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label2 As Label
     Friend WithEvents LeaveTypeComboBox As ComboBox
-    Friend WithEvents Panel4 As Panel
-    Friend WithEvents ClearButton As Button
-    Friend WithEvents DownloadButton As Button
-    Friend WithEvents ChangeButton As Button
     Friend WithEvents Panel5 As Panel
     Friend WithEvents Label10 As Label
     Friend WithEvents StatusComboBox As ComboBox
@@ -1220,6 +1141,6 @@ Partial Class EmployeeLeavesForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents EndTimePicker As NullableTimePicker
     Friend WithEvents StartTimePicker As NullableTimePicker
+    Friend WithEvents EndTimePicker As NullableTimePicker
 End Class

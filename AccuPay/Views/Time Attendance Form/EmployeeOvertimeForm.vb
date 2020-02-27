@@ -55,13 +55,20 @@ Public Class EmployeeOvertimeForm
         Close()
     End Sub
 
-    Private Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
+    Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
         Using form = New ImportOvertimeForm()
             form.ShowDialog()
 
             If form.IsSaved Then
+
+                Dim currentEmployee = GetSelectedEmployee()
+                If currentEmployee IsNot Nothing Then
+
+                    Await LoadOvertimes(currentEmployee)
+
+                End If
+
                 myBalloon("Overtimes Successfully Imported", "Import Overtimes", EmployeePictureBox, 100, -20)
-                'Refresh list
             End If
         End Using
     End Sub
@@ -140,9 +147,6 @@ Public Class EmployeeOvertimeForm
 
         StatusComboBox.SelectedIndex = -1
         StatusComboBox.DataBindings.Clear()
-
-        AttachmentPictureBox.Image = Nothing
-
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged

@@ -64,6 +64,7 @@ Public Class ImportOBForm
 
         For Each record In records
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            record.Status = OfficialBusiness.StatusApproved
 
             If employee Is Nothing Then
                 record.ErrorMessage = "Employee number does not exist."
@@ -93,20 +94,27 @@ Public Class ImportOBForm
 
                 If officialbusType Is Nothing Then
                     Try
-                        Dim listOfVal As New ListOfValue
-                        listOfVal.DisplayValue = record.Type.Trim()
-                        listOfVal.Type = "Official Business Type"
-                        listOfVal.Active = "Yes"
+                        Using OBContext = New PayrollContext
 
-                        listOfVal.Created = Date.Now
-                        listOfVal.CreatedBy = z_User
-                        listOfVal.LastUpdBy = z_User
-                        context.ListOfValues.Add(listOfVal)
+                            Dim listOfVal As New ListOfValue
+                            listOfVal.DisplayValue = record.Type.Trim()
+                            listOfVal.Type = "Official Business Type"
+                            listOfVal.Active = "Yes"
 
-                        Await context.SaveChangesAsync()
+                            listOfVal.Created = Date.Now
+                            listOfVal.CreatedBy = z_User
+                            listOfVal.LastUpd = Date.Now
+                            listOfVal.LastUpdBy = z_User
+                            OBContext.ListOfValues.Add(listOfVal)
 
-                        officialbusType = Await context.ListOfValues.
+                            Await OBContext.SaveChangesAsync()
+
+                            officialbusType = Await context.ListOfValues.
                             FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
+
+                        End Using
+                    Catch ex As DbUpdateException
+                        officialbusType = Nothing
                     Catch ex As Exception
                         officialbusType = Nothing
                     End Try
@@ -153,7 +161,7 @@ Public Class ImportOBForm
                 .EndDate = record.EndDate.Value,
                 .StartTime = record.StartTime,
                 .EndTime = record.EndTime,
-                .Status = OfficialBusiness.StatusApproved
+                .Status = record.Status
             }
 
             acceptedRecords.Add(record)

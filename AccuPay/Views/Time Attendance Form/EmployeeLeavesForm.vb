@@ -63,7 +63,13 @@ Public Class EmployeeLeavesForm
         Dim succeed = Await importForm.SaveAsync()
 
         If succeed Then
-            'Refresh list
+            Dim currentEmployee = GetSelectedEmployee()
+
+            If currentEmployee IsNot Nothing Then
+
+                Await LoadLeaves(currentEmployee)
+
+            End If
             InfoBalloon("Imported successfully.", "Done Importing Employee Leave(s)", EmployeePictureBox, 0, -69)
         End If
     End Sub
@@ -145,9 +151,6 @@ Public Class EmployeeLeavesForm
 
         StatusComboBox.SelectedIndex = -1
         StatusComboBox.DataBindings.Clear()
-
-        AttachmentPictureBox.Image = Nothing
-
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
