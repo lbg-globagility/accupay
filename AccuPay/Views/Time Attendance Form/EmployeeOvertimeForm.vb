@@ -431,6 +431,11 @@ Public Class EmployeeOvertimeForm
 
             MessageBoxHelper.Warning("No changed overtime!", messageTitle)
             Return
+
+        ElseIf changedOvertimes.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+            ($"You are about to update multiple overtimes. Do you want to proceed?", "Confirm Multiple Updates") = False Then
+
+            Return
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,

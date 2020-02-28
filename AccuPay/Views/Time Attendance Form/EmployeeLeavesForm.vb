@@ -461,6 +461,11 @@ Public Class EmployeeLeavesForm
 
             MessageBoxHelper.Warning("No changed leaves!", messageTitle)
             Return
+
+        ElseIf changedLeaves.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+            ($"You are about to update multiple leaves. Do you want to proceed?", "Confirm Multiple Updates") = False Then
+
+            Return
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,

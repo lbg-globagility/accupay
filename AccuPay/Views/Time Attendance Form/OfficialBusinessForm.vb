@@ -430,6 +430,11 @@ Public Class OfficialBusinessForm
 
             MessageBoxHelper.Warning("No changed official business!", messageTitle)
             Return
+
+        ElseIf changedOfficialBusinesses.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+            ($"You are about to update multiple official businesses. Do you want to proceed?", "Confirm Multiple Updates") = False Then
+
+            Return
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,

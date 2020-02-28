@@ -188,9 +188,7 @@ Public Class PayrollForm
     End Sub
 
     Private Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
-        ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
         ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
-        previousForm = BenchmarkPaystubForm
         previousForm = EmployeeLoansForm
     End Sub
 
