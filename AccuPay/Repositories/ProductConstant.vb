@@ -1,10 +1,12 @@
 ﻿Public Class ProductConstant
 
-    Public Shared ReadOnly LOAN_TYPE_CATEGORY As String = "Loan Type"
+    Public Shared ReadOnly ADJUSTMENT_TYPE_CATEGORY As String = "Adjustment Type"
 
     Public Shared ReadOnly ALLOWANCE_TYPE_CATEGORY As String = "Allowance Type"
 
-    Public Shared ReadOnly ADJUSTMENT_TYPE_CATEGORY As String = "Adjustment Type"
+    Public Shared ReadOnly LEAVE_TYPE_CATEGORY As String = "Leave Type"
+
+    Public Shared ReadOnly LOAN_TYPE_CATEGORY As String = "Loan Type"
 
     Public Shared ReadOnly ADJUSTMENT_TYPE_DEDUCTION As String = "DEDUCTION"
 

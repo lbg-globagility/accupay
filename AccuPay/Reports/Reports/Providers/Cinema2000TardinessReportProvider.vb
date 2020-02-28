@@ -63,7 +63,16 @@ Public Class Cinema2000TardinessReportProvider
         Dim firstDayOfTheMonth = New Date([date].Year, [date].Month, 1)
         Dim lastDayOfTheMonth = New Date([date].Year, [date].Month, Date.DaysInMonth([date].Year, [date].Month))
 
-        Dim previousMonth = [date].Month - 1
+        Dim previousMonth As Integer = [date].Month - 1
+
+        If firstDayOfTheMonth.Month = JanuaryMonth Then
+            'if the firstDayOfTheMonth is 01/01/2020, previousMonth should be December (12)
+            previousMonth = DecemberMonth
+        Else
+            'if the firstDayOfTheMonth is 02/01/2020, previousMonth should be January (1)
+            previousMonth = [date].Month - 1
+        End If
+
         Dim lastDayOfThePreviousMonth = New Date([date].Year, previousMonth, Date.DaysInMonth([date].Year, previousMonth))
 
         Dim firstDayOneYear As Date

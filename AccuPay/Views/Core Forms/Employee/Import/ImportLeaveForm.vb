@@ -234,11 +234,11 @@ Public Class ImportLeaveForm
 
     Private Class LeaveModel
         Implements IExcelRowRecord
-        Private Const PENDING_STATUS As String = "Pending"
+        Private Const PENDING_STATUS As String = AccuPay.Entity.Leave.StatusPending
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private Const REASON_LENGTH As Integer = 500
         Private Const COMMENT_LENGTH As Integer = 2000
-        Private VALID_STATUS As String() = {"approved", "pending"}
+        Private VALID_STATUS As String() = {AccuPay.Entity.Leave.StatusApproved.ToLower, AccuPay.Entity.Leave.StatusPending.ToLower} '{"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean
@@ -386,7 +386,8 @@ Public Class ImportLeaveForm
                     Or _noStartDate _
                     Or _employeeNotExists _
                     Or _noStatus _
-                    Or _notMeantToUseAddtlVL
+                    Or _notMeantToUseAddtlVL _
+                    Or Not String.IsNullOrWhiteSpace(ToLeave().Validate)
             End Get
         End Property
 
@@ -406,6 +407,17 @@ Public Class ImportLeaveForm
 
                 If _notMeantToUseAddtlVL Then description.Add($"AccuPay doesn't support {ADDITIONAL_VACATION_LEAVETYPE} leave type")
 
+                'add the model validation if there are no error message (there are checks that are here and in the model validation so only use the model validation if it there is no error detected here)
+                If Not description.Any Then
+                    Dim validationErrorMessage = ToLeave().Validate
+
+                    If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                        description.Add(validationErrorMessage)
+                    End If
+
+                End If
+
                 Dim stringsToJoin = description.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray()
                 If Not stringsToJoin.Any() Then Return Nothing
                 Return String.Join("; ", stringsToJoin)
@@ -421,6 +433,25 @@ Public Class ImportLeaveForm
             Else
                 Return Nothing
             End If
+        End Function
+
+        Public Function ToLeave() As Leave
+
+            If StartDate Is Nothing OrElse EndTime Is Nothing Then
+                Return Nothing
+            End If
+
+            Return New Leave With {
+                .StartDate = StartDate,
+                .EndDate = EndDate,
+                .StartTime = StartTime,
+                .EndTime = EndTime,
+                .EmployeeID = EmployeeID,
+                .Status = Status,
+                .LeaveType = LeaveType,
+                .Reason = Reason,
+                .Comments = Comment
+            }
         End Function
 
     End Class

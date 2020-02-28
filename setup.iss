@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "AccuPay"
-#define MyAppVersion "1.18.1"
+#define MyAppVersion "1.18.2"
 #define MyAppPublisher "Globagility, Inc."
 #define MyAppURL "http://www.globagilityinc.com/"
 #define MyAppExeName "AccuPay.exe"
@@ -40,7 +40,7 @@ Source: ".\AccuPay\bin\Debug\AccuPay.Data.dll"; DestDir: "{app}"; Flags: ignorev
 Source: ".\AccuPay\bin\Debug\AccuPay.DB.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.Payslip.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.Reference.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.Utils.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: ".\AccuPay\bin\Debug\AccuPay.Utilities.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AutoMapper.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\BouncyCastle.Crypto.dll"; DestDir: "{app}"; Flags: ignoreversion

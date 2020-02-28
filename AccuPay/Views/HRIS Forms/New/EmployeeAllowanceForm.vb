@@ -18,7 +18,7 @@ Public Class EmployeeAllowanceForm
 
     Private _employees As New List(Of Employee)
 
-    Private _AllEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Employee)
 
     Private _currentAllowance As Allowance
 
@@ -42,7 +42,7 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
+    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(searchTextBox.Text.ToLower())
@@ -140,6 +140,11 @@ Public Class EmployeeAllowanceForm
         If changedAllowances.Count < 1 Then
 
             MessageBoxHelper.Warning("No changed allowances!", messageTitle)
+            Return
+
+        ElseIf changedAllowances.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+            ($"You are about to update multiple allowances. Do you want to proceed?", "Confirm Multiple Updates") = False Then
+
             Return
         End If
 
@@ -241,7 +246,7 @@ Public Class EmployeeAllowanceForm
         End If
 
         If Me._currentAllowances Is Nothing Then
-            MessageBoxHelper.Warning("No allowances!")
+            MessageBoxHelper.Warning("No changed allowances!")
             Return
         End If
 
@@ -427,9 +432,6 @@ Public Class EmployeeAllowanceForm
     Private Sub PopulateAllowanceForm(allowance As Allowance)
         Me._currentAllowance = allowance
 
-        Dim originalAllowance = Me._changedAllowances.
-            FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentAllowance.RowID))
-
         txtallowamt.DataBindings.Clear()
         txtallowamt.DataBindings.Add("Text", Me._currentAllowance, "Amount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
@@ -437,7 +439,7 @@ Public Class EmployeeAllowanceForm
         dtpallowstartdate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         NullableDatePicker1.DataBindings.Clear()
-        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         cboallowtype.DataBindings.Clear()
         cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")
@@ -511,7 +513,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._AllEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
                             OrderBy(Function(e) e.LastName).
                             ToList
 
@@ -521,10 +523,10 @@ Public Class EmployeeAllowanceForm
 
         If cbShowAll.Checked Then
 
-            Me._employees = Me._AllEmployees
+            Me._employees = Me._allEmployees
         Else
 
-            Me._employees = Me._AllEmployees.Where(Function(e) e.IsActive).ToList
+            Me._employees = Me._allEmployees.Where(Function(e) e.IsActive).ToList
 
         End If
 

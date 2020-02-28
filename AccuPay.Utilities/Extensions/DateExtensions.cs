@@ -29,5 +29,10 @@ namespace AccuPay.Utilities.Extensions
         {
             return new DateTime(input.Value.Year, input.Value.Month, input.Value.Day, 23, 59, 59);
         }
+
+        public static DateTime StripSeconds(this DateTime input)
+        {
+            return new DateTime(input.Year, input.Month, input.Day, input.Hour, input.Minute, 0);
+        }
     }
 }

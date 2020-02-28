@@ -46,6 +46,16 @@ Public Class AddAllowanceForm
 
     End Sub
 
+    Private Sub PopulateEmployeeData()
+
+        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleInitial
+
+        txtEmployeeNumber.Text = _currentEmployee?.EmployeeIdWithPositionAndEmployeeType
+
+        pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
+
+    End Sub
+
     Private Sub ResetForm()
         Me._newAllowance = New Allowance
         Me._newAllowance.EmployeeID = _currentEmployee.RowID
@@ -62,16 +72,6 @@ Public Class AddAllowanceForm
         Me._newAllowance.AllowanceFrequency = cboallowfreq.SelectedItem
 
         CreateDataBindings()
-    End Sub
-
-    Private Sub PopulateEmployeeData()
-
-        txtEmployeeFirstName.Text = _currentEmployee?.FullNameWithMiddleInitial
-
-        txtEmployeeNumber.Text = _currentEmployee?.EmployeeIdWithPositionAndEmployeeType
-
-        pbEmployeePicture.Image = ConvByteToImage(_currentEmployee.Image)
-
     End Sub
 
     Private Sub CreateDataBindings()
@@ -118,6 +118,7 @@ Public Class AddAllowanceForm
         ForceAllowanceDataBindingsCommit()
 
         Dim confirmMessage = ""
+        Dim messageTitle = "New Allowance"
 
         If Me._newAllowance.ProductID Is Nothing Then
 
@@ -132,23 +133,26 @@ Public Class AddAllowanceForm
         If String.IsNullOrWhiteSpace(confirmMessage) = False Then
 
             If MessageBoxHelper.Confirm(Of Boolean) _
-                (confirmMessage, "New Allowance", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
+                (confirmMessage, messageTitle, messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
         End If
 
-        Await _allowanceRepository.SaveAsync(Me._newAllowance)
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
-        Me.IsSaved = True
+                Me.IsSaved = True
 
-        If sender Is btnAddAndNew Then
-            ShowBalloonInfo("Allowance Successfully Added", "Saved")
+                If sender Is btnAddAndNew Then
+                    ShowBalloonInfo("Allowance Successfully Added", "Saved")
 
-            ResetForm()
-        Else
+                    ResetForm()
+                Else
 
-            Me.ShowBalloonSuccess = True
-            Me.Close()
-        End If
+                    Me.ShowBalloonSuccess = True
+                    Me.Close()
+                End If
+            End Function)
 
     End Sub
 

@@ -1,2 +1,7 @@
 ALTER TABLE `payperiod`
 	ADD COLUMN `IsClosed` TINYINT(1) NOT NULL DEFAULT 0 AFTER `IsLastFridayOfMonthFallsHere`;
+
+/*
+RUN THIS QUERY. REPLACE THE DATE WITH THE LATEST PayFromDate
+UPDATE payperiod SET ISCLOSED = TRUE WHERE PayFromDate < '{2020-01-16}';
+*/
