@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Repository
+Imports AccuPay.Utils
 
 Public Class TimeAttendForm
 
@@ -105,6 +106,8 @@ Public Class TimeAttendForm
         MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
         LoadShiftSchedulePolicyAsync()
+
+        PrepareFormForUserLevelAuthorizations()
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
@@ -121,6 +124,42 @@ Public Class TimeAttendForm
         Dim _bool = _policy.UseShiftSchedule
         ShiftScheduleToolStripMenuItem.Visible = _bool
         TimeEntToolStripMenuItem.Visible = Not _bool
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                LeaveToolStripMenuItem.Visible = False
+                OfficialBusinessToolStripMenuItem.Visible = False
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    OvertimeToolStripMenuItem.Visible = False
+
+                End If
+
+            End If
+
+        End Using
+
     End Sub
 
     Sub reloadViewPrivilege()

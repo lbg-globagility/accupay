@@ -525,27 +525,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-                            Case .GetLeaveTabPageIndex
-                                If .listofEditRowleave.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetOvertimeTabPageIndex
-                                If .listofEditRowEmpOT.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetOfficialBusinessTabPageIndex
-                                If .listofEditRowOBF.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
                             Case .GetBonusTabPageIndex
                                 If .listofEditRowBon.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)
