@@ -3,6 +3,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports AccuPay.ModelData
 
 Public Class EmployeeLeavesForm
 
@@ -201,6 +202,12 @@ Public Class EmployeeLeavesForm
         EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
         EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
+
+        VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance
+        SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance
+
+        VacationLeaveBalanceTextBox.Text = Await EmployeeData.GetVacationLeaveBalance(currentEmployee.RowID)
+        SickLeaveBalanceTextBox.Text = Await EmployeeData.GetSickLeaveBalance(currentEmployee.RowID)
 
         Await LoadLeaves(currentEmployee)
 
