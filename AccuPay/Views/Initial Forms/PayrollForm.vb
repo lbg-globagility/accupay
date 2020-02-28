@@ -193,7 +193,6 @@ Public Class PayrollForm
     End Sub
 
     Private Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click
-
         ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
         previousForm = BenchmarkPaystubForm
     End Sub
