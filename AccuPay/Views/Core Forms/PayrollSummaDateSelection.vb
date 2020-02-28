@@ -135,7 +135,7 @@ Public Class PayrollSummaDateSelection
                     FROM category c
                     INNER JOIN product p ON p.CategoryID=c.RowID AND p.OrganizationID=c.OrganizationID AND p.ActiveData=TRUE
                     WHERE c.OrganizationID = @orgId
-                    AND c.CategoryName='Loan Type'
+                    AND c.CategoryName=@leaveType
                     ORDER BY p.PartNo
                     ;
         ]]>.Value
@@ -147,6 +147,7 @@ Public Class PayrollSummaDateSelection
             command As New MySqlCommand(sql, connection)
 
             command.Parameters.AddWithValue("@orgId", CStr(z_OrganizationID))
+            command.Parameters.AddWithValue("@leaveType", ProductConstant.LEAVE_TYPE_CATEGORY)
 
             Await connection.OpenAsync()
 

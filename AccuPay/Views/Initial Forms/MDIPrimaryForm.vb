@@ -525,27 +525,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-                            Case .GetLeaveTabPageIndex
-                                If .listofEditRowleave.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetOvertimeTabPageIndex
-                                If .listofEditRowEmpOT.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetOfficialBusinessTabPageIndex
-                                If .listofEditRowOBF.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
                             Case .GetBonusTabPageIndex
                                 If .listofEditRowBon.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)
@@ -846,7 +825,7 @@ Public Class MDIPrimaryForm
         If if_sysowner_is_hyundai Then
 
             Dim pend_leave As New SQL(str_pending_leave,
-                                  New Object() {orgztnID, "Pending"})
+                                  New Object() {orgztnID, AccuPay.Entity.Leave.StatusPending})
 
             dt_pend_leave = pend_leave.GetFoundRows.Tables(0)
 

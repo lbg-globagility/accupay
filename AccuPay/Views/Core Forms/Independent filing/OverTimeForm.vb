@@ -207,7 +207,7 @@ Public Class OverTimeForm
 
         param(12, 1) = imageobj
 
-        param(13, 1) = If(OTStatusString = Nothing, "Pending", OTStatusString)
+        param(13, 1) = If(OTStatusString = Nothing, Overtime.StatusPending, OTStatusString)
 
         Return _
                 EXEC_INSUPD_PROCEDURE(param,

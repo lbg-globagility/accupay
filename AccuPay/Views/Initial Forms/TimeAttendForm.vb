@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Repository
+Imports AccuPay.Utils
 
 Public Class TimeAttendForm
 
@@ -102,9 +103,11 @@ Public Class TimeAttendForm
 
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim checker = FeatureListChecker.Instance
-        OvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
+        MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
         LoadShiftSchedulePolicyAsync()
+
+        PrepareFormForUserLevelAuthorizations()
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
@@ -121,6 +124,42 @@ Public Class TimeAttendForm
         Dim _bool = _policy.UseShiftSchedule
         ShiftScheduleToolStripMenuItem.Visible = _bool
         TimeEntToolStripMenuItem.Visible = Not _bool
+    End Sub
+
+    Private Sub PrepareFormForUserLevelAuthorizations()
+
+        Using context As New PayrollContext
+
+            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+
+            If user Is Nothing Then
+
+                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+            End If
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+
+                Return
+
+            End If
+
+            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+
+                LeaveToolStripMenuItem.Visible = False
+                OfficialBusinessToolStripMenuItem.Visible = False
+
+                If user.UserLevel = UserLevel.Five Then
+
+                    OvertimeToolStripMenuItem.Visible = False
+
+                End If
+
+            End If
+
+        End Using
+
     End Sub
 
     Sub reloadViewPrivilege()
@@ -157,7 +196,7 @@ Public Class TimeAttendForm
         previousForm = TimeEntrySummaryForm
     End Sub
 
-    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+    Private Sub MassOvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MassOvertimeToolStripMenuItem.Click
         ChangeForm(MassOvertimeForm, "Employee Time Entry Logs")
         previousForm = MassOvertimeForm
     End Sub
@@ -167,9 +206,24 @@ Public Class TimeAttendForm
         previousForm = ShiftScheduleForm
     End Sub
 
-    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
+    Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles TimeLogsToolStripMenuItem.Click
         ChangeForm(TimeLogsForm2, "Employee Time Entry logs")
         previousForm = TimeLogsForm2
+    End Sub
+
+    Private Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click
+        ChangeForm(EmployeeLeavesForm, "Employee Leave")
+        previousForm = EmployeeLeavesForm
+    End Sub
+
+    Private Sub OfficialBusinessToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
+        ChangeForm(OfficialBusinessForm, "Official Business filing")
+        previousForm = OfficialBusinessForm
+    End Sub
+
+    Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
+        ChangeForm(EmployeeOvertimeForm, "Employee Overtime")
+        previousForm = EmployeeOvertimeForm
     End Sub
 
 End Class

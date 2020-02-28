@@ -33,32 +33,32 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function GetByIdAsync(allowanceId As Integer?) As Task(Of Allowance)
+        Public Async Function GetByIdAsync(id As Integer?) As Task(Of Allowance)
 
             Using context = New PayrollContext()
 
                 Return Await context.Allowances.
-                    FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, allowanceId))
+                    FirstOrDefaultAsync(Function(l) l.RowID.Value = id.Value)
 
             End Using
 
         End Function
 
-        Public Async Function CheckIfAlreadyUsed(allowanceId As Integer?) As Task(Of Boolean)
+        Public Async Function CheckIfAlreadyUsed(id As Integer?) As Task(Of Boolean)
 
             Using context = New PayrollContext()
 
                 Return Await context.AllowanceItems.
-                    AnyAsync(Function(a) Nullable.Equals(a.AllowanceID, allowanceId))
+                    AnyAsync(Function(a) Nullable.Equals(a.AllowanceID, id))
 
             End Using
 
         End Function
 
-        Public Async Function DeleteAsync(allowanceId As Integer?) As Task
+        Public Async Function DeleteAsync(id As Integer?) As Task
             Using context = New PayrollContext()
 
-                Dim allowance = Await GetByIdAsync(allowanceId)
+                Dim allowance = Await GetByIdAsync(id)
 
                 context.Remove(allowance)
 

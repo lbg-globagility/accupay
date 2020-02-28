@@ -11,12 +11,54 @@ Namespace Global.AccuPay.Repository
 
     Public Class LeaveRepository
 
-        Private Const STATUS_APPROVED As String = "Approved"
-
         Private VALIDATABLE_TYPES As New List(Of String) From {
                     ProductConstant.SICK_LEAVE,
                     ProductConstant.VACATION_LEAVE
             }
+
+        Public Function GetStatusList() As List(Of String)
+            Return New List(Of String) From {
+                    Leave.StatusPending,
+                    Leave.StatusApproved
+            }
+        End Function
+
+        Public Async Function GetByIdAsync(id As Integer?) As Task(Of Leave)
+
+            Using context = New PayrollContext()
+
+                Return Await context.Leaves.
+                    FirstOrDefaultAsync(Function(l) l.RowID.Value = id.Value)
+
+            End Using
+
+        End Function
+
+        Public Async Function GetByEmployeeAsync(
+            employeeId As Integer?) As _
+            Task(Of IEnumerable(Of Leave))
+
+            Using context = New PayrollContext()
+
+                Return Await context.Leaves.
+                        Where(Function(l) l.EmployeeID.Value = employeeId.Value).
+                        ToListAsync
+
+            End Using
+
+        End Function
+
+        Public Async Function DeleteAsync(id As Integer?) As Task
+            Using context = New PayrollContext()
+
+                Dim leave = Await GetByIdAsync(id)
+
+                context.Remove(leave)
+
+                Await context.SaveChangesAsync()
+
+            End Using
+        End Function
 
         Public Async Function SaveManyAsync(leaves As List(Of Leave)) As Task
 
@@ -263,7 +305,7 @@ Namespace Global.AccuPay.Repository
         End Sub
 
         Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Employee, leave As Leave) As Task
-            If leave.Status.Trim.ToLower = STATUS_APPROVED.ToLower AndAlso
+            If leave.Status.Trim.ToLower = Leave.StatusApproved.ToLower AndAlso
                                     policy.ValidateLeaveBalance AndAlso
                                     VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
 
@@ -380,7 +422,7 @@ Namespace Global.AccuPay.Repository
 
             Return context.Leaves.Local.
                         Where(Function(l) Nullable.Equals(l.EmployeeID, employeeId)).
-                        Where(Function(l) l.Status.Trim.ToUpper = STATUS_APPROVED.ToUpper).
+                        Where(Function(l) l.Status.Trim.ToUpper = Leave.StatusApproved.ToUpper).
                         Where(Function(l) l.LeaveType = leave.LeaveType).
                         Where(Function(l) l.StartDate >= firstDayOfTheYear.Value).
                         Where(Function(l) l.StartDate <= lastDayOfTheYear.Value).
@@ -396,6 +438,10 @@ Namespace Global.AccuPay.Repository
         ''' <param name="leave">The leave that will be inserted/updated.</param>
         ''' <param name="context">If there is no context provided, SaveAsync will save the changes to database automatically.</param>
         Public Async Function SaveAsync(leave As Leave, Optional context As PayrollContext = Nothing) As Task
+
+            leave.OrganizationID = z_OrganizationID
+            If leave.StartTime.HasValue Then leave.StartTime = leave.StartTime.Value.StripSeconds
+            If leave.EndTime.HasValue Then leave.EndTime = leave.EndTime.Value.StripSeconds
 
             If context Is Nothing Then
 
@@ -419,8 +465,8 @@ Namespace Global.AccuPay.Repository
             If context.Leaves.
                 Where(Function(l) If(leave.RowID Is Nothing, True, Nullable.Equals(leave.RowID, l.RowID) = False)).
                 Where(Function(l) l.EmployeeID.Value = leave.EmployeeID.Value).
-                Where(Function(l) (leave.StartDate >= l.StartDate AndAlso leave.StartDate <= l.EndDate.Value) OrElse
-                                    (leave.EndDate.Value >= l.StartDate AndAlso leave.EndDate.Value <= l.EndDate.Value)).
+                Where(Function(l) (leave.StartDate.Date >= l.StartDate.Date AndAlso leave.StartDate.Date <= l.EndDate.Value.Date) OrElse
+                                    (leave.EndDate.Value.Date >= l.StartDate.Date AndAlso leave.EndDate.Value.Date <= l.EndDate.Value.Date)).
                 Any() Then
 
                 Throw New ArgumentException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}")
@@ -428,6 +474,7 @@ Namespace Global.AccuPay.Repository
 
             If leave.RowID Is Nothing Then
 
+                leave.CreatedBy = z_User
                 context.Leaves.Add(leave)
             Else
                 Await Me.UpdateAsync(leave, context)
@@ -441,7 +488,7 @@ Namespace Global.AccuPay.Repository
 
             If currentLeave Is Nothing Then Return
 
-            currentLeave.LastUpdBy = leave.LastUpdBy
+            currentLeave.LastUpdBy = z_User
             currentLeave.StartTime = leave.StartTime
             currentLeave.EndTime = leave.EndTime
             currentLeave.LeaveType = leave.LeaveType

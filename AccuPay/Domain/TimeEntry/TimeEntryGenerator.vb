@@ -109,7 +109,7 @@ Public Class TimeEntryGenerator
             _leaves = context.Leaves.
                 Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
                 Where(Function(l) _cutoffStart <= l.StartDate AndAlso l.StartDate <= _cutoffEnd).
-                Where(Function(l) l.Status = "Approved").
+                Where(Function(l) l.Status = Leave.StatusApproved).
                 ToList()
 
             _overtimes = context.Overtimes.
@@ -436,7 +436,7 @@ Public Class TimeEntryGenerator
         Return context.Leaves.
             Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
             Where(Function(l) _cutoffStart <= l.StartDate And l.StartDate <= _cutoffEnd).
-            Where(Function(l) l.Status = "Approved").
+            Where(Function(l) l.Status = Leave.StatusApproved).
             ToList()
     End Function
 

@@ -81,7 +81,7 @@ Public Class SalaryTab
             Return
         Else
 
-            txtEcola.Text = _ecolaAllowance.Amount.ToString
+            txtEcola.Text = _ecolaAllowance?.Amount.ToString
         End If
 
         If _mode = FormMode.Creating Then

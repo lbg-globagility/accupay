@@ -33,5 +33,17 @@ namespace AccuPay.Utilities.Extensions
         {
             return timeSpanInput.Add(new TimeSpan(0, value * MINUTES_PER_HOUR, 0));
         }
+
+        public static TimeSpan StripSeconds(this TimeSpan timeSpanInput)
+        {
+            return new TimeSpan(timeSpanInput.Hours, timeSpanInput.Minutes, 0);
+        }
+
+        public static TimeSpan? StripSeconds(this TimeSpan? timeSpanInput)
+        {
+            if (timeSpanInput == null) return null;
+
+            return new TimeSpan(timeSpanInput.Value.Hours, timeSpanInput.Value.Minutes, 0);
+        }
     }
 }

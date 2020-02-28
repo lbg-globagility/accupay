@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Utilities.Extensions
 
 <Table("employeeovertime")>
 Public Class Overtime
@@ -50,8 +51,61 @@ Public Class Overtime
     <NotMapped>
     Public Overridable Property [End] As Date?
 
+    Public Overridable Property Reason As String
+
+    Public Overridable Property Comments As String
+
     Public Sub New()
         Status = StatusPending
     End Sub
+
+    <NotMapped>
+    Public Property OTStartTimeFull As Date?
+        Get
+            Return If(OTStartTime Is Nothing, Nothing, OTStartDate.Date.Add(OTStartTime.Value))
+        End Get
+        Set(value As Date?)
+            OTStartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+        End Set
+    End Property
+
+    <NotMapped>
+    Public Property OTEndTimeFull As Date?
+        Get
+            Return If(OTEndTime Is Nothing, Nothing, OTEndDate.Date.Add(OTEndTime.Value))
+        End Get
+        Set(value As Date?)
+            OTEndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+        End Set
+    End Property
+
+    Public Function Validate() As String
+
+        If OTStartTime Is Nothing Then
+
+            Return "Start Time cannot be empty."
+        End If
+
+        If OTEndTime Is Nothing Then
+
+            Return "End Time cannot be empty."
+        End If
+
+        If OTStartDate.Date.Add(OTStartTime.Value.StripSeconds) >= OTEndDate.Date.Add(OTEndTime.Value.StripSeconds) Then
+
+            Return "Start date and time cannot be greater than or equal to End date and time."
+
+        End If
+
+        If Not {StatusPending, StatusApproved}.Contains(Status) Then
+
+            Return "Status is not valid."
+
+        End If
+
+        'Means no error
+        Return Nothing
+
+    End Function
 
 End Class

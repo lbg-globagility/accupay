@@ -19,6 +19,16 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetLeaveTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Dim categoryName = ProductConstant.LEAVE_TYPE_CATEGORY
+
+            Dim category = Await GetOrCreateCategoryByName(categoryName)
+            Return Await GetProductsByCategory(category.RowID)
+
+        End Function
+
         Public Async Function GetLoanTypes() _
             As Task(Of IEnumerable(Of Product))
 

@@ -108,16 +108,11 @@ Public Class ImportOvertimeForm
 
     Private Function CheckIfRecordIsValid(record As OvertimeRowRecord, rejectedRecords As List(Of OvertimeRowRecord)) As Boolean
 
+        'Start Date and End Date is not nullable for Overtime so this validations
+        'will not be checked by the overtime Class
         If record.EffectiveStartDate Is Nothing Then
 
             record.ErrorMessage = "Effective Start Date cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        If record.EffectiveStartTime Is Nothing Then
-
-            record.ErrorMessage = "Effective Start Time cannot be empty."
             rejectedRecords.Add(record)
             Return False
         End If
@@ -129,9 +124,18 @@ Public Class ImportOvertimeForm
             Return False
         End If
 
-        If record.EffectiveEndTime Is Nothing Then
+        Dim overtime = record.ToOvertime()
 
-            record.ErrorMessage = "Effective End Time cannot be empty."
+        If overtime Is Nothing Then
+            record.ErrorMessage = "Cannot parse data."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        Dim validationErrorMessage = overtime.Validate()
+
+        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+            record.ErrorMessage = validationErrorMessage
             rejectedRecords.Add(record)
             Return False
         End If

@@ -33,13 +33,10 @@ Public Class HRISForm
             PromotionToolStripMenuItem.Visible = False
             DisciplinaryActionToolStripMenuItem.Visible = False
             BonusToolStripMenuItem.Visible = False
-            OvertimeToolStripMenuItem.Visible = False
-            OfficialBusinessToolStripMenuItem.Visible = False
             AttachmentToolStripMenuItem.Visible = False
             OffSetToolStripMenuItem.Visible = False
             JobLevelToolStripMenuItem.Visible = False
             EmployeeExperimentalToolStripMenuItem.Visible = False
-            LeaveToolStripMenuItem.Visible = False
 
             DeductionsToolStripMenuItem.Visible = True
             OtherIncomeToolStripMenuItem.Visible = True
@@ -203,17 +200,6 @@ Public Class HRISForm
         'Employee.tbpCertifications_Enter(sender, e)
     End Sub
 
-    Private Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click
-
-        Dim index = EmployeeForm.GetLeaveTabPageIndex
-
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Leave")
-        EmployeeForm.tbpLeave.Focus()
-        'Employee.tbpLeave_Enter(sender, e)
-    End Sub
-
     Private Sub DisciplinaryActionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DisciplinaryActionToolStripMenuItem.Click
 
         Dim index = EmployeeForm.GetDisciplinaryActionTabPageIndex
@@ -256,28 +242,6 @@ Public Class HRISForm
         ChangeForm(EmployeeForm, "Employee Promotion")
         EmployeeForm.tbpPromotion.Focus()
         'Employee.tbpPromotion_Enter(sender, e)
-    End Sub
-
-    Private Sub ToolStripMenuItem8_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
-
-        Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpEmpOT)
-
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Overtime")
-        EmployeeForm.tbpEmpOT.Focus()
-        'Employee.tbpEmpOT_Enter(sender, e)
-    End Sub
-
-    Private Sub ToolStripMenuItem9_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
-
-        Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpOBF)
-
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Official Business filing")
-        EmployeeForm.tbpOBF.Focus()
-        'Employee.tbpOBF_Enter(sender, e)
     End Sub
 
     Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
@@ -364,16 +328,8 @@ Public Class HRISForm
                 DisciplinaryActionToolStripMenuItem.Visible = False
                 EmpSalToolStripMenuItem.Visible = False
                 BonusToolStripMenuItem.Visible = False
-                LeaveToolStripMenuItem.Visible = False
-                OfficialBusinessToolStripMenuItem.Visible = False
                 AttachmentToolStripMenuItem.Visible = False
                 OffSetToolStripMenuItem.Visible = False
-
-                If user.UserLevel = UserLevel.Five Then
-
-                    OvertimeToolStripMenuItem.Visible = False
-
-                End If
 
             End If
 

@@ -229,6 +229,11 @@ Public Class EmployeeLoansForm
 
             MessageBoxHelper.Warning("No changed loans!", messageTitle)
             Return
+
+        ElseIf changedLoanSchedules.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+            ($"You are about to update multiple loans. Do you want to proceed?", "Confirm Multiple Updates") = False Then
+
+            Return
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
