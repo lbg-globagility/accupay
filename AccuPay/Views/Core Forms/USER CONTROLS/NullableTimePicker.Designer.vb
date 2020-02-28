@@ -34,7 +34,6 @@ Partial Class NullableTimePicker
         Me.DateTimePicker1.Margin = New System.Windows.Forms.Padding(0, 0, 0, 3)
         Me.DateTimePicker1.Name = "DateTimePicker1"
         Me.DateTimePicker1.ShowCheckBox = True
-        Me.DateTimePicker1.ShowUpDown = True
         Me.DateTimePicker1.Size = New System.Drawing.Size(100, 20)
         Me.DateTimePicker1.TabIndex = 1
         '
