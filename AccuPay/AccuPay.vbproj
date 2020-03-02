@@ -405,12 +405,6 @@
     </Compile>
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
-    <Compile Include="Reports\rpt\rpt\DefaultPaySlipFormat.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>DefaultPaySlipFormat.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
     <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
@@ -1933,10 +1927,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="_Benchmark\SetOvertimeForm.resx">
       <DependentUpon>SetOvertimeForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\rpt\rpt\DefaultPaySlipFormat.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>DefaultPaySlipFormat.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddBranchForm.resx">
       <DependentUpon>AddBranchForm.vb</DependentUpon>
