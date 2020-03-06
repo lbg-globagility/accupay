@@ -150,23 +150,19 @@ Public Class Cinema2000TardinessReportProvider
             '#4
             For Each tardinessReportModel In tardinessReportModels
 
-                If tardinessReportModel.Days >= CinemaTardinessReportModel.DaysLateLimit Then
+                tardinessReportModel.NumberOfOffense = 0
 
-                    tardinessReportModel.NumberOfOffense += 1
-
-                End If
-
-                Dim employeeTardinessDate = employeeTardinessDates.
+                Dim firstOffenseDate = employeeTardinessDates.
                                                     Where(Function(e) e.EmployeeId = tardinessReportModel.EmployeeId).
                                                     FirstOrDefault?.FirstOffenseDate
 
-                If employeeTardinessDate Is Nothing Then
+                If firstOffenseDate Is Nothing Then
                     Throw New Exception("Error creating new tardiness records.")
                 End If
 
                 Dim employeeOffenseList = previousOffenseList.
                                             Where(Function(o) o.EmployeeID = tardinessReportModel.EmployeeId).
-                                            Where(Function(o) o.Date >= employeeTardinessDate).
+                                            Where(Function(o) o.Date >= firstOffenseDate).
                                             Where(Function(o) o.Date <= lastDayOfThePreviousMonth).
                                             ToList
 
