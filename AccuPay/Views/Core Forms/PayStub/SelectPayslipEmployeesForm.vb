@@ -6,6 +6,7 @@ Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
 
@@ -319,7 +320,16 @@ Public Class SelectPayslipEmployeesForm
     Private Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
 
         Try
-            Dim windowsService = New WindowsServiceController("AccuPay Email Service")
+            'TODO: getting the IP Address should be from a static class and also will be used by other
+            'functions that are needing the values from registry
+
+            Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
+
+            Dim serverIpAddress = regKey.GetValue("server").ToString
+
+            'TODO: AccuPay Email Service should be stored in a static class that will also be used
+            'by the AccuPayWindowService project.
+            Dim windowsService = New WindowsServiceController("AccuPay Email Service", serverIpAddress)
             windowsService.StartOrRestart()
             MessageBoxHelper.Information("Service successfully restarted.")
         Catch ex As Exception
