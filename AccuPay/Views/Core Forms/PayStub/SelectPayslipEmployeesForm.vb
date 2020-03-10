@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
-Imports System.Net.Http
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Payslip
+Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
@@ -319,32 +319,25 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
 
-        Dim globagilityHelpDescription = "Please restart the ""Accupay Email Service"" manually or contact Globagility Inc. for assistance."
+        Dim serviceName = StringConfig.AccupayEmailServiceName
+        Dim globagilityHelpDescription = $"Please restart the {serviceName} manually or contact Globagility Inc. for assistance."
 
         Try
             'TODO: getting the IP Address should be from a static class and also will be used by other
             'functions that are needing the values from registry
 
             Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
-
             Dim serverIpAddress = regKey.GetValue("server").ToString
 
-            Using client = New HttpClient
-                client.BaseAddress = New Uri($"http://{serverIpAddress}:90/api/manager/Accupay Email Service/")
+            Dim service = New WSMService(serverIpAddress, serviceName)
+            Dim result = Await service.StartOrRestart()
 
-                'Dim status = Await client.GetStringAsync("status")
-                'MessageBoxHelper.Information(status)
+            If result.IsSuccessStatusCode Then
+                MessageBoxHelper.Information("Service successfully restarted.")
+            Else
+                MessageBoxHelper.Information($"Cannot restart the service at this time. {globagilityHelpDescription}")
 
-                Dim result = Await client.PostAsync("StartOrRestart", Nothing)
-
-                If result.IsSuccessStatusCode Then
-                    MessageBoxHelper.Information("Service successfully restarted.")
-                Else
-                    MessageBoxHelper.Information($"Cannot restart the service at this time. {globagilityHelpDescription}")
-
-                End If
-
-            End Using
+            End If
 
             ''TODO: AccuPay Email Service should be stored in a static class that will also be used
             ''by the AccuPayWindowService project.
