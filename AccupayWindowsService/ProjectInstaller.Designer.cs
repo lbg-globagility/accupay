@@ -1,4 +1,6 @@
-﻿namespace AccupayWindowsService
+﻿using AccuPay.Utilities;
+
+namespace AccupayWindowsService
 {
     partial class ProjectInstaller
     {
@@ -39,8 +41,8 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.ServiceName = "AccuPay Email Service";
-            this.serviceInstaller1.DisplayName = "AccuPay Email Service";
+            this.serviceInstaller1.ServiceName = StringConfig.AccupayEmailServiceName;
+            this.serviceInstaller1.DisplayName = StringConfig.AccupayEmailServiceName;
             this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller

@@ -10,7 +10,7 @@ namespace Accupay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; set; }
 
-        internal string Name { get; set; }
-        internal string IsCurrentOwner { get; set; }
+        public string Name { get; set; }
+        public string IsCurrentOwner { get; set; }
     }
 }
