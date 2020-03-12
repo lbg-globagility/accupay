@@ -6,6 +6,8 @@ namespace Accupay.Data
 {
     internal class PayrollContext : DbContext
     {
+        public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<PayPeriod> PayPeriods { get; set; }
         public virtual DbSet<Paystub> Paystubs { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
