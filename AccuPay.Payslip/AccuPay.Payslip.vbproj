@@ -92,7 +92,16 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="Reports\DefaultPayslipFormat.vb">
+    <Compile Include="Reports\DefaulltPayslipFullOvertimeBreakdown.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\DefaultPayslipFormat2.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaultPayslipFormat.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\DS1.Designer.vb">
@@ -128,6 +137,10 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <EmbeddedResource Include="Reports\DefaulltPayslipFullOvertimeBreakdown.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\TwoEmpIn1PaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
@@ -135,6 +148,7 @@
     <None Include="packages.config" />
     <EmbeddedResource Include="Reports\DefaultPayslipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaultPayslipFormat2.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="Reports\DS1.xsc">
       <DependentUpon>DS1.xsd</DependentUpon>
