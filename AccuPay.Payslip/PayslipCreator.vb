@@ -1,6 +1,7 @@
 ﻿Imports System.IO
 Imports Accupay.Data
 Imports Accupay.DB
+Imports Accupay.Data.Repositories
 Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports PdfSharp.Pdf
@@ -9,7 +10,7 @@ Imports PdfSharp.Pdf.Security
 
 Public Class PayslipCreator
 
-    Const customDateFormat As String = "'%c/%e/%Y'"
+    Const customDateFormat As String = "m/d/yyyy"
 
     Private sys_ownr As New Accupay.Data.SystemOwnerService
 
@@ -59,17 +60,20 @@ Public Class PayslipCreator
         'test this before deploying
         Dim rptdoc As Object = Nothing
 
-        Dim organizationName = New SQL($"SELECT Name FROM organization WHERE RowID = {orgztnID}").
-                                    GetFoundRow?.ToString
+        Dim organization = New OrganizationRepository().FindById(orgztnID)
+        Dim payperiod = New PayPeriodRepository().FindById(_payPeriodId)
+        Dim address As Entities.Address = If(organization?.PrimaryAddressId Is Nothing,
+                                                Nothing,
+                                                New AddressRepository().FindById(organization?.PrimaryAddressId))
+
+        Dim organizationName = organization.Name
 
         Static current_system_owner As String = sys_ownr.CurrentSystemOwner
 
         If Reference.BaseSystemOwner.Goldwings = current_system_owner Then
 
-            Dim n_SQLQueryToDatatable As _
-                   New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
-
-            _payslipDatatable = n_SQLQueryToDatatable.ResultTable
+            Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
+            _payslipDatatable = query.ResultTable
 
             'rptdoc = New OfficialPaySlipFormat
 
@@ -79,40 +83,28 @@ Public Class PayslipCreator
 
                 objText = .ReportObjects("txtPayPeriod")
 
-                If _payPeriodId > 0 Then
-                    objText.Text =
-                    New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
-                                     " FROM payperiod WHERE RowID=" & _payPeriodId & ";").Result
-                End If
+                objText.Text = $"{payperiod.PayFromDate.ToString("m/d/yyyy")} to {payperiod.PayToDate.ToString(customDateFormat)}"
             End With
 
-        ElseIf Reference.BaseSystemOwner.Hyundai = current_system_owner Then
+            'ElseIf Reference.BaseSystemOwner.Hyundai = current_system_owner Then
 
-            Dim params =
-            New Object() {orgztnID, _payPeriodId}
+            '    Dim params =
+            '    New Object() {orgztnID, _payPeriodId}
 
-            Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, NULL);",
-                           params)
+            '    Dim _sql As New SQL("CALL `HyundaiPayslip`(?og_rowid, ?pp_rowid, TRUE, NULL);",
+            '                   params)
 
-            _payslipDatatable = _sql.GetFoundRows.Tables(0)
+            '    _payslipDatatable = _sql.GetFoundRows.Tables(0)
 
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+            '    Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
 
-            objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
-            objText.Text = organizationName.ToUpper
+            '    objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
+            '    objText.Text = organizationName.ToUpper
 
         ElseIf Reference.BaseSystemOwner.Cinema2000 = current_system_owner Then
 
-            Dim params =
-            New Object() {orgztnID, _payPeriodId}
-
-            Dim str_query As String = String.Concat(
-            "CALL `RPT_payslip`(?og_rowid, ?pp_rowid, TRUE, NULL);")
-
-            Dim _sql As New SQL(str_query,
-                            params)
-
-            _payslipDatatable = _sql.GetFoundRows.Tables(0)
+            Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & orgztnID & "," & _payPeriodId & ", TRUE, NULL);")
+            _payslipDatatable = query.ResultTable
 
             If employeeIds IsNot Nothing AndAlso employeeIds.Count > 0 Then
 
@@ -121,8 +113,6 @@ Public Class PayslipCreator
                     CopyToDataTable
 
             End If
-
-            'rptdoc = New HyundaiPayslip1
 
             rptdoc = New TwoEmpIn1PaySlip
 
@@ -143,19 +133,7 @@ Public Class PayslipCreator
             objText.Text = organizationName.ToUpper
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("OrgAddress")
-            objText.Text = Convert.ToString(New SQL(String.Concat("SELECT CONCAT_WS(', ',",
-                                                       "IF(LENGTH(TRIM(ad.StreetAddress1)) > 0, ad.StreetAddress1, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.StreetAddress2)) > 0, ad.StreetAddress2, NULL)",
-                                                       ",IF(LOCATE('city', ad.Barangay) > 0, IF(LENGTH(TRIM(ad.Barangay)) > 0, ad.Barangay, NULL), CONCAT('Brgy. ', TRIM(ad.Barangay)))",
-                                                       ",IF(LOCATE('city', ad.CityTown) > 0, IF(LENGTH(TRIM(ad.CityTown)) > 0, ad.CityTown, NULL), CONCAT(TRIM(ad.CityTown), ' city'))",
-                                                       ",IF(LENGTH(TRIM(ad.Country)) > 0, ad.Country, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.State)) > 0, ad.State, NULL)",
-                                                       ",IF(LENGTH(TRIM(ad.ZipCode)) > 0, ad.ZipCode, NULL)",
-                                                       ") `AddressText`",
-                                                       " FROM organization og",
-                                                       " INNER JOIN address ad ON ad.RowID=og.PrimaryAddressID",
-                                                       " WHERE og.RowID = ", orgztnID,
-                                                       ";")).GetFoundRow)
+            objText.Text = If(address?.FullAddress, "")
         Else
 
             Dim n_SQLQueryToDatatable As _
@@ -171,11 +149,7 @@ Public Class PayslipCreator
 
                 objText = .ReportObjects("txtPayPeriod")
 
-                If _payPeriodId > 0 Then
-                    objText.Text =
-                    New ExecuteQuery("SELECT CONCAT(DATE_FORMAT(PayFromDate," & customDateFormat & "),' to ',DATE_FORMAT(PayToDate," & customDateFormat & ")) `Result`" &
-                                     " FROM payperiod WHERE RowID=" & _payPeriodId & ";").Result
-                End If
+                objText.Text = $"{payperiod.PayFromDate.ToString("m/d/yyyy")} to {payperiod.PayToDate.ToString(customDateFormat)}"
             End With
 
             rptdoc = rptPayslip
