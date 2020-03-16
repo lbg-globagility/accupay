@@ -75,7 +75,7 @@ Public Class PayslipCreator
             Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
             _payslipDatatable = query.ResultTable
 
-            'rptdoc = New OfficialPaySlipFormat
+            rptdoc = New OfficialPaySlipFormat
 
             With rptdoc.ReportDefinition.Sections(2)
                 Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
