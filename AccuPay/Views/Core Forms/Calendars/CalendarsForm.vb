@@ -16,15 +16,19 @@ Public Class CalendarsForm
 
     Private _currentCalendar As PayCalendar
 
+    Private WithEvents _editor As CalendarDayEditor
+
     Public Sub New()
+        _repository = New CalendarRepository()
+        _editor = New CalendarDayEditor()
+
         InitializeComponent()
         InitializeView()
-
-        _repository = New CalendarRepository()
     End Sub
 
     Public Sub InitializeView()
         CalendarsDataGridView.AutoGenerateColumns = False
+        Controls.Add(_editor)
     End Sub
 
     Private Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -32,7 +36,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
-        _currentCalendar = CType(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
+        _currentCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
         Await LoadPayrates()
         DisplayRates()
     End Sub
@@ -60,22 +64,42 @@ Public Class CalendarsForm
             Dim row = CInt(Math.Ceiling((payrate.Date.Day + monthOffset) / DaysInWeek) - 1)
 
             Dim dayControl = New CalendarDay()
+
+            AddHandler dayControl.Click, AddressOf DaysTableLayout_Click
             dayControl.PayRate = payrate
             dayControl.Dock = DockStyle.Fill
 
             DaysTableLayout.Controls.Add(dayControl, column, row)
-
-            'Dim label = New Label()
-            'label.Text = payrate.Date.Day.ToString()
-
-            'DaysTableLayout.Controls.Add(Label, column, row)
         Next
 
         DaysTableLayout.ResumeLayout()
     End Sub
 
     Private Sub DaysTableLayout_Click(sender As Object, e As EventArgs) Handles DaysTableLayout.Click
+        If Not TypeOf sender Is CalendarDay Then Return
 
+        Dim control = DirectCast(sender, CalendarDay)
+        Dim payrate = control.PayRate
+
+        Dim p = PointToClient(MousePosition)
+
+        _editor.ChangePayRate(control.PayRate)
+        _editor.Top = p.Y
+        _editor.Left = p.X
+        _editor.BringToFront()
+        _editor.Show()
+    End Sub
+
+    Private Sub Editor_Ok(payrate As PayRate) Handles _editor.Ok
+        For Each control In DaysTableLayout.Controls
+            Dim calendarDayControl = DirectCast(control, CalendarDay)
+
+            If payrate.RowID = calendarDayControl.PayRate.RowID Then
+                calendarDayControl.RenderText()
+            End If
+        Next
+
+        Debug.WriteLine("Ok")
     End Sub
 
 End Class
