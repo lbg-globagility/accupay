@@ -10,7 +10,7 @@ Imports PdfSharp.Pdf.Security
 
 Public Class PayslipCreator
 
-    Const customDateFormat As String = "m/d/yyyy"
+    Const customDateFormat As String = "M/d/yyyy"
 
     Private sys_ownr As New Accupay.Data.SystemOwnerService
 
@@ -83,7 +83,7 @@ Public Class PayslipCreator
 
                 objText = .ReportObjects("txtPayPeriod")
 
-                objText.Text = $"{payperiod.PayFromDate.ToString("m/d/yyyy")} to {payperiod.PayToDate.ToString(customDateFormat)}"
+                objText.Text = $"{payperiod.PayFromDate.ToString(customDateFormat)} to {payperiod.PayToDate.ToString(customDateFormat)}"
             End With
 
             'ElseIf Reference.BaseSystemOwner.Hyundai = current_system_owner Then
@@ -149,7 +149,7 @@ Public Class PayslipCreator
 
                 objText = .ReportObjects("txtPayPeriod")
 
-                objText.Text = $"{payperiod.PayFromDate.ToString("m/d/yyyy")} to {payperiod.PayToDate.ToString(customDateFormat)}"
+                objText.Text = $"{payperiod.PayFromDate.ToString(customDateFormat)} to {payperiod.PayToDate.ToString(customDateFormat)}"
             End With
 
             rptdoc = rptPayslip
