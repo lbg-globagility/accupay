@@ -6,8 +6,6 @@ Imports AccuPay.Repository
 
 Public Class CalendarsForm
 
-    Private Const DaysInWeek As Integer = 7
-
     Private ReadOnly _repository As CalendarRepository
 
     Private _calendars As ICollection(Of PayCalendar)
@@ -15,6 +13,8 @@ Public Class CalendarsForm
     Private _payrates As ICollection(Of PayRate)
 
     Private _currentCalendar As PayCalendar
+
+    Private _currentMonth As CalendarMonth
 
     Private WithEvents _editor As CalendarDayEditor
 
@@ -27,7 +27,11 @@ Public Class CalendarsForm
     End Sub
 
     Public Sub InitializeView()
+        ' Initialize CalendarsDataGridView
         CalendarsDataGridView.AutoGenerateColumns = False
+
+        ' Initialize CalendarDayEditor
+        _editor.Hide()
         Controls.Add(_editor)
     End Sub
 
@@ -47,43 +51,37 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Function LoadPayrates() As Task
-        _payrates = Await _repository.GetPayRates(_currentCalendar.RowID.Value, New Date(2020, 1, 1), New Date(2020, 1, 31))
+        _payrates = Await _repository.GetPayRates(_currentCalendar.RowID.Value, 2020)
     End Function
 
     Private Sub DisplayRates()
         If _payrates Is Nothing Then Return
 
-        DaysTableLayout.SuspendLayout()
-        DaysTableLayout.Controls.Clear()
+        Dim payratesByMonths = _payrates.
+            GroupBy(Function(p) p.Date.Month).
+            Reverse()
 
-        Dim firstDay = _payrates.First()
-        Dim monthOffset = CInt(firstDay.Date.DayOfWeek)
+        CalendarPanel.SuspendLayout()
+        CalendarPanel.Controls.Clear()
 
-        For Each payrate In _payrates
-            Dim column = CInt(payrate.Date.DayOfWeek)
-            Dim row = CInt(Math.Ceiling((payrate.Date.Day + monthOffset) / DaysInWeek) - 1)
+        For Each payratesByMonth In payratesByMonths
+            Dim calendarMonthComponent = New CalendarMonth()
+            AddHandler calendarMonthComponent.DayClicked, AddressOf DaysTableLayout_Click
 
-            Dim dayControl = New CalendarDay()
+            calendarMonthComponent.Dock = DockStyle.Top
+            calendarMonthComponent.Payrates = payratesByMonth.ToList()
 
-            AddHandler dayControl.Click, AddressOf DaysTableLayout_Click
-            dayControl.PayRate = payrate
-            dayControl.Dock = DockStyle.Fill
-
-            DaysTableLayout.Controls.Add(dayControl, column, row)
+            CalendarPanel.Controls.Add(calendarMonthComponent)
         Next
 
-        DaysTableLayout.ResumeLayout()
+        CalendarPanel.ResumeLayout()
     End Sub
 
-    Private Sub DaysTableLayout_Click(sender As Object, e As EventArgs) Handles DaysTableLayout.Click
-        If Not TypeOf sender Is CalendarDay Then Return
-
-        Dim control = DirectCast(sender, CalendarDay)
-        Dim payrate = control.PayRate
-
+    Private Sub DaysTableLayout_Click(sender As CalendarMonth, payrate As PayRate)
         Dim p = PointToClient(MousePosition)
 
-        _editor.ChangePayRate(control.PayRate)
+        _currentMonth = sender
+        _editor.ChangePayRate(payrate)
         _editor.Top = p.Y
         _editor.Left = p.X
         _editor.BringToFront()
@@ -91,15 +89,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub Editor_Ok(payrate As PayRate) Handles _editor.Ok
-        For Each control In DaysTableLayout.Controls
-            Dim calendarDayControl = DirectCast(control, CalendarDay)
-
-            If payrate.RowID = calendarDayControl.PayRate.RowID Then
-                calendarDayControl.RenderText()
-            End If
-        Next
-
-        Debug.WriteLine("Ok")
+        _currentMonth.RefreshData()
     End Sub
 
 End Class

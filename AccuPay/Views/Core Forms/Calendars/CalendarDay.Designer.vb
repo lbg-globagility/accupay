@@ -53,6 +53,7 @@ Partial Class CalendarDay
         Me.Controls.Add(Me.DescriptionLabel)
         Me.Controls.Add(Me.DayLabel)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Margin = New System.Windows.Forms.Padding(1)
         Me.Name = "CalendarDay"
         Me.Size = New System.Drawing.Size(64, 40)
         Me.ResumeLayout(False)

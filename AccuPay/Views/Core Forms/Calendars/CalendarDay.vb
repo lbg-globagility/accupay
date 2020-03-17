@@ -6,14 +6,14 @@ Public Class CalendarDay
 
     Public Property PayRate As PayRate
 
-    Public Sub RenderText()
+    Public Sub RefreshData()
         DayLabel.Text = PayRate.Date.Day.ToString()
         DescriptionLabel.Text = PayRate.Description.ToString()
     End Sub
 
     Private Sub CalendarDay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If PayRate Is Nothing Then Return
-        RenderText()
+        RefreshData()
     End Sub
 
 End Class

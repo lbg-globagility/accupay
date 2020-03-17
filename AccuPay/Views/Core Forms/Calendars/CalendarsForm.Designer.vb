@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class CalendarsForm
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,12 +20,11 @@ Partial Class CalendarsForm
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.DaysTableLayout = New System.Windows.Forms.TableLayoutPanel()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -41,15 +40,15 @@ Partial Class CalendarsForm
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.MainPanel = New System.Windows.Forms.Panel()
-        Me.pnlForm = New System.Windows.Forms.Panel()
+        Me.CalendarPanel = New System.Windows.Forms.Panel()
         Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripTextBox()
         Me.ToolStripComboBox1 = New System.Windows.Forms.ToolStripComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -63,30 +62,10 @@ Partial Class CalendarsForm
         Me.ToolStrip12.SuspendLayout()
         Me.pnlSearch.SuspendLayout()
         Me.MainPanel.SuspendLayout()
-        Me.pnlForm.SuspendLayout()
         CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
-        '
-        'DaysTableLayout
-        '
-        Me.DaysTableLayout.BackColor = System.Drawing.Color.White
-        Me.DaysTableLayout.ColumnCount = 7
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.DaysTableLayout.Location = New System.Drawing.Point(0, 0)
-        Me.DaysTableLayout.Name = "DaysTableLayout"
-        Me.DaysTableLayout.RowCount = 1
-        Me.DaysTableLayout.RowStyles.Add(New System.Windows.Forms.RowStyle())
-        Me.DaysTableLayout.Size = New System.Drawing.Size(842, 478)
-        Me.DaysTableLayout.TabIndex = 3
         '
         'ToolStrip12
         '
@@ -216,23 +195,22 @@ Partial Class CalendarsForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.MainPanel.AutoScroll = True
         Me.MainPanel.BackColor = System.Drawing.Color.White
-        Me.MainPanel.Controls.Add(Me.pnlForm)
+        Me.MainPanel.Controls.Add(Me.CalendarPanel)
         Me.MainPanel.Controls.Add(Me.ToolStrip12)
         Me.MainPanel.Location = New System.Drawing.Point(375, 33)
         Me.MainPanel.Name = "MainPanel"
         Me.MainPanel.Size = New System.Drawing.Size(842, 503)
         Me.MainPanel.TabIndex = 156
         '
-        'pnlForm
+        'CalendarPanel
         '
-        Me.pnlForm.AutoScroll = True
-        Me.pnlForm.BackColor = System.Drawing.Color.Transparent
-        Me.pnlForm.Controls.Add(Me.DaysTableLayout)
-        Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.pnlForm.Location = New System.Drawing.Point(0, 25)
-        Me.pnlForm.Name = "pnlForm"
-        Me.pnlForm.Size = New System.Drawing.Size(842, 478)
-        Me.pnlForm.TabIndex = 509
+        Me.CalendarPanel.AutoScroll = True
+        Me.CalendarPanel.BackColor = System.Drawing.Color.Transparent
+        Me.CalendarPanel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.CalendarPanel.Location = New System.Drawing.Point(0, 25)
+        Me.CalendarPanel.Name = "CalendarPanel"
+        Me.CalendarPanel.Size = New System.Drawing.Size(842, 478)
+        Me.CalendarPanel.TabIndex = 509
         '
         'CalendarsDataGridView
         '
@@ -247,14 +225,14 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.ColumnHeadersHeight = 34
         Me.CalendarsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.CalendarsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column_Name})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.CalendarsDataGridView.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.CalendarsDataGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.CalendarsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.CalendarsDataGridView.Location = New System.Drawing.Point(8, 96)
         Me.CalendarsDataGridView.MultiSelect = False
@@ -264,13 +242,6 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.CalendarsDataGridView.Size = New System.Drawing.Size(352, 439)
         Me.CalendarsDataGridView.TabIndex = 2
-        '
-        'Column_Name
-        '
-        Me.Column_Name.DataPropertyName = "Name"
-        Me.Column_Name.HeaderText = "Calendar"
-        Me.Column_Name.Name = "Column_Name"
-        Me.Column_Name.ReadOnly = True
         '
         'ContextMenuStrip1
         '
@@ -301,6 +272,13 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 103
+        '
+        'Column_Name
+        '
+        Me.Column_Name.DataPropertyName = "Name"
+        Me.Column_Name.HeaderText = "Calendar"
+        Me.Column_Name.Name = "Column_Name"
+        Me.Column_Name.ReadOnly = True
         '
         'DataGridViewTextBoxColumn2
         '
@@ -348,10 +326,10 @@ Partial Class CalendarsForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "N2"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle2.Format = "N2"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle2
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -406,7 +384,6 @@ Partial Class CalendarsForm
         Me.pnlSearch.PerformLayout()
         Me.MainPanel.ResumeLayout(False)
         Me.MainPanel.PerformLayout()
-        Me.pnlForm.ResumeLayout(False)
         CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ContextMenuStrip1.ResumeLayout(False)
@@ -414,8 +391,6 @@ Partial Class CalendarsForm
         Me.ResumeLayout(False)
 
     End Sub
-
-    Friend WithEvents DaysTableLayout As TableLayoutPanel
     Friend WithEvents ToolStrip12 As ToolStrip
     Friend WithEvents NewToolStripButton As ToolStripButton
     Friend WithEvents SaveToolStripButton As ToolStripButton
@@ -440,7 +415,7 @@ Partial Class CalendarsForm
     Friend WithEvents lblSearch As Label
     Friend WithEvents FormTitleLabel As Label
     Friend WithEvents MainPanel As Panel
-    Friend WithEvents pnlForm As Panel
+    Friend WithEvents CalendarPanel As Panel
     Friend WithEvents CalendarsDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
