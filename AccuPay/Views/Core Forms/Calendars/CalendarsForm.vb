@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Repository
@@ -16,11 +17,14 @@ Public Class CalendarsForm
 
     Private _currentMonth As CalendarMonth
 
-    Private WithEvents _editor As CalendarDayEditor
+    Private WithEvents Editor As CalendarDayEditor
+
+    Private ReadOnly _changedPayrates As ICollection(Of PayRate)
 
     Public Sub New()
         _repository = New CalendarRepository()
-        _editor = New CalendarDayEditor()
+        Editor = New CalendarDayEditor()
+        _changedPayrates = New Collection(Of PayRate)
 
         InitializeComponent()
         InitializeView()
@@ -31,8 +35,8 @@ Public Class CalendarsForm
         CalendarsDataGridView.AutoGenerateColumns = False
 
         ' Initialize CalendarDayEditor
-        _editor.Hide()
-        Controls.Add(_editor)
+        Editor.Hide()
+        Controls.Add(Editor)
     End Sub
 
     Private Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -81,15 +85,33 @@ Public Class CalendarsForm
         Dim p = PointToClient(MousePosition)
 
         _currentMonth = sender
-        _editor.ChangePayRate(payrate)
-        _editor.Top = p.Y
-        _editor.Left = p.X
-        _editor.BringToFront()
-        _editor.Show()
+        Editor.ChangePayRate(payrate)
+        Editor.Top = p.Y
+        Editor.Left = p.X
+        Editor.BringToFront()
+        Editor.Show()
     End Sub
 
-    Private Sub Editor_Ok(payrate As PayRate) Handles _editor.Ok
+    Private Sub Editor_Ok(payrate As PayRate) Handles Editor.Ok
+        _changedPayrates.Add(payrate)
         _currentMonth.RefreshData()
+    End Sub
+
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
+        Using context = New PayrollContext()
+            For Each payrate In _changedPayrates
+                context.Entry(payrate).State = Microsoft.EntityFrameworkCore.EntityState.Modified
+            Next
+
+            Await context.SaveChangesAsync()
+            _changedPayrates.Clear()
+        End Using
+    End Sub
+
+    Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
+        _changedPayrates.Clear()
+        Await LoadPayrates()
+        DisplayRates()
     End Sub
 
 End Class
