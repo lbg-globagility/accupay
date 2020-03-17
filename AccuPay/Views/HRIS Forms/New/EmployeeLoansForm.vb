@@ -12,7 +12,7 @@ Public Class EmployeeLoansForm
 
     Dim sys_ownr As New SystemOwner
 
-    Private if_sysowner_is_benchmark As Boolean
+    Private sysowner_is_benchmark As Boolean
 
     Private _employeeRepository As New EmployeeRepository
     Private _productRepository As New ProductRepository
@@ -39,7 +39,16 @@ Public Class EmployeeLoansForm
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        If sysowner_is_benchmark Then
+
+            RemoveHandler searchTextBox.TextChanged, AddressOf searchTextBox_TextChanged
+            AddHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
+        Else
+            AddHandler searchTextBox.TextChanged, AddressOf searchTextBox_TextChanged
+            RemoveHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
+        End If
 
         DetailsTabControl.Enabled = False
 
@@ -56,7 +65,7 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
+    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(searchTextBox.Text.ToLower())
@@ -64,6 +73,19 @@ Public Class EmployeeLoansForm
                                                Return True
                                            End Function)
 
+    End Sub
+
+    Private Sub SearchTextBox_KeyPress(sender As Object, e As KeyPressEventArgs)
+        Dim e_asc = Asc(e.KeyChar)
+
+        If e_asc = 13 Then
+
+            _textBoxDelayedAction.ProcessAsync(Async Function()
+                                                   Await FilterEmployees(searchTextBox.Text.ToLower())
+
+                                                   Return True
+                                               End Function)
+        End If
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
@@ -600,7 +622,7 @@ Public Class EmployeeLoansForm
 
     Private Async Function LoadLoanTypes() As Task
 
-        If if_sysowner_is_benchmark Then
+        If sysowner_is_benchmark Then
 
             Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
         Else

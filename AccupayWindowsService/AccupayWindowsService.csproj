@@ -62,7 +62,6 @@
     <Compile Include="EmailService.Designer.cs">
       <DependentUpon>EmailService.cs</DependentUpon>
     </Compile>
-    <Compile Include="PayPeriod.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProjectInstaller.cs">
       <SubType>Component</SubType>

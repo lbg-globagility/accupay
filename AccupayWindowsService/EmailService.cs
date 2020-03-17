@@ -19,9 +19,13 @@ namespace AccupayWindowsService
     // 6. Then install the service installUtil {path to .exe}\AccupayWindowsService.exe` ex. installUtil C:\AccupayWindowsService\AccupayWindowsService.exe
     // 7. Make sure the service is started.
 
-    //  C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    //  TYPE THE COMMANDS BELOW ON COMMAND PROMPT AS ADMINISTRATOR TO INSTALL (Only use the command if there is already an existing AccupayWindowsService installed.)
+    //  cd C:\Windows\Microsoft.NET\Framework\v4.0.30319
     //  installUtil /u E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
     //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+    //
+    // Dont forget to start the service!
+
     public partial class EmailService : ServiceBase
     {
         private Timer _emailTimer;
