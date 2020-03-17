@@ -1,0 +1,64 @@
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET NAMES utf8 */;
+/*!50503 SET NAMES utf8mb4 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+
+DELIMITER //
+CREATE PROCEDURE `migrate_payrates_to_calendar`()
+BEGIN
+
+DECLARE i INT DEFAULT 0;
+
+DECLARE EXIT HANDLER FOR SQLEXCEPTION
+BEGIN
+	ROLLBACK;
+	RESIGNAL;
+END;
+
+START TRANSACTION;
+
+SET @numOfOrganizations = (
+		SELECT COUNT(*)
+		FROM (
+			SELECT p.OrganizationID
+			FROM payrate p
+			GROUP BY p.OrganizationID
+		) p
+	);
+
+WHILE i < @numOfOrganizations DO
+	
+	SET @organizationID = (
+		SELECT p.OrganizationID
+		FROM payrate p
+		GROUP BY p.OrganizationID
+		ORDER BY p.OrganizationID
+		LIMIT i, 1);
+	
+	INSERT INTO calendar (`Name`)
+	SELECT o.`Name`
+	FROM organization o
+	WHERE o.RowID = @organizationID;
+	
+	SET @calendarID = LAST_INSERT_ID();
+	
+	INSERT INTO calendarday (`CalendarID`, `DayTypeID`, `Date`, `Description`)
+	SELECT @calendarID, d.`RowID`, p.`Date`, p.`Description`
+	FROM payrate p
+	INNER JOIN daytype d
+		ON d.Name = p.PayType
+	WHERE p.OrganizationID = @organizationID;
+			
+	SET i = i + 1;
+
+END WHILE;
+
+COMMIT;
+
+END//
+DELIMITER ;
+
+/*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
+/*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
