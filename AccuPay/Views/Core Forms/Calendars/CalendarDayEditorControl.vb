@@ -3,7 +3,7 @@
 Imports System.Collections.ObjectModel
 Imports AccuPay.Entity
 
-Public Class CalendarDayEditor
+Public Class CalendarDayEditorControl
 
     Public Event Ok(payrate As PayRate)
 

@@ -2,7 +2,7 @@
 
 Imports AccuPay.Entity
 
-Public Class CalendarDay
+Public Class CalendarDayControl
 
     Public Property PayRate As PayRate
 

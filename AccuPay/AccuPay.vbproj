@@ -423,16 +423,16 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
-    <Compile Include="Views\Core Forms\Calendars\CalendarDay.Designer.vb">
-      <DependentUpon>CalendarDay.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
+      <DependentUpon>CalendarDayControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\Calendars\CalendarDay.vb">
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditor.Designer.vb">
-      <DependentUpon>CalendarDayEditor.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditorControl.Designer.vb">
+      <DependentUpon>CalendarDayEditorControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditor.vb">
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditorControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\CalendarsForm.Designer.vb">
@@ -441,10 +441,10 @@
     <Compile Include="Views\Core Forms\Calendars\CalendarsForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\Calendars\CalendarMonth.Designer.vb">
-      <DependentUpon>CalendarMonth.vb</DependentUpon>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthControl.Designer.vb">
+      <DependentUpon>CalendarMonthControl.vb</DependentUpon>
     </Compile>
-    <Compile Include="Views\Core Forms\Calendars\CalendarMonth.vb">
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.Designer.vb">
@@ -1927,17 +1927,17 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDay.resx">
-      <DependentUpon>CalendarDay.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayControl.resx">
+      <DependentUpon>CalendarDayControl.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayEditor.resx">
-      <DependentUpon>CalendarDayEditor.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayEditorControl.resx">
+      <DependentUpon>CalendarDayEditorControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarsForm.resx">
       <DependentUpon>CalendarsForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonth.resx">
-      <DependentUpon>CalendarMonth.vb</DependentUpon>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonthControl.resx">
+      <DependentUpon>CalendarMonthControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>

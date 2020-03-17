@@ -15,15 +15,15 @@ Public Class CalendarsForm
 
     Private _currentCalendar As PayCalendar
 
-    Private _currentMonth As CalendarMonth
+    Private _currentMonth As CalendarMonthControl
 
-    Private WithEvents Editor As CalendarDayEditor
+    Private WithEvents Editor As CalendarDayEditorControl
 
     Private ReadOnly _changedPayrates As ICollection(Of PayRate)
 
     Public Sub New()
         _repository = New CalendarRepository()
-        Editor = New CalendarDayEditor()
+        Editor = New CalendarDayEditorControl()
         _changedPayrates = New Collection(Of PayRate)
 
         InitializeComponent()
@@ -69,7 +69,7 @@ Public Class CalendarsForm
         CalendarPanel.Controls.Clear()
 
         For Each payratesByMonth In payratesByMonths
-            Dim calendarMonthComponent = New CalendarMonth()
+            Dim calendarMonthComponent = New CalendarMonthControl()
             AddHandler calendarMonthComponent.DayClicked, AddressOf DaysTableLayout_Click
 
             calendarMonthComponent.Dock = DockStyle.Top
@@ -81,7 +81,7 @@ Public Class CalendarsForm
         CalendarPanel.ResumeLayout()
     End Sub
 
-    Private Sub DaysTableLayout_Click(sender As CalendarMonth, payrate As PayRate)
+    Private Sub DaysTableLayout_Click(sender As CalendarMonthControl, payrate As PayRate)
         Dim p = PointToClient(MousePosition)
 
         _currentMonth = sender
