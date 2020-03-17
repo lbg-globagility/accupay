@@ -356,6 +356,7 @@
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
+    <Compile Include="Domain\Calendars\PayCalendar.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
@@ -413,6 +414,7 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Repositories\AllowanceRepository.vb" />
+    <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
@@ -421,6 +423,24 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
+    <Compile Include="Views\Core Forms\Calendars\CalendarDay.Designer.vb">
+      <DependentUpon>CalendarDay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDay.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditor.Designer.vb">
+      <DependentUpon>CalendarDayEditor.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditor.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarsForm.Designer.vb">
+      <DependentUpon>CalendarsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </Compile>
@@ -1894,6 +1914,15 @@
     <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDay.resx">
+      <DependentUpon>CalendarDay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayEditor.resx">
+      <DependentUpon>CalendarDayEditor.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarsForm.resx">
+      <DependentUpon>CalendarsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>

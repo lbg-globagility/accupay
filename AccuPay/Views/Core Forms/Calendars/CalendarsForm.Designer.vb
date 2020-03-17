@@ -25,7 +25,7 @@ Partial Class CalendarsForm
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.DaysTableLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -40,10 +40,15 @@ Partial Class CalendarsForm
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
-        Me.pnlMain = New System.Windows.Forms.Panel()
+        Me.MainPanel = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
-        Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
-        Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.AToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripTextBox()
+        Me.ToolStripComboBox1 = New System.Windows.Forms.ToolStripComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -55,29 +60,33 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip12.SuspendLayout()
         Me.pnlSearch.SuspendLayout()
-        Me.pnlMain.SuspendLayout()
+        Me.MainPanel.SuspendLayout()
         Me.pnlForm.SuspendLayout()
-        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.ContextMenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
-        'EmployeeInfoTabLayout
+        'DaysTableLayout
         '
-        Me.EmployeeInfoTabLayout.BackColor = System.Drawing.Color.White
-        Me.EmployeeInfoTabLayout.ColumnCount = 2
-        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121.0!))
-        Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 861.0!))
-        Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(88, 128)
-        Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
-        Me.EmployeeInfoTabLayout.RowCount = 2
-        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(555, 88)
-        Me.EmployeeInfoTabLayout.TabIndex = 3
+        Me.DaysTableLayout.BackColor = System.Drawing.Color.White
+        Me.DaysTableLayout.ColumnCount = 7
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
+        Me.DaysTableLayout.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DaysTableLayout.Location = New System.Drawing.Point(0, 0)
+        Me.DaysTableLayout.Name = "DaysTableLayout"
+        Me.DaysTableLayout.RowCount = 1
+        Me.DaysTableLayout.RowStyles.Add(New System.Windows.Forms.RowStyle())
+        Me.DaysTableLayout.Size = New System.Drawing.Size(842, 478)
+        Me.DaysTableLayout.TabIndex = 3
         '
         'ToolStrip12
         '
@@ -197,57 +206,47 @@ Partial Class CalendarsForm
         Me.FormTitleLabel.Name = "FormTitleLabel"
         Me.FormTitleLabel.Size = New System.Drawing.Size(1229, 24)
         Me.FormTitleLabel.TabIndex = 152
-        Me.FormTitleLabel.Text = "Employee Leaves"
+        Me.FormTitleLabel.Text = "Calendars"
         Me.FormTitleLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'pnlMain
+        'MainPanel
         '
-        Me.pnlMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.MainPanel.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pnlMain.AutoScroll = True
-        Me.pnlMain.BackColor = System.Drawing.Color.White
-        Me.pnlMain.Controls.Add(Me.pnlForm)
-        Me.pnlMain.Controls.Add(Me.ToolStrip12)
-        Me.pnlMain.Location = New System.Drawing.Point(375, 33)
-        Me.pnlMain.Name = "pnlMain"
-        Me.pnlMain.Size = New System.Drawing.Size(842, 503)
-        Me.pnlMain.TabIndex = 156
+        Me.MainPanel.AutoScroll = True
+        Me.MainPanel.BackColor = System.Drawing.Color.White
+        Me.MainPanel.Controls.Add(Me.pnlForm)
+        Me.MainPanel.Controls.Add(Me.ToolStrip12)
+        Me.MainPanel.Location = New System.Drawing.Point(375, 33)
+        Me.MainPanel.Name = "MainPanel"
+        Me.MainPanel.Size = New System.Drawing.Size(842, 503)
+        Me.MainPanel.TabIndex = 156
         '
         'pnlForm
         '
         Me.pnlForm.AutoScroll = True
         Me.pnlForm.BackColor = System.Drawing.Color.Transparent
-        Me.pnlForm.Controls.Add(Me.EmployeeInfoTabLayout)
+        Me.pnlForm.Controls.Add(Me.DaysTableLayout)
         Me.pnlForm.Dock = System.Windows.Forms.DockStyle.Fill
         Me.pnlForm.Location = New System.Drawing.Point(0, 25)
         Me.pnlForm.Name = "pnlForm"
         Me.pnlForm.Size = New System.Drawing.Size(842, 478)
         Me.pnlForm.TabIndex = 509
         '
-        'ShowAllCheckBox
+        'CalendarsDataGridView
         '
-        Me.ShowAllCheckBox.AutoSize = True
-        Me.ShowAllCheckBox.Location = New System.Drawing.Point(8, 97)
-        Me.ShowAllCheckBox.Name = "ShowAllCheckBox"
-        Me.ShowAllCheckBox.Size = New System.Drawing.Size(128, 17)
-        Me.ShowAllCheckBox.TabIndex = 1
-        Me.ShowAllCheckBox.Text = "Show All Employees"
-        Me.ShowAllCheckBox.UseVisualStyleBackColor = True
-        '
-        'EmployeesDataGridView
-        '
-        Me.EmployeesDataGridView.AllowUserToAddRows = False
-        Me.EmployeesDataGridView.AllowUserToDeleteRows = False
-        Me.EmployeesDataGridView.AllowUserToOrderColumns = True
-        Me.EmployeesDataGridView.AllowUserToResizeRows = False
-        Me.EmployeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.CalendarsDataGridView.AllowUserToAddRows = False
+        Me.CalendarsDataGridView.AllowUserToDeleteRows = False
+        Me.CalendarsDataGridView.AllowUserToOrderColumns = True
+        Me.CalendarsDataGridView.AllowUserToResizeRows = False
+        Me.CalendarsDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.EmployeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.EmployeesDataGridView.BackgroundColor = System.Drawing.Color.White
-        Me.EmployeesDataGridView.ColumnHeadersHeight = 34
-        Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID})
+        Me.CalendarsDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.CalendarsDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.CalendarsDataGridView.ColumnHeadersHeight = 34
+        Me.CalendarsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.CalendarsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column_Name})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -255,16 +254,46 @@ Partial Class CalendarsForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
-        Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
-        Me.EmployeesDataGridView.MultiSelect = False
-        Me.EmployeesDataGridView.Name = "EmployeesDataGridView"
-        Me.EmployeesDataGridView.ReadOnly = True
-        Me.EmployeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
-        Me.EmployeesDataGridView.TabIndex = 2
+        Me.CalendarsDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.CalendarsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.CalendarsDataGridView.Location = New System.Drawing.Point(8, 96)
+        Me.CalendarsDataGridView.MultiSelect = False
+        Me.CalendarsDataGridView.Name = "CalendarsDataGridView"
+        Me.CalendarsDataGridView.ReadOnly = True
+        Me.CalendarsDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.CalendarsDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.CalendarsDataGridView.Size = New System.Drawing.Size(352, 439)
+        Me.CalendarsDataGridView.TabIndex = 2
+        '
+        'Column_Name
+        '
+        Me.Column_Name.DataPropertyName = "Name"
+        Me.Column_Name.HeaderText = "Calendar"
+        Me.Column_Name.Name = "Column_Name"
+        Me.Column_Name.ReadOnly = True
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AToolStripMenuItem, Me.ToolStripTextBox1, Me.ToolStripComboBox1})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(182, 78)
+        '
+        'AToolStripMenuItem
+        '
+        Me.AToolStripMenuItem.Name = "AToolStripMenuItem"
+        Me.AToolStripMenuItem.Size = New System.Drawing.Size(181, 22)
+        Me.AToolStripMenuItem.Text = "A"
+        '
+        'ToolStripTextBox1
+        '
+        Me.ToolStripTextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.ToolStripTextBox1.Name = "ToolStripTextBox1"
+        Me.ToolStripTextBox1.Size = New System.Drawing.Size(100, 23)
+        '
+        'ToolStripComboBox1
+        '
+        Me.ToolStripComboBox1.Name = "ToolStripComboBox1"
+        Me.ToolStripComboBox1.Size = New System.Drawing.Size(121, 23)
         '
         'DataGridViewTextBoxColumn1
         '
@@ -358,13 +387,6 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn11.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
         '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Calendar"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
         'CalendarsForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -373,9 +395,8 @@ Partial Class CalendarsForm
         Me.ClientSize = New System.Drawing.Size(1229, 547)
         Me.Controls.Add(Me.pnlSearch)
         Me.Controls.Add(Me.FormTitleLabel)
-        Me.Controls.Add(Me.pnlMain)
-        Me.Controls.Add(Me.ShowAllCheckBox)
-        Me.Controls.Add(Me.EmployeesDataGridView)
+        Me.Controls.Add(Me.MainPanel)
+        Me.Controls.Add(Me.CalendarsDataGridView)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.Name = "CalendarsForm"
@@ -384,17 +405,18 @@ Partial Class CalendarsForm
         Me.ToolStrip12.PerformLayout()
         Me.pnlSearch.ResumeLayout(False)
         Me.pnlSearch.PerformLayout()
-        Me.pnlMain.ResumeLayout(False)
-        Me.pnlMain.PerformLayout()
+        Me.MainPanel.ResumeLayout(False)
+        Me.MainPanel.PerformLayout()
         Me.pnlForm.ResumeLayout(False)
-        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.LeaveListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.ContextMenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
-        Me.PerformLayout()
 
     End Sub
 
-    Friend WithEvents EmployeeInfoTabLayout As TableLayoutPanel
+    Friend WithEvents DaysTableLayout As TableLayoutPanel
     Friend WithEvents ToolStrip12 As ToolStrip
     Friend WithEvents NewToolStripButton As ToolStripButton
     Friend WithEvents SaveToolStripButton As ToolStripButton
@@ -418,12 +440,15 @@ Partial Class CalendarsForm
     Friend WithEvents SearchTextBox As TextBox
     Friend WithEvents lblSearch As Label
     Friend WithEvents FormTitleLabel As Label
-    Friend WithEvents pnlMain As Panel
+    Friend WithEvents MainPanel As Panel
     Friend WithEvents pnlForm As Panel
-    Friend WithEvents ShowAllCheckBox As CheckBox
-    Friend WithEvents EmployeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents CalendarsDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
     Friend WithEvents LeaveListBindingSource As BindingSource
-    Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
+    Friend WithEvents Column_Name As DataGridViewTextBoxColumn
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents AToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripTextBox1 As ToolStripTextBox
+    Friend WithEvents ToolStripComboBox1 As ToolStripComboBox
 End Class
