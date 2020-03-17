@@ -42,10 +42,10 @@ Public Class OfficialBusiness
     Public Property EndTime As TimeSpan?
 
     <Column("OffBusStartDate")>
-    Public Property StartDate As Date
+    Public Property StartDate As Date?
 
     <Column("OffBusEndDate")>
-    Public Property EndDate As Date
+    Public Property EndDate As Date?
 
     Public Property Reason As String
 
@@ -54,7 +54,7 @@ Public Class OfficialBusiness
     <NotMapped>
     Public Property StartTimeFull As Date?
         Get
-            Return If(StartTime Is Nothing, Nothing, StartDate.Date.Add(StartTime.Value))
+            Return If(StartTime Is Nothing, Nothing, If(StartDate Is Nothing, Nothing, StartDate.Value.Date.Add(StartTime.Value)))
         End Get
         Set(value As Date?)
             StartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
@@ -64,7 +64,7 @@ Public Class OfficialBusiness
     <NotMapped>
     Public Property EndTimeFull As Date?
         Get
-            Return If(EndTime Is Nothing, Nothing, EndDate.Date.Add(EndTime.Value))
+            Return If(EndTime Is Nothing, Nothing, If(EndDate Is Nothing, Nothing, EndDate.Value.Date.Add(EndTime.Value)))
         End Get
         Set(value As Date?)
             EndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
@@ -73,17 +73,22 @@ Public Class OfficialBusiness
 
     Public Function Validate() As String
 
-        If StartTime Is Nothing Then
+        If StartDate Is Nothing AndAlso EndDate Is Nothing Then
 
-            Return "Start Time cannot be empty."
+            Return "Start Date and End Date cannot be both empty."
         End If
 
-        If EndTime Is Nothing Then
+        If StartDate IsNot Nothing AndAlso StartTime Is Nothing Then
 
-            Return "End Time cannot be empty."
+            Return "Start Time cannot be empty if Start Date has value."
         End If
 
-        If StartDate.Date.Add(StartTime.Value.StripSeconds) >= EndDate.Date.Add(EndTime.Value.StripSeconds) Then
+        If EndDate IsNot Nothing AndAlso EndTime Is Nothing Then
+
+            Return "End Time cannot be empty if End Date has value."
+        End If
+
+        If StartDate IsNot Nothing AndAlso EndDate IsNot Nothing AndAlso StartDate.Value.Date.Add(StartTime.Value.StripSeconds) >= EndDate.Value.Date.Add(EndTime.Value.StripSeconds) Then
 
             Return "Start date and time cannot be greater than or equal to End date and time."
 

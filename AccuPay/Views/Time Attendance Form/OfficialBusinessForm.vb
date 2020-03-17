@@ -203,8 +203,8 @@ Public Class OfficialBusinessForm
         Dim hasChanged = False
 
         If _
-            newOfficialBusiness.StartDate.Date <> oldOfficialBusiness.StartDate.Date OrElse
-            newOfficialBusiness.EndDate.Date <> oldOfficialBusiness.EndDate.Date OrElse
+            Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.StartDate, oldOfficialBusiness.StartDate) OrElse
+            Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.EndDate, oldOfficialBusiness.EndDate) OrElse
             Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.StartTime, oldOfficialBusiness.StartTime) OrElse
             newOfficialBusiness.StartTime.StripSeconds <> oldOfficialBusiness.StartTime.StripSeconds OrElse
             Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.EndTime, oldOfficialBusiness.EndTime) OrElse
@@ -245,10 +245,10 @@ Public Class OfficialBusinessForm
         Me._currentOfficialBusiness = officialBusiness
 
         StartDatePicker.DataBindings.Clear()
-        StartDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndDatePicker.DataBindings.Clear()
-        EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         StartTimePicker.DataBindings.Clear()
         StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)

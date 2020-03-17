@@ -34,16 +34,12 @@ Partial Class AddOfficialBusinessForm
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.EndDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
         Me.Label168 = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.StartDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label167 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -56,6 +52,10 @@ Partial Class AddOfficialBusinessForm
         Me.btnAddAndClose = New System.Windows.Forms.Button()
         Me.CancelButton = New System.Windows.Forms.Button()
         Me.btnAddAndNew = New System.Windows.Forms.Button()
+        Me.StartDatePicker = New AccuPay.NullableDatePicker()
+        Me.EndDatePicker = New AccuPay.NullableDatePicker()
+        Me.StartTimePicker = New AccuPay.NullableTimePicker()
+        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
@@ -132,6 +132,8 @@ Partial Class AddOfficialBusinessForm
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
@@ -139,9 +141,7 @@ Partial Class AddOfficialBusinessForm
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
-        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
         Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
@@ -239,17 +239,6 @@ Partial Class AddOfficialBusinessForm
         Me.Label5.TabIndex = 512
         Me.Label5.Text = "Reason"
         '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
-        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.ShowUpDown = True
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 7
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -259,17 +248,6 @@ Partial Class AddOfficialBusinessForm
         Me.Label4.Size = New System.Drawing.Size(52, 13)
         Me.Label4.TabIndex = 510
         Me.Label4.Text = "End time"
-        '
-        'StartTimePicker
-        '
-        Me.StartTimePicker.CustomFormat = "  hh:mm tt"
-        Me.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
-        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartTimePicker.Name = "StartTimePicker"
-        Me.StartTimePicker.ShowUpDown = True
-        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartTimePicker.TabIndex = 6
         '
         'Panel3
         '
@@ -281,14 +259,6 @@ Partial Class AddOfficialBusinessForm
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(160, 32)
         Me.Panel3.TabIndex = 5
-        '
-        'EndDatePicker
-        '
-        Me.EndDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
-        Me.EndDatePicker.Name = "EndDatePicker"
-        Me.EndDatePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndDatePicker.TabIndex = 5
         '
         'Label1
         '
@@ -322,22 +292,14 @@ Partial Class AddOfficialBusinessForm
         '
         'Panel2
         '
-        Me.Panel2.Controls.Add(Me.StartDatePicker)
         Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.Controls.Add(Me.StartDatePicker)
         Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel2.Location = New System.Drawing.Point(0, 16)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(160, 32)
         Me.Panel2.TabIndex = 4
-        '
-        'StartDatePicker
-        '
-        Me.StartDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.StartDatePicker.Location = New System.Drawing.Point(20, 3)
-        Me.StartDatePicker.Name = "StartDatePicker"
-        Me.StartDatePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartDatePicker.TabIndex = 4
         '
         'Label3
         '
@@ -462,6 +424,40 @@ Partial Class AddOfficialBusinessForm
         Me.btnAddAndNew.Text = "Add && &New"
         Me.btnAddAndNew.UseVisualStyleBackColor = True
         '
+        'StartDatePicker
+        '
+        Me.StartDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.StartDatePicker.Name = "StartDatePicker"
+        Me.StartDatePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartDatePicker.TabIndex = 13
+        Me.StartDatePicker.Value = New Date(2020, 3, 17, 14, 14, 59, 359)
+        '
+        'EndDatePicker
+        '
+        Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndDatePicker.Name = "EndDatePicker"
+        Me.EndDatePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndDatePicker.TabIndex = 14
+        Me.EndDatePicker.Value = New Date(2020, 3, 17, 14, 14, 59, 359)
+        '
+        'StartTimePicker
+        '
+        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
+        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartTimePicker.TabIndex = 13
+        Me.StartTimePicker.Value = New Date(2020, 3, 17, 14, 18, 0, 0)
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
+        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 520
+        Me.EndTimePicker.Value = New Date(2020, 3, 17, 14, 18, 0, 0)
+        '
         'AddOfficialBusinessForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -505,16 +501,12 @@ Partial Class AddOfficialBusinessForm
     Friend WithEvents ReasonTextBox As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
-    Friend WithEvents EndTimePicker As DateTimePicker
     Friend WithEvents Label4 As Label
-    Friend WithEvents StartTimePicker As DateTimePicker
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents EndDatePicker As DateTimePicker
     Friend WithEvents Label1 As Label
     Friend WithEvents Label163 As Label
     Friend WithEvents Label168 As Label
     Friend WithEvents Panel2 As Panel
-    Friend WithEvents StartDatePicker As DateTimePicker
     Friend WithEvents Label3 As Label
     Friend WithEvents Label167 As Label
     Friend WithEvents Panel1 As Panel
@@ -527,4 +519,8 @@ Partial Class AddOfficialBusinessForm
     Friend WithEvents btnAddAndClose As Button
     Friend WithEvents CancelButton As Button
     Friend WithEvents btnAddAndNew As Button
+    Friend WithEvents StartDatePicker As NullableDatePicker
+    Friend WithEvents EndDatePicker As NullableDatePicker
+    Friend WithEvents StartTimePicker As NullableTimePicker
+    Friend WithEvents EndTimePicker As NullableTimePicker
 End Class
