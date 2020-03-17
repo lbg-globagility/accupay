@@ -97,6 +97,11 @@ Public Class CalendarsForm
         _currentMonth.RefreshData()
     End Sub
 
+    Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
+        Dim dialog = New NewCalendarDialog()
+        dialog.ShowDialog()
+    End Sub
+
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         Using context = New PayrollContext()
             For Each payrate In _changedPayrates

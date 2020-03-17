@@ -42,13 +42,13 @@ Partial Class CalendarsForm
         Me.MainPanel = New System.Windows.Forms.Panel()
         Me.CalendarPanel = New System.Windows.Forms.Panel()
         Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.AToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripTextBox()
         Me.ToolStripComboBox1 = New System.Windows.Forms.ToolStripComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -243,13 +243,6 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.Size = New System.Drawing.Size(352, 439)
         Me.CalendarsDataGridView.TabIndex = 2
         '
-        'Column_Name
-        '
-        Me.Column_Name.DataPropertyName = "Name"
-        Me.Column_Name.HeaderText = "Calendar"
-        Me.Column_Name.Name = "Column_Name"
-        Me.Column_Name.ReadOnly = True
-        '
         'ContextMenuStrip1
         '
         Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AToolStripMenuItem, Me.ToolStripTextBox1, Me.ToolStripComboBox1})
@@ -280,6 +273,13 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 103
+        '
+        'Column_Name
+        '
+        Me.Column_Name.DataPropertyName = "Name"
+        Me.Column_Name.HeaderText = "Calendar"
+        Me.Column_Name.Name = "Column_Name"
+        Me.Column_Name.ReadOnly = True
         '
         'DataGridViewTextBoxColumn2
         '

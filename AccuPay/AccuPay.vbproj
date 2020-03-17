@@ -433,12 +433,24 @@
       <DependentUpon>CalendarDayEditor.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\CalendarDayEditor.vb">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\CalendarsForm.Designer.vb">
       <DependentUpon>CalendarsForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\CalendarsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonth.Designer.vb">
+      <DependentUpon>CalendarMonth.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonth.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.Designer.vb">
+      <DependentUpon>NewCalendarDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
@@ -1923,6 +1935,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarsForm.resx">
       <DependentUpon>CalendarsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonth.resx">
+      <DependentUpon>CalendarMonth.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
+      <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
