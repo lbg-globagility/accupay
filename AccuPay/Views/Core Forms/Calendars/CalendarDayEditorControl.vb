@@ -1,43 +1,47 @@
 ﻿Option Strict On
 
-Imports System.Collections.ObjectModel
 Imports AccuPay.Entity
+Imports AccuPay.Repository
 
 Public Class CalendarDayEditorControl
 
-    Public Event Ok(payrate As PayRate)
+    Public Event Ok(payrate As CalendarDay)
 
-    Private _payRate As PayRate
+    Private _calendarDay As CalendarDay
 
-    Private _dayTypes As ICollection(Of String)
+    Private _dayTypes As ICollection(Of DayType)
+
+    Private _repository As DayTypeRepository
 
     Public Sub New()
-        InitializeComponent()
+        _repository = New DayTypeRepository()
 
-        _dayTypes = New Collection(Of String) From {
-            "Regular Day",
-            "Special Non-Working Holiday",
-            "Regular Holiday"
-        }
+        InitializeComponent()
     End Sub
 
     Private Sub CalendarDayEditor_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LoadDayTypes()
+    End Sub
+
+    Private Async Sub LoadDayTypes()
+        _dayTypes = Await _repository.GetAll()
         DayTypesComboBox.DataSource = _dayTypes
     End Sub
 
-    Public Sub ChangePayRate(payrate As PayRate)
-        _payRate = payrate
+    Public Sub ChangePayRate(calendarDay As CalendarDay)
+        _calendarDay = calendarDay
 
-        DayLabel.Text = _payRate.Date.Day.ToString()
-        DescriptionTextBox.Text = _payRate.Description
-        DayTypesComboBox.SelectedItem = _payRate.PayType
+        DayLabel.Text = _calendarDay.Date.Day.ToString()
+        DescriptionTextBox.Text = _calendarDay.Description
+        DayTypesComboBox.SelectedValue = _calendarDay.DayTypeID
     End Sub
 
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
-        _payRate.Description = DescriptionTextBox.Text
-        _payRate.PayType = DirectCast(DayTypesComboBox.SelectedItem, String)
+        _calendarDay.Description = DescriptionTextBox.Text
+        _calendarDay.DayTypeID = DirectCast(DayTypesComboBox.SelectedValue, Integer?)
+        _calendarDay.DayType = DirectCast(DayTypesComboBox.SelectedItem, DayType)
 
-        RaiseEvent Ok(_payRate)
+        RaiseEvent Ok(_calendarDay)
         Hide()
     End Sub
 

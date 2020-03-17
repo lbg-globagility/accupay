@@ -356,6 +356,8 @@
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
+    <Compile Include="Domain\Calendars\CalendarDay.vb" />
+    <Compile Include="Domain\Calendars\DayType.vb" />
     <Compile Include="Domain\Calendars\PayCalendar.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
@@ -416,6 +418,7 @@
     <Compile Include="Repositories\AllowanceRepository.vb" />
     <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
+    <Compile Include="Repositories\DayTypeRepository.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\OfficialBusinessRepository.vb" />

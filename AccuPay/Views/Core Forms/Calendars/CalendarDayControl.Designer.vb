@@ -45,7 +45,7 @@ Partial Class CalendarDayControl
         Me.DescriptionLabel.TabIndex = 1
         Me.DescriptionLabel.Text = "<Description>"
         '
-        'CalendarDay
+        'CalendarDayControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -54,7 +54,7 @@ Partial Class CalendarDayControl
         Me.Controls.Add(Me.DayLabel)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Margin = New System.Windows.Forms.Padding(1)
-        Me.Name = "CalendarDay"
+        Me.Name = "CalendarDayControl"
         Me.Size = New System.Drawing.Size(64, 40)
         Me.ResumeLayout(False)
         Me.PerformLayout()

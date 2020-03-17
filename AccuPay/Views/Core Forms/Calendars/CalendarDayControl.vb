@@ -4,15 +4,15 @@ Imports AccuPay.Entity
 
 Public Class CalendarDayControl
 
-    Public Property PayRate As PayRate
+    Public Property CalendarDay As CalendarDay
 
     Public Sub RefreshData()
-        DayLabel.Text = PayRate.Date.Day.ToString()
-        DescriptionLabel.Text = PayRate.Description.ToString()
+        DayLabel.Text = CalendarDay.Date.Day.ToString()
+        DescriptionLabel.Text = CalendarDay.Description?.ToString()
     End Sub
 
     Private Sub CalendarDay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If PayRate Is Nothing Then Return
+        If CalendarDay Is Nothing Then Return
         RefreshData()
     End Sub
 

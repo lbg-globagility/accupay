@@ -60,12 +60,14 @@ Partial Class CalendarDayEditorControl
         '
         'DayTypesComboBox
         '
+        Me.DayTypesComboBox.DisplayMember = "Name"
         Me.DayTypesComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.DayTypesComboBox.FormattingEnabled = True
         Me.DayTypesComboBox.Location = New System.Drawing.Point(8, 40)
         Me.DayTypesComboBox.Name = "DayTypesComboBox"
         Me.DayTypesComboBox.Size = New System.Drawing.Size(144, 21)
         Me.DayTypesComboBox.TabIndex = 3
+        Me.DayTypesComboBox.ValueMember = "RowID"
         '
         'Label1
         '
@@ -87,7 +89,7 @@ Partial Class CalendarDayEditorControl
         Me.Label2.Text = "Day Type"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopCenter
         '
-        'CalendarDayEditor
+        'CalendarDayEditorControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -100,7 +102,7 @@ Partial Class CalendarDayEditorControl
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.DayLabel)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Name = "CalendarDayEditor"
+        Me.Name = "CalendarDayEditorControl"
         Me.Size = New System.Drawing.Size(160, 160)
         Me.ResumeLayout(False)
         Me.PerformLayout()

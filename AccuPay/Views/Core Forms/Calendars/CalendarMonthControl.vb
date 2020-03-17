@@ -5,9 +5,9 @@ Imports AccuPay.Entity
 
 Public Class CalendarMonthControl
 
-    Public Property Payrates As ICollection(Of PayRate)
+    Public Property CalendarDays As ICollection(Of CalendarDay)
 
-    Public Event DayClicked(sender As CalendarMonthControl, payrate As PayRate)
+    Public Event DayClicked(sender As CalendarMonthControl, calendarDay As CalendarDay)
 
     Private Const DaysPerWeek As Integer = 7
 
@@ -32,17 +32,17 @@ Public Class CalendarMonthControl
             DaysTableLayout.Controls.Add(weekdayHeader)
         Next
 
-        Dim firstDay = Payrates.First()
+        Dim firstDay = CalendarDays.First()
         Dim monthOffset = CInt(firstDay.Date.DayOfWeek)
 
         MonthLabel.Text = firstDay.Date.ToString("MMM")
 
-        For Each payrate In Payrates
-            Dim column = CInt(payrate.Date.DayOfWeek)
-            Dim row = CInt(Math.Ceiling((payrate.Date.Day + monthOffset) / DaysPerWeek))
+        For Each calendarDay In CalendarDays
+            Dim column = CInt(calendarDay.Date.DayOfWeek)
+            Dim row = CInt(Math.Ceiling((calendarDay.Date.Day + monthOffset) / DaysPerWeek))
 
             Dim dayControl = New CalendarDayControl()
-            dayControl.PayRate = payrate
+            dayControl.CalendarDay = calendarDay
             dayControl.Dock = DockStyle.Fill
 
             AddHandler dayControl.Click, AddressOf DaysTableLayout_Click
@@ -71,9 +71,9 @@ Public Class CalendarMonthControl
         If Not TypeOf sender Is CalendarDayControl Then Return
 
         Dim control = DirectCast(sender, CalendarDayControl)
-        Dim payrate = control.PayRate
+        Dim calendarDay = control.CalendarDay
 
-        RaiseEvent DayClicked(Me, payrate)
+        RaiseEvent DayClicked(Me, calendarDay)
     End Sub
 
 End Class

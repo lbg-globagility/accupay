@@ -24,8 +24,6 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
-        Public Property CalendarID As Integer?
-
         Public Property DayBefore As Date?
 
         <Column("Date")>

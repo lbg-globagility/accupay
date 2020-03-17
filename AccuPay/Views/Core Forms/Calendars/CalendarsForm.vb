@@ -7,24 +7,24 @@ Imports AccuPay.Repository
 
 Public Class CalendarsForm
 
+    Private WithEvents Editor As CalendarDayEditorControl
+
     Private ReadOnly _repository As CalendarRepository
 
     Private _calendars As ICollection(Of PayCalendar)
 
-    Private _payrates As ICollection(Of PayRate)
+    Private _calendarDays As ICollection(Of CalendarDay)
 
     Private _currentCalendar As PayCalendar
 
     Private _currentMonth As CalendarMonthControl
 
-    Private WithEvents Editor As CalendarDayEditorControl
-
-    Private ReadOnly _changedPayrates As ICollection(Of PayRate)
+    Private ReadOnly _changedCalendarDays As ICollection(Of CalendarDay)
 
     Public Sub New()
         _repository = New CalendarRepository()
         Editor = New CalendarDayEditorControl()
-        _changedPayrates = New Collection(Of PayRate)
+        _changedCalendarDays = New Collection(Of CalendarDay)
 
         InitializeComponent()
         InitializeView()
@@ -45,8 +45,9 @@ Public Class CalendarsForm
 
     Private Async Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
         _currentCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
-        Await LoadPayrates()
-        DisplayRates()
+        _changedCalendarDays.Clear()
+        Await LoadCalendarDays()
+        DisplayCalendarDays()
     End Sub
 
     Private Async Sub LoadCalendars()
@@ -54,14 +55,14 @@ Public Class CalendarsForm
         CalendarsDataGridView.DataSource = _calendars
     End Sub
 
-    Private Async Function LoadPayrates() As Task
-        _payrates = Await _repository.GetPayRates(_currentCalendar.RowID.Value, 2020)
+    Private Async Function LoadCalendarDays() As Task
+        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, 2020)
     End Function
 
-    Private Sub DisplayRates()
-        If _payrates Is Nothing Then Return
+    Private Sub DisplayCalendarDays()
+        If _calendarDays Is Nothing Then Return
 
-        Dim payratesByMonths = _payrates.
+        Dim payratesByMonths = _calendarDays.
             GroupBy(Function(p) p.Date.Month).
             Reverse()
 
@@ -73,7 +74,7 @@ Public Class CalendarsForm
             AddHandler calendarMonthComponent.DayClicked, AddressOf DaysTableLayout_Click
 
             calendarMonthComponent.Dock = DockStyle.Top
-            calendarMonthComponent.Payrates = payratesByMonth.ToList()
+            calendarMonthComponent.CalendarDays = payratesByMonth.ToList()
 
             CalendarPanel.Controls.Add(calendarMonthComponent)
         Next
@@ -81,19 +82,19 @@ Public Class CalendarsForm
         CalendarPanel.ResumeLayout()
     End Sub
 
-    Private Sub DaysTableLayout_Click(sender As CalendarMonthControl, payrate As PayRate)
+    Private Sub DaysTableLayout_Click(sender As CalendarMonthControl, calendarDay As CalendarDay)
         Dim p = PointToClient(MousePosition)
 
         _currentMonth = sender
-        Editor.ChangePayRate(payrate)
+        Editor.ChangePayRate(calendarDay)
         Editor.Top = p.Y
         Editor.Left = p.X
         Editor.BringToFront()
         Editor.Show()
     End Sub
 
-    Private Sub Editor_Ok(payrate As PayRate) Handles Editor.Ok
-        _changedPayrates.Add(payrate)
+    Private Sub Editor_Ok(calendarDay As CalendarDay) Handles Editor.Ok
+        _changedCalendarDays.Add(calendarDay)
         _currentMonth.RefreshData()
     End Sub
 
@@ -104,19 +105,19 @@ Public Class CalendarsForm
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         Using context = New PayrollContext()
-            For Each payrate In _changedPayrates
-                context.Entry(payrate).State = Microsoft.EntityFrameworkCore.EntityState.Modified
+            For Each calendarDay In _changedCalendarDays
+                context.Entry(calendarDay).State = Microsoft.EntityFrameworkCore.EntityState.Modified
             Next
 
             Await context.SaveChangesAsync()
-            _changedPayrates.Clear()
+            _changedCalendarDays.Clear()
         End Using
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
-        _changedPayrates.Clear()
-        Await LoadPayrates()
-        DisplayRates()
+        _changedCalendarDays.Clear()
+        Await LoadCalendarDays()
+        DisplayCalendarDays()
     End Sub
 
 End Class

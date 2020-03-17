@@ -24,46 +24,48 @@ Namespace Global.AccuPay.Repository
         End Function
 
         ''' <summary>
-        ''' Gets all payrates of a calendar that is part of a given year
+        ''' Gets all days of a calendar that is part of a given year
         ''' </summary>
         ''' <param name="calendarID"></param>
         ''' <param name="year"></param>
         ''' <returns></returns>
-        Public Async Function GetPayRates(calendarID As Integer,
-                                          year As Integer) As Task(Of ICollection(Of PayRate))
+        Public Async Function GetCalendarDays(calendarID As Integer,
+                                              year As Integer) As Task(Of ICollection(Of CalendarDay))
             Dim firstDayOfYear = New Date(year, 1, 1)
             Dim lastDayOfYear = New Date(year, 12, 31)
 
-            Return Await GetPayRates(calendarID, firstDayOfYear, lastDayOfYear)
+            Return Await GetCalendarDays(calendarID, firstDayOfYear, lastDayOfYear)
         End Function
 
         ''' <summary>
-        ''' Gets all payrates of a calendar that is from and to the given date range
+        ''' Gets all days of a calendar that is from and to the given date range
         ''' </summary>
         ''' <param name="calendarID"></param>
         ''' <param name="from"></param>
         ''' <param name="[to]"></param>
         ''' <returns></returns>
-        Public Async Function GetPayRates(calendarID As Integer,
-                                          from As Date,
-                                          [to] As Date) As Task(Of ICollection(Of PayRate))
+        Public Async Function GetCalendarDays(calendarID As Integer,
+                                              from As Date,
+                                              [to] As Date) As Task(Of ICollection(Of CalendarDay))
             Using context = New PayrollContext()
-                Return Await context.PayRates.
-                    Where(Function(p) from <= p.Date AndAlso p.Date <= [to]).
-                    Where(Function(p) p.OrganizationID.Value = calendarID).
+                Return Await context.CalendarDays.
+                    Include(Function(t) t.DayType).
+                    Where(Function(t) from <= t.Date AndAlso t.Date <= [to]).
+                    Where(Function(t) t.CalendarID.Value = calendarID).
                     ToListAsync()
             End Using
         End Function
 
         ''' <summary>
-        ''' Gets all payrates of a calendar
+        ''' Gets all days of a calendar
         ''' </summary>
         ''' <param name="calendarID"></param>
         ''' <returns></returns>
-        Public Async Function GetPayRates(calendarID As Integer) As Task(Of ICollection(Of PayRate))
+        Public Async Function GetCalendarDays(calendarID As Integer) As Task(Of ICollection(Of CalendarDay))
             Using context = New PayrollContext()
-                Return Await context.PayRates.
-                    Where(Function(p) p.OrganizationID.Value = calendarID).
+                Return Await context.CalendarDays.
+                    Include(Function(t) t.DayType).
+                    Where(Function(t) t.CalendarID.Value = calendarID).
                     ToListAsync()
             End Using
         End Function
@@ -77,21 +79,20 @@ Namespace Global.AccuPay.Repository
                     context.Calendars.Add(calendar)
                     Await context.SaveChangesAsync()
 
-                    Dim copiedPayrates = Await GetPayRates(copiedCalendar.RowID.Value)
+                    Dim copiedDays = Await GetCalendarDays(copiedCalendar.RowID.Value)
 
-                    Dim newPayrates = New Collection(Of PayRate)
-                    For Each copiedPayrate In copiedPayrates
-                        Dim payrate = New PayRate()
-                        payrate.CalendarID = calendar.RowID
-                        payrate.Date = copiedPayrate.Date
-                        payrate.PayType = copiedPayrate.PayType
-                        payrate.Description = copiedPayrate.Description
-                        payrate.DayBefore = copiedPayrate.DayBefore
+                    Dim newDays = New Collection(Of CalendarDay)
+                    For Each copiedDay In copiedDays
+                        Dim day = New CalendarDay()
+                        day.CalendarID = calendar.RowID
+                        day.Date = copiedDay.Date
+                        day.DayTypeID = copiedDay.DayTypeID
+                        day.Description = copiedDay.Description
 
-                        newPayrates.Add(payrate)
+                        newDays.Add(day)
                     Next
 
-                    context.PayRates.AddRange(newPayrates)
+                    context.CalendarDays.AddRange(newDays)
                     Await context.SaveChangesAsync()
 
                     transaction.Commit()
