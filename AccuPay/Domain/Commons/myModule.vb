@@ -2352,7 +2352,6 @@ Module myModule
                 Console.Write("Welcome")
             End If
 
-            'New Object() {Nothing, Nothing, Nothing, "TABLE"}
             Dim schemaTable As DataTable = connection.GetOleDbSchemaTable(OleDbSchemaGuid.Tables, Nothing)
 
             For Each excelTable As DataRow In schemaTable.Rows
@@ -2418,7 +2417,7 @@ Module myModule
 
             Dim schemaTable As DataTable =
                 objConn.GetOleDbSchemaTable(OleDbSchemaGuid.Tables,
-                                            Nothing) 'New Object() {Nothing, Nothing, Nothing, "TABLE"}
+                                            Nothing)
 
             Dim i = 0
 
