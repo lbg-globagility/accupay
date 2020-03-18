@@ -23,9 +23,9 @@ Partial Class OfficialBusinessForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
@@ -54,14 +54,10 @@ Partial Class OfficialBusinessForm
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.EndDatePicker = New AccuPay.NullableDatePicker()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
         Me.Label168 = New System.Windows.Forms.Label()
-        Me.Panel2 = New System.Windows.Forms.Panel()
         Me.StartDatePicker = New AccuPay.NullableDatePicker()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.Label167 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -97,8 +93,6 @@ Partial Class OfficialBusinessForm
         Me.pnlForm.SuspendLayout()
         CType(Me.OfficialBusinessGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
-        Me.Panel3.SuspendLayout()
-        Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -169,14 +163,14 @@ Partial Class OfficialBusinessForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle7
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -244,14 +238,14 @@ Partial Class OfficialBusinessForm
         Me.OfficialBusinessGridView.BackgroundColor = System.Drawing.Color.White
         Me.OfficialBusinessGridView.ColumnHeadersHeight = 34
         Me.OfficialBusinessGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OfficialBusinessGridView.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OfficialBusinessGridView.DefaultCellStyle = DataGridViewCellStyle8
         Me.OfficialBusinessGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.OfficialBusinessGridView.Location = New System.Drawing.Point(28, 350)
         Me.OfficialBusinessGridView.MultiSelect = False
@@ -317,6 +311,8 @@ Partial Class OfficialBusinessForm
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.EndDatePicker, 0, 3)
+        Me.DetailsTabLayout.Controls.Add(Me.StartDatePicker, 0, 1)
         Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
         Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
@@ -325,10 +321,8 @@ Partial Class OfficialBusinessForm
         Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
-        Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
         Me.DetailsTabLayout.Location = New System.Drawing.Point(8, 101)
@@ -426,34 +420,14 @@ Partial Class OfficialBusinessForm
         Me.Label4.TabIndex = 510
         Me.Label4.Text = "End time"
         '
-        'Panel3
-        '
-        Me.Panel3.Controls.Add(Me.EndDatePicker)
-        Me.Panel3.Controls.Add(Me.Label1)
-        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel3.Location = New System.Drawing.Point(0, 64)
-        Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(161, 32)
-        Me.Panel3.TabIndex = 5
-        '
         'EndDatePicker
         '
-        Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndDatePicker.Location = New System.Drawing.Point(20, 64)
+        Me.EndDatePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.EndDatePicker.Name = "EndDatePicker"
         Me.EndDatePicker.Size = New System.Drawing.Size(110, 22)
         Me.EndDatePicker.TabIndex = 13
         Me.EndDatePicker.Value = New Date(2020, 3, 17, 14, 1, 37, 828)
-        '
-        'Label1
-        '
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(3, 4)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(13, 13)
-        Me.Label1.TabIndex = 507
-        Me.Label1.Text = "*"
         '
         'Label163
         '
@@ -475,34 +449,14 @@ Partial Class OfficialBusinessForm
         Me.Label168.TabIndex = 374
         Me.Label168.Text = "End date"
         '
-        'Panel2
-        '
-        Me.Panel2.Controls.Add(Me.StartDatePicker)
-        Me.Panel2.Controls.Add(Me.Label3)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(0, 16)
-        Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(161, 32)
-        Me.Panel2.TabIndex = 4
-        '
         'StartDatePicker
         '
-        Me.StartDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.StartDatePicker.Location = New System.Drawing.Point(20, 16)
+        Me.StartDatePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.StartDatePicker.Name = "StartDatePicker"
         Me.StartDatePicker.Size = New System.Drawing.Size(110, 22)
         Me.StartDatePicker.TabIndex = 13
         Me.StartDatePicker.Value = New Date(2020, 3, 17, 14, 0, 33, 959)
-        '
-        'Label3
-        '
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label3.Location = New System.Drawing.Point(3, 4)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(13, 13)
-        Me.Label3.TabIndex = 507
-        Me.Label3.Text = "*"
         '
         'Label167
         '
@@ -740,10 +694,10 @@ Partial Class OfficialBusinessForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle9.Format = "N2"
+        DataGridViewCellStyle9.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -799,8 +753,6 @@ Partial Class OfficialBusinessForm
         CType(Me.OfficialBusinessGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
         Me.EmployeeInfoTabLayout.ResumeLayout(False)
         Me.EmployeeInfoTabLayout.PerformLayout()
@@ -854,12 +806,8 @@ Partial Class OfficialBusinessForm
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
     Friend WithEvents Label4 As Label
-    Friend WithEvents Panel3 As Panel
-    Friend WithEvents Label1 As Label
     Friend WithEvents Label163 As Label
     Friend WithEvents Label168 As Label
-    Friend WithEvents Panel2 As Panel
-    Friend WithEvents Label3 As Label
     Friend WithEvents Label167 As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label2 As Label
