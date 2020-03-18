@@ -54,20 +54,42 @@ Public Class OfficialBusiness
     <NotMapped>
     Public Property StartTimeFull As Date?
         Get
-            Return If(StartTime Is Nothing, Nothing, If(StartDate Is Nothing, Nothing, StartDate.Value.Date.Add(StartTime.Value)))
+            'Using Nothing as output on ternary operator does not work
+            If StartTime Is Nothing Then
+                Return Nothing
+            Else
+                Return If(StartDate Is Nothing, Date.Now.ToMinimumHourValue.Add(StartTime.Value),
+                                                StartDate.Value.Date.ToMinimumHourValue.Add(StartTime.Value))
+            End If
         End Get
         Set(value As Date?)
-            StartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+            'Using Nothing as output on ternary operator does not work
+            If value Is Nothing Then
+                StartTime = Nothing
+            Else
+                StartTime = value?.TimeOfDay
+            End If
         End Set
     End Property
 
     <NotMapped>
     Public Property EndTimeFull As Date?
         Get
-            Return If(EndTime Is Nothing, Nothing, If(EndDate Is Nothing, Nothing, EndDate.Value.Date.Add(EndTime.Value)))
+            'Using Nothing as output on ternary operator does not work
+            If EndTime Is Nothing Then
+                Return Nothing
+            Else
+                Return If(EndDate Is Nothing, Date.Now.ToMinimumHourValue.Add(EndTime.Value),
+                                                EndDate.Value.Date.ToMinimumHourValue.Add(EndTime.Value))
+            End If
         End Get
         Set(value As Date?)
-            EndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+            'Using Nothing as output on ternary operator does not work
+            If value Is Nothing Then
+                EndTime = Nothing
+            Else
+                EndTime = value?.TimeOfDay
+            End If
         End Set
     End Property
 
@@ -86,6 +108,16 @@ Public Class OfficialBusiness
         If EndDate IsNot Nothing AndAlso EndTime Is Nothing Then
 
             Return "End Time cannot be empty if End Date has value."
+        End If
+
+        If StartTime IsNot Nothing AndAlso StartDate Is Nothing Then
+
+            Return "Start Date cannot be empty if Start Time has value."
+        End If
+
+        If EndTime IsNot Nothing AndAlso EndDate Is Nothing Then
+
+            Return "End Date cannot be empty if End Time has value."
         End If
 
         If StartDate IsNot Nothing AndAlso EndDate IsNot Nothing AndAlso StartDate.Value.Date.Add(StartTime.Value.StripSeconds) >= EndDate.Value.Date.Add(EndTime.Value.StripSeconds) Then
