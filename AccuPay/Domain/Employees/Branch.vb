@@ -24,6 +24,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property OrganizationID As Integer
 
+        Public Property CalendarID As Integer?
+
         <Column("BranchCode")>
         Public Property Code As String
 

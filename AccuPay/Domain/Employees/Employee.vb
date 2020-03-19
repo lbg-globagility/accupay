@@ -146,6 +146,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property AdvancementPoints As Integer
 
+        Public Property BranchID As Integer?
+
         <ForeignKey("PositionID")>
         Public Overridable Property Position As Position
 

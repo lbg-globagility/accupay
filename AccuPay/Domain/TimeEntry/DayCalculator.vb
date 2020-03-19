@@ -5,6 +5,7 @@ Imports AccuPay.Utilities
 Imports PayrollSys
 
 Public Class DayCalculator
+
     Private Const DEFAULT_WORK_HOURS As Integer = 8
     Private ReadOnly _payrateCalendar As PayratesCalendar
     Private ReadOnly _settings As ListOfValueCollection
