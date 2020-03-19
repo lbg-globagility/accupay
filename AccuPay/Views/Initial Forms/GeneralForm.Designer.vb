@@ -37,13 +37,14 @@ Partial Class GeneralForm
         Me.BranchToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
         Me.PanelGeneral = New System.Windows.Forms.Panel()
+        Me.CalendarsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.ListOfValueToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.BranchToolStripMenuItem, Me.ToolStripMenuItem1})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.UserToolStripMenuItem, Me.ListOfValueToolStripMenuItem, Me.OrganizationToolStripMenuItem, Me.UserPrivilegeToolStripMenuItem, Me.GovernmentToolStripMenuItem, Me.DutyShiftingToolStripMenuItem, Me.PayRateToolStripMenuItem, Me.AgencyToolStripMenuItem, Me.BranchToolStripMenuItem, Me.ToolStripMenuItem1, Me.CalendarsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -85,20 +86,20 @@ Partial Class GeneralForm
         'PhilHealthTableToolStripMenuItem
         '
         Me.PhilHealthTableToolStripMenuItem.Name = "PhilHealthTableToolStripMenuItem"
-        Me.PhilHealthTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PhilHealthTableToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
         Me.PhilHealthTableToolStripMenuItem.Text = "PhilHealth table"
         Me.PhilHealthTableToolStripMenuItem.Visible = False
         '
         'SSSTableToolStripMenuItem
         '
         Me.SSSTableToolStripMenuItem.Name = "SSSTableToolStripMenuItem"
-        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SSSTableToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
         Me.SSSTableToolStripMenuItem.Text = "SSS table"
         '
         'WithholdingTaxToolStripMenuItem
         '
         Me.WithholdingTaxToolStripMenuItem.Name = "WithholdingTaxToolStripMenuItem"
-        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.WithholdingTaxToolStripMenuItem.Size = New System.Drawing.Size(159, 22)
         Me.WithholdingTaxToolStripMenuItem.Text = "Withholding tax"
         '
         'DutyShiftingToolStripMenuItem
@@ -143,6 +144,12 @@ Partial Class GeneralForm
         Me.PanelGeneral.Size = New System.Drawing.Size(1006, 446)
         Me.PanelGeneral.TabIndex = 2
         '
+        'CalendarsToolStripMenuItem
+        '
+        Me.CalendarsToolStripMenuItem.Name = "CalendarsToolStripMenuItem"
+        Me.CalendarsToolStripMenuItem.Size = New System.Drawing.Size(71, 20)
+        Me.CalendarsToolStripMenuItem.Text = "Calendars"
+        '
         'GeneralForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -175,4 +182,5 @@ Partial Class GeneralForm
     Friend WithEvents AgencyToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents BranchToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem1 As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents CalendarsToolStripMenuItem As ToolStripMenuItem
 End Class

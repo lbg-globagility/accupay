@@ -316,6 +316,11 @@ Public Class GeneralForm
 
     End Sub
 
+    Private Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
+        ChangeForm(CalendarsForm, "Pay rate")
+        previousForm = CalendarsForm
+    End Sub
+
     Sub reloadViewPrivilege()
 
         Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
