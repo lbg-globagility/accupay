@@ -235,10 +235,10 @@ Public Class EmployeeOvertimeForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentOvertime, "Reason")

@@ -70,16 +70,16 @@ Public Class AddOfficialBusinessForm
     Private Sub CreateDataBindings()
 
         StartDatePicker.DataBindings.Clear()
-        StartDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndDatePicker.DataBindings.Clear()
-        EndDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "EndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartTimePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndTimePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "EndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._newOfficialBusiness, "Reason")

@@ -31,8 +31,6 @@ Partial Class AddLeaveForm
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()
         Me.Label9 = New System.Windows.Forms.Label()
-        Me.AttachmentPictureBox = New System.Windows.Forms.PictureBox()
-        Me.Label8 = New System.Windows.Forms.Label()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CommentTextBox = New System.Windows.Forms.TextBox()
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
@@ -53,10 +51,6 @@ Partial Class AddLeaveForm
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.LeaveTypeComboBox = New System.Windows.Forms.ComboBox()
-        Me.Panel4 = New System.Windows.Forms.Panel()
-        Me.ClearButton = New System.Windows.Forms.Button()
-        Me.DownloadButton = New System.Windows.Forms.Button()
-        Me.ChangeButton = New System.Windows.Forms.Button()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
         Me.CancelButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
@@ -64,11 +58,9 @@ Partial Class AddLeaveForm
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
         Me.Panel5.SuspendLayout()
-        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        Me.Panel4.SuspendLayout()
         Me.SuspendLayout()
         '
         'EmployeeInfoTabLayout
@@ -86,7 +78,7 @@ Partial Class AddLeaveForm
         Me.EmployeeInfoTabLayout.RowCount = 2
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
         Me.EmployeeInfoTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 44.0!))
-        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(804, 88)
+        Me.EmployeeInfoTabLayout.Size = New System.Drawing.Size(684, 88)
         Me.EmployeeInfoTabLayout.TabIndex = 5
         '
         'EmployeeNameTextBox
@@ -132,15 +124,12 @@ Partial Class AddLeaveForm
         '
         'DetailsTabLayout
         '
-        Me.DetailsTabLayout.ColumnCount = 4
+        Me.DetailsTabLayout.ColumnCount = 3
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 35.0!))
         Me.DetailsTabLayout.Controls.Add(Me.Panel5, 2, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label9, 2, 2)
-        Me.DetailsTabLayout.Controls.Add(Me.AttachmentPictureBox, 4, 1)
-        Me.DetailsTabLayout.Controls.Add(Me.Label8, 4, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
         Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
@@ -155,7 +144,6 @@ Partial Class AddLeaveForm
         Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label167, 0, 0)
         Me.DetailsTabLayout.Controls.Add(Me.Panel1, 2, 1)
-        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 3, 7)
         Me.DetailsTabLayout.Dock = System.Windows.Forms.DockStyle.Top
         Me.DetailsTabLayout.Location = New System.Drawing.Point(0, 88)
         Me.DetailsTabLayout.Name = "DetailsTabLayout"
@@ -169,7 +157,7 @@ Partial Class AddLeaveForm
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 15.0!))
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33.0!))
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
-        Me.DetailsTabLayout.Size = New System.Drawing.Size(804, 193)
+        Me.DetailsTabLayout.Size = New System.Drawing.Size(684, 193)
         Me.DetailsTabLayout.TabIndex = 6
         '
         'Panel5
@@ -177,10 +165,10 @@ Partial Class AddLeaveForm
         Me.Panel5.Controls.Add(Me.Label10)
         Me.Panel5.Controls.Add(Me.StatusComboBox)
         Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(361, 64)
+        Me.Panel5.Location = New System.Drawing.Point(473, 64)
         Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(160, 32)
+        Me.Panel5.Size = New System.Drawing.Size(211, 32)
         Me.Panel5.TabIndex = 11
         '
         'Label10
@@ -207,39 +195,17 @@ Partial Class AddLeaveForm
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(381, 48)
+        Me.Label9.Location = New System.Drawing.Point(493, 48)
         Me.Label9.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(39, 13)
         Me.Label9.TabIndex = 520
         Me.Label9.Text = "Status"
         '
-        'AttachmentPictureBox
-        '
-        Me.AttachmentPictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.AttachmentPictureBox.Location = New System.Drawing.Point(531, 19)
-        Me.AttachmentPictureBox.Margin = New System.Windows.Forms.Padding(10, 3, 3, 3)
-        Me.AttachmentPictureBox.Name = "AttachmentPictureBox"
-        Me.DetailsTabLayout.SetRowSpan(Me.AttachmentPictureBox, 6)
-        Me.AttachmentPictureBox.Size = New System.Drawing.Size(209, 137)
-        Me.AttachmentPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.AttachmentPictureBox.TabIndex = 518
-        Me.AttachmentPictureBox.TabStop = False
-        '
-        'Label8
-        '
-        Me.Label8.AutoSize = True
-        Me.Label8.Location = New System.Drawing.Point(541, 0)
-        Me.Label8.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(66, 13)
-        Me.Label8.TabIndex = 517
-        Me.Label8.Text = "Attachment"
-        '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(381, 0)
+        Me.Label7.Location = New System.Drawing.Point(493, 0)
         Me.Label7.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label7.Name = "Label7"
         Me.Label7.Size = New System.Drawing.Size(60, 13)
@@ -248,7 +214,7 @@ Partial Class AddLeaveForm
         '
         'CommentTextBox
         '
-        Me.CommentTextBox.Location = New System.Drawing.Point(170, 112)
+        Me.CommentTextBox.Location = New System.Drawing.Point(220, 112)
         Me.CommentTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 3, 0)
         Me.CommentTextBox.Multiline = True
         Me.CommentTextBox.Name = "CommentTextBox"
@@ -259,7 +225,7 @@ Partial Class AddLeaveForm
         '
         'ReasonTextBox
         '
-        Me.ReasonTextBox.Location = New System.Drawing.Point(170, 16)
+        Me.ReasonTextBox.Location = New System.Drawing.Point(220, 16)
         Me.ReasonTextBox.Margin = New System.Windows.Forms.Padding(10, 0, 2, 0)
         Me.ReasonTextBox.Multiline = True
         Me.ReasonTextBox.Name = "ReasonTextBox"
@@ -271,7 +237,7 @@ Partial Class AddLeaveForm
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(180, 96)
+        Me.Label6.Location = New System.Drawing.Point(230, 96)
         Me.Label6.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.Size = New System.Drawing.Size(61, 13)
@@ -281,7 +247,7 @@ Partial Class AddLeaveForm
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(180, 0)
+        Me.Label5.Location = New System.Drawing.Point(230, 0)
         Me.Label5.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.Size = New System.Drawing.Size(45, 13)
@@ -330,7 +296,7 @@ Partial Class AddLeaveForm
         Me.Panel3.Location = New System.Drawing.Point(0, 64)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
-        Me.Panel3.Size = New System.Drawing.Size(160, 32)
+        Me.Panel3.Size = New System.Drawing.Size(210, 32)
         Me.Panel3.TabIndex = 5
         '
         'EndDatePicker
@@ -379,7 +345,7 @@ Partial Class AddLeaveForm
         Me.Panel2.Location = New System.Drawing.Point(0, 16)
         Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(160, 32)
+        Me.Panel2.Size = New System.Drawing.Size(210, 32)
         Me.Panel2.TabIndex = 4
         '
         'StartDatePicker
@@ -415,10 +381,10 @@ Partial Class AddLeaveForm
         Me.Panel1.Controls.Add(Me.Label2)
         Me.Panel1.Controls.Add(Me.LeaveTypeComboBox)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel1.Location = New System.Drawing.Point(361, 16)
+        Me.Panel1.Location = New System.Drawing.Point(473, 16)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel1.Name = "Panel1"
-        Me.Panel1.Size = New System.Drawing.Size(160, 32)
+        Me.Panel1.Size = New System.Drawing.Size(211, 32)
         Me.Panel1.TabIndex = 10
         '
         'Label2
@@ -442,49 +408,10 @@ Partial Class AddLeaveForm
         Me.LeaveTypeComboBox.Size = New System.Drawing.Size(110, 21)
         Me.LeaveTypeComboBox.TabIndex = 10
         '
-        'Panel4
-        '
-        Me.Panel4.Controls.Add(Me.ClearButton)
-        Me.Panel4.Controls.Add(Me.DownloadButton)
-        Me.Panel4.Controls.Add(Me.ChangeButton)
-        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel4.Location = New System.Drawing.Point(524, 162)
-        Me.Panel4.Name = "Panel4"
-        Me.Panel4.Size = New System.Drawing.Size(277, 28)
-        Me.Panel4.TabIndex = 12
-        '
-        'ClearButton
-        '
-        Me.ClearButton.Location = New System.Drawing.Point(147, 0)
-        Me.ClearButton.Name = "ClearButton"
-        Me.ClearButton.Size = New System.Drawing.Size(70, 23)
-        Me.ClearButton.TabIndex = 2
-        Me.ClearButton.Text = "Clear"
-        Me.ClearButton.UseVisualStyleBackColor = True
-        '
-        'DownloadButton
-        '
-        Me.DownloadButton.Location = New System.Drawing.Point(77, 0)
-        Me.DownloadButton.Name = "DownloadButton"
-        Me.DownloadButton.Size = New System.Drawing.Size(70, 23)
-        Me.DownloadButton.TabIndex = 1
-        Me.DownloadButton.Text = "Download"
-        Me.DownloadButton.UseVisualStyleBackColor = True
-        '
-        'ChangeButton
-        '
-        Me.ChangeButton.Location = New System.Drawing.Point(7, 0)
-        Me.ChangeButton.Name = "ChangeButton"
-        Me.ChangeButton.Size = New System.Drawing.Size(70, 23)
-        Me.ChangeButton.TabIndex = 0
-        Me.ChangeButton.Text = "Change"
-        Me.ChangeButton.UseVisualStyleBackColor = True
-        '
         'AddAndCloseButton
         '
-        Me.AddAndCloseButton.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AddAndCloseButton.Location = New System.Drawing.Point(275, 325)
+        Me.AddAndCloseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.AddAndCloseButton.Location = New System.Drawing.Point(230, 325)
         Me.AddAndCloseButton.Name = "AddAndCloseButton"
         Me.AddAndCloseButton.Size = New System.Drawing.Size(85, 23)
         Me.AddAndCloseButton.TabIndex = 15
@@ -493,9 +420,8 @@ Partial Class AddLeaveForm
         '
         'CancelButton
         '
-        Me.CancelButton.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(449, 325)
+        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelButton.Location = New System.Drawing.Point(404, 325)
         Me.CancelButton.Name = "CancelButton"
         Me.CancelButton.Size = New System.Drawing.Size(75, 23)
         Me.CancelButton.TabIndex = 14
@@ -504,9 +430,8 @@ Partial Class AddLeaveForm
         '
         'AddAndNewButton
         '
-        Me.AddAndNewButton.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.AddAndNewButton.Location = New System.Drawing.Point(366, 325)
+        Me.AddAndNewButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.AddAndNewButton.Location = New System.Drawing.Point(321, 325)
         Me.AddAndNewButton.Name = "AddAndNewButton"
         Me.AddAndNewButton.Size = New System.Drawing.Size(75, 23)
         Me.AddAndNewButton.TabIndex = 13
@@ -518,7 +443,7 @@ Partial Class AddLeaveForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
-        Me.ClientSize = New System.Drawing.Size(804, 361)
+        Me.ClientSize = New System.Drawing.Size(684, 361)
         Me.Controls.Add(Me.AddAndCloseButton)
         Me.Controls.Add(Me.CancelButton)
         Me.Controls.Add(Me.AddAndNewButton)
@@ -536,11 +461,9 @@ Partial Class AddLeaveForm
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
         Me.Panel5.ResumeLayout(False)
-        CType(Me.AttachmentPictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel3.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
-        Me.Panel4.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -554,8 +477,6 @@ Partial Class AddLeaveForm
     Friend WithEvents Label10 As Label
     Friend WithEvents StatusComboBox As ComboBox
     Friend WithEvents Label9 As Label
-    Friend WithEvents AttachmentPictureBox As PictureBox
-    Friend WithEvents Label8 As Label
     Friend WithEvents Label7 As Label
     Friend WithEvents CommentTextBox As TextBox
     Friend WithEvents ReasonTextBox As TextBox
@@ -576,10 +497,6 @@ Partial Class AddLeaveForm
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label2 As Label
     Friend WithEvents LeaveTypeComboBox As ComboBox
-    Friend WithEvents Panel4 As Panel
-    Friend WithEvents ClearButton As Button
-    Friend WithEvents DownloadButton As Button
-    Friend WithEvents ChangeButton As Button
     Friend WithEvents AddAndCloseButton As Button
     Friend WithEvents CancelButton As Button
     Friend WithEvents AddAndNewButton As Button

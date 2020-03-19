@@ -159,7 +159,7 @@ Public Class PayrollForm
         Dim showBonusForm As Boolean =
             (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
 
-        If showBonusForm Then BonusToolStripMenuItem.Visible = showBonusForm
+        BonusToolStripMenuItem.Visible = showBonusForm
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 

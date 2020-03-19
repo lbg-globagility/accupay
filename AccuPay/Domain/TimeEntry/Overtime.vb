@@ -62,20 +62,40 @@ Public Class Overtime
     <NotMapped>
     Public Property OTStartTimeFull As Date?
         Get
-            Return If(OTStartTime Is Nothing, Nothing, OTStartDate.Date.Add(OTStartTime.Value))
+            'Using Nothing as output on ternary operator does not work
+            If OTStartTime Is Nothing Then
+                Return Nothing
+            Else
+                Return OTStartDate.Date.ToMinimumHourValue.Add(OTStartTime.Value)
+            End If
         End Get
         Set(value As Date?)
-            OTStartTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+            'Using Nothing as output on ternary operator does not work
+            If value Is Nothing Then
+                OTStartTime = Nothing
+            Else
+                OTStartTime = value?.TimeOfDay
+            End If
         End Set
     End Property
 
     <NotMapped>
     Public Property OTEndTimeFull As Date?
         Get
-            Return If(OTEndTime Is Nothing, Nothing, OTEndDate.Date.Add(OTEndTime.Value))
+            'Using Nothing as output on ternary operator does not work
+            If OTEndTime Is Nothing Then
+                Return Nothing
+            Else
+                Return OTEndDate.Date.ToMinimumHourValue.Add(OTEndTime.Value)
+            End If
         End Get
         Set(value As Date?)
-            OTEndTime = If(value Is Nothing, Nothing, value?.TimeOfDay)
+            'Using Nothing as output on ternary operator does not work
+            If value Is Nothing Then
+                OTEndTime = Nothing
+            Else
+                OTEndTime = value?.TimeOfDay
+            End If
         End Set
     End Property
 
