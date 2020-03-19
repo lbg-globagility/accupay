@@ -55,7 +55,7 @@ Public Class SemiMonthlyAllowanceCalculator
             If _allowancePolicy.IsSpecialHolidayPaid Then
 
                 If (payRate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday) Then
-                    additionalAmount = timeEntry.SpecialHolidayHours * hourlyRate * (payRate.CommonRate - 1D)
+                    additionalAmount = timeEntry.SpecialHolidayHours * hourlyRate * (payRate.RegularRate - 1D)
                 End If
 
             End If
@@ -63,7 +63,7 @@ Public Class SemiMonthlyAllowanceCalculator
             If _allowancePolicy.IsRegularHolidayPaid Then
 
                 If (payRate.IsRegularHoliday And _employee.CalcHoliday) Then
-                    additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payRate.CommonRate - 1D)
+                    additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payRate.RegularRate - 1D)
                 End If
 
             End If

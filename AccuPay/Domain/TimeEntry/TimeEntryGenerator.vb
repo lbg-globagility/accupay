@@ -155,15 +155,22 @@ Public Class TimeEntryGenerator
                 _breakTimeBrackets = New List(Of BreakTimeBracket)
             End If
 
-            Dim payRates =
-                (From p In context.PayRates
-                 Where p.OrganizationID.Value = z_OrganizationID AndAlso
-                     p.Date >= previousCutoff AndAlso
-                     p.Date <= _cutoffEnd).
-                ToList()
+            If settings.GetBoolean("Payroll Policy.UseCalendar") Then
+                Dim calendarDays = context.CalendarDays.
+                    Include(Function(t) t.DayType).
+                    Where(Function(t) t.CalendarID.Value = 47).
+                    Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
+                    ToList()
 
-            payrateCalendar = New PayratesCalendar(payRates)
+                payrateCalendar = New PayratesCalendar(calendarDays)
+            Else
+                Dim payrates = context.PayRates.
+                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(p) previousCutoff <= p.Date AndAlso p.Date <= _cutoffEnd).
+                    ToList()
 
+                payrateCalendar = New PayratesCalendar(payrates)
+            End If
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)

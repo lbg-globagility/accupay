@@ -381,6 +381,7 @@
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Core\Enums\AdjustmentType.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
+    <Compile Include="Domain\Paystubs\IPayrate.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
