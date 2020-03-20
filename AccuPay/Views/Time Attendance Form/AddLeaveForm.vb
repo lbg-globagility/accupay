@@ -120,6 +120,7 @@ Public Class AddLeaveForm
     Private Sub ForceDataBindingsCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeePictureBox.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
@@ -138,6 +139,21 @@ Public Class AddLeaveForm
         Return True
 
     End Function
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._newLeave Is Nothing Then Return
+
+        If StartTimePicker.Checked AndAlso EndTimePicker.Checked AndAlso
+            EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+
+            Me._newLeave.EndDate = Me._newLeave.StartDate.AddDays(1)
+        Else
+            Me._newLeave.EndDate = Me._newLeave.StartDate
+
+        End If
+
+        EndDatePicker.Value = Me._newLeave.EndDate
+    End Sub
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Me.Close()
@@ -173,6 +189,13 @@ Public Class AddLeaveForm
                     Me.Close()
                 End If
             End Function)
+
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
 

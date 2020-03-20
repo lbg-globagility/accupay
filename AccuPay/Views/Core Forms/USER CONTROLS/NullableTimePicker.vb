@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Utilities.Extensions
+﻿Option Strict On
+
+Imports AccuPay.Utilities.Extensions
 
 Public Class NullableTimePicker
     Private _lastCheckValue As Boolean
@@ -33,6 +35,12 @@ Public Class NullableTimePicker
 
             End If
         End Set
+    End Property
+
+    Public ReadOnly Property Checked As Boolean
+        Get
+            Return DateTimePicker1.Checked
+        End Get
     End Property
 
     Public Overloads Function ToString() As String
