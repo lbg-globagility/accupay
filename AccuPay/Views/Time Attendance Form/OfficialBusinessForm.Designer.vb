@@ -23,41 +23,27 @@ Partial Class OfficialBusinessForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.ShowAllCheckBox = New System.Windows.Forms.CheckBox()
         Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlMain = New System.Windows.Forms.Panel()
         Me.pnlForm = New System.Windows.Forms.Panel()
         Me.OfficialBusinessGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.EndTimePicker = New AccuPay.NullableTimePicker()
-        Me.StartTimePicker = New AccuPay.NullableTimePicker()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CommentTextBox = New System.Windows.Forms.TextBox()
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.EndDatePicker = New AccuPay.NullableDatePicker()
         Me.Label163 = New System.Windows.Forms.Label()
         Me.Label168 = New System.Windows.Forms.Label()
-        Me.StartDatePicker = New AccuPay.NullableDatePicker()
         Me.Label167 = New System.Windows.Forms.Label()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -76,6 +62,19 @@ Partial Class OfficialBusinessForm
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.OfficialBusinessListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.StartDatePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Panel3 = New System.Windows.Forms.Panel()
+        Me.EndDatePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label1 = New System.Windows.Forms.Label()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -86,7 +85,16 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.OfficialBusinessListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlSearch.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
@@ -98,6 +106,10 @@ Partial Class OfficialBusinessForm
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
         CType(Me.OfficialBusinessListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.Panel2.SuspendLayout()
+        Me.Panel3.SuspendLayout()
+        Me.Panel4.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         Me.SuspendLayout()
         '
         'FormTitleLabel
@@ -163,14 +175,14 @@ Partial Class OfficialBusinessForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -180,27 +192,6 @@ Partial Class OfficialBusinessForm
         Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
         Me.EmployeesDataGridView.TabIndex = 2
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
         '
         'pnlMain
         '
@@ -238,14 +229,14 @@ Partial Class OfficialBusinessForm
         Me.OfficialBusinessGridView.BackgroundColor = System.Drawing.Color.White
         Me.OfficialBusinessGridView.ColumnHeadersHeight = 34
         Me.OfficialBusinessGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OfficialBusinessGridView.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OfficialBusinessGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.OfficialBusinessGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.OfficialBusinessGridView.Location = New System.Drawing.Point(28, 350)
         Me.OfficialBusinessGridView.MultiSelect = False
@@ -256,65 +247,16 @@ Partial Class OfficialBusinessForm
         Me.OfficialBusinessGridView.Size = New System.Drawing.Size(784, 250)
         Me.OfficialBusinessGridView.TabIndex = 12
         '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "StartTime"
-        Me.Column2.HeaderText = "Start time"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        '
-        'Column4
-        '
-        Me.Column4.DataPropertyName = "EndTime"
-        Me.Column4.HeaderText = "End time"
-        Me.Column4.Name = "Column4"
-        Me.Column4.ReadOnly = True
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "StartDate"
-        Me.Column1.HeaderText = "Start date"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "EndDate"
-        Me.Column3.HeaderText = "End date"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        '
-        'Column7
-        '
-        Me.Column7.DataPropertyName = "Status"
-        Me.Column7.HeaderText = "Status"
-        Me.Column7.Name = "Column7"
-        Me.Column7.ReadOnly = True
-        '
-        'Column5
-        '
-        Me.Column5.DataPropertyName = "Reason"
-        Me.Column5.HeaderText = "Reason"
-        Me.Column5.Name = "Column5"
-        Me.Column5.ReadOnly = True
-        '
-        'Column6
-        '
-        Me.Column6.DataPropertyName = "Comments"
-        Me.Column6.HeaderText = "Comments"
-        Me.Column6.Name = "Column6"
-        Me.Column6.ReadOnly = True
-        '
         'DetailsTabLayout
         '
         Me.DetailsTabLayout.ColumnCount = 3
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
-        Me.DetailsTabLayout.Controls.Add(Me.EndDatePicker, 0, 3)
-        Me.DetailsTabLayout.Controls.Add(Me.StartDatePicker, 0, 1)
-        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
-        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel5, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 0, 5)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel2, 0, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
         Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
@@ -339,24 +281,6 @@ Partial Class OfficialBusinessForm
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.DetailsTabLayout.Size = New System.Drawing.Size(526, 193)
         Me.DetailsTabLayout.TabIndex = 4
-        '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 13
-        Me.EndTimePicker.Value = New Date(2020, 2, 18, 14, 17, 0, 0)
-        '
-        'StartTimePicker
-        '
-        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
-        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartTimePicker.Name = "StartTimePicker"
-        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartTimePicker.TabIndex = 13
-        Me.StartTimePicker.Value = New Date(2020, 2, 18, 14, 16, 0, 0)
         '
         'Label7
         '
@@ -420,15 +344,6 @@ Partial Class OfficialBusinessForm
         Me.Label4.TabIndex = 510
         Me.Label4.Text = "End time"
         '
-        'EndDatePicker
-        '
-        Me.EndDatePicker.Location = New System.Drawing.Point(20, 64)
-        Me.EndDatePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndDatePicker.Name = "EndDatePicker"
-        Me.EndDatePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndDatePicker.TabIndex = 13
-        Me.EndDatePicker.Value = New Date(2020, 3, 17, 14, 1, 37, 828)
-        '
         'Label163
         '
         Me.Label163.AutoSize = True
@@ -448,15 +363,6 @@ Partial Class OfficialBusinessForm
         Me.Label168.Size = New System.Drawing.Size(53, 13)
         Me.Label168.TabIndex = 374
         Me.Label168.Text = "End date"
-        '
-        'StartDatePicker
-        '
-        Me.StartDatePicker.Location = New System.Drawing.Point(20, 16)
-        Me.StartDatePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartDatePicker.Name = "StartDatePicker"
-        Me.StartDatePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartDatePicker.TabIndex = 13
-        Me.StartDatePicker.Value = New Date(2020, 3, 17, 14, 0, 33, 959)
         '
         'Label167
         '
@@ -640,6 +546,130 @@ Partial Class OfficialBusinessForm
         Me.ImportToolStripButton.ToolTipText = "Import loans"
         Me.ImportToolStripButton.Visible = False
         '
+        'OfficialBusinessListBindingSource
+        '
+        '
+        'Panel2
+        '
+        Me.Panel2.Controls.Add(Me.StartDatePicker)
+        Me.Panel2.Controls.Add(Me.Label3)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(0, 16)
+        Me.Panel2.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(161, 32)
+        Me.Panel2.TabIndex = 13
+        '
+        'StartDatePicker
+        '
+        Me.StartDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.StartDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.StartDatePicker.Name = "StartDatePicker"
+        Me.StartDatePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartDatePicker.TabIndex = 4
+        '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(3, 4)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(13, 13)
+        Me.Label3.TabIndex = 507
+        Me.Label3.Text = "*"
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.EndDatePicker)
+        Me.Panel3.Controls.Add(Me.Label1)
+        Me.Panel3.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel3.Location = New System.Drawing.Point(0, 64)
+        Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(161, 32)
+        Me.Panel3.TabIndex = 14
+        '
+        'EndDatePicker
+        '
+        Me.EndDatePicker.Enabled = False
+        Me.EndDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndDatePicker.Name = "EndDatePicker"
+        Me.EndDatePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndDatePicker.TabIndex = 4
+        '
+        'Label1
+        '
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label1.Location = New System.Drawing.Point(3, 4)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(13, 13)
+        Me.Label1.TabIndex = 507
+        Me.Label1.Text = "*"
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.Label8)
+        Me.Panel4.Controls.Add(Me.StartTimePicker)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel4.Location = New System.Drawing.Point(0, 112)
+        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(161, 32)
+        Me.Panel4.TabIndex = 13
+        '
+        'Label8
+        '
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label8.Location = New System.Drawing.Point(3, 4)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(13, 13)
+        Me.Label8.TabIndex = 507
+        Me.Label8.Text = "*"
+        '
+        'StartTimePicker
+        '
+        Me.StartTimePicker.CustomFormat = "  hh:mm tt"
+        Me.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.StartTimePicker.Location = New System.Drawing.Point(20, 3)
+        Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.ShowUpDown = True
+        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartTimePicker.TabIndex = 8
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.Label9)
+        Me.Panel5.Controls.Add(Me.EndTimePicker)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel5.Location = New System.Drawing.Point(0, 159)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(161, 34)
+        Me.Panel5.TabIndex = 14
+        '
+        'Label9
+        '
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label9.Location = New System.Drawing.Point(3, 4)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(13, 13)
+        Me.Label9.TabIndex = 507
+        Me.Label9.Text = "*"
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
+        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.ShowUpDown = True
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 8
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EmployeeNo"
@@ -694,10 +724,10 @@ Partial Class OfficialBusinessForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "N2"
-        DataGridViewCellStyle9.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -726,8 +756,75 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn10.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         '
-        'OfficialBusinessListBindingSource
+        'Column2
         '
+        Me.Column2.DataPropertyName = "StartTime"
+        Me.Column2.HeaderText = "Start time"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        '
+        'Column4
+        '
+        Me.Column4.DataPropertyName = "EndTime"
+        Me.Column4.HeaderText = "End time"
+        Me.Column4.Name = "Column4"
+        Me.Column4.ReadOnly = True
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "StartDate"
+        Me.Column1.HeaderText = "Start date"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "EndDate"
+        Me.Column3.HeaderText = "End date"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        '
+        'Column7
+        '
+        Me.Column7.DataPropertyName = "Status"
+        Me.Column7.HeaderText = "Status"
+        Me.Column7.Name = "Column7"
+        Me.Column7.ReadOnly = True
+        '
+        'Column5
+        '
+        Me.Column5.DataPropertyName = "Reason"
+        Me.Column5.HeaderText = "Reason"
+        Me.Column5.Name = "Column5"
+        Me.Column5.ReadOnly = True
+        '
+        'Column6
+        '
+        Me.Column6.DataPropertyName = "Comments"
+        Me.Column6.HeaderText = "Comments"
+        Me.Column6.Name = "Column6"
+        Me.Column6.ReadOnly = True
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'OfficialBusinessForm
         '
@@ -760,6 +857,10 @@ Partial Class OfficialBusinessForm
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
         CType(Me.OfficialBusinessListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.Panel2.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel5.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -822,8 +923,16 @@ Partial Class OfficialBusinessForm
     Friend WithEvents Column7 As DataGridViewTextBoxColumn
     Friend WithEvents Column5 As DataGridViewTextBoxColumn
     Friend WithEvents Column6 As DataGridViewTextBoxColumn
-    Friend WithEvents StartTimePicker As NullableTimePicker
-    Friend WithEvents EndTimePicker As NullableTimePicker
-    Friend WithEvents StartDatePicker As NullableDatePicker
-    Friend WithEvents EndDatePicker As NullableDatePicker
+    Friend WithEvents Panel2 As Panel
+    Friend WithEvents StartDatePicker As DateTimePicker
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Panel3 As Panel
+    Friend WithEvents EndDatePicker As DateTimePicker
+    Friend WithEvents Label1 As Label
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents Label8 As Label
+    Friend WithEvents StartTimePicker As DateTimePicker
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents Label9 As Label
+    Friend WithEvents EndTimePicker As DateTimePicker
 End Class

@@ -161,6 +161,7 @@ Public Class OfficialBusinessForm
     Private Sub ForceGridViewCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeeInfoTabLayout.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
@@ -247,16 +248,16 @@ Public Class OfficialBusinessForm
         Me._currentOfficialBusiness = officialBusiness
 
         StartDatePicker.DataBindings.Clear()
-        StartDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        StartDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "ProperStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndDatePicker.DataBindings.Clear()
-        EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        EndDatePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "ProperEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        StartTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        EndTimePicker.DataBindings.Add("Value", Me._currentOfficialBusiness, "EndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentOfficialBusiness, "Reason")
@@ -283,6 +284,20 @@ Public Class OfficialBusinessForm
 
                                             End Function)
     End Function
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._currentOfficialBusiness Is Nothing Then Return
+
+        If EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+
+            Me._currentOfficialBusiness.EndDate = Me._currentOfficialBusiness.StartDate.Value.AddDays(1)
+        Else
+            Me._currentOfficialBusiness.EndDate = Me._currentOfficialBusiness.StartDate.Value
+
+        End If
+
+        EndDatePicker.Value = Me._currentOfficialBusiness.EndDate
+    End Sub
 
     Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OfficialBusinessGridView.SelectionChanged
         ResetForm()
@@ -454,6 +469,13 @@ Public Class OfficialBusinessForm
                                             End If
 
                                         End Function)
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
+
     End Sub
 
 End Class
