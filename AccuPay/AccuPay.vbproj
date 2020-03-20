@@ -453,6 +453,18 @@
     <Compile Include="Views\Core Forms\Calendars\CalendarMonthControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypeControl.Designer.vb">
+      <DependentUpon>DayTypeControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypeControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypesDialog.Designer.vb">
+      <DependentUpon>DayTypesDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypesDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.Designer.vb">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </Compile>
@@ -1943,6 +1955,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonthControl.resx">
       <DependentUpon>CalendarMonthControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\DayTypeControl.resx">
+      <DependentUpon>DayTypeControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\DayTypesDialog.resx">
+      <DependentUpon>DayTypesDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>

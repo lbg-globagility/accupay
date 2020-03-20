@@ -14,6 +14,18 @@ Namespace Global.AccuPay.Repository
             End Using
         End Function
 
+        Public Async Function Save(dayType As DayType) As Task
+            Using context = New PayrollContext()
+                If dayType.RowID Is Nothing Then
+                    context.DayTypes.Add(dayType)
+                Else
+                    context.Entry(dayType).State = EntityState.Modified
+                End If
+
+                Await context.SaveChangesAsync()
+            End Using
+        End Function
+
     End Class
 
 End Namespace
