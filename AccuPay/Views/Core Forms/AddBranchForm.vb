@@ -36,9 +36,7 @@ Public Class AddBranchForm
 
         Using context As New PayrollContext
 
-            _branches = Await context.Branches.
-                            Where(Function(b) b.OrganizationID = z_OrganizationID).
-                            ToListAsync
+            _branches = Await context.Branches.ToListAsync
 
         End Using
 
@@ -199,7 +197,7 @@ Public Class AddBranchForm
 
                                     Using context As New PayrollContext
 
-                                        Dim lastBranch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.Code = branchName AndAlso b.OrganizationID = z_OrganizationID)
+                                        Dim lastBranch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.Code = branchName)
                                         Me.LastBranchId = lastBranch?.RowID
 
                                         If Me.LastBranchId IsNot Nothing Then
@@ -228,10 +226,12 @@ Public Class AddBranchForm
 
         Using context As New PayrollContext
 
+            Dim branchNameValidationQuery = context.Branches.
+                Where(Function(b) b.Code.Trim.ToUpper = branchName.Trim.ToUpper)
+
             If _currentFormType = FormMode.Creating Then
 
                 Dim branch As New Branch
-                branch.OrganizationID = z_OrganizationID
                 branch.CreatedBy = z_User
                 branch.Code = NameTextBox.Text
                 branch.Name = NameTextBox.Text
@@ -252,17 +252,19 @@ Public Class AddBranchForm
 
                 End If
 
-                If Await context.Branches.AnyAsync(Function(b) b.Code = branchName AndAlso b.OrganizationID = z_OrganizationID) Then
-
-                    Throw New ArgumentException("Branch already exists.")
-
-                End If
+                branchNameValidationQuery = branchNameValidationQuery.Where(Function(b) b.RowID.Value <> currentBranchId)
 
                 branch.Code = branchName
                 branch.Name = branchName
                 branch.LastUpdBy = z_User
 
                 successMessage = $"Branch: '{branchName}' successfully updated."
+            End If
+
+            If Await branchNameValidationQuery.AnyAsync Then
+
+                Throw New ArgumentException("Branch already exists.")
+
             End If
 
             Await context.SaveChangesAsync

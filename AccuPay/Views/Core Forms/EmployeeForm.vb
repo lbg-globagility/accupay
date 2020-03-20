@@ -3344,9 +3344,7 @@ Public Class EmployeeForm
 
         Using context As New PayrollContext
 
-            _branches = context.Branches.
-                                Where(Function(b) b.OrganizationID = z_OrganizationID).
-                                ToList
+            _branches = context.Branches.ToList
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
@@ -7567,7 +7565,7 @@ Public Class EmployeeForm
 
             Using context As New PayrollContext
 
-                _branches = Await context.Branches.Where(Function(b) b.OrganizationID = z_OrganizationID).ToListAsync
+                _branches = Await context.Branches.ToListAsync
 
                 BranchComboBox.DataSource = _branches
 
