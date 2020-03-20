@@ -22,8 +22,6 @@ Namespace Global.AccuPay.Entity
 
         Public Property LastUpdBy As Integer?
 
-        Public Property OrganizationID As Integer
-
         <Column("BranchCode")>
         Public Property Code As String
 
