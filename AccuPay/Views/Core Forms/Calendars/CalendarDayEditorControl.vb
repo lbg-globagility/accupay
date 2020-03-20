@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Globalization
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 
@@ -31,7 +32,7 @@ Public Class CalendarDayEditorControl
     Public Sub ChangePayRate(calendarDay As CalendarDay)
         _calendarDay = calendarDay
 
-        DayLabel.Text = _calendarDay.Date.Day.ToString()
+        DayLabel.Text = _calendarDay.Date.ToString("MMM d", CultureInfo.InvariantCulture)
         DescriptionTextBox.Text = _calendarDay.Description
         DayTypesComboBox.SelectedValue = _calendarDay.DayTypeID
     End Sub

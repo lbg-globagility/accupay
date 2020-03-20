@@ -27,6 +27,7 @@ Public Class CalendarMonthControl
 
         For Each dayName In WeekDays
             Dim weekdayHeader = New Label()
+            weekdayHeader.TextAlign = ContentAlignment.MiddleCenter
             weekdayHeader.Text = dayName
 
             DaysTableLayout.Controls.Add(weekdayHeader)
@@ -35,7 +36,7 @@ Public Class CalendarMonthControl
         Dim firstDay = CalendarDays.First()
         Dim monthOffset = CInt(firstDay.Date.DayOfWeek)
 
-        MonthLabel.Text = firstDay.Date.ToString("MMM")
+        MonthLabel.Text = firstDay.Date.ToString("MMMM")
 
         For Each calendarDay In CalendarDays
             Dim column = CInt(calendarDay.Date.DayOfWeek)
@@ -50,9 +51,13 @@ Public Class CalendarMonthControl
             DaysTableLayout.Controls.Add(dayControl, column, row)
         Next
 
+        Dim i = 0
         For Each rowStyle As RowStyle In DaysTableLayout.RowStyles
+            Dim rowHeight = If(i = 0, 16, 48)
+
             rowStyle.SizeType = SizeType.Absolute
-            rowStyle.Height = 50
+            rowStyle.Height = rowHeight
+            i += 1
         Next
 
         DaysTableLayout.ResumeLayout()

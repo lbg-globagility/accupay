@@ -19,12 +19,12 @@ Public Class CalendarsForm
 
     Private _currentMonth As CalendarMonthControl
 
-    Private ReadOnly _changedCalendarDays As ICollection(Of CalendarDay)
+    Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
 
     Public Sub New()
-        _repository = New CalendarRepository()
         Editor = New CalendarDayEditorControl()
-        _changedCalendarDays = New Collection(Of CalendarDay)
+        _repository = New CalendarRepository()
+        _changeTracker = New Collection(Of CalendarDay)
 
         InitializeComponent()
         InitializeView()
@@ -45,9 +45,8 @@ Public Class CalendarsForm
 
     Private Async Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
         _currentCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
-        _changedCalendarDays.Clear()
+        _changeTracker.Clear()
         Await LoadCalendarDays()
-        DisplayCalendarDays()
     End Sub
 
     Private Async Sub LoadCalendars()
@@ -57,6 +56,7 @@ Public Class CalendarsForm
 
     Private Async Function LoadCalendarDays() As Task
         _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, 2020)
+        DisplayCalendarDays()
     End Function
 
     Private Sub DisplayCalendarDays()
@@ -94,7 +94,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub Editor_Ok(calendarDay As CalendarDay) Handles Editor.Ok
-        _changedCalendarDays.Add(calendarDay)
+        _changeTracker.Add(calendarDay)
         _currentMonth.RefreshData()
     End Sub
 
@@ -105,19 +105,23 @@ Public Class CalendarsForm
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         Using context = New PayrollContext()
-            For Each calendarDay In _changedCalendarDays
+            For Each calendarDay In _changeTracker
                 context.Entry(calendarDay).State = Microsoft.EntityFrameworkCore.EntityState.Modified
             Next
 
             Await context.SaveChangesAsync()
-            _changedCalendarDays.Clear()
+            _changeTracker.Clear()
         End Using
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
-        _changedCalendarDays.Clear()
+        _changeTracker.Clear()
         Await LoadCalendarDays()
-        DisplayCalendarDays()
+    End Sub
+
+    Private Sub DayTypesToolStripButton_Click(sender As Object, e As EventArgs) Handles DayTypesToolStripButton.Click
+        Dim dialog = New DayTypesDialog()
+        dialog.ShowDialog()
     End Sub
 
 End Class

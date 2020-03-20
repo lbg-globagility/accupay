@@ -1,14 +1,36 @@
 ﻿Option Strict On
 
+Imports System.Globalization
 Imports AccuPay.Entity
 
 Public Class CalendarDayControl
 
+    Private ReadOnly RegularDayColor As Color = Color.FromArgb(0)
+
+    Private ReadOnly HolidayColor As Color = Color.FromArgb(1, 255, 0, 0)
+
     Public Property CalendarDay As CalendarDay
 
     Public Sub RefreshData()
-        DayLabel.Text = CalendarDay.Date.Day.ToString()
+        RefreshContent()
+        RefreshColor()
+    End Sub
+
+    Private Sub RefreshContent()
+        DayLabel.Text = CalendarDay.Date.ToString("%d", CultureInfo.InvariantCulture)
         DescriptionLabel.Text = CalendarDay.Description?.ToString()
+    End Sub
+
+    Private Sub RefreshColor()
+        Dim color As Color
+        If CalendarDay.DayType.Name = "Regular Day" Then
+            color = RegularDayColor
+        ElseIf CalendarDay.DayType.Name = "Regular Holiday" Or CalendarDay.DayType.Name = "Special Non-Working Holiday" Then
+            color = HolidayColor
+        End If
+
+        DayLabel.ForeColor = color
+        DescriptionLabel.ForeColor = color
     End Sub
 
     Private Sub CalendarDay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
