@@ -94,23 +94,22 @@ Public Class GeneralForm
     Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Using context As New PayrollContext
-
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
 
             If user Is Nothing Then
-
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-
                 Return
             Else
-
                 UserPrivilegeToolStripMenuItem.Visible = False
+            End If
 
+            If Not settings.GetBoolean("Payroll Policy.UseCalendar") Then
+                CalendarsToolStripMenuItem.Visible = False
             End If
 
             If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
