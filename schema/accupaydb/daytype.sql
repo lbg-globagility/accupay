@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS `daytype` (
   `Updated` timestamp NULL DEFAULT NULL ON UPDATE current_timestamp(),
   `UpdatedBy` int(11) DEFAULT NULL,
   `Name` varchar(100) NOT NULL,
+  `DayConsideredAs` varchar(50) DEFAULT NULL,
   `RegularRate` decimal(10,4) NOT NULL,
   `OvertimeRate` decimal(10,4) NOT NULL,
   `NightDiffRate` decimal(10,4) NOT NULL,
