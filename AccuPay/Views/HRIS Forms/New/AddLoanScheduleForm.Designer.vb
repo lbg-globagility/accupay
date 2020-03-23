@@ -52,7 +52,6 @@ Partial Class AddLoanScheduleForm
         Me.cmbLoanStatus = New System.Windows.Forms.ComboBox()
         Me.lblLoanInterestPercentage = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.txtLoanInterestPercentage = New System.Windows.Forms.TextBox()
         Me.lblDeductionSchedule = New System.Windows.Forms.Label()
         Me.lblNumberOfPayPeriod = New System.Windows.Forms.Label()
@@ -419,23 +418,12 @@ Partial Class AddLoanScheduleForm
         '
         'Panel3
         '
-        Me.Panel3.Controls.Add(Me.Label2)
         Me.Panel3.Controls.Add(Me.txtLoanInterestPercentage)
         Me.Panel3.Location = New System.Drawing.Point(267, 160)
         Me.Panel3.Margin = New System.Windows.Forms.Padding(0)
         Me.Panel3.Name = "Panel3"
         Me.Panel3.Size = New System.Drawing.Size(267, 32)
         Me.Panel3.TabIndex = 362
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(3, 4)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(13, 13)
-        Me.Label2.TabIndex = 383
-        Me.Label2.Text = "₱"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'txtLoanInterestPercentage
         '
@@ -619,7 +607,6 @@ Partial Class AddLoanScheduleForm
     Friend WithEvents Label3 As Label
     Friend WithEvents txtLoanBalance As TextBox
     Friend WithEvents Panel3 As Panel
-    Friend WithEvents Label2 As Label
     Friend WithEvents txtLoanInterestPercentage As TextBox
     Friend WithEvents pnlTxtDeductionAmount As Panel
     Friend WithEvents Label1 As Label
