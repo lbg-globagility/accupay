@@ -1,5 +1,4 @@
-﻿using Accupay.Data;
-using Accupay.Reference;
+﻿using AccuPay.Reference;
 using System.Linq;
 
 namespace AccuPay.Data

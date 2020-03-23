@@ -1,7 +1,7 @@
-﻿using Accupay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using System;
 
-namespace Accupay.Data
+namespace AccuPay.Data
 {
     public interface IPaystubEmail
     {

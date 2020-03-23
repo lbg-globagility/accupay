@@ -1,7 +1,7 @@
 ﻿Imports System.IO
 Imports Accupay.Data
-Imports Accupay.DB
 Imports Accupay.Data.Repositories
+Imports Accupay.DB
 Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports PdfSharp.Pdf
@@ -12,7 +12,7 @@ Public Class PayslipCreator
 
     Const customDateFormat As String = "M/d/yyyy"
 
-    Private sys_ownr As New Accupay.Data.SystemOwnerService
+    Private sys_ownr As New SystemOwnerService
 
     Private _currentPayPeriod As IPayPeriod
 
