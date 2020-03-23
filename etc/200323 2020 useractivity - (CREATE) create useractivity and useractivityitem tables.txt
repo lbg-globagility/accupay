@@ -12,13 +12,17 @@ ENGINE=InnoDB
 ;
 
 
-CREATE TABLE `useractivity` (
-	`RowID` INT NOT NULL AUTO_INCREMENT,
-	`UserId` INT NOT NULL,
+CREATE TABLE `useractivityitem` (
+	`RowID` INT(11) NOT NULL AUTO_INCREMENT,
+	`UserActivityId` INT(11) NOT NULL,
 	`Description` VARCHAR(2000) NOT NULL,
 	`Created` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	`LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-	PRIMARY KEY (`RowID`)
+	PRIMARY KEY (`RowID`),
+	INDEX `FK_useractivityitem_useractivity_UserActivityId` (`UserActivityId`),
+	CONSTRAINT `FK_useractivityitem_useractivity_UserActivityId` FOREIGN KEY (`UserActivityId`) REFERENCES `useractivity` (`RowID`) ON DELETE CASCADE
 )
 COLLATE='utf8_general_ci'
+ENGINE=InnoDB
 ;
+
