@@ -1,2 +1,0 @@
-INSERT INTO `listofval` (`DisplayValue`, `LIC`, `Type`, `Active`, `Created`, `CreatedBy`, `LastUpd`, `OrderBy`, `LastUpdBy`)
-VALUES ('1', 'UseCalendar', 'Payroll Policy', 'Yes', '2020-03-21 19:26:51', '1', '2020-03-21 19:26:53', '1', '1');
