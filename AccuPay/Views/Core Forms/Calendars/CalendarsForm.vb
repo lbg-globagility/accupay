@@ -44,7 +44,13 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub CalendarsDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles CalendarsDataGridView.SelectionChanged
-        _currentCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
+        Dim selectedCalendar = DirectCast(CalendarsDataGridView.CurrentRow.DataBoundItem, PayCalendar)
+
+        If _currentCalendar?.RowID = selectedCalendar?.RowID Then
+            Return
+        End If
+
+        _currentCalendar = selectedCalendar
         _changeTracker.Clear()
         Await LoadCalendarDays()
     End Sub
@@ -55,7 +61,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
-        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, 2020)
+        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, New Date(2020, 1, 1), New Date(2020, 1, 31))
         DisplayCalendarDays()
     End Function
 
