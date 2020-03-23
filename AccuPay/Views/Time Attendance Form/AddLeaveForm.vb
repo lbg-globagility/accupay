@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -176,6 +177,9 @@ Public Class AddLeaveForm
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
                 Await _leaveRepository.SaveAsync(Me._newLeave)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Leave")
 
                 Me.IsSaved = True
 

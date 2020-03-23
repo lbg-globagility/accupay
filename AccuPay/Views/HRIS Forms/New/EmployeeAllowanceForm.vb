@@ -5,6 +5,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeAllowanceForm
 
@@ -313,6 +314,9 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Allowance")
 
                                                 Await LoadAllowances(currentEmployee)
 

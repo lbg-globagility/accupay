@@ -4,6 +4,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports AccuPay.ModelData
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeLeavesForm
 
@@ -306,6 +307,9 @@ Public Class EmployeeLeavesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Leave")
 
                                                 Await LoadLeaves(currentEmployee)
 

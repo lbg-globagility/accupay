@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -140,6 +141,9 @@ Public Class AddAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
                 Await _allowanceRepository.SaveAsync(Me._newAllowance)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Allowance")
 
                 Me.IsSaved = True
 

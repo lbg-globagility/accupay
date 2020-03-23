@@ -1,4 +1,5 @@
 ﻿Imports AccuPay
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -145,6 +146,9 @@ Public Class AddOfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Official Business")
 
                 Me.IsSaved = True
 

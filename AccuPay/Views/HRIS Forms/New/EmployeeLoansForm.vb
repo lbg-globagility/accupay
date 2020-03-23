@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -438,6 +439,9 @@ Public Class EmployeeLoansForm
         Try
 
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Loan")
 
             Await LoadLoanSchedules(currentEmployee)
 

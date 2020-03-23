@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -180,6 +181,9 @@ Public Class AddLoanScheduleForm
             Async Function()
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Loan")
+
                 Me.IsSaved = True
 
                 If sender Is btnAddAndNew Then
@@ -332,6 +336,10 @@ Public Class AddLoanScheduleForm
 
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
+    End Sub
+
+    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
+
     End Sub
 
 #End Region

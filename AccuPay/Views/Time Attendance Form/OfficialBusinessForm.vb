@@ -3,6 +3,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports AccuPay.Data.Repositories
 
 Public Class OfficialBusinessForm
 
@@ -277,6 +278,9 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _officialBusinessRepository.DeleteAsync(Me._currentOfficialBusiness.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Official Business")
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 

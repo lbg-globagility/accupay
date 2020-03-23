@@ -3,6 +3,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeOvertimeForm
 
@@ -259,6 +260,9 @@ Public Class EmployeeOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Overtime")
 
                                                 Await LoadOvertimes(currentEmployee)
 
