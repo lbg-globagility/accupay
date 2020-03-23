@@ -40,24 +40,25 @@ Partial Class CalendarMonthControl
         Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
         Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
         Me.DaysTableLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 14.28571!))
-        Me.DaysTableLayout.Location = New System.Drawing.Point(8, 24)
+        Me.DaysTableLayout.Location = New System.Drawing.Point(8, 32)
         Me.DaysTableLayout.Name = "DaysTableLayout"
         Me.DaysTableLayout.RowCount = 1
         Me.DaysTableLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100.0!))
-        Me.DaysTableLayout.Size = New System.Drawing.Size(223, 116)
+        Me.DaysTableLayout.Size = New System.Drawing.Size(226, 112)
         Me.DaysTableLayout.TabIndex = 0
         '
         'MonthLabel
         '
         Me.MonthLabel.Dock = System.Windows.Forms.DockStyle.Top
+        Me.MonthLabel.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.MonthLabel.Location = New System.Drawing.Point(0, 0)
         Me.MonthLabel.Name = "MonthLabel"
-        Me.MonthLabel.Size = New System.Drawing.Size(240, 24)
+        Me.MonthLabel.Size = New System.Drawing.Size(243, 32)
         Me.MonthLabel.TabIndex = 1
         Me.MonthLabel.Text = "<Month>"
         Me.MonthLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'CalendarMonth
+        'CalendarMonthControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
@@ -65,8 +66,8 @@ Partial Class CalendarMonthControl
         Me.Controls.Add(Me.MonthLabel)
         Me.Controls.Add(Me.DaysTableLayout)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Name = "CalendarMonth"
-        Me.Size = New System.Drawing.Size(240, 150)
+        Me.Name = "CalendarMonthControl"
+        Me.Size = New System.Drawing.Size(243, 150)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

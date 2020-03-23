@@ -17,7 +17,11 @@ Public Class CalendarsForm
 
     Private _currentCalendar As PayCalendar
 
-    Private _currentMonth As CalendarMonthControl
+    Private _currentYear As Integer
+
+    Private _currentMonth As Integer
+
+    Private _currentMonthControl As CalendarMonthControl
 
     Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
 
@@ -40,6 +44,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _currentYear = Date.Today.Year
         LoadCalendars()
     End Sub
 
@@ -61,7 +66,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
-        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, New Date(2020, 1, 1), New Date(2020, 1, 31))
+        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
         DisplayCalendarDays()
     End Function
 
@@ -91,7 +96,7 @@ Public Class CalendarsForm
     Private Sub DaysTableLayout_Click(sender As CalendarMonthControl, calendarDay As CalendarDay)
         Dim p = PointToClient(MousePosition)
 
-        _currentMonth = sender
+        _currentMonthControl = sender
         Editor.ChangePayRate(calendarDay)
         Editor.Top = p.Y
         Editor.Left = p.X
@@ -101,7 +106,7 @@ Public Class CalendarsForm
 
     Private Sub Editor_Ok(calendarDay As CalendarDay) Handles Editor.Ok
         _changeTracker.Add(calendarDay)
-        _currentMonth.RefreshData()
+        _currentMonthControl.RefreshData()
     End Sub
 
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
@@ -128,6 +133,11 @@ Public Class CalendarsForm
     Private Sub DayTypesToolStripButton_Click(sender As Object, e As EventArgs) Handles DayTypesToolStripButton.Click
         Dim dialog = New DayTypesDialog()
         dialog.ShowDialog()
+    End Sub
+
+    Private Async Sub MonthSelectorControl_MonthChanged(year As Integer, month As Integer) Handles MonthSelectorControl.MonthChanged
+        _currentYear = year
+        Await LoadCalendarDays()
     End Sub
 
 End Class

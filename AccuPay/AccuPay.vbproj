@@ -441,6 +441,12 @@
     <Compile Include="Views\Core Forms\Calendars\CalendarDayEditorControl.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.Designer.vb">
+      <DependentUpon>CalendarMonthSelectorControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Calendars\CalendarsForm.Designer.vb">
       <DependentUpon>CalendarsForm.vb</DependentUpon>
     </Compile>
@@ -1949,6 +1955,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayEditorControl.resx">
       <DependentUpon>CalendarDayEditorControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.resx">
+      <DependentUpon>CalendarMonthSelectorControl.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarsForm.resx">
       <DependentUpon>CalendarsForm.vb</DependentUpon>
