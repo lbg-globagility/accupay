@@ -40,6 +40,8 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayNDOTRate As Decimal
 
+        Public Property DayConsideredAs As String
+
     End Class
 
 End Namespace

@@ -82,19 +82,19 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsRegularDay As Boolean Implements IPayrate.IsRegularDay
             Get
-                Return DayType.Name = "Regular Day"
-            End Get
-        End Property
-
-        Public ReadOnly Property IsRegularHoliday As Boolean Implements IPayrate.IsRegularHoliday
-            Get
-                Return DayType.Name = "Regular Holiday"
+                Return DayType.DayConsideredAs = "Regular Day"
             End Get
         End Property
 
         Public ReadOnly Property IsSpecialNonWorkingHoliday As Boolean Implements IPayrate.IsSpecialNonWorkingHoliday
             Get
-                Return DayType.Name = "Special Non-Working Holiday"
+                Return DayType.DayConsideredAs = "Special Non-Working Holiday"
+            End Get
+        End Property
+
+        Public ReadOnly Property IsRegularHoliday As Boolean Implements IPayrate.IsRegularHoliday
+            Get
+                Return DayType.DayConsideredAs = "Regular Holiday"
             End Get
         End Property
 

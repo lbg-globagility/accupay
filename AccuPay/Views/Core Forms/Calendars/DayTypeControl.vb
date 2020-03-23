@@ -1,10 +1,17 @@
 ﻿Option Strict On
 
+Imports System.Collections.ObjectModel
 Imports AccuPay.Entity
 
 Public Class DayTypeControl
 
     Private _dayType As DayType
+
+    Private ReadOnly _dayConsideredAsOptions As Collection(Of String) = New Collection(Of String) From {
+        "Regular Day",
+        "Special Non-Working Holiday",
+        "Regular Holiday"
+    }
 
     Public Property DayType As DayType
         Get
@@ -16,6 +23,10 @@ Public Class DayTypeControl
             RefreshForm()
         End Set
     End Property
+
+    Private Sub DayTypeControl_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        DayConsideredAsComboBox.DataSource = _dayConsideredAsOptions
+    End Sub
 
     Private Sub UpdateDayType()
         If _dayType Is Nothing Then Return
@@ -29,6 +40,7 @@ Public Class DayTypeControl
         _dayType.RestDayOTRate = CDec(RestDayOTTextBox.Text)
         _dayType.RestDayNDRate = CDec(RestDayNDTextBox.Text)
         _dayType.RestDayNDOTRate = CDec(RestDayNDOTTextBox.Text)
+        _dayType.DayConsideredAs = DirectCast(DayConsideredAsComboBox.SelectedItem, String)
     End Sub
 
     Private Sub RefreshForm()
@@ -43,6 +55,7 @@ Public Class DayTypeControl
         RestDayOTTextBox.Text = _dayType.RestDayOTRate.ToString()
         RestDayNDTextBox.Text = _dayType.RestDayNDRate.ToString()
         RestDayNDOTTextBox.Text = _dayType.RestDayNDOTRate.ToString()
+        DayConsideredAsComboBox.SelectedItem = _dayType.DayConsideredAs
     End Sub
 
 End Class

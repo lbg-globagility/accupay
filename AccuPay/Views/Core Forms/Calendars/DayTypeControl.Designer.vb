@@ -26,6 +26,9 @@ Partial Class DayTypeControl
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel9 = New System.Windows.Forms.Panel()
+        Me.Label9 = New System.Windows.Forms.Label()
+        Me.NameTextBox = New System.Windows.Forms.TextBox()
         Me.Panel8 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.RestDayNDOTTextBox = New System.Windows.Forms.TextBox()
@@ -47,11 +50,12 @@ Partial Class DayTypeControl
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.RestDayTextBox = New System.Windows.Forms.TextBox()
-        Me.Panel9 = New System.Windows.Forms.Panel()
-        Me.Label9 = New System.Windows.Forms.Label()
-        Me.NameTextBox = New System.Windows.Forms.TextBox()
+        Me.Panel10 = New System.Windows.Forms.Panel()
+        Me.DayConsideredAsComboBox = New System.Windows.Forms.ComboBox()
+        Me.Label10 = New System.Windows.Forms.Label()
         Me.Panel1.SuspendLayout()
         Me.TableLayoutPanel1.SuspendLayout()
+        Me.Panel9.SuspendLayout()
         Me.Panel8.SuspendLayout()
         Me.Panel7.SuspendLayout()
         Me.Panel6.SuspendLayout()
@@ -59,7 +63,7 @@ Partial Class DayTypeControl
         Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
-        Me.Panel9.SuspendLayout()
+        Me.Panel10.SuspendLayout()
         Me.SuspendLayout()
         '
         'RegularTextBox
@@ -101,6 +105,7 @@ Partial Class DayTypeControl
         Me.TableLayoutPanel1.Controls.Add(Me.Panel3, 0, 2)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel1, 0, 1)
         Me.TableLayoutPanel1.Controls.Add(Me.Panel2, 1, 1)
+        Me.TableLayoutPanel1.Controls.Add(Me.Panel10, 1, 0)
         Me.TableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
         Me.TableLayoutPanel1.Location = New System.Drawing.Point(0, 0)
         Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
@@ -113,6 +118,31 @@ Partial Class DayTypeControl
         Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.TableLayoutPanel1.Size = New System.Drawing.Size(831, 659)
         Me.TableLayoutPanel1.TabIndex = 4
+        '
+        'Panel9
+        '
+        Me.Panel9.Controls.Add(Me.Label9)
+        Me.Panel9.Controls.Add(Me.NameTextBox)
+        Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel9.Location = New System.Drawing.Point(3, 3)
+        Me.Panel9.Name = "Panel9"
+        Me.Panel9.Size = New System.Drawing.Size(409, 125)
+        Me.Panel9.TabIndex = 5
+        '
+        'Label9
+        '
+        Me.Label9.Location = New System.Drawing.Point(8, 8)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(100, 16)
+        Me.Label9.TabIndex = 4
+        Me.Label9.Text = "Name"
+        '
+        'NameTextBox
+        '
+        Me.NameTextBox.Location = New System.Drawing.Point(8, 24)
+        Me.NameTextBox.Name = "NameTextBox"
+        Me.NameTextBox.Size = New System.Drawing.Size(168, 22)
+        Me.NameTextBox.TabIndex = 1
         '
         'Panel8
         '
@@ -144,9 +174,9 @@ Partial Class DayTypeControl
         Me.Panel7.Controls.Add(Me.Label7)
         Me.Panel7.Controls.Add(Me.NightDiffTextBox)
         Me.Panel7.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel7.Location = New System.Drawing.Point(418, 396)
+        Me.Panel7.Location = New System.Drawing.Point(3, 527)
         Me.Panel7.Name = "Panel7"
-        Me.Panel7.Size = New System.Drawing.Size(410, 125)
+        Me.Panel7.Size = New System.Drawing.Size(409, 129)
         Me.Panel7.TabIndex = 9
         '
         'Label7
@@ -169,9 +199,9 @@ Partial Class DayTypeControl
         Me.Panel6.Controls.Add(Me.Label6)
         Me.Panel6.Controls.Add(Me.RestDayNDTextBox)
         Me.Panel6.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel6.Location = New System.Drawing.Point(3, 527)
+        Me.Panel6.Location = New System.Drawing.Point(418, 396)
         Me.Panel6.Name = "Panel6"
-        Me.Panel6.Size = New System.Drawing.Size(409, 129)
+        Me.Panel6.Size = New System.Drawing.Size(410, 125)
         Me.Panel6.TabIndex = 8
         '
         'Label6
@@ -185,7 +215,7 @@ Partial Class DayTypeControl
         'RestDayNDTextBox
         '
         Me.RestDayNDTextBox.Location = New System.Drawing.Point(8, 24)
-        Me.RestDayNDTextBox.MaximumSize = New System.Drawing.Size(250, 0)
+        Me.RestDayNDTextBox.MaximumSize = New System.Drawing.Size(250, 4)
         Me.RestDayNDTextBox.Name = "RestDayNDTextBox"
         Me.RestDayNDTextBox.Size = New System.Drawing.Size(168, 22)
         Me.RestDayNDTextBox.TabIndex = 1
@@ -290,30 +320,32 @@ Partial Class DayTypeControl
         Me.RestDayTextBox.Size = New System.Drawing.Size(168, 22)
         Me.RestDayTextBox.TabIndex = 1
         '
-        'Panel9
+        'Panel10
         '
-        Me.Panel9.Controls.Add(Me.Label9)
-        Me.Panel9.Controls.Add(Me.NameTextBox)
-        Me.Panel9.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel9.Location = New System.Drawing.Point(3, 3)
-        Me.Panel9.Name = "Panel9"
-        Me.Panel9.Size = New System.Drawing.Size(409, 125)
-        Me.Panel9.TabIndex = 5
+        Me.Panel10.Controls.Add(Me.DayConsideredAsComboBox)
+        Me.Panel10.Controls.Add(Me.Label10)
+        Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel10.Location = New System.Drawing.Point(418, 3)
+        Me.Panel10.Name = "Panel10"
+        Me.Panel10.Size = New System.Drawing.Size(410, 125)
+        Me.Panel10.TabIndex = 11
         '
-        'Label9
+        'DayConsideredAsComboBox
         '
-        Me.Label9.Location = New System.Drawing.Point(8, 8)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(100, 16)
-        Me.Label9.TabIndex = 4
-        Me.Label9.Text = "Name"
+        Me.DayConsideredAsComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.DayConsideredAsComboBox.FormattingEnabled = True
+        Me.DayConsideredAsComboBox.Location = New System.Drawing.Point(8, 24)
+        Me.DayConsideredAsComboBox.Name = "DayConsideredAsComboBox"
+        Me.DayConsideredAsComboBox.Size = New System.Drawing.Size(168, 21)
+        Me.DayConsideredAsComboBox.TabIndex = 5
         '
-        'NameTextBox
+        'Label10
         '
-        Me.NameTextBox.Location = New System.Drawing.Point(8, 24)
-        Me.NameTextBox.Name = "NameTextBox"
-        Me.NameTextBox.Size = New System.Drawing.Size(168, 22)
-        Me.NameTextBox.TabIndex = 1
+        Me.Label10.Location = New System.Drawing.Point(8, 8)
+        Me.Label10.Name = "Label10"
+        Me.Label10.Size = New System.Drawing.Size(168, 16)
+        Me.Label10.TabIndex = 4
+        Me.Label10.Text = "Day Considered As"
         '
         'DayTypeControl
         '
@@ -326,6 +358,8 @@ Partial Class DayTypeControl
         Me.Panel1.ResumeLayout(False)
         Me.Panel1.PerformLayout()
         Me.TableLayoutPanel1.ResumeLayout(False)
+        Me.Panel9.ResumeLayout(False)
+        Me.Panel9.PerformLayout()
         Me.Panel8.ResumeLayout(False)
         Me.Panel8.PerformLayout()
         Me.Panel7.ResumeLayout(False)
@@ -340,8 +374,7 @@ Partial Class DayTypeControl
         Me.Panel3.PerformLayout()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        Me.Panel9.ResumeLayout(False)
-        Me.Panel9.PerformLayout()
+        Me.Panel10.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -373,4 +406,7 @@ Partial Class DayTypeControl
     Friend WithEvents Panel9 As Panel
     Friend WithEvents Label9 As Label
     Friend WithEvents NameTextBox As TextBox
+    Friend WithEvents Panel10 As Panel
+    Friend WithEvents Label10 As Label
+    Friend WithEvents DayConsideredAsComboBox As ComboBox
 End Class
