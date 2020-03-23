@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Accupay.Data.Entities
+namespace AccuPay.Data.Entities
 {
     [Table("systemowner")]
     internal class SystemOwner

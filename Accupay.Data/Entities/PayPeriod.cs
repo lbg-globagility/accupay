@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
-namespace Accupay.Data.Entities
+namespace AccuPay.Data.Entities
 {
     [Table("payperiod")]
     public class PayPeriod : IPayPeriod

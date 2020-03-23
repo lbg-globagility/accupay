@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Accupay.DB;
-using Accupay.Data.Entities;
+using AccuPay.Data.Entities;
 
-namespace Accupay.Data
+namespace AccuPay.Data
 {
     internal class PayrollContext : DbContext
     {

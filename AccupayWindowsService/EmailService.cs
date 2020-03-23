@@ -1,4 +1,4 @@
-﻿using Accupay.Data.Repositories;
+﻿using AccuPay.Data.Repositories;
 using Accupay.Payslip;
 using GlobagilityShared.EmailSender;
 using System;
@@ -58,7 +58,7 @@ namespace AccupayWindowsService
 
         private void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
         {
-            Accupay.Data.Entities.PaystubEmail paystubEmail = null;
+            AccuPay.Data.Entities.PaystubEmail paystubEmail = null;
 
             try
             {
@@ -173,8 +173,8 @@ namespace AccupayWindowsService
         }
 
         private string GetErrorMessage(string errorTitle,
-                            Accupay.Data.Entities.PayPeriod currentPayPeriod,
-                            Accupay.Data.Entities.PayPeriod nextPayPeriod,
+                            AccuPay.Data.Entities.PayPeriod currentPayPeriod,
+                            AccuPay.Data.Entities.PayPeriod nextPayPeriod,
                             int? employeeId,
                             int? organizationId)
         {
