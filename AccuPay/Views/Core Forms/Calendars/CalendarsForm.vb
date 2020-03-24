@@ -7,6 +7,10 @@ Imports AccuPay.Repository
 
 Public Class CalendarsForm
 
+    Private Const WM_PARENTNOTIFY As Integer = &H210
+
+    Private Const WM_LBUTTONDOWN As Integer = &H201
+
     Private WithEvents Editor As CalendarDayEditorControl
 
     Private ReadOnly _repository As CalendarRepository
@@ -97,7 +101,7 @@ Public Class CalendarsForm
         Dim p = PointToClient(MousePosition)
 
         _currentMonthControl = sender
-        Editor.ChangePayRate(calendarDay)
+        Editor.ChangeCalendarDay(calendarDay)
         Editor.Top = p.Y
         Editor.Left = p.X
         Editor.BringToFront()
@@ -138,6 +142,25 @@ Public Class CalendarsForm
     Private Async Sub MonthSelectorControl_MonthChanged(year As Integer, month As Integer) Handles MonthSelectorControl.MonthChanged
         _currentYear = year
         Await LoadCalendarDays()
+    End Sub
+
+    Protected Overrides Sub WndProc(ByRef m As Message)
+        ' Capture all clicks
+        If (m.Msg = WM_LBUTTONDOWN Or (m.Msg = WM_PARENTNOTIFY AndAlso m.WParam.ToInt32() = WM_LBUTTONDOWN)) Then
+
+            ' When the Editor is visible, and the mouse was clicked outside the control, then hide the editor.
+            If Editor.Visible Then
+                Dim pointer = Editor.PointToClient(Cursor.Position)
+                Dim isHit = Editor.ClientRectangle.Contains(pointer)
+
+                If Not isHit Then
+                    Editor.Hide()
+                End If
+            End If
+
+        End If
+
+        MyBase.WndProc(m)
     End Sub
 
 End Class

@@ -6,17 +6,20 @@ Imports AccuPay.Repository
 
 Public Class CalendarDayEditorControl
 
+    ''' <summary>
+    ''' Occurs when the OK button is clicked.
+    ''' </summary>
+    ''' <param name="payrate"></param>
     Public Event Ok(payrate As CalendarDay)
 
     Private _calendarDay As CalendarDay
 
     Private _dayTypes As ICollection(Of DayType)
 
-    Private _repository As DayTypeRepository
+    Private ReadOnly _repository As DayTypeRepository
 
     Public Sub New()
         _repository = New DayTypeRepository()
-
         InitializeComponent()
     End Sub
 
@@ -29,7 +32,7 @@ Public Class CalendarDayEditorControl
         DayTypesComboBox.DataSource = _dayTypes
     End Sub
 
-    Public Sub ChangePayRate(calendarDay As CalendarDay)
+    Public Sub ChangeCalendarDay(calendarDay As CalendarDay)
         _calendarDay = calendarDay
 
         DayLabel.Text = _calendarDay.Date.ToString("MMM d", CultureInfo.InvariantCulture)
