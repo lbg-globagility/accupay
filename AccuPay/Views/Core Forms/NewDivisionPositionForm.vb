@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository
@@ -750,6 +751,9 @@ Public Class NewDivisionPositionForm
 
         Await _positionRepository.DeleteAsync(Me._currentPosition.RowID)
 
+        Dim repo As New UserActivityRepository
+        repo.RecordDelete(z_User, "Position")
+
         Await RefreshTreeView()
 
         ShowBalloonInfo($"Position: {positionName} was successfully deleted.", messageTitle)
@@ -761,6 +765,19 @@ Public Class NewDivisionPositionForm
         Dim divisionName = Me._currentDivision.Name
 
         Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
+
+
+        If Me._currentDivision.IsRoot Then
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Division Location")
+
+        Else
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Division")
+
+        End If
 
         Await RefreshTreeView()
 
