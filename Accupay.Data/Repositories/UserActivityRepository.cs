@@ -19,16 +19,19 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<UserActivity> ListWithItems
+        public IEnumerable<UserActivity> ListWithItems(string entityName = null)
         {
-            get
+            using (PayrollContext context = new PayrollContext())
             {
-                using (PayrollContext context = new PayrollContext())
+                IQueryable<UserActivity> query = context.UserActivities.
+                                                    Include(x => x.ActivityItems);
+
+                if (!string.IsNullOrWhiteSpace(entityName))
                 {
-                    return context.UserActivities.
-                                    Include(x => x.ActivityItems).
-                                    ToList();
+                    query = query.Where(x => x.EntityName == entityName);
                 }
+
+                return query.ToList();
             }
         }
 
