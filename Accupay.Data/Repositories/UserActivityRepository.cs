@@ -68,6 +68,7 @@ namespace AccuPay.Data.Repositories
                 {
                     Created = DateTime.Now,
                     UserId = userId,
+                    EntityName = entityName.ToUpper(),
 
                     ActivityItems = acitivityItems
                 });
