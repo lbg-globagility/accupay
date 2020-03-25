@@ -6,6 +6,7 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Repository
@@ -916,6 +917,9 @@ Public Class EmployeeForm
             Else : dgvEmp.Rows.Insert(0, 1)
 
             End If
+
+            Dim repo As New UserActivityRepository
+            repo.RecordAdd(z_User, "Employee")
 
             emp_rcount += 1
             dgvEmp_RowIndex = 0
@@ -4543,6 +4547,10 @@ Public Class EmployeeForm
 
                 fillempdisciplinary()
                 fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Disciplinary Action")
+
                 myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
             End If
 
@@ -4602,6 +4610,9 @@ Public Class EmployeeForm
 
             Dim sql As New SQL(str_quer)
             sql.ExecuteQuery()
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Disciplinary Action")
 
             If sql.HasError = False Then
 
@@ -5740,6 +5751,10 @@ Public Class EmployeeForm
                                       If(c_char = "1", "Yes", "No"),
                                       paramValues(8),
                                       paramValues(10))
+
+            Dim repo As New UserActivityRepository
+            repo.RecordAdd(z_User, "Promotion")
+
         Else
             With dgvPromotionList.CurrentRow
 
@@ -6315,6 +6330,10 @@ Public Class EmployeeForm
                                                      .Cells("bon_End").Value,
                                                      .Cells("bon_Amount").Value,
                                                      .Cells("bon_ProdID").Value)
+
+                            Dim repo As New UserActivityRepository
+                            repo.RecordAdd(z_User, "Bonus")
+
                         End If
                     End If
                 End If
@@ -6350,6 +6369,9 @@ Public Class EmployeeForm
                     New ExecuteQuery("CALL DEL_employeebonus('" & bonus_RowID & "');")
 
                 dgvempbon.Rows.Remove(dgvempbon.CurrentRow)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordDelete(z_User, "Bonus")
 
             End If
 
