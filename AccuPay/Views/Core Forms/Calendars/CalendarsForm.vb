@@ -163,4 +163,9 @@ Public Class CalendarsForm
         MyBase.WndProc(m)
     End Sub
 
+    Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
+        GeneralForm.listGeneralForm.Remove(Me.Name)
+        Close()
+    End Sub
+
 End Class
