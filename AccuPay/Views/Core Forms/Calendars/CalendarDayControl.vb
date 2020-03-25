@@ -23,9 +23,9 @@ Public Class CalendarDayControl
 
     Private Sub RefreshColor()
         Dim color As Color
-        If CalendarDay.DayType.Name = "Regular Day" Then
+        If CalendarDay.IsRegularDay Then
             color = RegularDayColor
-        ElseIf CalendarDay.DayType.Name = "Regular Holiday" Or CalendarDay.DayType.Name = "Special Non-Working Holiday" Then
+        ElseIf CalendarDay.IsHoliday Then
             color = HolidayColor
         End If
 
