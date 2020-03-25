@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace AccuPay.Data.Repositories
@@ -37,8 +38,6 @@ namespace AccuPay.Data.Repositories
 
         public void RecordAdd(int userId, string entityName)
         {
-            entityName = SetFirstLetterLowerCase(entityName);
-
             RecordSimple(userId, entityName, "Created a new");
         }
 
@@ -50,7 +49,7 @@ namespace AccuPay.Data.Repositories
 
         private void RecordSimple(int userId, string entityName, string simpleDescription)
         {
-            entityName = SetFirstLetterLowerCase(entityName);
+            entityName = SetStringToPascalCase(entityName);
 
             var acitivityItems = new List<UserActivityItem>()
                 {
@@ -90,12 +89,12 @@ namespace AccuPay.Data.Repositories
             return false;
         }
 
-        private static string SetFirstLetterLowerCase(string entityName)
+        private static string SetStringToPascalCase(string entityName)
         {
             if (!string.IsNullOrWhiteSpace(entityName))
             {
-                entityName = entityName[0].ToString().ToLower() +
-                    (entityName.Count() > 1 ? entityName.Substring(1) : "");
+                var textInfo = new CultureInfo("en-US", false).TextInfo;
+                entityName = textInfo.ToTitleCase(entityName);
             }
 
             return entityName;

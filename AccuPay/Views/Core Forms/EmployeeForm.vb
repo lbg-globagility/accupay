@@ -918,12 +918,15 @@ Public Class EmployeeForm
 
             End If
 
-            Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, "Employee")
-
             emp_rcount += 1
             dgvEmp_RowIndex = 0
-            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
+            If succeed Then
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Employee")
+                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
+
+            End If
         Else 'UPDATE employee
 
             If dgvEmp.CurrentRow Is Nothing Then Exit Sub
@@ -5754,7 +5757,6 @@ Public Class EmployeeForm
 
             Dim repo As New UserActivityRepository
             repo.RecordAdd(z_User, "Promotion")
-
         Else
             With dgvPromotionList.CurrentRow
 
