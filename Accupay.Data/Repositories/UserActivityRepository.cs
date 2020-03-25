@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +15,19 @@ namespace AccuPay.Data.Repositories
                 using (PayrollContext context = new PayrollContext())
                 {
                     return context.UserActivities.ToList();
+                }
+            }
+        }
+
+        public IEnumerable<UserActivity> ListWithItems
+        {
+            get
+            {
+                using (PayrollContext context = new PayrollContext())
+                {
+                    return context.UserActivities.
+                                    Include(x => x.ActivityItems).
+                                    ToList();
                 }
             }
         }

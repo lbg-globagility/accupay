@@ -19,7 +19,8 @@ namespace AccuPay.Data.Entities
         public DateTime? LastUpd { get; set; }
 
         public int UserId { get; set; }
+        public string EntityName { get; set; }
 
-        public virtual ICollection<UserActivityItem> ActivityItems { get; internal set; }
+        public virtual ICollection<UserActivityItem> ActivityItems { get; set; }
     }
 }
