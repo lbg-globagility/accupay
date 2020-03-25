@@ -5,6 +5,8 @@ Imports AccuPay.Entity
 
 Public Class CalendarDayControl
 
+    Public Shadows Event Click(sender As CalendarDayControl)
+
     Private ReadOnly RegularDayColor As Color = Color.FromArgb(0)
 
     Private ReadOnly HolidayColor As Color = Color.FromArgb(1, 255, 0, 0)
@@ -36,6 +38,12 @@ Public Class CalendarDayControl
     Private Sub CalendarDay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If CalendarDay Is Nothing Then Return
         RefreshData()
+    End Sub
+
+    Private Sub ClickHandler(sender As Object, e As EventArgs) Handles MyBase.Click,
+                                                                       DescriptionLabel.Click,
+                                                                       DayLabel.Click
+        RaiseEvent Click(Me)
     End Sub
 
 End Class

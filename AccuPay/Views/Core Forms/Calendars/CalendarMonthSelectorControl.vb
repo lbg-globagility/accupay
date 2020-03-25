@@ -11,6 +11,16 @@ Public Class CalendarMonthSelectorControl
 
     Private _currentMonth As Integer
 
+    Public Property Year As Integer
+        Get
+            Return _currentYear
+        End Get
+        Set(value As Integer)
+            _currentYear = value
+            YearTextBox.Text = _currentYear.ToString()
+        End Set
+    End Property
+
     Private Sub YearTextBox_TextChanged(sender As Object, e As EventArgs) Handles YearTextBox.TextChanged
         Dim year = 0
         Dim successful = Integer.TryParse(YearTextBox.Text, year)

@@ -34,7 +34,7 @@ Partial Class NewCalendarDialog
         '
         Me.NameTextbox.Location = New System.Drawing.Point(8, 24)
         Me.NameTextbox.Name = "NameTextbox"
-        Me.NameTextbox.Size = New System.Drawing.Size(104, 22)
+        Me.NameTextbox.Size = New System.Drawing.Size(272, 22)
         Me.NameTextbox.TabIndex = 0
         '
         'NameLabel
@@ -51,7 +51,7 @@ Partial Class NewCalendarDialog
         Me.CopyCalendarComboBox.FormattingEnabled = True
         Me.CopyCalendarComboBox.Location = New System.Drawing.Point(8, 72)
         Me.CopyCalendarComboBox.Name = "CopyCalendarComboBox"
-        Me.CopyCalendarComboBox.Size = New System.Drawing.Size(160, 21)
+        Me.CopyCalendarComboBox.Size = New System.Drawing.Size(272, 21)
         Me.CopyCalendarComboBox.TabIndex = 2
         '
         'Label1
@@ -64,18 +64,18 @@ Partial Class NewCalendarDialog
         '
         'CreateButton
         '
-        Me.CreateButton.Location = New System.Drawing.Point(104, 120)
+        Me.CreateButton.Location = New System.Drawing.Point(96, 128)
         Me.CreateButton.Name = "CreateButton"
-        Me.CreateButton.Size = New System.Drawing.Size(99, 23)
+        Me.CreateButton.Size = New System.Drawing.Size(99, 24)
         Me.CreateButton.TabIndex = 4
         Me.CreateButton.Text = "Create Calendar"
         Me.CreateButton.UseVisualStyleBackColor = True
         '
         'CancelButton
         '
-        Me.CancelButton.Location = New System.Drawing.Point(208, 120)
+        Me.CancelButton.Location = New System.Drawing.Point(200, 128)
         Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelButton.Size = New System.Drawing.Size(80, 24)
         Me.CancelButton.TabIndex = 5
         Me.CancelButton.Text = "Cancel"
         Me.CancelButton.UseVisualStyleBackColor = True
@@ -84,7 +84,7 @@ Partial Class NewCalendarDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(294, 223)
+        Me.ClientSize = New System.Drawing.Size(288, 164)
         Me.Controls.Add(Me.CancelButton)
         Me.Controls.Add(Me.CreateButton)
         Me.Controls.Add(Me.Label1)
@@ -92,8 +92,9 @@ Partial Class NewCalendarDialog
         Me.Controls.Add(Me.NameLabel)
         Me.Controls.Add(Me.NameTextbox)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.Name = "NewCalendarDialog"
-        Me.Text = "NewCalendarDialog"
+        Me.Text = "New Calendar"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

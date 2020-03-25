@@ -27,7 +27,7 @@ Public Class CalendarMonthControl
 
         For Each dayName In WeekDays
             Dim weekdayHeader = New Label()
-            weekdayHeader.TextAlign = ContentAlignment.MiddleCenter
+            weekdayHeader.Font = New Font("Segoe UI", 9.75)
             weekdayHeader.Text = dayName
 
             DaysTableLayout.Controls.Add(weekdayHeader)
@@ -36,7 +36,7 @@ Public Class CalendarMonthControl
         Dim firstDay = CalendarDays.First()
         Dim monthOffset = CInt(firstDay.Date.DayOfWeek)
 
-        MonthLabel.Text = firstDay.Date.ToString("MMMM")
+        MonthLabel.Text = firstDay.Date.ToString("MMMM yyyy")
 
         For Each calendarDay In CalendarDays
             Dim column = CInt(calendarDay.Date.DayOfWeek)
@@ -46,14 +46,14 @@ Public Class CalendarMonthControl
             dayControl.CalendarDay = calendarDay
             dayControl.Dock = DockStyle.Fill
 
-            AddHandler dayControl.Click, AddressOf DaysTableLayout_Click
+            AddHandler dayControl.Click, AddressOf DayControl_Click
 
             DaysTableLayout.Controls.Add(dayControl, column, row)
         Next
 
         Dim i = 0
         For Each rowStyle As RowStyle In DaysTableLayout.RowStyles
-            Dim rowHeight = If(i = 0, 16, 48)
+            Dim rowHeight = If(i = 0, 24, 48)
 
             rowStyle.SizeType = SizeType.Absolute
             rowStyle.Height = rowHeight
@@ -72,11 +72,8 @@ Public Class CalendarMonthControl
         Next
     End Sub
 
-    Private Sub DaysTableLayout_Click(sender As Object, e As EventArgs)
-        If Not TypeOf sender Is CalendarDayControl Then Return
-
-        Dim control = DirectCast(sender, CalendarDayControl)
-        Dim calendarDay = control.CalendarDay
+    Private Sub DayControl_Click(sender As CalendarDayControl)
+        Dim calendarDay = sender.CalendarDay
 
         RaiseEvent DayClicked(Me, calendarDay)
     End Sub

@@ -30,16 +30,17 @@ Partial Class CalendarDayControl
         '
         Me.DayLabel.AutoSize = True
         Me.DayLabel.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DayLabel.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.DayLabel.Location = New System.Drawing.Point(0, 0)
         Me.DayLabel.Name = "DayLabel"
-        Me.DayLabel.Size = New System.Drawing.Size(42, 13)
+        Me.DayLabel.Size = New System.Drawing.Size(48, 17)
         Me.DayLabel.TabIndex = 0
         Me.DayLabel.Text = "<Day>"
         '
         'DescriptionLabel
         '
         Me.DescriptionLabel.AutoSize = True
-        Me.DescriptionLabel.Location = New System.Drawing.Point(0, 16)
+        Me.DescriptionLabel.Location = New System.Drawing.Point(0, 24)
         Me.DescriptionLabel.Name = "DescriptionLabel"
         Me.DescriptionLabel.Size = New System.Drawing.Size(82, 13)
         Me.DescriptionLabel.TabIndex = 1
@@ -52,7 +53,7 @@ Partial Class CalendarDayControl
         Me.Controls.Add(Me.DescriptionLabel)
         Me.Controls.Add(Me.DayLabel)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Margin = New System.Windows.Forms.Padding(1)
+        Me.Margin = New System.Windows.Forms.Padding(0)
         Me.Name = "CalendarDayControl"
         Me.Size = New System.Drawing.Size(64, 40)
         Me.ResumeLayout(False)
