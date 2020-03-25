@@ -2,6 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Utilities
@@ -378,6 +379,10 @@ Public Class SalaryTab
                     context.Entry(_currentSalary).State = EntityState.Modified
                 Else
                     context.Salaries.Add(_currentSalary)
+
+                    Dim repo As New UserActivityRepository
+                    repo.RecordAdd(z_User, "Salary")
+
                 End If
 
                 If _isSystemOwnerBenchMark Then
@@ -432,6 +437,9 @@ Public Class SalaryTab
                 context.Salaries.Remove(_currentSalary)
                 context.SaveChanges()
             End Using
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Salary")
 
             LoadSalaries()
         End If
