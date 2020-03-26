@@ -512,4 +512,8 @@ Public Class EmployeeLeavesForm
 
     End Sub
 
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Leave")
+        userActivity.ShowDialog()
+    End Sub
 End Class

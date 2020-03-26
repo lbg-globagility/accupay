@@ -560,4 +560,8 @@ Public Class SalaryTab
         myBalloon(content, title, pbEmployee, 100, -20)
     End Sub
 
+    Private Sub UserActivitySalaryToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivitySalaryToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Salary")
+        userActivity.ShowDialog()
+    End Sub
 End Class

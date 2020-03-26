@@ -482,4 +482,8 @@ Public Class OfficialBusinessForm
 
     End Sub
 
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Official Business")
+        userActivity.ShowDialog()
+    End Sub
 End Class

@@ -39,6 +39,7 @@ Partial Class EmployeeAllowanceForm
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeAllowanceForm))
         Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
         Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
@@ -113,6 +114,7 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.pbEmpPicAllow, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -191,7 +193,7 @@ Partial Class EmployeeAllowanceForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewAllowance, Me.tsbtnSaveAllowance, Me.ToolStripSeparator9, Me.DeleteAllowanceButton, Me.ToolStripSeparator10, Me.tsbtnCancelAllowance, Me.btnClose, Me.ToolStripButton25, Me.tsbtnImportAllowance})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewAllowance, Me.tsbtnSaveAllowance, Me.ToolStripSeparator9, Me.DeleteAllowanceButton, Me.ToolStripSeparator10, Me.tsbtnCancelAllowance, Me.btnClose, Me.ToolStripButton25, Me.tsbtnImportAllowance, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -971,6 +973,14 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn18.Visible = False
         Me.DataGridViewTextBoxColumn18.Width = 103
         '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
+        '
         'EmployeeAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1085,4 +1095,5 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents pnlTxtLoanBalance As Panel
     Friend WithEvents txtallowamt As TextBox
     Friend WithEvents Label4 As Label
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
 End Class

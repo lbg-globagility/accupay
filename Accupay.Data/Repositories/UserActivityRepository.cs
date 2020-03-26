@@ -25,7 +25,7 @@ namespace AccuPay.Data.Repositories
             using (PayrollContext context = new PayrollContext())
             {
                 IQueryable<UserActivity> query = context.UserActivities.
-                                                    Include(x => x.ActivityItems);
+                                                    Include(x => x.ActivityItems).Include(x => x.User);
 
                 if (!string.IsNullOrWhiteSpace(entityName))
                 {

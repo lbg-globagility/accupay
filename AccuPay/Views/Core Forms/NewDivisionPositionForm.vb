@@ -877,4 +877,20 @@ Public Class NewDivisionPositionForm
 
     End Sub
 
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+
+        If Me._currentDivision.IsRoot Then
+            Dim userActivity As New UserActivityForm("Division Location")
+            userActivity.ShowDialog()
+        Else
+            Dim userActivity As New UserActivityForm("Division")
+            userActivity.ShowDialog()
+        End If
+
+    End Sub
+
+    Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Position")
+        userActivity.ShowDialog()
+    End Sub
 End Class

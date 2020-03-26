@@ -537,4 +537,8 @@ Public Class EmployeeAllowanceForm
         Await FilterEmployees()
     End Function
 
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Allowance")
+        userActivity.ShowDialog()
+    End Sub
 End Class

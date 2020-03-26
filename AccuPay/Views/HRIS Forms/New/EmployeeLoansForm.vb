@@ -848,6 +848,11 @@ Public Class EmployeeLoansForm
         Await FilterEmployees()
     End Function
 
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Loan")
+        userActivity.ShowDialog()
+    End Sub
+
 #End Region
 
 End Class

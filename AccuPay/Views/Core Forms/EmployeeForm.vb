@@ -7817,6 +7817,26 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Employee")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityBonusToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityBonusToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Bonus")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityPromotionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPromotionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Promotion")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityDisciplinaryActionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityDisciplinaryActionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Disciplinary Action")
+        userActivity.ShowDialog()
+    End Sub
+
     Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
         RemoveHandler MaskedTextBox2.Leave, AddressOf MaskedTextBox2_Leave
         If CheckBox2.Checked Then

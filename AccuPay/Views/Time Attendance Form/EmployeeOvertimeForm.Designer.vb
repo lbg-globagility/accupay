@@ -23,9 +23,10 @@ Partial Class EmployeeOvertimeForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeOvertimeForm))
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -95,6 +96,7 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -174,7 +176,7 @@ Partial Class EmployeeOvertimeForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.DeleteToolStripButton, Me.ToolStripSeparator10, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ImportToolStripButton, Me.UserActivityToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(842, 25)
@@ -607,14 +609,14 @@ Partial Class EmployeeOvertimeForm
         Me.OvertimeGridView.BackgroundColor = System.Drawing.Color.White
         Me.OvertimeGridView.ColumnHeadersHeight = 34
         Me.OvertimeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column2, Me.Column4, Me.Column1, Me.Column3, Me.Column7, Me.Column5, Me.Column6})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.OvertimeGridView.DefaultCellStyle = DataGridViewCellStyle1
         Me.OvertimeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.OvertimeGridView.Location = New System.Drawing.Point(28, 350)
         Me.OvertimeGridView.MultiSelect = False
@@ -697,14 +699,14 @@ Partial Class EmployeeOvertimeForm
         Me.EmployeesDataGridView.ColumnHeadersHeight = 34
         Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle2
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
@@ -793,10 +795,10 @@ Partial Class EmployeeOvertimeForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "N2"
-        DataGridViewCellStyle6.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "N2"
+        DataGridViewCellStyle3.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle3
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -825,6 +827,14 @@ Partial Class EmployeeOvertimeForm
         Me.DataGridViewTextBoxColumn10.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'EmployeeOvertimeForm
         '
@@ -935,4 +945,5 @@ Partial Class EmployeeOvertimeForm
     Friend WithEvents Label9 As Label
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label8 As Label
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
 End Class
