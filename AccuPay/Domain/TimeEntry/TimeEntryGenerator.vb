@@ -120,7 +120,7 @@ Public Class TimeEntryGenerator
 
             _officialBusinesses = context.OfficialBusinesses.
                 Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
-                Where(Function(o) o.StartDate <= _cutoffEnd AndAlso _cutoffStart <= o.EndDate).
+                Where(Function(o) o.StartDate.Value <= _cutoffEnd AndAlso _cutoffStart <= o.EndDate.Value).
                 Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
                 ToList()
 
@@ -255,7 +255,7 @@ Public Class TimeEntryGenerator
                 Dim employeeShift = shiftSchedules.FirstOrDefault(Function(s) s.EffectiveFrom <= currentDate And currentDate <= s.EffectiveTo)
                 Dim overtimes = overtimesInCutoff.Where(Function(o) o.OTStartDate <= currentDate And currentDate <= o.OTEndDate).ToList()
                 Dim leaves = leavesInCutoff.Where(Function(l) l.StartDate = currentDate).ToList()
-                Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate = currentDate)
+                Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate.Value = currentDate)
                 Dim dutyShiftSched = dutyShiftSchedules.FirstOrDefault(Function(es) es.DateSched = currentDate)
                 Dim currentTimeAttendanceLogs = timeAttendanceLogs.Where(Function(l) l.WorkDay = currentDate).ToList()
 
@@ -427,7 +427,7 @@ Public Class TimeEntryGenerator
     Private Function GetOfficialBusinesses(context As PayrollContext, employee As Employee) As IList(Of OfficialBusiness)
         Return context.OfficialBusinesses.
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
-            Where(Function(o) o.StartDate <= _cutoffEnd And _cutoffStart <= o.EndDate).
+            Where(Function(o) o.StartDate.Value <= _cutoffEnd And _cutoffStart <= o.EndDate.Value).
             Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
             ToList()
     End Function

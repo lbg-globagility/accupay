@@ -1,4 +1,4 @@
-﻿using Accupay.Data.Repositories;
+﻿using AccuPay.Data.Repositories;
 using Accupay.Payslip;
 using GlobagilityShared.EmailSender;
 using System;
@@ -19,9 +19,13 @@ namespace AccupayWindowsService
     // 6. Then install the service installUtil {path to .exe}\AccupayWindowsService.exe` ex. installUtil C:\AccupayWindowsService\AccupayWindowsService.exe
     // 7. Make sure the service is started.
 
-    //  C:\Windows\Microsoft.NET\Framework\v4.0.30319
+    //  TYPE THE COMMANDS BELOW ON COMMAND PROMPT AS ADMINISTRATOR TO INSTALL (Only use the command if there is already an existing AccupayWindowsService installed.)
+    //  cd C:\Windows\Microsoft.NET\Framework\v4.0.30319
     //  installUtil /u E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
     //  installUtil E:\Programs\_accupay_from_origin\AccupayWindowsService\bin\Debug\AccupayWindowsService.exe
+    //
+    // Dont forget to start the service!
+
     public partial class EmailService : ServiceBase
     {
         private Timer _emailTimer;
@@ -54,7 +58,7 @@ namespace AccupayWindowsService
 
         private void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
         {
-            Accupay.Data.Entities.PaystubEmail paystubEmail = null;
+            AccuPay.Data.Entities.PaystubEmail paystubEmail = null;
 
             try
             {
@@ -169,8 +173,8 @@ namespace AccupayWindowsService
         }
 
         private string GetErrorMessage(string errorTitle,
-                            Accupay.Data.Entities.PayPeriod currentPayPeriod,
-                            Accupay.Data.Entities.PayPeriod nextPayPeriod,
+                            AccuPay.Data.Entities.PayPeriod currentPayPeriod,
+                            AccuPay.Data.Entities.PayPeriod nextPayPeriod,
                             int? employeeId,
                             int? organizationId)
         {

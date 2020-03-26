@@ -70,10 +70,10 @@ Public Class AddOfficialBusinessForm
     Private Sub CreateDataBindings()
 
         StartDatePicker.DataBindings.Clear()
-        StartDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        StartDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "ProperStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndDatePicker.DataBindings.Clear()
-        EndDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "EndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
+        EndDatePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "ProperEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
         StartTimePicker.DataBindings.Add("Value", Me._newOfficialBusiness, "StartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
@@ -98,6 +98,7 @@ Public Class AddOfficialBusinessForm
     Private Sub ForceDataBindingsCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeePictureBox.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
@@ -116,6 +117,20 @@ Public Class AddOfficialBusinessForm
         Return True
 
     End Function
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._newOfficialBusiness Is Nothing Then Return
+
+        If EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+
+            Me._newOfficialBusiness.EndDate = Me._newOfficialBusiness.StartDate.Value.AddDays(1)
+        Else
+            Me._newOfficialBusiness.EndDate = Me._newOfficialBusiness.StartDate.Value
+
+        End If
+
+        EndDatePicker.Value = Me._newOfficialBusiness.EndDate
+    End Sub
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Me.Close()
@@ -143,6 +158,13 @@ Public Class AddOfficialBusinessForm
                     Me.Close()
                 End If
             End Function)
+
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
 

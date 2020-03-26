@@ -2,102 +2,55 @@
 
 Public Class SQLQueryToDatatable
 
-    Private priv_conn As New MySqlConnection
-
-    Private priv_da As New MySqlDataAdapter
-
-    Private priv_cmd As New MySqlCommand
+    Public Property ResultTable As DataTable
+    Public Property HasError As Boolean
 
     Sub New(SQLProcedureName As String,
             Optional cmd_time_out As Integer = 0)
 
-        'Static mysql_conn_text As String = n_DataBaseConnection.GetStringMySQLConnectionString
+        Dim mysqlCon As New MySqlConnection
+        Dim mysqlDataAdapater = New MySqlDataAdapter
 
-        'Dim n_DataBaseConnection As New DataBaseConnection
+        mysqlCon.ConnectionString = New DataBaseConnection().GetStringMySQLConnectionString
 
         If cmd_time_out > 0 Then
 
-            priv_conn.ConnectionString = mysql_conn_text &
-                "default command timeout=" & cmd_time_out & ";"
-        Else
-
-            priv_conn.ConnectionString = mysql_conn_text
-
+            mysqlCon.ConnectionString &= "default command timeout=" & cmd_time_out & ";"
         End If
 
         SQLProcedureName = SQLProcedureName.Trim
 
         Try
 
-            If priv_conn.State = ConnectionState.Open Then
-                priv_conn.Close()
+            If mysqlCon.State = ConnectionState.Open Then
+                mysqlCon.Close()
 
             End If
 
-            priv_conn.Open()
+            mysqlCon.Open()
 
-            priv_cmd = New MySqlCommand
+            Dim mysqlCmd = New MySqlCommand
 
-            With priv_cmd
-
+            With mysqlCmd
                 .Parameters.Clear()
-
-                .Connection = priv_conn
-
+                .Connection = mysqlCon
                 .CommandText = SQLProcedureName
-
                 .CommandType = CommandType.Text
 
-                priv_da.SelectCommand = priv_cmd
-
-                priv_da.Fill(n_ResultTable)
+                mysqlDataAdapater.SelectCommand = mysqlCmd
+                ResultTable = New DataTable
+                mysqlDataAdapater.Fill(ResultTable)
 
             End With
         Catch ex As Exception
-            _hasError = True
-            MsgBox(getErrExcptn(ex, MyBase.ToString))
+            HasError = True
+            MsgBox(Utils.getErrExcptn(ex, MyBase.ToString))
         Finally
-            priv_da.Dispose()
-
-            priv_conn.Close()
-
-            priv_cmd.Dispose()
-
+            mysqlDataAdapater.Dispose()
+            mysqlCon.Close()
+            mysqlDataAdapater.Dispose()
         End Try
 
     End Sub
-
-    Dim n_ResultTable As New DataTable
-
-    Property ResultTable As DataTable
-
-        Get
-            Return n_ResultTable
-
-        End Get
-
-        Set(value As DataTable)
-
-            n_ResultTable = value
-
-        End Set
-
-    End Property
-
-    Dim _hasError As Boolean = False
-
-    Property HasError As Boolean
-
-        Get
-            Return _hasError
-
-        End Get
-
-        Set(value As Boolean)
-            _hasError = value
-
-        End Set
-
-    End Property
 
 End Class

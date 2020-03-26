@@ -72,6 +72,7 @@ Partial Class EmployeeLeavesForm
         Me.SickLeaveAllowanceTextBox = New System.Windows.Forms.TextBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.StartTimePicker = New AccuPay.NullableTimePicker()
+        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.Panel5 = New System.Windows.Forms.Panel()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()
@@ -111,7 +112,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.EndTimePicker = New AccuPay.NullableTimePicker()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -623,6 +623,15 @@ Partial Class EmployeeLeavesForm
         Me.StartTimePicker.TabIndex = 8
         Me.StartTimePicker.Value = New Date(2020, 2, 18, 13, 57, 0, 0)
         '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
+        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 8
+        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
+        '
         'Panel5
         '
         Me.Panel5.Controls.Add(Me.Label10)
@@ -740,6 +749,7 @@ Partial Class EmployeeLeavesForm
         '
         'EndDatePicker
         '
+        Me.EndDatePicker.Enabled = False
         Me.EndDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
         Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
         Me.EndDatePicker.Name = "EndDatePicker"
@@ -1003,15 +1013,6 @@ Partial Class EmployeeLeavesForm
         '
         'LeaveListBindingSource
         '
-        '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 8
-        Me.EndTimePicker.Value = New Date(2020, 2, 18, 13, 55, 0, 0)
         '
         'EmployeeLeavesForm
         '

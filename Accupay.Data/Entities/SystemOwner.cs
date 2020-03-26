@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Accupay.Data.Entities
+namespace AccuPay.Data.Entities
 {
     [Table("systemowner")]
     internal class SystemOwner
@@ -10,7 +10,7 @@ namespace Accupay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int RowID { get; set; }
 
-        internal string Name { get; set; }
-        internal string IsCurrentOwner { get; set; }
+        public string Name { get; set; }
+        public string IsCurrentOwner { get; set; }
     }
 }

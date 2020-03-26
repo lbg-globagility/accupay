@@ -1,0 +1,7 @@
+ALTER TABLE `branch`
+	DROP INDEX `UniqueColumn`,
+	ADD UNIQUE INDEX `AK_branch_BranchCode` (`BranchCode`);
+	
+ALTER TABLE `branch`
+	DROP COLUMN `OrganizationID`,
+	DROP FOREIGN KEY `branch_ibfk_1`;

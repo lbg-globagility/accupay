@@ -1,8 +1,9 @@
-﻿using Accupay.Data.Entities;
+﻿using AccuPay.Data.Entities;
+using AccuPay.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Accupay.Data.Repositories
+namespace AccuPay.Data.Repositories
 {
     public class PaystubRepository
     {

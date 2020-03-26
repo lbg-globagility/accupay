@@ -167,6 +167,7 @@ Public Class EmployeeLeavesForm
     Private Sub ForceGridViewCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeeInfoTabLayout.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
@@ -312,6 +313,21 @@ Public Class EmployeeLeavesForm
 
                                             End Function)
     End Function
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._currentLeave Is Nothing Then Return
+
+        If StartTimePicker.Checked AndAlso EndTimePicker.Checked AndAlso
+            EndTimePicker.Value.Value.TimeOfDay < StartTimePicker.Value.Value.TimeOfDay Then
+
+            Me._currentLeave.EndDate = Me._currentLeave.StartDate.AddDays(1)
+        Else
+            Me._currentLeave.EndDate = Me._currentLeave.StartDate
+
+        End If
+
+        EndDatePicker.Value = Me._currentLeave.EndDate
+    End Sub
 
     Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
         ResetForm()
@@ -483,6 +499,13 @@ Public Class EmployeeLeavesForm
                                             End If
 
                                         End Function)
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
+
     End Sub
 
 End Class

@@ -162,6 +162,7 @@ Public Class EmployeeOvertimeForm
     Private Sub ForceGridViewCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeeInfoTabLayout.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
@@ -235,10 +236,10 @@ Public Class EmployeeOvertimeForm
         EndDatePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         StartTimePicker.DataBindings.Clear()
-        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        StartTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTStartTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         EndTimePicker.DataBindings.Clear()
-        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        EndTimePicker.DataBindings.Add("Value", Me._currentOvertime, "OTEndTimeFull", True) 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
         ReasonTextBox.DataBindings.Clear()
         ReasonTextBox.DataBindings.Add("Text", Me._currentOvertime, "Reason")
@@ -265,6 +266,20 @@ Public Class EmployeeOvertimeForm
 
                                             End Function)
     End Function
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._currentOvertime Is Nothing Then Return
+
+        If EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+
+            Me._currentOvertime.OTEndDate = Me._currentOvertime.OTStartDate.AddDays(1)
+        Else
+            Me._currentOvertime.OTEndDate = Me._currentOvertime.OTStartDate
+
+        End If
+
+        EndDatePicker.Value = Me._currentOvertime.OTEndDate
+    End Sub
 
     Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
 
@@ -453,6 +468,13 @@ Public Class EmployeeOvertimeForm
                                             End If
 
                                         End Function)
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
+
     End Sub
 
 End Class

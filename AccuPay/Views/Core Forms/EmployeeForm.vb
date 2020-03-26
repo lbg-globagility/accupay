@@ -706,8 +706,13 @@ Public Class EmployeeForm
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        If tsbtnNewEmp.Enabled = False And
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" & Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1 Then
+        'dgvEmp.CurrentRow.Cells("RowID").Value
+        If (tsbtnNewEmp.Enabled = False AndAlso
+            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
+           (tsbtnNewEmp.Enabled = True AndAlso
+            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             WarnBalloon("Employee ID has already exist.", "Invalid employee ID", lblforballoon, 0, -69)
@@ -3344,9 +3349,7 @@ Public Class EmployeeForm
 
         Using context As New PayrollContext
 
-            _branches = context.Branches.
-                                Where(Function(b) b.OrganizationID = z_OrganizationID).
-                                ToList
+            _branches = context.Branches.ToList
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
@@ -7567,7 +7570,7 @@ Public Class EmployeeForm
 
             Using context As New PayrollContext
 
-                _branches = Await context.Branches.Where(Function(b) b.OrganizationID = z_OrganizationID).ToListAsync
+                _branches = Await context.Branches.ToListAsync
 
                 BranchComboBox.DataSource = _branches
 

@@ -1,73 +1,10 @@
 ﻿Imports Microsoft.Win32
-Imports System.IO
 
 Public Class DataBaseConnection
 
     Dim regKey As RegistryKey
 
-    Dim n_NameOfServer As String = String.Empty
-
-    Property NameOfServer As String
-
-        Get
-            Return n_NameOfServer
-
-        End Get
-
-        Set(value As String)
-            n_NameOfServer = value
-
-        End Set
-
-    End Property
-
-    Dim n_IDOfUser As String = String.Empty
-
-    Property IDOfUser As String
-        Get
-            Return n_IDOfUser
-
-        End Get
-
-        Set(value As String)
-            n_IDOfUser = value
-
-        End Set
-
-    End Property
-
-    Dim n_PasswordOfDatabase As String = String.Empty
-
-    Property PasswordOfDatabase As String
-        Get
-            Return n_PasswordOfDatabase
-
-        End Get
-
-        Set(value As String)
-            n_PasswordOfDatabase = value
-
-        End Set
-
-    End Property
-
-    Dim n_NameOfDatabase As String = String.Empty
-    Private ReadOnly _applicationStartupPath As String
-
-    Property NameOfDatabase As String
-        Get
-            Return n_NameOfDatabase
-
-        End Get
-
-        Set(value As String)
-            n_NameOfDatabase = value
-
-        End Set
-
-    End Property
-
-    Function GetStringMySQLConnectionString(Optional updateModuleVariables As Boolean = True) As String
+    Function GetStringMySQLConnectionString() As String
 
         Dim ver = Nothing
 
@@ -110,25 +47,6 @@ Public Class DataBaseConnection
                 ";user id=" & userId &
                 ";password=" & password &
                 ";database=" & database & ";"
-
-            n_NameOfServer = server
-            n_IDOfUser = userId
-            n_PasswordOfDatabase = password
-            n_NameOfDatabase = database
-
-            'did this so that professional code can access this shit
-            'visual basic modules are fucking trash
-            If updateModuleVariables Then
-
-                sys_servername = server
-                sys_userid = userId
-                sys_password = password
-                sys_db = database
-                sys_apppath = apppath
-                installerpath = sys_apppath
-                db_connectinstring = connstringresult
-
-            End If
         Catch ex As Exception
             'MsgBox(getErrExcptn(ex, "DataBaseConnection"))
         Finally

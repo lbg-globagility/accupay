@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
-using System.Text;
 
-namespace Accupay.Data.Entities
+namespace AccuPay.Data.Entities
 {
     [Table("payperiod")]
     public class PayPeriod : IPayPeriod

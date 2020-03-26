@@ -73,8 +73,6 @@ Public Class Cinema2000TardinessReportProvider
             previousMonth = [date].Month - 1
         End If
 
-        Dim lastDayOfThePreviousMonth = New Date([date].Year, previousMonth, Date.DaysInMonth([date].Year, previousMonth))
-
         Dim firstDayOneYear As Date
         If firstDayOfTheMonth.Month = DecemberMonth Then
             'if the firstDayOfTheMonth is 12/01/2019, lastYearDate is 1/01/2019
@@ -142,7 +140,7 @@ Public Class Cinema2000TardinessReportProvider
 
             Dim previousOffenseList = Await context.TimeEntries.
                                             Include(Function(t) t.Employee).
-                                            Where(Function(t) t.Date >= earliestFirstOffenseDate.Value AndAlso t.Date <= lastDayOfThePreviousMonth).
+                                            Where(Function(t) t.Date >= earliestFirstOffenseDate.Value AndAlso t.Date <= lastDayOfTheMonth).
                                             Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
                                             Where(Function(t) t.LateHours > 0).
                                             ToListAsync
@@ -163,7 +161,7 @@ Public Class Cinema2000TardinessReportProvider
                 Dim employeeOffenseList = previousOffenseList.
                                             Where(Function(o) o.EmployeeID = tardinessReportModel.EmployeeId).
                                             Where(Function(o) o.Date >= firstOffenseDate).
-                                            Where(Function(o) o.Date <= lastDayOfThePreviousMonth).
+                                            Where(Function(o) o.Date <= lastDayOfTheMonth).
                                             ToList
 
                 Dim employeeOffenseListPerMonth = employeeOffenseList.

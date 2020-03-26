@@ -24,7 +24,6 @@ Partial Class EmployeeAllowanceForm
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -34,6 +33,7 @@ Partial Class EmployeeAllowanceForm
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -61,8 +61,7 @@ Partial Class EmployeeAllowanceForm
         Me.txtallowamt = New System.Windows.Forms.TextBox()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
-        Me.NullableDatePicker1 = New AccuPay.NullableDatePicker()
-        Me.Label168 = New System.Windows.Forms.Label()
+        Me.lblEndDate = New System.Windows.Forms.Label()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.dtpallowstartdate = New System.Windows.Forms.DateTimePicker()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -77,18 +76,9 @@ Partial Class EmployeeAllowanceForm
         Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
         Me.Label156 = New System.Windows.Forms.Label()
         Me.dgvempallowance = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.eall_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.eall_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.searchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
@@ -103,6 +93,16 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dtpallowenddate = New AccuPay.NullableDatePicker()
+        Me.eall_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.allow_taxab = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eall_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -303,8 +303,8 @@ Partial Class EmployeeAllowanceForm
         Me.AllowanceDetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.pnlTxtLoanBalance, 0, 9)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.NullableDatePicker1, 0, 7)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 6)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.dtpallowenddate, 0, 7)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.lblEndDate, 0, 6)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel2, 0, 5)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 4)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Panel1, 0, 3)
@@ -369,24 +369,15 @@ Partial Class EmployeeAllowanceForm
         Me.Label163.TabIndex = 381
         Me.Label163.Text = "Amount"
         '
-        'NullableDatePicker1
+        'lblEndDate
         '
-        Me.NullableDatePicker1.Location = New System.Drawing.Point(20, 160)
-        Me.NullableDatePicker1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.NullableDatePicker1.Name = "NullableDatePicker1"
-        Me.NullableDatePicker1.Size = New System.Drawing.Size(195, 22)
-        Me.NullableDatePicker1.TabIndex = 380
-        Me.NullableDatePicker1.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
-        '
-        'Label168
-        '
-        Me.Label168.AutoSize = True
-        Me.Label168.Location = New System.Drawing.Point(20, 144)
-        Me.Label168.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label168.Name = "Label168"
-        Me.Label168.Size = New System.Drawing.Size(53, 13)
-        Me.Label168.TabIndex = 374
-        Me.Label168.Text = "End date"
+        Me.lblEndDate.AutoSize = True
+        Me.lblEndDate.Location = New System.Drawing.Point(20, 144)
+        Me.lblEndDate.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.lblEndDate.Name = "lblEndDate"
+        Me.lblEndDate.Size = New System.Drawing.Size(53, 13)
+        Me.lblEndDate.TabIndex = 374
+        Me.lblEndDate.Text = "End date"
         '
         'Panel2
         '
@@ -549,33 +540,6 @@ Partial Class EmployeeAllowanceForm
         Me.dgvempallowance.Size = New System.Drawing.Size(784, 250)
         Me.dgvempallowance.TabIndex = 364
         '
-        'eall_RowID
-        '
-        Me.eall_RowID.DataPropertyName = "RowID"
-        Me.eall_RowID.HeaderText = "RowID"
-        Me.eall_RowID.Name = "eall_RowID"
-        Me.eall_RowID.ReadOnly = True
-        Me.eall_RowID.Visible = False
-        Me.eall_RowID.Width = 50
-        '
-        'eall_Type
-        '
-        Me.eall_Type.DataPropertyName = "Type"
-        Me.eall_Type.HeaderText = "Type"
-        Me.eall_Type.Name = "eall_Type"
-        Me.eall_Type.ReadOnly = True
-        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Type.Width = 180
-        '
-        'eall_Frequency
-        '
-        Me.eall_Frequency.DataPropertyName = "AllowanceFrequency"
-        Me.eall_Frequency.HeaderText = "Frequency"
-        Me.eall_Frequency.Name = "eall_Frequency"
-        Me.eall_Frequency.ReadOnly = True
-        Me.eall_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Frequency.Width = 180
-        '
         'eall_Start
         '
         '
@@ -654,33 +618,6 @@ Partial Class EmployeeAllowanceForm
         Me.eall_End.ReadOnly = True
         Me.eall_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
-        'eall_Amount
-        '
-        Me.eall_Amount.DataPropertyName = "Amount"
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle1.Format = "N2"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle1
-        Me.eall_Amount.HeaderText = "Amount"
-        Me.eall_Amount.Name = "eall_Amount"
-        Me.eall_Amount.ReadOnly = True
-        Me.eall_Amount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eall_Amount.Width = 180
-        '
-        'allow_taxab
-        '
-        Me.allow_taxab.HeaderText = "Taxable"
-        Me.allow_taxab.Name = "allow_taxab"
-        Me.allow_taxab.ReadOnly = True
-        Me.allow_taxab.Visible = False
-        '
-        'eall_ProdID
-        '
-        Me.eall_ProdID.HeaderText = "ProductID"
-        Me.eall_ProdID.Name = "eall_ProdID"
-        Me.eall_ProdID.ReadOnly = True
-        Me.eall_ProdID.Visible = False
-        '
         'employeesDataGridView
         '
         Me.employeesDataGridView.AllowUserToAddRows = False
@@ -711,27 +648,6 @@ Partial Class EmployeeAllowanceForm
         Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.employeesDataGridView.Size = New System.Drawing.Size(352, 415)
         Me.employeesDataGridView.TabIndex = 144
-        '
-        'cemp_EmployeeID
-        '
-        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
-        Me.cemp_EmployeeID.HeaderText = "Employee ID"
-        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
-        Me.cemp_EmployeeID.ReadOnly = True
-        '
-        'cemp_LastName
-        '
-        Me.cemp_LastName.DataPropertyName = "LastName"
-        Me.cemp_LastName.HeaderText = "Last Name"
-        Me.cemp_LastName.Name = "cemp_LastName"
-        Me.cemp_LastName.ReadOnly = True
-        '
-        'cemp_FirstName
-        '
-        Me.cemp_FirstName.DataPropertyName = "FirstName"
-        Me.cemp_FirstName.HeaderText = "First Name"
-        Me.cemp_FirstName.Name = "cemp_FirstName"
-        Me.cemp_FirstName.ReadOnly = True
         '
         'searchTextBox
         '
@@ -877,6 +793,90 @@ Partial Class EmployeeAllowanceForm
         Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
         Me.DataGridViewTextBoxColumn9.ReadOnly = True
         Me.DataGridViewTextBoxColumn9.Visible = False
+        '
+        'dtpallowenddate
+        '
+        Me.dtpallowenddate.Location = New System.Drawing.Point(20, 160)
+        Me.dtpallowenddate.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.dtpallowenddate.Name = "dtpallowenddate"
+        Me.dtpallowenddate.Size = New System.Drawing.Size(195, 22)
+        Me.dtpallowenddate.TabIndex = 380
+        Me.dtpallowenddate.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
+        '
+        'eall_RowID
+        '
+        Me.eall_RowID.DataPropertyName = "RowID"
+        Me.eall_RowID.HeaderText = "RowID"
+        Me.eall_RowID.Name = "eall_RowID"
+        Me.eall_RowID.ReadOnly = True
+        Me.eall_RowID.Visible = False
+        Me.eall_RowID.Width = 50
+        '
+        'eall_Type
+        '
+        Me.eall_Type.DataPropertyName = "Type"
+        Me.eall_Type.HeaderText = "Type"
+        Me.eall_Type.Name = "eall_Type"
+        Me.eall_Type.ReadOnly = True
+        Me.eall_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Type.Width = 180
+        '
+        'eall_Frequency
+        '
+        Me.eall_Frequency.DataPropertyName = "AllowanceFrequency"
+        Me.eall_Frequency.HeaderText = "Frequency"
+        Me.eall_Frequency.Name = "eall_Frequency"
+        Me.eall_Frequency.ReadOnly = True
+        Me.eall_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Frequency.Width = 180
+        '
+        'eall_Amount
+        '
+        Me.eall_Amount.DataPropertyName = "Amount"
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle1.Format = "N2"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.eall_Amount.DefaultCellStyle = DataGridViewCellStyle1
+        Me.eall_Amount.HeaderText = "Amount"
+        Me.eall_Amount.Name = "eall_Amount"
+        Me.eall_Amount.ReadOnly = True
+        Me.eall_Amount.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eall_Amount.Width = 180
+        '
+        'allow_taxab
+        '
+        Me.allow_taxab.HeaderText = "Taxable"
+        Me.allow_taxab.Name = "allow_taxab"
+        Me.allow_taxab.ReadOnly = True
+        Me.allow_taxab.Visible = False
+        '
+        'eall_ProdID
+        '
+        Me.eall_ProdID.HeaderText = "ProductID"
+        Me.eall_ProdID.Name = "eall_ProdID"
+        Me.eall_ProdID.ReadOnly = True
+        Me.eall_ProdID.Visible = False
+        '
+        'cemp_EmployeeID
+        '
+        Me.cemp_EmployeeID.DataPropertyName = "EmployeeNo"
+        Me.cemp_EmployeeID.HeaderText = "Employee ID"
+        Me.cemp_EmployeeID.Name = "cemp_EmployeeID"
+        Me.cemp_EmployeeID.ReadOnly = True
+        '
+        'cemp_LastName
+        '
+        Me.cemp_LastName.DataPropertyName = "LastName"
+        Me.cemp_LastName.HeaderText = "Last Name"
+        Me.cemp_LastName.Name = "cemp_LastName"
+        Me.cemp_LastName.ReadOnly = True
+        '
+        'cemp_FirstName
+        '
+        Me.cemp_FirstName.DataPropertyName = "FirstName"
+        Me.cemp_FirstName.HeaderText = "First Name"
+        Me.cemp_FirstName.Name = "cemp_FirstName"
+        Me.cemp_FirstName.ReadOnly = True
         '
         'DataGridViewTextBoxColumn19
         '
@@ -1074,8 +1074,8 @@ Partial Class EmployeeAllowanceForm
     Friend WithEvents Label350 As Label
     Friend WithEvents Label1 As Label
     Friend WithEvents Label163 As Label
-    Friend WithEvents NullableDatePicker1 As NullableDatePicker
-    Friend WithEvents Label168 As Label
+    Friend WithEvents dtpallowenddate As NullableDatePicker
+    Friend WithEvents lblEndDate As Label
     Friend WithEvents Panel2 As Panel
     Friend WithEvents dtpallowstartdate As DateTimePicker
     Friend WithEvents Label3 As Label

@@ -95,10 +95,13 @@ Namespace Global.AccuPay.Repository
             If context.OfficialBusinesses.
                 Where(Function(l) If(officialBusiness.RowID Is Nothing, True, Nullable.Equals(officialBusiness.RowID, l.RowID) = False)).
                 Where(Function(l) l.EmployeeID.Value = officialBusiness.EmployeeID.Value).
-                Where(Function(l) l.StartDate = officialBusiness.StartDate).
+                Where(Function(l) (l.StartDate.HasValue AndAlso
+                                    officialBusiness.StartDate.HasValue AndAlso
+                                    l.StartDate.Value.Date = officialBusiness.StartDate.Value.Date)).
                 Any() Then
 
-                Throw New ArgumentException($"Employee already has an official business for {officialBusiness.StartDate.ToShortDateString()}")
+                Throw New ArgumentException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}")
+
             End If
 
             If officialBusiness.RowID Is Nothing Then

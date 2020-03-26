@@ -317,23 +317,32 @@ Public Class SelectPayslipEmployeesForm
         EnableDisableButtons()
     End Sub
 
-    Private Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
+    Private Async Sub RefreshEmailServiceButton_Click(sender As Object, e As EventArgs) Handles RefreshEmailServiceButton.Click
+
+        Dim serviceName = StringConfig.AccupayEmailServiceName
+        Dim globagilityHelpDescription = $"Please restart the {serviceName} manually or contact Globagility Inc. for assistance."
 
         Try
             'TODO: getting the IP Address should be from a static class and also will be used by other
             'functions that are needing the values from registry
 
             Dim regKey = Registry.LocalMachine.OpenSubKey("Software\Globagility\DBConn\GoldWings", True)
-
             Dim serverIpAddress = regKey.GetValue("server").ToString
 
-            'TODO: AccuPay Email Service should be stored in a static class that will also be used
-            'by the AccuPayWindowService project.
-            Dim windowsService = New WindowsServiceController("AccuPay Email Service", serverIpAddress)
-            windowsService.StartOrRestart()
-            MessageBoxHelper.Information("Service successfully restarted.")
+            Dim service = New WSMService(serverIpAddress, serviceName)
+            Dim result = Await service.StartOrRestart()
+
+            If result.IsSuccessStatusCode Then
+                MessageBoxHelper.Information("Service successfully restarted.")
+            Else
+                MessageBoxHelper.Information($"Cannot restart the service at this time. {globagilityHelpDescription}")
+
+            End If
+
+            ''TODO: AccuPay Email Service should be stored in a static class that will also be used
+            ''by the AccuPayWindowService project.
         Catch ex As Exception
-            MessageBoxHelper.ErrorMessage("An error occured trying to restart the service. Please restart the ""Accupay Windows Service"" manually or contact Globagility Inc. for assistance.")
+            MessageBoxHelper.ErrorMessage($"An error occured trying to restart the service. {globagilityHelpDescription}")
 
         End Try
 
