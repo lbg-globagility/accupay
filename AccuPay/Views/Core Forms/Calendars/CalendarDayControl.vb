@@ -13,9 +13,14 @@ Public Class CalendarDayControl
 
     Public Property CalendarDay As CalendarDay
 
-    Public Sub RefreshData()
-        RefreshContent()
-        RefreshColor()
+    Public Sub RefreshControl()
+        If CalendarDay Is Nothing Then
+            DayLabel.Text = String.Empty
+            DescriptionLabel.Text = String.Empty
+        Else
+            RefreshContent()
+            RefreshColor()
+        End If
     End Sub
 
     Private Sub RefreshContent()
@@ -36,8 +41,7 @@ Public Class CalendarDayControl
     End Sub
 
     Private Sub CalendarDay_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If CalendarDay Is Nothing Then Return
-        RefreshData()
+        RefreshControl()
     End Sub
 
     Private Sub ClickHandler(sender As Object, e As EventArgs) Handles MyBase.Click,

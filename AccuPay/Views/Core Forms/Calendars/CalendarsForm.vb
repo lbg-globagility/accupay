@@ -11,6 +11,8 @@ Public Class CalendarsForm
 
     Private Const WM_LBUTTONDOWN As Integer = &H201
 
+    Private Const MonthsPerYear As Integer = 12
+
     Private WithEvents Editor As CalendarDayEditorControl
 
     Private ReadOnly _repository As CalendarRepository
@@ -38,13 +40,29 @@ Public Class CalendarsForm
         InitializeView()
     End Sub
 
-    Public Sub InitializeView()
+    Private Sub InitializeView()
         ' Initialize CalendarsDataGridView
         CalendarsDataGridView.AutoGenerateColumns = False
 
         ' Initialize CalendarDayEditor
         Editor.Hide()
         Controls.Add(Editor)
+
+        InitializeMonthControls()
+    End Sub
+
+    Private Sub InitializeMonthControls()
+        CalendarPanel.SuspendLayout()
+
+        For Each i In Enumerable.Range(0, MonthsPerYear)
+            Dim monthControl = New CalendarMonthControl()
+            monthControl.Dock = DockStyle.Top
+            AddHandler monthControl.DayClick, AddressOf MonthControl_DayClick
+
+            CalendarPanel.Controls.Add(monthControl)
+        Next
+
+        CalendarPanel.ResumeLayout()
     End Sub
 
     Private Sub CalendarsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -61,7 +79,8 @@ Public Class CalendarsForm
         End If
 
         _currentCalendar = selectedCalendar
-        _changeTracker.Clear()
+        ClearChangeTracker()
+        CalendarLabel.Text = _currentCalendar.Name
         Await LoadCalendarDays()
     End Sub
 
@@ -79,26 +98,18 @@ Public Class CalendarsForm
         If _calendarDays Is Nothing Then Return
 
         Dim payratesByMonths = _calendarDays.
-            GroupBy(Function(p) p.Date.Month).
-            Reverse()
-
-        CalendarPanel.SuspendLayout()
-        CalendarPanel.Controls.Clear()
+            GroupBy(Function(p) p.Date.Month)
 
         For Each payratesByMonth In payratesByMonths
-            Dim calendarMonthComponent = New CalendarMonthControl()
-            AddHandler calendarMonthComponent.DayClicked, AddressOf DaysTableLayout_Click
+            Dim index = MonthsPerYear - payratesByMonth.Key
 
-            calendarMonthComponent.Dock = DockStyle.Top
-            calendarMonthComponent.CalendarDays = payratesByMonth.ToList()
-
-            CalendarPanel.Controls.Add(calendarMonthComponent)
+            Dim control = DirectCast(CalendarPanel.Controls(index), CalendarMonthControl)
+            control.CalendarDays = payratesByMonth.ToList()
+            control.RefreshControl()
         Next
-
-        CalendarPanel.ResumeLayout()
     End Sub
 
-    Private Sub DaysTableLayout_Click(sender As CalendarMonthControl, calendarDay As CalendarDay)
+    Private Sub MonthControl_DayClick(sender As CalendarMonthControl, calendarDay As CalendarDay)
         Dim p = PointToClient(MousePosition)
 
         _currentMonthControl = sender
@@ -110,7 +121,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub Editor_Ok(calendarDay As CalendarDay) Handles Editor.Ok
-        _changeTracker.Add(calendarDay)
+        AddToChangeTracker(calendarDay)
         _currentMonthControl.RefreshData()
     End Sub
 
@@ -126,12 +137,12 @@ Public Class CalendarsForm
             Next
 
             Await context.SaveChangesAsync()
-            _changeTracker.Clear()
+            ClearChangeTracker()
         End Using
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
-        _changeTracker.Clear()
+        ClearChangeTracker()
         Await LoadCalendarDays()
     End Sub
 
@@ -146,7 +157,7 @@ Public Class CalendarsForm
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As Message)
-        ' Capture all clicks
+        ' Capture all mouse left button clicks
         If (m.Msg = WM_LBUTTONDOWN Or (m.Msg = WM_PARENTNOTIFY AndAlso m.WParam.ToInt32() = WM_LBUTTONDOWN)) Then
 
             ' When the Editor is visible, and the mouse was clicked outside the control, then hide the editor.
@@ -167,6 +178,18 @@ Public Class CalendarsForm
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         GeneralForm.listGeneralForm.Remove(Me.Name)
         Close()
+    End Sub
+
+    Private Sub AddToChangeTracker(calendarDay As CalendarDay)
+        _changeTracker.Add(calendarDay)
+        CancelToolStripButton.Enabled = True
+        SaveToolStripButton.Enabled = True
+    End Sub
+
+    Private Sub ClearChangeTracker()
+        _changeTracker.Clear()
+        CancelToolStripButton.Enabled = False
+        SaveToolStripButton.Enabled = False
     End Sub
 
 End Class
