@@ -906,6 +906,8 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dtpEvaluationDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtpRegularizationDate = New System.Windows.Forms.DateTimePicker()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1489,6 +1491,8 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.dtpRegularizationDate)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.dtpEvaluationDate)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LeaveGroupBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AddBranchLinkButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchComboBox)
@@ -1497,10 +1501,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label364)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboAgency)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox1)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label363)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label362)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox2)
@@ -1598,6 +1598,10 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label315)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LinkLabel2)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label365)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox2)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox1)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox2)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox1)
         Me.SplitContainer2.Panel1MinSize = 0
         '
         'SplitContainer2.Panel2
@@ -1832,39 +1836,43 @@ Partial Class EmployeeForm
         'MaskedTextBox2
         '
         Me.MaskedTextBox2.BackColor = System.Drawing.Color.White
-        Me.MaskedTextBox2.Location = New System.Drawing.Point(149, 433)
+        Me.MaskedTextBox2.Location = New System.Drawing.Point(335, 433)
         Me.MaskedTextBox2.Name = "MaskedTextBox2"
         Me.MaskedTextBox2.ReadOnly = True
-        Me.MaskedTextBox2.Size = New System.Drawing.Size(100, 20)
+        Me.MaskedTextBox2.Size = New System.Drawing.Size(25, 20)
         Me.MaskedTextBox2.TabIndex = 19
         Me.MaskedTextBox2.ValidatingType = GetType(Date)
+        Me.MaskedTextBox2.Visible = False
         '
         'MaskedTextBox1
         '
         Me.MaskedTextBox1.BackColor = System.Drawing.Color.White
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(149, 403)
+        Me.MaskedTextBox1.Location = New System.Drawing.Point(335, 403)
         Me.MaskedTextBox1.Name = "MaskedTextBox1"
         Me.MaskedTextBox1.ReadOnly = True
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(100, 20)
+        Me.MaskedTextBox1.Size = New System.Drawing.Size(25, 20)
         Me.MaskedTextBox1.TabIndex = 17
+        Me.MaskedTextBox1.Visible = False
         '
         'CheckBox2
         '
         Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(128, 439)
+        Me.CheckBox2.Location = New System.Drawing.Point(314, 439)
         Me.CheckBox2.Name = "CheckBox2"
         Me.CheckBox2.Size = New System.Drawing.Size(15, 14)
         Me.CheckBox2.TabIndex = 18
         Me.CheckBox2.UseVisualStyleBackColor = True
+        Me.CheckBox2.Visible = False
         '
         'CheckBox1
         '
         Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(128, 405)
+        Me.CheckBox1.Location = New System.Drawing.Point(314, 405)
         Me.CheckBox1.Name = "CheckBox1"
         Me.CheckBox1.Size = New System.Drawing.Size(15, 14)
         Me.CheckBox1.TabIndex = 16
         Me.CheckBox1.UseVisualStyleBackColor = True
+        Me.CheckBox1.Visible = False
         '
         'Label363
         '
@@ -8815,6 +8823,26 @@ Partial Class EmployeeForm
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
         '
+        'dtpEvaluationDate
+        '
+        Me.dtpEvaluationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpEvaluationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpEvaluationDate.Location = New System.Drawing.Point(128, 403)
+        Me.dtpEvaluationDate.Name = "dtpEvaluationDate"
+        Me.dtpEvaluationDate.ShowCheckBox = True
+        Me.dtpEvaluationDate.Size = New System.Drawing.Size(168, 20)
+        Me.dtpEvaluationDate.TabIndex = 539
+        '
+        'dtpRegularizationDate
+        '
+        Me.dtpRegularizationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpRegularizationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpRegularizationDate.Location = New System.Drawing.Point(128, 433)
+        Me.dtpRegularizationDate.Name = "dtpRegularizationDate"
+        Me.dtpRegularizationDate.ShowCheckBox = True
+        Me.dtpRegularizationDate.Size = New System.Drawing.Size(168, 20)
+        Me.dtpRegularizationDate.TabIndex = 540
+        '
         'EmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -9773,4 +9801,6 @@ Partial Class EmployeeForm
     Friend WithEvents AgencyRowID As DataGridViewTextBoxColumn
     Friend WithEvents BranchID As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
+    Friend WithEvents dtpEvaluationDate As DateTimePicker
+    Friend WithEvents dtpRegularizationDate As DateTimePicker
 End Class
