@@ -683,9 +683,7 @@ Public Class EmployeeForm
     Dim dontUpdateEmp As SByte = 0
 
     Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
-        MaskedTextBox1.Focus()
         pbemppic.Focus()
-        MaskedTextBox2.Focus()
         pbemppic.Focus()
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
@@ -7811,30 +7809,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
-        RemoveHandler MaskedTextBox1.Leave, AddressOf MaskedTextBox1_Leave
-        If CheckBox1.Checked Then
-            AddHandler MaskedTextBox1.Leave, AddressOf MaskedTextBox1_Leave
-            MaskedTextBox1.ReadOnly = False
-            MaskedTextBox1.Focus()
-        Else
-            MaskedTextBox1.ReadOnly = True
-        End If
-
-    End Sub
-
-    Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
-        RemoveHandler MaskedTextBox2.Leave, AddressOf MaskedTextBox2_Leave
-        If CheckBox2.Checked Then
-            AddHandler MaskedTextBox2.Leave, AddressOf MaskedTextBox2_Leave
-            MaskedTextBox2.ReadOnly = False
-            MaskedTextBox2.Focus()
-        Else
-            MaskedTextBox2.ReadOnly = True
-        End If
-
-    End Sub
-
     Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 
         Dim n_DiscipAction As New DiscipAction
@@ -7877,47 +7851,6 @@ Public Class EmployeeForm
         Label148.Text = label_gender
         Label149.Text = label_gender
 
-    End Sub
-
-    Private Sub MaskedTextBox2_Leave(sender As Object, e As EventArgs) 'Handles MaskedTextBox2.Leave
-        Try
-            MaskedTextBox2.Text = CDate(MaskedTextBox2.Text).ToShortDateString
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-    End Sub
-
-    Private Sub MaskedTextBox2_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox2.TextChanged
-        Try
-            MaskedTextBox2.Tag = MYSQLDateFormat(CDate(MaskedTextBox2.Text))
-        Catch ex As Exception
-            MaskedTextBox2.Tag = String.Empty
-        Finally
-            If CheckBox2.Checked = False Then
-                CheckBox2.Checked = (MaskedTextBox2.Tag.ToString.Length > 0)
-            End If
-        End Try
-    End Sub
-
-    Private Sub MaskedTextBox1_Leave(sender As Object, e As EventArgs) 'Handles MaskedTextBox1.Leave
-        Try
-            MaskedTextBox1.Text = CDate(MaskedTextBox1.Text).ToShortDateString
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-
-    End Sub
-
-    Private Sub MaskedTextBox1_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox1.TextChanged
-        Try
-            MaskedTextBox1.Tag = MYSQLDateFormat(CDate(MaskedTextBox1.Text))
-        Catch ex As Exception
-            MaskedTextBox1.Tag = String.Empty
-        Finally
-            If CheckBox1.Checked = False Then
-                CheckBox1.Checked = (MaskedTextBox1.Tag.ToString.Length > 0)
-            End If
-        End Try
     End Sub
 
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting
