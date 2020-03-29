@@ -4,10 +4,18 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
-DROP PROCEDURE IF EXISTS `SEARCH_employeeprofile`;
-DELIMITER //
-CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(IN `og_id` INT, IN `emp_id` VARCHAR(50), IN `emp_fname` VARCHAR(50), IN `emp_lname` VARCHAR(50), IN `page_number` INT)
-    DETERMINISTIC
+CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(
+	IN `og_id` INT,
+	IN `emp_id` VARCHAR(50),
+	IN `emp_fname` VARCHAR(50),
+	IN `emp_lname` VARCHAR(50),
+	IN `page_number` INT
+)
+LANGUAGE SQL
+DETERMINISTIC
+CONTAINS SQL
+SQL SECURITY DEFINER
+COMMENT ''
 BEGIN
 
 DECLARE max_count_per_page INT(11) DEFAULT 50;
@@ -80,7 +88,8 @@ SELECT e.RowID
         ,IFNULL(e.OffsetBalance,0)                  `OffsetBalance`
         ,IFNULL(ag.AgencyName,'')                   `AgencyName`
         ,IFNULL(ag.RowID,'')                            `ag_RowID`
-        ,e.BranchID 
+        ,e.BranchID
+        ,e.BPIInsurance
 
 FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id     AND LENGTH(emp_id) > 0
     UNION
