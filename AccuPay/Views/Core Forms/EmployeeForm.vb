@@ -1058,9 +1058,9 @@ Public Class EmployeeForm
 
         Dim _gend = If(rdMale.Checked, "M", "F")
 
-        If EXECQUER("SELECT EXISTS(SELECT RowID FROM listofval lov WHERE lov.Type='Salutation' AND Active='Yes' AND DisplayValue='" & cboSalut.Text & "')") = 0 And cboSalut.Text <> "" Then
-            INS_LoL(cboSalut.Text, cboSalut.Text, "Salutation", , "Yes", , , 1) : cboSalut.Items.Add(cboSalut.Text)
-        End If
+        'If EXECQUER("SELECT EXISTS(SELECT RowID FROM listofval lov WHERE lov.Type='Salutation' AND Active='Yes' AND DisplayValue='" & cboSalut.Text & "')") = 0 And cboSalut.Text <> "" Then
+        '    INS_LoL(cboSalut.Text, cboSalut.Text, "Salutation", , "Yes", , , 1) : cboSalut.Items.Add(cboSalut.Text)
+        'End If
 
         If tsbtnNewEmp.Enabled = True Then
             If dgvEmp.RowCount <> 0 Then
@@ -1134,7 +1134,7 @@ Public Class EmployeeForm
                         End If
                     End If
 
-                    enlistToCboBox(q_salut, cboSalut) : salutn_count = cboSalut.Items.Count
+                    'enlistToCboBox(q_salut, cboSalut) : salutn_count = cboSalut.Items.Count
                     '"Surname" = "Column21" : "PayFrequency" = "Column22"
                     '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
                 End With
@@ -1154,7 +1154,7 @@ Public Class EmployeeForm
             _EmpRowID = _RowID
             RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-            enlistToCboBox(q_salut, cboSalut) : salutn_count = cboSalut.Items.Count
+            'enlistToCboBox(q_salut, cboSalut) : salutn_count = cboSalut.Items.Count
 
             If hasERR = 0 Then
                 If emp_rcount = 0 Then
@@ -3250,8 +3250,8 @@ Public Class EmployeeForm
 
             loadPositName()
 
-            enlistToCboBox(q_salut, cboSalut)
-            salutn_count = cboSalut.Items.Count
+            'enlistToCboBox(q_salut, cboSalut)
+            'salutn_count = cboSalut.Items.Count
 
             enlistToCboBox(q_empstat, cboEmpStat) '"SELECT DISTINCT(COALESCE(DisplayValue,'')) FROM listofval WHERE Type='Status' AND Active='Yes'"
 
@@ -3289,9 +3289,9 @@ Public Class EmployeeForm
 
             view_ID = VIEW_privilege("Employee Personal Profile", orgztnID)
 
-            For Each strval In cboSalut.Items
-                Colmn2.Items.Add(strval)
-            Next
+            'For Each strval In cboSalut.Items
+            '    Colmn2.Items.Add(strval)
+            'Next
 
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
@@ -7836,17 +7836,21 @@ Public Class EmployeeForm
 
         Dim label_gender = ""
 
-        If obj_sender.Name = "rdMale" _
+        Dim gender As Gender
+
+        If obj_sender.Name = rdMale.Name _
             And obj_sender.Checked Then
 
             label_gender = "Paternity"
-
-        ElseIf obj_sender.Name = "rdFMale" _
+            gender = Gender.Male
+        ElseIf obj_sender.Name = rdFMale.Name _
             And obj_sender.Checked Then
 
             label_gender = "Maternity"
-
+            gender = Gender.Female
         End If
+
+        LoadSalutation(gender)
 
         Label148.Text = label_gender
         Label149.Text = label_gender
@@ -7895,5 +7899,37 @@ Public Class EmployeeForm
         End Try
 
     End Sub
+
+    Dim indentifyGender As Dictionary(Of Gender, String) =
+        New Dictionary(Of Gender, String) From {{Gender.Male, Gender.Male.ToString()}, {Gender.Female, Gender.Female.ToString()}}
+
+    Private Async Sub LoadSalutation(gender As Gender)
+        Dim genderList = New String() {"Neutral", indentifyGender(gender)}
+
+        Using context = New PayrollContext
+            Dim salutationList = Await context.ListOfValues.
+                Where(Function(l) l.Type = "Salutation").
+                Where(Function(l) genderList.Contains(l.ParentLIC)).
+                OrderBy(Function(l) l.DisplayValue).
+                ToListAsync()
+
+            Dim salutations = salutationList.
+                GroupBy(Function(l) l.DisplayValue).
+                Select(Function(l) l.FirstOrDefault.DisplayValue).
+                ToArray()
+
+            cboSalut.Text = String.Empty
+            cboSalut.Items.Clear()
+            cboSalut.Items.AddRange(salutations)
+
+            Colmn2.Items.Clear()
+            Colmn2.Items.AddRange(salutations)
+        End Using
+    End Sub
+
+    Private Enum Gender
+        Male
+        Female
+    End Enum
 
 End Class
