@@ -95,23 +95,38 @@ Namespace Global.AccuPay.Repository
             'add or update the allowance
             If passedContext Is Nothing Then
                 Using newContext As New PayrollContext
-                    If allowance.RowID Is Nothing Then
-                        Me.Insert(allowance, newContext)
-                    Else
-                        Me.Update(allowance, newContext)
-                    End If
-
-                    Await newContext.SaveChangesAsync
+                    Await SaveAsyncFunction(allowance, newContext)
                 End Using
             Else
-                If allowance.RowID Is Nothing Then
-                    Me.Insert(allowance, passedContext)
-                Else
-                    Me.Update(allowance, passedContext)
-                End If
+                Await SaveAsyncFunction(allowance, passedContext)
+            End If
+        End Function
+
+        Private Async Function SaveAsyncFunction(newAllowance As Allowance, context As PayrollContext) As Task
+
+            If newAllowance.ProductID Is Nothing Then
+                Throw New ArgumentException("Allowance type cannot be empty.")
             End If
 
+            Dim product = Await context.Products.
+                                    Where(Function(p) p.RowID.Value = newAllowance.ProductID.Value).
+                                    FirstOrDefaultAsync()
 
+            If product Is Nothing Then
+                Throw New ArgumentException("The selected allowance type no longer exists. Please close then reopen the form to view the latest data.")
+            End If
+
+            If newAllowance.IsMonthly AndAlso Not product.Fixed Then
+                Throw New ArgumentException("Only fixed allowance type are allowed for Monthly allowances.")
+            End If
+
+            If newAllowance.RowID Is Nothing Then
+                Me.Insert(newAllowance, context)
+            Else
+                Me.Update(newAllowance, context)
+            End If
+
+            Await context.SaveChangesAsync()
         End Function
 
         Public Function GetAllowancesWithPayPeriodBaseQuery(context As PayrollContext, _payDateFrom As Date, _payDateTo As Date) _

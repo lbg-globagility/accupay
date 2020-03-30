@@ -442,8 +442,8 @@ Public Class EmployeeAllowanceForm
         dtpallowstartdate.DataBindings.Clear()
         dtpallowstartdate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveStartDate") 'No DataSourceUpdateMode.OnPropertyChanged because it resets to current date
 
-        NullableDatePicker1.DataBindings.Clear()
-        NullableDatePicker1.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        dtpallowenddate.DataBindings.Clear()
+        dtpallowenddate.DataBindings.Add("Value", Me._currentAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         cboallowtype.DataBindings.Clear()
         cboallowtype.DataBindings.Add("Text", Me._currentAllowance, "Type")
@@ -470,8 +470,8 @@ Public Class EmployeeAllowanceForm
         dtpallowstartdate.ResetText()
         dtpallowstartdate.DataBindings.Clear()
 
-        NullableDatePicker1.ResetText()
-        NullableDatePicker1.DataBindings.Clear()
+        dtpallowenddate.ResetText()
+        dtpallowenddate.DataBindings.Clear()
 
         txtallowamt.Clear()
         txtallowamt.DataBindings.Clear()
@@ -541,4 +541,15 @@ Public Class EmployeeAllowanceForm
         Dim userActivity As New UserActivityForm("Allowance")
         userActivity.ShowDialog()
     End Sub
+    
+    Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
+        If _currentAllowance Is Nothing Then Return
+
+        Dim showEndDate = Not cboallowfreq.Text = Allowance.FREQUENCY_ONE_TIME
+
+        lblEndDate.Visible = showEndDate
+        dtpallowenddate.Visible = showEndDate
+
+    End Sub
+
 End Class

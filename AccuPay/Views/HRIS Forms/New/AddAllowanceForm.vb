@@ -86,8 +86,8 @@ Public Class AddAllowanceForm
         dtpallowstartdate.DataBindings.Clear()
         dtpallowstartdate.DataBindings.Add("Value", Me._newAllowance, "EffectiveStartDate")
 
-        NullableDatePicker1.DataBindings.Clear()
-        NullableDatePicker1.DataBindings.Add("Value", Me._newAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
+        dtpallowenddate.DataBindings.Clear()
+        dtpallowenddate.DataBindings.Add("Value", Me._newAllowance, "EffectiveEndDate", True, DataSourceUpdateMode.OnPropertyChanged, Nothing)
 
         txtallowamt.DataBindings.Clear()
         txtallowamt.DataBindings.Add("Text", Me._newAllowance, "Amount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
@@ -157,6 +157,16 @@ Public Class AddAllowanceForm
                     Me.Close()
                 End If
             End Function)
+
+    End Sub
+
+    Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
+        If Me._newAllowance Is Nothing Then Return
+
+        Dim showEndDate = Not cboallowfreq.Text = Allowance.FREQUENCY_ONE_TIME
+
+        lblEndDate.Visible = showEndDate
+        dtpallowenddate.Visible = showEndDate
 
     End Sub
 
