@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.EntityFrameworkCore
 
@@ -10,6 +12,7 @@ Public Class OvertimeRateService
         Dim regularDayLIC = "Regular Day"
         Dim specialHolidayLIC = "Special Non-Working Holiday"
         Dim regularHolidayLIC = "Regular Holiday"
+        Dim doubleHolidayLIC = "Double Holiday"
 
         Using context As New PayrollContext
 
@@ -37,6 +40,14 @@ Public Class OvertimeRateService
             Dim regularHolidayRestDayOvertime As Decimal
             Dim regularHolidayRestDayNightDifferential As Decimal
             Dim regularHolidayRestDayNightDifferentialOvertime As Decimal
+            Dim doubleHoliday As Decimal
+            Dim doubleHolidayOvertime As Decimal
+            Dim doubleHolidayNightDifferential As Decimal
+            Dim doubleHolidayNightDifferentialOvertime As Decimal
+            Dim doubleHolidayRestDay As Decimal
+            Dim doubleHolidayRestDayOvertime As Decimal
+            Dim doubleHolidayRestDayNightDifferential As Decimal
+            Dim doubleHolidayRestDayNightDifferentialOvertime As Decimal
 
             Dim payRates = Await context.ListOfValues.
                             Where(Function(l) l.Type = listOfValuesType).
@@ -99,30 +110,58 @@ Public Class OvertimeRateService
 
             End If
 
-            Return New OvertimeRate(basePay:=basePay,
-                    overtime:=overtime,
-                    nightDifferential:=nightDifferential,
-                    nightDifferentialOvertime:=nightDifferentialOvertime,
-                    restDay:=restDay,
-                    restDayOvertime:=restDayOvertime,
-                    restDayNightDifferential:=restDayNightDifferential,
-                    restDayNightDifferentialOvertime:=restDayNightDifferentialOvertime,
-                    specialHoliday:=specialHoliday,
-                    specialHolidayOvertime:=specialHolidayOvertime,
-                    specialHolidayNightDifferential:=specialHolidayNightDifferential,
-                    specialHolidayNightDifferentialOvertime:=specialHolidayNightDifferentialOvertime,
-                    specialHolidayRestDay:=specialHolidayRestDay,
-                    specialHolidayRestDayOvertime:=specialHolidayRestDayOvertime,
-                    specialHolidayRestDayNightDifferential:=specialHolidayRestDayNightDifferential,
-                    specialHolidayRestDayNightDifferentialOvertime:=specialHolidayRestDayNightDifferentialOvertime,
-                    regularHoliday:=regularHoliday,
-                    regularHolidayOvertime:=regularHolidayOvertime,
-                    regularHolidayNightDifferential:=regularHolidayNightDifferential,
-                    regularHolidayNightDifferentialOvertime:=regularHolidayNightDifferentialOvertime,
-                    regularHolidayRestDay:=regularHolidayRestDay,
-                    regularHolidayRestDayOvertime:=regularHolidayRestDayOvertime,
-                    regularHolidayRestDayNightDifferential:=regularHolidayRestDayNightDifferential,
-                    regularHolidayRestDayNightDifferentialOvertime:=regularHolidayRestDayNightDifferentialOvertime)
+            Dim doubleHolidayRate = payRates.
+                                    Where(Function(l) l.ParentLIC = doubleHolidayLIC).
+                                    FirstOrDefault?.DisplayValue
+
+            If String.IsNullOrWhiteSpace(doubleHolidayRate) = False Then
+
+                Dim doubleHolidayRates = Split(doubleHolidayRate, ",")
+
+                doubleHoliday = ConvertToRate(doubleHolidayRates(0))
+                doubleHolidayOvertime = ConvertToRate(doubleHolidayRates(1))
+                doubleHolidayNightDifferential = ConvertToRate(doubleHolidayRates(2))
+                doubleHolidayNightDifferentialOvertime = ConvertToRate(doubleHolidayRates(3))
+                doubleHolidayRestDay = ConvertToRate(doubleHolidayRates(4))
+                doubleHolidayRestDayOvertime = ConvertToRate(doubleHolidayRates(5))
+                doubleHolidayRestDayNightDifferential = ConvertToRate(doubleHolidayRates(6))
+                doubleHolidayRestDayNightDifferentialOvertime = ConvertToRate(doubleHolidayRates(7))
+
+            End If
+
+            Return New OvertimeRate(
+                basePay:=basePay,
+                overtime:=overtime,
+                nightDifferential:=nightDifferential,
+                nightDifferentialOvertime:=nightDifferentialOvertime,
+                restDay:=restDay,
+                restDayOvertime:=restDayOvertime,
+                restDayNightDifferential:=restDayNightDifferential,
+                restDayNightDifferentialOvertime:=restDayNightDifferentialOvertime,
+                specialHoliday:=specialHoliday,
+                specialHolidayOvertime:=specialHolidayOvertime,
+                specialHolidayNightDifferential:=specialHolidayNightDifferential,
+                specialHolidayNightDifferentialOvertime:=specialHolidayNightDifferentialOvertime,
+                specialHolidayRestDay:=specialHolidayRestDay,
+                specialHolidayRestDayOvertime:=specialHolidayRestDayOvertime,
+                specialHolidayRestDayNightDifferential:=specialHolidayRestDayNightDifferential,
+                specialHolidayRestDayNightDifferentialOvertime:=specialHolidayRestDayNightDifferentialOvertime,
+                regularHoliday:=regularHoliday,
+                regularHolidayOvertime:=regularHolidayOvertime,
+                regularHolidayNightDifferential:=regularHolidayNightDifferential,
+                regularHolidayNightDifferentialOvertime:=regularHolidayNightDifferentialOvertime,
+                regularHolidayRestDay:=regularHolidayRestDay,
+                regularHolidayRestDayOvertime:=regularHolidayRestDayOvertime,
+                regularHolidayRestDayNightDifferential:=regularHolidayRestDayNightDifferential,
+                regularHolidayRestDayNightDifferentialOvertime:=regularHolidayRestDayNightDifferentialOvertime,
+                doubleHoliday:=doubleHoliday,
+                doubleHolidayOvertime:=doubleHolidayOvertime,
+                doubleHolidayNightDifferential:=doubleHolidayNightDifferential,
+                doubleHolidayNightDifferentialOvertime:=doubleHolidayNightDifferentialOvertime,
+                doubleHolidayRestDay:=doubleHolidayRestDay,
+                doubleHolidayRestDayOvertime:=doubleHolidayRestDayOvertime,
+                doubleHolidayRestDayNightDifferential:=doubleHolidayRestDayNightDifferential,
+                doubleHolidayRestDayNightDifferentialOvertime:=doubleHolidayRestDayNightDifferentialOvertime)
 
         End Using
 
