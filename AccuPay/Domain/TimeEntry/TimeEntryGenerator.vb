@@ -155,7 +155,10 @@ Public Class TimeEntryGenerator
                 _breakTimeBrackets = New List(Of BreakTimeBracket)
             End If
 
-            If settings.GetBoolean("Payroll Policy.UseCalendar") Then
+            Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                            AccuPay.PayRateCalculationBasis.Organization)
+
+            If payrateCalculationBasis = AccuPay.PayRateCalculationBasis.Branch Then
                 Dim branches = context.Branches.ToList()
 
                 Dim calendarDays = context.CalendarDays.

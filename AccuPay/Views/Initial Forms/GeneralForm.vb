@@ -1,10 +1,13 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay
+Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
     Dim sys_ownr As New SystemOwner
+
+    Private _payRateCalculationBasis As PayRateCalculationBasis
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -102,14 +105,13 @@ Public Class GeneralForm
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
+            _payRateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                            AccuPay.PayRateCalculationBasis.Organization)
+
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
                 Return
             Else
                 UserPrivilegeToolStripMenuItem.Visible = False
-            End If
-
-            If Not settings.GetBoolean("Payroll Policy.UseCalendar") Then
-                CalendarsToolStripMenuItem.Visible = False
             End If
 
             If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
@@ -296,8 +298,14 @@ Public Class GeneralForm
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
-        ChangeForm(PayRateForm, "Pay rate")
-        previousForm = PayRateForm
+        If _payRateCalculationBasis = PayRateCalculationBasis.Branch Then
+            ChangeForm(CalendarsForm, "Pay rate")
+            previousForm = CalendarsForm
+        Else
+            ChangeForm(PayRateForm, "Pay rate")
+            previousForm = PayRateForm
+
+        End If
 
         'If FormLeft.Contains("Pay rate") Then
         '    FormLeft.Remove("Pay rate")
@@ -313,11 +321,6 @@ Public Class GeneralForm
         '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
         'End If
 
-    End Sub
-
-    Private Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
-        ChangeForm(CalendarsForm, "Pay rate")
-        previousForm = CalendarsForm
     End Sub
 
     Sub reloadViewPrivilege()

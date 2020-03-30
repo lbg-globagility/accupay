@@ -111,7 +111,7 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
-        _payrateCalendar = New PayratesCalendar(CType(resources.PayRates, IList(Of PayRate)))
+        _payrateCalendar = resources.CalendarCollection.GetCalendar(_employee)
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
