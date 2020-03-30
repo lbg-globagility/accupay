@@ -97,6 +97,7 @@ Public Class AddOvertimeForm
     Private Sub ForceDataBindingsCommit()
         'Workaround. Focus other control to lose focus on current control
         EmployeePictureBox.Focus()
+        UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
     Private Function ValidateSave(newOvertime As Overtime) As Boolean
@@ -114,6 +115,20 @@ Public Class AddOvertimeForm
 
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
+    End Sub
+
+    Private Sub UpdateEndDateDependingOnStartAndEndTimes()
+        If Me._newOvertime Is Nothing Then Return
+
+        If EndTimePicker.Value.TimeOfDay < StartTimePicker.Value.TimeOfDay Then
+
+            Me._newOvertime.OTEndDate = Me._newOvertime.OTStartDate.AddDays(1)
+        Else
+            Me._newOvertime.OTEndDate = Me._newOvertime.OTStartDate
+
+        End If
+
+        EndDatePicker.Value = Me._newOvertime.OTEndDate
     End Sub
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
@@ -142,6 +157,13 @@ Public Class AddOvertimeForm
                     Me.Close()
                 End If
             End Function)
+
+    End Sub
+
+    Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
+        Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
+
+        UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
 

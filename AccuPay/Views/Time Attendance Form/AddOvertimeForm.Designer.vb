@@ -27,14 +27,15 @@ Partial Class AddOvertimeForm
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel4 = New System.Windows.Forms.Panel()
+        Me.Label8 = New System.Windows.Forms.Label()
+        Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label7 = New System.Windows.Forms.Label()
         Me.CommentTextBox = New System.Windows.Forms.TextBox()
         Me.ReasonTextBox = New System.Windows.Forms.TextBox()
         Me.Label6 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
-        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label4 = New System.Windows.Forms.Label()
-        Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.EndDatePicker = New System.Windows.Forms.DateTimePicker()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -50,12 +51,17 @@ Partial Class AddOvertimeForm
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
         Me.CancelButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
+        Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         Me.SuspendLayout()
         '
         'EmployeeInfoTabLayout
@@ -123,14 +129,14 @@ Partial Class AddOvertimeForm
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25.0!))
         Me.DetailsTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 20.0!))
+        Me.DetailsTabLayout.Controls.Add(Me.Panel5, 0, 7)
+        Me.DetailsTabLayout.Controls.Add(Me.Panel4, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.Label7, 2, 0)
         Me.DetailsTabLayout.Controls.Add(Me.CommentTextBox, 1, 5)
         Me.DetailsTabLayout.Controls.Add(Me.ReasonTextBox, 1, 1)
         Me.DetailsTabLayout.Controls.Add(Me.Label6, 1, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label5, 1, 0)
-        Me.DetailsTabLayout.Controls.Add(Me.EndTimePicker, 0, 7)
         Me.DetailsTabLayout.Controls.Add(Me.Label4, 0, 6)
-        Me.DetailsTabLayout.Controls.Add(Me.StartTimePicker, 0, 5)
         Me.DetailsTabLayout.Controls.Add(Me.Panel3, 0, 3)
         Me.DetailsTabLayout.Controls.Add(Me.Label163, 0, 4)
         Me.DetailsTabLayout.Controls.Add(Me.Label168, 0, 2)
@@ -152,6 +158,37 @@ Partial Class AddOvertimeForm
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.DetailsTabLayout.Size = New System.Drawing.Size(684, 193)
         Me.DetailsTabLayout.TabIndex = 6
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.Label8)
+        Me.Panel4.Controls.Add(Me.StartTimePicker)
+        Me.Panel4.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel4.Location = New System.Drawing.Point(0, 112)
+        Me.Panel4.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(210, 32)
+        Me.Panel4.TabIndex = 19
+        '
+        'Label8
+        '
+        Me.Label8.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label8.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label8.Location = New System.Drawing.Point(3, 4)
+        Me.Label8.Name = "Label8"
+        Me.Label8.Size = New System.Drawing.Size(13, 13)
+        Me.Label8.TabIndex = 507
+        Me.Label8.Text = "*"
+        '
+        'StartTimePicker
+        '
+        Me.StartTimePicker.CustomFormat = "  hh:mm tt"
+        Me.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.StartTimePicker.Location = New System.Drawing.Point(20, 3)
+        Me.StartTimePicker.Name = "StartTimePicker"
+        Me.StartTimePicker.ShowUpDown = True
+        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.StartTimePicker.TabIndex = 8
         '
         'Label7
         '
@@ -205,17 +242,6 @@ Partial Class AddOvertimeForm
         Me.Label5.TabIndex = 512
         Me.Label5.Text = "Reason"
         '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
-        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 159)
-        Me.EndTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.ShowUpDown = True
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 7
-        '
         'Label4
         '
         Me.Label4.AutoSize = True
@@ -225,17 +251,6 @@ Partial Class AddOvertimeForm
         Me.Label4.Size = New System.Drawing.Size(52, 13)
         Me.Label4.TabIndex = 510
         Me.Label4.Text = "End time"
-        '
-        'StartTimePicker
-        '
-        Me.StartTimePicker.CustomFormat = "  hh:mm tt"
-        Me.StartTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.StartTimePicker.Location = New System.Drawing.Point(20, 112)
-        Me.StartTimePicker.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.StartTimePicker.Name = "StartTimePicker"
-        Me.StartTimePicker.ShowUpDown = True
-        Me.StartTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.StartTimePicker.TabIndex = 6
         '
         'Panel3
         '
@@ -250,6 +265,7 @@ Partial Class AddOvertimeForm
         '
         'EndDatePicker
         '
+        Me.EndDatePicker.Enabled = False
         Me.EndDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
         Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
         Me.EndDatePicker.Name = "EndDatePicker"
@@ -387,6 +403,37 @@ Partial Class AddOvertimeForm
         Me.AddAndNewButton.Text = "Add && &New"
         Me.AddAndNewButton.UseVisualStyleBackColor = True
         '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.EndTimePicker)
+        Me.Panel5.Controls.Add(Me.Label9)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel5.Location = New System.Drawing.Point(0, 159)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(210, 34)
+        Me.Panel5.TabIndex = 19
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
+        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.ShowUpDown = True
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 7
+        '
+        'Label9
+        '
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label9.Location = New System.Drawing.Point(3, 4)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(13, 13)
+        Me.Label9.TabIndex = 507
+        Me.Label9.Text = "*"
+        '
         'AddOvertimeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -409,9 +456,11 @@ Partial Class AddOvertimeForm
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
+        Me.Panel4.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
+        Me.Panel5.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -426,9 +475,7 @@ Partial Class AddOvertimeForm
     Friend WithEvents ReasonTextBox As TextBox
     Friend WithEvents Label6 As Label
     Friend WithEvents Label5 As Label
-    Friend WithEvents EndTimePicker As DateTimePicker
     Friend WithEvents Label4 As Label
-    Friend WithEvents StartTimePicker As DateTimePicker
     Friend WithEvents Panel3 As Panel
     Friend WithEvents EndDatePicker As DateTimePicker
     Friend WithEvents Label1 As Label
@@ -444,4 +491,10 @@ Partial Class AddOvertimeForm
     Friend WithEvents AddAndCloseButton As Button
     Friend WithEvents CancelButton As Button
     Friend WithEvents AddAndNewButton As Button
+    Friend WithEvents Panel4 As Panel
+    Friend WithEvents Label8 As Label
+    Friend WithEvents StartTimePicker As DateTimePicker
+    Friend WithEvents Panel5 As Panel
+    Friend WithEvents EndTimePicker As DateTimePicker
+    Friend WithEvents Label9 As Label
 End Class

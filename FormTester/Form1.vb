@@ -1,6 +1,6 @@
 ﻿Imports System.IO
-Imports Accupay.Data.Repositories
-Imports Accupay.Payslip
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Payslip
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
 Imports PdfSharp.Pdf
@@ -216,7 +216,7 @@ HRD"
 
         Dim paystubEmail = repo.FirstOnQueueWithPaystubDetails()
 
-        MessageBox.Show(paystubEmail.PaystubId)
+        MessageBox.Show(paystubEmail.PaystubID)
 
     End Sub
 

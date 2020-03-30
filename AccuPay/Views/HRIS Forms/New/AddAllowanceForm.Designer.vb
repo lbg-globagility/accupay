@@ -46,9 +46,9 @@ Partial Class AddAllowanceForm
         Me.lnklbaddallowtype = New System.Windows.Forms.LinkLabel()
         Me.Label156 = New System.Windows.Forms.Label()
         Me.Label167 = New System.Windows.Forms.Label()
-        Me.Label168 = New System.Windows.Forms.Label()
+        Me.lblEndDate = New System.Windows.Forms.Label()
         Me.Label163 = New System.Windows.Forms.Label()
-        Me.NullableDatePicker1 = New AccuPay.NullableDatePicker()
+        Me.dtpallowenddate = New AccuPay.NullableDatePicker()
         CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         Me.AllowanceDetailsTabLayout.SuspendLayout()
@@ -156,9 +156,9 @@ Partial Class AddAllowanceForm
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.plnCboLoanType, 0, 1)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label156, 0, 0)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label167, 0, 4)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label168, 0, 6)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.lblEndDate, 0, 6)
         Me.AllowanceDetailsTabLayout.Controls.Add(Me.Label163, 0, 8)
-        Me.AllowanceDetailsTabLayout.Controls.Add(Me.NullableDatePicker1, 0, 7)
+        Me.AllowanceDetailsTabLayout.Controls.Add(Me.dtpallowenddate, 0, 7)
         Me.AllowanceDetailsTabLayout.Location = New System.Drawing.Point(141, 108)
         Me.AllowanceDetailsTabLayout.Name = "AllowanceDetailsTabLayout"
         Me.AllowanceDetailsTabLayout.RowCount = 10
@@ -341,15 +341,15 @@ Partial Class AddAllowanceForm
         Me.Label167.TabIndex = 372
         Me.Label167.Text = "Start date"
         '
-        'Label168
+        'lblEndDate
         '
-        Me.Label168.AutoSize = True
-        Me.Label168.Location = New System.Drawing.Point(20, 144)
-        Me.Label168.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.Label168.Name = "Label168"
-        Me.Label168.Size = New System.Drawing.Size(50, 13)
-        Me.Label168.TabIndex = 374
-        Me.Label168.Text = "End date"
+        Me.lblEndDate.AutoSize = True
+        Me.lblEndDate.Location = New System.Drawing.Point(20, 144)
+        Me.lblEndDate.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.lblEndDate.Name = "lblEndDate"
+        Me.lblEndDate.Size = New System.Drawing.Size(50, 13)
+        Me.lblEndDate.TabIndex = 374
+        Me.lblEndDate.Text = "End date"
         '
         'Label163
         '
@@ -361,14 +361,14 @@ Partial Class AddAllowanceForm
         Me.Label163.TabIndex = 381
         Me.Label163.Text = "Amount"
         '
-        'NullableDatePicker1
+        'dtpallowenddate
         '
-        Me.NullableDatePicker1.Location = New System.Drawing.Point(20, 160)
-        Me.NullableDatePicker1.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.NullableDatePicker1.Name = "NullableDatePicker1"
-        Me.NullableDatePicker1.Size = New System.Drawing.Size(195, 22)
-        Me.NullableDatePicker1.TabIndex = 380
-        Me.NullableDatePicker1.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
+        Me.dtpallowenddate.Location = New System.Drawing.Point(20, 160)
+        Me.dtpallowenddate.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
+        Me.dtpallowenddate.Name = "dtpallowenddate"
+        Me.dtpallowenddate.Size = New System.Drawing.Size(195, 22)
+        Me.dtpallowenddate.TabIndex = 380
+        Me.dtpallowenddate.Value = New Date(2019, 5, 24, 10, 35, 13, 830)
         '
         'AddAllowanceForm
         '
@@ -408,8 +408,8 @@ Partial Class AddAllowanceForm
     Friend WithEvents btnAddAndClose As Button
     Friend WithEvents AllowanceDetailsTabLayout As TableLayoutPanel
     Friend WithEvents Label163 As Label
-    Friend WithEvents NullableDatePicker1 As NullableDatePicker
-    Friend WithEvents Label168 As Label
+    Friend WithEvents dtpallowenddate As NullableDatePicker
+    Friend WithEvents lblEndDate As Label
     Friend WithEvents Label167 As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Label2 As Label

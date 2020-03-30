@@ -564,6 +564,8 @@ Public Class EmployeeForm
         ",IFNULL(e.OffsetBalance,0) AS OffsetBalance" &
         ",IFNULL(ag.AgencyName,'') AS AgencyName" &
         ",IFNULL(ag.RowID,'') AS ag_RowID" &
+        ",e.DateEvaluated" &
+        ",e.DateRegularized" &
         " " &
         "FROM employee e " &
         "LEFT JOIN user u ON e.CreatedBy=u.RowID " &
@@ -613,25 +615,7 @@ Public Class EmployeeForm
         '                                ComboBox9, TextBox16,
         '                                ComboBox10, TextBox17)
 
-        Dim param_array =
-            New Object() {orgztnID,
-            TextBox1.Text,
-            TextBox15.Text,
-            TextBox16.Text,
-            pagination}
-
-        Dim n_ReadSQLProcedureToDatatable As New _
-                ReadSQLProcedureToDatatable("SEARCH_employeeprofile",
-                                            param_array)
-        Dim dtemployee As New DataTable
-        dtemployee = n_ReadSQLProcedureToDatatable.ResultTable
-        dgvEmp.Rows.Clear()
-
-        For Each drow As DataRow In dtemployee.Rows
-            Dim rowArray = drow.ItemArray()
-            dgvEmp.Rows.Add(rowArray)
-        Next
-        dtemployee.Dispose()
+        PopulateEmployeeGrid()
 
         emp_rcount = dgvEmp.RowCount
 
@@ -699,15 +683,18 @@ Public Class EmployeeForm
     Dim dontUpdateEmp As SByte = 0
 
     Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
-        MaskedTextBox1.Focus()
         pbemppic.Focus()
-        MaskedTextBox2.Focus()
         pbemppic.Focus()
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
-        If tsbtnNewEmp.Enabled = False And
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" & Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1 Then
+        'dgvEmp.CurrentRow.Cells("RowID").Value
+        If (tsbtnNewEmp.Enabled = False AndAlso
+            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
+           (tsbtnNewEmp.Enabled = True AndAlso
+            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             WarnBalloon("Employee ID has already exist.", "Invalid employee ID", lblforballoon, 0, -69)
@@ -817,6 +804,10 @@ Public Class EmployeeForm
 
             Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
+
+            Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
+            Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
+
             new_eRowID =
             INSUPDemployee(employee_RowID,
                            z_User,
@@ -874,8 +865,8 @@ Public Class EmployeeForm
                            Convert.ToInt16(chkcalcNightDiffOT.Checked),
                            Convert.ToInt16(chkcalcRestDay.Checked),
                            Convert.ToInt16(chkcalcRestDayOT.Checked),
-                           If(MaskedTextBox2.Tag = Nothing, DBNull.Value, MaskedTextBox2.Tag),
-                           If(MaskedTextBox1.Tag = Nothing, DBNull.Value, MaskedTextBox1.Tag),
+                           regularizationDate,
+                           evaluationDate,
                            (Not chkbxRevealInPayroll.Checked),
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
@@ -894,6 +885,13 @@ Public Class EmployeeForm
                                                                 LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
+            End If
+
+            Dim currentRow = dgvEmp.CurrentRow
+            If currentRow IsNot Nothing Then
+                Dim dataRow = DirectCast(currentRow.Tag, DataRow)
+                dataRow("DateEvaluated") = evaluationDate
+                dataRow("DateRegularized") = regularizationDate
             End If
         Catch ex As Exception
             succeed = False
@@ -1763,17 +1761,15 @@ Public Class EmployeeForm
                     txtUTgrace.Text = .Cells("LateGracePeriod").Value 'AgencyName
                     cboAgency.Text = .Cells("AgencyName").Value
 
-                    Dim n_fdsfd As _
-                        New ExecuteQuery("SELECT CONCAT(IFNULL(DATE_FORMAT(DateEvaluated,@@date_format),''),',',IFNULL(DATE_FORMAT(DateRegularized,@@date_format),'')) FROM employee WHERE RowID='" & publicEmpRowID & "';")
-                    If n_fdsfd.Result = Nothing Then
-                    Else
-                        Dim date_value_string = Split(CStr(n_fdsfd.Result), ",")
-                        If date_value_string(0).Length > 0 Then
-                            MaskedTextBox1.Text = CDate(date_value_string(0)).ToShortDateString
-                        End If
-                        If date_value_string(1).Length > 0 Then
-                            MaskedTextBox2.Text = CDate(date_value_string(1)).ToShortDateString
-                        End If
+                    Dim dataRow = DirectCast(.Tag, DataRow)
+                    If dataRow IsNot Nothing Then
+                        Dim hasDateEvaluated = Not IsDBNull(dataRow("DateEvaluated"))
+                        dtpEvaluationDate.Value = If(hasDateEvaluated, dataRow("DateEvaluated"), dtpEvaluationDate.MinDate)
+                        dtpEvaluationDate.Checked = hasDateEvaluated
+
+                        Dim hasDateRegularized = Not IsDBNull(dataRow("DateRegularized"))
+                        dtpRegularizationDate.Value = If(hasDateRegularized, dataRow("DateRegularized"), dtpRegularizationDate.MinDate)
+                        dtpRegularizationDate.Checked = hasDateRegularized
                     End If
 
                     Dim branchId = .Cells("BranchID").Value
@@ -2286,41 +2282,20 @@ Public Class EmployeeForm
         End If
 
         If TabControl2.SelectedIndex = 0 Then
-            Dim q_search = searchCommon(ComboBox7, TextBox1,
-                                        ComboBox8, TextBox15,
-                                        ComboBox9, TextBox16,
-                                        ComboBox10, TextBox17)
-
-            Dim param_array = New Object() {orgztnID,
-                                            TextBox1.Text,
-                                            TextBox15.Text,
-                                            TextBox16.Text,
-                                            pagination}
-
-            Dim n_ReadSQLProcedureToDatatable As New _
-                ReadSQLProcedureToDatatable("SEARCH_employeeprofile",
-                                            param_array)
-            Dim dtemployee As New DataTable
-            dtemployee = n_ReadSQLProcedureToDatatable.ResultTable
-            dgvEmp.Rows.Clear()
-
-            For Each drow As DataRow In dtemployee.Rows
-                Dim rowArray = drow.ItemArray()
-                dgvEmp.Rows.Add(rowArray)
-            Next
-            dtemployee.Dispose()
+            PopulateEmployeeGrid()
         Else
+            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
             If isKPressSimple = 1 Then
                 If txtSimple.Text.Trim.Length = 0 Then
-                    dgvRowAdder(q_employee & " ORDER BY e.RowID DESC LIMIT " & pagination & ",100;", dgvEmp)
+                    SimpleEmployeeFilter(sql)
                 Else
-                    searchEmpSimple()
+                    SearchEmpSimple()
                 End If
             Else
                 If txtSimple.Text.Trim.Length = 0 Then
-                    dgvRowAdder(q_employee & " ORDER BY e.RowID DESC LIMIT " & pagination & ",100;", dgvEmp)
+                    SimpleEmployeeFilter(sql)
                 Else
-                    searchEmpSimple()
+                    SearchEmpSimple()
                 End If
             End If
         End If
@@ -2343,6 +2318,55 @@ Public Class EmployeeForm
 
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
         AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
+    End Sub
+
+    Private Sub PopulateEmployeeGrid()
+        Dim param_array = New Object() {orgztnID,
+                                        TextBox1.Text,
+                                        TextBox15.Text,
+                                        TextBox16.Text,
+                                        pagination}
+
+        Dim n_ReadSQLProcedureToDatatable As New _
+            ReadSQLProcedureToDatatable("SEARCH_employeeprofile",
+                                        param_array)
+        Dim dtemployee As New DataTable
+        dtemployee = n_ReadSQLProcedureToDatatable.ResultTable
+        dgvEmp.Rows.Clear()
+
+        For Each drow In dtemployee.Rows.OfType(Of DataRow).ToList()
+            Dim rowArray = drow.ItemArray()
+            Dim index = dgvEmp.Rows.Add(rowArray)
+            dgvEmp.Rows(index).Tag = drow
+        Next
+        dtemployee.Dispose()
+    End Sub
+
+    Private Async Sub SimpleEmployeeFilter(queryText As String, Optional dictionary As Dictionary(Of String, Object) = Nothing)
+        Using command = New MySqlCommand(queryText, New MySqlConnection(mysql_conn_text))
+            Try
+                dgvEmp.Rows.Clear()
+                Dim hasParameters = dictionary.Any
+                If hasParameters Then
+                    For Each dict In dictionary
+                        command.Parameters.AddWithValue(dict.Key, dict.Value)
+                    Next
+                End If
+                Await command.Connection.OpenAsync()
+                Dim da As New MySqlDataAdapter
+                da.SelectCommand = command
+                Dim ds As New DataSet
+                da.Fill(ds)
+                Dim dt = ds.Tables.OfType(Of DataTable).FirstOrDefault
+                For Each drow In dt.Rows.OfType(Of DataRow).ToList()
+                    Dim rowArray = drow.ItemArray()
+                    Dim index = dgvEmp.Rows.Add(rowArray)
+                    dgvEmp.Rows(index).Tag = drow
+                Next
+            Catch ex As Exception
+                Throw New Exception("SimpleEmployeeFilter")
+            End Try
+        End Using
     End Sub
 
     Private Sub dgvDepen_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvDepen.DataError
@@ -2574,7 +2598,7 @@ Public Class EmployeeForm
 
     Dim colName As String
 
-    Sub searchEmpSimple() ' As String
+    Sub SearchEmpSimple() ' As String
         Static s As SByte
 
         Try
@@ -2596,13 +2620,14 @@ Public Class EmployeeForm
             Case 7 : colName = "e.EmployeeID='" 'NoOfDependents
             Case 8 : colName = "e.Birthdate='"
                 s = 1
-                dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
-
+                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
+                Dim dict = New Dictionary(Of String, Object) From {{"@birthDate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
+                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.RowID DESC", dict)
             Case 9 : colName = "e.Startdate='"
                 s = 1
-
-                dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
-
+                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
+                Dim dict = New Dictionary(Of String, Object) From {{"@startdate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
+                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.RowID DESC", dict)
             Case 10 : colName = "e.JobTitle='"
             Case 11 : colName = "pos.PositionName='" 'e.PositionID
             Case 12 : colName = "e.Salutation='"
@@ -2617,8 +2642,9 @@ Public Class EmployeeForm
             Case 21 : colName = "e.EmailAddress='"
             Case 22 : colName = "e.Gender=LEFT('"
                 s = 1
-                dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "',1) ORDER BY e.RowID DESC", dgvEmp)
-
+                'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "',1) ORDER BY e.RowID DESC", dgvEmp)
+                Dim dict = New Dictionary(Of String, Object) From {{"@gender", txtSimple.Text}}
+                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.RowID DESC", dict)
             Case 23 : colName = "e.EmploymentStatus='"
             Case 24 : colName = "pf.PayFrequencyType='"
 
@@ -2633,7 +2659,9 @@ Public Class EmployeeForm
         End Select
 
         If s = 0 Then
-            dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "' ORDER BY e.RowID DESC", dgvEmp)
+            'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "' ORDER BY e.RowID DESC", dgvEmp)
+            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
+            SimpleEmployeeFilter(sql)
         End If
     End Sub
 
@@ -7781,30 +7809,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
-        RemoveHandler MaskedTextBox1.Leave, AddressOf MaskedTextBox1_Leave
-        If CheckBox1.Checked Then
-            AddHandler MaskedTextBox1.Leave, AddressOf MaskedTextBox1_Leave
-            MaskedTextBox1.ReadOnly = False
-            MaskedTextBox1.Focus()
-        Else
-            MaskedTextBox1.ReadOnly = True
-        End If
-
-    End Sub
-
-    Private Sub CheckBox2_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox2.CheckedChanged
-        RemoveHandler MaskedTextBox2.Leave, AddressOf MaskedTextBox2_Leave
-        If CheckBox2.Checked Then
-            AddHandler MaskedTextBox2.Leave, AddressOf MaskedTextBox2_Leave
-            MaskedTextBox2.ReadOnly = False
-            MaskedTextBox2.Focus()
-        Else
-            MaskedTextBox2.ReadOnly = True
-        End If
-
-    End Sub
-
     Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 
         Dim n_DiscipAction As New DiscipAction
@@ -7847,47 +7851,6 @@ Public Class EmployeeForm
         Label148.Text = label_gender
         Label149.Text = label_gender
 
-    End Sub
-
-    Private Sub MaskedTextBox2_Leave(sender As Object, e As EventArgs) 'Handles MaskedTextBox2.Leave
-        Try
-            MaskedTextBox2.Text = CDate(MaskedTextBox2.Text).ToShortDateString
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-    End Sub
-
-    Private Sub MaskedTextBox2_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox2.TextChanged
-        Try
-            MaskedTextBox2.Tag = MYSQLDateFormat(CDate(MaskedTextBox2.Text))
-        Catch ex As Exception
-            MaskedTextBox2.Tag = String.Empty
-        Finally
-            If CheckBox2.Checked = False Then
-                CheckBox2.Checked = (MaskedTextBox2.Tag.ToString.Length > 0)
-            End If
-        End Try
-    End Sub
-
-    Private Sub MaskedTextBox1_Leave(sender As Object, e As EventArgs) 'Handles MaskedTextBox1.Leave
-        Try
-            MaskedTextBox1.Text = CDate(MaskedTextBox1.Text).ToShortDateString
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name))
-        End Try
-
-    End Sub
-
-    Private Sub MaskedTextBox1_TextChanged(sender As Object, e As EventArgs) Handles MaskedTextBox1.TextChanged
-        Try
-            MaskedTextBox1.Tag = MYSQLDateFormat(CDate(MaskedTextBox1.Text))
-        Catch ex As Exception
-            MaskedTextBox1.Tag = String.Empty
-        Finally
-            If CheckBox1.Checked = False Then
-                CheckBox1.Checked = (MaskedTextBox1.Tag.ToString.Length > 0)
-            End If
-        End Try
     End Sub
 
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting

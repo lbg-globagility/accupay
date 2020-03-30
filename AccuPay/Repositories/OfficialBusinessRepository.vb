@@ -100,17 +100,7 @@ Namespace Global.AccuPay.Repository
                                     l.StartDate.Value.Date = officialBusiness.StartDate.Value.Date)).
                 Any() Then
 
-                Throw New ArgumentException($"Employee already has a time in OB for {officialBusiness.StartDate.Value.ToShortDateString()}")
-
-            ElseIf context.OfficialBusinesses.
-                Where(Function(l) If(officialBusiness.RowID Is Nothing, True, Nullable.Equals(officialBusiness.RowID, l.RowID) = False)).
-                Where(Function(l) l.EmployeeID.Value = officialBusiness.EmployeeID.Value).
-                Where(Function(l) (l.EndDate.HasValue AndAlso
-                                    officialBusiness.EndDate.HasValue AndAlso
-                                    l.EndDate.Value.Date = officialBusiness.EndDate.Value.Date)).
-                Any() Then
-
-                Throw New ArgumentException($"Employee already has a time out OB for {officialBusiness.EndDate.Value.ToShortDateString()}")
+                Throw New ArgumentException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}")
 
             End If
 

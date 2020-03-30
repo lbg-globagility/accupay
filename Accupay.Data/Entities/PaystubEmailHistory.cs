@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Accupay.Data.Entities
+namespace AccuPay.Data.Entities
 {
     [Table("paystubemailhistory")]
     public class PaystubEmailHistory : IPaystubEmailHistory

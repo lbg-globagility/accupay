@@ -96,7 +96,7 @@ Namespace Global.AccuPay.Entity
             End Set
         End Property
 
-        'End Date that is not nullable since it should not be null
+        'End Date that is not nullable since it should not be nullable
         <NotMapped>
         Public Property ProperEndDate As Date
             Get

@@ -1,7 +1,8 @@
-﻿using Accupay.Data.Entities;
+﻿using AccuPay.Data;
+using AccuPay.Data.Entities;
 using System.Linq;
 
-namespace Accupay.Data.Repositories
+namespace AccuPay.Data.Repositories
 {
     public class AddressRepository
     {

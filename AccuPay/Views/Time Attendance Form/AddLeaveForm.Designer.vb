@@ -301,6 +301,7 @@ Partial Class AddLeaveForm
         '
         'EndDatePicker
         '
+        Me.EndDatePicker.Enabled = False
         Me.EndDatePicker.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
         Me.EndDatePicker.Location = New System.Drawing.Point(20, 3)
         Me.EndDatePicker.Name = "EndDatePicker"

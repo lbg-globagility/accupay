@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Accupay.Data
+namespace AccuPay.Data
 {
     public interface IOrganization
     {

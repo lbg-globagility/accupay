@@ -93,6 +93,28 @@ Public Class OfficialBusiness
         End Set
     End Property
 
+    'Start Date that is not nullable since it should not be nullable
+    <NotMapped>
+    Public Property ProperStartDate As Date
+        Get
+            Return If(StartDate, Date.Now.Date)
+        End Get
+        Set(value As Date)
+            StartDate = value
+        End Set
+    End Property
+
+    'End Date that is not nullable since it should not be nullable
+    <NotMapped>
+    Public Property ProperEndDate As Date
+        Get
+            Return If(EndDate, Date.Now.Date)
+        End Get
+        Set(value As Date)
+            EndDate = value
+        End Set
+    End Property
+
     Public Function Validate() As String
 
         If StartDate Is Nothing AndAlso EndDate Is Nothing Then
