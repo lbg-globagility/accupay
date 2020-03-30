@@ -87,7 +87,7 @@ Public Class PayrollTools
 
     Public Shared Function HasWorkedLastWorkingDay(
                             currentDate As Date,
-                            currentTimeEntries As IList(Of TimeEntry),
+                            currentTimeEntries As ICollection(Of TimeEntry),
                             payratesCalendar As PayratesCalendar) As Boolean
 
         Dim threeDaysPrior = fourDays * -1
