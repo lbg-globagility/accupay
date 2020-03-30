@@ -23,5 +23,7 @@ namespace AccuPay.Data.Entities
         public string EntityName { get; set; }
 
         public virtual ICollection<UserActivityItem> ActivityItems { get; set; }
+
+        public int EntityId { get; set; }
     }
 }

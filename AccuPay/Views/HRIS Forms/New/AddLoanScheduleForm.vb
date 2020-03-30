@@ -182,7 +182,7 @@ Public Class AddLoanScheduleForm
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Loan")
+                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID)
 
                 Me.IsSaved = True
 
@@ -336,10 +336,6 @@ Public Class AddLoanScheduleForm
 
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
-    End Sub
-
-    Private Sub Label2_Click(sender As Object, e As EventArgs) Handles Label2.Click
-
     End Sub
 
 #End Region

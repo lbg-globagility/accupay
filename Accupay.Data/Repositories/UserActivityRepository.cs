@@ -36,18 +36,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public void RecordAdd(int userId, string entityName)
+        public void RecordAdd(int userId, string entityName, int EntityId)
         {
-            RecordSimple(userId, entityName, "Created a new");
+            RecordSimple(userId, entityName, "Created a new", EntityId);
         }
 
-        public void RecordDelete(int userId, string entityName)
+        public void RecordDelete(int userId, string entityName, int EntityId)
         {
             RecordSimple(userId, entityName,
-                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}");
+                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}", EntityId);
         }
 
-        private void RecordSimple(int userId, string entityName, string simpleDescription)
+        private void RecordSimple(int userId, string entityName, string simpleDescription, int EntityId)
         {
             entityName = SetStringToPascalCase(entityName);
 
@@ -59,10 +59,10 @@ namespace AccuPay.Data.Repositories
                     }
                 };
 
-            AddItem(userId, entityName, acitivityItems);
+            AddItem(userId, entityName, EntityId, acitivityItems);
         }
 
-        public void AddItem(int userId, string entityName, List<UserActivityItem> acitivityItems = null)
+        public void AddItem(int userId, string entityName, int entiryId, List<UserActivityItem> acitivityItems = null)
         {
             using (var context = new PayrollContext())
             {
@@ -71,7 +71,7 @@ namespace AccuPay.Data.Repositories
                     Created = DateTime.Now,
                     UserId = userId,
                     EntityName = entityName.ToUpper(),
-
+                    EntityId = entiryId,
                     ActivityItems = acitivityItems
                 });
 

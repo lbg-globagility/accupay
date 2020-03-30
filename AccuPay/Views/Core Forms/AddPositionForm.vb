@@ -124,7 +124,7 @@ Public Class AddPositionForm
         Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition)
 
         Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, "Position")
+        repo.RecordAdd(z_User, "Position", Me._newPosition.RowID)
 
         Me.IsSaved = True
 

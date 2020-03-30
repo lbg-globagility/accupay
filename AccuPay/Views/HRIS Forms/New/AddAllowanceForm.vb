@@ -143,7 +143,7 @@ Public Class AddAllowanceForm
                 Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Allowance")
+                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID)
 
                 Me.IsSaved = True
 

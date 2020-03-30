@@ -40,7 +40,7 @@ Public Class AddDivisionLocationForm
             Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision)
 
             Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, "Division Location")
+            repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID)
 
             Me.IsSaved = True
 

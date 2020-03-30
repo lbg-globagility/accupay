@@ -87,29 +87,31 @@ Namespace Global.AccuPay.Repository
             Optional passedContext As PayrollContext = Nothing) As Task
 
             'remove the product so it won't override the saving of ProductID
-            Dim newAllowance = allowance.CloneJson()
-            newAllowance.Product = Nothing
+            'Dim newAllowance = allowance.CloneJson()
+            allowance.Product = Nothing
 
-            newAllowance.OrganizationID = z_OrganizationID
+            allowance.OrganizationID = z_OrganizationID
 
             'add or update the allowance
             If passedContext Is Nothing Then
                 Using newContext As New PayrollContext
-                    If newAllowance.RowID Is Nothing Then
-                        Me.Insert(newAllowance, newContext)
+                    If allowance.RowID Is Nothing Then
+                        Me.Insert(allowance, newContext)
                     Else
-                        Me.Update(newAllowance, newContext)
+                        Me.Update(allowance, newContext)
                     End If
 
-                    Await newContext.SaveChangesAsync()
+                    Await newContext.SaveChangesAsync
                 End Using
             Else
-                If newAllowance.RowID Is Nothing Then
-                    Me.Insert(newAllowance, passedContext)
+                If allowance.RowID Is Nothing Then
+                    Me.Insert(allowance, passedContext)
                 Else
-                    Me.Update(newAllowance, passedContext)
+                    Me.Update(allowance, passedContext)
                 End If
             End If
+
+
         End Function
 
         Public Function GetAllowancesWithPayPeriodBaseQuery(context As PayrollContext, _payDateFrom As Date, _payDateTo As Date) _
