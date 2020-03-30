@@ -17,6 +17,14 @@ Namespace Global.AccuPay.Entity
 
         Private Const DoubleHoliday As String = "Double Holiday"
 
+        Private Const RegularDay As String = "Regular Day"
+
+        Private Const SpecialNonWorkingHoliday As String = "Special Non-Working Holiday"
+
+        Private Const RegularHoliday As String = "Regular Holiday"
+
+        Private Const DoubleHoliday As String = "Double Holiday"
+
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?

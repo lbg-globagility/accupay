@@ -87,7 +87,6 @@ Namespace Global.AccuPay.Entity
         Public Property Image As Byte() Implements IEmployee.Image
         Public Property AdvancementPoints As Integer Implements IEmployee.AdvancementPoints
         Public Property BPIInsurance As Decimal Implements IEmployee.BPIInsurance
-
         Public Property BranchID As Integer?
 
         <ForeignKey("PositionID")>

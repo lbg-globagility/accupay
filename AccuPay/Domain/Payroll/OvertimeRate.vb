@@ -176,6 +176,21 @@ Public Class OvertimeRate
         End Get
     End Property
 
+    Public ReadOnly Property DoubleHolidayRateGroup() As RateGroup
+        Get
+            Return New RateGroup() With {
+                .BasePay = Me.DoubleHoliday,
+                .Overtime = Me.DoubleHolidayOvertime,
+                .NightDifferential = Me.DoubleHolidayNightDifferential,
+                .NightDifferentialOvertime = Me.DoubleHolidayNightDifferentialOvertime,
+                .RestDay = Me.DoubleHolidayRestDay,
+                .RestDayOvertime = Me.DoubleHolidayRestDayOvertime,
+                .RestDayNightDifferential = Me.DoubleHolidayRestDayNightDifferential,
+                .RestDayNightDifferentialOvertime = Me.DoubleHolidayRestDayNightDifferentialOvertime
+            }
+        End Get
+    End Property
+
     Public Sub New(
             basePay As Decimal,
             overtime As Decimal,
@@ -237,6 +252,15 @@ Public Class OvertimeRate
         Me.RegularHolidayRestDayOvertime = New Rate("Regular Holiday Rest Day OT", regularHolidayRestDayOvertime)
         Me.RegularHolidayRestDayNightDifferential = New Rate("Regular Holiday Rest Day Night Differential", regularHolidayRestDayNightDifferential, Me.RegularHolidayRestDay)
         Me.RegularHolidayRestDayNightDifferentialOvertime = New Rate("Regular Holiday Rest Day Night Differential OT", regularHolidayRestDayNightDifferentialOvertime)
+
+        Me.DoubleHoliday = New Rate("Double Holiday", doubleHoliday)
+        Me.DoubleHolidayOvertime = New Rate("Double Holiday OT", doubleHolidayOvertime)
+        Me.DoubleHolidayNightDifferential = New Rate("Double Holiday Night Differential", doubleHolidayNightDifferential, Me.DoubleHoliday)
+        Me.DoubleHolidayNightDifferentialOvertime = New Rate("Double Holiday Night Differential OT", doubleHolidayNightDifferentialOvertime)
+        Me.DoubleHolidayRestDay = New Rate("Double Holiday Rest Day", doubleHolidayRestDay)
+        Me.DoubleHolidayRestDayOvertime = New Rate("Double Holiday Rest Day OT", doubleHolidayRestDayOvertime)
+        Me.DoubleHolidayRestDayNightDifferential = New Rate("Double Holiday Rest Day Night Differential", doubleHolidayRestDayNightDifferential, Me.DoubleHoliday)
+        Me.DoubleHolidayRestDayNightDifferentialOvertime = New Rate("Double Holiday Rest Day Night Differential OT", doubleHolidayRestDayNightDifferentialOvertime)
 
         Me.DoubleHoliday = New Rate("Double Holiday", doubleHoliday)
         Me.DoubleHolidayOvertime = New Rate("Double Holiday OT", doubleHolidayOvertime)
