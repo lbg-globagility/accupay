@@ -611,8 +611,12 @@ Public Class DayCalculator
                         (Not _policy.RequiredToWorkLastDayForHolidayPay))
 
                 If isEntitledToHolidayPay Then
-                    'timeEntry.RegularHolidayPay += basicHolidayPay
-                    timeEntry.BasicRegularHolidayPay = basicHolidayPay
+                    ' If it's a `Double Holiday', then the employee is entitled to twice their holiday pay.
+                    If payrate.IsDoubleHoliday Then
+                        timeEntry.BasicRegularHolidayPay = basicHolidayPay * 2
+                    Else
+                        timeEntry.BasicRegularHolidayPay = basicHolidayPay
+                    End If
                 End If
             End If
         End If

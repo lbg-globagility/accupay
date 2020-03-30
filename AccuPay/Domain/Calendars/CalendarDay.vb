@@ -110,6 +110,12 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
+        Public ReadOnly Property IsDoubleHoliday As Boolean Implements IPayrate.IsDoubleHoliday
+            Get
+                Throw New Exception("Not Supported Yet.")
+            End Get
+        End Property
+
     End Class
 
 End Namespace

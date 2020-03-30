@@ -29,6 +29,7 @@ Namespace Global.AccuPay.Entity
         ReadOnly Property IsSpecialNonWorkingHoliday As Boolean
 
         ReadOnly Property IsHoliday As Boolean
+        ReadOnly Property IsDoubleHoliday As Boolean
 
     End Interface
 

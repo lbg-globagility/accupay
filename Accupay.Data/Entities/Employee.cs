@@ -79,6 +79,7 @@ namespace AccuPay.Data.Entities
         public int? AgencyID { get; set; }
         public Byte[] Image { get; set; }
         public int AdvancementPoints { get; set; }
+        public decimal BPIInsurance { get; set; }
 
         //[ForeignKey("PositionID")]
         //public virtual Position Position { get; set; }

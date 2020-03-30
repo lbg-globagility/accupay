@@ -130,6 +130,25 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
+        Public Async Function GetOrCreateAdjustmentType(adjustmentTypeName As String) As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim adjustmentType = Await context.Products.
+                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                    Where(Function(p) p.PartNo.ToLower = adjustmentTypeName.ToLower).
+                                    FirstOrDefaultAsync
+
+                If adjustmentType Is Nothing Then
+                    adjustmentType = Await AddAdjustmentType(adjustmentTypeName)
+                End If
+
+                Return adjustmentType
+
+            End Using
+
+        End Function
+
         Public Async Function AddLoanType(loanName As String, Optional throwError As Boolean = True) _
             As Task(Of Product)
 
@@ -154,14 +173,14 @@ Namespace Global.AccuPay.Repository
 
         Public Async Function AddAdjustmentType(
                                     adjustmentName As String,
-                                    code As String,
-                                    adjustmentType As AdjustmentType,
+                                    Optional adjustmentType As AdjustmentType = AdjustmentType.Blank,
+                                    Optional comments As String = "",
                                     Optional throwError As Boolean = True) _
             As Task(Of Product)
 
             Dim product As New Product
 
-            product.Comments = code
+            product.Comments = comments
             product.Description = DetermineAdjustmentTypeString(adjustmentType)
 
             product.Category = ProductConstant.ADJUSTMENT_TYPE_CATEGORY

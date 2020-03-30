@@ -9,6 +9,14 @@ Namespace Global.AccuPay.Entity
     Public Class PayRate
         Implements IPayrate
 
+        Private Const RegularDay As String = "Regular Day"
+
+        Private Const SpecialNonWorkingHoliday As String = "Special Non-Working Holiday"
+
+        Private Const RegularHoliday As String = "Regular Holiday"
+
+        Private Const DoubleHoliday As String = "Double Holiday"
+
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
         Public Property RowID As Integer?
@@ -53,7 +61,7 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsRegularDay As Boolean Implements IPayrate.IsRegularDay
             Get
-                Return PayType = "Regular Day"
+                Return PayType = RegularDay
             End Get
         End Property
 
@@ -65,13 +73,13 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsSpecialNonWorkingHoliday As Boolean Implements IPayrate.IsSpecialNonWorkingHoliday
             Get
-                Return PayType = "Special Non-Working Holiday"
+                Return PayType = SpecialNonWorkingHoliday
             End Get
         End Property
 
         Public ReadOnly Property IsRegularHoliday As Boolean Implements IPayrate.IsRegularHoliday
             Get
-                Return PayType = "Regular Holiday"
+                Return PayType = RegularHoliday OrElse PayType = DoubleHoliday
             End Get
         End Property
 
@@ -126,6 +134,12 @@ Namespace Global.AccuPay.Entity
         Private ReadOnly Property IPayrate_RestDayNDOTRate As Decimal Implements IPayrate.RestDayNDOTRate
             Get
                 Return RestDayNDOTRate
+            End Get
+        End Property
+
+        Public ReadOnly Property IsDoubleHoliday As Boolean Implements IPayrate.IsDoubleHoliday
+            Get
+                Return PayType = DoubleHoliday
             End Get
         End Property
 
