@@ -425,9 +425,16 @@ Public Class EmployeeOvertimeForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceGridViewCommit()
 
-        Dim changedOvertimes As New List(Of Overtime)
+        Dim hasWorry = HasConflictingOvertime()
 
         Dim messageTitle = "Update Overtimes"
+
+        If hasWorry Then
+            MessageBoxHelper.Warning("An overtime overlaps to another overtime.", messageTitle)
+            Return
+        End If
+
+        Dim changedOvertimes As New List(Of Overtime)
 
         For Each item In Me._currentOvertimes
             If CheckIfOvertimeIsChanged(item) Then
@@ -470,11 +477,82 @@ Public Class EmployeeOvertimeForm
                                         End Function)
     End Sub
 
+    Private Function HasConflictingOvertime() As Boolean
+        Dim overtimeList = _currentOvertimes.
+            GroupBy(Function(ot) ot.OTStartDate).
+            GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
+            Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
+            ToList()
+
+        Dim itHas = False 'overtimeList.Any()
+
+        Dim approved = Overtime.StatusApproved
+
+        For Each ot In overtimeList
+            Dim otStartDate = ot.Key
+            Dim overtimes = _currentOvertimes.
+                Where(Function(o) o.OTStartDate = otStartDate AndAlso o.OTEndDate = ot.OTEndDate).
+                Where(Function(o) o.Status = approved).
+                OrderBy(Function(o) o.OTStartTime).
+                ToList()
+            'OrderBy(Function(o) o.OTEndTime).
+
+            Dim isMoreThanOne = If(overtimes.Any(), overtimes.Count() > 1, False)
+            If Not isMoreThanOne Then Continue For
+
+            Dim count = overtimes.Count - 1
+            Dim preceedingOvertime = overtimes.FirstOrDefault
+            Dim thisIsIt = preceedingOvertime.EmployeeID.Value = 75 And preceedingOvertime.OTStartDate.Date = New Date(2020, 2, 18)
+            If thisIsIt Then Console.WriteLine("This is it...")
+            For i = 1 To count
+                Dim proceedingOvertime = overtimes(i)
+
+                If preceedingOvertime.OTStartTime.Value < proceedingOvertime.OTStartTime.Value _
+                    AndAlso proceedingOvertime.OTStartTime.Value < preceedingOvertime.OTEndTime.Value Then
+
+                    itHas = True
+                    'SetCurrentOvertimeRow(preceedingOvertime)
+                    SetCurrentOvertimeRow(proceedingOvertime)
+                    Exit For
+                End If
+
+                preceedingOvertime = proceedingOvertime
+            Next
+
+            If itHas Then Exit For
+        Next
+
+        Return itHas
+    End Function
+
+    Private Sub SetCurrentOvertimeRow(overtime As Overtime)
+        Dim gridRow = OvertimeGridView.Rows.OfType(Of DataGridViewRow).
+            Where(Function(r) r.Cells(Column2.Name).Value = overtime.OTStartTime.Value).
+            Where(Function(r) r.Cells(Column4.Name).Value = overtime.OTEndTime.Value).
+            Where(Function(r) r.Cells(Column1.Name).Value = overtime.OTStartDate).
+            Where(Function(r) r.Cells(Column3.Name).Value = overtime.OTEndDate).
+            Where(Function(r) r.Cells(Column7.Name).Value = overtime.Status).
+            Where(Function(r) r.Cells(Column5.Name).Value = overtime.Reason).
+            Where(Function(r) r.Cells(Column6.Name).Value = overtime.Comments).
+            FirstOrDefault
+
+        If gridRow Is Nothing Then Return
+
+        Dim selectedCells = gridRow.Cells
+        Dim selectedCell = selectedCells.OfType(Of DataGridViewCell).FirstOrDefault
+        OvertimeGridView.CurrentCell = selectedCell
+
+        gridRow.Selected = True
+        OvertimeGridView.CurrentRow.Selected = True
+
+        Dim selectedOvertime = DirectCast(gridRow.DataBoundItem, Overtime)
+        PopulateOvertimeForm(selectedOvertime)
+    End Sub
+
     Private Sub TimePicker_Leave(sender As Object, e As EventArgs) _
         Handles StartTimePicker.Leave, EndTimePicker.Leave, StartDatePicker.Leave
 
         UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
-
 End Class
