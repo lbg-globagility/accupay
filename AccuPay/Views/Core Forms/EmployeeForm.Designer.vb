@@ -129,6 +129,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
         Me.BPIinsuranceText = New System.Windows.Forms.TextBox()
         Me.BPIinsuranceLabel = New System.Windows.Forms.Label()
+        Me.dtpRegularizationDate = New System.Windows.Forms.DateTimePicker()
+        Me.dtpEvaluationDate = New System.Windows.Forms.DateTimePicker()
         Me.LeaveGroupBox = New System.Windows.Forms.GroupBox()
         Me.LeaveBalanceTextBox = New System.Windows.Forms.TextBox()
         Me.Label89 = New System.Windows.Forms.Label()
@@ -150,10 +152,6 @@ Partial Class EmployeeForm
         Me.txtWorkHoursPerWeek = New System.Windows.Forms.TextBox()
         Me.Label364 = New System.Windows.Forms.Label()
         Me.cboAgency = New System.Windows.Forms.ComboBox()
-        Me.MaskedTextBox2 = New System.Windows.Forms.MaskedTextBox()
-        Me.MaskedTextBox1 = New System.Windows.Forms.MaskedTextBox()
-        Me.CheckBox2 = New System.Windows.Forms.CheckBox()
-        Me.CheckBox1 = New System.Windows.Forms.CheckBox()
         Me.Label363 = New System.Windows.Forms.Label()
         Me.Label362 = New System.Windows.Forms.Label()
         Me.GroupBox2 = New System.Windows.Forms.GroupBox()
@@ -1495,6 +1493,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.AutoScroll = True
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceText)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceLabel)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.dtpRegularizationDate)
+        Me.SplitContainer2.Panel1.Controls.Add(Me.dtpEvaluationDate)
         Me.SplitContainer2.Panel1.Controls.Add(Me.LeaveGroupBox)
         Me.SplitContainer2.Panel1.Controls.Add(Me.AddBranchLinkButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BranchComboBox)
@@ -1503,10 +1503,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label364)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboAgency)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.MaskedTextBox1)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.CheckBox1)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label363)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label362)
         Me.SplitContainer2.Panel1.Controls.Add(Me.GroupBox2)
@@ -1637,6 +1633,25 @@ Partial Class EmployeeForm
         Me.BPIinsuranceLabel.Size = New System.Drawing.Size(74, 13)
         Me.BPIinsuranceLabel.TabIndex = 539
         Me.BPIinsuranceLabel.Text = "BPI Insurance"
+        'dtpRegularizationDate
+        '
+        Me.dtpRegularizationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpRegularizationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpRegularizationDate.Location = New System.Drawing.Point(128, 433)
+        Me.dtpRegularizationDate.Name = "dtpRegularizationDate"
+        Me.dtpRegularizationDate.ShowCheckBox = True
+        Me.dtpRegularizationDate.Size = New System.Drawing.Size(168, 20)
+        Me.dtpRegularizationDate.TabIndex = 540
+        '
+        'dtpEvaluationDate
+        '
+        Me.dtpEvaluationDate.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.dtpEvaluationDate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpEvaluationDate.Location = New System.Drawing.Point(128, 403)
+        Me.dtpEvaluationDate.Name = "dtpEvaluationDate"
+        Me.dtpEvaluationDate.ShowCheckBox = True
+        Me.dtpEvaluationDate.Size = New System.Drawing.Size(168, 20)
+        Me.dtpEvaluationDate.TabIndex = 539
         '
         'LeaveGroupBox
         '
@@ -1850,43 +1865,6 @@ Partial Class EmployeeForm
         Me.cboAgency.Name = "cboAgency"
         Me.cboAgency.Size = New System.Drawing.Size(168, 21)
         Me.cboAgency.TabIndex = 24
-        '
-        'MaskedTextBox2
-        '
-        Me.MaskedTextBox2.BackColor = System.Drawing.Color.White
-        Me.MaskedTextBox2.Location = New System.Drawing.Point(149, 433)
-        Me.MaskedTextBox2.Name = "MaskedTextBox2"
-        Me.MaskedTextBox2.ReadOnly = True
-        Me.MaskedTextBox2.Size = New System.Drawing.Size(100, 20)
-        Me.MaskedTextBox2.TabIndex = 19
-        Me.MaskedTextBox2.ValidatingType = GetType(Date)
-        '
-        'MaskedTextBox1
-        '
-        Me.MaskedTextBox1.BackColor = System.Drawing.Color.White
-        Me.MaskedTextBox1.Location = New System.Drawing.Point(149, 403)
-        Me.MaskedTextBox1.Name = "MaskedTextBox1"
-        Me.MaskedTextBox1.ReadOnly = True
-        Me.MaskedTextBox1.Size = New System.Drawing.Size(100, 20)
-        Me.MaskedTextBox1.TabIndex = 17
-        '
-        'CheckBox2
-        '
-        Me.CheckBox2.AutoSize = True
-        Me.CheckBox2.Location = New System.Drawing.Point(128, 439)
-        Me.CheckBox2.Name = "CheckBox2"
-        Me.CheckBox2.Size = New System.Drawing.Size(15, 14)
-        Me.CheckBox2.TabIndex = 18
-        Me.CheckBox2.UseVisualStyleBackColor = True
-        '
-        'CheckBox1
-        '
-        Me.CheckBox1.AutoSize = True
-        Me.CheckBox1.Location = New System.Drawing.Point(128, 405)
-        Me.CheckBox1.Name = "CheckBox1"
-        Me.CheckBox1.Size = New System.Drawing.Size(15, 14)
-        Me.CheckBox1.TabIndex = 16
-        Me.CheckBox1.UseVisualStyleBackColor = True
         '
         'Label363
         '
@@ -9633,10 +9611,6 @@ Partial Class EmployeeForm
     Friend WithEvents Label360 As System.Windows.Forms.Label
     Friend WithEvents Label362 As System.Windows.Forms.Label
     Friend WithEvents Label363 As System.Windows.Forms.Label
-    Friend WithEvents CheckBox2 As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBox1 As System.Windows.Forms.CheckBox
-    Friend WithEvents MaskedTextBox2 As System.Windows.Forms.MaskedTextBox
-    Friend WithEvents MaskedTextBox1 As System.Windows.Forms.MaskedTextBox
     Friend WithEvents LinkLabel3 As System.Windows.Forms.LinkLabel
     Friend WithEvents Label364 As System.Windows.Forms.Label
     Friend WithEvents cboAgency As System.Windows.Forms.ComboBox
@@ -9851,4 +9825,6 @@ Partial Class EmployeeForm
     Friend WithEvents BranchID As DataGridViewTextBoxColumn
     Friend WithEvents BPIInsuranceColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
+    Friend WithEvents dtpEvaluationDate As DateTimePicker
+    Friend WithEvents dtpRegularizationDate As DateTimePicker
 End Class

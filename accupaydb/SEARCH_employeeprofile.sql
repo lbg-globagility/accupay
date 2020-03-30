@@ -4,6 +4,8 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 
+DROP PROCEDURE IF EXISTS `SEARCH_employeeprofile`;
+DELIMITER //
 CREATE DEFINER=`root`@`127.0.0.1` PROCEDURE `SEARCH_employeeprofile`(
 	IN `og_id` INT,
 	IN `emp_id` VARCHAR(50),
@@ -91,6 +93,9 @@ SELECT e.RowID
         ,e.BranchID
         ,e.BPIInsurance
 
+        ,e.DateEvaluated
+        ,e.DateRegularized
+        
 FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id     AND LENGTH(emp_id) > 0
     UNION
         SELECT * FROM employee WHERE OrganizationID=og_id AND FirstName =emp_fname  AND LENGTH(emp_fname) > 0
