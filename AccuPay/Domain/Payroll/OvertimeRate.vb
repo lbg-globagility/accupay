@@ -176,21 +176,6 @@ Public Class OvertimeRate
         End Get
     End Property
 
-    Public ReadOnly Property DoubleHolidayRateGroup() As RateGroup
-        Get
-            Return New RateGroup() With {
-                .BasePay = Me.DoubleHoliday,
-                .Overtime = Me.DoubleHolidayOvertime,
-                .NightDifferential = Me.DoubleHolidayNightDifferential,
-                .NightDifferentialOvertime = Me.DoubleHolidayNightDifferentialOvertime,
-                .RestDay = Me.DoubleHolidayRestDay,
-                .RestDayOvertime = Me.DoubleHolidayRestDayOvertime,
-                .RestDayNightDifferential = Me.DoubleHolidayRestDayNightDifferential,
-                .RestDayNightDifferentialOvertime = Me.DoubleHolidayRestDayNightDifferentialOvertime
-            }
-        End Get
-    End Property
-
     Public Sub New(
             basePay As Decimal,
             overtime As Decimal,
