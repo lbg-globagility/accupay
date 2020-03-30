@@ -82,6 +82,9 @@ SELECT e.RowID
         ,IFNULL(ag.RowID,'')                            `ag_RowID`
         ,e.BranchID 
 
+        ,e.DateEvaluated
+        ,e.DateRegularized
+        
 FROM (SELECT * FROM employee WHERE OrganizationID=og_id AND EmployeeID  =emp_id     AND LENGTH(emp_id) > 0
     UNION
         SELECT * FROM employee WHERE OrganizationID=og_id AND FirstName =emp_fname  AND LENGTH(emp_fname) > 0
