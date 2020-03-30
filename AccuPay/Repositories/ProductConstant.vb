@@ -28,4 +28,6 @@
 
     Public Shared ReadOnly OTHERS_LEAVE As String = "Others"
 
+    Public Shared ReadOnly BPI_INSURANCE_ADJUSTMENT As String = "BPI Insurance"
+
 End Class

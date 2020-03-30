@@ -200,7 +200,7 @@ Public Class AdjustmentForm
 
                                         Await _productRepository.AddAdjustmentType(
                                                         adjustmentName:=adjustmentName,
-                                                        code:=CodeTextBox.Text.Trim,
+                                                        comments:=CodeTextBox.Text.Trim,
                                                         adjustmentType:=_adjustmentType)
 
                                         successMessage = $"Adjustment: '{adjustmentName}' successfully added."

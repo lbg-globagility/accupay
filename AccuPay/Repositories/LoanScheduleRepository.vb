@@ -155,7 +155,7 @@ Namespace Global.AccuPay.Repository
             'add or update the loanSchedule
             If passedContext Is Nothing Then
                 Using newContext As New PayrollContext
-                    If loanSchedule.RowID Is Nothing Then
+                    If loanSchedule.RowID Is Nothing OrElse loanSchedule.RowID = Integer.MinValue Then
                         Me.Insert(loanSchedule, loanTypes, newContext)
                     Else
                         Await Me.UpdateAsync(loanSchedule, newContext)
@@ -164,7 +164,7 @@ Namespace Global.AccuPay.Repository
                     Await newContext.SaveChangesAsync()
                 End Using
             Else
-                If loanSchedule.RowID Is Nothing Then
+                If loanSchedule.RowID Is Nothing OrElse loanSchedule.RowID = Integer.MinValue Then
                     Me.Insert(loanSchedule, loanTypes, passedContext)
                 Else
                     Await Me.UpdateAsync(loanSchedule, passedContext)

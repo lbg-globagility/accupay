@@ -67,7 +67,7 @@ Public Class PayrollResources
 
     Private _systemOwner As SystemOwner
 
-    Private _allowanceRepository As AllowanceRepository
+    Private _bpiInsuranceProduct As Product
 
     Public ReadOnly Property Employees As ICollection(Of Employee)
         Get
@@ -189,6 +189,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property BpiInsuranceProduct As Product
+        Get
+            Return _bpiInsuranceProduct
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As Integer, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
@@ -198,8 +204,6 @@ Public Class PayrollResources
     Public Async Function Load() As Task
 
         'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-
-        _allowanceRepository = New AllowanceRepository
 
         Await LoadPayPeriod()
 
@@ -222,7 +226,8 @@ Public Class PayrollResources
             LoadActualTimeEntries(),
             LoadFilingStatuses(),
             LoadDivisionMinimumWages(),
-            LoadEmployeeDutySchedules()
+            LoadEmployeeDutySchedules(),
+            LoadBpiInsuranceProduct()
         })
     End Function
 
@@ -365,6 +370,7 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = context.Paystubs.
                     Include(Function(p) p.Adjustments).
+                    ThenInclude(Function(a) a.Product).
                     Include(Function(p) p.ThirteenthMonthPay).
                     Include(Function(p) p.ActualAdjustments).
                     Include(Function(p) p.Actual).
@@ -484,7 +490,7 @@ Public Class PayrollResources
     Private Async Function LoadAllowances() As Task
         Try
             Using context = New PayrollContext(logger)
-                Dim query As IQueryable(Of Allowance) = _allowanceRepository.
+                Dim query As IQueryable(Of Allowance) = New AllowanceRepository().
                                                 GetAllowancesWithPayPeriodBaseQuery(context,
                                                                        _payDateFrom:=_payDateFrom,
                                                                        _payDateTo:=_payDateTo)
@@ -518,6 +524,16 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("DivisionMinimumWage", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadBpiInsuranceProduct() As Task
+        Try
+
+            _bpiInsuranceProduct = Await New ProductRepository().
+                                        GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
         End Try
     End Function
 
