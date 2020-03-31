@@ -7904,7 +7904,7 @@ Public Class EmployeeForm
         New Dictionary(Of Gender, String) From {{Gender.Male, Gender.Male.ToString()}, {Gender.Female, Gender.Female.ToString()}}
 
     Private Async Sub LoadSalutation(gender As Gender)
-        Dim genderList = New String() {"Neutral", indentifyGender(gender)}
+        Dim genderList = {"Neutral", indentifyGender(gender)}
 
         Using context = New PayrollContext
             Dim salutationList = Await context.ListOfValues.
