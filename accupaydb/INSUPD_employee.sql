@@ -69,7 +69,8 @@ CREATE DEFINER=`root`@`localhost` FUNCTION `INSUPD_employee`(
 	`emplo_LateGracePeriod` DECIMAL(10,2),
 	`emplo_AgencyID` INT,
 	`emplo_OffsetBalance` DECIMAL(10,2),
-	`emplo_BranchID` INT
+	`emplo_BranchID` INT,
+	`emplo_BPIInsurance` DECIMAL(10,2)
 )
 RETURNS int(11)
 LANGUAGE SQL
@@ -153,6 +154,7 @@ INSERT INTO employee
     ,AgencyID
     ,OffsetBalance
     ,BranchID
+    ,BPIInsurance
 ) VALUES (
     emplo_RowID
     ,emplo_UserID
@@ -220,6 +222,7 @@ INSERT INTO employee
     ,emplo_AgencyID
     ,emplo_OffsetBalance
     ,emplo_BranchID
+    ,emplo_BPIInsurance
 ) ON
 DUPLICATE
 KEY
@@ -282,7 +285,8 @@ UPDATE
     ,OffsetBalance=emplo_OffsetBalance
     ,MaternityLeaveBalance=emplo_MaternityLeaveBalance
     ,OtherLeaveBalance=emplo_OtherLeaveBalance
-	,BranchID=emplo_BranchID;SELECT @@Identity AS id INTO emploRowID;
+	,BranchID=emplo_BranchID
+	,BPIInsurance=emplo_BPIInsurance;SELECT @@Identity AS id INTO emploRowID;
 
 RETURN emploRowID;
 

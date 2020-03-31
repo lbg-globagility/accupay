@@ -7,6 +7,15 @@ Namespace Global.AccuPay.Entity
 
     <Table("payrate")>
     Public Class PayRate
+        Implements IPayrate
+
+        Private Const RegularDay As String = "Regular Day"
+
+        Private Const SpecialNonWorkingHoliday As String = "Special Non-Working Holiday"
+
+        Private Const RegularHoliday As String = "Regular Holiday"
+
+        Private Const DoubleHoliday As String = "Double Holiday"
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
@@ -50,27 +59,87 @@ Namespace Global.AccuPay.Entity
 
         Public Property RestDayNDOTRate As Decimal
 
-        Public ReadOnly Property IsRegularDay As Boolean
+        Public ReadOnly Property IsRegularDay As Boolean Implements IPayrate.IsRegularDay
             Get
-                Return PayType = "Regular Day"
+                Return PayType = RegularDay
             End Get
         End Property
 
-        Public ReadOnly Property IsHoliday As Boolean
+        Public ReadOnly Property IsHoliday As Boolean Implements IPayrate.IsHoliday
             Get
                 Return IsSpecialNonWorkingHoliday Or IsRegularHoliday
             End Get
         End Property
 
-        Public ReadOnly Property IsSpecialNonWorkingHoliday As Boolean
+        Public ReadOnly Property IsSpecialNonWorkingHoliday As Boolean Implements IPayrate.IsSpecialNonWorkingHoliday
             Get
-                Return PayType = "Special Non-Working Holiday"
+                Return PayType = SpecialNonWorkingHoliday
             End Get
         End Property
 
-        Public ReadOnly Property IsRegularHoliday As Boolean
+        Public ReadOnly Property IsRegularHoliday As Boolean Implements IPayrate.IsRegularHoliday
             Get
-                Return PayType = "Regular Holiday"
+                Return PayType = RegularHoliday OrElse PayType = DoubleHoliday
+            End Get
+        End Property
+
+        Public ReadOnly Property IPayrate_Date As Date Implements IPayrate.Date
+            Get
+                Return [Date]
+            End Get
+        End Property
+
+        Public ReadOnly Property IPayrate_RegularRate As Decimal Implements IPayrate.RegularRate
+            Get
+                Return CommonRate
+            End Get
+        End Property
+
+        Private ReadOnly Property IPayrate_OvertimeRate As Decimal Implements IPayrate.OvertimeRate
+            Get
+                Return OvertimeRate
+            End Get
+        End Property
+
+        Public ReadOnly Property IPayrate_NightDiffRate As Decimal Implements IPayrate.NightDiffRate
+            Get
+                Return NightDifferentialRate
+            End Get
+        End Property
+
+        Public ReadOnly Property IPayrate_NightDiffOTRate As Decimal Implements IPayrate.NightDiffOTRate
+            Get
+                Return NightDifferentialOTRate
+            End Get
+        End Property
+
+        Private ReadOnly Property IPayrate_RestDayRate As Decimal Implements IPayrate.RestDayRate
+            Get
+                Return RestDayRate
+            End Get
+        End Property
+
+        Public ReadOnly Property IPayrate_RestDayOTRate As Decimal Implements IPayrate.RestDayOTRate
+            Get
+                Return RestDayOvertimeRate
+            End Get
+        End Property
+
+        Private ReadOnly Property IPayrate_RestDayNDRate As Decimal Implements IPayrate.RestDayNDRate
+            Get
+                Return RestDayNDRate
+            End Get
+        End Property
+
+        Private ReadOnly Property IPayrate_RestDayNDOTRate As Decimal Implements IPayrate.RestDayNDOTRate
+            Get
+                Return RestDayNDOTRate
+            End Get
+        End Property
+
+        Public ReadOnly Property IsDoubleHoliday As Boolean Implements IPayrate.IsDoubleHoliday
+            Get
+                Return PayType = DoubleHoliday
             End Get
         End Property
 

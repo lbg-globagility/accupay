@@ -30,46 +30,56 @@ Public Class DailyAllowanceCalculator
                 Continue For
             End If
 
-            Dim divisor = PayrollTools.DivisorToDailyRate
-            Dim hourlyRate = dailyRate / divisor
+            Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
-            Dim amount = 0D
-            Dim payRate = _payrateCalendar.Find(timeEntry.Date)
-            If payRate.IsRegularDay Then
+            Dim allowanceAmount = 0D
+            Dim payrate = _payrateCalendar.Find(timeEntry.Date)
+
+            If payrate.IsRegularDay Then
                 Dim isRestDay = timeEntry.RestDayHours > 0
 
                 If isRestDay Then
-                    amount = dailyRate
+                    allowanceAmount = dailyRate
                 ElseIf allowance.Product.Fixed Then
-                    amount = dailyRate
+                    allowanceAmount = dailyRate
                 Else
-                    amount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
+                    allowanceAmount = (timeEntry.RegularHours + timeEntry.TotalLeaveHours) * hourlyRate
                 End If
-            ElseIf payRate.IsSpecialNonWorkingHoliday Then
+
+            ElseIf payrate.IsSpecialNonWorkingHoliday Then
                 Dim countableHours = timeEntry.RegularHours + timeEntry.SpecialHolidayHours + timeEntry.TotalLeaveHours
 
-                amount = If(countableHours > 0, dailyRate, 0D)
-            ElseIf payRate.IsRegularHoliday Then
-                amount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
+                allowanceAmount = If(countableHours > 0, dailyRate, 0D)
+            ElseIf payrate.IsRegularHoliday Then
+                allowanceAmount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
                 Dim exemption = _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly")
 
                 Dim giveAllowance =
-                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, CType(_previousTimeEntries, IList(Of TimeEntry)), _payrateCalendar) Or
+                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, _previousTimeEntries, _payrateCalendar) Or
                     ((employee.IsFixed Or employee.IsMonthly) And exemption)
 
                 If giveAllowance Then
+                    Dim basicHolidayPay As Decimal
+
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
                         Dim workHours = If(timeEntry.HasShift, timeEntry.WorkHours, PayrollTools.WorkHoursPerDay)
 
-                        amount += {workHours * hourlyRate, dailyRate}.Max()
+                        basicHolidayPay = {workHours * hourlyRate, dailyRate}.Max()
                     Else
-                        amount += dailyRate
+                        basicHolidayPay = dailyRate
+                    End If
+
+                    If payrate.IsDoubleHoliday Then
+                        ' If it's a double holiday, then give the basic holiday pay twice
+                        allowanceAmount += basicHolidayPay * 2
+                    Else
+                        allowanceAmount += basicHolidayPay
                     End If
                 End If
             End If
 
-            allowanceItem.AddPerDay(timeEntry.Date, amount)
+            allowanceItem.AddPerDay(timeEntry.Date, allowanceAmount)
         Next
 
         Return allowanceItem

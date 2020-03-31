@@ -41,3 +41,8 @@ Public Enum PayrollSummaryAdjustmentBreakdownPolicy
     BreakdownOnly
     Both
 End Enum
+
+Public Enum PayRateCalculationBasis
+    Organization
+    Branch
+End Enum

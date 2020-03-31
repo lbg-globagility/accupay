@@ -57,8 +57,6 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
-    Private _payRates As ICollection(Of PayRate)
-
     Private _allowances As ICollection(Of Allowance)
 
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
@@ -67,7 +65,9 @@ Public Class PayrollResources
 
     Private _systemOwner As SystemOwner
 
-    Private _allowanceRepository As AllowanceRepository
+    Private _bpiInsuranceProduct As Product
+
+    Private _calendarCollection As CalendarCollection
 
     Public ReadOnly Property Employees As ICollection(Of Employee)
         Get
@@ -153,12 +153,6 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property PayRates As ICollection(Of PayRate)
-        Get
-            Return _payRates
-        End Get
-    End Property
-
     Public ReadOnly Property Allowances As ICollection(Of Allowance)
         Get
             Return _allowances
@@ -189,6 +183,18 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property CalendarCollection As CalendarCollection
+        Get
+            Return _calendarCollection
+        End Get
+    End Property
+    
+    Public ReadOnly Property BpiInsuranceProduct As Product
+        Get
+            Return _bpiInsuranceProduct
+        End Get
+    End Property
+
     Public Sub New(payPeriodID As Integer, payDateFrom As Date, payDateTo As Date)
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
@@ -198,8 +204,6 @@ Public Class PayrollResources
     Public Async Function Load() As Task
 
         'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-
-        _allowanceRepository = New AllowanceRepository
 
         Await LoadPayPeriod()
 
@@ -216,13 +220,14 @@ Public Class PayrollResources
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
             LoadSettings(),
-            LoadPayRates(),
             LoadAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
             LoadFilingStatuses(),
             LoadDivisionMinimumWages(),
-            LoadEmployeeDutySchedules()
+            LoadEmployeeDutySchedules(),
+            LoadCalendarCollection(),
+            LoadBpiInsuranceProduct()
         })
     End Function
 
@@ -248,13 +253,13 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadTimeEntries() As Task
-        Dim backDate = _payDateFrom.AddDays(-3)
+        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
 
         Try
             Using context = New PayrollContext()
                 Dim query = From t In context.TimeEntries
                             Where t.OrganizationID.Value = z_OrganizationID AndAlso
-                                backDate <= t.Date AndAlso
+                                threeDaysBeforeCutoff <= t.Date AndAlso
                                 t.Date <= _payDateTo
                             Select t
 
@@ -266,17 +271,54 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadEmployeeDutySchedules() As Task
-        Dim backDate = _payDateFrom.AddDays(-3)
+        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
 
         Try
             Using context = New PayrollContext(logger)
                 Dim query = From e In context.EmployeeDutySchedules
                             Where e.OrganizationID.Value = z_OrganizationID AndAlso
-                                e.DateSched >= backDate AndAlso
+                                e.DateSched >= threeDaysBeforeCutoff AndAlso
                                 e.DateSched <= _payDateTo
 
                 _employeeDutySchedules = Await query.ToListAsync()
             End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadCalendarCollection() As Task
+        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
+
+        Try
+            Await Task.Run(
+               Sub()
+                   Using context = New PayrollContext(logger)
+
+                       Dim settings = New ListOfValueCollection(_listOfValues)
+                       Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                                                PayRateCalculationBasis.Organization)
+
+                       If calculationBasis = PayRateCalculationBasis.Branch Then
+                           Dim branches = context.Branches.ToList()
+
+                           Dim calendarDays = context.CalendarDays.
+                                        Include(Function(t) t.DayType).
+                                        Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= _payDateTo).
+                                        ToList()
+
+                           _calendarCollection = New CalendarCollection(branches, calendarDays)
+                       Else
+                           Dim payrates = context.PayRates.
+                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                        Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso p.Date <= _payDateTo).
+                                        ToList()
+
+                           _calendarCollection = New CalendarCollection(payrates)
+                       End If
+
+                   End Using
+               End Sub)
         Catch ex As Exception
             Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
         End Try
@@ -365,6 +407,7 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = context.Paystubs.
                     Include(Function(p) p.Adjustments).
+                    ThenInclude(Function(a) a.Product).
                     Include(Function(p) p.ThirteenthMonthPay).
                     Include(Function(p) p.ActualAdjustments).
                     Include(Function(p) p.Actual).
@@ -464,27 +507,10 @@ Public Class PayrollResources
         End Try
     End Function
 
-    Private Async Function LoadPayRates() As Task
-        Dim cutoffStart = _payDateFrom.AddDays(-3)
-
-        Try
-            Using context = New PayrollContext(logger)
-                Dim query = From p In context.PayRates
-                            Where p.OrganizationID.Value = z_OrganizationID AndAlso
-                                cutoffStart <= p.Date AndAlso
-                                p.Date <= _payDateTo
-
-                _payRates = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("PayRates", ex)
-        End Try
-    End Function
-
     Private Async Function LoadAllowances() As Task
         Try
             Using context = New PayrollContext(logger)
-                Dim query As IQueryable(Of Allowance) = _allowanceRepository.
+                Dim query As IQueryable(Of Allowance) = New AllowanceRepository().
                                                 GetAllowancesWithPayPeriodBaseQuery(context,
                                                                        _payDateFrom:=_payDateFrom,
                                                                        _payDateTo:=_payDateTo)
@@ -518,6 +544,20 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("DivisionMinimumWage", ex)
+        End Try
+    End Function
+
+    Private Function GetPreviousThreeDaysBeforeCutoff() As Date
+        Return _payDateFrom.AddDays(-3)
+    End Function
+    
+    Private Async Function LoadBpiInsuranceProduct() As Task
+        Try
+
+            _bpiInsuranceProduct = Await New ProductRepository().
+                                        GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
         End Try
     End Function
 

@@ -64,6 +64,12 @@ Public Class PayrollContext
 
     Public Overridable Property ListOfValues As DbSet(Of ListOfValue)
 
+    Public Overridable Property Calendars As DbSet(Of PayCalendar)
+
+    Public Overridable Property CalendarDays As DbSet(Of CalendarDay)
+
+    Public Overridable Property DayTypes As DbSet(Of DayType)
+
     Public Overridable Property PayRates As DbSet(Of PayRate)
 
     Public Overridable Property Organizations As DbSet(Of Organization)

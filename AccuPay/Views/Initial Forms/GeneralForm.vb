@@ -1,10 +1,13 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay
+Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
     Dim sys_ownr As New SystemOwner
+
+    Private _payRateCalculationBasis As PayRateCalculationBasis
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -94,23 +97,21 @@ Public Class GeneralForm
     Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Using context As New PayrollContext
-
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
 
             If user Is Nothing Then
-
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            _payRateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                            AccuPay.PayRateCalculationBasis.Organization)
 
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
                 Return
             Else
-
                 UserPrivilegeToolStripMenuItem.Visible = False
-
             End If
 
             If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
@@ -297,8 +298,14 @@ Public Class GeneralForm
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
-        ChangeForm(PayRateForm, "Pay rate")
-        previousForm = PayRateForm
+        If _payRateCalculationBasis = PayRateCalculationBasis.Branch Then
+            ChangeForm(CalendarsForm, "Pay rate")
+            previousForm = CalendarsForm
+        Else
+            ChangeForm(PayRateForm, "Pay rate")
+            previousForm = PayRateForm
+
+        End If
 
         'If FormLeft.Contains("Pay rate") Then
         '    FormLeft.Remove("Pay rate")

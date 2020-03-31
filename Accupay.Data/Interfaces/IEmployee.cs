@@ -71,5 +71,6 @@ namespace AccuPay.Data
         bool UndertimeOverride { get; set; }
         decimal WorkDaysPerYear { get; set; }
         string WorkPhone { get; set; }
+        decimal BPIInsurance { get; set; }
     }
 }

@@ -19,7 +19,8 @@ Namespace Global.AccuPay.Payroll
             If paystub.ThirteenthMonthPay Is Nothing Then
                 paystub.ThirteenthMonthPay = New ThirteenthMonthPay() With {
                     .OrganizationID = z_OrganizationID,
-                    .CreatedBy = z_User
+                    .CreatedBy = z_User,
+                    .Created = Date.Now
                 }
             Else
                 paystub.ThirteenthMonthPay.LastUpdBy = z_User

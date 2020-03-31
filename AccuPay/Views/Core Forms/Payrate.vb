@@ -896,6 +896,8 @@ Public Class PayRateForm
                 overtimeRate = overtimeRates.SpecialHolidayRateGroup
             Case "Regular Holiday"
                 overtimeRate = overtimeRates.RegularHolidayRateGroup
+            Case "Double Holiday"
+                overtimeRate = overtimeRates.DoubleHolidayRateGroup
         End Select
 
         If overtimeRate Is Nothing Then

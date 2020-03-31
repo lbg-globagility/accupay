@@ -54,6 +54,8 @@ Public Class PayrollGeneration
 
     Private _paystub As Paystub
 
+    Private ReadOnly _bpiInsuranceProduct As Product
+
     Sub New(employee As Employee,
             resources As PayrollResources,
             Optional paystubForm As PayStubForm = Nothing)
@@ -111,11 +113,13 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
-        _payrateCalendar = New PayratesCalendar(CType(resources.PayRates, IList(Of PayRate)))
+        _payrateCalendar = resources.CalendarCollection.GetCalendar(_employee)
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
+
+        _bpiInsuranceProduct = resources.BpiInsuranceProduct
     End Sub
 
     Public Sub DoProcess()
@@ -151,6 +155,7 @@ Public Class PayrollGeneration
             If _paystub Is Nothing Then
                 _paystub = New Paystub() With {
                 .OrganizationID = z_OrganizationID,
+                .Created = Date.Now,
                 .CreatedBy = z_User,
                 .LastUpdBy = z_User,
                 .EmployeeID = _employee.RowID,
@@ -192,6 +197,17 @@ Public Class PayrollGeneration
                 End If
             Else
                 context.Paystubs.Add(_paystub)
+            End If
+
+            If EligibleForNewBPIInsurance() Then
+                context.Adjustments.Add(New Adjustment() With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .Created = Date.Now,
+                .Paystub = _paystub,
+                .ProductID = _bpiInsuranceProduct.RowID,
+                .Amount = -_employee.BPIInsurance
+                })
             End If
 
             context.Entry(_paystub).Collection(Function(p) p.AllowanceItems).Load()
@@ -237,21 +253,25 @@ Public Class PayrollGeneration
 
         End If
 
+        'Allowance
         CalculateAllowances(allowanceItems)
-
-        newLoanTransactions = ComputeLoans()
-
-        If _paystub.TotalEarnings < 0 Then
-            _paystub.TotalEarnings = 0
-        End If
-
         Dim grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance
+
+        'Loans
+        newLoanTransactions = ComputeLoans()
 
         'gross pay and total earnings should be higher than the goverment deduction calculators
         'since it is sometimes used in computing the basis pay for the deductions
         'depending on the organization's policy
+        If _paystub.TotalEarnings < 0 Then
+            _paystub.TotalEarnings = 0
+        End If
+
         _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance
+
         _paystub.TotalAdjustments = _paystub.Adjustments.Sum(Function(a) a.Amount)
+        'BPI Insurance feature, currently used by LA Global
+        If EligibleForNewBPIInsurance() Then _paystub.TotalAdjustments -= _employee.BPIInsurance
 
         Dim socialSecurityCalculator = New SssCalculator(_settings, _resources.SocialSecurityBrackets)
         socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod)
@@ -274,6 +294,42 @@ Public Class PayrollGeneration
         thirteenthMonthPayCalculator.Calculate(_employee, _paystub, _timeEntries, _actualtimeentries, _salary, _settings, _allowanceItems)
 
         Return newLoanTransactions
+    End Function
+
+    Private Function EligibleForNewBPIInsurance() As Boolean
+        Return _settings.GetBoolean("Employee Policy.UseBPIInsurance", False) AndAlso
+                    IsFirstPaystub() AndAlso
+                    _employee.BPIInsurance > 0 AndAlso
+                    Not _paystub.Adjustments.
+                            Any(Function(a) a.Product?.PartNo = ProductConstant.BPI_INSURANCE_ADJUSTMENT)
+    End Function
+
+    Private Function IsFirstPaystub() As Boolean
+        Using context As New PayrollContext
+
+            Dim query = context.Paystubs.Where(Function(p) p.EmployeeID.Value = _employee.RowID.Value)
+
+            Dim paystubCount = query.Count
+
+            If paystubCount > 1 Then
+                Return False
+
+            ElseIf paystubCount = 0 Then
+                Return True
+            Else
+                Dim firstPaystub = query.
+                                    OrderBy(Function(p) p.PayFromdate).
+                                    FirstOrDefault
+
+                If firstPaystub Is Nothing OrElse firstPaystub.PayPeriodID = _payPeriod.RowID Then
+                    Return True
+                End If
+
+                Return False
+
+            End If
+
+        End Using
     End Function
 
     Private Sub ComputeTotalEarnings()
@@ -664,6 +720,8 @@ Public Class PayrollGeneration
 
         vacationLeaveBalance = New PaystubItem() With {
             .OrganizationID = z_OrganizationID,
+            .Created = Date.Now,
+            .CreatedBy = z_User,
             .ProductID = vacationLeaveProduct.RowID,
             .PayAmount = newBalance,
             .Paystub = _paystub
