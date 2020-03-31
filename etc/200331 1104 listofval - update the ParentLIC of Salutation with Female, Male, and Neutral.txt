@@ -1,0 +1,13 @@
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='MRS' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='MS' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='Ms.' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Neutral' WHERE	DisplayValue='Atty' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Neutral' WHERE	DisplayValue='Doctor' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Neutral' WHERE	DisplayValue='Honorable' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='Miss' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='Miss' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Male' WHERE	DisplayValue='Mr' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Male' WHERE	DisplayValue='Mr.' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='Mrs.' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Female' WHERE	DisplayValue='Mrs.' AND `Type`='Salutation'	;
+UPDATE `listofval` SET `ParentLIC`='Neutral' WHERE	DisplayValue='Professor' AND `Type`='Salutation'	;
