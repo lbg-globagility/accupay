@@ -148,7 +148,7 @@ Public Class AddOfficialBusinessForm
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Official Business", Me._newOfficialBusiness.RowID)
+                repo.RecordAdd(z_User, "Official Business", Me._newOfficialBusiness.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

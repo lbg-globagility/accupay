@@ -383,7 +383,7 @@ Public Class SalaryTab
                     Await context.SaveChangesAsync
 
                     Dim repo As New UserActivityRepository
-                    repo.RecordAdd(z_User, "Salary", CInt(_currentSalary.RowID))
+                    repo.RecordAdd(z_User, "Salary", CInt(_currentSalary.RowID), z_OrganizationID)
 
                 End If
 
@@ -441,7 +441,7 @@ Public Class SalaryTab
             End Using
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Salary", CInt(_currentSalary.RowID))
+            repo.RecordDelete(z_User, "Salary", CInt(_currentSalary.RowID), z_OrganizationID)
 
             LoadSalaries()
         End If

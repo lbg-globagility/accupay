@@ -262,7 +262,7 @@ Public Class EmployeeOvertimeForm
                                                 Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Overtime", Me._currentOvertime.RowID)
+                                                repo.RecordDelete(z_User, "Overtime", Me._currentOvertime.RowID, z_OrganizationID)
 
                                                 Await LoadOvertimes(currentEmployee)
 

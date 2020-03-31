@@ -179,7 +179,7 @@ Public Class AddLeaveForm
                 Await _leaveRepository.SaveAsync(Me._newLeave)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID)
+                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

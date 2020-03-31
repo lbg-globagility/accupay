@@ -441,7 +441,7 @@ Public Class EmployeeLoansForm
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Loan", CInt(Me._currentLoanSchedule.RowID))
+            repo.RecordDelete(z_User, "Loan", CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
 
             Await LoadLoanSchedules(currentEmployee)
 

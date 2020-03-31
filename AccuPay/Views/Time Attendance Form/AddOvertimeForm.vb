@@ -147,7 +147,7 @@ Public Class AddOvertimeForm
                 Await _overtimeRepository.SaveAsync(Me._newOvertime)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID)
+                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 
