@@ -105,8 +105,21 @@ Public Class GeneralForm
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
-            _payRateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            AccuPay.PayRateCalculationBasis.Organization)
+            If settings.GetEnum("Pay rate.CalculationBasis",
+                   PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
+
+                CalendarsToolStripMenuItem.Visible = True
+                PayRateToolStripMenuItem.Visible = False
+            Else
+
+                CalendarsToolStripMenuItem.Visible = False
+                PayRateToolStripMenuItem.Visible = True
+
+            End If
+
+            If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
+                BranchToolStripMenuItem.Visible = False
+            End If
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
                 Return
@@ -298,14 +311,8 @@ Public Class GeneralForm
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
-        If _payRateCalculationBasis = PayRateCalculationBasis.Branch Then
-            ChangeForm(CalendarsForm, "Pay rate")
-            previousForm = CalendarsForm
-        Else
-            ChangeForm(PayRateForm, "Pay rate")
-            previousForm = PayRateForm
-
-        End If
+        ChangeForm(PayRateForm, "Pay rate")
+        previousForm = PayRateForm
 
         'If FormLeft.Contains("Pay rate") Then
         '    FormLeft.Remove("Pay rate")
@@ -321,6 +328,11 @@ Public Class GeneralForm
         '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
         'End If
 
+    End Sub
+
+    Private Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
+        ChangeForm(CalendarsForm, "Calendars")
+        previousForm = CalendarsForm
     End Sub
 
     Sub reloadViewPrivilege()
@@ -360,41 +372,34 @@ Public Class GeneralForm
 
     Private Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
-        'Static once As Short = 0
+        Dim form As New AddBranchForm
+        form.ShowDialog()
 
-        'If once = 0 Then
+        'Dim ControlExists As Boolean = False
 
-        '    once = 1
+        'For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
+
+        '    If ctrl.Name.Contains("BranchForm") Then
+
+        '        ControlExists = True
+
+        '    End If
+
+        'Next
+
+        'If ControlExists Then
+
+        '    n_BranchForm.Show()
+        '    n_BranchForm.BringToFront()
+        'Else
+        '    n_BranchForm = New BranchHierarchyForm
 
         '    n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
 
+        '    ChangeForm(n_BranchForm, "Branch")
+        '    previousForm = n_BranchForm
+
         'End If
-
-        Dim ControlExists As Boolean = False
-
-        For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-            If ctrl.Name.Contains("BranchForm") Then
-
-                ControlExists = True
-
-            End If
-
-        Next
-
-        If ControlExists Then
-
-            n_BranchForm.Show()
-            n_BranchForm.BringToFront()
-        Else
-            n_BranchForm = New BranchHierarchyForm
-
-            n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-            ChangeForm(n_BranchForm, "Branch")
-            previousForm = n_BranchForm
-
-        End If
 
     End Sub
 

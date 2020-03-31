@@ -7631,9 +7631,9 @@ Public Class EmployeeForm
 
             Dim branchId = GetSelectedBranch()?.RowID
 
-            If form.LastBranchId IsNot Nothing Then
+            If form.LastAddedBranchId IsNot Nothing Then
 
-                branchId = form.LastBranchId
+                branchId = form.LastAddedBranchId
 
             End If
 
