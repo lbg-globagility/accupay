@@ -7838,13 +7838,13 @@ Public Class EmployeeForm
 
         Dim gender As Gender
 
-        If obj_sender.Name = rdMale.Name _
-            And obj_sender.Checked Then
+        If obj_sender.Name = rdMale.Name Then
+            'And obj_sender.Checked Then
 
             label_gender = "Paternity"
             gender = Gender.Male
-        ElseIf obj_sender.Name = rdFMale.Name _
-            And obj_sender.Checked Then
+        ElseIf obj_sender.Name = rdFMale.Name Then
+            'And obj_sender.Checked Then
 
             label_gender = "Maternity"
             gender = Gender.Female
