@@ -72,6 +72,10 @@ Public Class TimeEntrySummaryForm
 
         _employeeRepository = New EmployeeRepository
 
+        ' Hide `delete` and `regenerate` menu buttons by default
+        tsBtnDeleteTimeEntry.Visible = False
+        regenerateTimeEntryButton.Visible = False
+
         Dim policy As New PolicyHelper
         _calculateBreakTimeLateHours = policy.ComputeBreakTimeLate
         _useNewShift = policy.UseShiftSchedule
@@ -156,8 +160,8 @@ Public Class TimeEntrySummaryForm
 
         If _formHasLoaded = False Then Return
 
-        tsBtnDeleteTimeEntry.Visible = False
-        regenerateTimeEntryButton.Visible = False
+        'tsBtnDeleteTimeEntry.Visible = False
+        'regenerateTimeEntryButton.Visible = False
 
         Dim numOfRows = 2
 
@@ -221,12 +225,10 @@ Public Class TimeEntrySummaryForm
             LoadTimeEntries()
         End If
 
-        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
+        Dim isPayperiodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
-            tsBtnDeleteTimeEntry.Visible = True
-            regenerateTimeEntryButton.Visible = True
-
-        End If
+        tsBtnDeleteTimeEntry.Visible = isPayperiodProcessing
+        regenerateTimeEntryButton.Visible = isPayperiodProcessing
     End Function
 
     Private Async Function GetPayPeriods(organizationID As Integer,
@@ -910,10 +912,6 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
-
-        tsBtnDeleteTimeEntry.Visible = False
-        regenerateTimeEntryButton.Visible = False
-
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -925,12 +923,10 @@ Public Class TimeEntrySummaryForm
 
         _selectedPayPeriod = payPeriod
 
-        If _selectedPayPeriod.Status <> PayPeriodStatusData.PayPeriodStatus.Closed Then
+        Dim isPayPeriodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
-            tsBtnDeleteTimeEntry.Visible = True
-            regenerateTimeEntryButton.Visible = True
-
-        End If
+        tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
+        regenerateTimeEntryButton.Visible = isPayPeriodProcessing
 
         LoadTimeEntries()
     End Sub
