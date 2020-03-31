@@ -8,7 +8,7 @@ Namespace Global.AccuPay.Payroll
 
     Public Class HdmfCalculator
 
-        Private Const StandardEmployeeContribution As Decimal = 100
+        Public Const StandardEmployeeContribution As Decimal = 100
 
         Private Const StandardEmployerContribution As Decimal = 100
 
