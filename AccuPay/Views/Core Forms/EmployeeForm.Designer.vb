@@ -1641,7 +1641,7 @@ Partial Class EmployeeForm
         Me.dtpRegularizationDate.Name = "dtpRegularizationDate"
         Me.dtpRegularizationDate.ShowCheckBox = True
         Me.dtpRegularizationDate.Size = New System.Drawing.Size(168, 20)
-        Me.dtpRegularizationDate.TabIndex = 540
+        Me.dtpRegularizationDate.TabIndex = 17
         '
         'dtpEvaluationDate
         '
@@ -1651,7 +1651,7 @@ Partial Class EmployeeForm
         Me.dtpEvaluationDate.Name = "dtpEvaluationDate"
         Me.dtpEvaluationDate.ShowCheckBox = True
         Me.dtpEvaluationDate.Size = New System.Drawing.Size(168, 20)
-        Me.dtpEvaluationDate.TabIndex = 539
+        Me.dtpEvaluationDate.TabIndex = 16
         '
         'LeaveGroupBox
         '
@@ -2173,7 +2173,7 @@ Partial Class EmployeeForm
         Me.txtUTgrace.Name = "txtUTgrace"
         Me.txtUTgrace.ShortcutsEnabled = False
         Me.txtUTgrace.Size = New System.Drawing.Size(41, 20)
-        Me.txtUTgrace.TabIndex = 31
+        Me.txtUTgrace.TabIndex = 38
         '
         'Label143
         '
