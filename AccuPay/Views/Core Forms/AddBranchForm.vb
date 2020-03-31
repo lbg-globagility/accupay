@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
@@ -22,17 +23,39 @@ Public Class AddBranchForm
 
     Private _currentFormType As FormMode
 
+    Private _payrateCalculationBasis As PayRateCalculationBasis
     Public Property HasChanges As Boolean
 
-    Public Property LastBranchId As Integer?
+    Public Property LastAddedBranchId As Integer?
 
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.HasChanges = False
 
-        Me.LastBranchId = Nothing
+        Me.LastAddedBranchId = Nothing
+
+        ShowBranch()
 
         Await RefreshForm()
+
+    End Sub
+
+    Private Sub ShowBranch()
+
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                            AccuPay.PayRateCalculationBasis.Organization)
+
+            If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
+
+                CalendarPanel.Visible = False
+
+            End If
+
+        End Using
 
     End Sub
 
@@ -78,16 +101,23 @@ Public Class AddBranchForm
                                                 Any(Function(c) c.Value IsNot Nothing))
     End Function
 
-    Private Function GetTextBoxWithError() As TextBox
-        Dim errorTextBox As TextBox = Nothing
+    Private Function GetControlWithError() As Control
+        Dim errorControl As Control = Nothing
 
         If String.IsNullOrWhiteSpace(NameTextBox.Text) Then
 
-            errorTextBox = NameTextBox
+            Return NameTextBox
 
         End If
 
-        Return errorTextBox
+        If _payrateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
+                CalendarComboBox.SelectedItem Is Nothing Then
+
+            Return CalendarComboBox
+
+        End If
+
+        Return errorControl
     End Function
 
     Private Sub AddButton_Click(sender As Object, e As EventArgs) Handles AddButton.Click
@@ -96,6 +126,7 @@ Public Class AddBranchForm
         DetailsGroupBox.Enabled = True
 
         NameTextBox.Clear()
+        CalendarComboBox.SelectedIndex = -1
 
         _currentFormType = FormMode.Creating
 
@@ -120,7 +151,13 @@ Public Class AddBranchForm
         DetailsGroupBox.Enabled = True
 
         NameTextBox.Text = _currentBranch.Name
-        CalendarComboBox.SelectedValue = _currentBranch.CalendarID
+
+        If _currentBranch.CalendarID Is Nothing Then
+            CalendarComboBox.SelectedIndex = -1
+        Else
+            CalendarComboBox.SelectedValue = _currentBranch.CalendarID
+
+        End If
 
         _currentFormType = FormMode.Editing
 
@@ -166,7 +203,7 @@ Public Class AddBranchForm
                     Await RefreshForm()
 
                     Me.HasChanges = True
-                    Me.LastBranchId = Nothing
+                    Me.LastAddedBranchId = Nothing
 
                     MessageBoxHelper.Information($"Branch: '{branch.Name}' successfully deleted.")
                 End Function)
@@ -175,14 +212,14 @@ Public Class AddBranchForm
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
 
-        Dim errorTextBox As TextBox = GetTextBoxWithError()
-
         If _currentFormType = FormMode.Empty Then Return
 
-        If errorTextBox IsNot Nothing Then
+        Dim errorControl As Control = GetControlWithError()
+
+        If errorControl IsNot Nothing Then
 
             MessageBoxHelper.Warning("Please provide input for the required fields.")
-            errorTextBox.Focus()
+            errorControl.Focus()
             Return
 
         End If
@@ -199,49 +236,43 @@ Public Class AddBranchForm
                                     Dim branchName = NameTextBox.Text.Trim
                                     Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
 
-                                    Dim successMessage = Await SaveBranch(branchName, calendar)
+                                    Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
+                                    Dim successMesage = ""
 
-                                    Dim isNotInsert = _currentFormType <> FormMode.Creating
+                                    If Me.LastAddedBranchId IsNot Nothing Then
+
+                                        Me.HasChanges = True
+
+                                        If _currentFormType = FormMode.Creating Then
+
+                                            successMesage = $"Branch: '{branchName}' successfully added."
+                                        Else
+
+                                            Me.LastAddedBranchId = Nothing
+                                            successMesage = $"Branch: '{branchName}' successfully updated."
+                                        End If
+
+                                    End If
 
                                     Await RefreshForm()
 
-                                    Using context As New PayrollContext
-
-                                        Dim lastBranch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.Code = branchName)
-                                        Me.LastBranchId = lastBranch?.RowID
-
-                                        If Me.LastBranchId IsNot Nothing Then
-
-                                            Me.HasChanges = True
-
-                                            If isNotInsert Then
-
-                                                Me.LastBranchId = Nothing
-
-                                            End If
-
-                                        End If
-
-                                    End Using
-
-                                    MessageBoxHelper.Information(successMessage)
+                                    MessageBoxHelper.Information(successMesage)
 
                                 End Function)
 
     End Sub
 
-    Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of String)
-
-        Dim successMessage = ""
+    Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
 
         Using context As New PayrollContext
+
+            Dim branch As New Branch
 
             Dim branchNameValidationQuery = context.Branches.
                 Where(Function(b) b.Code.Trim.ToUpper = branchName.Trim.ToUpper)
 
             If _currentFormType = FormMode.Creating Then
 
-                Dim branch As New Branch
                 branch.CreatedBy = z_User
                 branch.Code = NameTextBox.Text
                 branch.Name = NameTextBox.Text
@@ -249,13 +280,11 @@ Public Class AddBranchForm
 
                 context.Branches.Add(branch)
 
-                successMessage = $"Branch: '{branchName}' successfully added."
-
             ElseIf _currentFormType = FormMode.Editing Then
 
                 Dim currentBranchId = _currentBranch.RowID.Value
 
-                Dim branch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.RowID.Value = currentBranchId)
+                branch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.RowID.Value = currentBranchId)
 
                 If branch Is Nothing Then
 
@@ -270,7 +299,6 @@ Public Class AddBranchForm
                 branch.CalendarID = calendar?.RowID
                 branch.LastUpdBy = z_User
 
-                successMessage = $"Branch: '{branchName}' successfully updated."
             End If
 
             If Await branchNameValidationQuery.AnyAsync Then
@@ -281,7 +309,7 @@ Public Class AddBranchForm
 
             Await context.SaveChangesAsync
 
-            Return successMessage
+            Return branch.RowID
 
         End Using
 
