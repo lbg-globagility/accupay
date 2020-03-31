@@ -1,19 +1,12 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay
 Imports AccuPay.Entity
+Imports AccuPay.Enums
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
 Public Class AddBranchForm
-
-    Public Enum FormMode
-        Disabled
-        Empty
-        Creating
-        Editing
-    End Enum
 
     Private _branches As IEnumerable(Of Branch)
 
@@ -47,7 +40,7 @@ Public Class AddBranchForm
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
             _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            AccuPay.PayRateCalculationBasis.Organization)
+                                            PayRateCalculationBasis.Organization)
 
             If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 

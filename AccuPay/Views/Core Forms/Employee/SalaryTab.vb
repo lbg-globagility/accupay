@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Entity
 Imports AccuPay.Enums
-Imports AccuPay.Utilities
+Imports AccuPay.Payroll
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
@@ -14,8 +14,6 @@ Public Class SalaryTab
 
     Dim sys_ownr As New SystemOwner
 
-    Private Const StandardPagIbigContribution As Decimal = 100
-
     Private _mode As FormMode = FormMode.Empty
 
     Private _employee As Employee
@@ -23,16 +21,6 @@ Public Class SalaryTab
     Private _salaries As List(Of Salary)
 
     Private _currentSalary As Salary
-
-    Private _philHealthBrackets As List(Of PhilHealthBracket)
-
-    Private _philHealthDeductionType As String
-
-    Private _philHealthContributionRate As Decimal
-
-    Private _philHealthMinimumContribution As Decimal
-
-    Private _philHealthMaximumContribution As Decimal
 
     Private _isSystemOwnerBenchMark As Boolean
 
@@ -152,7 +140,6 @@ Public Class SalaryTab
             Return
         End If
 
-        LoadPhilHealthBrackets()
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
 
@@ -270,23 +257,6 @@ Public Class SalaryTab
         Return True
     End Function
 
-    Private Sub LoadPhilHealthBrackets()
-        Using context = New PayrollContext()
-            Dim listOfValues = context.ListOfValues.
-                Where(Function(l) l.Type = "PhilHealth").
-                ToList()
-
-            Dim values = New ListOfValueCollection(listOfValues)
-
-            _philHealthDeductionType = If(values.GetValue("DeductionType"), "Bracket")
-            _philHealthContributionRate = values.GetDecimal("Rate")
-            _philHealthMinimumContribution = values.GetDecimal("MinimumContribution")
-            _philHealthMaximumContribution = values.GetDecimal("MaximumContribution")
-
-            _philHealthBrackets = context.PhilHealthBrackets.ToList()
-        End Using
-    End Sub
-
     Private Sub ClearForm()
         dtpEffectiveFrom.Value = Date.Today
         dtpEffectiveTo.Value = Date.Today
@@ -332,9 +302,12 @@ Public Class SalaryTab
             .CreatedBy = z_User,
             .EmployeeID = _employee.RowID,
             .PositionID = _employee.PositionID,
-            .HDMFAmount = StandardPagIbigContribution,
+            .HDMFAmount = HdmfCalculator.StandardEmployeeContribution,
             .EffectiveFrom = Date.Today,
-            .EffectiveTo = Nothing
+            .EffectiveTo = Nothing,
+            .AutoComputeHDMFContribution = True,
+            .AutoComputePhilHealthContribution = True,
+            .DoPaySSSContribution = True
         }
 
         DisableSalaryGrid()
@@ -358,6 +331,13 @@ Public Class SalaryTab
     End Sub
 
     Private Async Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+        'Focus other control to commit the changes on some control
+        'ex. Change Start Date then clicking the save button immediately
+        'does not change the Start DatePicker value unless you press tab first
+        'or focus other control manually
+        pbEmployee.Focus()
+
         Using context = New PayrollContext()
             Try
                 With _currentSalary
@@ -497,27 +477,6 @@ Public Class SalaryTab
                     txtAllowance.Text.ToDecimal
 
         txtTotalSalary.Text = totalSalary.ToString
-    End Sub
-
-    <Obsolete>
-    Private Sub UpdatePhilHealth(monthlyRate As Decimal)
-        Dim philHealthContribution = 0D
-        If _philHealthDeductionType = "Formula" Then
-            philHealthContribution = monthlyRate * (_philHealthContributionRate / 100)
-
-            philHealthContribution = {philHealthContribution, _philHealthMinimumContribution}.Max()
-            philHealthContribution = {philHealthContribution, _philHealthMaximumContribution}.Min()
-            philHealthContribution = AccuMath.Truncate(philHealthContribution, 2)
-        Else
-            Dim philHealthBracket = _philHealthBrackets?.FirstOrDefault(
-                Function(p) p.SalaryRangeFrom <= monthlyRate And monthlyRate <= p.SalaryRangeTo)
-
-            _currentSalary.PayPhilHealthID = philHealthBracket?.RowID
-
-            philHealthContribution = If(philHealthBracket?.TotalMonthlyPremium, 0)
-        End If
-
-        txtPhilHealth.Text = CStr(philHealthContribution)
     End Sub
 
     Private Sub ChkPayPhilHealth_CheckedChanged(sender As Object, e As EventArgs) Handles chkPayPhilHealth.CheckedChanged
