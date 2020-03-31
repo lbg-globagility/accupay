@@ -182,7 +182,7 @@ Public Class AddLoanScheduleForm
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID)
+                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

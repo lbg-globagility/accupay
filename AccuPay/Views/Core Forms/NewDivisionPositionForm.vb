@@ -752,7 +752,7 @@ Public Class NewDivisionPositionForm
         Await _positionRepository.DeleteAsync(Me._currentPosition.RowID)
 
         Dim repo As New UserActivityRepository
-        repo.RecordDelete(z_User, "Position", CInt(Me._currentPosition.RowID))
+        repo.RecordDelete(z_User, "Position", CInt(Me._currentPosition.RowID), z_OrganizationID)
 
         Await RefreshTreeView()
 
@@ -770,12 +770,12 @@ Public Class NewDivisionPositionForm
         If Me._currentDivision.IsRoot Then
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Division Location", CInt(Me._currentDivision.RowID))
+            repo.RecordDelete(z_User, "Division Location", CInt(Me._currentDivision.RowID), z_OrganizationID)
 
         Else
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Division", CInt(Me._currentDivision.RowID))
+            repo.RecordDelete(z_User, "Division", CInt(Me._currentDivision.RowID), z_OrganizationID)
 
         End If
 

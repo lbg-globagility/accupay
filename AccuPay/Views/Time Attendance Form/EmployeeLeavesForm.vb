@@ -309,7 +309,7 @@ Public Class EmployeeLeavesForm
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID)
+                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 

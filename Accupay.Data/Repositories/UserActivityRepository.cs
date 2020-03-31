@@ -20,12 +20,13 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<UserActivity> ListWithItems(string entityName = null)
+        public IEnumerable<UserActivity> ListWithItems(int organizationId, string entityName = null)
         {
             using (PayrollContext context = new PayrollContext())
             {
                 IQueryable<UserActivity> query = context.UserActivities.
-                                                    Include(x => x.ActivityItems).Include(x => x.User);
+                                                    Include(x => x.ActivityItems).Include(x => x.User)
+                                                    .Where(x => x.OrganizationID == organizationId);
 
                 if (!string.IsNullOrWhiteSpace(entityName))
                 {
@@ -36,18 +37,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public void RecordAdd(int userId, string entityName, int EntityId)
+        public void RecordAdd(int userId, string entityName, int EntityId, int organizationId)
         {
-            RecordSimple(userId, entityName, "Created a new", EntityId);
+            RecordSimple(userId, entityName, "Created a new", EntityId, organizationId);
         }
 
-        public void RecordDelete(int userId, string entityName, int EntityId)
+        public void RecordDelete(int userId, string entityName, int EntityId, int organizationId)
         {
             RecordSimple(userId, entityName,
-                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}", EntityId);
+                $"Deleted {(CheckIfFirstLetterIsVowel(entityName) ? "an" : "a")}", EntityId, organizationId);
         }
 
-        private void RecordSimple(int userId, string entityName, string simpleDescription, int EntityId)
+        private void RecordSimple(int userId, string entityName, string simpleDescription, int EntityId, int organizationId)
         {
             entityName = SetStringToPascalCase(entityName);
 
@@ -59,10 +60,10 @@ namespace AccuPay.Data.Repositories
                     }
                 };
 
-            AddItem(userId, entityName, EntityId, acitivityItems);
+            AddItem(userId, entityName, EntityId, organizationId, acitivityItems);
         }
 
-        public void AddItem(int userId, string entityName, int entiryId, List<UserActivityItem> acitivityItems = null)
+        public void AddItem(int userId, string entityName, int entiryId, int organizationId, List<UserActivityItem> acitivityItems = null)
         {
             using (var context = new PayrollContext())
             {
@@ -72,7 +73,8 @@ namespace AccuPay.Data.Repositories
                     UserId = userId,
                     EntityName = entityName.ToUpper(),
                     EntityId = entiryId,
-                    ActivityItems = acitivityItems
+                    ActivityItems = acitivityItems,
+                    OrganizationID = organizationId
                 });
 
                 context.SaveChanges();

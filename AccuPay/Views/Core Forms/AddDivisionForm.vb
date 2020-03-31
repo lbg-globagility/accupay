@@ -137,7 +137,7 @@ Public Class AddDivisionForm
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
 
         Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID)
+        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID, z_OrganizationID)
 
         Me.IsSaved = True
 

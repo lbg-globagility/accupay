@@ -28,13 +28,13 @@ Public Class UserActivityForm
     Public Sub populateDataGrid()
 
         Dim repo As New UserActivityRepository
-        Dim userActivities = repo.ListWithItems(type)
+        Dim userActivities = repo.ListWithItems(z_OrganizationID, type)
         Dim list As New List(Of ActivityItem)
 
         For Each activity In userActivities
             For Each item In activity.ActivityItems
                 list.Add(New ActivityItem With {
-                    .Name = activity.User.FirstName + ", " + activity.User.LastName,
+                    .Name = activity.User.LastName + ", " + activity.User.FirstName,
                     .Description = item.Description,
                     .DateandTime = item.Created.ToString("MMM dd, yyyy hh:mm tt")
                          })

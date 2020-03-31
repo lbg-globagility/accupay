@@ -316,7 +316,7 @@ Public Class EmployeeAllowanceForm
                                                 Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Allowance", CInt(Me._currentAllowance.RowID))
+                                                repo.RecordDelete(z_User, "Allowance", CInt(Me._currentAllowance.RowID), z_OrganizationID)
 
                                                 Await LoadAllowances(currentEmployee)
 

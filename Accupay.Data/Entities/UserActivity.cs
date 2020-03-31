@@ -17,13 +17,11 @@ namespace AccuPay.Data.Entities
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
-
         public int UserId { get; set; }
         public User User { get; set; }
         public string EntityName { get; set; }
-
         public virtual ICollection<UserActivityItem> ActivityItems { get; set; }
-
         public int EntityId { get; set; }
+        public int OrganizationID { get; set; }
     }
 }

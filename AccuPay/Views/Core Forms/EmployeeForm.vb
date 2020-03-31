@@ -923,7 +923,7 @@ Public Class EmployeeForm
             If succeed Then
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Employee", employee_RowID)
+                repo.RecordAdd(z_User, "Employee", employee_RowID, z_OrganizationID)
                 InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
 
             End If
@@ -4552,7 +4552,7 @@ Public Class EmployeeForm
                 fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Disciplinary Action", dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
+                repo.RecordAdd(z_User, "Disciplinary Action", dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value, z_OrganizationID)
 
                 myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
             End If
@@ -4615,7 +4615,7 @@ Public Class EmployeeForm
             sql.ExecuteQuery()
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Disciplinary Action", selected_rowids.First)
+            repo.RecordDelete(z_User, "Disciplinary Action", selected_rowids.First, z_OrganizationID)
 
             If sql.HasError = False Then
 
@@ -5756,7 +5756,7 @@ Public Class EmployeeForm
                                       paramValues(10))
 
             Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, "Promotion", paramValues(0))
+            repo.RecordAdd(z_User, "Promotion", paramValues(0), z_OrganizationID)
         Else
             With dgvPromotionList.CurrentRow
 
@@ -6336,7 +6336,7 @@ Public Class EmployeeForm
 
 
                             Dim repo As New UserActivityRepository
-                            repo.RecordAdd(z_User, "Bonus", .Cells("bon_RowID").Value)
+                            repo.RecordAdd(z_User, "Bonus", .Cells("bon_RowID").Value, z_OrganizationID)
 
                         End If
                     End If
@@ -6375,7 +6375,7 @@ Public Class EmployeeForm
                 dgvempbon.Rows.Remove(dgvempbon.CurrentRow)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordDelete(z_User, "Bonus", bonus_RowID)
+                repo.RecordDelete(z_User, "Bonus", bonus_RowID, z_OrganizationID)
 
             End If
 

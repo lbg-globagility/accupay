@@ -280,7 +280,7 @@ Public Class OfficialBusinessForm
                                                 Await _officialBusinessRepository.DeleteAsync(Me._currentOfficialBusiness.RowID)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID)
+                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID, z_OrganizationID)
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 
