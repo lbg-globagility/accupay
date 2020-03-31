@@ -888,12 +888,6 @@ Public Class EmployeeForm
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
 
-            Dim currentRow = dgvEmp.CurrentRow
-            If currentRow IsNot Nothing Then
-                Dim dataRow = DirectCast(currentRow.Tag, DataRow)
-                dataRow("DateEvaluated") = evaluationDate
-                dataRow("DateRegularized") = regularizationDate
-            End If
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -1027,12 +1021,37 @@ Public Class EmployeeForm
             .Cells("BranchID").Value = GetSelectedBranch()?.RowID
             .Cells("BPIInsuranceColumn").Value = BPIinsuranceText.Text
 
+            SetEmployeeGridDataRow(dgvEmp_RowIndex)
+
         End With
         tsbtnNewEmp.Enabled = True
 
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         tsbtnSaveEmp.Enabled = True
+    End Sub
+
+    Private Async Sub SetEmployeeGridDataRow(rowIndex As Integer)
+        Dim gridRow = dgvEmp.Rows(rowIndex)
+        Using command = New MySqlCommand("CALL `SEARCH_employeeprofile`(@organizationID, @employeeID, '', '', 0);",
+                                         New MySqlConnection(mysql_conn_text))
+            With command.Parameters
+                .AddWithValue("@organizationID", orgztnID)
+                .AddWithValue("@employeeID", gridRow.Cells(Column1.Name).Value)
+            End With
+
+            Await command.Connection.OpenAsync()
+
+            Dim da As New MySqlDataAdapter
+            da.SelectCommand = command
+
+            Dim ds As New DataSet
+            da.Fill(ds)
+
+            Dim dt = ds.Tables.OfType(Of DataTable).FirstOrDefault
+
+            If dt IsNot Nothing Then dgvEmp.Rows(rowIndex).Tag = dt.Rows.OfType(Of DataRow).FirstOrDefault
+        End Using
     End Sub
 
     Sub tsbtnSaveEmp_Click(sender As Object, e As EventArgs) 'Handles tsbtnSaveEmp.Click
