@@ -60,9 +60,9 @@ Public Class TimeEntryGenerator
     Public Sub Start()
         Dim employees As IList(Of Employee) = Nothing
         Dim organization As Organization = Nothing
-        Dim payrateCalendar As PayratesCalendar = Nothing
         Dim settings As ListOfValueCollection = Nothing
         Dim agencies As IList(Of Agency) = Nothing
+        Dim calendarCollection As CalendarCollection
 
         Dim timeEntryPolicy As TimeEntryPolicy
         Using context = New PayrollContext()
@@ -155,15 +155,26 @@ Public Class TimeEntryGenerator
                 _breakTimeBrackets = New List(Of BreakTimeBracket)
             End If
 
-            Dim payRates =
-                (From p In context.PayRates
-                 Where p.OrganizationID.Value = z_OrganizationID AndAlso
-                     p.Date >= previousCutoff AndAlso
-                     p.Date <= _cutoffEnd).
-                ToList()
+            Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                            AccuPay.PayRateCalculationBasis.Organization)
 
-            payrateCalendar = New PayratesCalendar(payRates)
+            If payrateCalculationBasis = AccuPay.PayRateCalculationBasis.Branch Then
+                Dim branches = context.Branches.ToList()
 
+                Dim calendarDays = context.CalendarDays.
+                    Include(Function(t) t.DayType).
+                    Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
+                    ToList()
+
+                calendarCollection = New CalendarCollection(branches, calendarDays)
+            Else
+                Dim payrates = context.PayRates.
+                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                    Where(Function(p) previousCutoff <= p.Date AndAlso p.Date <= _cutoffEnd).
+                    ToList()
+
+                calendarCollection = New CalendarCollection(payrates)
+            End If
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)
@@ -173,7 +184,7 @@ Public Class TimeEntryGenerator
         Parallel.ForEach(employees,
             Sub(employee)
                 Try
-                    CalculateEmployee(employee, organization, payrateCalendar, settings, agencies, timeEntryPolicy)
+                    CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection)
                 Catch ex As Exception
                     logger.Error(ex.Message, ex)
                     _errors += 1
@@ -183,7 +194,12 @@ Public Class TimeEntryGenerator
             End Sub)
     End Sub
 
-    Private Sub CalculateEmployee(employee As Employee, organization As Organization, payrateCalendar As PayratesCalendar, settings As ListOfValueCollection, agencies As IList(Of Agency), timeEntryPolicy As TimeEntryPolicy)
+    Private Sub CalculateEmployeeEntries(employee As Employee,
+                                         organization As Organization,
+                                         settings As ListOfValueCollection,
+                                         agencies As IList(Of Agency),
+                                         timeEntryPolicy As TimeEntryPolicy,
+                                         calendarCollection As CalendarCollection)
         Dim previousTimeEntries As IList(Of TimeEntry) = _timeEntries.
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
@@ -231,6 +247,8 @@ Public Class TimeEntryGenerator
         Dim breakTimeBrackets As IList(Of BreakTimeBracket) = _breakTimeBrackets.
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
+
+        Dim payrateCalendar = calendarCollection.GetCalendar(employee)
 
         If employee.IsActive = False Then
             Dim currentTimeEntries = previousTimeEntries.

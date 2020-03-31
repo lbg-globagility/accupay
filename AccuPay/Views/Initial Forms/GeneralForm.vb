@@ -1,10 +1,13 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay
+Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
     Dim sys_ownr As New SystemOwner
+
+    Private _payRateCalculationBasis As PayRateCalculationBasis
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -94,23 +97,34 @@ Public Class GeneralForm
     Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Using context As New PayrollContext
-
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
 
             If user Is Nothing Then
-
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            If settings.GetEnum("Pay rate.CalculationBasis",
+                   PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
 
-                Return
+                CalendarsToolStripMenuItem.Visible = True
+                PayRateToolStripMenuItem.Visible = False
             Else
 
-                UserPrivilegeToolStripMenuItem.Visible = False
+                CalendarsToolStripMenuItem.Visible = False
+                PayRateToolStripMenuItem.Visible = True
 
+            End If
+
+            If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
+                BranchToolStripMenuItem.Visible = False
+            End If
+
+            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+                Return
+            Else
+                UserPrivilegeToolStripMenuItem.Visible = False
             End If
 
             If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
@@ -316,6 +330,11 @@ Public Class GeneralForm
 
     End Sub
 
+    Private Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
+        ChangeForm(CalendarsForm, "Calendars")
+        previousForm = CalendarsForm
+    End Sub
+
     Sub reloadViewPrivilege()
 
         Dim hasPositionViewUpdate = EXECQUER("SELECT EXISTS(SELECT" &
@@ -353,41 +372,34 @@ Public Class GeneralForm
 
     Private Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
-        'Static once As Short = 0
+        Dim form As New AddBranchForm
+        form.ShowDialog()
 
-        'If once = 0 Then
+        'Dim ControlExists As Boolean = False
 
-        '    once = 1
+        'For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
+
+        '    If ctrl.Name.Contains("BranchForm") Then
+
+        '        ControlExists = True
+
+        '    End If
+
+        'Next
+
+        'If ControlExists Then
+
+        '    n_BranchForm.Show()
+        '    n_BranchForm.BringToFront()
+        'Else
+        '    n_BranchForm = New BranchHierarchyForm
 
         '    n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
 
+        '    ChangeForm(n_BranchForm, "Branch")
+        '    previousForm = n_BranchForm
+
         'End If
-
-        Dim ControlExists As Boolean = False
-
-        For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-            If ctrl.Name.Contains("BranchForm") Then
-
-                ControlExists = True
-
-            End If
-
-        Next
-
-        If ControlExists Then
-
-            n_BranchForm.Show()
-            n_BranchForm.BringToFront()
-        Else
-            n_BranchForm = New BranchHierarchyForm
-
-            n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-            ChangeForm(n_BranchForm, "Branch")
-            previousForm = n_BranchForm
-
-        End If
 
     End Sub
 

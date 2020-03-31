@@ -121,7 +121,8 @@ Public Class DataBaseConnection
             connstringresult = "server=" & sys_servername &
                 ";user id=" & sys_userid &
                 ";password=" & sys_password &
-                ";database=" & sys_db & ";"
+                ";database=" & sys_db &
+                ";Convert Zero Datetime=true;"
 
             db_connectinstring = connstringresult
         Catch ex As Exception

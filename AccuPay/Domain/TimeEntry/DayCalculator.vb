@@ -5,6 +5,7 @@ Imports AccuPay.Utilities
 Imports PayrollSys
 
 Public Class DayCalculator
+
     Private Const DEFAULT_WORK_HOURS As Integer = 8
     Private ReadOnly _payrateCalendar As PayratesCalendar
     Private ReadOnly _settings As ListOfValueCollection
@@ -513,7 +514,7 @@ Public Class DayCalculator
                            currentDate As Date,
                            currentShift As CurrentShift,
                            salary As Salary,
-                           payrate As PayRate,
+                           payrate As IPayrate,
                            hasWorkedLastDay As Boolean)
         If currentDate < _employee.StartDate Then
 
@@ -540,12 +541,12 @@ Public Class DayCalculator
         End If
         timeEntry.RestDayPay = timeEntry.RestDayHours * hourlyRate * restDayRate
 
-        timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOvertimeRate
+        timeEntry.RestDayOTPay = timeEntry.RestDayOTHours * hourlyRate * payrate.RestDayOTRate
         timeEntry.LeavePay = timeEntry.TotalLeaveHours * hourlyRate
 
         If currentShift.IsWorkingDay Then
-            Dim nightDiffRate = payrate.NightDifferentialRate - payrate.CommonRate
-            Dim nightDiffOTRate = payrate.NightDifferentialOTRate - payrate.OvertimeRate
+            Dim nightDiffRate = payrate.NightDiffRate - payrate.RegularRate
+            Dim nightDiffOTRate = payrate.NightDiffOTRate - payrate.OvertimeRate
 
             Dim notEntitledForLegalHolidayRate = Not _employee.CalcHoliday And payrate.IsSpecialNonWorkingHoliday
             Dim notEntitledForSpecialNonWorkingHolidayRate = Not _employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday
@@ -553,15 +554,15 @@ Public Class DayCalculator
             If notEntitledForLegalHolidayRate Or
                 notEntitledForSpecialNonWorkingHolidayRate Then
 
-                nightDiffRate = (payrate.NightDifferentialRate / payrate.CommonRate) Mod 1
-                nightDiffOTRate = (payrate.NightDifferentialOTRate / payrate.OvertimeRate) Mod 1
+                nightDiffRate = (payrate.NightDiffRate / payrate.RegularRate) Mod 1
+                nightDiffOTRate = (payrate.NightDiffOTRate / payrate.OvertimeRate) Mod 1
             End If
 
             timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * nightDiffRate
             timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * nightDiffOTRate
         ElseIf currentShift.IsRestDay Then
             Dim restDayNDRate = payrate.RestDayNDRate - payrate.RestDayRate
-            Dim restDayNDOTRate = payrate.RestDayNDOTRate - payrate.RestDayOvertimeRate
+            Dim restDayNDOTRate = payrate.RestDayNDOTRate - payrate.RestDayOTRate
 
             timeEntry.NightDiffPay = timeEntry.NightDiffHours * hourlyRate * restDayNDRate
             timeEntry.NightDiffOTPay = timeEntry.NightDiffOTHours * hourlyRate * restDayNDOTRate
@@ -572,11 +573,11 @@ Public Class DayCalculator
             Dim holidayOTRate = 0D
 
             If currentShift.IsWorkingDay Then
-                holidayRate = payrate.CommonRate
+                holidayRate = payrate.RegularRate
                 holidayOTRate = payrate.OvertimeRate
             ElseIf currentShift.IsRestDay Then
                 holidayRate = payrate.RestDayRate
-                holidayOTRate = payrate.RestDayOvertimeRate
+                holidayOTRate = payrate.RestDayOTRate
             End If
 
             timeEntry.SpecialHolidayOTPay = timeEntry.SpecialHolidayOTHours * hourlyRate * holidayOTRate
@@ -610,8 +611,12 @@ Public Class DayCalculator
                         (Not _policy.RequiredToWorkLastDayForHolidayPay))
 
                 If isEntitledToHolidayPay Then
-                    'timeEntry.RegularHolidayPay += basicHolidayPay
-                    timeEntry.BasicRegularHolidayPay = basicHolidayPay
+                    ' If it's a `Double Holiday', then the employee is entitled to twice their holiday pay.
+                    If payrate.IsDoubleHoliday Then
+                        timeEntry.BasicRegularHolidayPay = basicHolidayPay * 2
+                    Else
+                        timeEntry.BasicRegularHolidayPay = basicHolidayPay
+                    End If
                 End If
             End If
         End If
@@ -644,7 +649,7 @@ Public Class DayCalculator
         End If
     End Sub
 
-    Private Sub ComputeHolidayHours(payrate As PayRate, timeEntry As TimeEntry)
+    Private Sub ComputeHolidayHours(payrate As IPayrate, timeEntry As TimeEntry)
         If Not (
             (_employee.CalcHoliday And payrate.IsRegularHoliday) Or
             (_employee.CalcSpecialHoliday And payrate.IsSpecialNonWorkingHoliday)) Then
@@ -686,7 +691,7 @@ Public Class DayCalculator
     End Sub
 
     Private Sub ComputeAbsentHours(timeEntry As TimeEntry,
-                                   payrate As PayRate,
+                                   payrate As IPayrate,
                                    hasWorkedLastDay As Boolean,
                                    currentshift As CurrentShift,
                                    leaves As IList(Of Leave))
@@ -721,7 +726,7 @@ Public Class DayCalculator
     ''' <param name="payrate"></param>
     ''' <param name="hasWorkedLastDay"></param>
     ''' <returns>True means no absence, false means possibly absent.</returns>
-    Public Function IsExemptDueToHoliday(payrate As PayRate, hasWorkedLastDay As Boolean) As Boolean
+    Public Function IsExemptDueToHoliday(payrate As IPayrate, hasWorkedLastDay As Boolean) As Boolean
         ' If it's not a holiday, then employee is not exempt
         If Not payrate.IsHoliday Then
             Return False
@@ -742,7 +747,7 @@ Public Class DayCalculator
         Return ((Not _policy.RequiredToWorkLastDay) Or hasWorkedLastDay)
     End Function
 
-    Public Function IsHolidayExempt(payrate As PayRate) As Boolean
+    Public Function IsHolidayExempt(payrate As IPayrate) As Boolean
         Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
         Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
 

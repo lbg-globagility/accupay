@@ -872,7 +872,8 @@ Public Class EmployeeForm
                            ValNoComma(txtUTgrace.Text),
                            agensi_rowid,
                            0,
-                           GetSelectedBranch()?.RowID)
+                           GetSelectedBranch()?.RowID,
+                           ValNoComma(BPIinsuranceText.Text))
             succeed = new_eRowID IsNot Nothing
 
             Dim employeeId = If(tsbtnNewEmp.Enabled = False, new_eRowID, employee_RowID)
@@ -1031,6 +1032,7 @@ Public Class EmployeeForm
             .Cells("AgencyName").Value = cboAgency.Text
 
             .Cells("BranchID").Value = GetSelectedBranch()?.RowID
+            .Cells("BPIInsuranceColumn").Value = BPIinsuranceText.Text
 
         End With
         tsbtnNewEmp.Enabled = True
@@ -1792,6 +1794,8 @@ Public Class EmployeeForm
 
                     BranchComboBox.SelectedIndex = branchIndex
 
+                    BPIinsuranceText.Text = .Cells("BPIInsuranceColumn").Value
+
                     AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
 
                 ElseIf selectedTab Is tbpAwards Then
@@ -2026,7 +2030,21 @@ Public Class EmployeeForm
         dtpempstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         chkbxRevealInPayroll.Checked = False
+
+        BPIinsuranceText.Text = GetDefaultBPIInsurance()
     End Sub
+
+    Private Function GetDefaultBPIInsurance() As Decimal
+
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Return settings.GetDecimal("Default.BPIInsurance")
+
+        End Using
+
+    End Function
 
     Dim PayFreqE_asc As String
 
@@ -3270,6 +3288,8 @@ Public Class EmployeeForm
 
             ShowBranch()
 
+            ShowBPIInsurance()
+
             Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("SELECT '' AS RowID, '' AS AgencyName" &
                                                                  " UNION" &
                                                                  " SELECT RowID,AgencyName FROM agency WHERE OrganizationID='" & orgztnID & "' AND IsActive=1;")
@@ -3379,7 +3399,7 @@ Public Class EmployeeForm
 
         Using context As New PayrollContext
 
-            _branches = context.Branches.ToList
+            _branches = New List(Of Branch)
 
             Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
@@ -3395,12 +3415,38 @@ Public Class EmployeeForm
 
             End If
 
+            _branches = context.Branches.ToList
+
             BranchComboBox.Visible = True
             BranchLabel.Visible = True
             AddBranchLinkButton.Visible = True
 
             BranchComboBox.DisplayMember = "Name"
             BranchComboBox.DataSource = _branches
+
+        End Using
+
+    End Sub
+
+    Private Sub ShowBPIInsurance()
+
+        Using context As New PayrollContext
+
+            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+
+            Dim showBranch = settings.GetBoolean("Employee Policy.UseBPIInsurance", False)
+
+            If showBranch = False Then
+
+                BPIinsuranceText.Visible = False
+                BPIinsuranceLabel.Visible = False
+
+                Return
+
+            End If
+
+            BPIinsuranceText.Visible = True
+            BPIinsuranceLabel.Visible = True
 
         End Using
 
@@ -7611,9 +7657,9 @@ Public Class EmployeeForm
 
             Dim branchId = GetSelectedBranch()?.RowID
 
-            If form.LastBranchId IsNot Nothing Then
+            If form.LastAddedBranchId IsNot Nothing Then
 
-                branchId = form.LastBranchId
+                branchId = form.LastAddedBranchId
 
             End If
 

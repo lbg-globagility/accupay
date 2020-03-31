@@ -356,6 +356,11 @@
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
+    <Compile Include="Domain\Calendars\CalendarCollection.vb" />
+    <Compile Include="Domain\Calendars\CalendarDay.vb" />
+    <Compile Include="Domain\Calendars\DayType.vb" />
+    <Compile Include="Domain\Calendars\PayCalendar.vb" />
+    <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
@@ -378,6 +383,7 @@
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Core\Enums\AdjustmentType.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
+    <Compile Include="Domain\Paystubs\IPayrate.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
@@ -397,6 +403,18 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
+    <Compile Include="Reports\Reports\EmploymentContractPage1.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmploymentContractPage1.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\EmploymentContractPage2.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmploymentContractPage2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -406,6 +424,18 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\SMDeploymentEndorsement.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\WorkOrder.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>WorkOrder.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -413,7 +443,9 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Repositories\AllowanceRepository.vb" />
+    <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
+    <Compile Include="Repositories\DayTypeRepository.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\OfficialBusinessRepository.vb" />
@@ -421,6 +453,54 @@
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
+      <DependentUpon>CalendarDayControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditorControl.Designer.vb">
+      <DependentUpon>CalendarDayEditorControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarDayEditorControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.Designer.vb">
+      <DependentUpon>CalendarMonthSelectorControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarsForm.Designer.vb">
+      <DependentUpon>CalendarsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthControl.Designer.vb">
+      <DependentUpon>CalendarMonthControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\CalendarMonthControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypeControl.Designer.vb">
+      <DependentUpon>DayTypeControl.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypeControl.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypesDialog.Designer.vb">
+      <DependentUpon>DayTypesDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\DayTypesDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.Designer.vb">
+      <DependentUpon>NewCalendarDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </Compile>
@@ -621,7 +701,6 @@
     <Compile Include="Domain\Payroll\PayrollException.vb" />
     <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
-    <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
     <Compile Include="Domain\Paystubs\Category.vb" />
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
@@ -1893,13 +1972,53 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\EmploymentContractPage1.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EmploymentContractPage1.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\EmploymentContractPage2.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EmploymentContractPage2.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\SMDeploymentEndorsement.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SMDeploymentEndorsement.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\WorkOrder.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>WorkOrder.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayControl.resx">
+      <DependentUpon>CalendarDayControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarDayEditorControl.resx">
+      <DependentUpon>CalendarDayEditorControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonthSelectorControl.resx">
+      <DependentUpon>CalendarMonthSelectorControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarsForm.resx">
+      <DependentUpon>CalendarsForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\CalendarMonthControl.resx">
+      <DependentUpon>CalendarMonthControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\DayTypeControl.resx">
+      <DependentUpon>DayTypeControl.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\DayTypesDialog.resx">
+      <DependentUpon>DayTypesDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
+      <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
