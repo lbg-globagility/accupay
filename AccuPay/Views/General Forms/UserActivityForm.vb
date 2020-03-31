@@ -1,9 +1,11 @@
 ﻿Option Strict On
+
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
 Public Class UserActivityForm
     Public Property type As String
+
     Public Sub New(type As String)
         InitializeComponent()
         Me.type = type
@@ -13,7 +15,7 @@ Public Class UserActivityForm
 
         Public Property Name As String
         Public Property Description As String
-        Public Property DateandTime As String
+        Public Property DateAndTime As String
 
     End Class
 
@@ -28,7 +30,7 @@ Public Class UserActivityForm
     Public Sub populateDataGrid()
 
         Dim repo As New UserActivityRepository
-        Dim userActivities = repo.ListWithItems(z_OrganizationID, type)
+        Dim userActivities = repo.List(z_OrganizationID, type)
         Dim list As New List(Of ActivityItem)
 
         For Each activity In userActivities
@@ -36,8 +38,8 @@ Public Class UserActivityForm
                 list.Add(New ActivityItem With {
                     .Name = activity.User.LastName + ", " + activity.User.FirstName,
                     .Description = item.Description,
-                    .DateandTime = item.Created.ToString("MMM dd, yyyy hh:mm tt")
-                         })
+                    .DateAndTime = item.Created.ToString("MMM dd, yyyy hh:mm tt")
+                })
             Next
         Next
 
@@ -48,4 +50,5 @@ Public Class UserActivityForm
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         Close()
     End Sub
+
 End Class

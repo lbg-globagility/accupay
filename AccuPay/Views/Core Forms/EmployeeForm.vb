@@ -6407,8 +6407,6 @@ Public Class EmployeeForm
                                                      .Cells("bon_Amount").Value,
                                                      .Cells("bon_ProdID").Value)
 
-
-
                             Dim repo As New UserActivityRepository
                             repo.RecordAdd(z_User, "Bonus", .Cells("bon_RowID").Value, z_OrganizationID)
 
@@ -7790,6 +7788,26 @@ Public Class EmployeeForm
         'e.Handled = TrapNumKey(Asc(e.KeyChar))
         e.Handled = New TrapDecimalKey(Asc(e.KeyChar), txtWorkDaysPerYear.Text).ResultTrap
 
+    End Sub
+
+    Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Employee")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityBonusToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityBonusToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Bonus")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityPromotionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPromotionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Promotion")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityDisciplinaryActionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityDisciplinaryActionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Disciplinary Action")
+        userActivity.ShowDialog()
     End Sub
 
     Private Sub rdbDirectDepo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbDirectDepo.CheckedChanged
