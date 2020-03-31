@@ -26,16 +26,6 @@ Partial Class SalaryTab
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SalaryTab))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -46,6 +36,16 @@ Partial Class SalaryTab
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
@@ -92,6 +92,18 @@ Partial Class SalaryTab
         Me.txtFullname = New System.Windows.Forms.TextBox()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.dgvSalaries = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tlpResult = New System.Windows.Forms.ToolTip(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -105,18 +117,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn13 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn14 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -124,6 +124,7 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.OverlapWarningLabel = New System.Windows.Forms.Label()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -222,6 +223,7 @@ Partial Class SalaryTab
         '
         Me.grpSalary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpSalary.Controls.Add(Me.OverlapWarningLabel)
         Me.grpSalary.Controls.Add(Me.txtEcola)
         Me.grpSalary.Controls.Add(Me.lblEcolaPeroSign)
         Me.grpSalary.Controls.Add(Me.lblEcola)
@@ -600,6 +602,141 @@ Partial Class SalaryTab
         Me.dgvSalaries.Size = New System.Drawing.Size(840, 233)
         Me.dgvSalaries.TabIndex = 346
         '
+        'c_fromdate
+        '
+        Me.c_fromdate.DataPropertyName = "EffectiveFrom"
+        Me.c_fromdate.HeaderText = "Effective From"
+        Me.c_fromdate.Name = "c_fromdate"
+        Me.c_fromdate.ReadOnly = True
+        Me.c_fromdate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_fromdate.Width = 120
+        '
+        'c_todate
+        '
+        Me.c_todate.DataPropertyName = "EffectiveTo"
+        Me.c_todate.HeaderText = "Effective To"
+        Me.c_todate.Name = "c_todate"
+        Me.c_todate.ReadOnly = True
+        Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_todate.Width = 120
+        '
+        'c_EmpSal
+        '
+        Me.c_EmpSal.DataPropertyName = "BasicSalary"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle2.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.c_EmpSal.DefaultCellStyle = DataGridViewCellStyle2
+        Me.c_EmpSal.HeaderText = "Basic Salary"
+        Me.c_EmpSal.Name = "c_EmpSal"
+        Me.c_EmpSal.ReadOnly = True
+        Me.c_EmpSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_EmpSal.Width = 120
+        '
+        'Column1
+        '
+        Me.Column1.DataPropertyName = "AllowanceSalary"
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
+        Me.Column1.HeaderText = "Allowance Salary"
+        Me.Column1.Name = "Column1"
+        Me.Column1.ReadOnly = True
+        Me.Column1.Width = 150
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "TotalSalary"
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle4.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
+        Me.Column2.HeaderText = "Total Salary"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.Width = 120
+        '
+        'c_BasicPaySal
+        '
+        Me.c_BasicPaySal.DataPropertyName = "BasicPay"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle5.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicPaySal.DefaultCellStyle = DataGridViewCellStyle5
+        Me.c_BasicPaySal.HeaderText = "Basic Pay"
+        Me.c_BasicPaySal.Name = "c_BasicPaySal"
+        Me.c_BasicPaySal.ReadOnly = True
+        Me.c_BasicPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_BasicPaySal.Visible = False
+        '
+        'c_sss
+        '
+        Me.c_sss.DataPropertyName = "SSSDeduction"
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle6.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_sss.DefaultCellStyle = DataGridViewCellStyle6
+        Me.c_sss.HeaderText = "SSS"
+        Me.c_sss.Name = "c_sss"
+        Me.c_sss.ReadOnly = True
+        Me.c_sss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_sss.Visible = False
+        '
+        'c_philhealth
+        '
+        Me.c_philhealth.DataPropertyName = "PhilHealthDeduction"
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle7.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_philhealth.DefaultCellStyle = DataGridViewCellStyle7
+        Me.c_philhealth.HeaderText = "PhilHealth"
+        Me.c_philhealth.Name = "c_philhealth"
+        Me.c_philhealth.ReadOnly = True
+        Me.c_philhealth.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_philhealth.Visible = False
+        '
+        'c_pagibig
+        '
+        Me.c_pagibig.DataPropertyName = "HDMFAmount"
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle8.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_pagibig.DefaultCellStyle = DataGridViewCellStyle8
+        Me.c_pagibig.HeaderText = "Pag-IBIG"
+        Me.c_pagibig.Name = "c_pagibig"
+        Me.c_pagibig.ReadOnly = True
+        Me.c_pagibig.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_pagibig.Visible = False
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "MonthlyRate"
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle9.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.Column3.DefaultCellStyle = DataGridViewCellStyle9
+        Me.Column3.HeaderText = "Monthly Rate"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        Me.Column3.Visible = False
+        '
+        'c_BasicDailyPaySal
+        '
+        Me.c_BasicDailyPaySal.DataPropertyName = "DailyRate"
+        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicDailyPaySal.DefaultCellStyle = DataGridViewCellStyle10
+        Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
+        Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
+        Me.c_BasicDailyPaySal.ReadOnly = True
+        Me.c_BasicDailyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_BasicDailyPaySal.Visible = False
+        '
+        'c_BasicHourlyPaySal
+        '
+        Me.c_BasicHourlyPaySal.DataPropertyName = "HourlyRate"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle11.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.c_BasicHourlyPaySal.DefaultCellStyle = DataGridViewCellStyle11
+        Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
+        Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
+        Me.c_BasicHourlyPaySal.ReadOnly = True
+        Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_BasicHourlyPaySal.Visible = False
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "EffectiveFrom"
@@ -741,141 +878,6 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn12.Visible = False
         '
-        'c_fromdate
-        '
-        Me.c_fromdate.DataPropertyName = "EffectiveFrom"
-        Me.c_fromdate.HeaderText = "Effective From"
-        Me.c_fromdate.Name = "c_fromdate"
-        Me.c_fromdate.ReadOnly = True
-        Me.c_fromdate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_fromdate.Width = 120
-        '
-        'c_todate
-        '
-        Me.c_todate.DataPropertyName = "EffectiveTo"
-        Me.c_todate.HeaderText = "Effective To"
-        Me.c_todate.Name = "c_todate"
-        Me.c_todate.ReadOnly = True
-        Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_todate.Width = 120
-        '
-        'c_EmpSal
-        '
-        Me.c_EmpSal.DataPropertyName = "BasicSalary"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle2.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.c_EmpSal.DefaultCellStyle = DataGridViewCellStyle2
-        Me.c_EmpSal.HeaderText = "Basic Salary"
-        Me.c_EmpSal.Name = "c_EmpSal"
-        Me.c_EmpSal.ReadOnly = True
-        Me.c_EmpSal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_EmpSal.Width = 120
-        '
-        'Column1
-        '
-        Me.Column1.DataPropertyName = "AllowanceSalary"
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle3.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.Column1.DefaultCellStyle = DataGridViewCellStyle3
-        Me.Column1.HeaderText = "Allowance Salary"
-        Me.Column1.Name = "Column1"
-        Me.Column1.ReadOnly = True
-        Me.Column1.Width = 150
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "TotalSalary"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.Column2.DefaultCellStyle = DataGridViewCellStyle4
-        Me.Column2.HeaderText = "Total Salary"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.Width = 120
-        '
-        'c_BasicPaySal
-        '
-        Me.c_BasicPaySal.DataPropertyName = "BasicPay"
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle5.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicPaySal.DefaultCellStyle = DataGridViewCellStyle5
-        Me.c_BasicPaySal.HeaderText = "Basic Pay"
-        Me.c_BasicPaySal.Name = "c_BasicPaySal"
-        Me.c_BasicPaySal.ReadOnly = True
-        Me.c_BasicPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_BasicPaySal.Visible = False
-        '
-        'c_sss
-        '
-        Me.c_sss.DataPropertyName = "SSSDeduction"
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle6.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_sss.DefaultCellStyle = DataGridViewCellStyle6
-        Me.c_sss.HeaderText = "SSS"
-        Me.c_sss.Name = "c_sss"
-        Me.c_sss.ReadOnly = True
-        Me.c_sss.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_sss.Visible = False
-        '
-        'c_philhealth
-        '
-        Me.c_philhealth.DataPropertyName = "PhilHealthDeduction"
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle7.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_philhealth.DefaultCellStyle = DataGridViewCellStyle7
-        Me.c_philhealth.HeaderText = "PhilHealth"
-        Me.c_philhealth.Name = "c_philhealth"
-        Me.c_philhealth.ReadOnly = True
-        Me.c_philhealth.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_philhealth.Visible = False
-        '
-        'c_pagibig
-        '
-        Me.c_pagibig.DataPropertyName = "HDMFAmount"
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle8.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_pagibig.DefaultCellStyle = DataGridViewCellStyle8
-        Me.c_pagibig.HeaderText = "Pag-IBIG"
-        Me.c_pagibig.Name = "c_pagibig"
-        Me.c_pagibig.ReadOnly = True
-        Me.c_pagibig.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_pagibig.Visible = False
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "MonthlyRate"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle9.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.Column3.DefaultCellStyle = DataGridViewCellStyle9
-        Me.Column3.HeaderText = "Monthly Rate"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.Visible = False
-        '
-        'c_BasicDailyPaySal
-        '
-        Me.c_BasicDailyPaySal.DataPropertyName = "DailyRate"
-        DataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle10.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicDailyPaySal.DefaultCellStyle = DataGridViewCellStyle10
-        Me.c_BasicDailyPaySal.HeaderText = "Daily Rate"
-        Me.c_BasicDailyPaySal.Name = "c_BasicDailyPaySal"
-        Me.c_BasicDailyPaySal.ReadOnly = True
-        Me.c_BasicDailyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_BasicDailyPaySal.Visible = False
-        '
-        'c_BasicHourlyPaySal
-        '
-        Me.c_BasicHourlyPaySal.DataPropertyName = "HourlyRate"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle11.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.c_BasicHourlyPaySal.DefaultCellStyle = DataGridViewCellStyle11
-        Me.c_BasicHourlyPaySal.HeaderText = "Hourly Rate"
-        Me.c_BasicHourlyPaySal.Name = "c_BasicHourlyPaySal"
-        Me.c_BasicHourlyPaySal.ReadOnly = True
-        Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.c_BasicHourlyPaySal.Visible = False
-        '
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.HeaderText = "SSS"
@@ -918,6 +920,16 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn19.HeaderText = "TrueHDMFAmount"
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
+        '
+        'OverlapWarningLabel
+        '
+        Me.OverlapWarningLabel.BackColor = System.Drawing.Color.LemonChiffon
+        Me.OverlapWarningLabel.Location = New System.Drawing.Point(8, 136)
+        Me.OverlapWarningLabel.Name = "OverlapWarningLabel"
+        Me.OverlapWarningLabel.Size = New System.Drawing.Size(824, 32)
+        Me.OverlapWarningLabel.TabIndex = 290
+        Me.OverlapWarningLabel.Text = "Two or more salaries have overlapping dates"
+        Me.OverlapWarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'SalaryTab
         '
@@ -1021,4 +1033,5 @@ Partial Class SalaryTab
     Friend WithEvents txtEcola As TextBox
     Friend WithEvents lblEcolaPeroSign As Label
     Friend WithEvents lblEcola As Label
+    Friend WithEvents OverlapWarningLabel As Label
 End Class

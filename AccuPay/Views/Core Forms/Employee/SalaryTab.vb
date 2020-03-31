@@ -143,6 +143,7 @@ Public Class SalaryTab
         ChangeMode(FormMode.Disabled)
         LoadSalaries()
 
+        OverlapWarningLabel.Visible = False
         _isSystemOwnerBenchMark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
         ToggleBenchmarkEcola()
@@ -211,48 +212,44 @@ Public Class SalaryTab
             SelectSalary(_salaries.FirstOrDefault())
         End If
 
+        ValidateSalaryRanges(_salaries)
+
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
     Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
         If salaries.Count <= 1 Then
-            'lblWarning.Visible = False
+            OverlapWarningLabel.Visible = False
         End If
 
-        For i = 0 To salaries.Count - 1
-            Dim salary = salaries.Item(i)
+        For Each a In salaries
+            Dim nextIndex = salaries.IndexOf(a) + 1
 
-            For j = i + 1 To salaries.Count - 1
-                Dim comparedSalary = salaries.Item(j)
-                If salary.RowID = comparedSalary.RowID Then
-                    Continue For
+            For Each b In salaries.GetRange(nextIndex, salaries.Count - nextIndex)
+
+                If IsOverlapping(a, b) Then
+                    OverlapWarningLabel.Visible = True
+                    Return
                 End If
 
-                If SalariesOverlap(salary, comparedSalary) Then
-                    'TODO make the overlapping salaries show in the form as warnings
-                    'lblWarning.Text = "Warning: One or more of the employee's salary history is overlapping with another salary's date."
-                    'lblWarning.Visible = True
-                    'WarnBalloon("You have input a date range overlaps to employee's existing salary.", "Overlapping dates", lblforballoon, 0, -69)
-                Else
-                    'lblWarning.Visible = False
-                End If
             Next
         Next
+
+        OverlapWarningLabel.Visible = False
     End Sub
 
-    Private Function SalariesOverlap(salaryA As PayrollSys.Salary, salaryB As PayrollSys.Salary) As Boolean
-        'If (Not salaryA.IsIndefinite) And (Not salaryB.IsIndefinite) Then
-        '    Return salaryA.EffectiveFrom <= salaryB.EffectiveTo And
-        '        salaryB.EffectiveFrom <= salaryA.EffectiveTo
-        'End If
+    Private Function IsOverlapping(a As Salary, b As Salary) As Boolean
+        If a.IsIndefinite And (Not b.IsIndefinite) Then
+            Return b.EffectiveTo.Value >= a.EffectiveFrom
+        End If
 
-        'If salaryA.IsIndefinite And (Not salaryB.IsIndefinite) Then
-        '    Return salaryB.EffectiveTo >= salaryA.EffectiveFrom
-        'End If
+        If b.IsIndefinite And (Not a.IsIndefinite) Then
+            Return a.EffectiveTo.Value >= b.EffectiveFrom
+        End If
 
-        'If salaryB.IsIndefinite And (Not salaryA.IsIndefinite) Then
-        '    Return salaryA.EffectiveTo >= salaryB.EffectiveFrom
-        'End If
+        If (Not a.IsIndefinite) And (Not b.IsIndefinite) Then
+            Return a.EffectiveFrom <= b.EffectiveTo.Value And b.EffectiveFrom <= a.EffectiveTo.Value
+        End If
 
         Return True
     End Function
