@@ -299,23 +299,10 @@ Public Class PayrollResources
                        Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                                                 PayRateCalculationBasis.Organization)
 
-                       If calculationBasis = PayRateCalculationBasis.Branch Then
-                           Dim branches = context.Branches.ToList()
-
-                           Dim calendarDays = context.CalendarDays.
-                                        Include(Function(t) t.DayType).
-                                        Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= _payDateTo).
-                                        ToList()
-
-                           _calendarCollection = New CalendarCollection(branches, calendarDays)
-                       Else
-                           Dim payrates = context.PayRates.
-                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso p.Date <= _payDateTo).
-                                        ToList()
-
-                           _calendarCollection = New CalendarCollection(payrates)
-                       End If
+                       _calendarCollection = PayrollTools.GetCalendarCollection(threeDaysBeforeCutoff,
+                                                                                _payDateTo,
+                                                                                context,
+                                                                                calculationBasis)
 
                    End Using
                End Sub)

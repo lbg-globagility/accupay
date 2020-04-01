@@ -30,7 +30,8 @@ Public Class SemiMonthlyAllowanceCalculator
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
                                                 paystub:=_paystub,
                                                 payperiodId:=_payperiod.RowID,
-                                                allowanceId:=allowance.RowID
+                                                allowanceId:=allowance.RowID,
+                                                product:=allowance.Product
                                             )
         allowanceItem.Amount = allowance.Amount
 

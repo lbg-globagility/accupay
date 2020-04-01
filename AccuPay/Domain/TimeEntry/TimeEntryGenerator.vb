@@ -162,23 +162,10 @@ Public Class TimeEntryGenerator
             Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                             AccuPay.PayRateCalculationBasis.Organization)
 
-            If payrateCalculationBasis = AccuPay.PayRateCalculationBasis.Branch Then
-                Dim branches = context.Branches.ToList()
-
-                Dim calendarDays = context.CalendarDays.
-                    Include(Function(t) t.DayType).
-                    Where(Function(t) previousCutoff <= t.Date AndAlso t.Date <= _cutoffEnd).
-                    ToList()
-
-                calendarCollection = New CalendarCollection(branches, calendarDays)
-            Else
-                Dim payrates = context.PayRates.
-                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(p) previousCutoff <= p.Date AndAlso p.Date <= _cutoffEnd).
-                    ToList()
-
-                calendarCollection = New CalendarCollection(payrates)
-            End If
+            calendarCollection = PayrollTools.GetCalendarCollection(previousCutoff,
+                                                                    _cutoffEnd,
+                                                                    context,
+                                                                    payrateCalculationBasis)
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)

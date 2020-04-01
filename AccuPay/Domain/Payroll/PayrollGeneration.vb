@@ -489,7 +489,8 @@ Public Class PayrollGeneration
     Public Shared Function CreateBasicAllowanceItem(
                                 paystub As Paystub,
                                 payperiodId As Integer?,
-                                allowanceId As Integer?) As AllowanceItem
+                                allowanceId As Integer?,
+                                product As Product) As AllowanceItem
 
         Return New AllowanceItem() With {
                 .OrganizationID = z_OrganizationID,
@@ -497,7 +498,9 @@ Public Class PayrollGeneration
                 .LastUpdBy = z_User,
                 .Paystub = paystub,
                 .PayPeriodID = payperiodId,
-                .AllowanceID = allowanceId
+                .AllowanceID = allowanceId,
+                .IsTaxable = product.IsTaxable,
+                .IsThirteenthMonthPay = product.IsThirteenthMonthPay
             }
 
     End Function
@@ -511,10 +514,9 @@ Public Class PayrollGeneration
             Dim item = CreateBasicAllowanceItem(
                         paystub:=_paystub,
                         payperiodId:=_payPeriod.RowID,
-                        allowanceId:=allowance.RowID
+                        allowanceId:=allowance.RowID,
+                        product:=allowance.Product
             )
-            item.IsTaxable = allowance.Product.IsTaxable
-            item.IsThirteenthMonthPay = allowance.Product.IsThirteenthMonthPay
 
             If allowance.IsOneTime Then
 
