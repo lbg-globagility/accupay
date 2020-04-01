@@ -425,12 +425,20 @@ Public Class EmployeeOvertimeForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceGridViewCommit()
 
-        Dim hasWorry = HasConflictingOvertime()
+        Dim overlappingOvertimes = ConflictingOvertime()
+        Dim hasWorry = overlappingOvertimes.Any()
 
         Dim messageTitle = "Update Overtimes"
 
         If hasWorry Then
-            MessageBoxHelper.Warning("An overtime overlaps to another overtime.", messageTitle)
+            Dim overtime1 = overlappingOvertimes.FirstOrDefault
+            Dim overtime2 = overlappingOvertimes.LastOrDefault
+            Dim timeFormat = "hh\:mm"
+            MessageBoxHelper.
+                Warning($"An overtime overlaps another overtime.
+                {overtime1.OTStartTime.Value.ToString(timeFormat)}-{overtime1.OTEndTime.Value.ToString(timeFormat)} {overtime1.OTStartDate.ToShortDateString}-{overtime1.OTEndDate.ToShortDateString}
+                {overtime2.OTStartTime.Value.ToString(timeFormat)}-{overtime2.OTEndTime.Value.ToString(timeFormat)} {overtime2.OTStartDate.ToShortDateString}-{overtime2.OTEndDate.ToShortDateString}",
+                        messageTitle)
             Return
         End If
 
@@ -477,7 +485,7 @@ Public Class EmployeeOvertimeForm
                                         End Function)
     End Sub
 
-    Private Function HasConflictingOvertime() As Boolean
+    Private Function ConflictingOvertime() As List(Of Overtime)
         Dim overtimeList = _currentOvertimes.
             GroupBy(Function(ot) ot.OTStartDate).
             GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
@@ -487,6 +495,8 @@ Public Class EmployeeOvertimeForm
         Dim itHas = False 'overtimeList.Any()
 
         Dim approved = Overtime.StatusApproved
+
+        Dim overlappingOvertime As New List(Of Overtime)
 
         For Each ot In overtimeList
             Dim otStartDate = ot.Key
@@ -513,6 +523,9 @@ Public Class EmployeeOvertimeForm
                     itHas = True
                     'SetCurrentOvertimeRow(preceedingOvertime)
                     SetCurrentOvertimeRow(proceedingOvertime)
+
+                    overlappingOvertime.Add(preceedingOvertime)
+                    overlappingOvertime.Add(proceedingOvertime)
                     Exit For
                 End If
 
@@ -522,7 +535,7 @@ Public Class EmployeeOvertimeForm
             If itHas Then Exit For
         Next
 
-        Return itHas
+        Return overlappingOvertime
     End Function
 
     Private Sub SetCurrentOvertimeRow(overtime As Overtime)
