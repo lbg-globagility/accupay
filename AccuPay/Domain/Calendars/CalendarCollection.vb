@@ -17,7 +17,9 @@ Namespace Global.AccuPay.Entity
             _isUsingCalendars = False
         End Sub
 
-        Public Sub New(branches As ICollection(Of Branch), calendarDays As ICollection(Of CalendarDay))
+        Public Sub New(payrates As ICollection(Of PayRate), branches As ICollection(Of Branch), calendarDays As ICollection(Of CalendarDay))
+            Me.New(payrates)
+
             _branches = branches
             _calendars = calendarDays.
                 GroupBy(Function(t) t.CalendarID).
@@ -39,10 +41,16 @@ Namespace Global.AccuPay.Entity
         End Function
 
         Private Function FindCalendarByBranch(branchId As Integer?) As PayratesCalendar
+
+            If branchId Is Nothing Then
+                Return _organizationCalendar
+            End If
+
             Dim branch = _branches.FirstOrDefault(Function(t) t.RowID.Value = branchId.Value)
 
             If Not _calendars.ContainsKey(branch.CalendarID) Then
-                Throw New Exception($"Calendar for branch #{branchId} doesn't exist")
+                Return _organizationCalendar
+                'Throw New Exception($"Calendar for branch #{branchId} doesn't exist")
             End If
 
             Return _calendars(branch.CalendarID)

@@ -1,0 +1,6 @@
+ALTER TABLE `calendarday`
+	DROP FOREIGN KEY `FK_calendarday_calendar`,
+	DROP FOREIGN KEY `FK_calendarday_daytype`;
+ALTER TABLE `calendarday`
+	ADD CONSTRAINT `FK_calendarday_calendar_CalendarID` FOREIGN KEY (`CalendarID`) REFERENCES `calendar` (`RowID`) ON DELETE CASCADE,
+	ADD CONSTRAINT `FK_calendarday_daytype_DayTypeID` FOREIGN KEY (`DayTypeID`) REFERENCES `daytype` (`RowID`);

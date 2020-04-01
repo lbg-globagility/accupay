@@ -442,4 +442,28 @@ Public Class PayrollTools
 
     End Function
 
+    Public Shared Function GetCalendarCollection(threeDaysBeforeCutoff As Date,
+                                                    payDateTo As Date,
+                                                    context As PayrollContext,
+                                                    calculationBasis As PayRateCalculationBasis) _
+                                                    As CalendarCollection
+        Dim payrates = context.PayRates.
+                                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso
+                                                    p.Date <= payDateTo).
+                                ToList()
+        If calculationBasis = PayRateCalculationBasis.Branch Then
+            Dim branches = context.Branches.ToList()
+
+            Dim calendarDays = context.CalendarDays.
+                         Include(Function(t) t.DayType).
+                         Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
+                         ToList()
+
+            Return New CalendarCollection(payrates, branches, calendarDays)
+        Else
+            Return New CalendarCollection(payrates)
+        End If
+    End Function
+
 End Class
