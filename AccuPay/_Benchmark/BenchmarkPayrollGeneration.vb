@@ -399,7 +399,8 @@ Namespace Benchmark
             Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
                                                 paystub:=paystub,
                                                 payperiodId:=_currentPayPeriod.RowID,
-                                                allowanceId:=_ecola?.RowID
+                                                allowanceId:=_ecola?.RowID,
+                                                product:=_ecola?.Product
                                             )
 
             allowanceItem.Amount = paystub.Ecola

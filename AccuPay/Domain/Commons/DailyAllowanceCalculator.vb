@@ -22,7 +22,8 @@ Public Class DailyAllowanceCalculator
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
                                                 paystub:=paystub,
                                                 payperiodId:=payperiod.RowID,
-                                                allowanceId:=allowance.RowID
+                                                allowanceId:=allowance.RowID,
+                                                product:=allowance.Product
                                             )
 
         For Each timeEntry In timeEntries
