@@ -188,7 +188,7 @@ Public Class PayrollResources
             Return _calendarCollection
         End Get
     End Property
-    
+
     Public ReadOnly Property BpiInsuranceProduct As Product
         Get
             Return _bpiInsuranceProduct
@@ -377,8 +377,8 @@ Public Class PayrollResources
             Using context = New PayrollContext(logger)
                 Dim query = context.Salaries.
                     Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(s) (s.EffectiveFrom <= _payDateTo AndAlso _payDateFrom <= s.EffectiveTo.Value) OrElse
-                        (s.EffectiveTo Is Nothing AndAlso s.EffectiveFrom <= _payDateTo)).
+                    Where(Function(s) s.EffectiveFrom <= _payDateFrom).
+                    OrderByDescending(Function(s) s.EffectiveFrom).
                     GroupBy(Function(s) s.EmployeeID).
                     Select(Function(g) g.FirstOrDefault())
 
@@ -550,7 +550,7 @@ Public Class PayrollResources
     Private Function GetPreviousThreeDaysBeforeCutoff() As Date
         Return _payDateFrom.AddDays(-3)
     End Function
-    
+
     Private Async Function LoadBpiInsuranceProduct() As Task
         Try
 

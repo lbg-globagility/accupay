@@ -7,6 +7,7 @@ Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
@@ -85,7 +86,10 @@ Public Class TimeEntryGenerator
 
             _salaries = context.Salaries.
                 Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
+                Where(Function(s) s.EffectiveFrom <= _cutoffStart).
+                OrderByDescending(Function(s) s.EffectiveFrom).
+                GroupBy(Function(s) s.EmployeeID).
+                Select(Function(g) g.FirstOrDefault()).
                 ToList()
 
             Dim previousCutoff = _cutoffStart.AddDays(-_threeDays)
@@ -208,7 +212,7 @@ Public Class TimeEntryGenerator
             Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim salary As Salary = _salaries.
+        Dim salary = _salaries.
             FirstOrDefault(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID))
 
         Dim timeLogs As IList(Of TimeLog) = _timeLogs.
