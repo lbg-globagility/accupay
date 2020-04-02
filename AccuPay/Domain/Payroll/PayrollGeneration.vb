@@ -79,9 +79,7 @@ Public Class PayrollGeneration
             ToList()
 
         _salary = resources.Salaries.
-            Where(Function(s) CBool(s.EmployeeID = _employee.RowID)).
-            OrderByDescending(Function(s) s.EffectiveFrom).
-            FirstOrDefault()
+            FirstOrDefault(Function(s) CBool(s.EmployeeID = _employee.RowID))
 
         _products = resources.Products
 

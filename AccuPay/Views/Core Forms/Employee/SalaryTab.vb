@@ -212,11 +212,10 @@ Public Class SalaryTab
             SelectSalary(_salaries.FirstOrDefault())
         End If
 
-        ValidateSalaryRanges(_salaries)
-
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
     End Sub
 
+    <Obsolete("Remove if it's been decided that Effective Date To is really going to be gone")>
     Private Sub ValidateSalaryRanges(salaries As List(Of PayrollSys.Salary))
         If salaries.Count <= 1 Then
             OverlapWarningLabel.Visible = False
@@ -238,6 +237,7 @@ Public Class SalaryTab
         OverlapWarningLabel.Visible = False
     End Sub
 
+    <Obsolete("Remove if it's been decided that Effective Date To is really going to be gone")>
     Private Function IsOverlapping(a As Salary, b As Salary) As Boolean
         If a.IsIndefinite And (Not b.IsIndefinite) Then
             Return b.EffectiveTo.Value >= a.EffectiveFrom
