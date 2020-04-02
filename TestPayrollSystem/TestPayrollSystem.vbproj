@@ -184,6 +184,7 @@
     <Compile Include="ListOfValueCollectionTest.vb" />
     <Compile Include="mdlTestHelper.vb" />
     <Compile Include="NHibernateTest.vb" />
+    <Compile Include="ObjectExtensionsTest.vb" />
     <Compile Include="ObjectUtilsTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
     <Compile Include="Import Logs\TimeAnalyzer.vb" />
