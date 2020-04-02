@@ -48,7 +48,7 @@ Namespace Global.AccuPay.Entity
 
             Dim branch = _branches.FirstOrDefault(Function(t) t.RowID.Value = branchId.Value)
 
-            If Not _calendars.ContainsKey(branch.CalendarID) Then
+            If branch.CalendarID Is Nothing OrElse Not _calendars.ContainsKey(branch.CalendarID) Then
                 Return _organizationCalendar
                 'Throw New Exception($"Calendar for branch #{branchId} doesn't exist")
             End If
