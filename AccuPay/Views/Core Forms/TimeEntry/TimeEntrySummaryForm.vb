@@ -923,7 +923,8 @@ Public Class TimeEntrySummaryForm
 
         _selectedPayPeriod = payPeriod
 
-        Dim isPayPeriodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
+        Dim isPayPeriodProcessing = _selectedPayPeriod IsNot Nothing AndAlso
+                _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
 
         tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
         regenerateTimeEntryButton.Visible = isPayPeriodProcessing

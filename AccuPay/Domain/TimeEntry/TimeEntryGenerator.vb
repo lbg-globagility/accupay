@@ -91,7 +91,7 @@ Public Class TimeEntryGenerator
                 Select(Function(g) g.FirstOrDefault()).
                 ToList()
 
-            Dim previousCutoff = _cutoffStart.AddDays(-_threeDays)
+            Dim previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart)
             Dim endOfCutOff As Date = _cutoffEnd
             If timeEntryPolicy.PostLegalHolidayCheck Then endOfCutOff = _cutoffEnd.AddDays(_threeDays)
             _timeEntries = context.TimeEntries.

@@ -10,10 +10,10 @@ Public Class DailyAllowanceCalculator
 
     Private ReadOnly _calendarCollection As CalendarCollection
 
-    Public Sub New(settings As ListOfValueCollection, calendarCollection As CalendarCollection, previousTimeEntries2 As ICollection(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, calendarCollection As CalendarCollection, previousTimeEntries As ICollection(Of TimeEntry))
         _settings = settings
         _calendarCollection = calendarCollection
-        _previousTimeEntries = previousTimeEntries2
+        _previousTimeEntries = previousTimeEntries
     End Sub
 
     Public Function Compute(payperiod As PayPeriod, allowance As Allowance, employee As Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
