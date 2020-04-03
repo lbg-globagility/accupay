@@ -302,6 +302,100 @@ Public Class EmployeeLeavesForm
 
     End Function
 
+    Private Function RecordUpdate(newLeave As Leave)
+
+        Dim oldLeave =
+            Me._changedLeaves.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLeave.RowID))
+
+        If oldLeave Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newLeave.StartDate.Date <> oldLeave.StartDate.Date Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update leave start date from " + oldLeave.StartDate.ToShortDateString + " to " + newLeave.StartDate.ToShortDateString
+                        })
+        End If
+        If newLeave.EndDate?.Date <> oldLeave.EndDate?.Date Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave end date from " + oldLeave.EndDate?.ToShortDateString + " to " + newLeave.EndDate?.ToShortDateString
+                       })
+        End If
+        If newLeave.StartTime <> oldLeave.StartTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave start time from " + oldLeave.StartTime.StripSeconds.ToString + " to " + newLeave.StartTime.StripSeconds.ToString
+                       })
+        End If
+        If newLeave.EndTime <> oldLeave.EndTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave end time from " + oldLeave.EndTime.StripSeconds.ToString + " to " + newLeave.EndTime.StripSeconds.ToString
+                       })
+        End If
+        If newLeave.Reason <> oldLeave.Reason Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave reason from " + oldLeave.Reason + " to " + newLeave.Reason
+                       })
+        End If
+        If newLeave.Comments <> oldLeave.Comments Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave comments from " + oldLeave.Comments + " to " + newLeave.Comments
+                       })
+        End If
+        If newLeave.LeaveType <> oldLeave.LeaveType Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave type from " + oldLeave.LeaveType + " to " + newLeave.LeaveType
+                       })
+        End If
+        If newLeave.Status <> oldLeave.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave status from " + oldLeave.Status + " to " + newLeave.Status
+                       })
+        End If
+        If Not CheckIfBothNullorBothHaveValue(newLeave.StartTime, oldLeave.StartTime) Then
+            If newLeave.StartTime Is Nothing Then
+                changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave remove leave start time on " + oldLeave.StartTime.ToString
+                       })
+            Else
+                changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave add leave start time on " + newLeave.StartTime.StripSeconds.ToString
+                       })
+            End If
+        End If
+        If Not CheckIfBothNullorBothHaveValue(newLeave.EndTime, oldLeave.EndTime) Then
+            If newLeave.EndTime Is Nothing Then
+                changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave remove leave end time on " + oldLeave.EndTime.ToString
+                       })
+            Else
+                changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .Description = "Update leave add leave end time on " + newLeave.EndTime.StripSeconds.ToString
+                       })
+            End If
+        End If
+
+        If changes.Count > 0 Then
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Leave", oldLeave.RowID, z_OrganizationID, "EDIT", changes)
+            Return True
+        End If
+
+        Return True
+    End Function
+
     Private Async Function DeleteLeave(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
@@ -491,6 +585,10 @@ Public Class EmployeeLeavesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
                                             Await _leaveRepository.SaveManyAsync(changedLeaves)
+
+                                            For Each item In changedLeaves
+                                                RecordUpdate(item)
+                                            Next
 
                                             ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)
 

@@ -83,11 +83,13 @@ Namespace Global.AccuPay.Entity
         Public Property RevealInPayroll As Boolean Implements IEmployee.RevealInPayroll
         Public Property LateGracePeriod As Decimal Implements IEmployee.LateGracePeriod
         Public Property OffsetBalance As Decimal Implements IEmployee.OffsetBalance
+        Public Overridable Property Agency As Agency
         Public Property AgencyID As Integer? Implements IEmployee.AgencyID
         Public Property Image As Byte() Implements IEmployee.Image
         Public Property AdvancementPoints As Integer Implements IEmployee.AdvancementPoints
         Public Property BPIInsurance As Decimal Implements IEmployee.BPIInsurance
         Public Property BranchID As Integer?
+        Public Overridable Property Branch As Branch
 
         <ForeignKey("PositionID")>
         Public Overridable Property Position As Position

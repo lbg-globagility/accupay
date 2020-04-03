@@ -263,6 +263,10 @@ Public Class EmployeeLoansForm
             Async Function()
                 Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
 
+                For Each item In changedLoanSchedules
+                    RecordUpdate(item)
+                Next
+
                 ShowBalloonInfo($"{changedLoanSchedules.Count} Loan(s) Successfully Updated.", messageTitle)
 
                 Dim currentEmployee = GetSelectedEmployee()
@@ -824,6 +828,72 @@ Public Class EmployeeLoansForm
 
         Return hasChanged
 
+    End Function
+
+    Private Function RecordUpdate(newLoanSchedule As LoanSchedule) As Boolean
+
+        Dim oldLoanSchedule =
+            Me._changedLoanSchedules.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLoanSchedule.RowID))
+
+        If oldLoanSchedule Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newLoanSchedule.LoanName <> oldLoanSchedule.LoanName Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan type from " + oldLoanSchedule.LoanName + " to " + newLoanSchedule.LoanName
+                        })
+        End If
+        If newLoanSchedule.LoanNumber <> oldLoanSchedule.LoanNumber Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan number from " + oldLoanSchedule.LoanNumber + " to " + newLoanSchedule.LoanNumber
+                        })
+        End If
+        If newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan total amount from " + oldLoanSchedule.TotalLoanAmount.ToString + " to " + newLoanSchedule.TotalLoanAmount.ToString
+                        })
+        End If
+        If newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan date from " + oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString + " to " + newLoanSchedule.DedEffectiveDateFrom.ToShortDateString
+                        })
+        End If
+        If newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan deduction amount from " + oldLoanSchedule.DeductionAmount.ToString + " to " + newLoanSchedule.DeductionAmount.ToString
+                        })
+        End If
+        If newLoanSchedule.Status <> oldLoanSchedule.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan status from " + oldLoanSchedule.Status + " to " + newLoanSchedule.Status
+                        })
+        End If
+        If newLoanSchedule.DeductionPercentage <> oldLoanSchedule.DeductionPercentage Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan interest percentage from " + oldLoanSchedule.DeductionPercentage.ToString + " to " + newLoanSchedule.DeductionPercentage.ToString
+                        })
+        End If
+        If newLoanSchedule.DeductionSchedule <> oldLoanSchedule.DeductionSchedule Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = "Update loan deduction schedule from " + oldLoanSchedule.DeductionSchedule + " to " + newLoanSchedule.DeductionSchedule
+                        })
+        End If
+
+
+        Dim repo = New UserActivityRepository
+        repo.CreateRecord(z_User, "Loan", CInt(oldLoanSchedule.RowID), z_OrganizationID, "EDIT", changes)
+
+        Return True
     End Function
 
     Private Async Function LoadEmployees() As Task
