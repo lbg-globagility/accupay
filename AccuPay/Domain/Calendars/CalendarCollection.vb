@@ -27,10 +27,10 @@ Namespace Global.AccuPay.Entity
             _isUsingCalendars = True
         End Sub
 
-        Public Function GetCalendar(employee As Employee) As PayratesCalendar
+        Public Function GetCalendar(Optional branchId As Integer? = Nothing) As PayratesCalendar
             Dim calendar = If(
                 _isUsingCalendars,
-                FindCalendarByBranch(employee.BranchID),
+                FindCalendarByBranch(branchId),
                 _organizationCalendar)
 
             If calendar Is Nothing Then

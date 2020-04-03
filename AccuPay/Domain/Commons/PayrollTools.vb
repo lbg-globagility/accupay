@@ -88,7 +88,7 @@ Public Class PayrollTools
     Public Shared Function HasWorkedLastWorkingDay(
                             currentDate As Date,
                             currentTimeEntries As ICollection(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
         Dim threeDaysPrior = fourDays * -1
         Dim lastPotentialEntry = currentDate.Date.AddDays(threeDaysPrior)
@@ -115,8 +115,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(lastTimeEntry.Date)
-            If payRate.IsHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(lastTimeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(lastTimeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If
@@ -134,7 +135,7 @@ Public Class PayrollTools
                             legalHolidayDate As Date,
                             endOfCutOff As Date,
                             currentTimeEntries As IList(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
         Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(fourDays)
 
@@ -159,8 +160,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(timeEntry.Date)
-            If payRate.IsRegularHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If

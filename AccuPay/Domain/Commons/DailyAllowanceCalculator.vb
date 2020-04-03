@@ -8,11 +8,11 @@ Public Class DailyAllowanceCalculator
 
     Private _previousTimeEntries As ICollection(Of TimeEntry)
 
-    Private ReadOnly _payrateCalendar As PayratesCalendar
+    Private ReadOnly _calendarCollection As CalendarCollection
 
-    Public Sub New(settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, previousTimeEntries2 As ICollection(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, calendarCollection As CalendarCollection, previousTimeEntries2 As ICollection(Of TimeEntry))
         _settings = settings
-        _payrateCalendar = payrateCalendar
+        _calendarCollection = calendarCollection
         _previousTimeEntries = previousTimeEntries2
     End Sub
 
@@ -34,7 +34,8 @@ Public Class DailyAllowanceCalculator
             Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
             Dim allowanceAmount = 0D
-            Dim payrate = _payrateCalendar.Find(timeEntry.Date)
+            Dim payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
 
             If payrate.IsRegularDay Then
                 Dim isRestDay = timeEntry.RestDayHours > 0
@@ -57,7 +58,7 @@ Public Class DailyAllowanceCalculator
                 Dim exemption = _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly")
 
                 Dim giveAllowance =
-                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, _previousTimeEntries, _payrateCalendar) Or
+                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, _previousTimeEntries, _calendarCollection) Or
                     ((employee.IsFixed Or employee.IsMonthly) And exemption)
 
                 If giveAllowance Then

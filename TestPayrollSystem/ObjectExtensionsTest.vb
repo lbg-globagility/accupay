@@ -35,23 +35,23 @@ Public Class ObjectExtensionsTest
 
         Assert.True(stringNull1.NullableEquals(stringNull2))
         Assert.True(string1.NullableEquals(string1_2))
-        Assert.True(Not string1.NullableEquals(stringNull1))
-        Assert.True(Not string1.NullableEquals(string2))
+        Assert.False(string1.NullableEquals(stringNull1))
+        Assert.False(string1.NullableEquals(string2))
 
         Assert.True(intNull1.NullableEquals(intNull2))
         Assert.True(int1.NullableEquals(int1_2))
-        Assert.True(Not int1.NullableEquals(intNull1))
-        Assert.True(Not int1.NullableEquals(int2))
+        Assert.False(int1.NullableEquals(intNull1))
+        Assert.False(int1.NullableEquals(int2))
 
         Assert.True(dateNull1.NullableEquals(dateNull2))
         Assert.True(date1.NullableEquals(date1_2))
-        Assert.True(Not date1.NullableEquals(dateNull1))
-        Assert.True(Not date1.NullableEquals(date2))
+        Assert.False(date1.NullableEquals(dateNull1))
+        Assert.False(date1.NullableEquals(date2))
 
         Assert.True(concreteClassNull1.NullableEquals(concreteClassNull2))
         Assert.True(concreteClass1.NullableEquals(concreteClass1))
-        Assert.True(Not concreteClass1.NullableEquals(concreteClassNull1))
-        Assert.True(Not concreteClass1.NullableEquals(concreteClass2))
+        Assert.False(concreteClass1.NullableEquals(concreteClassNull1))
+        Assert.False(concreteClass1.NullableEquals(concreteClass2))
 
     End Sub
 

@@ -7,7 +7,6 @@ Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
@@ -239,8 +238,6 @@ Public Class TimeEntryGenerator
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
 
-        Dim payrateCalendar = calendarCollection.GetCalendar(employee)
-
         If employee.IsActive = False Then
             Dim currentTimeEntries = previousTimeEntries.
                 Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd)
@@ -254,9 +251,10 @@ Public Class TimeEntryGenerator
             Return
         End If
 
-        Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
+        Dim dayCalculator = New DayCalculator(organization, settings, employee)
 
         Dim timeEntries = New List(Of TimeEntry)
+        Dim regularHolidaysList = New List(Of Date) 'Used for postlegalholidaycheck
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
 
             Try
@@ -267,6 +265,11 @@ Public Class TimeEntryGenerator
                 Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate.Value = currentDate)
                 Dim dutyShiftSched = dutyShiftSchedules.FirstOrDefault(Function(es) es.DateSched = currentDate)
                 Dim currentTimeAttendanceLogs = timeAttendanceLogs.Where(Function(l) l.WorkDay = currentDate).ToList()
+
+                Dim branchId = If(timelog?.BranchID, employee?.BranchID)
+                Dim payrate = calendarCollection.
+                                        GetCalendar(branchId).
+                                        Find(currentDate)
 
                 Dim timeEntry = dayCalculator.Compute(
                     currentDate,
@@ -279,7 +282,14 @@ Public Class TimeEntryGenerator
                     officialBusiness,
                     leaves,
                     currentTimeAttendanceLogs,
-                    breakTimeBrackets)
+                    breakTimeBrackets,
+                    payrate,
+                    calendarCollection,
+                    branchId)
+
+                If payrate.IsRegularHoliday Then
+                    regularHolidaysList.Add(currentDate)
+                End If
 
                 timeEntries.Add(timeEntry)
             Catch ex As Exception
@@ -288,7 +298,7 @@ Public Class TimeEntryGenerator
 
         Next
 
-        PostLegalHolidayCheck(timeEntries, payrateCalendar, timeEntryPolicy)
+        PostLegalHolidayCheck(employee, timeEntries, timeEntryPolicy, regularHolidaysList, calendarCollection)
         timeEntries.ForEach(Sub(t)
                                 t.RegularHolidayPay += t.BasicRegularHolidayPay
                                 t.TotalDayPay += t.BasicRegularHolidayPay
@@ -312,29 +322,20 @@ Public Class TimeEntryGenerator
         End Using
     End Sub
 
-    Private Sub PostLegalHolidayCheck(timeEntries As List(Of TimeEntry), payrateCalendar As PayratesCalendar, timeEntryPolicy As TimeEntryPolicy)
+    Private Sub PostLegalHolidayCheck(employee As Employee,
+                                      timeEntries As List(Of TimeEntry),
+                                      timeEntryPolicy As TimeEntryPolicy,
+                                      regularHolidaysList As List(Of Date),
+                                      calendarCollection As CalendarCollection)
         If timeEntryPolicy.PostLegalHolidayCheck Then
-            Dim employeeId = timeEntries.FirstOrDefault?.EmployeeID
-            Dim employees = _employees.
-                Where(Function(e) e.CalcHoliday).
-                Where(Function(e) Equals(employeeId, e.RowID)).
-                ToList()
 
-            Dim isEntitledForLegalHolidayPay = employees.Any()
-            If Not isEntitledForLegalHolidayPay Then Return
+            If Not employee.CalcHoliday Then Return
 
-            Dim legalHolidays = payrateCalendar.LegalHolidays
+            If regularHolidaysList.Any() Then
 
-            If legalHolidays.Any() Then
-                Dim legalHolidayDescDates = legalHolidays.
-                    Select(Function(p) p.Date).
-                    OrderByDescending(Function(d) d).
-                    ToList()
-
-                Dim employee = employees.FirstOrDefault
-                For Each holidayDate In legalHolidayDescDates
+                For Each holidayDate In regularHolidaysList
                     Dim presentAfterLegalHoliday = PayrollTools.HasWorkAfterLegalHoliday(
-                        holidayDate, _cutoffEnd, timeEntries, payrateCalendar)
+                                                    holidayDate, _cutoffEnd, timeEntries, calendarCollection)
 
                     If Not presentAfterLegalHoliday Then
                         Dim timeEntry = timeEntries.Where(Function(t) t.Date = holidayDate).FirstOrDefault
