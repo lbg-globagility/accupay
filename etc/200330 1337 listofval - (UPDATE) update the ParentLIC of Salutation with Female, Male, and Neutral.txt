@@ -1,0 +1,10 @@
+
+SELECT
+CONCAT('UPDATE listofval SET ParentLIC=\'', l.ParentLIC, '\' WHERE DisplayValeu=\'', l.DisplayValue, '\' AND `Type`=\'', l.`Type`, '\';') `Result`
+
+FROM listofval l
+WHERE l.`Type` LIKE '%salut%'
+ORDER BY l.ParentLIC, l.DisplayValue
+;
+
+# export the result, and execute the update statements

@@ -22,7 +22,8 @@ Public Class PayrollTools
     Public Const PayFrequencySemiMonthlyId As Integer = 1
 
     Public Const PayFrequencyWeeklyId As Integer = 4
-    Private Const fourDays As Integer = 4
+
+    Private Const PotentialLastWorkDay As Integer = 7
 
     Public Shared Function GetEmployeeMonthlyRate(
                             employee As Employee,
@@ -88,10 +89,9 @@ Public Class PayrollTools
     Public Shared Function HasWorkedLastWorkingDay(
                             currentDate As Date,
                             currentTimeEntries As ICollection(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
-        Dim threeDaysPrior = fourDays * -1
-        Dim lastPotentialEntry = currentDate.Date.AddDays(threeDaysPrior)
+        Dim lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay)
 
         Dim lastTimeEntries = currentTimeEntries.
             Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= currentDate.Date).
@@ -115,8 +115,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(lastTimeEntry.Date)
-            If payRate.IsHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(lastTimeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(lastTimeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If
@@ -134,12 +135,12 @@ Public Class PayrollTools
                             legalHolidayDate As Date,
                             endOfCutOff As Date,
                             currentTimeEntries As IList(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
-        Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(fourDays)
+        Dim lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay)
 
         Dim postTimeEntries = currentTimeEntries.
-            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= thirdDateAfterCurrDate).
+            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= lastPotentialEntry).
             OrderBy(Function(t) t.Date).
             ToList()
 
@@ -159,8 +160,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(timeEntry.Date)
-            If payRate.IsRegularHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If
@@ -440,6 +442,47 @@ Public Class PayrollTools
 
         Return Convert.ToString(New SQL(str_quer_address).GetFoundRow)
 
+    End Function
+
+    Public Shared Function GetCalendarCollection(threeDaysBeforeCutoff As Date,
+                                                    payDateTo As Date,
+                                                    context As PayrollContext,
+                                                    calculationBasis As PayRateCalculationBasis) _
+                                                    As CalendarCollection
+        Dim payrates = context.PayRates.
+                                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso
+                                                    p.Date <= payDateTo).
+                                ToList()
+        If calculationBasis = PayRateCalculationBasis.Branch Then
+            Dim branches = context.Branches.ToList()
+
+            Dim calendarDays = context.CalendarDays.
+                         Include(Function(t) t.DayType).
+                         Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
+                         ToList()
+
+            Return New CalendarCollection(payrates, branches, calendarDays)
+        Else
+            Return New CalendarCollection(payrates)
+        End If
+    End Function
+
+    Public Shared Function GetPreviousCutoffDateForCheckingLastWorkingDay(currentCutOffStart As Date) As Date
+        'Used to be 3 days since the starting cut off can be a Monday
+        'so to check the last working day you have to check up to last Friday
+        'and that is 3 days since starting cut off
+
+        'But sometimes, last Friday can be a holiday.
+        'Or more specifically, the last days of the previous cut off are holidays
+        'for example January 1, 2020. December 30 & 31 are holidays, December 28 & 29
+        'are weekends. So last working days is December 27, 5 days since the starting cutoff
+        'so the original 3 days value will not be enough.
+
+        'I chose 7 days but this can be modified if there are scenarios that needs
+        'more than 7 days to check the last working day.
+
+        Return currentCutOffStart.AddDays(-PotentialLastWorkDay)
     End Function
 
 End Class

@@ -57,6 +57,7 @@ Partial Class SalaryTab
         Me.btnImport = New System.Windows.Forms.ToolStripButton()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
+        Me.OverlapWarningLabel = New System.Windows.Forms.Label()
         Me.txtEcola = New System.Windows.Forms.TextBox()
         Me.lblEcolaPeroSign = New System.Windows.Forms.Label()
         Me.lblEcola = New System.Windows.Forms.Label()
@@ -92,18 +93,6 @@ Partial Class SalaryTab
         Me.txtFullname = New System.Windows.Forms.TextBox()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.dgvSalaries = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.tlpResult = New System.Windows.Forms.ToolTip(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -125,6 +114,18 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_sss = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_philhealth = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_pagibig = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicDailyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_BasicHourlyPaySal = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -164,7 +165,7 @@ Partial Class SalaryTab
         Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.btnDelete.Name = "btnDelete"
         Me.btnDelete.Size = New System.Drawing.Size(60, 22)
-        Me.btnDelete.Text = "Delete"
+        Me.btnDelete.Text = "&Delete"
         '
         'btnCancel
         '
@@ -223,6 +224,7 @@ Partial Class SalaryTab
         '
         Me.grpSalary.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.grpSalary.Controls.Add(Me.OverlapWarningLabel)
         Me.grpSalary.Controls.Add(Me.txtEcola)
         Me.grpSalary.Controls.Add(Me.lblEcolaPeroSign)
         Me.grpSalary.Controls.Add(Me.lblEcola)
@@ -261,6 +263,16 @@ Partial Class SalaryTab
         Me.grpSalary.TabIndex = 183
         Me.grpSalary.TabStop = False
         Me.grpSalary.Text = "Salary"
+        '
+        'OverlapWarningLabel
+        '
+        Me.OverlapWarningLabel.BackColor = System.Drawing.Color.LemonChiffon
+        Me.OverlapWarningLabel.Location = New System.Drawing.Point(8, 136)
+        Me.OverlapWarningLabel.Name = "OverlapWarningLabel"
+        Me.OverlapWarningLabel.Size = New System.Drawing.Size(824, 32)
+        Me.OverlapWarningLabel.TabIndex = 290
+        Me.OverlapWarningLabel.Text = "Two or more salaries have overlapping dates"
+        Me.OverlapWarningLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'txtEcola
         '
@@ -492,6 +504,7 @@ Partial Class SalaryTab
         Me.dtpEffectiveTo.ShowCheckBox = True
         Me.dtpEffectiveTo.Size = New System.Drawing.Size(159, 20)
         Me.dtpEffectiveTo.TabIndex = 58
+        Me.dtpEffectiveTo.Visible = False
         '
         'dtpEffectiveFrom
         '
@@ -510,6 +523,7 @@ Partial Class SalaryTab
         Me.Label4.Size = New System.Drawing.Size(112, 16)
         Me.Label4.TabIndex = 3
         Me.Label4.Text = "Effective To"
+        Me.Label4.Visible = False
         '
         'Label3
         '
@@ -601,6 +615,197 @@ Partial Class SalaryTab
         Me.dgvSalaries.Size = New System.Drawing.Size(840, 233)
         Me.dgvSalaries.TabIndex = 346
         '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.DataPropertyName = "EffectiveFrom"
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.ReadOnly = True
+        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        Me.DataGridViewTextBoxColumn1.Width = 120
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.DataPropertyName = "EffectiveTo"
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Employee Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.ReadOnly = True
+        Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn2.Visible = False
+        Me.DataGridViewTextBoxColumn2.Width = 120
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.DataPropertyName = "SalaryAmount"
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle13.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle13
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Pay Type"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.ReadOnly = True
+        Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn3.Visible = False
+        Me.DataGridViewTextBoxColumn3.Width = 120
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "Amount"
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle14.Format = "#,###,##0.00;(#,###,##0.00)"
+        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle14
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Marital Status"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.ReadOnly = True
+        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn4.Width = 150
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.DataPropertyName = "AllowanceAmount"
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle15.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle15
+        Me.DataGridViewTextBoxColumn5.HeaderText = "No Of Dependent"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.ReadOnly = True
+        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn5.Width = 120
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.DataPropertyName = "BasicPay"
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle16.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle16
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Filing Status"
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        Me.DataGridViewTextBoxColumn6.ReadOnly = True
+        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn6.Visible = False
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.DataPropertyName = "DailyRate"
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle17.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle17
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Basic Pay"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        Me.DataGridViewTextBoxColumn7.ReadOnly = True
+        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn7.Visible = False
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.DataPropertyName = "HourlyRate"
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle18.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle18
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Salary"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        Me.DataGridViewTextBoxColumn8.ReadOnly = True
+        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn8.Visible = False
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.DataPropertyName = "SSS"
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle19.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle19
+        Me.DataGridViewTextBoxColumn9.HeaderText = "Daily pay"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        Me.DataGridViewTextBoxColumn9.ReadOnly = True
+        Me.DataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn9.Visible = False
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.DataPropertyName = "PhilHealth"
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle20.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle20
+        Me.DataGridViewTextBoxColumn10.HeaderText = "Hourly pay"
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        Me.DataGridViewTextBoxColumn10.ReadOnly = True
+        Me.DataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn10.Visible = False
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.DataPropertyName = "PagIbig"
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle21.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle21
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Pag-IBIG"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        Me.DataGridViewTextBoxColumn11.ReadOnly = True
+        Me.DataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn11.Visible = False
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.DataPropertyName = "HourlyRate"
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle22.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle22
+        Me.DataGridViewTextBoxColumn12.HeaderText = "PhilHealth"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        Me.DataGridViewTextBoxColumn12.ReadOnly = True
+        Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn12.Visible = False
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "SSS"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Effectivity Date From"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        Me.DataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "Effectivity Date To"
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.DataGridViewTextBoxColumn16.Visible = False
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "True Salary"
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.Visible = False
+        '
+        'DataGridViewTextBoxColumn18
+        '
+        Me.DataGridViewTextBoxColumn18.HeaderText = "DifferenceBetweenSal&TrueSal"
+        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
+        Me.DataGridViewTextBoxColumn18.Visible = False
+        '
+        'DataGridViewTextBoxColumn19
+        '
+        Me.DataGridViewTextBoxColumn19.HeaderText = "TrueHDMFAmount"
+        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
+        Me.DataGridViewTextBoxColumn19.Visible = False
+        '
+        'UserActivitySalaryToolStripButton
+        '
+        Me.UserActivitySalaryToolStripButton.Image = CType(resources.GetObject("UserActivitySalaryToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivitySalaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivitySalaryToolStripButton.Name = "UserActivitySalaryToolStripButton"
+        Me.UserActivitySalaryToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivitySalaryToolStripButton.Text = "User Activity"
         'c_fromdate
         '
         Me.c_fromdate.DataPropertyName = "EffectiveFrom"
@@ -617,6 +822,7 @@ Partial Class SalaryTab
         Me.c_todate.Name = "c_todate"
         Me.c_todate.ReadOnly = True
         Me.c_todate.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.c_todate.Visible = False
         Me.c_todate.Width = 120
         '
         'c_EmpSal
@@ -736,186 +942,6 @@ Partial Class SalaryTab
         Me.c_BasicHourlyPaySal.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.c_BasicHourlyPaySal.Visible = False
         '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.DataPropertyName = "EffectiveFrom"
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Employee ID"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        Me.DataGridViewTextBoxColumn1.ReadOnly = True
-        Me.DataGridViewTextBoxColumn1.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn1.Visible = False
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.DataPropertyName = "EffectiveTo"
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Employee Name"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        Me.DataGridViewTextBoxColumn2.ReadOnly = True
-        Me.DataGridViewTextBoxColumn2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn2.Visible = False
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.DataPropertyName = "SalaryAmount"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle13.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle13
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Pay Type"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        Me.DataGridViewTextBoxColumn3.ReadOnly = True
-        Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn3.Visible = False
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.DataPropertyName = "Amount"
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle14.Format = "#,###,##0.00;(#,###,##0.00)"
-        Me.DataGridViewTextBoxColumn4.DefaultCellStyle = DataGridViewCellStyle14
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Marital Status"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        Me.DataGridViewTextBoxColumn4.ReadOnly = True
-        Me.DataGridViewTextBoxColumn4.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.DataPropertyName = "AllowanceAmount"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle15.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle15
-        Me.DataGridViewTextBoxColumn5.HeaderText = "No Of Dependent"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        Me.DataGridViewTextBoxColumn5.ReadOnly = True
-        Me.DataGridViewTextBoxColumn5.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.DataPropertyName = "BasicPay"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle16.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle16
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Filing Status"
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        Me.DataGridViewTextBoxColumn6.ReadOnly = True
-        Me.DataGridViewTextBoxColumn6.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn6.Visible = False
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.DataPropertyName = "DailyRate"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle17.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle17
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Basic Pay"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        Me.DataGridViewTextBoxColumn7.ReadOnly = True
-        Me.DataGridViewTextBoxColumn7.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.DataPropertyName = "HourlyRate"
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle18.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn8.DefaultCellStyle = DataGridViewCellStyle18
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Salary"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        Me.DataGridViewTextBoxColumn8.ReadOnly = True
-        Me.DataGridViewTextBoxColumn8.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.DataPropertyName = "SSS"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle19.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn9.DefaultCellStyle = DataGridViewCellStyle19
-        Me.DataGridViewTextBoxColumn9.HeaderText = "Daily pay"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        Me.DataGridViewTextBoxColumn9.ReadOnly = True
-        Me.DataGridViewTextBoxColumn9.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.DataPropertyName = "PhilHealth"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle20.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn10.DefaultCellStyle = DataGridViewCellStyle20
-        Me.DataGridViewTextBoxColumn10.HeaderText = "Hourly pay"
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        Me.DataGridViewTextBoxColumn10.ReadOnly = True
-        Me.DataGridViewTextBoxColumn10.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn11
-        '
-        Me.DataGridViewTextBoxColumn11.DataPropertyName = "PagIbig"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle21.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn11.DefaultCellStyle = DataGridViewCellStyle21
-        Me.DataGridViewTextBoxColumn11.HeaderText = "Pag-IBIG"
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        Me.DataGridViewTextBoxColumn11.ReadOnly = True
-        Me.DataGridViewTextBoxColumn11.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn12
-        '
-        Me.DataGridViewTextBoxColumn12.DataPropertyName = "HourlyRate"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle22.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.DataGridViewTextBoxColumn12.DefaultCellStyle = DataGridViewCellStyle22
-        Me.DataGridViewTextBoxColumn12.HeaderText = "PhilHealth"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        Me.DataGridViewTextBoxColumn12.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn13
-        '
-        Me.DataGridViewTextBoxColumn13.HeaderText = "SSS"
-        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
-        Me.DataGridViewTextBoxColumn13.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn14
-        '
-        Me.DataGridViewTextBoxColumn14.HeaderText = "Effectivity Date From"
-        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
-        Me.DataGridViewTextBoxColumn14.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn15
-        '
-        Me.DataGridViewTextBoxColumn15.HeaderText = "Effectivity Date To"
-        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
-        Me.DataGridViewTextBoxColumn15.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        '
-        'DataGridViewTextBoxColumn16
-        '
-        Me.DataGridViewTextBoxColumn16.HeaderText = "RowID"
-        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
-        Me.DataGridViewTextBoxColumn16.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.DataGridViewTextBoxColumn16.Visible = False
-        '
-        'DataGridViewTextBoxColumn17
-        '
-        Me.DataGridViewTextBoxColumn17.HeaderText = "True Salary"
-        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
-        Me.DataGridViewTextBoxColumn17.Visible = False
-        '
-        'DataGridViewTextBoxColumn18
-        '
-        Me.DataGridViewTextBoxColumn18.HeaderText = "DifferenceBetweenSal&TrueSal"
-        Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
-        Me.DataGridViewTextBoxColumn18.Visible = False
-        '
-        'DataGridViewTextBoxColumn19
-        '
-        Me.DataGridViewTextBoxColumn19.HeaderText = "TrueHDMFAmount"
-        Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
-        Me.DataGridViewTextBoxColumn19.Visible = False
-        '
-        'UserActivitySalaryToolStripButton
-        '
-        Me.UserActivitySalaryToolStripButton.Image = CType(resources.GetObject("UserActivitySalaryToolStripButton.Image"), System.Drawing.Image)
-        Me.UserActivitySalaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivitySalaryToolStripButton.Name = "UserActivitySalaryToolStripButton"
-        Me.UserActivitySalaryToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivitySalaryToolStripButton.Text = "User Activity"
-        '
         'SalaryTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1003,6 +1029,7 @@ Partial Class SalaryTab
     Friend WithEvents chkPaySSS As CheckBox
     Friend WithEvents chkPayPhilHealth As CheckBox
     Friend WithEvents ChkPagIbig As CheckBox
+    Friend WithEvents OverlapWarningLabel As Label
     Friend WithEvents c_fromdate As DataGridViewTextBoxColumn
     Friend WithEvents c_todate As DataGridViewTextBoxColumn
     Friend WithEvents c_EmpSal As DataGridViewTextBoxColumn

@@ -40,8 +40,6 @@ Public Class PayrollGeneration
 
     Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
 
-    Private ReadOnly _payrateCalendar As PayratesCalendar
-
     Private ReadOnly _allowances As ICollection(Of Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
@@ -52,9 +50,11 @@ Public Class PayrollGeneration
 
     Private ReadOnly _previousPaystub As Paystub
 
-    Private _paystub As Paystub
-
     Private ReadOnly _bpiInsuranceProduct As Product
+
+    Private ReadOnly _calendarCollection As CalendarCollection
+
+    Private _paystub As Paystub
 
     Sub New(employee As Employee,
             resources As PayrollResources,
@@ -113,13 +113,13 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
 
-        _payrateCalendar = resources.CalendarCollection.GetCalendar(_employee)
-
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
 
         _bpiInsuranceProduct = resources.BpiInsuranceProduct
+
+        _calendarCollection = resources.CalendarCollection
     End Sub
 
     Public Sub DoProcess()
@@ -389,7 +389,9 @@ Public Class PayrollGeneration
 
         For Each timeEntry In _timeEntries
 
-            Dim payrate = _payrateCalendar.Find(timeEntry.Date)
+            Dim payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
+
             If Not (timeEntry.IsRestDay Or (timeEntry.TotalLeaveHours > 0) Or
                 payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
 
@@ -487,7 +489,8 @@ Public Class PayrollGeneration
     Public Shared Function CreateBasicAllowanceItem(
                                 paystub As Paystub,
                                 payperiodId As Integer?,
-                                allowanceId As Integer?) As AllowanceItem
+                                allowanceId As Integer?,
+                                product As Product) As AllowanceItem
 
         Return New AllowanceItem() With {
                 .OrganizationID = z_OrganizationID,
@@ -495,24 +498,25 @@ Public Class PayrollGeneration
                 .LastUpdBy = z_User,
                 .Paystub = paystub,
                 .PayPeriodID = payperiodId,
-                .AllowanceID = allowanceId
+                .AllowanceID = allowanceId,
+                .IsTaxable = product.IsTaxable,
+                .IsThirteenthMonthPay = product.IsThirteenthMonthPay
             }
 
     End Function
 
     Private Sub CreateAllowanceItems()
-        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
+        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _calendarCollection, _previousTimeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _calendarCollection, _timeEntries)
 
         For Each allowance In _allowances
 
             Dim item = CreateBasicAllowanceItem(
                         paystub:=_paystub,
                         payperiodId:=_payPeriod.RowID,
-                        allowanceId:=allowance.RowID
+                        allowanceId:=allowance.RowID,
+                        product:=allowance.Product
             )
-            item.IsTaxable = allowance.Product.IsTaxable
-            item.IsThirteenthMonthPay = allowance.Product.IsThirteenthMonthPay
 
             If allowance.IsOneTime Then
 

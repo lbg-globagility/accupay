@@ -737,12 +737,6 @@
     <Compile Include="Reports\Reports\Providers\LoanLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
     <Compile Include="Repositories\EmployeeRepository.vb" />
-    <Compile Include="Views\Core Forms\Employee\AllowanceTab.Designer.vb">
-      <DependentUpon>AllowanceTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\AllowanceTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\Employee\BonusTab.Designer.vb">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </Compile>
@@ -753,30 +747,6 @@
       <DependentUpon>JobPointsTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\JobPointsTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\LeaveTab.Designer.vb">
-      <DependentUpon>LeaveTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\LeaveTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\LoanScheduleTab.Designer.vb">
-      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\LoanScheduleTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\OfficialBusinessTab.Designer.vb">
-      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\OfficialBusinessTab.vb">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\OvertimeTab.Designer.vb">
-      <DependentUpon>OvertimeTab.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\Employee\OvertimeTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PersonalProfileTab.Designer.vb">
@@ -2129,26 +2099,11 @@
     <EmbeddedResource Include="Views\Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\AllowanceTab.resx">
-      <DependentUpon>AllowanceTab.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\BonusTab.resx">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\JobPointsTab.resx">
       <DependentUpon>JobPointsTab.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\LeaveTab.resx">
-      <DependentUpon>LeaveTab.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\LoanScheduleTab.resx">
-      <DependentUpon>LoanScheduleTab.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\OfficialBusinessTab.resx">
-      <DependentUpon>OfficialBusinessTab.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\Employee\OvertimeTab.resx">
-      <DependentUpon>OvertimeTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PersonalProfileTab.resx">
       <DependentUpon>PersonalProfileTab.vb</DependentUpon>

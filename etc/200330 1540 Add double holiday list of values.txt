@@ -1,5 +1,0 @@
-INSERT INTO listofval (`DisplayValue`, `LIC`, `ParentLIC`, `Type`, `Active`, Created, CreatedBy, LastUpd, LastUpdBy)
-VALUES ('Double Holiday', NULL, NULL, 'Holiday Type', 'Yes', CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1);
-
-INSERT INTO listofval (`DisplayValue`, `LIC`, `ParentLIC`, `Type`, `Active`, Created, CreatedBy, LastUpd, LastUpdBy)
-VALUES ('300,390,330,429,390,507,429,5577', NULL, 'Double Holiday', 'Pay rate', 'Yes', CURRENT_TIMESTAMP(), 1, CURRENT_TIMESTAMP(), 1);

@@ -535,7 +535,11 @@ Public Class TimeLogsForm2
 #Region "PrivateClass"
 
     Private Class TimeLogModel
+
         Private Const CUSTOM_SHORT_TIME_FORMAT As String = "HH:mm"
+        Public Property RowID As Integer
+        Public Property ShiftSchedule As EmployeeDutySchedule
+        Public Property DateIn As Date
 
         Private _timeLog As TimeLog
         Private _employee As Employee
@@ -543,6 +547,7 @@ Public Class TimeLogsForm2
         Private origTimeIn, origTimeOut As String
         Private _dateOutDisplay As Date?
         Private _timeIn, _timeOut As String
+        Private _branchId, origBranchId As Integer?
 
         Sub New(timeLog As TimeLog)
             _timeLog = timeLog
@@ -570,6 +575,9 @@ Public Class TimeLogsForm2
 
                 _timeIn = origTimeIn
                 _timeOut = origTimeOut
+
+                _branchId = .BranchID
+                origBranchId = .BranchID
             End With
 
         End Sub
@@ -584,8 +592,6 @@ Public Class TimeLogsForm2
             DateOut = d
 
         End Sub
-
-        Public Property RowID As Integer
 
         Public ReadOnly Property EmployeeID As Integer
             Get
@@ -618,10 +624,6 @@ Public Class TimeLogsForm2
                 Return $"{TimeSpanToString(ShiftSchedule.StartTime)} - {TimeSpanToString(ShiftSchedule.EndTime)}"
             End Get
         End Property
-
-        Public Property ShiftSchedule As EmployeeDutySchedule
-
-        Public Property DateIn As Date
 
         Public Property TimeIn As String
             Get
@@ -669,6 +671,15 @@ Public Class TimeLogsForm2
             End Set
         End Property
 
+        Public Property BranchID As Integer?
+            Get
+                Return _branchId
+            End Get
+            Set(value As Integer?)
+                _branchId = value
+            End Set
+        End Property
+
         Public ReadOnly Property IsExisting As Boolean
             Get
                 Return RowID > 0
@@ -678,9 +689,10 @@ Public Class TimeLogsForm2
         Public ReadOnly Property HasChanged As Boolean
             Get
                 Dim differs = Not Equals(origDateIn, DateIn) _
-                    Or Not Equals(origTimeIn, _timeIn) _
-                    Or Not Equals(origDateOut, DateOut) _
-                    Or Not Equals(origTimeOut, _timeOut)
+                    OrElse Not Equals(origTimeIn, _timeIn) _
+                    OrElse Not Equals(origDateOut, DateOut) _
+                    OrElse Not Equals(origTimeOut, _timeOut) _
+                    OrElse Not origBranchId.NullableEquals(_branchId)
 
                 Return differs
             End Get
@@ -689,7 +701,8 @@ Public Class TimeLogsForm2
         Public ReadOnly Property IsValidToSave As Boolean
             Get
                 Dim hasLog = Not String.IsNullOrWhiteSpace(_timeIn) _
-                    Or Not String.IsNullOrWhiteSpace(_timeOut)
+                    OrElse Not String.IsNullOrWhiteSpace(_timeOut) _
+                    OrElse _branchId IsNot Nothing
 
                 Return hasLog
             End Get
@@ -709,7 +722,8 @@ Public Class TimeLogsForm2
                         .OrganizationID = z_OrganizationID,
                         .LogDate = DateIn,
                         .CreatedBy = z_User,
-                        .Created = Now}
+                        .Created = Now
+                    }
                 End If
 
                 With _timeLog
@@ -718,6 +732,7 @@ Public Class TimeLogsForm2
 
                     .TimeIn = Calendar.ToTimespan(TimeIn)
                     .TimeOut = Calendar.ToTimespan(TimeOut)
+                    .BranchID = _branchId
                 End With
 
                 Return _timeLog
@@ -730,6 +745,7 @@ Public Class TimeLogsForm2
 
             DateOut = origDateOut
             _timeOut = origTimeOut
+            _branchId = origBranchId
         End Sub
 
         Public Sub Commit()
@@ -738,6 +754,7 @@ Public Class TimeLogsForm2
 
             origDateOut = DateOut
             origTimeOut = _timeOut
+            origBranchId = _branchId
 
             Remove()
         End Sub
@@ -745,6 +762,8 @@ Public Class TimeLogsForm2
         Public Sub ClearLogTime()
             _timeIn = Nothing
             _timeOut = Nothing
+
+            _branchId = Nothing
         End Sub
 
         Public Sub ClearLogDateOut()
@@ -794,7 +813,22 @@ Public Class TimeLogsForm2
 
         End If
 
+        Await PopulateBranchComboBox()
+
     End Sub
+
+    Private Async Function PopulateBranchComboBox() As Task
+
+        Using context As New PayrollContext
+
+            colBranchID.ValueMember = "RowID"
+            colBranchID.DisplayMember = "Name"
+
+            colBranchID.DataSource = Await context.Branches.ToListAsync
+
+        End Using
+
+    End Function
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
@@ -850,6 +884,8 @@ Public Class TimeLogsForm2
                     If timeOut IsNot Nothing Then
                         timeLog.TimeStampOut = model.DateOut.ToMinimumHourValue.Add(Calendar.ToTimespan(model.TimeOut).Value)
                     End If
+
+                    timeLog.BranchID = model.BranchID
 
                     timeLog.LastUpdBy = z_User
                     timeLog.LastUpd = Now
@@ -1049,7 +1085,7 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub grid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit
-        Dim parseableIndexes = {colTimeIn.Index, colTimeOut.Index}
+        Dim parseableIndexes = {colTimeIn.Index, colTimeOut.Index, colBranchID.Index}
 
         If parseableIndexes.Any(Function(i) i = e.ColumnIndex) Then
             Dim currRow = grid.Rows(e.RowIndex)

@@ -1,0 +1,18 @@
+ALTER TABLE `employeetimeentry`
+	DROP FOREIGN KEY `employeetimeentry_ibfk_1`,
+	DROP FOREIGN KEY `employeetimeentry_ibfk_2`,
+	DROP FOREIGN KEY `employeetimeentry_ibfk_3`,
+	DROP FOREIGN KEY `FK_employeetimeentry_employee`,
+	DROP FOREIGN KEY `FK_employeetimeentry_employeesalary`,
+	DROP FOREIGN KEY `FK_employeetimeentry_employeeshift`,
+	DROP FOREIGN KEY `FK_employeetimeentry_payrate`;
+ALTER TABLE `employeetimeentry`
+	ADD COLUMN `BranchID` INT(10) NULL DEFAULT NULL AFTER `EmployeeID`,
+	ADD CONSTRAINT `employeetimeentry_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentry_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentry_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentry_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
+	ADD CONSTRAINT `FK_employeetimeentry_employeesalary_EmployeeSalaryID` FOREIGN KEY (`EmployeeSalaryID`) REFERENCES `employeesalary` (`RowID`) ON DELETE SET NULL,
+	ADD CONSTRAINT `FK_employeetimeentry_employeeshift_EmployeeShiftID` FOREIGN KEY (`EmployeeShiftID`) REFERENCES `employeeshift` (`RowID`) ON DELETE SET NULL,
+	ADD CONSTRAINT `FK_employeetimeentry_payrate_PayRateID` FOREIGN KEY (`PayRateID`) REFERENCES `payrate` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentry_branch_BranchID` FOREIGN KEY (`BranchID`) REFERENCES `branch` (`RowID`);
