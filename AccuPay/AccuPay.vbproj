@@ -395,6 +395,7 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Domain\User.vb" />
+    <Compile Include="Reports\Reports\CrystalReportParameterValueSetter.vb" />
     <Compile Include="Reports\Reports\DataModel\PaystubPayslipModel.vb" />
     <Compile Include="Reports\Reports\Cinema%27s Tardiness Report1.vb">
       <AutoGen>True</AutoGen>
@@ -424,6 +425,9 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalEmployeeReports.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\SmDeploymentEndorsementReportProvider.vb" />
     <Compile Include="Reports\Reports\SMDeploymentEndorsement.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2772,6 +2776,7 @@
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
