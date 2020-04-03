@@ -1,6 +1,4 @@
 ﻿Imports AccuPay.Entity
-Imports CrystalDecisions.CrystalReports.Engine
-Imports CrystalDecisions.Shared
 
 Public Class SmDeploymentEndorsementReportProvider
     Implements ILaGlobalEmployeeReport
@@ -22,7 +20,7 @@ Public Class SmDeploymentEndorsementReportProvider
                 .SetParameter("gender", e.Gender)
             End With
 
-            Dim form = New TestLAGlobalReports
+            Dim form = New LaGlobalEmployeeReportForm
             form.reportViewer.ReportSource = reportDocument
             form.Show()
 

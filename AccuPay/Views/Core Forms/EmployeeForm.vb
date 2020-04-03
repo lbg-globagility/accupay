@@ -887,7 +887,6 @@ Public Class EmployeeForm
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
-
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -1416,6 +1415,8 @@ Public Class EmployeeForm
         employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
 
         PrepareFormForUserLevelAuthorizations()
+
+        InitializeLaGlobalReportList()
 
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
     End Sub
@@ -7996,5 +7997,47 @@ Public Class EmployeeForm
         Male
         Female
     End Enum
+
+    Private laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
+
+    Private repo As New EmployeeRepository
+
+    Private Async Sub LaGlobalEmployeeReportMenu_Click(sender As ToolStripMenuItem, e As EventArgs) Handles ActiveEmployeeChecklistReportToolStripMenuItem.Click,
+        BPIInsuranceAmountReportToolStripMenuItem.Click,
+        EmploymentContractToolStripMenuItem.Click,
+        EndOfContractReportToolStripMenuItem.Click,
+        MonthlyBirthdayReportToolStripMenuItem.Click,
+        PayrollSummaryByBranchToolStripMenuItem.Click,
+        DeploymentEndorsementToolStripMenuItem.Click,
+        WorkOrderToolStripMenuItem.Click
+
+        Dim employeeRow = dgvEmp.CurrentRow
+        If employeeRow Is Nothing Then Return
+
+        Dim employeeID = employeeRow.Cells(Column1.Name).Value
+
+        Dim employee = Await repo.GetByEmployeeNumberAsync(employeeID)
+
+        Dim selectedReport = laGlobalEmployeeReports(sender.Name)
+
+        Dim report = New LaGlobalEmployeeReports(employee)
+        report.Print(selectedReport)
+    End Sub
+
+    Private Sub LaGlobalEmployeeReportMenu1_Click(sender As Object, e As EventArgs) Handles DeploymentEndorsementToolStripMenuItem.Click, WorkOrderToolStripMenuItem.Click, PayrollSummaryByBranchToolStripMenuItem.Click, MonthlyBirthdayReportToolStripMenuItem.Click, EndOfContractReportToolStripMenuItem.Click, EmploymentContractToolStripMenuItem.Click, BPIInsuranceAmountReportToolStripMenuItem.Click, ActiveEmployeeChecklistReportToolStripMenuItem.Click
+
+    End Sub
+
+    Private Sub InitializeLaGlobalReportList()
+        laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
+            {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
+            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsuranceAmountReport},
+            {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
+            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.EndofContractReport},
+            {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
+            {PayrollSummaryByBranchToolStripMenuItem.Name, LaGlobalEmployeeReportName.PayrollSummaryByBranch},
+            {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
+            {WorkOrderToolStripMenuItem.Name, LaGlobalEmployeeReportName.WorkOrder}}
+    End Sub
 
 End Class

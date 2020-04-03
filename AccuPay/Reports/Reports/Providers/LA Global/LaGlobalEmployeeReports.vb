@@ -4,7 +4,14 @@ Public Class LaGlobalEmployeeReports
     Private ReadOnly _employee As Employee
 
     Private reportProviders = New Dictionary(Of LaGlobalEmployeeReportName, ILaGlobalEmployeeReport) From {
-        {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()}
+        {LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.BpiInsuranceAmountReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.EmploymentContractPage, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.EndofContractReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.PayrollSummaryByBranch, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.WorkOrder, New SmDeploymentEndorsementReportProvider()}
     }
 
     Public Sub New(employee As Employee)
@@ -21,8 +28,7 @@ End Class
 Public Enum LaGlobalEmployeeReportName
     ActiveEmployeeChecklistReport
     BpiInsuranceAmountReport
-    EmploymentContractPage1
-    EmploymentContractPage2
+    EmploymentContractPage
     EndofContractReport
     MonthlyBirthdayReport
     PayrollSummaryByBranch
