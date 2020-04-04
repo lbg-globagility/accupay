@@ -410,6 +410,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
+    <Compile Include="Reports\Reports\LA Global\EmploymentContract.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmploymentContract.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\LA Global\EmploymentContractPage1.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -431,6 +437,7 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\EmploymentContractReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalEmployeeReports.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\SmDeploymentEndorsementReportProvider.vb" />
@@ -439,6 +446,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
       <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\Providers\LA Global\TestForm.Designer.vb">
+      <DependentUpon>TestForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Reports\Providers\LA Global\TestForm.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Reports\Reports\WorkOrder.vb">
       <AutoGen>True</AutoGen>
@@ -1949,6 +1962,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContract.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>EmploymentContract.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContractPage1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmploymentContractPage1.vb</LastGenOutput>
@@ -1964,6 +1981,9 @@
     <EmbeddedResource Include="Reports\Reports\LA Global\SMDeploymentEndorsement.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SMDeploymentEndorsement.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\Providers\LA Global\TestForm.resx">
+      <DependentUpon>TestForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\WorkOrder.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
