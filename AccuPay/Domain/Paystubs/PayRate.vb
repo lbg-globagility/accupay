@@ -9,13 +9,15 @@ Namespace Global.AccuPay.Entity
     Public Class PayRate
         Implements IPayrate
 
-        Private Const RegularDay As String = "Regular Day"
+        Public Const RegularDay As String = "Regular Day"
 
-        Private Const SpecialNonWorkingHoliday As String = "Special Non-Working Holiday"
+        Public Const SpecialNonWorkingHoliday As String = "Special Non-Working Holiday"
 
-        Private Const RegularHoliday As String = "Regular Holiday"
+        Public Const RegularHoliday As String = "Regular Holiday"
 
-        Private Const DoubleHoliday As String = "Double Holiday"
+        Public Const DoubleHoliday As String = "Double Holiday"
+
+        Public Const RegularDayAndSpecialHoliday As String = "Regular + Special Holiday"
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
