@@ -236,43 +236,43 @@ Public Class OfficialBusinessForm
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business start date from " + oldOfficialBusiness.StartDate?.ToShortDateString + " to " + newOfficialBusiness.StartDate?.ToShortDateString
+                        .Description = $"Update official business start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'"
                         })
         End If
         If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business end date from " + oldOfficialBusiness.EndDate?.ToShortDateString + " to " + newOfficialBusiness.EndDate?.ToShortDateString
+                        .Description = $"Update official business end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'"
                         })
         End If
         If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business start time from " + oldOfficialBusiness.StartTime?.StripSeconds.ToString + " to " + newOfficialBusiness.StartTime?.StripSeconds.ToString
+                        .Description = $"Update official business start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'"
                         })
         End If
         If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business end time from " + oldOfficialBusiness.EndTime?.StripSeconds.ToString + " to " + newOfficialBusiness.EndTime?.StripSeconds.ToString
+                        .Description = $"Update official business end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'"
                         })
         End If
         If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business reason from " + oldOfficialBusiness.Reason + " to " + newOfficialBusiness.Reason
+                        .Description = $"Update official business reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'"
                         })
         End If
         If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business comments from " + oldOfficialBusiness.Comments + " to " + newOfficialBusiness.Comments
+                        .Description = $"Update official business comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'"
                         })
         End If
         If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update official business status from " + oldOfficialBusiness.Status + " to " + newOfficialBusiness.Status
+                        .Description = $"Update official business status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'"
                         })
         End If
 

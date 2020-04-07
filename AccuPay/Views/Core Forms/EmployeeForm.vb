@@ -810,15 +810,7 @@ Public Class EmployeeForm
             Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
             Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
 
-
-            Using context = New PayrollContext()
-                oldEmployee = context.Employees.
-                                    Include(Function(emp) emp.PayFrequency).
-                                    Include(Function(emp) emp.Position).
-                                    Include(Function(emp) emp.Position.Division).
-                                    Include(Function(emp) emp.Branch).
-                                    Where(Function(emp) Equals(emp.RowID, employee_RowID)).FirstOrDefault
-            End Using
+            oldEmployee = GetOldEmployee(employee_RowID)
 
             new_eRowID =
             INSUPDemployee(employee_RowID,
@@ -1056,6 +1048,21 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
+    Private Shared Function GetOldEmployee(employee_RowID As Object) As Employee
+        Dim oldEmployee As Employee
+
+        Using context = New PayrollContext()
+            oldEmployee = context.Employees.
+                                Include(Function(emp) emp.PayFrequency).
+                                Include(Function(emp) emp.Position).
+                                Include(Function(emp) emp.Position.Division).
+                                Include(Function(emp) emp.Branch).
+                                Where(Function(emp) Equals(emp.RowID, employee_RowID)).FirstOrDefault
+        End Using
+
+        Return oldEmployee
+    End Function
+
     Private Function RecordUpdateEmployee(employee_RowID As Object, oldEmployee As Employee) As Boolean
 
         If oldEmployee Is Nothing Then Return False
@@ -1072,109 +1079,109 @@ Public Class EmployeeForm
         If oldEmployee.EmployeeNo <> txtEmpID.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee ID from " + oldEmployee.EmployeeNo + " to " + txtEmpID.Text
+                        .Description = $"Update employee ID from '{oldEmployee.EmployeeNo}' to '{txtEmpID.Text}'"
                         })
         End If
         If oldEmployee.EmployeeType <> cboEmpType.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee type from " + oldEmployee.EmployeeType + " to " + cboEmpType.Text
+                        .Description = $"Update employee type from '{oldEmployee.EmployeeType}' to '{cboEmpType.Text}'"
                         })
         End If
         If oldEmployee.EmploymentStatus <> cboEmpStat.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee status from " + oldEmployee.EmploymentStatus + " to " + cboEmpStat.Text
+                        .Description = $"Update employee status from '{oldEmployee.EmploymentStatus}' to '{cboEmpStat.Text}'"
                         })
         End If
         If oldEmployee.StartDate <> dtpempstartdate.Value Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee start date from " + oldEmployee.StartDate.ToShortDateString + " to " + dtpempstartdate.Text
+                        .Description = $"Update employee start date from '{oldEmployee.StartDate.ToShortDateString}' to '{dtpempstartdate.Text}'"
                         })
         End If
         If oldEmployee.Salutation <> cboSalut.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee salutation from " + oldEmployee.Salutation + " to " + cboSalut.Text
+                        .Description = $"Update employee salutation from '{oldEmployee.Salutation}' to '{cboSalut.Text}'"
                         })
         End If
         If oldEmployee.Gender <> gender Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee gender from " + oldEmployee.Gender + " to " + gender
+                        .Description = $"Update employee gender from '{oldEmployee.Gender}' to '{gender}'"
                         })
         End If
         If oldEmployee.FirstName <> txtFName.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee first name from " + oldEmployee.FirstName + " to " + txtFName.Text
+                        .Description = $"Update employee first name from '{oldEmployee.FirstName}' to '{txtFName.Text}'"
                         })
         End If
         If oldEmployee.MiddleName <> txtMName.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee middle name from " + oldEmployee.MiddleName + " to " + txtMName.Text
+                        .Description = $"Update employee middle name from '{oldEmployee.MiddleName}' to '{txtMName.Text}'"
                         })
         End If
         If oldEmployee.LastName <> txtLName.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee last name from " + oldEmployee.LastName + " to " + txtLName.Text
+                        .Description = $"Update employee last name from '{oldEmployee.LastName}' to '{txtLName.Text}'"
                         })
         End If
         If oldEmployee.Surname <> txtSName.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee surname from " + oldEmployee.Surname + " to " + txtSName.Text
+                        .Description = $"Update employee surname from '{oldEmployee.Surname}' to '{txtSName.Text}'"
                         })
         End If
         If oldEmployee.Nickname <> txtNName.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee nickname from " + oldEmployee.Nickname + " to " + txtNName.Text
+                        .Description = $"Update employee nickname from '{oldEmployee.Nickname}' to '{txtNName.Text}'"
                         })
         End If
         If oldEmployee.MaritalStatus <> cboMaritStat.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee marital status from " + oldEmployee.MaritalStatus + " to " + cboMaritStat.Text
+                        .Description = $"Update employee marital status from '{oldEmployee.MaritalStatus}' to '{cboMaritStat.Text}'"
                         })
         End If
         If oldEmployee.NoOfDependents.ToString <> txtNumDepen.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee number of dependents from " + oldEmployee.NoOfDependents.ToString + " to " + txtNumDepen.Text
+                        .Description = $"Update employee number of dependents from '{oldEmployee.NoOfDependents.ToString}' to '{txtNumDepen.Text}'"
                         })
         End If
         If oldEmployee.PayFrequency.Type <> cboPayFreq.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee pay frequency from " + oldEmployee.PayFrequency.Type + " to " + cboPayFreq.Text
+                        .Description = $"Update employee pay frequency from '{oldEmployee.PayFrequency.Type}' to '{cboPayFreq.Text}'"
                         })
         End If
         If oldEmployee.DayOfRest Is Nothing And cboDayOfRest.Text <> "" Then
             changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee add rest day on " + cboDayOfRest.Text
+                            .Description = $"Update employee rest day from '' to  '{cboDayOfRest.Text}'"
                             })
         ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text <> "" Then
             If WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday) <> cboDayOfRest.Text Then
                 changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee rest day from " + WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday) + " to " + cboDayOfRest.Text
+                            .Description = $"Update employee rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to '{cboDayOfRest.Text}'"
                             })
             End If
         ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text = "" Then
             changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee remove rest day on " + WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)
+                            .Description = $"Update employee rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to ''"
                             })
         End If
         If oldEmployee.DateEvaluated <> dtpEvaluationDate.Value Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee evaluation date from " + oldEmployee.DateEvaluated?.ToShortDateString + " to " + dtpEvaluationDate.Text
+                        .Description = $"Update employee evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to '{dtpEvaluationDate.Text}'"
                         })
         End If
         If (oldEmployee.DateEvaluated Is Nothing And dtpEvaluationDate.Checked) Or
@@ -1182,19 +1189,19 @@ Public Class EmployeeForm
             If dtpEvaluationDate.Checked = False Then
                 changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee remove evaluation date"
+                        .Description = $"Update employee evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to ''"
                         })
             Else
                 changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee add evaluation date " + dtpEvaluationDate.Text
+                        .Description = $"Update employee evaluation date from '' to '{dtpEvaluationDate.Text}'"
                         })
             End If
         End If
         If oldEmployee.DateRegularized <> dtpRegularizationDate.Value Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee regularization date from " + oldEmployee.DateRegularized?.ToShortDateString + " to " + dtpRegularizationDate.Text
+                        .Description = $"Update employee regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to '{dtpRegularizationDate.Text}'"
                         })
         End If
         If (oldEmployee.DateRegularized Is Nothing And dtpRegularizationDate.Checked) Or
@@ -1202,43 +1209,45 @@ Public Class EmployeeForm
             If dtpRegularizationDate.Checked = False Then
                 changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee remove regularization date"
+                        .Description = $"Update employee regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to ''"
                         })
             Else
                 changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee add regularization date " + dtpEvaluationDate.Text
+                        .Description = $"Update employee regularization date from '' to '{dtpEvaluationDate.Text}'"
                         })
             End If
         End If
-        If (oldEmployee.AtmNo Is Nothing And oldEmployee.BankName Is Nothing) And 'change to direct deposit
-                (txtATM.Enabled = True And cbobank.Enabled = True) Then
+        If oldEmployee.AtmNo = Nothing And txtATM.Text <> "" Then 'change to deposit
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee add ATM number " + txtATM.Text
+                        .Description = $"Update employee salary distribution from 'Cash / Check' to 'Direct Deposit'"
+                        })
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Update employee ATM number from '' to " + txtATM.Text
                         })
             changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee add bank name " + cbobank.Text
+                            .Description = $"Update employee bank name from '' to '{cbobank.Text}'"
                             })
 
-        ElseIf (oldEmployee.AtmNo IsNot Nothing And oldEmployee.BankName IsNot Nothing) And 'change to Cash / Check
-                (txtATM.Enabled = False And cbobank.Enabled = False) Then
+        ElseIf oldEmployee.AtmNo <> Nothing And txtATM.Text = Nothing Then ' change to cash / check
             changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee salary distribution from Direct Deposit to Cash / Check"
+                            .Description = $"Update employee salary distribution from 'Direct Deposit' to 'Cash / Check'"
                             })
         Else
             If oldEmployee.AtmNo <> txtATM.Text Then 'change ATM number and Bank Name
                 changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee ATM number from " + oldEmployee.AtmNo + " to " + txtATM.Text
+                            .Description = $"Update employee ATM number from '{oldEmployee.AtmNo}' to '{txtATM.Text}'"
                             })
             End If
             If oldEmployee.BankName <> cbobank.Text Then
                 changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee bank name from " + oldEmployee.BankName + " to " + cbobank.Text
+                            .Description = $"Update employee bank name from '{oldEmployee.BankName}' to '{cbobank.Text}'"
                             })
             End If
         End If
@@ -1249,188 +1258,188 @@ Public Class EmployeeForm
         If (oldEmployee.Branch Is Nothing And BranchComboBox.Text <> "") Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee add branch " + BranchComboBox.Text
+                        .Description = $"Update employee branch from '' to '{BranchComboBox.Text}'"
                         })
         ElseIf oldEmployee.Branch IsNot Nothing And BranchComboBox.Text <> "" Then
             If oldEmployee.Branch.Name <> BranchComboBox.Text Then
                 changes.Add(New Data.Entities.UserActivityItem() With
                             {
-                            .Description = "Update employee branch from " + oldEmployee.Branch.Name + " to " + BranchComboBox.Text
+                            .Description = $"Update employee branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}'"
                             })
             End If
         End If
         'If oldEmployee.BPIInsurance.ToString <> BPIinsuranceText.Text Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee BPI insurance from " + oldEmployee.BPIInsurance.ToString + " to " + BPIinsuranceText.Text
+        '                .Description = $"Update employee BPI insurance from '{oldEmployee.BPIInsurance.ToString}' to '{BPIinsuranceText.Text}'"
         '                })
         'End If
         'If oldEmployee.Position.Division.Name <> txtDivisionName.Text Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee division from " + oldEmployee.Position.Division.Name + " to " + txtDivisionName.Text
+        '                .Description = $"Update employee division from '{oldEmployee.Position.Division.Name}' to '{txtDivisionName.Text}'"
         '                })
         'End If
         If oldEmployee.Position.Name <> cboPosit.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee position from " + oldEmployee.Position.Name + " to " + cboPosit.Text
+                        .Description = $"Update employee position from '{oldEmployee.Position.Name}' to '{cboPosit.Text}'"
                         })
         End If
         'If oldEmployee.Agency.Name <> cboAgency.Text Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee agency from " + oldEmployee.Agency.Name + " to " + cboAgency.Text
+        '                .Description = $"Update employee agency from '{oldEmployee.Agency.Name'} to '{cboAgency.Text}'"
         '                })
         'End If
         If oldEmployee.BirthDate <> dtpempbdate.Value Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee birthday from " + oldEmployee.BirthDate.ToShortDateString + " to " + dtpempbdate.Text
+                        .Description = $"Update employee birthday from '{oldEmployee.BirthDate.ToShortDateString}' to '{dtpempbdate.Text}'"
                         })
         End If
         If oldEmployee.EmailAddress <> txtemail.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee email address from " + oldEmployee.EmailAddress + " to " + txtemail.Text
+                        .Description = $"Update employee email address from '{oldEmployee.EmailAddress}' to '{txtemail.Text}'"
                         })
         End If
         If oldEmployee.TinNo <> txtTIN.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee TIN from " + oldEmployee.TinNo + " to " + txtTIN.Text
+                        .Description = $"Update employee TIN from '{oldEmployee.TinNo}' to '{txtTIN.Text}'"
                         })
         End If
         If oldEmployee.SssNo <> txtSSS.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee SSS from " + oldEmployee.SssNo + " to " + txtSSS.Text
+                        .Description = $"Update employee SSS from '{oldEmployee.SssNo}' to '{txtSSS.Text}'"
                         })
         End If
         If oldEmployee.PhilHealthNo <> txtPIN.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee PhilHealth from " + oldEmployee.PhilHealthNo + " to " + txtPIN.Text
+                        .Description = $"Update employee PhilHealth from '{oldEmployee.PhilHealthNo}' to '{txtPIN.Text}'"
                         })
         End If
         If oldEmployee.HdmfNo <> txtHDMF.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee PagIbig from " + oldEmployee.HdmfNo + " to " + txtHDMF.Text
+                        .Description = $"Update employee PagIbig from '{oldEmployee.HdmfNo}' to '{txtHDMF.Text}'"
                         })
         End If
         If oldEmployee.HomeAddress <> txtHomeAddr.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee home address from " + oldEmployee.HomeAddress + " to " + txtHomeAddr.Text
+                        .Description = $"Update employee home address from '{oldEmployee.HomeAddress}' to '{txtHomeAddr.Text}'"
                         })
         End If
         If oldEmployee.WorkPhone <> txtWorkPhne.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee work phone from " + oldEmployee.WorkPhone + " to " + txtWorkPhne.Text
+                        .Description = $"Update employee work phone from '{oldEmployee.WorkPhone}' to '{txtWorkPhne.Text}'"
                         })
         End If
         If oldEmployee.HomePhone <> txtHomePhne.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee home phone from " + oldEmployee.HomePhone + " to " + txtHomePhne.Text
+                        .Description = $"Update employee home phone from '{oldEmployee.HomePhone}' to '{txtHomePhne.Text}'"
                         })
         End If
         If oldEmployee.MobilePhone <> txtMobPhne.Text Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee mobile phone from " + oldEmployee.MobilePhone + " to " + txtMobPhne.Text
+                        .Description = $"Update employee mobile phone from '{oldEmployee.MobilePhone}' to '{txtMobPhne.Text}'"
                         })
         End If
         If oldEmployee.OvertimeOverride <> chkotflag.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate overtime from " + oldEmployee.OvertimeOverride.ToString + " to " + chkotflag.Checked.ToString
+                        .Description = $"Update employee calculate overtime from '{oldEmployee.OvertimeOverride.ToString}' to '{chkotflag.Checked.ToString}'"
                         })
         End If
         If oldEmployee.UndertimeOverride <> chkutflag.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate undertime from " + oldEmployee.UndertimeOverride.ToString + " to " + chkutflag.Checked.ToString
+                        .Description = $"Update employee calculate undertime from '{oldEmployee.UndertimeOverride.ToString}' to '{chkutflag.Checked.ToString}'"
                         })
         End If
         If oldEmployee.LateGracePeriod <> txtUTgrace.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee grace period from " + oldEmployee.LateGracePeriod.ToString + " to " + txtUTgrace.Text
+                        .Description = $"Update employee grace period from '{oldEmployee.LateGracePeriod.ToString}' to '{txtUTgrace.Text}'"
                         })
         End If
         'If oldEmployee.AlphalistExempted <> chkAlphaListExempt.Checked Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee alpha list exemption from " + oldEmployee.AlphalistExempted.ToString + " to " + chkAlphaListExempt.Checked.ToString
+        '                .Description = $"Update employee alpha list exemption from '{oldEmployee.AlphalistExempted.ToString}' to '{chkAlphaListExempt.Checked.ToString}'"
         '                })
         'End If
         If oldEmployee.WorkDaysPerYear <> txtWorkDaysPerYear.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee work days per year from " + oldEmployee.WorkDaysPerYear.ToString + " to " + txtWorkDaysPerYear.Text
+                        .Description = $"Update employee work days per year from '{oldEmployee.WorkDaysPerYear.ToString}' to '{txtWorkDaysPerYear.Text}'"
                         })
         End If
         If oldEmployee.CalcHoliday <> chkcalcHoliday.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate holiday from " + oldEmployee.CalcHoliday.ToString + " to " + chkcalcHoliday.Checked.ToString
+                        .Description = $"Update employee calculate holiday from '{oldEmployee.CalcHoliday.ToString}' to '{chkcalcHoliday.Checked.ToString}'"
                         })
         End If
         If oldEmployee.CalcSpecialHoliday <> chkcalcSpclHoliday.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate special holiday from " + oldEmployee.CalcSpecialHoliday.ToString + " to " + chkcalcSpclHoliday.Checked.ToString
+                        .Description = $"Update employee calculate special holiday from '{oldEmployee.CalcSpecialHoliday.ToString}' to '{chkcalcSpclHoliday.Checked.ToString}'"
                         })
         End If
         If oldEmployee.CalcNightDiff <> chkcalcNightDiff.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate night differential from " + oldEmployee.CalcNightDiff.ToString + " to " + chkcalcNightDiff.Checked.ToString
+                        .Description = $"Update employee calculate night differential from '{oldEmployee.CalcNightDiff.ToString}' to '{chkcalcNightDiff.Checked.ToString}'"
                         })
         End If
         If oldEmployee.CalcRestDay <> chkcalcRestDay.Checked Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee calculate rest day from " + oldEmployee.CalcRestDay.ToString + " to " + chkcalcRestDay.Checked.ToString
+                        .Description = $"Update employee calculate rest day from '{oldEmployee.CalcRestDay.ToString}' to '{chkcalcRestDay.Checked.ToString}'"
                         })
         End If
         'If oldEmployee.CalcNightDiffOT <> chkcalcNightDiffOT.Checked Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee calculate night diferential overtime from " + oldEmployee.CalcNightDiffOT.ToString + " to " + chkcalcNightDiffOT.Checked.ToString
+        '                .Description = $"Update employee calculate night diferential overtime from '{oldEmployee.CalcNightDiffOT.ToString}' to '{chkcalcNightDiffOT.Checked.ToString}'"
         '                })
         'End If
         'If oldEmployee.CalcRestDayOT <> chkcalcRestDayOT.Checked Then
         '    changes.Add(New Data.Entities.UserActivityItem() With
         '                {
-        '                .Description = "Update employee calculate rest day overtime from " + oldEmployee.CalcRestDayOT.ToString + " to " + chkcalcRestDayOT.Checked.ToString
+        '                .Description = $"Update employee calculate rest day overtime from '{oldEmployee.CalcRestDayOT.ToString}' to '{chkcalcRestDayOT.Checked.ToString}'"
         '                })
         'End If
         If oldEmployee.VacationLeaveAllowance <> txtvlallow.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee vacation leave allowance from " + oldEmployee.VacationLeaveAllowance.ToString("#0") + " to " + txtvlallow.Text
+                        .Description = $"Update employee vacation leave allowance from '{oldEmployee.VacationLeaveAllowance.ToString("#0")}' to '{txtvlallow.Text}'"
                         })
         End If
         If oldEmployee.SickLeaveAllowance <> txtslallow.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee sick leave allowance from " + oldEmployee.SickLeaveAllowance.ToString + " to " + txtslallow.Text
+                        .Description = $"Update employee sick leave allowance from '{oldEmployee.SickLeaveAllowance.ToString}' to '{txtslallow.Text}'"
                         })
         End If
         If oldEmployee.MaternityLeaveAllowance <> txtmlallow.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee maternity leave allowance from " + oldEmployee.MaternityLeaveAllowance.ToString + " to " + txtmlallow.Text
+                        .Description = $"Update employee maternity leave allowance from '{oldEmployee.MaternityLeaveAllowance.ToString}' to '{txtmlallow.Text}'"
                         })
         End If
         If oldEmployee.OtherLeaveAllowance <> txtothrallow.Text.ToDecimal Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
-                        .Description = "Update employee other leave allowance from " + oldEmployee.OtherLeaveAllowance.ToString + " to " + txtothrallow.Text
+                        .Description = $"Update employee other leave allowance from '{oldEmployee.OtherLeaveAllowance.ToString}' to '{txtothrallow.Text}'"
                         })
         End If
 
