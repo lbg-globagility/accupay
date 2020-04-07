@@ -20,6 +20,7 @@ Public Class EmploymentContractReportProvider
                 .SetParameter("jobName", e.Position.Name)
                 .SetParameter("salutation", e.Salutation)
                 .SetParameter("employeeType", e.EmployeeType)
+                .SetParameter("startDate", e.StartDate)
 
                 Dim latestSalary = e.Salaries.
                     Where(Function(s) s.IsIndefinite).
@@ -31,6 +32,7 @@ Public Class EmploymentContractReportProvider
                         FirstOrDefault
                 End If
                 .SetParameter("salary", latestSalary.BasicSalary)
+                .SetParameter("companyName", orgNam)
 
             End With
 
