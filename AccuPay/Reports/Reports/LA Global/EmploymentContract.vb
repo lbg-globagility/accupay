@@ -62,7 +62,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property ReportHeaderSection2() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property Section2() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(1)
         End Get
@@ -70,7 +70,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Section2() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property Section3() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(2)
         End Get
@@ -78,7 +78,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property PageHeaderSection3() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection5() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(3)
         End Get
@@ -86,7 +86,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property PageHeaderSection4() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection6() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(4)
         End Get
@@ -94,7 +94,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Section3() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection7() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(5)
         End Get
@@ -102,7 +102,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection5() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection22() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(6)
         End Get
@@ -110,7 +110,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection6() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection23() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(7)
         End Get
@@ -118,7 +118,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection7() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection24() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(8)
         End Get
@@ -126,7 +126,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property DetailSection8() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection25() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(9)
         End Get
@@ -134,7 +134,7 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Section4() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection26() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(10)
         End Get
@@ -142,9 +142,121 @@ Public Class EmploymentContract
     
     <Browsable(false),  _
      DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
-    Public ReadOnly Property Section5() As CrystalDecisions.CrystalReports.Engine.Section
+    Public ReadOnly Property DetailSection27() As CrystalDecisions.CrystalReports.Engine.Section
         Get
             Return Me.ReportDefinition.Sections(11)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection28() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(12)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection29() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(13)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection30() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(14)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection31() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(15)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection32() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(16)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection33() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(17)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection34() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(18)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection35() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(19)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection36() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(20)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection8() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(21)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection2() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(22)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property DetailSection3() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(23)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property Section4() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(24)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property Section5() As CrystalDecisions.CrystalReports.Engine.Section
+        Get
+            Return Me.ReportDefinition.Sections(25)
         End Get
     End Property
     
@@ -233,6 +345,22 @@ Public Class EmploymentContract
     Public ReadOnly Property Parameter_employeeMiddleName() As CrystalDecisions.[Shared].IParameterField
         Get
             Return Me.DataDefinition.ParameterFields(10)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property Parameter_authorizedSignatory() As CrystalDecisions.[Shared].IParameterField
+        Get
+            Return Me.DataDefinition.ParameterFields(11)
+        End Get
+    End Property
+    
+    <Browsable(false),  _
+     DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)>  _
+    Public ReadOnly Property Parameter_employeeType() As CrystalDecisions.[Shared].IParameterField
+        Get
+            Return Me.DataDefinition.ParameterFields(12)
         End Get
     End Property
 End Class

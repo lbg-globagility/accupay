@@ -7,15 +7,32 @@ Public Class EmploymentContractReportProvider
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim succeed = False
-        Dim e = Employee
+        Dim e = _Employee
         Try
-            Dim reportDocument As New EmploymentContract 'HTMLTextInterpretation 'EmploymentContract
+            Dim reportDocument As New EmploymentContract
 
-            Dim source = New List(Of DummyID)
-            For i = 1 To 17
-                source.Add(New DummyID() With {.RowID = i})
-            Next
-            reportDocument.SetDataSource(source)
+            Dim parameterSetter = New CrystalReportParameterValueSetter(reportDocument)
+            With parameterSetter
+                .SetParameter("employeeMiddleName", e.MiddleName)
+                .SetParameter("employeeLastName", e.LastName)
+                .SetParameter("employeeFirstName", e.FirstName)
+                .SetParameter("gender", e.Gender)
+                .SetParameter("jobName", e.Position.Name)
+                .SetParameter("salutation", e.Salutation)
+                .SetParameter("employeeType", e.EmployeeType)
+
+                Dim latestSalary = e.Salaries.
+                    Where(Function(s) s.IsIndefinite).
+                    FirstOrDefault
+                If latestSalary Is Nothing Then
+                    latestSalary = e.Salaries.
+                        OrderByDescending(Function(s) s.EffectiveFrom).
+                        ThenByDescending(Function(s) s.EffectiveTo).
+                        FirstOrDefault
+                End If
+                .SetParameter("salary", latestSalary.BasicSalary)
+
+            End With
 
             Dim form = New LaGlobalEmployeeReportForm
             form.reportViewer.ReportSource = reportDocument
@@ -28,7 +45,4 @@ Public Class EmploymentContractReportProvider
         Return succeed
     End Function
 
-    Private Class DummyID
-        Public Property RowID As Integer
-    End Class
 End Class

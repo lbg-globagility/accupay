@@ -4,6 +4,7 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay.Data
 Imports AccuPay.Enums
+Imports PayrollSys
 
 Namespace Global.AccuPay.Entity
 
@@ -94,6 +95,8 @@ Namespace Global.AccuPay.Entity
 
         <ForeignKey("PayFrequencyID")>
         Public Overridable Property PayFrequency As PayFrequency
+
+        Public Overridable Property Salaries As ICollection(Of Salary)
 
         Public ReadOnly Property MiddleInitial As String
             Get

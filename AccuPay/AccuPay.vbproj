@@ -447,12 +447,6 @@
       <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Providers\LA Global\TestForm.Designer.vb">
-      <DependentUpon>TestForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\Reports\Providers\LA Global\TestForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Reports\Reports\WorkOrder.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1964,7 +1958,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContract.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>EmploymentContract.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContractPage1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
@@ -1981,9 +1974,6 @@
     <EmbeddedResource Include="Reports\Reports\LA Global\SMDeploymentEndorsement.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SMDeploymentEndorsement.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Providers\LA Global\TestForm.resx">
-      <DependentUpon>TestForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\WorkOrder.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

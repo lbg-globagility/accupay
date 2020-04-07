@@ -146,7 +146,9 @@ Namespace Global.AccuPay.Repository
 
         Private Function GetAllEmployeeBaseQuery(context As PayrollContext) As IQueryable(Of Entity.Employee)
             Return context.Employees.
-                            Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
+                Include(Function(e) e.Position).
+                Include(Function(e) e.Salaries).
+                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function
 
 #End Region

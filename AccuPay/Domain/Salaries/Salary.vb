@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel.DataAnnotations.Schema
 Imports System.ComponentModel.DataAnnotations
+Imports AccuPay.Entity
 
 Namespace Global.PayrollSys
 
@@ -64,6 +65,9 @@ Namespace Global.PayrollSys
         Public Property AutoComputePhilHealthContribution As Boolean
 
         Public Property AutoComputeHDMFContribution As Boolean
+
+        <ForeignKey("EmployeeID")>
+        Public Overridable Property Employee As Employee
 
         Public ReadOnly Property IsIndefinite As Boolean
             Get
