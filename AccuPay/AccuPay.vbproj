@@ -447,12 +447,13 @@
       <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\WorkOrder.vb">
+    <Compile Include="Reports\Reports\LA Global\WorkOrder.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WorkOrder.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\Providers\LA Global\WorkOrderReportProvider.vb" />
     <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -1975,7 +1976,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SMDeploymentEndorsement.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\WorkOrder.rpt">
+    <EmbeddedResource Include="Reports\Reports\LA Global\WorkOrder.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>WorkOrder.vb</LastGenOutput>
     </EmbeddedResource>

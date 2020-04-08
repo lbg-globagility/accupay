@@ -11,7 +11,7 @@ Public Class LaGlobalEmployeeReports
         {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.PayrollSummaryByBranch, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()},
-        {LaGlobalEmployeeReportName.WorkOrder, New SmDeploymentEndorsementReportProvider()}
+        {LaGlobalEmployeeReportName.WorkOrder, New WorkOrderReportProvider()}
     }
 
     Public Sub New(employee As Employee)
