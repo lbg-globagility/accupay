@@ -1,0 +1,38 @@
+﻿Imports System.Threading.Tasks
+Imports AccuPay.Entity
+Imports Microsoft.EntityFrameworkCore
+
+Public Class SelectBranchForm
+
+    Private _branches As List(Of Branch)
+
+    Public Property SelectedBranch As Branch
+
+    Private Async Sub SelectBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        SelectedBranch = Nothing
+
+        Await LoadBranch()
+
+    End Sub
+
+    Private Async Function LoadBranch() As Task
+
+        Using context As New PayrollContext
+
+            _branches = Await context.Branches.ToListAsync
+
+        End Using
+
+        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.DataSource = _branches
+
+    End Function
+
+    Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
+
+        SelectedBranch = DirectCast(BranchComboBox.SelectedValue, Branch)
+        Me.Close()
+    End Sub
+
+End Class

@@ -27,13 +27,13 @@ Public Class AddBranchForm
 
         Me.LastAddedBranchId = Nothing
 
-        ShowBranch()
+        ShowCalendar()
 
         Await RefreshForm()
 
     End Sub
 
-    Private Sub ShowBranch()
+    Private Sub ShowCalendar()
 
         Using context As New PayrollContext
 
@@ -56,7 +56,7 @@ Public Class AddBranchForm
 
         Using context As New PayrollContext
 
-            _branches = Await context.Branches.ToListAsync
+            _branches = Await context.Branches.ToListAsync()
 
             _calendars = Await context.Calendars.ToListAsync()
 

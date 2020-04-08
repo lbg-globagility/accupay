@@ -64,6 +64,12 @@ Namespace Global.AccuPay.Helpers
             End Get
         End Property
 
+        Public ReadOnly Property UseEmailPayslip As Boolean
+            Get
+                Return _settings.GetBoolean("Payroll Policy.EmailPayslip", False)
+            End Get
+        End Property
+
     End Class
 
 End Namespace

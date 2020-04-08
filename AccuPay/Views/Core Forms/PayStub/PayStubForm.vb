@@ -2,6 +2,7 @@ Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
+Imports AccuPay.Helpers
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -59,7 +60,7 @@ Public Class PayStubForm
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
-    Private _showActual As Boolean
+    Private _policy As PolicyHelper
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -75,6 +76,8 @@ Public Class PayStubForm
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
+
+        _policy = New PolicyHelper
 
         setProperInterfaceBaseOnCurrentSystemOwner()
 
@@ -152,54 +155,49 @@ Public Class PayStubForm
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
+        ShowOrHidePayrollSummaryByBranch()
 
+    End Sub
+
+    Private Sub ShowOrHidePayrollSummaryByBranch()
+        PayrollSummaryByBranchToolStripMenuItem.Visible = _policy.PayRateCalculationBasis =
+                                                            PayRateCalculationBasis.Branch
     End Sub
 
     Private Sub ShowOrHideActual()
-        Using context As New PayrollContext
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        Dim showActual = _policy.ShowActual
 
-            Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+        PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
+        PayrollSummaryActualToolStripMenuItem.Visible = showActual
 
-            PayrollSummaryDeclaredToolStripMenuItem.Visible = showActual
-            PayrollSummaryActualToolStripMenuItem.Visible = showActual
+        PayslipDeclaredToolStripMenuItem.Visible = showActual
+        PayslipActualToolStripMenuItem.Visible = showActual
 
-            PayslipDeclaredToolStripMenuItem.Visible = showActual
-            PayslipActualToolStripMenuItem.Visible = showActual
+        If showActual = False Then
 
-            If showActual = False Then
+            Dim str_empty As String = String.Empty
 
-                Dim str_empty As String = String.Empty
+            TabPage1.Text = str_empty
 
-                TabPage1.Text = str_empty
+            TabPage4.Text = str_empty
 
-                TabPage4.Text = str_empty
+            AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+        Else
 
-                AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
-            Else
+            RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
+            RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
 
-                RemoveHandler PrintPaySlipToolStripMenuItem.Click, AddressOf PrintPaySlipToolStripMenuItem_Click
-                RemoveHandler PrintPayrollSummaryToolStripMenuItem.Click, AddressOf PrintPayrollSummaryToolStripMenuItem_Click
+        End If
 
-            End If
-
-            _showActual = showActual
-
-        End Using
     End Sub
 
     Private Sub ShowOrHideEmailPayslip()
-        Using context As New PayrollContext
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        Dim emailPayslip = _policy.UseEmailPayslip
 
-            Dim emailPayslip = (settings.GetBoolean("Payroll Policy.EmailPayslip", False) = True)
-
-            ManagePayslipsToolStripMenuItem.Visible = emailPayslip
-            PrintPaySlipToolStripMenuItem.Visible = Not emailPayslip
-
-        End Using
+        ManagePayslipsToolStripMenuItem.Visible = emailPayslip
+        PrintPaySlipToolStripMenuItem.Visible = Not emailPayslip
 
     End Sub
 
@@ -1970,7 +1968,7 @@ Public Class PayStubForm
 
     Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
 
-        If _showActual = False Then
+        If _policy.ShowActual = False Then
 
             PrintPayslip(isActual:=0)
 
@@ -1999,7 +1997,7 @@ Public Class PayStubForm
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
 
-        If _showActual = False Then
+        If _policy.ShowActual = False Then
 
             Dim psefr As New PayrollSummaryExcelFormatReportProvider
 
@@ -2026,6 +2024,14 @@ Public Class PayStubForm
         End If
 
         form.ShowDialog()
+
+    End Sub
+
+    Private Sub PayrollSummaryByBranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollSummaryByBranchToolStripMenuItem.Click
+
+        Dim provider = New PayrollSummaryByBranchProvider()
+
+        provider.Run()
 
     End Sub
 
