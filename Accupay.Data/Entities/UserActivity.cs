@@ -20,7 +20,6 @@ namespace AccuPay.Data.Entities
 
         public int UserId { get; set; }
         public int OrganizationID { get; set; }
-        public int EntityId { get; set; }
         public User User { get; set; }
         public string EntityName { get; set; }
         public string RecordType { get; set; }

@@ -18,6 +18,7 @@ namespace AccuPay.Data.Entities
         public DateTime? LastUpd { get; set; }
 
         public int UserActivityId { get; set; }
+        public int EntityId { get; set; }
         public string Description { get; set; }
     }
 }
