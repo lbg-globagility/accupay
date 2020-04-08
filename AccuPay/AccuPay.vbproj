@@ -410,6 +410,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
+    <Compile Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BpiInsuranceAmountReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\LA Global\EmploymentContract.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -437,6 +443,7 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\BpiInsurancePaymentReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\EmploymentContractReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalEmployeeReports.vb" />
@@ -1956,6 +1963,10 @@
     <EmbeddedResource Include="Reports\Reports\Cinema%27s Tardiness Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BpiInsuranceAmountReport.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContract.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
