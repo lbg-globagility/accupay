@@ -19,12 +19,6 @@ Public Class BpiInsurancePaymentReportProvider
         Try
             Dim reportDocument As New BpiInsuranceAmountReport
 
-            Dim parameterSetter = New CrystalReportParameterValueSetter(reportDocument)
-            With parameterSetter
-                .SetParameter("selectedDate", _selectedDate)
-
-            End With
-
             SetDataSource(reportDocument)
 
             Dim form = New LaGlobalEmployeeReportForm
@@ -71,6 +65,13 @@ Public Class BpiInsurancePaymentReportProvider
                 ToList()
 
             'parameterSetter.SetParameter("noRecordFound", Not source.Any())
+
+            Dim parameterSetter = New CrystalReportParameterValueSetter(reportClass)
+            With parameterSetter
+                '.SetParameter("selectedDate", _selectedDate)
+                .SetParameter("organizationName", z_CompanyName)
+
+            End With
 
             reportClass.SetDataSource(source)
         End Using
