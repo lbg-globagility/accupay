@@ -29,7 +29,7 @@ Public Class WorkOrderReportProvider
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
-            form.reportViewer.ReportSource = reportDocument
+            form.SetReportSource(reportDocument)
             form.Show()
 
             succeed = True

@@ -434,6 +434,12 @@
       <DependentUpon>EmploymentContractPage2.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\LA Global\MonthlyBirthdayCelebrantsReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MonthlyBirthdayCelebrantsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -447,6 +453,7 @@
     <Compile Include="Reports\Reports\Providers\LA Global\EmploymentContractReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalEmployeeReports.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\MonthlyBirthdayCelebrantsReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\SmDeploymentEndorsementReportProvider.vb" />
     <Compile Include="Reports\Reports\LA Global\SMDeploymentEndorsement.vb">
       <AutoGen>True</AutoGen>
@@ -1978,6 +1985,10 @@
     <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContractPage2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmploymentContractPage2.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\MonthlyBirthdayCelebrantsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MonthlyBirthdayCelebrantsReport.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>

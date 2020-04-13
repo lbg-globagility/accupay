@@ -1,9 +1,10 @@
 ﻿Imports AccuPay.Entity
-Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.EntityFrameworkCore
 
 Public Class BpiInsurancePaymentReportProvider
     Implements ILaGlobalEmployeeReport
+
+    Private reportDocument As BpiInsuranceAmountReport
 
     Private _selectedDate As Date
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
@@ -17,13 +18,9 @@ Public Class BpiInsurancePaymentReportProvider
         _selectedDate = CDate(monthSelector.MonthFirstDate)
 
         Try
-            Dim reportDocument As New BpiInsuranceAmountReport
+            reportDocument = New BpiInsuranceAmountReport
 
-            SetDataSource(reportDocument)
-
-            Dim form = New LaGlobalEmployeeReportForm
-            form.reportViewer.ReportSource = reportDocument
-            form.Show()
+            SetDataSource()
 
             succeed = True
         Catch ex As Exception
@@ -32,8 +29,7 @@ Public Class BpiInsurancePaymentReportProvider
         Return succeed
     End Function
 
-    Private Async Sub SetDataSource(reportClass As ReportClass) ', parameterSetter As CrystalReportParameterValueSetter
-
+    Private Async Sub SetDataSource()
         Using context = New PayrollContext
             Dim periods = Await context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                 Where(Function(p) p.Year = _selectedDate.Year).
@@ -66,24 +62,30 @@ Public Class BpiInsurancePaymentReportProvider
 
             'parameterSetter.SetParameter("noRecordFound", Not source.Any())
 
-            Dim parameterSetter = New CrystalReportParameterValueSetter(reportClass)
+            Dim parameterSetter = New CrystalReportParameterValueSetter(reportDocument)
             With parameterSetter
                 '.SetParameter("selectedDate", _selectedDate)
                 .SetParameter("organizationName", z_CompanyName)
 
             End With
 
-            reportClass.SetDataSource(source)
+            reportDocument.SetDataSource(source)
+            'reportDocument.Refresh()
         End Using
+
+        Dim form = New LaGlobalEmployeeReportForm
+        form.SetReportSource(reportDocument)
+        form.Show()
+
     End Sub
 
-    Private Function ConvertToDataSource(a As IGrouping(Of Integer?, Adjustment)) As BpiInsuranceDateSource
+    Private Function ConvertToDataSource(a As IGrouping(Of Integer?, Adjustment)) As BpiInsuranceDataSource
         Dim e = a.FirstOrDefault.Paystub.Employee
         Dim middleName = If(Not String.IsNullOrWhiteSpace(e.MiddleName), $"{Left(e.MiddleName, 1)}.", String.Empty)
         Dim nameParts = {e.LastName, e.FirstName, middleName}
         Dim fullName = String.Join(", ", nameParts.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray())
 
-        Dim result As New BpiInsuranceDateSource With {
+        Dim result As New BpiInsuranceDataSource With {
             .Column1 = e.EmployeeNo,
             .Column2 = fullName,
             .Column3 = a.Sum(Function(adj) adj.Amount),
@@ -92,7 +94,8 @@ Public Class BpiInsurancePaymentReportProvider
         Return result
     End Function
 
-    Private Class BpiInsuranceDateSource
+    Private Class BpiInsuranceDataSource
+
         'Employee ID
         Public Property Column1 As String
 
@@ -101,7 +104,10 @@ Public Class BpiInsurancePaymentReportProvider
 
         'Payment/Amount
         Public Property Column3 As String
+
         'Selected Month - in a value of date
         Public Property Column4 As String
+
     End Class
+
 End Class

@@ -9,18 +9,22 @@ Public Class CrystalReportParameterValueSetter
     End Sub
 
     Public Sub SetParameter(parameterName As String, parameterValue As Object)
-        Dim parameterFields = _reportDocument.DataDefinition.ParameterFields
-        Dim crParameterFieldDefinition = parameterFields.Item(parameterName)
-        Dim crParameterValues = crParameterFieldDefinition.CurrentValues
-        Dim crParameterDiscreteValue As New ParameterDiscreteValue
+        Try
+            Dim parameterFields = _reportDocument.DataDefinition.ParameterFields
+            Dim crParameterFieldDefinition = parameterFields.Item(parameterName)
+            Dim crParameterValues = crParameterFieldDefinition.CurrentValues
+            Dim crParameterDiscreteValue As New ParameterDiscreteValue
 
-        'Dim parameterFieldNames = parameterFields.OfType(Of ParameterFieldDefinition).Select(Function(p) p.ParameterFieldName).ToList()
+            'Dim parameterFieldNames = parameterFields.OfType(Of ParameterFieldDefinition).Select(Function(p) p.ParameterFieldName).ToList()
 
-        crParameterDiscreteValue.Value = parameterValue
+            crParameterDiscreteValue.Value = parameterValue
 
-        'crParameterValues.Clear()
-        crParameterValues.Add(crParameterDiscreteValue)
-        crParameterFieldDefinition.ApplyCurrentValues(crParameterValues)
+            'crParameterValues.Clear()
+            crParameterValues.Add(crParameterDiscreteValue)
+            crParameterFieldDefinition.ApplyCurrentValues(crParameterValues)
+        Catch ex As Exception
+            MsgBox(ex.Message)
+        End Try
     End Sub
 
     Public Sub SetParameters(parameters As Dictionary(Of String, Object))

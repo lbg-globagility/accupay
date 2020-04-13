@@ -8,7 +8,7 @@ Public Class LaGlobalEmployeeReports
         {LaGlobalEmployeeReportName.BpiInsuranceAmountReport, New BpiInsurancePaymentReportProvider()},
         {LaGlobalEmployeeReportName.EmploymentContractPage, New EmploymentContractReportProvider()},
         {LaGlobalEmployeeReportName.EndofContractReport, New SmDeploymentEndorsementReportProvider()},
-        {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New MonthlyBirthdayCelebrantsReportProvider()},
         {LaGlobalEmployeeReportName.PayrollSummaryByBranch, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.WorkOrder, New WorkOrderReportProvider()}
