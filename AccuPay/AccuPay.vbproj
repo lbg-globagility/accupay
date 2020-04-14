@@ -410,6 +410,12 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
+    <Compile Include="Reports\Reports\LA Global\ActiveEmployeeChecklistReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ActiveEmployeeChecklistReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -449,6 +455,7 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\ActiveEmployeeChecklistReport.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\BpiInsurancePaymentReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\EmploymentContractReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
@@ -531,6 +538,12 @@
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
+      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
@@ -1971,6 +1984,10 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\ActiveEmployeeChecklistReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ActiveEmployeeChecklistReport.vb</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>BpiInsuranceAmountReport.vb</LastGenOutput>
@@ -2029,6 +2046,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
+      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>

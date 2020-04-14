@@ -34,11 +34,10 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
     End Function
 
     Private Async Sub SetDataSource()
-        Dim unemploymentStatus = {"Resigned", "Terminated"}
         Using context = New PayrollContext
             Dim employees = Await context.Employees.
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                Where(Function(e) Not unemploymentStatus.Contains(e.EmploymentStatus)).
+                Where(Function(e) e.IsActive).
                 Where(Function(e) _selectedDate.Month = e.BirthDate.Month).
                 ToListAsync()
 

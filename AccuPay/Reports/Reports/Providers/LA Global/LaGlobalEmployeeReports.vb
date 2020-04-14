@@ -4,7 +4,7 @@ Public Class LaGlobalEmployeeReports
     Private ReadOnly _employee As Employee
 
     Private reportProviders = New Dictionary(Of LaGlobalEmployeeReportName, ILaGlobalEmployeeReport) From {
-        {LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport, New SmDeploymentEndorsementReportProvider()},
+        {LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport, New ActiveEmployeeChecklistReportProvider()},
         {LaGlobalEmployeeReportName.BpiInsuranceAmountReport, New BpiInsurancePaymentReportProvider()},
         {LaGlobalEmployeeReportName.EmploymentContractPage, New EmploymentContractReportProvider()},
         {LaGlobalEmployeeReportName.EndofContractReport, New SmDeploymentEndorsementReportProvider()},
