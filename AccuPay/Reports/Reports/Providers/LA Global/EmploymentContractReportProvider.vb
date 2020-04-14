@@ -34,6 +34,9 @@ Public Class EmploymentContractReportProvider
                 .SetParameter("salary", latestSalary.BasicSalary)
                 .SetParameter("companyName", orgNam)
 
+                Dim area = If(String.IsNullOrWhiteSpace(e.Branch?.Name), String.Empty, e.Branch?.Name)
+                .SetParameter("area", area)
+
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
