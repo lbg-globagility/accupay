@@ -52,13 +52,11 @@ Public Class TimeEntrySummaryForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _calculateBreakTimeLateHours As Boolean
-
-    Private _useNewShift As Boolean
-
     Private _hideMoneyColumns As Boolean
 
     Private _formHasLoaded As Boolean = False
+
+    Private _policy As PolicyHelper
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -76,15 +74,13 @@ Public Class TimeEntrySummaryForm
         tsBtnDeleteTimeEntry.Visible = False
         regenerateTimeEntryButton.Visible = False
 
-        Dim policy As New PolicyHelper
-        _calculateBreakTimeLateHours = policy.ComputeBreakTimeLate
-        _useNewShift = policy.UseShiftSchedule
+        _policy = New PolicyHelper
 
         Await LoadEmployees()
         Await LoadPayPeriods()
 
         _breakTimeBrackets = New List(Of BreakTimeBracket)
-        If _calculateBreakTimeLateHours Then
+        If _policy.ComputeBreakTimeLate Then
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
 
@@ -94,20 +90,16 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub UpdateFormBaseOnPolicy()
-        Using context As New PayrollContext
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        actualButton.Visible = _policy.ShowActual
 
-            Dim showActual = (settings.GetBoolean("Policy.HideActual", True) = True)
+        ColumnBranch.Visible = _policy.PayRateCalculationBasis =
+                                        PayRateCalculationBasis.Branch
 
-            actualButton.Visible = showActual
-
-            CheckIfMoneyColumnsAreGoingToBeHidden(settings)
-
-        End Using
+        CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
 
-    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden(settings As ListOfValueCollection)
+    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
         Using context As New PayrollContext
 
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
@@ -117,7 +109,7 @@ Public Class TimeEntrySummaryForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            If _policy.UseUserLevel = False Then
 
                 Return
 
@@ -137,6 +129,19 @@ Public Class TimeEntrySummaryForm
                             Include(Function(b) b.Division).
                             Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
                             ToList()
+        End Using
+
+    End Function
+
+    Private Function GetCalendarCollection(payPeriod As PayPeriod) As CalendarCollection
+
+        If payPeriod Is Nothing Then Return Nothing
+
+        Using context As New PayrollContext
+            Return PayrollTools.GetCalendarCollection(payPeriod.PayFromDate,
+                                                        payPeriod.PayToDate,
+                                                        context,
+                                                        _policy.PayRateCalculationBasis)
         End Using
 
     End Function
@@ -393,6 +398,11 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
+        Dim calendarCollection As CalendarCollection
+        If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
+            calendarCollection = GetCalendarCollection(payPeriod)
+        End If
+
         Dim sql = <![CDATA[
             SELECT
                 ete.RowID,
@@ -440,12 +450,14 @@ Public Class TimeEntrySummaryForm
                 ofb.OffBusEndTime,
                 ot.OTStartTime,
                 ot.OTEndTIme,
-                IF(payrate.PayType='Regular Day', '', payrate.PayType) `PayType`,
+                payrate.PayType,
                 etd.TimeStampIn,
                 etd.TimeStampOut,
                 l.LeaveStartTime,
                 l.LeaveEndTime,
-                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`
+                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`,
+                ete.BranchID,
+                branch.BranchName
             FROM employeetimeentry ete
             LEFT JOIN (
                 SELECT EmployeeID, DATE,
@@ -498,6 +510,9 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN shift
                 ON employeeshift.ShiftID = shift.RowID
 
+            LEFT JOIN branch
+                ON ete.BranchID = branch.RowID
+
             WHERE ete.EmployeeID = @EmployeeID AND
                 ete.`Date` BETWEEN @DateFrom AND @DateTo
             ORDER BY ete.`Date`;
@@ -512,7 +527,7 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
-                .AddWithValue("@UseNewSchedule", _useNewShift)
+                .AddWithValue("@UseNewSchedule", _policy.UseShiftSchedule)
             End With
 
             Await connection.OpenAsync()
@@ -568,8 +583,15 @@ Public Class TimeEntrySummaryForm
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
                     .HolidayType = reader.GetValue(Of String)("PayType"),
-                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay")
+                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay"),
+                    .BranchID = reader.GetValue(Of Integer?)("BranchID"),
+                    .BranchName = reader.GetValue(Of String)("BranchName")
                 }
+
+                If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
+                    calendarCollection IsNot Nothing Then
+                    timeEntry.UseBranchHolidayType(calendarCollection)
+                End If
 
                 'check first if there is duplicate
                 If timeEntries.
@@ -623,6 +645,12 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+
+        Dim calendarCollection As CalendarCollection
+        If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
+            calendarCollection = GetCalendarCollection(payPeriod)
+        End If
+
         Dim sql = <![CDATA[
             SELECT
                 eta.RowID,
@@ -667,8 +695,10 @@ Public Class TimeEntrySummaryForm
                 employeetimeentrydetails.TimeStampOut,
                 l.LeaveStartTime,
                 l.LeaveEndTime,
-                IF(payrate.PayType='Regular Day', '', payrate.PayType) `PayType`,
-                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`
+                payrate.PayType,
+                IF(@useNewSchedule, IFNULL(shiftschedules.IsRestDay, FALSE), IFNULL(employeeshift.RestDay, FALSE)) `IsRestDay`,
+                ete.BranchID,
+                branch.BranchName
             FROM employeetimeentryactual eta
             LEFT JOIN employeetimeentry ete
                 ON ete.EmployeeID = eta.EmployeeID AND
@@ -716,6 +746,9 @@ Public Class TimeEntrySummaryForm
             LEFT JOIN shift
                 ON shift.RowID = employeeshift.ShiftID
 
+            LEFT JOIN branch
+                ON ete.BranchID = branch.RowID
+
             LEFT JOIN shiftschedules
                 ON shiftschedules.EmployeeID = ete.EmployeeID AND
                 shiftschedules.`Date` = ete.`Date`
@@ -734,7 +767,7 @@ Public Class TimeEntrySummaryForm
                 .AddWithValue("@EmployeeID", employee.RowID)
                 .AddWithValue("@DateFrom", payPeriod.PayFromDate)
                 .AddWithValue("@DateTo", payPeriod.PayToDate)
-                .AddWithValue("@UseNewSchedule", _useNewShift)
+                .AddWithValue("@UseNewSchedule", _policy.UseShiftSchedule)
             End With
 
             Await connection.OpenAsync()
@@ -784,8 +817,15 @@ Public Class TimeEntrySummaryForm
                     .TotalHoursWorked = reader.GetValue(Of Decimal)("TotalHoursWorked"),
                     .TotalDayPay = reader.GetValue(Of Decimal)("TotalDayPay"),
                     .HolidayType = reader.GetValue(Of String)("PayType"),
-                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay")
+                    .IsRestDay = reader.GetValue(Of Boolean)("IsRestDay"),
+                    .BranchID = reader.GetValue(Of Integer?)("BranchID"),
+                    .BranchName = reader.GetValue(Of String)("BranchName")
                 }
+
+                If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch AndAlso
+                    calendarCollection IsNot Nothing Then
+                    timeEntry.UseBranchHolidayType(calendarCollection)
+                End If
 
                 'check first if there is duplicate
                 If timeEntries.
@@ -1063,7 +1103,19 @@ Public Class TimeEntrySummaryForm
         Public Property TotalDayPay As Decimal
 
         Public Property IsRestDay As Boolean
+        Public Property BranchID As Integer?
+        Public Property BranchName As String
+
+        Private _holidayType As String
+
         Public Property HolidayType As String
+            Get
+                Return _holidayType
+            End Get
+            Set(value As String)
+                _holidayType = If(value = "Regular Day", "", value)
+            End Set
+        End Property
 
         Public ReadOnly Property TotalAdditionalPay As Decimal
             Get
@@ -1094,6 +1146,8 @@ Public Class TimeEntrySummaryForm
             Dim abbreviatn As String = String.Empty
             If nameOfHoliday = "regular holiday" Then abbreviatn = "RHol"
             If nameOfHoliday = "special non-working holiday" Then abbreviatn = "SHol"
+            If nameOfHoliday = "double holiday" Then abbreviatn = "DHol"
+            If nameOfHoliday = "regular + special holiday" Then abbreviatn = "RHol+SHol"
             Return abbreviatn
         End Function
 
@@ -1181,6 +1235,44 @@ Public Class TimeEntrySummaryForm
             End Get
         End Property
 
+        Public Sub UseBranchHolidayType(calendarCollection As CalendarCollection)
+
+            Dim currentPayRate = calendarCollection.
+                                        GetCalendar(BranchID).
+                                        Find(EntryDate.Value)
+
+            If TypeOf currentPayRate Is CalendarDay Then
+
+                Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
+
+                If {PayRate.DoubleHoliday,
+                    PayRate.RegularHoliday,
+                    PayRate.SpecialNonWorkingHoliday,
+                    PayRate.RegularDay,
+                    PayRate.RegularDayAndSpecialHoliday}.
+                    Contains(calendarDayName) Then
+
+                    Me.HolidayType = calendarDayName
+                    Return
+                End If
+
+            End If
+
+            If currentPayRate.IsDoubleHoliday Then
+                Me.HolidayType = PayRate.DoubleHoliday
+
+            ElseIf currentPayRate.IsRegularHoliday Then
+                Me.HolidayType = PayRate.RegularHoliday
+
+            ElseIf currentPayRate.IsSpecialNonWorkingHoliday Then
+                Me.HolidayType = PayRate.SpecialNonWorkingHoliday
+
+            ElseIf currentPayRate.IsRegularDay Then
+                Me.HolidayType = PayRate.RegularDay
+            End If
+
+        End Sub
+
     End Class
 
     Private Sub cboYears_SelectedIndexChanged(sender As Object, e As EventArgs)
@@ -1228,7 +1320,7 @@ Public Class TimeEntrySummaryForm
                     .ToolTipIcon = ToolTipIcon.Info
                 }
 
-                If _useNewShift Then
+                If _policy.UseShiftSchedule Then
 
                     Await DeleteNewShift(dateValue, employeeRowId, balloon)
                 Else
@@ -1374,7 +1466,7 @@ Public Class TimeEntrySummaryForm
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 
-        If _calculateBreakTimeLateHours = False Then Return
+        If _policy.ComputeBreakTimeLate = False Then Return
 
         Dim currentRow = timeEntriesDataGridView.Rows(e.RowIndex)
         Dim currentColumn = timeEntriesDataGridView.Columns(e.ColumnIndex)
@@ -1547,7 +1639,7 @@ Public Class TimeEntrySummaryForm
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 
-        If _calculateBreakTimeLateHours = False Then Return
+        If _policy.ComputeBreakTimeLate = False Then Return
 
         'format except the last row
         If e.RowIndex >= timeEntriesDataGridView.Rows.Count - 1 Then Return

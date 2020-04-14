@@ -5,44 +5,64 @@ Namespace Global.AccuPay.Helpers
     Public NotInheritable Class PolicyHelper
 
         Private _policy As TimeEntryPolicy
+        Private _settings As ListOfValueCollection
 
         Public Sub New()
 
             Using context = New PayrollContext()
 
-                Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+                _settings = New ListOfValueCollection(context.ListOfValues.ToList())
 
-                _policy = New TimeEntryPolicy(settings)
+                _policy = New TimeEntryPolicy(_settings)
 
             End Using
 
         End Sub
 
-        Public Function ComputeBreakTimeLate() As Boolean
+        Public ReadOnly Property ComputeBreakTimeLate As Boolean
+            Get
+                Return _policy.ComputeBreakTimeLate
+            End Get
+        End Property
 
-            Return _policy.ComputeBreakTimeLate
+        Public ReadOnly Property UseShiftSchedule As Boolean
+            Get
 
-        End Function
+                Return _policy.UseShiftSchedule
+            End Get
+        End Property
 
-        Public Function UseShiftSchedule() As Boolean
+        Public ReadOnly Property RespectDefaultRestDay As Boolean
+            Get
+                Return _policy.RespectDefaultRestDay
+            End Get
+        End Property
 
-            Return _policy.UseShiftSchedule
+        Public ReadOnly Property ValidateLeaveBalance As Boolean
+            Get
 
-        End Function
+                Return _policy.ValidateLeaveBalance
+            End Get
+        End Property
 
-        Public Function RespectDefaultRestDay() As Boolean
+        Public ReadOnly Property PayRateCalculationBasis As PayRateCalculationBasis
+            Get
+                Return _settings.GetEnum("Pay rate.CalculationBasis",
+                                    PayRateCalculationBasis.Organization)
+            End Get
+        End Property
 
-            Return _policy.RespectDefaultRestDay
+        Public ReadOnly Property ShowActual As Boolean
+            Get
+                Return _settings.GetBoolean("Policy.ShowActual", True)
+            End Get
+        End Property
 
-        End Function
-
-        Public Function ValidateLeaveBalance() As Boolean
-
-            Return _policy.ValidateLeaveBalance
-
-        End Function
-
-
+        Public ReadOnly Property UseUserLevel As Boolean
+            Get
+                Return _settings.GetBoolean("User Policy.UseUserLevel", False)
+            End Get
+        End Property
 
     End Class
 
