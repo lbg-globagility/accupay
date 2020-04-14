@@ -1,6 +1,7 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
@@ -224,6 +225,8 @@ Public Class ImportEmployeeForm
                 Where(Function(p) p.OrganizationID = z_OrganizationID).
                 ToListAsync()
 
+            Dim newEmpList As New List(Of Employee)
+
             For Each model In notExistEmployees
                 Dim position = existingPositions.
                     Where(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job)).
@@ -249,12 +252,33 @@ Public Class ImportEmployeeForm
                 }
 
                 AssignChanges(model, employee)
-
+                newEmpList.Add(employee)
                 context.Employees.Add(employee)
             Next
 
             Try
                 Await context.SaveChangesAsync()
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each item In newEmpList
+
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new employee.",
+                        .EntityId = item.RowID
+                        })
+                Next
+
+                For Each model In employees
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Updated an employee",
+                        .EntityId = model.RowID
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Employee", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+
             Catch ex As Exception
                 logger.Error("EmployeeImportProfile", ex)
                 'Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")

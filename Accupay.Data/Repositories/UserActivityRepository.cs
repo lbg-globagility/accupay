@@ -79,10 +79,14 @@ namespace AccuPay.Data.Repositories
         {
             using (var context = new PayrollContext())
             {
-                foreach (var item in activityItems)
+                if (entityId != 0)
                 {
-                    item.EntityId = entityId;
+                    foreach (var item in activityItems)
+                    {
+                        item.EntityId = entityId;
+                    }
                 }
+
                 context.UserActivities.Add(new UserActivity()
                 {
                     Created = DateTime.Now,

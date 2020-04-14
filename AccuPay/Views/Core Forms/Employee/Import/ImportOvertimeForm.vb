@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -178,6 +179,20 @@ Public Class ImportOvertimeForm
                 Next
 
                 Await context.SaveChangesAsync()
+
+                Dim importlist = New List(Of Data.Entities.UserActivityItem)
+
+                For Each overtime In _overtimes
+                    importlist.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new Overtime.",
+                        .EntityId = CInt(overtime.RowID)
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Overtime", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+
             End Using
 
             Me.IsSaved = True

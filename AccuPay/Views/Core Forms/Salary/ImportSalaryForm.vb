@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -194,6 +195,18 @@ Public Class ImportSalaryForm
                 Next
 
                 Await context.SaveChangesAsync()
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each item In _salaries
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new salary.",
+                        .EntityId = CInt(item.RowID)
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Salary", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 
