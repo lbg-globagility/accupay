@@ -39,19 +39,15 @@ Public Class BpiInsurancePaymentReportProvider
 
             Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()
 
-            Dim productNames = {"Bpi Insurance", "Non Taxable Adjustment"}
+            Dim firstPeriod = periods.FirstOrDefault
+            Dim payrollResource = New PayrollResources(firstPeriod.RowID.Value, firstPeriod.PayFromDate, firstPeriod.PayToDate)
 
-            Dim bpiInsuranceProductIDs = Await context.Products.
-                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                Where(Function(p) p.Category = "Adjustment Type").
-                Where(Function(p) productNames.Contains(p.Name)).
-                Select(Function(p) p.RowID.Value).
-                ToListAsync()
+            Dim bpiInsuranceProductID = payrollResource.BpiInsuranceProduct.RowID.Value
 
             Dim adjustmens = Await context.Adjustments.
                 Include(Function(a) a.Paystub.Employee).
                 Where(Function(a) periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
-                Where(Function(a) bpiInsuranceProductIDs.Contains(a.ProductID.Value)).
+                Where(Function(a) bpiInsuranceProductID = a.ProductID.Value).
                 ToListAsync()
 
             Dim source = adjustmens.
@@ -60,17 +56,13 @@ Public Class BpiInsurancePaymentReportProvider
                 OrderBy(Function(a) a.Column2).
                 ToList()
 
-            'parameterSetter.SetParameter("noRecordFound", Not source.Any())
-
             Dim parameterSetter = New CrystalReportParameterValueSetter(reportDocument)
             With parameterSetter
-                '.SetParameter("selectedDate", _selectedDate)
                 .SetParameter("organizationName", z_CompanyName)
 
             End With
 
             reportDocument.SetDataSource(source)
-            'reportDocument.Refresh()
         End Using
 
         Dim form = New LaGlobalEmployeeReportForm
