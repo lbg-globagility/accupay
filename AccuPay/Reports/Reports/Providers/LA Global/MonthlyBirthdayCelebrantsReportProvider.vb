@@ -56,7 +56,7 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
                 Select(Function(e) New MonthlyBirthdayCelebrantDateSource With {
                 .Column1 = e.EmployeeNo,
                 .Column2 = $"{e.LastName}, {e.FirstName}{If(Not String.IsNullOrWhiteSpace(e.MiddleName), $" {Left(e.MiddleName, 1)}.", String.Empty)}",
-                .Column3 = String.Empty,
+                .Column3 = e.Branch?.Name,
                 .Column4 = e.BirthDate.ToShortDateString(),
                 .Column5 = _selectedDate.ToShortDateString()}).
                 ToList()
