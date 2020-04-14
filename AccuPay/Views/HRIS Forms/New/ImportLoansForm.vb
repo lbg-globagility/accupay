@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -229,6 +230,18 @@ Public Class ImportLoansForm
                 Next
 
                 Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each item In loansWithOutEmployeeObject
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new loan.",
+                        .EntityId = item.RowID
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Loan", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

@@ -56,6 +56,9 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property Status As String
 
         <NotMapped>
+        Public Property IsNew As Boolean
+
+        <NotMapped>
         Public Property StartTimeFull As Date?
             Get
                 'Using Nothing as output on ternary operator does not work

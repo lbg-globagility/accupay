@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -201,6 +202,18 @@ Public Class ImportAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
                                             Await _allowanceRepository.SaveManyAsync(_allowances)
+
+                                            Dim importList = New List(Of Data.Entities.UserActivityItem)
+                                            For Each item In _allowances
+                                                importList.Add(New Data.Entities.UserActivityItem() With
+                                                    {
+                                                    .Description = $"Imported a new allowance.",
+                                                    .EntityId = item.RowID
+                                                    })
+                                            Next
+
+                                            Dim repo = New UserActivityRepository
+                                            repo.CreateRecord(z_User, "Allowance", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                                             Me.IsSaved = True
                                             Me.Cursor = Cursors.Default

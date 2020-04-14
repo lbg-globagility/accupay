@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -329,6 +330,18 @@ Public Class TimeLogsForm2
                 Next
 
                 Await context.SaveChangesAsync()
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each log In timeLogs
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new time log.",
+                        .EntityId = CInt(log.RowID)
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Time Log", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             End Using
         Catch ex As Exception

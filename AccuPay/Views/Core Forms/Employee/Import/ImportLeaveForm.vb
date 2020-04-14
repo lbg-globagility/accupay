@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -148,6 +149,29 @@ Public Class ImportLeaveForm
         Try
             Await _leaveRepository.SaveManyAsync(leaves)
 
+            Dim importList = New List(Of Data.Entities.UserActivityItem)
+            For Each item In leaves
+
+                If item.IsNew Then
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new leave.",
+                        .EntityId = item.RowID
+                        })
+                Else
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Updated a leave",
+                        .EntityId = item.RowID
+                        })
+                End If
+
+
+            Next
+
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Leave", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+
             Return True
         Catch ex As ArgumentException
 
@@ -196,6 +220,7 @@ Public Class ImportLeaveForm
                             .EndDate = model.EndDateProper
                             .LastUpd = Now
                             .LastUpdBy = z_User
+                            .IsNew = False
                         End With
 
                         leaves.Add(leave)
@@ -227,7 +252,9 @@ Public Class ImportLeaveForm
             .EndTime = model.EndTime,
             .EndDate = model.EndDateProper,
             .LeaveType = model.LeaveType,
-            .Status = model.Status}
+            .Status = model.Status,
+            .IsNew = True}
+
     End Function
 
 #End Region
