@@ -18,6 +18,10 @@ Public Class SmDeploymentEndorsementReportProvider
                 .SetParameter("employeeFirstName", e.FirstName)
                 .SetParameter("employeeSssNum", e.SssNo)
                 .SetParameter("gender", e.Gender)
+
+                Dim branchName = e.Branch?.Name
+                .SetParameter("storeLocation", If(String.IsNullOrWhiteSpace(branchName), String.Empty, branchName))
+
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
