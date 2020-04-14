@@ -148,6 +148,7 @@ Namespace Global.AccuPay.Repository
             Return context.Employees.
                 Include(Function(e) e.Position).
                 Include(Function(e) e.Salaries).
+                Include(Function(e) e.Branch).
                 Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
         End Function
 
