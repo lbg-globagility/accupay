@@ -6,6 +6,7 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Helpers
@@ -28,11 +29,13 @@ Public Class EmployeeForm
 
     Private threadArrayList As New List(Of Thread)
 
-    Private _branches As New List(Of Branch)
+    Private _branches As New List(Of Data.Entities.Branch)
 
     Private _payFrequencies As New List(Of PayFrequency)
 
     Private _policy As PolicyHelper
+
+    Private _branchRepository As BranchRepository
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
@@ -1383,6 +1386,7 @@ Public Class EmployeeForm
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
         _policy = New PolicyHelper
+        _branchRepository = New BranchRepository
 
         If if_sysowner_is_benchmark Then
 
@@ -3400,31 +3404,26 @@ Public Class EmployeeForm
 
     Private Sub ShowBranch()
 
-        Using context As New PayrollContext
+        _branches = New List(Of Data.Entities.Branch)
 
-            _branches = New List(Of Branch)
+        If _policy.ShowBranch = False Then
 
-            If _policy.ShowBranch = False Then
+            BranchComboBox.Visible = False
+            BranchLabel.Visible = False
+            AddBranchLinkButton.Visible = False
 
-                BranchComboBox.Visible = False
-                BranchLabel.Visible = False
-                AddBranchLinkButton.Visible = False
+            Return
 
-                Return
+        End If
 
-            End If
+        _branches = _branchRepository.GetAll
 
-            _branches = context.Branches.ToList
+        BranchComboBox.Visible = True
+        BranchLabel.Visible = True
+        AddBranchLinkButton.Visible = True
 
-            BranchComboBox.Visible = True
-            BranchLabel.Visible = True
-            AddBranchLinkButton.Visible = True
-
-            BranchComboBox.DisplayMember = "Name"
-            BranchComboBox.DataSource = _branches
-
-        End Using
-
+        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.DataSource = _branches
     End Sub
 
     Private Sub ShowBPIInsurance()
@@ -3443,7 +3442,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Function GetSelectedBranch() As Branch
+    Private Function GetSelectedBranch() As Data.Entities.Branch
 
         If BranchComboBox.SelectedIndex >= 0 AndAlso BranchComboBox.SelectedIndex < _branches.Count Then
 
@@ -7635,13 +7634,8 @@ Public Class EmployeeForm
 
             End If
 
-            Using context As New PayrollContext
-
-                _branches = Await context.Branches.ToListAsync
-
-                BranchComboBox.DataSource = _branches
-
-            End Using
+            _branches = _branchRepository.GetAll
+            BranchComboBox.DataSource = _branches
 
             Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
 

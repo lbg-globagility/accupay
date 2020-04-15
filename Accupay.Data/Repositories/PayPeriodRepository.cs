@@ -1,5 +1,4 @@
-﻿using AccuPay.Data;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using System.Linq;
 
 namespace AccuPay.Data.Repositories

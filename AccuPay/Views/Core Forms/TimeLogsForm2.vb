@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -819,14 +820,11 @@ Public Class TimeLogsForm2
 
     Private Async Function PopulateBranchComboBox() As Task
 
-        Using context As New PayrollContext
+        colBranchID.ValueMember = "RowID"
+        colBranchID.DisplayMember = "Name"
 
-            colBranchID.ValueMember = "RowID"
-            colBranchID.DisplayMember = "Name"
-
-            colBranchID.DataSource = Await context.Branches.ToListAsync
-
-        End Using
+        Dim branchRepository As New BranchRepository()
+        colBranchID.DataSource = Await branchRepository.GetAllAsync
 
     End Function
 
@@ -1275,7 +1273,6 @@ Public Class TimeLogsForm2
                 Try
 
                     file.Delete()
-
                 Catch ex As Exception
                     MsgBox(getErrExcptn(ex, Me.Name))
                     Return

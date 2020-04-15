@@ -368,7 +368,6 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Employees\Branch.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\IPaystubRate.vb" />
