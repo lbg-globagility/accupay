@@ -623,8 +623,6 @@ Public Class LoginForm
 
     Private Sub Cancel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles Cancel.Click
 
-        'TrialForm.Show()
-
         'Application.Exit()
 
         'Dim n_ListOfValFrm As New ListOfValFrm
