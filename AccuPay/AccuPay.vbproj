@@ -350,6 +350,7 @@
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\IPaystubRate.vb" />
+    <Compile Include="Domain\Payroll\LeaveAccrualCalculator.vb" />
     <Compile Include="Domain\Payroll\LeaveAccrualService.vb" />
     <Compile Include="Domain\Payroll\OvertimeRate.vb" />
     <Compile Include="Domain\Payroll\OvertimeRateService.vb" />

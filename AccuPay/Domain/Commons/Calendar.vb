@@ -91,6 +91,10 @@ Namespace Global.AccuPay.Tools
             End While
         End Function
 
+        Public Shared Function DaysBetween(a As Date, b As Date) As Integer
+            Return (b - a).Duration().Days + 1
+        End Function
+
     End Class
 
 End Namespace
