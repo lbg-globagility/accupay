@@ -40,15 +40,35 @@ Public Class ActiveEmployeeChecklistReportProvider
         Return succeed
     End Function
 
+    Private Function ActiveCheck(e As Employee) As Boolean
+        If Not e.TerminationDate.HasValue Then
+            Return True
+        End If
+
+        Dim employeeStartDate = e.StartDate
+        Dim terminationDate = e.TerminationDate.Value.Date
+
+        If employeeStartDate <= _startDate And terminationDate >= _endDate Then
+            Return True
+        ElseIf _startDate <= employeeStartDate And _endDate >= employeeStartDate Then
+            Return True
+        ElseIf _startDate <= terminationDate And _endDate >= terminationDate Then
+            Return True
+        End If
+
+        Return False
+    End Function
+
     Private Async Sub SetDataSource()
         Using context = New PayrollContext
-            Dim employees = Await context.Employees.
+            Dim records = Await context.Employees.
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Where(Function(e) e.IsActive).
-                Where(Function(e) e.DateRegularized.Value.Date >= _startDate AndAlso e.DateRegularized.Value.Date <= _endDate).
                 ToListAsync()
 
-            recordFound = employees.Any()
+            Dim employees = records.Where(Function(e) ActiveCheck(e)).ToList()
+
+            recordFound = records.Any()
             If Not recordFound Then
                 MessageBox.Show($"No record found.", "Active Employee Checklist Report", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
