@@ -170,7 +170,7 @@ Public Class ImportLeaveForm
             Next
 
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Leave", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            repo.CreateRecord(z_User, "Leave", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             Return True
         Catch ex As ArgumentException

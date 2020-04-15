@@ -206,7 +206,7 @@ Public Class ImportSalaryForm
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Salary", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, "Salary", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

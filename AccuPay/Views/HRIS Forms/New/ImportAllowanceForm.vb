@@ -213,7 +213,7 @@ Public Class ImportAllowanceForm
                                             Next
 
                                             Dim repo = New UserActivityRepository
-                                            repo.CreateRecord(z_User, "Allowance", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                                            repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                                             Me.IsSaved = True
                                             Me.Cursor = Cursors.Default

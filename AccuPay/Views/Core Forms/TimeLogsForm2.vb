@@ -341,7 +341,7 @@ Public Class TimeLogsForm2
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Time Log", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             End Using
         Catch ex As Exception

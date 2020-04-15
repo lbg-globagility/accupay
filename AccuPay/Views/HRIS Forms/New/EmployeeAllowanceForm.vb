@@ -532,50 +532,42 @@ Public Class EmployeeAllowanceForm
         If newAllowance.Type <> oldAllowance.Type Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = CInt(oldAllowance.RowID),
                         .Description = $"Update allowance type from '{oldAllowance.Type}' to '{newAllowance.Type}'"
                         })
         End If
         If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = CInt(oldAllowance.RowID),
                         .Description = $"Update allowance frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'"
                         })
         End If
         If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = CInt(oldAllowance.RowID),
                         .Description = $"Update allowance start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'"
                         })
         End If
         If newAllowance.EffectiveEndDate.ToString <> oldAllowance.EffectiveEndDate.ToString Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = CInt(oldAllowance.RowID),
                         .Description = $"Update allowance end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'"
                         })
         End If
-        'If Not CheckIfBothNullorBothHaveValue(newAllowance.EffectiveEndDate, oldAllowance.EffectiveEndDate) Then
-        '    If newAllowance.EffectiveEndDate IsNot Nothing Then
-        '        changes.Add(New Data.Entities.UserActivityItem() With
-        '                {
-        '                .Description = "Update allowance add end date on " + newAllowance.EffectiveEndDate?.ToShortDateString
-        '                })
-        '    Else
-        '        changes.Add(New Data.Entities.UserActivityItem() With
-        '                {
-        '                .Description = "Update allowance remove end date on " + oldAllowance.EffectiveEndDate?.ToShortDateString
-        '                })
-        '    End If
-        'End If
         If newAllowance.Amount <> oldAllowance.Amount Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = CInt(oldAllowance.RowID),
                         .Description = $"Update allowance amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'"
                         })
         End If
 
         
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Allowance", CInt(oldAllowance.RowID), z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Allowance", z_OrganizationID, "EDIT", changes)
 
         Return True
     End Function

@@ -235,48 +235,55 @@ Public Class EmployeeOvertimeForm
         If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'"
                         })
         End If
         If newOvertime.OTEndDate <> oldOvertime.OTEndDate Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'"
                         })
         End If
         If newOvertime.OTStartTime <> oldOvertime.OTStartTime Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'"
                         })
         End If
         If newOvertime.OTEndTime <> oldOvertime.OTEndTime Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'"
                         })
         End If
         If newOvertime.Reason <> oldOvertime.Reason Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'"
                         })
         End If
         If newOvertime.Comments <> oldOvertime.Comments Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'"
                         })
         End If
         If newOvertime.Status <> oldOvertime.Status Then
             changes.Add(New Data.Entities.UserActivityItem() With
                         {
+                        .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime status from '{oldOvertime.Status}' to '{newOvertime.Status}'"
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Overtime", oldOvertime.RowID, z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Overtime", z_OrganizationID, "EDIT", changes)
 
         Return True
     End Function

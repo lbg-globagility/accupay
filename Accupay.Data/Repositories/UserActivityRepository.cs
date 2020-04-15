@@ -63,30 +63,22 @@ namespace AccuPay.Data.Repositories
                 {
                     new UserActivityItem()
                     {
+                        EntityId = entityId,
                         Description = $"{simpleDescription} {entityName}."
                     }
                 };
 
-            CreateRecord(userId, entityName, entityId, organizationId, recordType, activityItems);
+            CreateRecord(userId, entityName, organizationId, recordType, activityItems);
         }
 
         public void CreateRecord(int userId,
                                     string entityName,
-                                    int entityId,
                                     int organizationId,
                                     string recordType,
                                     List<UserActivityItem> activityItems = null)
         {
             using (var context = new PayrollContext())
             {
-                if (entityId != 0)
-                {
-                    foreach (var item in activityItems)
-                    {
-                        item.EntityId = entityId;
-                    }
-                }
-
                 context.UserActivities.Add(new UserActivity()
                 {
                     Created = DateTime.Now,

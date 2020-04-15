@@ -277,7 +277,7 @@ Public Class ImportEmployeeForm
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Employee", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             Catch ex As Exception
                 logger.Error("EmployeeImportProfile", ex)

@@ -191,7 +191,7 @@ Public Class ImportOvertimeForm
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Overtime", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
             End Using
 

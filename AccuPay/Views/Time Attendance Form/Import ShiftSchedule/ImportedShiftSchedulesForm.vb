@@ -474,7 +474,7 @@ Public Class ImportedShiftSchedulesForm
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Shift Schedule", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, "Shift Schedule", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 succeed = True
             Catch ex As Exception

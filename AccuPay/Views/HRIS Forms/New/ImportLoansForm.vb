@@ -241,7 +241,7 @@ Public Class ImportLoansForm
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Loan", Nothing, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, "Loan", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 
