@@ -25,8 +25,7 @@ CREATE TABLE IF NOT EXISTS `branch` (
   CONSTRAINT `branch_ibfk_1` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
   CONSTRAINT `branch_ibfk_2` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `branch_ibfk_3` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `branch_ibfk_4` FOREIGN KEY (`AddressID`) REFERENCES `address` (`RowID`),
-  CONSTRAINT `branch_ibfk_5` FOREIGN KEY (`AreaID`) REFERENCES `area` (`RowID`)
+  CONSTRAINT `branch_ibfk_4` FOREIGN KEY (`AddressID`) REFERENCES `address` (`RowID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
