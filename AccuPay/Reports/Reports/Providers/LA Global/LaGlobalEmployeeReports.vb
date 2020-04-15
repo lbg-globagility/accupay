@@ -5,9 +5,9 @@ Public Class LaGlobalEmployeeReports
 
     Private reportProviders = New Dictionary(Of LaGlobalEmployeeReportName, ILaGlobalEmployeeReport) From {
         {LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport, New ActiveEmployeeChecklistReportProvider()},
-        {LaGlobalEmployeeReportName.BpiInsuranceAmountReport, New BpiInsurancePaymentReportProvider()},
+        {LaGlobalEmployeeReportName.BpiInsurancePaymentReport, New BpiInsurancePaymentReportProvider()},
         {LaGlobalEmployeeReportName.EmploymentContractPage, New EmploymentContractReportProvider()},
-        {LaGlobalEmployeeReportName.EndofContractReport, New MonthlyEndofContractReportProvider()},
+        {LaGlobalEmployeeReportName.MonthlyEndofContractReport, New MonthlyEndofContractReportProvider()},
         {LaGlobalEmployeeReportName.MonthlyBirthdayReport, New MonthlyBirthdayCelebrantsReportProvider()},
         {LaGlobalEmployeeReportName.PayrollSummaryByBranch, New SmDeploymentEndorsementReportProvider()},
         {LaGlobalEmployeeReportName.SmDeploymentEndorsement, New SmDeploymentEndorsementReportProvider()},
@@ -27,9 +27,9 @@ End Class
 
 Public Enum LaGlobalEmployeeReportName
     ActiveEmployeeChecklistReport
-    BpiInsuranceAmountReport
+    BpiInsurancePaymentReport
     EmploymentContractPage
-    EndofContractReport
+    MonthlyEndofContractReport
     MonthlyBirthdayReport
     PayrollSummaryByBranch
     SmDeploymentEndorsement

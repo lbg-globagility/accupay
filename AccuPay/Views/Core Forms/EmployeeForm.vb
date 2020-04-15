@@ -8031,9 +8031,9 @@ Public Class EmployeeForm
     Private Sub InitializeLaGlobalReportList()
         laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
             {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
-            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsuranceAmountReport},
+            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
             {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
-            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.EndofContractReport},
+            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyEndofContractReport},
             {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
             {PayrollSummaryByBranchToolStripMenuItem.Name, LaGlobalEmployeeReportName.PayrollSummaryByBranch},
             {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
