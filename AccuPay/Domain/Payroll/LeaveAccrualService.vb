@@ -26,38 +26,113 @@ Public Class LeaveAccrualService
                 OrderByDescending(Function(p) p.PayFromDate).
                 FirstOrDefaultAsync()
 
-            Dim sickLeaveType = Await context.Products.
-                Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE).
-                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                FirstOrDefaultAsync()
+            Await UpdateVacationLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear)
+            Await UpdateSickLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear)
 
-            Dim ledger = Await context.LeaveLedgers.
-                Where(Function(l) l.EmployeeID.Value = employee.RowID.Value).
-                Where(Function(l) CBool(l.ProductID.Value = sickLeaveType.RowID)).
-                FirstOrDefaultAsync()
+            'Dim sickLeaveType = Await context.Products.
+            '    Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE).
+            '    Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+            '    FirstOrDefaultAsync()
 
-            Dim lastTransaction = Await context.LeaveTransactions.
-                Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
-                FirstOrDefaultAsync()
+            'Dim ledger = Await context.LeaveLedgers.
+            '    Where(Function(l) l.EmployeeID.Value = employee.RowID.Value).
+            '    Where(Function(l) CBool(l.ProductID.Value = sickLeaveType.RowID)).
+            '    FirstOrDefaultAsync()
 
-            Dim leaveHours = _calculator.Calculate(payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
+            'Dim lastTransaction = Await context.LeaveTransactions.
+            '    Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
+            '    FirstOrDefaultAsync()
 
-            Dim newTransaction = New LeaveTransaction() With {
-                .LeaveLedgerID = ledger.RowID,
-                .EmployeeID = employee.RowID,
-                .CreatedBy = z_User,
-                .OrganizationID = z_OrganizationID,
-                .Type = LeaveTransactionType.Credit,
-                .TransactionDate = payperiod.PayToDate,
-                .Amount = leaveHours,
-                .Balance = lastTransaction.Balance + leaveHours
-            }
+            'Dim leaveHours = _calculator.Calculate(payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
 
-            context.LeaveTransactions.Add(newTransaction)
-            ledger.LastTransaction = newTransaction
+            'Dim newTransaction = New LeaveTransaction() With {
+            '    .LeaveLedgerID = ledger.RowID,
+            '    .EmployeeID = employee.RowID,
+            '    .CreatedBy = z_User,
+            '    .OrganizationID = z_OrganizationID,
+            '    .Type = LeaveTransactionType.Credit,
+            '    .TransactionDate = payperiod.PayToDate,
+            '    .Amount = leaveHours,
+            '    .Balance = lastTransaction.Balance + leaveHours
+            '}
+
+            'context.LeaveTransactions.Add(newTransaction)
+            'ledger.LastTransaction = newTransaction
 
             Await context.SaveChangesAsync()
         End Using
+    End Function
+
+    Private Async Function UpdateVacationLeaveLedger(context As PayrollContext,
+                                                     employee As Employee,
+                                                     payperiod As PayPeriod,
+                                                     firstPayperiodOfYear As PayPeriod,
+                                                     lastPayperiodOfYear As PayPeriod) As Task
+        Dim leaveType = Await context.Products.
+            Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE).
+            Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+            FirstOrDefaultAsync()
+
+        Dim ledger = Await context.LeaveLedgers.
+            Where(Function(l) l.EmployeeID.Value = employee.RowID.Value).
+            Where(Function(l) CBool(l.ProductID.Value = leaveType.RowID)).
+            FirstOrDefaultAsync()
+
+        Dim lastTransaction = Await context.LeaveTransactions.
+            Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
+            FirstOrDefaultAsync()
+
+        Dim leaveHours = _calculator.Calculate(payperiod, employee.VacationLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
+
+        Dim newTransaction = New LeaveTransaction() With {
+            .LeaveLedgerID = ledger.RowID,
+            .EmployeeID = employee.RowID,
+            .CreatedBy = z_User,
+            .OrganizationID = z_OrganizationID,
+            .Type = LeaveTransactionType.Credit,
+            .TransactionDate = payperiod.PayToDate,
+            .Amount = leaveHours,
+            .Balance = lastTransaction.Balance + leaveHours
+        }
+
+        context.LeaveTransactions.Add(newTransaction)
+        ledger.LastTransaction = newTransaction
+    End Function
+
+    Private Async Function UpdateSickLeaveLedger(context As PayrollContext,
+                                                 employee As Employee,
+                                                 payperiod As PayPeriod,
+                                                 firstPayperiodOfYear As PayPeriod,
+                                                 lastPayperiodOfYear As PayPeriod) As Task
+        Dim leaveType = Await context.Products.
+            Where(Function(p) p.PartNo = ProductConstant.VACATION_LEAVE).
+            Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+            FirstOrDefaultAsync()
+
+        Dim ledger = Await context.LeaveLedgers.
+            Where(Function(l) l.EmployeeID.Value = employee.RowID.Value).
+            Where(Function(l) CBool(l.ProductID.Value = leaveType.RowID)).
+            FirstOrDefaultAsync()
+
+        Dim lastTransaction = Await context.LeaveTransactions.
+            Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
+            FirstOrDefaultAsync()
+
+        Dim leaveHours = _calculator.Calculate(payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
+
+        Dim newTransaction = New LeaveTransaction() With {
+            .LeaveLedgerID = ledger.RowID,
+            .EmployeeID = employee.RowID,
+            .CreatedBy = z_User,
+            .OrganizationID = z_OrganizationID,
+            .Type = LeaveTransactionType.Credit,
+            .TransactionDate = payperiod.PayToDate,
+            .Amount = leaveHours,
+            .Balance = lastTransaction.Balance + leaveHours
+        }
+
+        context.LeaveTransactions.Add(newTransaction)
+        ledger.LastTransaction = newTransaction
     End Function
 
 End Class
