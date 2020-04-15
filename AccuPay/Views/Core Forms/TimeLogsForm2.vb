@@ -1272,7 +1272,14 @@ Public Class TimeLogsForm2
             Dim file = New FileInfo(fileName)
 
             If file.Exists() Then
-                file.Delete()
+                Try
+
+                    file.Delete()
+
+                Catch ex As Exception
+                    MsgBox(getErrExcptn(ex, Me.Name))
+                    Return
+                End Try
             End If
 
             Using excelPackage = New ExcelPackage(file)
