@@ -1698,11 +1698,18 @@ Public Class EmployeeForm
                     cboEmpType.Text = .Cells("Column34").Value
 
                     txtNumDepen.Text = Val(.Cells("Column32").Value)
+
+                    Dim radioGender As RadioButton
                     If .Cells("Column19").Value = "Male" Then
                         rdMale.Checked = True
+                        radioGender = rdMale
                     Else
                         rdFMale.Checked = True
+                        radioGender = rdFMale
                     End If
+
+                    Gender_CheckedChanged(radioGender, New EventArgs)
+
                     noCurrCellChange = 0
                     dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
 
@@ -7867,22 +7874,17 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub Gender_CheckedChanged(sender As Object, e As EventArgs) Handles rdMale.CheckedChanged,
+    Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged
-
-        Dim obj_sender = DirectCast(sender, RadioButton)
-
         Dim label_gender = ""
 
         Dim gender As Gender
 
-        If obj_sender.Name = rdMale.Name Then
-            'And obj_sender.Checked Then
+        If sender.Name = rdMale.Name Then
 
             label_gender = "Paternity"
             gender = Gender.Male
-        ElseIf obj_sender.Name = rdFMale.Name Then
-            'And obj_sender.Checked Then
+        ElseIf sender.Name = rdFMale.Name Then
 
             label_gender = "Maternity"
             gender = Gender.Female
@@ -7958,11 +7960,25 @@ Public Class EmployeeForm
 
             cboSalut.Text = String.Empty
             cboSalut.Items.Clear()
+            cboSalut.Items.Add(String.Empty)
             cboSalut.Items.AddRange(salutations)
 
+            Dim currentRow = dgvEmp.CurrentRow
+            If currentRow IsNot Nothing Then
+                With currentRow
+                    If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+
+                        cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                    End If
+                End With
+            End If
+
             Colmn2.Items.Clear()
+            Colmn2.Items.Add(String.Empty)
             Colmn2.Items.AddRange(salutations)
+
         End Using
+
     End Sub
 
     Private Enum Gender
