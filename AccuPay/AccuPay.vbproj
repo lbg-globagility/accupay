@@ -755,7 +755,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Domain\Government\PhilHealthBracket.vb" />
-    <Compile Include="Domain\Government\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Government\SocialSecurityBracket.vb" />
     <Compile Include="Domain\Government\WithholdingTaxBracket.vb" />
     <Compile Include="Views\Core Forms\Independent filing\LeaveForm.designer.vb">

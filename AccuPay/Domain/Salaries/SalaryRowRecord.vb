@@ -14,9 +14,6 @@ Namespace Global.Globagility.AccuPay.Salaries
         <ColumnName("Effective From")>
         Public Property EffectiveFrom As Date?
 
-        <ColumnName("Effective To")>
-        Public Property EffectiveTo As Date?
-
         <ColumnName("Basic Salary")>
         Public Property BasicSalary As Decimal?
 
