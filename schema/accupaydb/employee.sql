@@ -72,7 +72,6 @@ CREATE TABLE IF NOT EXISTS `employee` (
   `AgencyID` int(11) DEFAULT NULL,
   `OffsetBalance` decimal(11,2) DEFAULT '0.00',
   `BranchID` int(11) DEFAULT NULL COMMENT 'this required field for employee - Store Manager || Crew',
-  `AreaID` int(11) DEFAULT NULL COMMENT 'this required field for employee - Area Manager',
   `MinimumOvertime` time DEFAULT '00:00:00',
   PRIMARY KEY (`RowID`),
   UNIQUE KEY `Index 2` (`OrganizationID`,`EmployeeID`),
@@ -89,7 +88,6 @@ CREATE TABLE IF NOT EXISTS `employee` (
   CONSTRAINT `FK_Employee_payfrequency` FOREIGN KEY (`PayFrequencyID`) REFERENCES `payfrequency` (`RowID`),
   CONSTRAINT `FK_Employee_user` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
   CONSTRAINT `FK_Employee_user_2` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
-  CONSTRAINT `FK_employee_area` FOREIGN KEY (`AreaID`) REFERENCES `area` (`RowID`),
   CONSTRAINT `FK_employee_branch` FOREIGN KEY (`BranchID`) REFERENCES `branch` (`RowID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=780 DEFAULT CHARSET=latin1 COMMENT='Employee Table';
 

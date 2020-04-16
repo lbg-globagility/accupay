@@ -64,6 +64,24 @@ Namespace Global.AccuPay.Helpers
             End Get
         End Property
 
+        Public ReadOnly Property DefaultBPIInsurance As Decimal
+            Get
+                Return _settings.GetDecimal("Default.BPIInsurance")
+            End Get
+        End Property
+
+        Public ReadOnly Property ShowBranch As Boolean
+            Get
+                Return _settings.GetBoolean("Employee Policy.ShowBranch", False)
+            End Get
+        End Property
+
+        Public ReadOnly Property UseBPIInsurance As Boolean
+            Get
+                Return _settings.GetBoolean("Employee Policy.UseBPIInsurance", False)
+            End Get
+        End Property
+
     End Class
 
 End Namespace

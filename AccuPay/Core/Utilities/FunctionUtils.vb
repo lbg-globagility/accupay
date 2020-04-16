@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 
 Namespace Global.AccuPay.Utils
 
@@ -42,10 +43,10 @@ Namespace Global.AccuPay.Utils
 
                 Await action()
             Catch ex As ArgumentException
-
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As AccuPayRepositoryException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As Exception
-
                 Debugger.Break()
 
                 If baseExceptionErrorMessage Is Nothing Then

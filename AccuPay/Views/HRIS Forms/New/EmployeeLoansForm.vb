@@ -570,7 +570,12 @@ Public Class EmployeeLoansForm
 
         Dim statusFilter = CreateStatusFilter()
 
-        Me._currentloanSchedules = loanSchedules.Where(statusFilter).ToList
+        If statusFilter Is Nothing Then
+            Me._currentloanSchedules = New List(Of LoanSchedule)
+        Else
+            Me._currentloanSchedules = loanSchedules.Where(statusFilter).ToList
+
+        End If
 
         Me._changedLoanSchedules = Me._currentloanSchedules.CloneListJson()
 

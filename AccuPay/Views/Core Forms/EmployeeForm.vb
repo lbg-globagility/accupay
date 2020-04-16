@@ -9,6 +9,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Enums
+Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -28,9 +29,13 @@ Public Class EmployeeForm
 
     Private threadArrayList As New List(Of Thread)
 
-    Private _branches As New List(Of Branch)
+    Private _branches As New List(Of Data.Entities.Branch)
 
     Private _payFrequencies As New List(Of PayFrequency)
+
+    Private _policy As PolicyHelper
+
+    Private _branchRepository As BranchRepository
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
@@ -892,7 +897,6 @@ Public Class EmployeeForm
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
-
         Catch ex As Exception
             succeed = False
             MsgBox(getErrExcptn(ex, Me.Name))
@@ -1868,6 +1872,9 @@ Public Class EmployeeForm
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
+        _policy = New PolicyHelper
+        _branchRepository = New BranchRepository
+
         If if_sysowner_is_benchmark Then
 
             'only salary and employee tabs should be visible
@@ -1912,6 +1919,7 @@ Public Class EmployeeForm
 
         Using context As New PayrollContext
 
+            'Use user repository
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
 
             If user Is Nothing Then
@@ -1919,9 +1927,7 @@ Public Class EmployeeForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            If _policy.UseUserLevel = False Then
 
                 Return
 
@@ -2531,20 +2537,8 @@ Public Class EmployeeForm
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         chkbxRevealInPayroll.Checked = False
 
-        BPIinsuranceText.Text = GetDefaultBPIInsurance()
+        BPIinsuranceText.Text = _policy.DefaultBPIInsurance
     End Sub
-
-    Private Function GetDefaultBPIInsurance() As Decimal
-
-        Using context As New PayrollContext
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            Return settings.GetDecimal("Default.BPIInsurance")
-
-        End Using
-
-    End Function
 
     Dim PayFreqE_asc As String
 
@@ -3897,62 +3891,45 @@ Public Class EmployeeForm
 
     Private Sub ShowBranch()
 
-        Using context As New PayrollContext
+        _branches = New List(Of Data.Entities.Branch)
 
-            _branches = New List(Of Branch)
+        If _policy.ShowBranch = False Then
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            BranchComboBox.Visible = False
+            BranchLabel.Visible = False
+            AddBranchLinkButton.Visible = False
 
-            Dim showBranch = settings.GetBoolean("Employee Policy.ShowBranch", False)
+            Return
 
-            If showBranch = False Then
+        End If
 
-                BranchComboBox.Visible = False
-                BranchLabel.Visible = False
-                AddBranchLinkButton.Visible = False
+        _branches = _branchRepository.GetAll
 
-                Return
+        BranchComboBox.Visible = True
+        BranchLabel.Visible = True
+        AddBranchLinkButton.Visible = True
 
-            End If
-
-            _branches = context.Branches.ToList
-
-            BranchComboBox.Visible = True
-            BranchLabel.Visible = True
-            AddBranchLinkButton.Visible = True
-
-            BranchComboBox.DisplayMember = "Name"
-            BranchComboBox.DataSource = _branches
-
-        End Using
-
+        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.DataSource = _branches
     End Sub
 
     Private Sub ShowBPIInsurance()
 
-        Using context As New PayrollContext
+        If _policy.ShowBranch = False Then
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            BPIinsuranceText.Visible = False
+            BPIinsuranceLabel.Visible = False
 
-            Dim showBranch = settings.GetBoolean("Employee Policy.UseBPIInsurance", False)
+            Return
 
-            If showBranch = False Then
+        End If
 
-                BPIinsuranceText.Visible = False
-                BPIinsuranceLabel.Visible = False
-
-                Return
-
-            End If
-
-            BPIinsuranceText.Visible = True
-            BPIinsuranceLabel.Visible = True
-
-        End Using
+        BPIinsuranceText.Visible = True
+        BPIinsuranceLabel.Visible = True
 
     End Sub
 
-    Private Function GetSelectedBranch() As Branch
+    Private Function GetSelectedBranch() As Data.Entities.Branch
 
         If BranchComboBox.SelectedIndex >= 0 AndAlso BranchComboBox.SelectedIndex < _branches.Count Then
 
@@ -8161,13 +8138,8 @@ Public Class EmployeeForm
 
             End If
 
-            Using context As New PayrollContext
-
-                _branches = Await context.Branches.ToListAsync
-
-                BranchComboBox.DataSource = _branches
-
-            End Using
+            _branches = _branchRepository.GetAll
+            BranchComboBox.DataSource = _branches
 
             Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
 

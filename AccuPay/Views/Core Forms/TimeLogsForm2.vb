@@ -832,14 +832,11 @@ Public Class TimeLogsForm2
 
     Private Async Function PopulateBranchComboBox() As Task
 
-        Using context As New PayrollContext
+        colBranchID.ValueMember = "RowID"
+        colBranchID.DisplayMember = "Name"
 
-            colBranchID.ValueMember = "RowID"
-            colBranchID.DisplayMember = "Name"
-
-            colBranchID.DataSource = Await context.Branches.ToListAsync
-
-        End Using
+        Dim branchRepository As New BranchRepository()
+        colBranchID.DataSource = Await branchRepository.GetAllAsync
 
     End Function
 
@@ -1285,7 +1282,13 @@ Public Class TimeLogsForm2
             Dim file = New FileInfo(fileName)
 
             If file.Exists() Then
-                file.Delete()
+                Try
+
+                    file.Delete()
+                Catch ex As Exception
+                    MsgBox(getErrExcptn(ex, Me.Name))
+                    Return
+                End Try
             End If
 
             Using excelPackage = New ExcelPackage(file)

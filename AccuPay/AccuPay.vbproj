@@ -368,7 +368,6 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Employees\Branch.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\IPaystubRate.vb" />
@@ -1090,28 +1089,10 @@
     <Compile Include="Views\General Forms\AgencyForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\AreaForm.designer.vb">
-      <DependentUpon>AreaForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AreaForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\General Forms\AuditTrailForm.Designer.vb">
       <DependentUpon>AuditTrailForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\AuditTrailForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\BranchForm.Designer.vb">
-      <DependentUpon>BranchForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\BranchForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\BranchHierarchyForm.designer.vb">
-      <DependentUpon>BranchHierarchyForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\BranchHierarchyForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\ForgotPasswordForm.designer.vb">
@@ -1268,12 +1249,6 @@
       <DependentUpon>dutyshift.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\dutyshift.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\BlankTimeEntryLogs.Designer.vb">
-      <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\BlankTimeEntryLogs.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\importWithholdingTax.Designer.vb">
@@ -1711,12 +1686,6 @@
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.vb">
       <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\TrialForm.Designer.vb">
-      <DependentUpon>TrialForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\USER CONTROLS\TrialForm.vb">
-      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\txtEmployeeFullName.vb">
       <SubType>UserControl</SubType>
@@ -2231,17 +2200,8 @@
     <EmbeddedResource Include="Views\General Forms\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AreaForm.resx">
-      <DependentUpon>AreaForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AuditTrailForm.resx">
       <DependentUpon>AuditTrailForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\BranchForm.resx">
-      <DependentUpon>BranchForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\BranchHierarchyForm.resx">
-      <DependentUpon>BranchHierarchyForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\ForgotPasswordForm.resx">
       <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
@@ -2296,9 +2256,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\AddressClass.resx">
       <DependentUpon>AddressClass.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\BlankTimeEntryLogs.resx">
-      <DependentUpon>BlankTimeEntryLogs.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\BonusGenerator.resx">
       <DependentUpon>BonusGenerator.vb</DependentUpon>
@@ -2582,9 +2539,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\TextBoxDateTime.resx">
       <DependentUpon>TextBoxDateTime.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\TrialForm.resx">
-      <DependentUpon>TrialForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\txtIDOfEmployee.resx">
       <DependentUpon>txtIDOfEmployee.vb</DependentUpon>

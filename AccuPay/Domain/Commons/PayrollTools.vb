@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
@@ -455,14 +456,17 @@ Public Class PayrollTools
                                                     p.Date <= payDateTo).
                                 ToList()
         If calculationBasis = PayRateCalculationBasis.Branch Then
-            Dim branches = context.Branches.ToList()
+            Dim branchRepository As New BranchRepository()
+            Dim branches = branchRepository.GetAll()
 
             Dim calendarDays = context.CalendarDays.
                          Include(Function(t) t.DayType).
                          Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
                          ToList()
 
-            Return New CalendarCollection(payrates, branches, calendarDays)
+            Return New CalendarCollection(payrates,
+                                          DirectCast(branches, ICollection(Of Data.Entities.Branch)),
+                                          calendarDays)
         Else
             Return New CalendarCollection(payrates)
         End If
