@@ -227,52 +227,41 @@ Public Class PayrollTools
                             Optional allowanceFrequency As String = Allowance.FREQUENCY_SEMI_MONTHLY,
                             Optional amount As Decimal = 0,
                             Optional effectiveEndDateShouldBeNull As Boolean = False) _
-        As Task(Of Allowance)
+        As Task(Of Entities.Allowance)
 
         Dim allowanceRepository As New AllowanceRepository
-        Dim productRepository As New ProductRepository
+        Dim productRepository As New Data.Repositories.ProductRepository
 
-        Using context = New PayrollContext()
-            Dim ecolaAllowance As Allowance = Await GetEmployeeEcola(employeeId,
-                                                  payDateFrom,
-                                                  payDateTo,
-                                                  allowanceRepository,
-                                                  context)
+        Dim ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
 
-            If ecolaAllowance Is Nothing Then
+        If ecolaAllowance Is Nothing Then
 
-                Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA))?.RowID
+            Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA, z_OrganizationID, z_User))?.RowID
 
-                Dim effectiveEndDate As Date?
+            Dim effectiveEndDate As Date?
 
-                If effectiveEndDateShouldBeNull Then
+            If effectiveEndDateShouldBeNull Then
 
-                    effectiveEndDate = Nothing
-                Else
-                    effectiveEndDate = Nothing
+                effectiveEndDate = Nothing
+            Else
+                effectiveEndDate = Nothing
 
-                End If
-
-                ecolaAllowance = New Allowance
-                ecolaAllowance.EmployeeID = employeeId
-                ecolaAllowance.ProductID = ecolaProductId
-                ecolaAllowance.AllowanceFrequency = allowanceFrequency
-                ecolaAllowance.EffectiveStartDate = payDateFrom
-                ecolaAllowance.EffectiveEndDate = effectiveEndDate
-                ecolaAllowance.Amount = amount
-
-                Await allowanceRepository.SaveAsync(ecolaAllowance, context)
-                Await context.SaveChangesAsync()
-
-                ecolaAllowance = Await GetEmployeeEcola(employeeId,
-                                                  payDateFrom,
-                                                  payDateTo,
-                                                  allowanceRepository,
-                                                  context)
             End If
 
-            Return ecolaAllowance
-        End Using
+            ecolaAllowance = New Data.Entities.Allowance
+            ecolaAllowance.EmployeeID = employeeId
+            ecolaAllowance.ProductID = ecolaProductId
+            ecolaAllowance.AllowanceFrequency = allowanceFrequency
+            ecolaAllowance.EffectiveStartDate = payDateFrom
+            ecolaAllowance.EffectiveEndDate = effectiveEndDate
+            ecolaAllowance.Amount = amount
+
+            Await allowanceRepository.SaveAsync(organizationID:=z_OrganizationID, userID:=z_User, allowance:=ecolaAllowance)
+
+            ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
+        End If
+
+        Return ecolaAllowance
 
     End Function
 
@@ -300,14 +289,6 @@ Public Class PayrollTools
 
         Return firstPayPeriodOfTheYear?.PayFromDate
 
-    End Function
-
-    Private Shared Async Function GetEmployeeEcola(employeeId As Integer, payDateFrom As Date, payDateTo As Date, allowanceRepository As AllowanceRepository, context As PayrollContext) As Task(Of Allowance)
-        Return Await allowanceRepository.
-                                    GetAllowancesWithPayPeriodBaseQuery(context, payDateFrom, payDateTo).
-                                    Where(Function(a) a.EmployeeID.Value = employeeId).
-                                    Where(Function(a) a.Product.PartNo.ToLower() = ProductConstant.ECOLA).
-                                    FirstOrDefaultAsync
     End Function
 
     Public Shared Sub UpdateLoanSchedule(paypRowID As Integer)

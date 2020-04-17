@@ -1,15 +1,14 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
-Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeAllowanceForm
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -151,7 +150,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
+                                            Await _allowanceRepository.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, currentAllowances:=changedAllowances)
 
                                             For Each item In changedAllowances
                                                 RecordUpdate(item)
@@ -178,7 +177,7 @@ Public Class EmployeeAllowanceForm
                 Me._currentAllowance.ProductID = Nothing
             Else
                 Me._currentAllowance.ProductID = selectedAllowanceType.RowID
-                Me._currentAllowance.Product.PartNo = selectedAllowanceType.PartNo
+                Me._currentAllowance.Product = selectedAllowanceType.CloneJson()
 
                 'force commit to gridview
                 'ForceAllowanceGridViewCommit()
@@ -415,7 +414,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes())
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -580,7 +579,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

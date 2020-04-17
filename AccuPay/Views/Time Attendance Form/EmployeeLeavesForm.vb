@@ -1,5 +1,4 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.ModelData
 Imports AccuPay.Repository
@@ -20,7 +19,7 @@ Public Class EmployeeLeavesForm
 
     Private _leaveRepository As New LeaveRepository
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -370,7 +369,7 @@ Public Class EmployeeLeavesForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
+            Dim repo = New Data.Repositories.UserActivityRepository
             repo.CreateRecord(z_User, "Leave", z_OrganizationID, "EDIT", changes)
             Return True
         End If
@@ -384,7 +383,7 @@ Public Class EmployeeLeavesForm
                                             Async Function()
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
 
-                                                Dim repo As New UserActivityRepository
+                                                Dim repo As New Data.Repositories.UserActivityRepository
                                                 repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)

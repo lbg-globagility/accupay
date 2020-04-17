@@ -21,7 +21,7 @@ Public Class OfficialBusinessForm
 
     Private _employeeRepository As New Repository.EmployeeRepository
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New Data.Repositories.ProductRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 

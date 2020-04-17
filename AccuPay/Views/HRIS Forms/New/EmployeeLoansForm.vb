@@ -1,10 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Repository
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -15,7 +14,7 @@ Public Class EmployeeLoansForm
 
     Private sysowner_is_benchmark As Boolean
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
     Private _productRepository As New ProductRepository
     Private _listOfValueRepository As New ListOfValueRepository
     Private _loanScheduleRepository As New LoanScheduleRepository
@@ -123,7 +122,12 @@ Public Class EmployeeLoansForm
 
         DetailsTabControl.Enabled = False
 
-        If loanSchedulesDataGridView.CurrentRow Is Nothing Then Return
+        If loanSchedulesDataGridView.CurrentRow Is Nothing Then
+
+            AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
+            Return
+
+        End If
 
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
 
@@ -265,7 +269,7 @@ Public Class EmployeeLoansForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-            Async Function()
+            Async Function() As Task
                 Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
 
                 For Each item In changedLoanSchedules
@@ -449,7 +453,7 @@ Public Class EmployeeLoansForm
 
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
 
-            Dim repo As New UserActivityRepository
+            Dim repo As New Data.Repositories.UserActivityRepository
             repo.RecordDelete(z_User, "Loan", CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
 
             Await LoadLoanSchedules(currentEmployee)
@@ -919,7 +923,7 @@ Public Class EmployeeLoansForm
                         })
         End If
 
-        Dim repo = New UserActivityRepository
+        Dim repo = New Data.Repositories.UserActivityRepository
         repo.CreateRecord(z_User, "Loan", z_OrganizationID, "EDIT", changes)
 
         Return True

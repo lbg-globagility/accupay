@@ -1,5 +1,4 @@
-﻿Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
+﻿Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -13,7 +12,7 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -240,8 +239,8 @@ Public Class ImportLoansForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Loan", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                Dim repo = New Data.Repositories.UserActivityRepository
+                repo.CreateRecord(z_User, "Loan", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 
