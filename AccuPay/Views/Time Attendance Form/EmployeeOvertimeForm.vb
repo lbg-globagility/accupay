@@ -425,7 +425,7 @@ Public Class EmployeeOvertimeForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceGridViewCommit()
 
-        Dim overlappingOvertimes = ConflictingOvertime()
+        Dim overlappingOvertimes = ScrutinizedConflictingOvertime(_currentOvertimes)
         Dim hasWorry = overlappingOvertimes.Any()
 
         Dim messageTitle = "Update Overtimes"
@@ -439,6 +439,8 @@ Public Class EmployeeOvertimeForm
                 {overtime1.OTStartTime.Value.ToString(timeFormat)}-{overtime1.OTEndTime.Value.ToString(timeFormat)} {overtime1.OTStartDate.ToShortDateString}-{overtime1.OTEndDate.ToShortDateString}
                 {overtime2.OTStartTime.Value.ToString(timeFormat)}-{overtime2.OTEndTime.Value.ToString(timeFormat)} {overtime2.OTStartDate.ToShortDateString}-{overtime2.OTEndDate.ToShortDateString}",
                         messageTitle)
+
+            SetCurrentOvertimeRow(overtime2)
             Return
         End If
 
@@ -485,51 +487,57 @@ Public Class EmployeeOvertimeForm
                                         End Function)
     End Sub
 
-    Private Function ConflictingOvertime() As List(Of Overtime)
-        Dim overtimeList = _currentOvertimes.
-            GroupBy(Function(ot) ot.OTStartDate).
-            GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
-            Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
-            ToList()
-
-        Dim itHas = False 'overtimeList.Any()
-
-        Dim approved = Overtime.StatusApproved
+    Public Function ScrutinizedConflictingOvertime(otList As List(Of Overtime), Optional otStatus As String = "") As List(Of Overtime)
+        Dim employeeIDs = otList.GroupBy(Function(ot) ot.EmployeeID).Select(Function(id) id.Key).ToList()
 
         Dim overlappingOvertime As New List(Of Overtime)
 
-        For Each ot In overtimeList
-            Dim otStartDate = ot.Key
-            Dim overtimes = _currentOvertimes.
-                Where(Function(o) o.OTStartDate = otStartDate AndAlso o.OTEndDate = ot.OTEndDate).
-                Where(Function(o) o.Status = approved).
-                OrderBy(Function(o) o.OTStartTime).
+        Dim approved = If(String.IsNullOrEmpty(otStatus), Overtime.StatusApproved, otStatus)
+
+        For Each employeeID In employeeIDs
+
+            Dim overtimeList = otList.
+                Where(Function(ot) ot.EmployeeID = employeeID).
+                GroupBy(Function(ot) ot.OTStartDate).
+                GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
+                Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
                 ToList()
-            'OrderBy(Function(o) o.OTEndTime).
 
-            Dim isMoreThanOne = If(overtimes.Any(), overtimes.Count() > 1, False)
-            If Not isMoreThanOne Then Continue For
+            Dim itHas = False 'overtimeList.Any()
 
-            Dim count = overtimes.Count - 1
-            Dim preceedingOvertime = overtimes.FirstOrDefault
-            Dim thisIsIt = preceedingOvertime.EmployeeID.Value = 75 And preceedingOvertime.OTStartDate.Date = New Date(2020, 2, 18)
-            If thisIsIt Then Console.WriteLine("This is it...")
-            For i = 1 To count
-                Dim proceedingOvertime = overtimes(i)
+            For Each ot In overtimeList
+                Dim otStartDate = ot.Key
+                Dim overtimes = otList.
+                    Where(Function(o) o.OTStartDate = otStartDate AndAlso o.OTEndDate = ot.OTEndDate).
+                    Where(Function(o) o.Status = approved).
+                    OrderBy(Function(o) o.OTStartTime).
+                    ToList()
+                'OrderBy(Function(o) o.OTEndTime).
 
-                If preceedingOvertime.OTStartTime.Value < proceedingOvertime.OTStartTime.Value _
-                    AndAlso proceedingOvertime.OTStartTime.Value < preceedingOvertime.OTEndTime.Value Then
+                Dim isMoreThanOne = If(overtimes.Any(), overtimes.Count() > 1, False)
+                If Not isMoreThanOne Then Continue For
 
-                    itHas = True
-                    'SetCurrentOvertimeRow(preceedingOvertime)
-                    SetCurrentOvertimeRow(proceedingOvertime)
+                Dim count = overtimes.Count - 1
+                Dim preceedingOvertime = overtimes.FirstOrDefault
+                'Dim thisIsIt = preceedingOvertime.EmployeeID.Value = 75 And preceedingOvertime.OTStartDate.Date = New Date(2020, 2, 18)
+                'If thisIsIt Then Console.WriteLine("This is it...")
+                For i = 1 To count
+                    Dim proceedingOvertime = overtimes(i)
 
-                    overlappingOvertime.Add(preceedingOvertime)
-                    overlappingOvertime.Add(proceedingOvertime)
-                    Exit For
-                End If
+                    If preceedingOvertime.OTStartTime.Value < proceedingOvertime.OTStartTime.Value _
+                        AndAlso proceedingOvertime.OTStartTime.Value < preceedingOvertime.OTEndTime.Value Then
 
-                preceedingOvertime = proceedingOvertime
+                        itHas = True
+
+                        overlappingOvertime.Add(preceedingOvertime)
+                        overlappingOvertime.Add(proceedingOvertime)
+                        Exit For
+                    End If
+
+                    preceedingOvertime = proceedingOvertime
+                Next
+
+                If itHas Then Exit For
             Next
 
             If itHas Then Exit For

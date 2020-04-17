@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccuPay.Data.Enums;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -81,10 +82,170 @@ namespace AccuPay.Data.Entities
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
 
-        //[ForeignKey("PositionID")]
-        //public virtual Position Position { get; set; }
+        [ForeignKey("PositionID")]
+        public virtual Position Position { get; set; }
 
-        //[ForeignKey("PayFrequencyID")]
-        //public virtual PayFrequency PayFrequency { get; set; }
+        [ForeignKey("PayFrequencyID")]
+        public virtual PayFrequency PayFrequency { get; set; }
+
+        public string MiddleInitial
+        {
+            get
+            {
+                return string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
+            }
+        }
+
+        public bool IsDaily
+        {
+            get
+            {
+                return (EmployeeType.ToLower() == "daily"); // "Daily"
+            }
+        }
+
+        public bool IsMonthly
+        {
+            get
+            {
+                return (EmployeeType.ToLower() == "monthly"); // "Monthly"
+            }
+        }
+
+        public bool IsFixed
+        {
+            get
+            {
+                return (EmployeeType.ToLower() == "fixed"); // "Fixed"
+            }
+        }
+
+        public bool IsWeeklyPaid
+        {
+            get
+            {
+                return PayFrequencyID.Value == (int)PayFrequencyType.Weekly;
+            }
+        }
+
+        public bool IsPremiumInclusive
+        {
+            get
+            {
+                return IsMonthly || IsFixed;
+            }
+        }
+
+        public string FullNameLastNameFirst
+        {
+            get
+            {
+                return $"{LastName}, {FirstName}";
+            }
+        }
+
+        public string FullNameWithMiddleInitialLastNameFirst
+        {
+            get
+            {
+                return $"{LastName}, {FirstName} {MiddleInitial}";
+            }
+        }
+
+        public string FullNameWithMiddleInitial
+        {
+            get
+            {
+                return $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";
+            }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                return $"{FirstName} {LastName}";
+            }
+        }
+
+        public string EmployeeIdWithPositionAndEmployeeType
+        {
+            get
+            {
+                return $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary";
+            }
+        }
+
+        public bool IsUnderAgency
+        {
+            get
+            {
+                return AgencyID.HasValue;
+            }
+        }
+
+        public string SssSchedule
+        {
+            get
+            {
+                return IsUnderAgency ? Position?.Division?.AgencySssDeductionSchedule : Position?.Division?.SssDeductionSchedule;
+            }
+        }
+
+        public string PhilHealthSchedule
+        {
+            get
+            {
+                return IsUnderAgency ? Position?.Division?.AgencyPhilHealthDeductionSchedule : Position?.Division?.PhilHealthDeductionSchedule;
+            }
+        }
+
+        public string PagIBIGSchedule
+        {
+            get
+            {
+                return IsUnderAgency ? Position?.Division?.AgencyPagIBIGDeductionSchedule : Position?.Division?.PagIBIGDeductionSchedule;
+            }
+        }
+
+        public string WithholdingTaxSchedule
+        {
+            get
+            {
+                return IsUnderAgency ? Position?.Division?.AgencyWithholdingTaxSchedule : Position?.Division?.WithholdingTaxSchedule;
+            }
+        }
+
+        public bool IsActive
+        {
+            get
+            {
+                return IsResigned == false && IsTerminated == false && IsRetired == false;
+            }
+        }
+
+        public bool IsResigned
+        {
+            get
+            {
+                return EmploymentStatus.Trim().ToUpper() == "RESIGNED";
+            }
+        }
+
+        public bool IsTerminated
+        {
+            get
+            {
+                return EmploymentStatus.Trim().ToUpper() == "TERMINATED";
+            }
+        }
+
+        public bool IsRetired
+        {
+            get
+            {
+                return EmploymentStatus.ToUpper().Trim() == "RETIRED";
+            }
+        }
     }
 }

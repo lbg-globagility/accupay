@@ -24,7 +24,7 @@ Public Class SalaryTab
 
     Private _isSystemOwnerBenchMark As Boolean
 
-    Private _ecolaAllowance As Allowance
+    Private _ecolaAllowance As Data.Entities.Allowance
 
     Public Property BasicSalary As Decimal
         Get

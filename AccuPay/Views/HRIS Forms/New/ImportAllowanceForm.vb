@@ -1,6 +1,6 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Entities
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
@@ -28,7 +28,7 @@ Public Class ImportAllowanceForm
 
         Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
-        Me._allowanceTypeList = Await _productRepository.GetAllowanceTypes()
+        Me._allowanceTypeList = Await _productRepository.GetAllowanceTypes(z_OrganizationID)
 
         AllowancesDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -68,7 +68,7 @@ Public Class ImportAllowanceForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
 
             If employee Is Nothing Then
 
@@ -92,7 +92,7 @@ Public Class ImportAllowanceForm
 
             End If
 
-            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceType(record.Type)
+            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceType(record.Type, z_OrganizationID, z_User)
 
             If allowanceType Is Nothing Then
 
@@ -200,7 +200,7 @@ Public Class ImportAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(_allowances)
+                                            Await _allowanceRepository.SaveManyAsync(z_OrganizationID, z_User, _allowances)
 
                                             Me.IsSaved = True
                                             Me.Cursor = Cursors.Default

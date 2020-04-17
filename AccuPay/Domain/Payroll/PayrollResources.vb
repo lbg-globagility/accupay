@@ -57,7 +57,7 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
-    Private _allowances As ICollection(Of Allowance)
+    Private _allowances As ICollection(Of Data.Entities.Allowance)
 
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
@@ -153,7 +153,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Allowances As ICollection(Of Allowance)
+    Public ReadOnly Property Allowances As ICollection(Of Data.Entities.Allowance)
         Get
             Return _allowances
         End Get
@@ -495,14 +495,9 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Try
-            Using context = New PayrollContext(logger)
-                Dim query As IQueryable(Of Allowance) = New AllowanceRepository().
-                                                GetAllowancesWithPayPeriodBaseQuery(context,
-                                                                       _payDateFrom:=_payDateFrom,
-                                                                       _payDateTo:=_payDateTo)
+            Dim allowanceRepo = New Data.Repositories.AllowanceRepository()
 
-                _allowances = Await query.ToListAsync()
-            End Using
+            _allowances = Await (allowanceRepo.GetByPayPeriodWithProduct(organizationID:=z_OrganizationID, payDateFrom:=_payDateFrom, payDateTo:=_payDateTo))
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
         End Try

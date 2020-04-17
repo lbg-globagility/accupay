@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
 Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeAllowanceForm
 
@@ -150,7 +150,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
+                                            Await _allowanceRepository.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, currentAllowances:=changedAllowances)
 
                                             ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
 
@@ -407,7 +407,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes())
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -513,7 +513,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

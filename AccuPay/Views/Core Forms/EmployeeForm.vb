@@ -7898,7 +7898,6 @@ Public Class EmployeeForm
             Label149.Text = label_gender
         End If
 
-
     End Sub
 
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting

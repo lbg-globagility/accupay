@@ -441,7 +441,6 @@
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Repositories\AllowanceRepository.vb" />
     <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DayTypeRepository.vb" />
