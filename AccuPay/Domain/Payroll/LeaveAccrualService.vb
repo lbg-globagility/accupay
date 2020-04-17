@@ -82,7 +82,7 @@ Public Class LeaveAccrualService
             Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
             FirstOrDefaultAsync()
 
-        Dim leaveHours = _calculator.Calculate(payperiod, employee.VacationLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
+        Dim leaveHours = _calculator.Calculate(employee, payperiod, employee.VacationLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
 
         Dim newTransaction = New LeaveTransaction() With {
             .LeaveLedgerID = ledger.RowID,
@@ -118,7 +118,7 @@ Public Class LeaveAccrualService
             Where(Function(t) t.RowID.Value = ledger.LastTransactionID.Value).
             FirstOrDefaultAsync()
 
-        Dim leaveHours = _calculator.Calculate(payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
+        Dim leaveHours = _calculator.Calculate(employee, payperiod, employee.SickLeaveAllowance, firstPayperiodOfYear, lastPayperiodOfYear)
 
         Dim newTransaction = New LeaveTransaction() With {
             .LeaveLedgerID = ledger.RowID,

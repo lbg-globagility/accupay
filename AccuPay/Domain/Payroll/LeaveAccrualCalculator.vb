@@ -6,25 +6,40 @@ Imports AccuPay.Utilities
 
 Public Class LeaveAccrualCalculator
 
-    Public Function Calculate(currentPayperiod As PayPeriod,
+    Public Function Calculate(employee As Employee,
+                              currentPayperiod As PayPeriod,
                               leaveAllowance As Decimal,
                               firstPayperiodOfYear As PayPeriod,
                               lastPayperiodOfYear As PayPeriod) As Decimal
         Dim daysInYear = Calendar.DaysBetween(firstPayperiodOfYear.PayFromDate, lastPayperiodOfYear.PayToDate)
 
-        Dim startDateOfYear = firstPayperiodOfYear.PayFromDate
+        If currentPayperiod.PayFromDate < employee.StartDate Then
+            Dim daysInCutoff = Calendar.DaysBetween(employee.StartDate, currentPayperiod.PayToDate)
+            Dim leaveHours = ComputeTotalLeave(daysInCutoff, daysInYear, leaveAllowance)
 
-        Dim daysSinceLastCutoff = Calendar.DaysBetween(startDateOfYear, currentPayperiod.PayFromDate.AddDays(-1))
-        Dim totalSinceLastCutoff = ComputeTotalLeave(daysSinceLastCutoff, daysInYear, leaveAllowance)
+            Return leaveHours
+        End If
 
-        Dim daysSinceCurrentCutoff = Calendar.DaysBetween(startDateOfYear, currentPayperiod.PayToDate)
-        Dim totalSinceCurrentCutoff = ComputeTotalLeave(daysSinceCurrentCutoff, daysInYear, leaveAllowance)
+        If currentPayperiod.RowID = firstPayperiodOfYear.RowID Then
+            Dim daysInCutoff = Calendar.DaysBetween(currentPayperiod.PayFromDate, currentPayperiod.PayToDate)
+            Dim leaveHours = ComputeTotalLeave(daysInCutoff, daysInYear, leaveAllowance)
 
-        ' The difference between the total of the last cutoff and the total for the current cutoff will be the
-        ' actual leave hours to be given.
-        Dim leaveForCutoff = totalSinceCurrentCutoff - totalSinceLastCutoff
+            Return leaveHours
+        Else
+            Dim startDateOfYear = firstPayperiodOfYear.PayFromDate
 
-        Return leaveForCutoff
+            Dim daysSinceLastCutoff = Calendar.DaysBetween(startDateOfYear, currentPayperiod.PayFromDate.AddDays(-1))
+            Dim totalSinceLastCutoff = ComputeTotalLeave(daysSinceLastCutoff, daysInYear, leaveAllowance)
+
+            Dim daysSinceCurrentCutoff = Calendar.DaysBetween(startDateOfYear, currentPayperiod.PayToDate)
+            Dim totalSinceCurrentCutoff = ComputeTotalLeave(daysSinceCurrentCutoff, daysInYear, leaveAllowance)
+
+            ' The difference between the total of the last cutoff and the total for the current cutoff will be the
+            ' actual leave hours to be given.
+            Dim leaveHours = totalSinceCurrentCutoff - totalSinceLastCutoff
+
+            Return leaveHours
+        End If
     End Function
 
     Private Function ComputeTotalLeave(daysPassed As Integer, daysInYear As Integer, leaveAllowance As Decimal) As Decimal
