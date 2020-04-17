@@ -24,6 +24,8 @@ Public Class PayrollTools
 
     Public Const PayFrequencyWeeklyId As Integer = 4
 
+    Public Shared ReadOnly MinimumMicrosoftDate As New Date(1753, 1, 1)
+
     Private Const PotentialLastWorkDay As Integer = 7
 
     Public Shared Function GetEmployeeMonthlyRate(
