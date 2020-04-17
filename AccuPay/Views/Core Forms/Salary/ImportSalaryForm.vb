@@ -3,11 +3,10 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
+Imports AccuPay.Payroll
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Globagility.AccuPay.Government
 Imports Globagility.AccuPay.Salaries
-Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
 
 Public Class ImportSalaryForm
@@ -73,6 +72,13 @@ Public Class ImportSalaryForm
                     Continue For
                 End If
 
+                If record.EffectiveFrom IsNot Nothing AndAlso
+                    record.EffectiveFrom.Value < PayrollTools.MinimumMicrosoftDate Then
+                    record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+                    rejectedRecords.Add(record)
+                    Continue For
+                End If
+
                 Dim lastSalary = context.Salaries.
                     Where(Function(s) Nullable.Equals(employee.RowID, s.EmployeeID)).
                     OrderByDescending(Function(s) s.EffectiveTo).
@@ -96,10 +102,13 @@ Public Class ImportSalaryForm
                     .EmployeeID = employee.RowID,
                     .PositionID = employee.PositionID,
                     .EffectiveFrom = record.EffectiveFrom.Value,
-                    .EffectiveTo = record.EffectiveTo,
                     .BasicSalary = record.BasicSalary.Value,
                     .AllowanceSalary = record.AllowanceSalary,
-                    .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True)
+                    .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
+                    .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
+                    .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
+                    .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                    .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
                 }
 
                 _salaries.Add(salary)
@@ -115,6 +124,7 @@ Public Class ImportSalaryForm
         SaveButton.Enabled = _salaries.Count > 0
 
         SalaryDataGrid.DataSource = salaryViewModels
+        RejectedRecordsGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.DataSource = rejectedRecords
     End Sub
 
@@ -167,29 +177,8 @@ Public Class ImportSalaryForm
         Try
 
             Using context = New PayrollContext()
-                Dim philHealthBrackets = Await context.PhilHealthBrackets.ToListAsync()
-                Dim philHealthConfig = Await context.ListOfValues.Where(Function(t) t.Type = "PhilHealth").ToListAsync()
-                Dim philHealthCalculator = New PhilHealthCalculator(philHealthConfig, philHealthBrackets)
-
                 For Each salary In _salaries
-                    Dim employee = Await context.Employees.
-                        FirstOrDefaultAsync(Function(emp) Nullable.Equals(emp.RowID, salary.EmployeeID))
-
                     salary.TotalSalary = salary.BasicSalary + salary.AllowanceSalary
-
-                    Dim monthlyRate = 0D
-                    If employee.EmployeeType = "Monthly" Or employee.EmployeeType = "Fixed" Then
-                        monthlyRate = salary.BasicSalary
-                    ElseIf employee.EmployeeType = "Daily" Then
-                        Dim workDaysPerMonth = PayrollTools.GetWorkDaysPerMonth(employee.WorkDaysPerYear)
-
-                        monthlyRate = salary.BasicSalary * workDaysPerMonth
-                    End If
-
-                    salary.PhilHealthDeduction = philHealthCalculator.Calculate(monthlyRate)
-
-                    ' Set the pagibig amount to the default
-                    salary.HDMFAmount = 100D
 
                     context.Salaries.Add(salary)
                 Next
@@ -252,12 +241,6 @@ Public Class ImportSalaryForm
         Public ReadOnly Property EffectiveFrom As Date
             Get
                 Return _salary.EffectiveFrom
-            End Get
-        End Property
-
-        Public ReadOnly Property EffectiveTo As Date?
-            Get
-                Return _salary.EffectiveTo
             End Get
         End Property
 

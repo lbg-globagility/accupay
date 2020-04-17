@@ -13,7 +13,7 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -255,6 +255,8 @@ Public Class ImportLoansForm
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
         Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan)
+
+        If fileInfo Is Nothing Then Return
 
         Using package As New ExcelPackage(fileInfo)
             Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")

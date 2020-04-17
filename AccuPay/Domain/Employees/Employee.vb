@@ -58,7 +58,7 @@ Namespace Global.AccuPay.Entity
         Public Property OtherLeaveBalance As Decimal Implements IEmployee.OtherLeaveBalance
 
         <Column("LeaveAllowance")>
-        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.LeaveAllowance
+        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.VacationLeaveAllowance
 
         Public Property SickLeaveAllowance As Decimal Implements IEmployee.SickLeaveAllowance
         Public Property MaternityLeaveAllowance As Decimal Implements IEmployee.MaternityLeaveAllowance
@@ -89,7 +89,6 @@ Namespace Global.AccuPay.Entity
         Public Property AdvancementPoints As Integer Implements IEmployee.AdvancementPoints
         Public Property BPIInsurance As Decimal Implements IEmployee.BPIInsurance
         Public Property BranchID As Integer?
-        Public Overridable Property Branch As Branch
 
         <ForeignKey("PositionID")>
         Public Overridable Property Position As Position

@@ -11,7 +11,7 @@ Public Class ImportAllowanceForm
 
     Private _allowances As List(Of Allowance)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 

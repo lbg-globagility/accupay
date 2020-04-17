@@ -1,9 +1,9 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Repository
-Imports AccuPay.Utils
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
+Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Utils
 
 Public Class EmployeeOvertimeForm
 
@@ -19,9 +19,7 @@ Public Class EmployeeOvertimeForm
 
     Private _overtimeRepository As New OvertimeRepository
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -646,4 +644,5 @@ Public Class EmployeeOvertimeForm
         Dim userActivity As New UserActivityForm("Overtime")
         userActivity.ShowDialog()
     End Sub
+
 End Class

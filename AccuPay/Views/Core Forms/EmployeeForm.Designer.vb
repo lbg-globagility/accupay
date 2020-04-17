@@ -127,6 +127,7 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.Panel4 = New System.Windows.Forms.Panel()
         Me.BPIinsuranceText = New System.Windows.Forms.TextBox()
         Me.BPIinsuranceLabel = New System.Windows.Forms.Label()
         Me.dtpRegularizationDate = New System.Windows.Forms.DateTimePicker()
@@ -921,6 +922,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.SuspendLayout
         Me.SplitContainer2.Panel2.SuspendLayout
         Me.SplitContainer2.SuspendLayout
+        Me.Panel4.SuspendLayout
         Me.LeaveGroupBox.SuspendLayout
         Me.GroupBox1.SuspendLayout
         Me.Panel1.SuspendLayout
@@ -1009,7 +1011,7 @@ Partial Class EmployeeForm
         '
         Me.rdMale.AutoSize = True
         Me.rdMale.Checked = True
-        Me.rdMale.Location = New System.Drawing.Point(128, 141)
+        Me.rdMale.Location = New System.Drawing.Point(3, 7)
         Me.rdMale.Name = "rdMale"
         Me.rdMale.Size = New System.Drawing.Size(48, 17)
         Me.rdMale.TabIndex = 5
@@ -1020,7 +1022,7 @@ Partial Class EmployeeForm
         'rdFMale
         '
         Me.rdFMale.AutoSize = True
-        Me.rdFMale.Location = New System.Drawing.Point(182, 141)
+        Me.rdFMale.Location = New System.Drawing.Point(57, 7)
         Me.rdFMale.Name = "rdFMale"
         Me.rdFMale.Size = New System.Drawing.Size(59, 17)
         Me.rdFMale.TabIndex = 5
@@ -1495,6 +1497,7 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.Panel4)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceText)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceLabel)
         Me.SplitContainer2.Panel1.Controls.Add(Me.dtpRegularizationDate)
@@ -1574,9 +1577,7 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label3)
         Me.SplitContainer2.Panel1.Controls.Add(Me.cboPayFreq)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label17)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.rdMale)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label2)
-        Me.SplitContainer2.Panel1.Controls.Add(Me.rdFMale)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Label18)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtDivisionName)
         Me.SplitContainer2.Panel1.Controls.Add(Me.txtNName)
@@ -1621,6 +1622,15 @@ Partial Class EmployeeForm
         Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
+        '
+        'Panel4
+        '
+        Me.Panel4.Controls.Add(Me.rdFMale)
+        Me.Panel4.Controls.Add(Me.rdMale)
+        Me.Panel4.Location = New System.Drawing.Point(128, 134)
+        Me.Panel4.Name = "Panel4"
+        Me.Panel4.Size = New System.Drawing.Size(168, 28)
+        Me.Panel4.TabIndex = 542
         '
         'BPIinsuranceText
         '
@@ -8380,6 +8390,7 @@ Partial Class EmployeeForm
         Me.DataGridViewTextBoxColumn134.HeaderText = "Last Name"
         Me.DataGridViewTextBoxColumn134.Name = "DataGridViewTextBoxColumn134"
         Me.DataGridViewTextBoxColumn134.ReadOnly = True
+        Me.DataGridViewTextBoxColumn134.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         Me.DataGridViewTextBoxColumn134.Visible = False
         '
         'DataGridViewTextBoxColumn135
@@ -8931,6 +8942,8 @@ Partial Class EmployeeForm
         Me.SplitContainer2.Panel2.PerformLayout
         CType(Me.SplitContainer2, System.ComponentModel.ISupportInitialize).EndInit
         Me.SplitContainer2.ResumeLayout(False)
+        Me.Panel4.ResumeLayout(False)
+        Me.Panel4.PerformLayout
         Me.LeaveGroupBox.ResumeLayout(False)
         Me.LeaveGroupBox.PerformLayout
         Me.GroupBox1.ResumeLayout(False)
@@ -9868,4 +9881,5 @@ Partial Class EmployeeForm
     Friend WithEvents UserActivityDisciplinaryActionToolStripButton As ToolStripButton
     Friend WithEvents dtpEvaluationDate As DateTimePicker
     Friend WithEvents dtpRegularizationDate As DateTimePicker
+    Friend WithEvents Panel4 As Panel
 End Class

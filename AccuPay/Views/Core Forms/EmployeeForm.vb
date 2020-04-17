@@ -497,7 +497,6 @@ Public Class EmployeeForm
 
 #End Region
 
-
 #Region "Personal Profile"
 
     Public positn As New AutoCompleteStringCollection
@@ -804,7 +803,7 @@ Public Class EmployeeForm
         End If
         Dim null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
-        Dim oldEmployee As Employee = Nothing
+        Dim oldEmployee As Data.Entities.Employee = Nothing
 
         Dim succeed As Boolean = False
         Try
@@ -1049,22 +1048,21 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
-    Private Shared Function GetOldEmployee(employee_RowID As Object) As Employee
-        Dim oldEmployee As Employee
+    Private Shared Function GetOldEmployee(employee_RowID As Object) As Data.Entities.Employee
 
-        Using context = New PayrollContext()
-            oldEmployee = context.Employees.
-                                Include(Function(emp) emp.PayFrequency).
-                                Include(Function(emp) emp.Position).
-                                Include(Function(emp) emp.Position.Division).
-                                Include(Function(emp) emp.Branch).
-                                Where(Function(emp) Equals(emp.RowID, employee_RowID)).FirstOrDefault
+        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+
+            Return employeeBuilder.
+                    WithPayFrequency().
+                    WithPosition().
+                    WithBranch().
+                    FirstOrDefault(employee_RowID)
+
         End Using
 
-        Return oldEmployee
     End Function
 
-    Private Function RecordUpdateEmployee(employee_RowID As Object, oldEmployee As Employee) As Boolean
+    Private Function RecordUpdateEmployee(employee_RowID As Object, oldEmployee As Data.Entities.Employee) As Boolean
 
         If oldEmployee Is Nothing Then Return False
 
@@ -1523,6 +1521,7 @@ Public Class EmployeeForm
 
         Return False
     End Function
+
     Private Async Sub SetEmployeeGridDataRow(rowIndex As Integer)
         Dim gridRow = dgvEmp.Rows(rowIndex)
         Using command = New MySqlCommand("CALL `SEARCH_employeeprofile`(@organizationID, @employeeID, '', '', 0);",
@@ -2185,11 +2184,18 @@ Public Class EmployeeForm
                     cboEmpType.Text = .Cells("Column34").Value
 
                     txtNumDepen.Text = Val(.Cells("Column32").Value)
+
+                    Dim radioGender As RadioButton
                     If .Cells("Column19").Value = "Male" Then
                         rdMale.Checked = True
+                        radioGender = rdMale
                     Else
                         rdFMale.Checked = True
+                        radioGender = rdFMale
                     End If
+
+                    Gender_CheckedChanged(radioGender, New EventArgs)
+
                     noCurrCellChange = 0
                     dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
 
@@ -8391,22 +8397,17 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub Gender_CheckedChanged(sender As Object, e As EventArgs) Handles rdMale.CheckedChanged,
+    Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged
-
-        Dim obj_sender = DirectCast(sender, RadioButton)
-
         Dim label_gender = ""
 
         Dim gender As Gender
 
-        If obj_sender.Name = rdMale.Name Then
-            'And obj_sender.Checked Then
+        If sender.Name = rdMale.Name Then
 
             label_gender = "Paternity"
             gender = Gender.Male
-        ElseIf obj_sender.Name = rdFMale.Name Then
-            'And obj_sender.Checked Then
+        ElseIf sender.Name = rdFMale.Name Then
 
             label_gender = "Maternity"
             gender = Gender.Female
@@ -8482,11 +8483,25 @@ Public Class EmployeeForm
 
             cboSalut.Text = String.Empty
             cboSalut.Items.Clear()
+            cboSalut.Items.Add(String.Empty)
             cboSalut.Items.AddRange(salutations)
 
+            Dim currentRow = dgvEmp.CurrentRow
+            If currentRow IsNot Nothing Then
+                With currentRow
+                    If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+
+                        cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                    End If
+                End With
+            End If
+
             Colmn2.Items.Clear()
+            Colmn2.Items.Add(String.Empty)
             Colmn2.Items.AddRange(salutations)
+
         End Using
+
     End Sub
 
     Private Enum Gender

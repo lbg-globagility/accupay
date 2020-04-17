@@ -26,6 +26,9 @@ Namespace Global.AccuPay.Helpers
                 File.Copy(template, saveFileDialogHelperOutPut.FileInfo.FullName)
 
                 Process.Start(saveFileDialogHelperOutPut.FileInfo.FullName)
+            Catch ex As IOException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()
@@ -67,6 +70,9 @@ Namespace Global.AccuPay.Helpers
                 End Using
 
                 Return fileInfo
+            Catch ex As IOException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As Exception
 
                 MessageBoxHelper.DefaultErrorMessage()

@@ -15,7 +15,7 @@ Public Class EmployeeLoansForm
 
     Private sysowner_is_benchmark As Boolean
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
     Private _productRepository As New ProductRepository
     Private _listOfValueRepository As New ListOfValueRepository
     Private _loanScheduleRepository As New LoanScheduleRepository
@@ -908,7 +908,6 @@ Public Class EmployeeLoansForm
                         .Description = $"Update loan comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'"
                         })
         End If
-
 
         Dim repo = New UserActivityRepository
         repo.CreateRecord(z_User, "Loan", z_OrganizationID, "EDIT", changes)

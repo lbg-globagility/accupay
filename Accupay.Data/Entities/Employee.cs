@@ -52,7 +52,10 @@ namespace AccuPay.Data.Entities
         public decimal SickLeaveBalance { get; set; }
         public decimal MaternityLeaveBalance { get; set; }
         public decimal OtherLeaveBalance { get; set; }
-        public decimal LeaveAllowance { get; set; }
+
+        [Column("LeaveAllowance")]
+        public decimal VacationLeaveAllowance { get; set; }
+
         public decimal SickLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
         public decimal OtherLeaveAllowance { get; set; }
@@ -81,10 +84,13 @@ namespace AccuPay.Data.Entities
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
 
-        //[ForeignKey("PositionID")]
-        //public virtual Position Position { get; set; }
+        [ForeignKey("PositionID")]
+        public virtual Position Position { get; set; }
 
-        //[ForeignKey("PayFrequencyID")]
-        //public virtual PayFrequency PayFrequency { get; set; }
+        [ForeignKey("PayFrequencyID")]
+        public virtual PayFrequency PayFrequency { get; set; }
+
+        [ForeignKey("BranchID")]
+        public virtual Branch Branch { get; set; }
     }
 }

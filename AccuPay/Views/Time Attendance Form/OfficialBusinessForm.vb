@@ -1,9 +1,9 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Repository
-Imports AccuPay.Utils
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
+Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Utils
 
 Public Class OfficialBusinessForm
 
@@ -19,7 +19,7 @@ Public Class OfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -555,4 +555,5 @@ Public Class OfficialBusinessForm
         Dim userActivity As New UserActivityForm("Official Business")
         userActivity.ShowDialog()
     End Sub
+
 End Class

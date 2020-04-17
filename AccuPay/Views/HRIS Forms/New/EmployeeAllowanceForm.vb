@@ -1,15 +1,15 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
-Imports AccuPay.Utils
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Utils
 
 Public Class EmployeeAllowanceForm
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -565,7 +565,6 @@ Public Class EmployeeAllowanceForm
                         })
         End If
 
-        
         Dim repo = New UserActivityRepository
         repo.CreateRecord(z_User, "Allowance", z_OrganizationID, "EDIT", changes)
 
@@ -605,7 +604,7 @@ Public Class EmployeeAllowanceForm
         Dim userActivity As New UserActivityForm("Allowance")
         userActivity.ShowDialog()
     End Sub
-    
+
     Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
         If _currentAllowance Is Nothing Then Return
 
