@@ -43,7 +43,7 @@ Public Class UserActivityForm
             Next
         Next
 
-        DataGridView1.DataSource = list
+        DataGridView1.DataSource = list.OrderByDescending(Function(a) a.DateAndTime).ToList
 
     End Sub
 
