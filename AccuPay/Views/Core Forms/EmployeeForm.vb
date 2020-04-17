@@ -8399,24 +8399,28 @@ Public Class EmployeeForm
 
     Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged
-        Dim label_gender = ""
+        If Not sender.Checked Then Return
 
-        Dim gender As Gender
+        Dim label_gender = ""
 
         If sender.Name = rdMale.Name Then
 
             label_gender = "Paternity"
-            gender = Gender.Male
+
+            LoadSalutation(Gender.Male)
+
+            Label148.Text = label_gender
+            Label149.Text = label_gender
         ElseIf sender.Name = rdFMale.Name Then
 
             label_gender = "Maternity"
-            gender = Gender.Female
+
+            LoadSalutation(Gender.Female)
+
+            Label148.Text = label_gender
+            Label149.Text = label_gender
         End If
 
-        LoadSalutation(gender)
-
-        Label148.Text = label_gender
-        Label149.Text = label_gender
 
     End Sub
 
@@ -8492,6 +8496,11 @@ Public Class EmployeeForm
                     If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
 
                         cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                    End If
+
+                    If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
+                        cboSalut.SelectedIndex = 0
+                        cboSalut.Text = String.Empty
                     End If
                 End With
             End If
