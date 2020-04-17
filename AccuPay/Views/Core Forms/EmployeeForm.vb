@@ -689,8 +689,6 @@ Public Class EmployeeForm
     Dim dontUpdateEmp As SByte = 0
 
     Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
-        pbemppic.Focus()
-        pbemppic.Focus()
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -815,7 +813,10 @@ Public Class EmployeeForm
             Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
             Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
 
-            oldEmployee = GetOldEmployee(employee_RowID)
+            If tsbtnNewEmp.Enabled = True Then 'Means update and oldEmployee is needed for UserActivity
+                oldEmployee = GetOldEmployee(employee_RowID)
+
+            End If
 
             new_eRowID =
             INSUPDemployee(employee_RowID,
@@ -949,7 +950,7 @@ Public Class EmployeeForm
             dgvEmp_RowIndex = dgvEmp.CurrentRow.Index
 
             If succeed Then
-                RecordUpdateEmployee(employee_RowID, oldEmployee)
+                RecordUpdateEmployee(oldEmployee)
                 InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
             End If
 
@@ -1048,7 +1049,9 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
-    Private Shared Function GetOldEmployee(employee_RowID As Object) As Data.Entities.Employee
+    Private Shared Function GetOldEmployee(employee_RowID As Integer?) As Data.Entities.Employee
+
+        If employee_RowID.HasValue = False Then Return Nothing
 
         Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
 
@@ -1062,7 +1065,7 @@ Public Class EmployeeForm
 
     End Function
 
-    Private Function RecordUpdateEmployee(employee_RowID As Object, oldEmployee As Data.Entities.Employee) As Boolean
+    Private Function RecordUpdateEmployee(oldEmployee As Data.Entities.Employee) As Boolean
 
         If oldEmployee Is Nothing Then Return False
 
@@ -1236,7 +1239,7 @@ Public Class EmployeeForm
                 changes.Add(New Data.Entities.UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
-                        .Description = $"Update employee regularization date from '' to '{dtpEvaluationDate.Text}'"
+                        .Description = $"Update employee regularization date from '' to '{dtpRegularizationDate.Text}'"
                         })
             End If
         End If
@@ -8420,7 +8423,6 @@ Public Class EmployeeForm
             Label148.Text = label_gender
             Label149.Text = label_gender
         End If
-
 
     End Sub
 

@@ -51,6 +51,8 @@ Public Class EmployeeLoansForm
             RemoveHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
         End If
 
+        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
+
         DetailsTabControl.Enabled = False
 
         InitializeComponentSettings()
@@ -113,7 +115,10 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Sub loanSchedulesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles loanSchedulesDataGridView.SelectionChanged
+    Private Async Sub loanSchedulesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        RemoveHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
+
         ResetLoanScheduleForm()
 
         DetailsTabControl.Enabled = False
@@ -126,14 +131,14 @@ Public Class EmployeeLoansForm
         If currentLoanSchedule IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
            Nullable.Equals(currentLoanSchedule.EmployeeID, currentEmployee.RowID) Then
 
-            Await LoadLoanTransactions(currentLoanSchedule)
-
-            PopulateLoanScheduleForm(currentLoanSchedule)
+            Await UpdateSelectedLoanScheduleData()
 
             tbpHistory.Text = $"{LOAN_HISTORY_TAB_TEXT} ({Me._currentLoanTransactions.Count})"
 
             DetailsTabControl.Enabled = True
         End If
+
+        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
 
     End Sub
 
@@ -616,7 +621,10 @@ Public Class EmployeeLoansForm
         Return whereFunction
     End Function
 
-    Private Async Function LoadLoanTransactions(currentLoanSchedule As LoanSchedule) As Task
+    Private Async Function UpdateSelectedLoanScheduleData() As Task
+
+        Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
+        If currentLoanSchedule Is Nothing Then Return
 
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
             (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriod(currentLoanSchedule.RowID))
@@ -630,6 +638,8 @@ Public Class EmployeeLoansForm
             loanHistoryGridView.CurrentCell = loanHistoryGridView.Rows(loanHistoryCount - 1).Cells(0)
 
         End If
+
+        PopulateLoanScheduleForm(currentLoanSchedule)
 
     End Function
 
