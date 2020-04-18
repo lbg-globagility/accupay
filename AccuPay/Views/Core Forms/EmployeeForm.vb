@@ -1053,12 +1053,12 @@ Public Class EmployeeForm
 
         If employee_RowID.HasValue = False Then Return Nothing
 
-        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder(z_OrganizationID)
 
             Return employeeBuilder.
-                    WithPayFrequency().
-                    WithPosition().
-                    WithBranch().
+                    IncludePayFrequency().
+                    IncludePosition().
+                    IncludeBranch().
                     FirstOrDefault(employee_RowID)
 
         End Using

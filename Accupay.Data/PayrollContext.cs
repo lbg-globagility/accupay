@@ -1,15 +1,19 @@
 ﻿using Accupay.DB;
 using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 namespace AccuPay.Data
 {
     internal class PayrollContext : DbContext
     {
-        //        public static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(
-        //{
-        //    new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name && level == LogLevel.Information, true)
-        //});
+        private readonly ILoggerFactory _loggerFactory;
+
+        public static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(new[] {
+            new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name &&
+                                                    level == LogLevel.Information, true)
+        });
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
@@ -27,11 +31,20 @@ namespace AccuPay.Data
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
 
+        public PayrollContext()
+        {
+        }
+
+        public PayrollContext(ILoggerFactory loggerFactory)
+        {
+            _loggerFactory = loggerFactory;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString());
-            //UseLoggerFactory(_loggerFactory).
-            //EnableSensitiveDataLogging()
+            optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
+                            UseLoggerFactory(_loggerFactory).
+                            EnableSensitiveDataLogging();
         }
     }
 }
