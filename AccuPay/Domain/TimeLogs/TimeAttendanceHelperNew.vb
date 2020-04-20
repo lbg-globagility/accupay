@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -20,7 +21,7 @@ Public Class TimeAttendanceHelperNew
     Private ReadOnly _employees As New List(Of Employee)
     Private ReadOnly _employeeShifts As New List(Of EmployeeDutySchedule)
 
-    Private ReadOnly _employeeOvertimes As List(Of Overtime)
+    Private ReadOnly _employeeOvertimes As List(Of Entities.Overtime)
 
     Private _logsGroupedByEmployee As New List(Of IGrouping(Of String, ImportTimeAttendanceLog))
 
@@ -30,7 +31,7 @@ Public Class TimeAttendanceHelperNew
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
            employees As List(Of Employee),
            employeeShifts As List(Of EmployeeDutySchedule),
-           employeeOvertimes As List(Of Overtime))
+           employeeOvertimes As List(Of Entities.Overtime))
 
         _importedTimeAttendanceLogs = importedTimeLogs
         _employees = employees
@@ -294,7 +295,7 @@ Public Class TimeAttendanceHelperNew
         employeeId As Integer,
         employeeLogs As List(Of ImportTimeAttendanceLog),
         currentEmployeeShifts As List(Of EmployeeDutySchedule),
-        currentEmployeeOvertimes As List(Of Overtime),
+        currentEmployeeOvertimes As List(Of Entities.Overtime),
         currentDate As Date,
         lastDayLogRecord As DayLogRecord) As DayLogRecord
 
@@ -350,7 +351,7 @@ Public Class TimeAttendanceHelperNew
     ''' <param name="overtime"></param>
     ''' <param name="shift"></param>
     ''' <returns></returns>
-    Private Function CheckOvertimeType(overtime As Overtime, shift As EmployeeDutySchedule) As OvertimeType
+    Private Function CheckOvertimeType(overtime As Entities.Overtime, shift As EmployeeDutySchedule) As OvertimeType
 
         'Sometimes the OT StartTime is less than the shift StartTime
         'but it can be a post OT.
@@ -416,9 +417,9 @@ Public Class TimeAttendanceHelperNew
     End Function
 
     Private Function GetEarliestOvertime(
-                        currentEmployeeOvertimes As List(Of Overtime),
+                        currentEmployeeOvertimes As List(Of Entities.Overtime),
                         currentDate As Date,
-                        currentShift As EmployeeDutySchedule) As Overtime
+                        currentShift As EmployeeDutySchedule) As Entities.Overtime
 
         Return currentEmployeeOvertimes.
                 Where(Function(o)
@@ -435,9 +436,9 @@ Public Class TimeAttendanceHelperNew
     End Function
 
     Private Function GetLastOvertime(
-                        currentEmployeeOvertimes As List(Of Overtime),
+                        currentEmployeeOvertimes As List(Of Entities.Overtime),
                         currentDate As Date,
-                        currentShift As EmployeeDutySchedule) As Overtime
+                        currentShift As EmployeeDutySchedule) As Entities.Overtime
 
         Return currentEmployeeOvertimes.
                 Where(Function(o)
@@ -461,7 +462,7 @@ Public Class TimeAttendanceHelperNew
     ''' <param name="currentShift"></param>
     ''' <returns></returns>
     Private Function IsTodaysOvertime(
-                        overtime As Overtime,
+                        overtime As Entities.Overtime,
                         currentDate As Date,
                         currentShift As EmployeeDutySchedule) As Boolean
 
@@ -531,7 +532,7 @@ Public Class TimeAttendanceHelperNew
                         previousTimeOutBounds As Date?,
                         currentDate As Date,
                         currentShift As EmployeeDutySchedule,
-                        earliestOvertime As Overtime) As Date
+                        earliestOvertime As Entities.Overtime) As Date
 
         Dim currentDayStartDateTime = GetStartDateTime(currentShift, earliestOvertime)
 
@@ -571,9 +572,9 @@ Public Class TimeAttendanceHelperNew
     Private Function GetShiftBoundsForTimeOut(
                         currentDate As Date,
                         currentShift As EmployeeDutySchedule,
-                        lastOvertime As Overtime,
+                        lastOvertime As Entities.Overtime,
                         nextShift As EmployeeDutySchedule,
-                        earliestOvertimeNextDay As Overtime) As Date
+                        earliestOvertimeNextDay As Entities.Overtime) As Date
 
         Dim shiftMaxBound As Date
 
@@ -667,7 +668,7 @@ Public Class TimeAttendanceHelperNew
         Return shiftMaxBound
     End Function
 
-    Private Function GetStartDateTime(currentShift As EmployeeDutySchedule, earliestOvertime As Overtime) As Date?
+    Private Function GetStartDateTime(currentShift As EmployeeDutySchedule, earliestOvertime As Entities.Overtime) As Date?
         Dim currentShiftStartTime = CreateDateTime(
                                         currentShift?.DateSched,
                                         currentShift?.StartTime)
@@ -683,7 +684,7 @@ Public Class TimeAttendanceHelperNew
         Return startDateTime
     End Function
 
-    Private Function GetEndDateTime(currentShift As EmployeeDutySchedule, lastOvertime As Overtime) As Date?
+    Private Function GetEndDateTime(currentShift As EmployeeDutySchedule, lastOvertime As Entities.Overtime) As Date?
         Dim currentShiftEndTime = CreateDateTime(
                                             currentShift?.DateSched,
                                             currentShift?.EndTime,
@@ -697,7 +698,7 @@ Public Class TimeAttendanceHelperNew
         Return endTime
     End Function
 
-    Private Function GetLastOvertime(currentShift As EmployeeDutySchedule, lastOvertime As Overtime) As Date?
+    Private Function GetLastOvertime(currentShift As EmployeeDutySchedule, lastOvertime As Entities.Overtime) As Date?
         Dim lastOvertimeEndTime = CreateDateTime(
                                         lastOvertime?.OTStartDate,
                                         lastOvertime?.OTEndTime,

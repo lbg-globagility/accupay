@@ -20,6 +20,7 @@ namespace AccuPay.Data
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
+        public virtual DbSet<Overtime> Overtimes { get; set; }
         public virtual DbSet<PayPeriod> PayPeriods { get; set; }
         public virtual DbSet<Paystub> Paystubs { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }

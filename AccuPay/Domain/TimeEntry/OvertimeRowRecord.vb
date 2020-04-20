@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Attributes
+Imports AccuPay.Data
 Imports AccuPay.Utilities
 
 Public Class OvertimeRowRecord
@@ -33,13 +34,13 @@ Public Class OvertimeRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
-    Public Function ToOvertime() As Overtime
+    Public Function ToOvertime() As Entities.Overtime
 
         If EffectiveStartDate Is Nothing OrElse EffectiveEndDate Is Nothing Then
             Return Nothing
         End If
 
-        Return New Overtime With {
+        Return New Entities.Overtime With {
             .OTStartDate = EffectiveStartDate.Value,
             .OTEndDate = EffectiveEndDate.Value,
             .OTStartTime = EffectiveStartTime,

@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -8,7 +9,7 @@ Imports Globagility.AccuPay
 
 Public Class ImportOvertimeForm
 
-    Private _overtimes As List(Of Overtime)
+    Private _overtimes As List(Of Entities.Overtime)
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -47,7 +48,7 @@ Public Class ImportOvertimeForm
 
         If parsedSuccessfully = False Then Return
 
-        _overtimes = New List(Of Overtime)
+        _overtimes = New List(Of Entities.Overtime)
 
         Dim acceptedRecords As New List(Of OvertimeRowRecord)
         Dim rejectedRecords As New List(Of OvertimeRowRecord)
@@ -68,7 +69,7 @@ Public Class ImportOvertimeForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
-            record.Type = Overtime.DefaultType
+            record.Type = Entities.Overtime.DefaultType
 
             If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
@@ -77,7 +78,7 @@ Public Class ImportOvertimeForm
             End If
 
             'For database
-            Dim newOvertime = New Overtime With {
+            Dim newOvertime = New Entities.Overtime With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
@@ -87,7 +88,7 @@ Public Class ImportOvertimeForm
                 .OTEndDate = record.EffectiveEndDate.Value,
                 .OTStartTime = record.EffectiveStartTime,
                 .OTEndTime = record.EffectiveEndTime,
-                .Status = Overtime.StatusApproved
+                .Status = Entities.Overtime.StatusApproved
             }
 
             acceptedRecords.Add(record)

@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports Microsoft.EntityFrameworkCore
-Imports System.Data.Entity
-Imports System.Threading.Tasks
 
 Public Class MassOvertimeForm
 
@@ -228,7 +228,7 @@ Public Class MassOvertimePresenter
         End Using
     End Function
 
-    Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
+    Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Entities.Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID).ToList()
 
         Using context = New PayrollContext()
@@ -312,13 +312,13 @@ Public Class MassOvertimePresenter
                 Dim overtime = model.Overtime
 
                 If model.IsNew Then
-                    overtime = New Overtime() With {
+                    overtime = New Entities.Overtime() With {
                         .EmployeeID = model.EmployeeID,
                         .OrganizationID = z_OrganizationID,
                         .CreatedBy = z_User,
                         .OTStartDate = model.Date,
                         .OTEndDate = model.Date,
-                        .Status = Overtime.StatusApproved
+                        .Status = overtime.StatusApproved
                     }
                 ElseIf model.IsUpdate Then
                     overtime.LastUpdBy = z_User
@@ -358,7 +358,7 @@ Public Class OvertimeModel
 
     Public Property EndTime As TimeSpan?
 
-    Public Property Overtime As Overtime
+    Public Property Overtime As Entities.Overtime
 
     Public ReadOnly Property HasValue As Boolean
         Get

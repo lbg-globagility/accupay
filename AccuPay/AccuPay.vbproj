@@ -447,7 +447,6 @@
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\OfficialBusinessRepository.vb" />
-    <Compile Include="Repositories\OvertimeRepository.vb" />
     <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
@@ -923,7 +922,6 @@
     <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
     <Compile Include="Domain\Employees\Employee.vb" />
     <Compile Include="Domain\TimeEntry\OfficialBusiness.vb" />
-    <Compile Include="Domain\TimeEntry\Overtime.vb" />
     <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
     <Compile Include="Domain\Shifts\Shift.vb" />
     <Compile Include="Domain\TimeEntry\CurrentShift.vb" />

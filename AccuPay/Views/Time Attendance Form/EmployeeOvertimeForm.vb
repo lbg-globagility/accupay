@@ -1,8 +1,9 @@
-﻿Imports System.Threading.Tasks
+﻿Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
 Imports AccuPay.Utils
+Imports System.Threading.Tasks
 
 Public Class EmployeeOvertimeForm
 
@@ -10,13 +11,13 @@ Public Class EmployeeOvertimeForm
 
     Private _allEmployees As New List(Of Employee)
 
-    Private _currentOvertime As Overtime
+    Private _currentOvertime As Entities.Overtime
 
-    Private _currentOvertimes As New List(Of Overtime)
+    Private _currentOvertimes As New List(Of Entities.Overtime)
 
-    Private _changedOvertimes As New List(Of Overtime)
+    Private _changedOvertimes As New List(Of Entities.Overtime)
 
-    Private _overtimeRepository As New OvertimeRepository
+    Private _overtimeRepository As New Repositories.OvertimeRepository
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -193,7 +194,7 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
-    Private Function CheckIfOvertimeIsChanged(newOvertime As Overtime) As Boolean
+    Private Function CheckIfOvertimeIsChanged(newOvertime As Entities.Overtime) As Boolean
         If Me._currentOvertime Is Nothing Then Return False
 
         Dim oldOvertime =
@@ -222,11 +223,11 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
-    Private Function GetSelectedOvertime() As Overtime
-        Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Overtime)
+    Private Function GetSelectedOvertime() As Entities.Overtime
+        Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Entities.Overtime)
     End Function
 
-    Private Sub PopulateOvertimeForm(overtime As Overtime)
+    Private Sub PopulateOvertimeForm(overtime As Entities.Overtime)
         Me._currentOvertime = overtime
 
         StartDatePicker.DataBindings.Clear()
@@ -303,7 +304,7 @@ Public Class EmployeeOvertimeForm
 
         If OvertimeGridView.CurrentRow Is Nothing Then Return
 
-        Dim currentOvertime As Overtime = GetSelectedOvertime()
+        Dim currentOvertime As Entities.Overtime = GetSelectedOvertime()
 
         Dim currentEmployee = GetSelectedEmployee()
         If currentOvertime IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
@@ -444,7 +445,7 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim changedOvertimes As New List(Of Overtime)
+        Dim changedOvertimes As New List(Of Entities.Overtime)
 
         For Each item In Me._currentOvertimes
             If CheckIfOvertimeIsChanged(item) Then
@@ -472,7 +473,7 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
+                                            Await _overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, changedOvertimes)
 
                                             ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
 
@@ -487,12 +488,12 @@ Public Class EmployeeOvertimeForm
                                         End Function)
     End Sub
 
-    Public Function ScrutinizedConflictingOvertime(otList As List(Of Overtime), Optional otStatus As String = "") As List(Of Overtime)
+    Public Function ScrutinizedConflictingOvertime(otList As List(Of Entities.Overtime), Optional otStatus As String = "") As List(Of Entities.Overtime)
         Dim employeeIDs = otList.GroupBy(Function(ot) ot.EmployeeID).Select(Function(id) id.Key).ToList()
 
-        Dim overlappingOvertime As New List(Of Overtime)
+        Dim overlappingOvertime As New List(Of Entities.Overtime)
 
-        Dim approved = If(String.IsNullOrEmpty(otStatus), Overtime.StatusApproved, otStatus)
+        Dim approved = If(String.IsNullOrEmpty(otStatus), Entities.Overtime.StatusApproved, otStatus)
 
         For Each employeeID In employeeIDs
 
@@ -546,7 +547,7 @@ Public Class EmployeeOvertimeForm
         Return overlappingOvertime
     End Function
 
-    Private Sub SetCurrentOvertimeRow(overtime As Overtime)
+    Private Sub SetCurrentOvertimeRow(overtime As Entities.Overtime)
         Dim gridRow = OvertimeGridView.Rows.OfType(Of DataGridViewRow).
             Where(Function(r) r.Cells(Column2.Name).Value = overtime.OTStartTime.Value).
             Where(Function(r) r.Cells(Column4.Name).Value = overtime.OTEndTime.Value).
@@ -566,7 +567,7 @@ Public Class EmployeeOvertimeForm
         gridRow.Selected = True
         OvertimeGridView.CurrentRow.Selected = True
 
-        Dim selectedOvertime = DirectCast(gridRow.DataBoundItem, Overtime)
+        Dim selectedOvertime = DirectCast(gridRow.DataBoundItem, Entities.Overtime)
         PopulateOvertimeForm(selectedOvertime)
     End Sub
 
@@ -576,4 +577,5 @@ Public Class EmployeeOvertimeForm
         UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
+
 End Class

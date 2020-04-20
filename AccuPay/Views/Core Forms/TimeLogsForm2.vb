@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
@@ -377,7 +378,7 @@ Public Class TimeLogsForm2
 
 #Region "Functions"
 
-    Private Function CreatedResults(employees As List(Of Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
+    Private Function CreatedResults(employees As List(Of Entity.Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
         Dim returnList As New List(Of TimeLogModel)
 
         Dim dateRanges = Calendar.EachDay(startDate, endDate)
@@ -436,7 +437,7 @@ Public Class TimeLogsForm2
         logs = logs.OrderBy(Function(l) l.DateTime).ToList
 
         Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
-        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+        Dim employees As List(Of Entity.Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
 
         Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
         Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
@@ -502,11 +503,11 @@ Public Class TimeLogsForm2
 
     End Function
 
-    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Entity.Employee))
 
         Using context As New PayrollContext
             If logsGroupedByEmployee.Count < 1 Then
-                Return New List(Of Employee)
+                Return New List(Of Entity.Employee)
             End If
 
             Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
@@ -543,7 +544,7 @@ Public Class TimeLogsForm2
         Public Property DateIn As Date
 
         Private _timeLog As TimeLog
-        Private _employee As Employee
+        Private _employee As Entity.Employee
         Private _dateOut, origDateIn, origDateOut As Date
         Private origTimeIn, origTimeOut As String
         Private _dateOutDisplay As Date?
@@ -583,7 +584,7 @@ Public Class TimeLogsForm2
 
         End Sub
 
-        Sub New(employee As Employee, d As Date)
+        Sub New(employee As Entity.Employee, d As Date)
             _employee = employee
 
             origDateIn = d
