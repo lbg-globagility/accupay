@@ -24,6 +24,7 @@ namespace AccuPay.Data
         public virtual DbSet<Paystub> Paystubs { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
