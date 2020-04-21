@@ -4,6 +4,8 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
@@ -22,6 +24,7 @@ Public Class TimeEntryGenerator
     Private _timeLogs As IList(Of TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
     Private _leaves As IList(Of Leave)
+    Private _overtimeRepository As OvertimeRepository
     Private _officialBusinesses As IList(Of OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
@@ -56,6 +59,8 @@ Public Class TimeEntryGenerator
     Public Sub New(cutoffStart As Date, cutoffEnd As Date)
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
+
+        _overtimeRepository = New Repositories.OvertimeRepository()
     End Sub
 
     Public Sub Start()
@@ -116,11 +121,12 @@ Public Class TimeEntryGenerator
                 Where(Function(l) l.Status = Leave.StatusApproved).
                 ToList()
 
-            _overtimes = context.Overtimes.
-                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
-                Where(Function(o) _cutoffStart <= o.OTStartDate AndAlso o.OTStartDate <= _cutoffEnd).
-                Where(Function(o) o.Status = Entities.Overtime.StatusApproved).
-                ToList()
+            '_overtimes = context.Overtimes.
+            '    Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
+            '    Where(Function(o) _cutoffStart <= o.OTStartDate AndAlso o.OTStartDate <= _cutoffEnd).
+            '    Where(Function(o) o.Status = Entities.Overtime.StatusApproved).
+            '    ToList()
+            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID, startDate:=_cutoffStart, endDate:=_cutoffEnd, OvertimeStatuses.Approved).ToList()
 
             _officialBusinesses = context.OfficialBusinesses.
                 Where(Function(o) o.OrganizationID.Value = z_OrganizationID).

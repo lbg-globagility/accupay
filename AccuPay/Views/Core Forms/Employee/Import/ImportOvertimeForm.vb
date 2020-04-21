@@ -13,6 +13,8 @@ Public Class ImportOvertimeForm
 
     Private _employeeRepository As New EmployeeRepository
 
+    Private overtimeRepository As New Repositories.OvertimeRepository()
+
     Public IsSaved As Boolean
 
     Private Sub ImportOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -173,13 +175,7 @@ Public Class ImportOvertimeForm
         Dim messageTitle = "Import Overtimes"
 
         Try
-            Using context As New PayrollContext
-                For Each overtime In _overtimes
-                    context.Overtimes.Add(overtime)
-                Next
-
-                Await context.SaveChangesAsync()
-            End Using
+            Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
 
             Me.IsSaved = True
 

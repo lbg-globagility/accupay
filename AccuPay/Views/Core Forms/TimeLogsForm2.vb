@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
@@ -30,6 +31,8 @@ Public Class TimeLogsForm2
     Private _useShiftSchedulePolicy As Boolean
 
     Private _originalDates As TimePeriod
+
+    Private overtimeRepository As New OvertimeRepository()
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -493,14 +496,9 @@ Public Class TimeLogsForm2
 
     Private Async Function GetEmployeeOvertime(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of Overtime))
 
-        Using context = New PayrollContext()
-            Return Await context.Overtimes.
-                           Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                           Where(Function(s) s.OTStartDate >= firstDate).
-                           Where(Function(s) s.OTStartDate <= lastDate).
-                           ToListAsync()
-        End Using
+        Dim overtimes = Await overtimeRepository.GetAllBetweenDateAsync(z_OrganizationID, startDate:=firstDate, endDate:=lastDate)
 
+        Return overtimes.ToList()
     End Function
 
     Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Entity.Employee))
