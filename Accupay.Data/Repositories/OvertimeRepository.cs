@@ -47,6 +47,20 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task DeleteManyAsync(IList<int?> ids)
+        {
+            using (var context = new PayrollContext())
+            {
+                var overtimes = await context.Overtimes.
+                    Where(o => ids.Contains(o.RowID)).
+                    ToListAsync();
+
+                context.RemoveRange(overtimes);
+
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task SaveManyAsync(int organizationID, int userID, List<Overtime> currentOvertimes)
         {
             using (PayrollContext context = new PayrollContext())
