@@ -83,10 +83,10 @@ Public Class ImportOvertimeForm
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .Type = record.Type,
-                .OTStartDate = record.EffectiveStartDate.Value,
-                .OTEndDate = record.EffectiveEndDate.Value,
-                .OTStartTime = record.EffectiveStartTime,
-                .OTEndTime = record.EffectiveEndTime,
+                .OTStartDate = record.StartDate.Value,
+                .OTEndDate = record.EndDate.Value,
+                .OTStartTime = record.StartTime,
+                .OTEndTime = record.EndTime,
                 .Status = Overtime.StatusApproved
             }
 
@@ -110,14 +110,21 @@ Public Class ImportOvertimeForm
 
         'Start Date and End Date is not nullable for Overtime so this validations
         'will not be checked by the overtime Class
-        If record.EffectiveStartDate Is Nothing Then
+        If record.StartDate Is Nothing Then
 
             record.ErrorMessage = "Effective Start Date cannot be empty."
             rejectedRecords.Add(record)
             Return False
         End If
 
-        If record.EffectiveEndDate Is Nothing Then
+        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EndDate Is Nothing Then
 
             record.ErrorMessage = "Effective End Date cannot be empty."
             rejectedRecords.Add(record)
