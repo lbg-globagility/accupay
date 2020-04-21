@@ -108,12 +108,14 @@ namespace AccuPay.Data.Repositories
                 context.Overtimes.Add(overtime);
             }
             else
-                await this.UpdateAsync(userID, overtime, context);
+                await UpdateAsync(userID, overtime, context);
+
+            await context.SaveChangesAsync();
         }
 
         private async Task UpdateAsync(int userID, Overtime overtime, PayrollContext context)
         {
-            var currentOfficialBusiness = await context.Overtimes.FirstOrDefaultAsync(l => Nullable.Equals(l.RowID, overtime.RowID));
+            var currentOfficialBusiness = await context.Overtimes.FirstOrDefaultAsync(l => l.RowID == overtime.RowID);
 
             if (currentOfficialBusiness == null)
                 return;
