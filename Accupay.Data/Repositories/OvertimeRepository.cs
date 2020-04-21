@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -128,6 +129,120 @@ namespace AccuPay.Data.Repositories
             currentOfficialBusiness.Reason = overtime.Reason;
             currentOfficialBusiness.Comments = overtime.Comments;
             currentOfficialBusiness.Status = overtime.Status;
+        }
+
+        public async Task<IEnumerable<Overtime>> GetAllBetweenDateAsync(int organizationID, DateTime startDate, DateTime endDate, OvertimeStatuses overtimeStatuses = OvertimeStatuses.All)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (overtimeStatuses == OvertimeStatuses.All)
+                {
+                    return await context.Overtimes.
+                        Where(ot => ot.OrganizationID == organizationID).
+                        Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                        ToListAsync();
+                }
+
+                var status = overtimeStatuses.ToString();
+                return await context.Overtimes.
+                    Where(ot => ot.OrganizationID == organizationID).
+                    Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                    Where(o => o.Status == status).
+                    ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Overtime>> GetByEmployeeBetweenDateAsync(int organizationID, int employeeID, DateTime startDate, DateTime endDate, OvertimeStatuses overtimeStatuses = OvertimeStatuses.All)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (overtimeStatuses == OvertimeStatuses.All)
+                {
+                    return await context.Overtimes.
+                        Where(ot => ot.OrganizationID == organizationID).
+                        Where(ot => ot.EmployeeID == employeeID).
+                        Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                        ToListAsync();
+                }
+
+                var status = overtimeStatuses.ToString();
+                return await context.Overtimes.
+                    Where(ot => ot.OrganizationID == organizationID).
+                    Where(ot => ot.EmployeeID == employeeID).
+                    Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                    Where(o => o.Status == status).
+                    ToListAsync();
+            }
+        }
+
+        public IEnumerable<Overtime> GetAllApprovedBetweenDate(int organizationID, DateTime startDate, DateTime endDate, OvertimeStatuses overtimeStatuses = OvertimeStatuses.All)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (overtimeStatuses == OvertimeStatuses.All)
+                {
+                    return context.Overtimes.
+                        Where(ot => ot.OrganizationID == organizationID).
+                        //Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                        Where(o => startDate <= o.OTStartDate).
+                        Where(o => o.OTStartDate <= endDate).
+                        ToList();
+                }
+
+                var status = overtimeStatuses.ToString();
+                return context.Overtimes.
+                    Where(ot => ot.OrganizationID == organizationID).
+                    Where(o => startDate <= o.OTStartDate).
+                    Where(o => o.OTStartDate <= endDate).
+                    Where(o => o.Status == status).
+                    ToList();
+            }
+        }
+
+        public IEnumerable<Overtime> GetByEmployeeBetweenDate(int organizationID, int employeeID, DateTime startDate, DateTime endDate, OvertimeStatuses overtimeStatuses = OvertimeStatuses.All)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (overtimeStatuses == OvertimeStatuses.All)
+                {
+                    return context.Overtimes.
+                        Where(ot => ot.OrganizationID == organizationID).
+                        Where(ot => ot.EmployeeID == employeeID).
+                        Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                        ToList();
+                }
+
+                var status = overtimeStatuses.ToString();
+                return context.Overtimes.
+                    Where(ot => ot.OrganizationID == organizationID).
+                    Where(ot => ot.EmployeeID == employeeID).
+                    Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                    Where(o => o.Status == status).
+                    ToList();
+            }
+        }
+
+        public IEnumerable<Overtime> GetByEmployeeIDsBetweenDate(int organizationID, List<int> employeeID, DateTime startDate, DateTime endDate, OvertimeStatuses overtimeStatuses = OvertimeStatuses.All)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (overtimeStatuses == OvertimeStatuses.All)
+                {
+                    return context.Overtimes.
+                        Where(ot => ot.OrganizationID == organizationID).
+                        Where(ot => employeeID.Contains(ot.EmployeeID.Value)).
+                        Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                        ToList();
+                }
+
+                var status = overtimeStatuses.ToString();
+                return context.Overtimes.
+                    Where(ot => ot.OrganizationID == organizationID).
+                    Where(ot => employeeID.Contains(ot.EmployeeID.Value)).
+                    Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
+                    Where(o => o.Status == status).
+                    ToList();
+            }
         }
     }
 }
