@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
@@ -15,7 +17,7 @@ Public Class ImportLeaveForm
 
     Private _filePath As String
     Private _worksheetName As String
-    Private _ep As New ExcelParser(Of LeaveModel)
+    Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
@@ -65,7 +67,7 @@ Public Class ImportLeaveForm
 
         Using context = New PayrollContext
             Dim employees = Await context.Employees.
-                Where(Function(e) e.OrganizationID = z_OrganizationID).
+                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
                 ToListAsync()
 
@@ -113,7 +115,6 @@ Public Class ImportLeaveForm
         Return New LeaveModel(employee) With {
             .Status = model.Status,
             .Comment = model.Comment,
-            .EndDate = model.EndDate,
             .EndTime = model.EndTime,
             .LeaveType = model.LeaveType,
             .Reason = model.Reason,
@@ -146,45 +147,37 @@ Public Class ImportLeaveForm
 
         End If
 
-        Try
-            Await _leaveRepository.SaveManyAsync(leaves)
+        Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                        Async Function() As Task(Of Boolean)
 
-            Dim importList = New List(Of Data.Entities.UserActivityItem)
-            For Each item In leaves
+                            Await _leaveRepository.SaveManyAsync(leaves)
 
-                If item.IsNew Then
-                    importList.Add(New Data.Entities.UserActivityItem() With
-                        {
-                        .Description = $"Imported a new leave.",
-                        .EntityId = item.RowID
-                        })
-                Else
-                    importList.Add(New Data.Entities.UserActivityItem() With
-                        {
-                        .Description = $"Updated a leave",
-                        .EntityId = item.RowID
-                        })
-                End If
+                            Dim importList = New List(Of Data.Entities.UserActivityItem)
+                            For Each item In leaves
 
+                                If item.IsNew Then
+                                    importList.Add(New Data.Entities.UserActivityItem() With
+                                    {
+                                    .Description = $"Imported a new leave.",
+                                    .EntityId = item.RowID.Value
+                                    })
+                                Else
+                                    importList.Add(New Data.Entities.UserActivityItem() With
+                                    {
+                                    .Description = $"Updated a leave on import.",
+                                    .EntityId = item.RowID.Value
+                                    })
+                                End If
 
-            Next
+                            Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Leave", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                            Dim repo = New UserActivityRepository
+                            repo.CreateRecord(z_User, "Leave", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-            Return True
-        Catch ex As ArgumentException
+                            Return True
+                        End Function)
 
-            MessageBoxHelper.ErrorMessage("One of the employees has reached its maximum leave allowance. Please check your data and try again.", messageTitle)
-
-            Return False
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex, "EmployeeImportLeave")
-
-            Return False
-
-        End Try
+        Return False
 
     End Function
 
@@ -195,19 +188,18 @@ Public Class ImportLeaveForm
         Using context = New PayrollContext
             Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
             Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
-            Dim maxDate = _okModels.Max(Function(lm) lm.EndDateProper.Date)
 
             Dim currentLeaves = Await context.Leaves.
-                Where(Function(lv) lv.OrganizationID = z_OrganizationID).
+                Where(Function(lv) lv.OrganizationID.Value = z_OrganizationID).
                 Where(Function(lv) employeeIDs.Contains(lv.EmployeeID.Value)).
-                Where(Function(lv) lv.StartDate >= minDate AndAlso lv.EndDate.Value.Date <= maxDate).
+                Where(Function(lv) lv.StartDate >= minDate).
                 ToListAsync()
 
             If currentLeaves.Any() Then
                 For Each model In _okModels
                     Dim leave = currentLeaves.
                         Where(Function(lv) lv.EmployeeID.Value = model.EmployeeID).
-                        Where(Function(lv) lv.StartDate >= model.StartDate.Value.Date AndAlso lv.EndDate.Value.Date <= model.EndDateProper.Date).
+                        Where(Function(lv) lv.StartDate = model.StartDate.Value.Date).
                         FirstOrDefault
 
                     If leave IsNot Nothing Then
@@ -215,9 +207,9 @@ Public Class ImportLeaveForm
                             .Reason = model.Reason
                             .Comments = model.Comment
                             .StartTime = model.StartTime
-                            .StartDate = model.StartDate
+                            .StartDate = model.StartDate.Value
+                            .EndDate = model.EndDate
                             .EndTime = model.EndTime
-                            .EndDate = model.EndDateProper
                             .LastUpd = Now
                             .LastUpdBy = z_User
                             .IsNew = False
@@ -225,36 +217,18 @@ Public Class ImportLeaveForm
 
                         leaves.Add(leave)
                     Else
-                        leaves.Add(CreateNewLeave(model))
+                        leaves.Add(model.ToLeave())
                     End If
                 Next
             Else
                 For Each model In _okModels
-                    leaves.Add(CreateNewLeave(model))
+                    leaves.Add(model.ToLeave())
                 Next
 
             End If
         End Using
 
         Return leaves
-    End Function
-
-    Private Shared Function CreateNewLeave(model As LeaveModel) As Leave
-        Return New Leave() With {
-            .OrganizationID = z_OrganizationID,
-            .Reason = model.Reason,
-            .Comments = model.Comment,
-            .CreatedBy = z_User,
-            .LastUpdBy = z_User,
-            .EmployeeID = model.EmployeeID,
-            .StartTime = model.StartTime,
-            .StartDate = model.StartDate,
-            .EndTime = model.EndTime,
-            .EndDate = model.EndDateProper,
-            .LeaveType = model.LeaveType,
-            .Status = model.Status,
-            .IsNew = True}
-
     End Function
 
 #End Region
@@ -270,6 +244,7 @@ Public Class ImportLeaveForm
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean
         Private _noStartDate As Boolean
+        Private _invalidStartDate As Boolean
         Private _employeeNotExists As Boolean
         Private _noStatus As Boolean
         Private _notMeantToUseAddtlVL As Boolean
@@ -329,54 +304,13 @@ Public Class ImportLeaveForm
         <ColumnName("Start Time (Optional)")>
         Public Property StartTime As TimeSpan?
 
-        '    Get
-        '        Return _startTime
-        '    End Get
-        '    Set(value As TimeSpan?)
-        '        _startTime = value
-        '    End Set
-        'End Property
-
-        'Public ReadOnly Property StartTimeDisplay As String
-        '    Get
-        '        Return ShortTimeSpan(_startTime)
-        '    End Get
-        'End Property
-
         <ColumnName("End Time (Optional)")>
         Public Property EndTime As TimeSpan?
-
-        '    Get
-        '        Return _endTime
-        '    End Get
-        '    Set(value As TimeSpan?)
-        '        _endTime = value
-        '    End Set
-        'End Property
-
-        'Public ReadOnly Property EndTimeDisplay As String
-        '    Get
-        '        Return ShortTimeSpan(_endTime)
-        '    End Get
-        'End Property
 
         <ColumnName("Start Date")>
         Public Property StartDate As Date?
 
-        <ColumnName("End Date To (Optional)")>
-        Public Property EndDate As Date?
-
-        Public ReadOnly Property EndDateProper As Date
-            Get
-                If Not EndDate.HasValue Then
-                    Return StartDate.Value.Date
-                Else
-                    Return EndDate.Value.Date
-                End If
-            End Get
-        End Property
-
-        <ColumnName("Reason")>
+        <ColumnName("Reason (Optional)")>
         Public Property Reason As String
             Get
                 Return _reasons
@@ -386,7 +320,7 @@ Public Class ImportLeaveForm
             End Set
         End Property
 
-        <ColumnName("Comment")>
+        <ColumnName("Comment (Optional)")>
         Public Property Comment As String
             Get
                 Return _comments
@@ -396,11 +330,26 @@ Public Class ImportLeaveForm
             End Set
         End Property
 
+        Public ReadOnly Property EndDate As Date?
+            Get
+                If StartDate.HasValue = False Then
+                    Return Nothing
+                ElseIf StartTime.HasValue = False OrElse EndTime.HasValue = False Then
+                    Return StartDate
+                ElseIf StartTime.HasValue = False AndAlso EndTime.HasValue = False Then
+                    Return StartDate
+                Else
+                    Return If(EndTime < StartTime, StartDate.Value.AddDays(1), StartDate)
+                End If
+            End Get
+        End Property
+
         Public ReadOnly Property ConsideredFailed As Boolean
             Get
                 _noEmployeeNo = String.IsNullOrWhiteSpace(EmployeeNo)
                 _noLeaveType = String.IsNullOrWhiteSpace(LeaveType)
                 _noStartDate = Not StartDate.HasValue
+                _invalidStartDate = _noStartDate = False AndAlso StartDate.Value < PayrollTools.MinimumMicrosoftDate
                 _employeeNotExists = Not If(_employee?.RowID.HasValue, False)
 
                 _noStatus = String.IsNullOrWhiteSpace(Status) _
@@ -411,14 +360,15 @@ Public Class ImportLeaveForm
                 Return _noEmployeeNo _
                     Or _noLeaveType _
                     Or _noStartDate _
+                    Or _invalidStartDate _
                     Or _employeeNotExists _
                     Or _noStatus _
                     Or _notMeantToUseAddtlVL _
-                    Or Not String.IsNullOrWhiteSpace(ToLeave().Validate)
+                    Or (_noStartDate = False AndAlso Not String.IsNullOrWhiteSpace(ToLeave().Validate))
             End Get
         End Property
 
-        Public ReadOnly Property FailureDescription
+        Public ReadOnly Property FailureDescription As String
             Get
                 Dim description As New List(Of String)
 
@@ -427,6 +377,8 @@ Public Class ImportLeaveForm
                 If _noLeaveType Then description.Add("no Leave Type")
 
                 If _noStartDate Then description.Add("no Start Date")
+
+                If _invalidStartDate Then description.Add("dates cannot be earlier than January 1, 1753.")
 
                 If _employeeNotExists Then description.Add("Employee doesn't belong here")
 
@@ -462,22 +414,22 @@ Public Class ImportLeaveForm
             End If
         End Function
 
-        Public Function ToLeave() As Leave
-
-            If StartDate Is Nothing OrElse EndTime Is Nothing Then
-                Return Nothing
-            End If
+        Public Function ToLeave(Optional isNew As Boolean = True) As Leave
 
             Return New Leave With {
-                .StartDate = StartDate,
-                .EndDate = EndDate,
+                .OrganizationID = z_OrganizationID,
+                .StartDate = StartDate.Value,
+                .EndDate = EndDate.Value,
                 .StartTime = StartTime,
                 .EndTime = EndTime,
                 .EmployeeID = EmployeeID,
                 .Status = Status,
                 .LeaveType = LeaveType,
                 .Reason = Reason,
-                .Comments = Comment
+                .Comments = Comment,
+                .CreatedBy = z_User,
+                .LastUpdBy = z_User,
+                .IsNew = isNew
             }
         End Function
 
@@ -507,7 +459,7 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-        Static fileFilter = String.Join("|", {"Microsoft Excel Workbook Documents 2007-13 (*.xlsx)", "*.xlsx", "Microsoft Excel Documents 97-2003 (*.xls)", "*.xls"})
+        Static fileFilter As String = String.Join("|", {"Microsoft Excel Workbook Documents 2007-13 (*.xlsx)", "*.xlsx", "Microsoft Excel Documents 97-2003 (*.xls)", "*.xls"})
 
         Dim browseFile = New OpenFileDialog With {
             .Filter = fileFilter,
@@ -527,7 +479,7 @@ Public Class ImportLeaveForm
             Using package As New ExcelPackage(fileInfo)
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
-                Dim leaveTypes
+                Dim leaveTypes As List(Of String)
                 Using context As New PayrollContext
                     Dim categleavID = Await context.Categories.
                                         Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).

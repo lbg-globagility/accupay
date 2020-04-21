@@ -15,7 +15,13 @@ Public Class UserActivityForm
 
         Public Property Name As String
         Public Property Description As String
-        Public Property DateAndTime As String
+        Public Property [Date] As Date
+
+        Public ReadOnly Property DateAndTime As String
+            Get
+                Return [Date].ToString("MMM dd, yyyy hh:mm tt")
+            End Get
+        End Property
 
     End Class
 
@@ -38,12 +44,12 @@ Public Class UserActivityForm
                 list.Add(New ActivityItem With {
                     .Name = activity.User.LastName + ", " + activity.User.FirstName,
                     .Description = item.Description,
-                    .DateAndTime = item.Created.ToString("MMM dd, yyyy hh:mm tt")
+                    .Date = item.Created
                 })
             Next
         Next
 
-        DataGridView1.DataSource = list.OrderByDescending(Function(a) a.DateAndTime).ToList
+        DataGridView1.DataSource = list.OrderByDescending(Function(a) a.Date).ToList
 
     End Sub
 
