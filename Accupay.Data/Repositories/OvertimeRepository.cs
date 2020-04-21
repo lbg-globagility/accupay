@@ -74,7 +74,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        internal async Task InternalSaveAsync(int organizationID, int userID, Overtime overtime, PayrollContext context = null/* TODO Change to default(_) if this is not a reference type */)
+        internal async Task InternalSaveAsync(int organizationID, int userID, Overtime overtime, PayrollContext passedContext = null/* TODO Change to default(_) if this is not a reference type */)
         {
             overtime.OrganizationID = organizationID;
             if (overtime.OTStartTime.HasValue)
@@ -82,19 +82,17 @@ namespace AccuPay.Data.Repositories
             if (overtime.OTEndTime.HasValue)
                 overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
 
-            if (context == null)
+            if (passedContext == null)
             {
-                context = new PayrollContext();
+                var newContext = new PayrollContext();
 
-                using (context)
+                using (newContext)
                 {
-                    await SaveAsyncFunction(userID, overtime, context);
-
-                    await context.SaveChangesAsync();
+                    await SaveAsyncFunction(userID, overtime, newContext);
                 }
             }
             else
-                await SaveAsyncFunction(userID, overtime, context);
+                await SaveAsyncFunction(userID, overtime, passedContext);
         }
 
         public async Task SaveAsync(int organizationID, int userID, Overtime overtime)
