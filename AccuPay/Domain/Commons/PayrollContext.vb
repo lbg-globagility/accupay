@@ -95,8 +95,6 @@ Public Class PayrollContext
 
     Public Overridable Property Leaves As DbSet(Of Leave)
 
-    Public Overridable Property Overtimes As DbSet(Of Entities.Overtime)
-
     Public Overridable Property OfficialBusinesses As DbSet(Of OfficialBusiness)
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
