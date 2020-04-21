@@ -47,7 +47,7 @@ Public Class BenchmarkPayrollForm
 
     Private _overtimes As List(Of OvertimeInput)
 
-    Private _ecola As Allowance
+    Private _ecola As Data.Entities.Allowance
 
     Private _pagibigLoan As LoanSchedule
 

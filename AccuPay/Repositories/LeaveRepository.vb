@@ -409,6 +409,8 @@ Namespace Global.AccuPay.Repository
                                                     Where(Function(p) p.IsBetween(leave.StartDate)).
                                                     FirstOrDefault
 
+            If currentPayPeriod Is Nothing Then Return New List(Of Leave)
+
             Dim firstDayOfTheYear As Date? = Await PayrollTools.GetFirstDayOfTheYear(context, currentPayPeriod)
 
             Dim lastDayOfTheYear = context.PayPeriods.

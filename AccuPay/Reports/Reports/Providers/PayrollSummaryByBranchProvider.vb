@@ -126,7 +126,7 @@ Public Class PayrollSummaryByBranchProvider
 
     Private Function GeneratePayPeriodModels(startDate As Date,
                                              endDate As Date,
-                                             selectedBranch As Branch) As _
+                                             selectedBranch As Data.Entities.Branch) As _
                                              List(Of PayPeriodModel)
 
         Dim payPeriodModels As New List(Of PayPeriodModel)
@@ -353,7 +353,7 @@ Public Class PayrollSummaryByBranchProvider
 
     End Function
 
-    Private Shared Function GetSelectedBranch() As Branch
+    Private Shared Function GetSelectedBranch() As Data.Entities.Branch
 
         Dim selectBranchDialog As New SelectBranchForm
 

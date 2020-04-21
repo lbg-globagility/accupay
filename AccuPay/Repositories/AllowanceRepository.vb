@@ -87,18 +87,18 @@ Namespace Global.AccuPay.Repository
             Optional passedContext As PayrollContext = Nothing) As Task
 
             'remove the product so it won't override the saving of ProductID
-            Dim newAllowance = allowance.CloneJson()
-            newAllowance.Product = Nothing
+            'Dim newAllowance = allowance.CloneJson()
+            allowance.Product = Nothing
 
-            newAllowance.OrganizationID = z_OrganizationID
+            allowance.OrganizationID = z_OrganizationID
 
             'add or update the allowance
             If passedContext Is Nothing Then
                 Using newContext As New PayrollContext
-                    Await SaveAsyncFunction(newAllowance, newContext)
+                    Await SaveAsyncFunction(allowance, newContext)
                 End Using
             Else
-                Await SaveAsyncFunction(newAllowance, passedContext)
+                Await SaveAsyncFunction(allowance, passedContext)
             End If
         End Function
 

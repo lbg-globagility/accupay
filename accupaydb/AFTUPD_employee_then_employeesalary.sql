@@ -9,20 +9,6 @@ SET @OLDTMP_SQL_MODE=@@SQL_MODE, SQL_MODE='STRICT_TRANS_TABLES,NO_ENGINE_SUBSTIT
 DELIMITER //
 CREATE TRIGGER `AFTUPD_employee_then_employeesalary` AFTER UPDATE ON `employee` FOR EACH ROW BEGIN
 
-DECLARE empBasicPay DECIMAL(11,2);
-
-DECLARE prevesalRowID INT(11);
-
-DECLARE thebasicpay DECIMAL(11,2) DEFAULT 0;
-
-DECLARE thedailypay DECIMAL(11,2) DEFAULT 0;
-
-DECLARE thehourlypay DECIMAL(11,2) DEFAULT 0;
-
-DECLARE psssID INT(11);
-
-DECLARE phhID INT(11);
-
 DECLARE emp_chklist_ID INT(11);
 
 DECLARE viewID INT(11);
@@ -36,71 +22,6 @@ DECLARE NEW_agfee DECIMAL(11,2) DEFAULT 0;
 DECLARE OLD_agfee DECIMAL(11,2) DEFAULT 0;
 
 DECLARE agfee_percent DECIMAL(11,2) DEFAULT 0;
-
-SET @salary_count = (SELECT COUNT(RowID) FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID);
-
-IF NEW.NoOfDependents != OLD.NoOfDependents OR NEW.MaritalStatus != COALESCE(OLD.MaritalStatus,'') OR @salary_count = 0 THEN
-
-    IF NEW.EmploymentStatus NOT IN ('Resigned','Terminated') THEN
-
-        SELECT RowID,Salary FROM employeesalary WHERE EmployeeID=NEW.RowID AND OrganizationID=NEW.OrganizationID AND EffectiveDateTo IS NULL ORDER BY DATEDIFF(DATE_FORMAT(NOW(),'%Y-%m-%d'),EffectiveDateFrom) LIMIT 1 INTO prevesalRowID,empBasicPay;
-
-        SELECT RowID FROM payphilhealth WHERE COALESCE(empBasicPay,0) BETWEEN SalaryRangeFrom AND IF(COALESCE(empBasicPay,0) > SalaryRangeTo, COALESCE(empBasicPay,0) + 1, SalaryRangeTo) ORDER BY SalaryBase DESC LIMIT 1 INTO phhID;
-
-        IF NEW.EmployeeType IN ('Fixed','Monthly') THEN
-            IF NEW.PayFrequencyID=1 THEN
-                SET thebasicpay = empBasicPay / 2;
-                SET thedailypay = 0;
-                SET thehourlypay = 0;
-            ELSE
-                SET thebasicpay = empBasicPay;
-                SET thedailypay = 0;
-                SET thehourlypay = 0;
-            END IF;
-
-            SELECT RowID FROM paysocialsecurity WHERE COALESCE(empBasicPay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-
-        ELSEIF NEW.EmployeeType = 'Daily' THEN
-                SET thebasicpay = empBasicPay;
-                SET thedailypay = empBasicPay;
-                SET thehourlypay = 0;
-
-            SELECT RowID FROM paysocialsecurity WHERE COALESCE(thedailypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-
-        ELSEIF NEW.EmployeeType = 'Hourly' THEN
-                SET thebasicpay = empBasicPay;
-                SET thedailypay = 0;
-                SET thehourlypay = empBasicPay;
-
-            SELECT RowID FROM paysocialsecurity WHERE COALESCE(thehourlypay,0) BETWEEN RangeFromAmount AND IF(COALESCE(thebasicpay,0) > RangeToAmount, COALESCE(thebasicpay,0) + 1, RangeToAmount) ORDER BY MonthlySalaryCredit DESC LIMIT 1 INTO psssID;
-
-        END IF;
-
-        SET @emp_true_sal = (SELECT TrueSalary FROM employeesalary WHERE RowID=prevesalRowID);
-    
-    END IF;
-
-ELSEIF NEW.EmploymentStatus = 'Resigned' THEN
-
-    UPDATE employeesalary SET
-    LastUpdBy=NEW.LastUpdBy
-    ,EffectiveDateTo=CURRENT_DATE()
-    WHERE EmployeeID=NEW.RowID
-    AND OrganizationID=NEW.OrganizationID
-    AND EffectiveDateTo IS NULL;
-
-ELSEIF NEW.EmploymentStatus = 'Terminated' THEN
-
-    UPDATE employeesalary SET
-    LastUpdBy=NEW.LastUpdBy
-    ,EffectiveDateTo=CURRENT_DATE()
-    WHERE EmployeeID=NEW.RowID
-    AND OrganizationID=NEW.OrganizationID
-    AND EffectiveDateTo IS NULL;
-
-
-
-END IF;
 
 SELECT RowID FROM employeechecklist WHERE EmployeeID=NEW.RowID ORDER BY RowID DESC LIMIT 1 INTO emp_chklist_ID;
 

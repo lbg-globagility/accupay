@@ -1,7 +1,8 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class EmployeeOvertimeForm
@@ -18,9 +19,7 @@ Public Class EmployeeOvertimeForm
 
     Private _overtimeRepository As New OvertimeRepository
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -222,6 +221,71 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
+    Private Function RecordUpdate(newOvertime As Overtime)
+        Dim oldOvertime =
+            Me._changedOvertimes.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOvertime.RowID))
+
+        If oldOvertime Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'"
+                        })
+        End If
+        If newOvertime.OTEndDate <> oldOvertime.OTEndDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'"
+                        })
+        End If
+        If newOvertime.OTStartTime <> oldOvertime.OTStartTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'"
+                        })
+        End If
+        If newOvertime.OTEndTime <> oldOvertime.OTEndTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'"
+                        })
+        End If
+        If newOvertime.Reason <> oldOvertime.Reason Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'"
+                        })
+        End If
+        If newOvertime.Comments <> oldOvertime.Comments Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'"
+                        })
+        End If
+        If newOvertime.Status <> oldOvertime.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOvertime.RowID,
+                        .Description = $"Update overtime status from '{oldOvertime.Status}' to '{newOvertime.Status}'"
+                        })
+        End If
+
+        Dim repo = New UserActivityRepository
+        repo.CreateRecord(z_User, "Overtime", z_OrganizationID, "EDIT", changes)
+
+        Return True
+    End Function
+
     Private Function GetSelectedOvertime() As Overtime
         Return CType(OvertimeGridView.CurrentRow.DataBoundItem, Overtime)
     End Function
@@ -259,6 +323,9 @@ Public Class EmployeeOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Overtime", Me._currentOvertime.RowID, z_OrganizationID)
 
                                                 Await LoadOvertimes(currentEmployee)
 
@@ -425,7 +492,7 @@ Public Class EmployeeOvertimeForm
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceGridViewCommit()
 
-        Dim overlappingOvertimes = ConflictingOvertime()
+        Dim overlappingOvertimes = ScrutinizedConflictingOvertime(_currentOvertimes)
         Dim hasWorry = overlappingOvertimes.Any()
 
         Dim messageTitle = "Update Overtimes"
@@ -439,6 +506,8 @@ Public Class EmployeeOvertimeForm
                 {overtime1.OTStartTime.Value.ToString(timeFormat)}-{overtime1.OTEndTime.Value.ToString(timeFormat)} {overtime1.OTStartDate.ToShortDateString}-{overtime1.OTEndDate.ToShortDateString}
                 {overtime2.OTStartTime.Value.ToString(timeFormat)}-{overtime2.OTEndTime.Value.ToString(timeFormat)} {overtime2.OTStartDate.ToShortDateString}-{overtime2.OTEndDate.ToShortDateString}",
                         messageTitle)
+
+            SetCurrentOvertimeRow(overtime2)
             Return
         End If
 
@@ -472,6 +541,10 @@ Public Class EmployeeOvertimeForm
                                         Async Function()
                                             Await _overtimeRepository.SaveManyAsync(changedOvertimes)
 
+                                            For Each item In changedOvertimes
+                                                RecordUpdate(item)
+                                            Next
+
                                             ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
 
                                             Dim currentEmployee = GetSelectedEmployee()
@@ -485,51 +558,57 @@ Public Class EmployeeOvertimeForm
                                         End Function)
     End Sub
 
-    Private Function ConflictingOvertime() As List(Of Overtime)
-        Dim overtimeList = _currentOvertimes.
-            GroupBy(Function(ot) ot.OTStartDate).
-            GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
-            Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
-            ToList()
-
-        Dim itHas = False 'overtimeList.Any()
-
-        Dim approved = Overtime.StatusApproved
+    Public Function ScrutinizedConflictingOvertime(otList As List(Of Overtime), Optional otStatus As String = "") As List(Of Overtime)
+        Dim employeeIDs = otList.GroupBy(Function(ot) ot.EmployeeID).Select(Function(id) id.Key).ToList()
 
         Dim overlappingOvertime As New List(Of Overtime)
 
-        For Each ot In overtimeList
-            Dim otStartDate = ot.Key
-            Dim overtimes = _currentOvertimes.
-                Where(Function(o) o.OTStartDate = otStartDate AndAlso o.OTEndDate = ot.OTEndDate).
-                Where(Function(o) o.Status = approved).
-                OrderBy(Function(o) o.OTStartTime).
+        Dim approved = If(String.IsNullOrEmpty(otStatus), Overtime.StatusApproved, otStatus)
+
+        For Each employeeID In employeeIDs
+
+            Dim overtimeList = otList.
+                Where(Function(ot) ot.EmployeeID = employeeID).
+                GroupBy(Function(ot) ot.OTStartDate).
+                GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
+                Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
                 ToList()
-            'OrderBy(Function(o) o.OTEndTime).
 
-            Dim isMoreThanOne = If(overtimes.Any(), overtimes.Count() > 1, False)
-            If Not isMoreThanOne Then Continue For
+            Dim itHas = False 'overtimeList.Any()
 
-            Dim count = overtimes.Count - 1
-            Dim preceedingOvertime = overtimes.FirstOrDefault
-            Dim thisIsIt = preceedingOvertime.EmployeeID.Value = 75 And preceedingOvertime.OTStartDate.Date = New Date(2020, 2, 18)
-            If thisIsIt Then Console.WriteLine("This is it...")
-            For i = 1 To count
-                Dim proceedingOvertime = overtimes(i)
+            For Each ot In overtimeList
+                Dim otStartDate = ot.Key
+                Dim overtimes = otList.
+                    Where(Function(o) o.OTStartDate = otStartDate AndAlso o.OTEndDate = ot.OTEndDate).
+                    Where(Function(o) o.Status = approved).
+                    OrderBy(Function(o) o.OTStartTime).
+                    ToList()
+                'OrderBy(Function(o) o.OTEndTime).
 
-                If preceedingOvertime.OTStartTime.Value < proceedingOvertime.OTStartTime.Value _
-                    AndAlso proceedingOvertime.OTStartTime.Value < preceedingOvertime.OTEndTime.Value Then
+                Dim isMoreThanOne = If(overtimes.Any(), overtimes.Count() > 1, False)
+                If Not isMoreThanOne Then Continue For
 
-                    itHas = True
-                    'SetCurrentOvertimeRow(preceedingOvertime)
-                    SetCurrentOvertimeRow(proceedingOvertime)
+                Dim count = overtimes.Count - 1
+                Dim preceedingOvertime = overtimes.FirstOrDefault
+                'Dim thisIsIt = preceedingOvertime.EmployeeID.Value = 75 And preceedingOvertime.OTStartDate.Date = New Date(2020, 2, 18)
+                'If thisIsIt Then Console.WriteLine("This is it...")
+                For i = 1 To count
+                    Dim proceedingOvertime = overtimes(i)
 
-                    overlappingOvertime.Add(preceedingOvertime)
-                    overlappingOvertime.Add(proceedingOvertime)
-                    Exit For
-                End If
+                    If preceedingOvertime.OTStartTime.Value < proceedingOvertime.OTStartTime.Value _
+                        AndAlso proceedingOvertime.OTStartTime.Value < preceedingOvertime.OTEndTime.Value Then
 
-                preceedingOvertime = proceedingOvertime
+                        itHas = True
+
+                        overlappingOvertime.Add(preceedingOvertime)
+                        overlappingOvertime.Add(proceedingOvertime)
+                        Exit For
+                    End If
+
+                    preceedingOvertime = proceedingOvertime
+                Next
+
+                If itHas Then Exit For
             Next
 
             If itHas Then Exit For
@@ -568,4 +647,10 @@ Public Class EmployeeOvertimeForm
         UpdateEndDateDependingOnStartAndEndTimes()
 
     End Sub
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Overtime")
+        userActivity.ShowDialog()
+    End Sub
+
 End Class

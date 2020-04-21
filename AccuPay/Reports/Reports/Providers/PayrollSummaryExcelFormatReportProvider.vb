@@ -1,11 +1,13 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Utilities
+Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
@@ -213,7 +215,11 @@ Public Class PayrollSummaryExcelFormatReportProvider
             End Using
 
             Process.Start(newFile.FullName)
+        Catch ex As IOException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
         Catch ex As Exception
+
             MsgBox(getErrExcptn(ex, Me.Name))
         End Try
     End Sub

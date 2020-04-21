@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -329,6 +330,18 @@ Public Class TimeLogsForm2
                 Next
 
                 Await context.SaveChangesAsync()
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each log In timeLogs
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new time log.",
+                        .EntityId = CInt(log.RowID)
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             End Using
         Catch ex As Exception
@@ -819,14 +832,11 @@ Public Class TimeLogsForm2
 
     Private Async Function PopulateBranchComboBox() As Task
 
-        Using context As New PayrollContext
+        colBranchID.ValueMember = "RowID"
+        colBranchID.DisplayMember = "Name"
 
-            colBranchID.ValueMember = "RowID"
-            colBranchID.DisplayMember = "Name"
-
-            colBranchID.DataSource = Await context.Branches.ToListAsync
-
-        End Using
+        Dim branchRepository As New BranchRepository()
+        colBranchID.DataSource = Await branchRepository.GetAllAsync
 
     End Function
 
@@ -1263,56 +1273,61 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
-        Dim saveFileDialog = New SaveFileDialog()
-        saveFileDialog.FileName = z_CompanyName & "_" & dtpDateFrom.Value.ToString("MM'-'dd'-'yyyy") & "_" & dtpDateTo.Value.ToString("MM'-'dd'-'yyyy")
-        saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
 
-        If saveFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim fileName = saveFileDialog.FileName
-            Dim file = New FileInfo(fileName)
+        Try
+            Dim saveFileDialog = New SaveFileDialog()
+            saveFileDialog.FileName = z_CompanyName & "_" & dtpDateFrom.Value.ToString("MM'-'dd'-'yyyy") & "_" & dtpDateTo.Value.ToString("MM'-'dd'-'yyyy")
+            saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
 
-            If file.Exists() Then
-                Try
+            If saveFileDialog.ShowDialog() = DialogResult.OK Then
+                Dim fileName = saveFileDialog.FileName
+                Dim file = New FileInfo(fileName)
+
+                If file.Exists() Then
 
                     file.Delete()
+                End If
 
-                Catch ex As Exception
-                    MsgBox(getErrExcptn(ex, Me.Name))
-                    Return
-                End Try
+                Using excelPackage = New ExcelPackage(file)
+                    Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
+                    worksheet.Column(5).Style.Numberformat.Format = "mm/dd/yyyy"
+                    worksheet.Column(7).Style.Numberformat.Format = "mm/dd/yyyy"
+
+                    worksheet.Cells("A1").Value = "Employee ID"
+                    worksheet.Cells("B1").Value = "Name"
+                    worksheet.Cells("C1").Value = "Shift Schedule"
+                    worksheet.Cells("D1").Value = "Time In"
+                    worksheet.Cells("E1").Value = "Date In"
+                    worksheet.Cells("F1").Value = "Time Out"
+                    worksheet.Cells("G1").Value = "Date Out"
+
+                    Dim i = 2
+                    For Each row As DataGridViewRow In grid.Rows
+                        If row.Cells(7).Value IsNot Nothing Or row.Cells(12).Value IsNot Nothing Then
+                            worksheet.Cells($"A{i}").Value = row.Cells(2).Value
+                            worksheet.Cells($"B{i}").Value = row.Cells(3).Value
+                            worksheet.Cells($"C{i}").Value = row.Cells(4).Value
+                            worksheet.Cells($"D{i}").Value = row.Cells(7).Value
+                            worksheet.Cells($"E{i}").Value = row.Cells(6).Value
+                            worksheet.Cells($"F{i}").Value = row.Cells(12).Value
+                            worksheet.Cells($"G{i}").Value = row.Cells(8).Value
+                            i += 1
+                        End If
+                    Next
+
+                    excelPackage.Save()
+                    MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
+                End Using
             End If
+        Catch ex As IOException
 
-            Using excelPackage = New ExcelPackage(file)
-                Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
-                worksheet.Column(5).Style.Numberformat.Format = "mm/dd/yyyy"
-                worksheet.Column(7).Style.Numberformat.Format = "mm/dd/yyyy"
+            MessageBoxHelper.ErrorMessage(ex.Message)
+        Catch ex As Exception
 
-                worksheet.Cells("A1").Value = "Employee ID"
-                worksheet.Cells("B1").Value = "Name"
-                worksheet.Cells("C1").Value = "Shift Schedule"
-                worksheet.Cells("D1").Value = "Time In"
-                worksheet.Cells("E1").Value = "Date In"
-                worksheet.Cells("F1").Value = "Time Out"
-                worksheet.Cells("G1").Value = "Date Out"
+            MessageBoxHelper.DefaultErrorMessage()
 
-                Dim i = 2
-                For Each row As DataGridViewRow In grid.Rows
-                    If row.Cells(7).Value IsNot Nothing Or row.Cells(12).Value IsNot Nothing Then
-                        worksheet.Cells($"A{i}").Value = row.Cells(2).Value
-                        worksheet.Cells($"B{i}").Value = row.Cells(3).Value
-                        worksheet.Cells($"C{i}").Value = row.Cells(4).Value
-                        worksheet.Cells($"D{i}").Value = row.Cells(7).Value
-                        worksheet.Cells($"E{i}").Value = row.Cells(6).Value
-                        worksheet.Cells($"F{i}").Value = row.Cells(12).Value
-                        worksheet.Cells($"G{i}").Value = row.Cells(8).Value
-                        i += 1
-                    End If
-                Next
+        End Try
 
-                excelPackage.Save()
-                MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
-            End Using
-        End If
     End Sub
 
 #End Region

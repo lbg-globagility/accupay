@@ -43,7 +43,7 @@ Namespace Benchmark
         Public Shared Async Function GetEcola(
                                         employeeId As Integer,
                                         payDateFrom As Date,
-                                        payDateTo As Date) As Task(Of Allowance)
+                                        payDateTo As Date) As Task(Of Data.Entities.Allowance)
 
             Return Await PayrollTools.GetOrCreateEmployeeEcola(
                                                 employeeId,

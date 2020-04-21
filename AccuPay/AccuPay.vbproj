@@ -368,7 +368,6 @@
     <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Employees\Branch.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\IPaystubRate.vb" />
@@ -446,7 +445,6 @@
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Repositories\AllowanceRepository.vb" />
     <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DayTypeRepository.vb" />
@@ -516,6 +514,12 @@
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
       <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
+      <DependentUpon>UserActivityForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\General Forms\UserActivityForm.vb">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>
@@ -766,7 +770,6 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Domain\Government\PhilHealthBracket.vb" />
-    <Compile Include="Domain\Government\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Government\SocialSecurityBracket.vb" />
     <Compile Include="Domain\Government\WithholdingTaxBracket.vb" />
     <Compile Include="Views\Core Forms\Independent filing\LeaveForm.designer.vb">
@@ -1969,6 +1972,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
+      <DependentUpon>UserActivityForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>

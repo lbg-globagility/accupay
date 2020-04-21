@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -134,6 +135,9 @@ Public Class AddDivisionForm
     Private Async Function SaveDivision(messageTitle As String, sender As Object) As Task
 
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
+
+        Dim repo As New UserActivityRepository
+        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID, z_OrganizationID)
 
         Me.IsSaved = True
 

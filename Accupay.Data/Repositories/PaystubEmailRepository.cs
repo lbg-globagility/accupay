@@ -1,5 +1,4 @@
-﻿using AccuPay.Data;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 

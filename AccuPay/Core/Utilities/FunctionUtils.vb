@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 
 Namespace Global.AccuPay.Utils
 
@@ -42,10 +43,37 @@ Namespace Global.AccuPay.Utils
 
                 Await action()
             Catch ex As ArgumentException
-
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As AccuPayRepositoryException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As Exception
+                Debugger.Break()
 
+                If baseExceptionErrorMessage Is Nothing Then
+
+                    MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+                Else
+
+                    MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
+                End If
+
+            End Try
+
+        End Function
+
+        Public Shared Async Function TryCatchFunctionAsync(
+                                        messageTitle As String,
+                                        action As Func(Of Task(Of Boolean)),
+                                        Optional baseExceptionErrorMessage As String = Nothing) As Task(Of Boolean)
+
+            Try
+
+                Return Await action()
+            Catch ex As ArgumentException
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As AccuPayRepositoryException
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As Exception
                 Debugger.Break()
 
                 If baseExceptionErrorMessage Is Nothing Then

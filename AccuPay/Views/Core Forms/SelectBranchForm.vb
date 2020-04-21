@@ -1,6 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class SelectBranchForm
 
@@ -18,11 +18,7 @@ Public Class SelectBranchForm
 
     Private Async Function LoadBranch() As Task
 
-        Using context As New PayrollContext
-
-            _branches = Await context.Branches.ToListAsync
-
-        End Using
+        _branches = Await New BranchRepository().GetAllAsync()
 
         BranchComboBox.DisplayMember = "Name"
         BranchComboBox.DataSource = _branches

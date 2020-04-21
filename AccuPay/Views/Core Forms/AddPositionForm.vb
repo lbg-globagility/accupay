@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository
@@ -121,6 +122,9 @@ Public Class AddPositionForm
     Private Async Function SavePosition(messageTitle As String, sender As Object) As Task
 
         Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition)
+
+        Dim repo As New UserActivityRepository
+        repo.RecordAdd(z_User, "Position", Me._newPosition.RowID, z_OrganizationID)
 
         Me.IsSaved = True
 

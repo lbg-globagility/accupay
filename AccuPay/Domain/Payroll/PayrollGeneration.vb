@@ -40,7 +40,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
 
-    Private ReadOnly _allowances As ICollection(Of Allowance)
+    Private ReadOnly _allowances As ICollection(Of Data.Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
@@ -490,7 +490,7 @@ Public Class PayrollGeneration
                                 paystub As Paystub,
                                 payperiodId As Integer?,
                                 allowanceId As Integer?,
-                                product As Product) As AllowanceItem
+                                product As Data.Entities.Product) As AllowanceItem
 
         Return New AllowanceItem() With {
                 .OrganizationID = z_OrganizationID,

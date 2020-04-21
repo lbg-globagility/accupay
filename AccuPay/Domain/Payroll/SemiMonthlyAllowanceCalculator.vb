@@ -25,7 +25,7 @@ Public Class SemiMonthlyAllowanceCalculator
         _allowancePolicy = allowancePolicy
     End Sub
 
-    Public Function Calculate(allowance As Allowance) As AllowanceItem
+    Public Function Calculate(allowance As Data.Entities.Allowance) As AllowanceItem
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
                                                 paystub:=_paystub,
