@@ -59,8 +59,6 @@ Public Class PayrollContext
 
     Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
 
-    Public Overridable Property Employees As DbSet(Of Employee)
-
     Public Overridable Property Shifts As DbSet(Of Shift)
 
     Public Overridable Property ListOfValues As DbSet(Of ListOfValue)
