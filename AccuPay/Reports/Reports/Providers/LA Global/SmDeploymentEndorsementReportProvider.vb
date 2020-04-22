@@ -22,6 +22,10 @@ Public Class SmDeploymentEndorsementReportProvider
                 Dim branchName = e.Branch?.Name
                 .SetParameter("storeLocation", If(String.IsNullOrWhiteSpace(branchName), String.Empty, branchName))
 
+                Dim dateNow = Date.UtcNow
+                .SetParameter("startDate", dateNow.Date)
+                .SetParameter("endDate", dateNow.Date)
+
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
