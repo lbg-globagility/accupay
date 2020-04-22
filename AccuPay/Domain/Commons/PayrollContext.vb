@@ -108,8 +108,6 @@ Public Class PayrollContext
 
     Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
 
-    Public Overridable Property PayFrequencies As DbSet(Of PayFrequency)
-
     Public Overridable Property Users As DbSet(Of User)
 
     Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)

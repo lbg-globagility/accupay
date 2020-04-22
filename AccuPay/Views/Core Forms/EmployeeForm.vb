@@ -31,7 +31,7 @@ Public Class EmployeeForm
 
     Private _branches As New List(Of Data.Entities.Branch)
 
-    Private _payFrequencies As New List(Of PayFrequency)
+    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
 
     Private _policy As PolicyHelper
 
@@ -3822,7 +3822,7 @@ Public Class EmployeeForm
 
             Dim payFrequencies = Await (New PayFrequencyRepository()).GetAllAsync()
             _payFrequencies = payFrequencies.
-                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
+                                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
                                     p.RowID = PayFrequencyType.Weekly).ToList
 
             cboPayFreq.ValueMember = "RowID"

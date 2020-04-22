@@ -6,6 +6,8 @@
 
         public static readonly string ALLOWANCE_TYPE_CATEGORY = "Allowance Type";
 
+        public static readonly string BONUS_TYPE_CATEGORY = "Bonus";
+
         public static readonly string LEAVE_TYPE_CATEGORY = "Leave Type";
 
         public static readonly string LOAN_TYPE_CATEGORY = "Loan Type";

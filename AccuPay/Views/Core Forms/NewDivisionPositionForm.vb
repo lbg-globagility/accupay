@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
@@ -17,7 +18,7 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevels As New List(Of JobLevel)
 
-    Private _payFrequencies As New List(Of PayFrequency)
+    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
 
     Private _divisionTypes As List(Of String)
 
@@ -531,7 +532,9 @@ Public Class NewDivisionPositionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.OrderBy(Function(p) p.Type).ToList
+        _payFrequencies = payFrequencies.
+                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
+                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
 
     End Function
 
@@ -805,12 +808,10 @@ Public Class NewDivisionPositionForm
 
         Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
 
-
         If Me._currentDivision.IsRoot Then
 
             Dim repo As New UserActivityRepository
             repo.RecordDelete(z_User, "Division Location", CInt(Me._currentDivision.RowID), z_OrganizationID)
-
         Else
 
             Dim repo As New UserActivityRepository
@@ -884,6 +885,7 @@ Public Class NewDivisionPositionForm
 
         Return False
     End Function
+
     Private Function RecordUpdateDivision() As Boolean
 
         Dim oldDivision =
@@ -1211,4 +1213,5 @@ Public Class NewDivisionPositionForm
         Dim userActivity As New UserActivityForm("Position")
         userActivity.ShowDialog()
     End Sub
+
 End Class

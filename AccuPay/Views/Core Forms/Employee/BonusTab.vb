@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -11,7 +12,7 @@ Public Class BonusTab
 
     Private _bonuses As List(Of Bonus)
 
-    Private _products As IEnumerable(Of Entity.Product)
+    Private _products As IEnumerable(Of Product)
 
     Private _currentBonus As New Bonus
 
@@ -24,6 +25,7 @@ Public Class BonusTab
         dgvempbon.AutoGenerateColumns = False
 
     End Sub
+
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         dtpbonenddate.Enabled = False
@@ -49,8 +51,8 @@ Public Class BonusTab
         Dim bonusRepo = New BonusRepository
         _bonuses = bonusRepo.GetByEmployee(_employee.RowID.Value).ToList
 
-        Dim productRepo = New Repository.ProductRepository
-        _products = Await productRepo.GetBonusTypes()
+        Dim productRepo = New ProductRepository
+        _products = Await productRepo.GetBonusTypes(z_OrganizationID)
 
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         Await BindDataSource()
@@ -69,7 +71,7 @@ Public Class BonusTab
 
     Private Async Function BindDataSource() As Task
 
-        Dim payFrequencyRepo = New Repository.PayFrequencyRepository
+        Dim payFrequencyRepo = New PayFrequencyRepository
         cbobonfreq.DataSource = (Await payFrequencyRepo.GetAllAsync()).Select(Function(x) x.Type).ToList()
         cbobontype.DisplayMember = "Name"
         cbobontype.DataSource = _products
@@ -205,14 +207,12 @@ Public Class BonusTab
                     MessageBoxHelper.Warning("No value changed")
                     Return False
                 End If
-
             Else
                 _currentBonus.CreatedBy = z_User
                 repo.Create(_currentBonus)
                 messageTitle = "New Bonus"
                 succeed = True
             End If
-
         Catch ex As Exception
             MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
         End Try
@@ -223,10 +223,9 @@ Public Class BonusTab
         ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
         Return True
 
-
     End Function
 
-    Private Function IsChanged(product As Entity.Product) As Boolean
+    Private Function IsChanged(product As Product) As Boolean
         If _currentBonus.ProductID <> product.RowID Or
             _currentBonus.Product.Name <> cbobontype.SelectedItem.ToString Or
             _currentBonus.AllowanceFrequency <> cbobonfreq.SelectedItem.ToString Or
@@ -279,6 +278,7 @@ Public Class BonusTab
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, pbEmpPicBon, 100, -110)
     End Sub
+
     Private Sub DisableBonusGrid()
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         dgvempbon.ClearSelection()
@@ -293,4 +293,5 @@ Public Class BonusTab
             SelectBonus(DirectCast(dgvempbon.CurrentRow.DataBoundItem, Bonus))
         End If
     End Sub
+
 End Class
