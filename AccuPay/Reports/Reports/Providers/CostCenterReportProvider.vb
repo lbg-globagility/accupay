@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports System.IO
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
@@ -11,11 +12,11 @@ Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 Imports PayrollSys
 
-Public Class PayrollSummaryByBranchProvider
+Public Class CostCenterReportProvider
     Inherits ExcelFormatReport
     Implements IReportProvider
 
-    Public Property Name As String = "Payroll Summary by Branch" Implements IReportProvider.Name
+    Public Property Name As String = "Cost Center Report" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
@@ -28,12 +29,20 @@ Public Class PayrollSummaryByBranchProvider
     Private Const DailyRateDescription As String = "DailyRate"
     Private Const HoulyRateDescription As String = "HoulyRate"
     Private Const BasicPayDescription As String = "BasicPay"
-    Private Const TotalOvertimeHoursDescription As String = "TotalOvertimeHours"
-    Private Const TotalOvertimePayDescription As String = "TotalOvertimePay"
+    Private Const OvertimeHoursDescription As String = "OvertimeHours"
+    Private Const OvertimePayDescription As String = "OvertimePay"
+    Private Const NightDiffHoursDescription As String = "NightDiffHours"
+    Private Const NightDiffPayDescription As String = "NightDiffPay"
+    Private Const NightDiffOvertimeHoursDescription As String = "NightDiffOvertimeHours"
+    Private Const NightDiffOvertimePayDescription As String = "NightDiffOvertimePay"
     Private Const SpecialHolidayHoursDescription As String = "SpecialHolidayHours"
     Private Const SpecialHolidayPayDescription As String = "SpecialHolidayPay"
-    Private Const LegalHolidayHoursDescription As String = "LegalHolidayHours"
-    Private Const LegalHolidayPayDescription As String = "LegalHolidayPay"
+    Private Const SpecialHolidayOTHoursDescription As String = "SpecialHolidayOTHours"
+    Private Const SpecialHolidayOTPayDescription As String = "SpecialHolidayOTPay"
+    Private Const RegularHolidayHoursDescription As String = "RegularHolidayHours"
+    Private Const RegularHolidayPayDescription As String = "RegularHolidayPay"
+    Private Const RegularHolidayOTHoursDescription As String = "RegularHolidayOTHours"
+    Private Const RegularHolidayOTPayDescription As String = "RegularHolidayOTPay"
     Private Const GrossPayDescription As String = "GrossPay"
     Private Const SSSAmountDescription As String = "SSSAmount"
     Private Const ECAmountDescription As String = "ECAmount"
@@ -53,12 +62,20 @@ Public Class PayrollSummaryByBranchProvider
                 New ExcelReportColumn("RATE", DailyRateDescription),
                 New ExcelReportColumn("HOURLY", HoulyRateDescription),
                 New ExcelReportColumn("GROSS PAY", BasicPayDescription),
-                New ExcelReportColumn("NO. OF OT HOURS", TotalOvertimeHoursDescription),
-                New ExcelReportColumn("OT PAY", TotalOvertimePayDescription),
+                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursDescription),
+                New ExcelReportColumn("OT PAY", OvertimePayDescription),
+                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursDescription),
+                New ExcelReportColumn("ND PAY", NightDiffPayDescription),
+                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursDescription),
+                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayDescription),
                 New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursDescription),
                 New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayDescription),
-                New ExcelReportColumn("LEGAL HOLIDAY HOURS", LegalHolidayHoursDescription),
-                New ExcelReportColumn("LH HOLIDAY PAY", LegalHolidayPayDescription),
+                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursDescription),
+                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayDescription),
+                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursDescription),
+                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayDescription),
+                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursDescription),
+                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayDescription),
                 New ExcelReportColumn("TOTAL GROSS PAY", GrossPayDescription),
                 New ExcelReportColumn("SSS", SSSAmountDescription),
                 New ExcelReportColumn("EREC", ECAmountDescription),
@@ -75,38 +92,47 @@ Public Class PayrollSummaryByBranchProvider
 
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim payrollSelector = GetPayrollSelector()
-        If payrollSelector Is Nothing Then Return
+        Try
+            Dim payrollSelector = GetPayrollSelector()
+            If payrollSelector Is Nothing Then Return
 
-        Dim selectedBranch = GetSelectedBranch()
-        If selectedBranch Is Nothing Then Return
+            Dim selectedBranch = GetSelectedBranch()
+            If selectedBranch Is Nothing Then Return
 
-        MsgBox($"({payrollSelector.PayPeriodFromID} - {payrollSelector.PayPeriodToID}) / {selectedBranch.Name}")
+            MsgBox($"({payrollSelector.PayPeriodFromID} - {payrollSelector.PayPeriodToID}) / {selectedBranch.Name}")
 
-        Dim defaultFileName = GetDefaultFileName("PayrollSummaryByBranch", payrollSelector)
+            Dim defaultFileName = GetDefaultFileName("PayrollSummaryByBranch", payrollSelector)
 
-        Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
+            Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
-        If saveFileDialogHelperOutPut.IsSuccess = False Then
-            Return
-        End If
+            If saveFileDialogHelperOutPut.IsSuccess = False Then
+                Return
+            End If
 
-        Dim newFile = saveFileDialogHelperOutPut.FileInfo
+            Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-        Dim payPeriodModels = GeneratePayPeriodModels(payrollSelector.DateFrom.Value,
-                                                      payrollSelector.DateTo.Value,
-                                                      selectedBranch)
+            Dim payPeriodModels = GeneratePayPeriodModels(payrollSelector.DateFrom.Value,
+                                                          payrollSelector.DateTo.Value,
+                                                          selectedBranch)
 
-        If payPeriodModels.Any = False Then
+            If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
 
-            MessageBoxHelper.ErrorMessage("No paystubs to show.")
-            Return
+                MessageBoxHelper.ErrorMessage("No paystubs to show.")
+                Return
 
-        End If
+            End If
 
-        GenerateExcel(payPeriodModels, newFile)
+            GenerateExcel(payPeriodModels, newFile)
 
-        Process.Start(newFile.FullName)
+            Process.Start(newFile.FullName)
+        Catch ex As IOException
+
+            MessageBoxHelper.ErrorMessage(ex.Message)
+        Catch ex As Exception
+
+            MsgBox(getErrExcptn(ex, Me.Name))
+
+        End Try
 
     End Sub
 
@@ -156,6 +182,7 @@ Public Class PayrollSummaryByBranchProvider
             'Get all the employee in the branch
             'Also get the employees that has at least 1 timelogs on the branch
             Dim employees = context.Employees.
+                Where(Function(e) e.IsDaily). 'This report is for daily employee only
                 Where(Function(e) (e.BranchID.HasValue AndAlso
                                     e.BranchID.Value = selectedBranch.RowID.Value) OrElse
                                    employeesWithTimeEntriesInBranch.Contains(e.RowID.Value)).
@@ -391,14 +418,26 @@ Public Class PayrollSummaryByBranchProvider
             paystubModel.RegularHours = totalTimeEntries.RegularHours
             paystubModel.HourlyRate = totalTimeEntries.HourlyRate
 
-            paystubModel.TotalOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.OvertimeHours)
-            paystubModel.TotalOvertimePay = totalTimeEntries.OvertimePay
+            paystubModel.OvertimeHours = AccuMath.CommercialRound(totalTimeEntries.OvertimeHours)
+            paystubModel.OvertimePay = totalTimeEntries.OvertimePay
+
+            paystubModel.NightDiffHours = AccuMath.CommercialRound(totalTimeEntries.NightDiffHours)
+            paystubModel.NightDiffPay = totalTimeEntries.NightDiffPay
+
+            paystubModel.NightDiffOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.NightDiffOvertimeHours)
+            paystubModel.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay
 
             paystubModel.SpecialHolidayHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayHours)
             paystubModel.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay
 
-            paystubModel.LegalHolidayHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayHours)
-            paystubModel.LegalHolidayPay = totalTimeEntries.RegularHolidayPay
+            paystubModel.SpecialHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayOTHours)
+            paystubModel.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay
+
+            paystubModel.RegularHolidayHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayHours)
+            paystubModel.RegularHolidayPay = totalTimeEntries.RegularHolidayPay
+
+            paystubModel.RegularHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayOTHours)
+            paystubModel.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay
 
             'paystubModel.LeaveHours = totalTimeEntries.LeaveHours
             'paystubModel.LeavePay = totalTimeEntries.LeavePay
@@ -443,17 +482,31 @@ Public Class PayrollSummaryByBranchProvider
             End Get
         End Property
 
-        Private Property TotalOvertimeHours As Decimal
-        Private Property TotalOvertimePay As Decimal
+        Private Property OvertimeHours As Decimal
+        Private Property OvertimePay As Decimal
+        Private Property NightDiffHours As Decimal
+        Private Property NightDiffPay As Decimal
+        Private Property NightDiffOvertimeHours As Decimal
+        Private Property NightDiffOvertimePay As Decimal
         Private Property SpecialHolidayHours As Decimal
         Private Property SpecialHolidayPay As Decimal
-        Private Property LegalHolidayHours As Decimal
-        Private Property LegalHolidayPay As Decimal
+        Private Property SpecialHolidayOTHours As Decimal
+        Private Property SpecialHolidayOTPay As Decimal
+        Private Property RegularHolidayHours As Decimal
+        Private Property RegularHolidayPay As Decimal
+        Private Property RegularHolidayOTHours As Decimal
+        Private Property RegularHolidayOTPay As Decimal
 
         Public ReadOnly Property GrossPay As Decimal
             Get
-                Return AccuMath.CommercialRound(RegularPay + TotalOvertimePay +
-                                                SpecialHolidayPay + LegalHolidayPay)
+                Return AccuMath.CommercialRound(RegularPay +
+                                                OvertimePay +
+                                                NightDiffPay +
+                                                NightDiffOvertimePay +
+                                                SpecialHolidayPay +
+                                                SpecialHolidayOTPay +
+                                                RegularHolidayPay +
+                                                RegularHolidayOTPay)
             End Get
         End Property
 
@@ -473,28 +526,36 @@ Public Class PayrollSummaryByBranchProvider
                 If _lookUp IsNot Nothing Then Return _lookUp
 
                 _lookUp = New Dictionary(Of String, String)
-                _lookUp("EmployeeId") = Me.EmployeeId.ToString
-                _lookUp("EmployeeName") = Me.EmployeeName
-                _lookUp("TotalDays") = Me.RegularDays.ToString
-                _lookUp("TotalHours") = Me.RegularHours.ToString
-                _lookUp("DailyRate") = Me.DailyRate.ToString
-                _lookUp("HoulyRate") = Me.HourlyRate.ToString
-                _lookUp("BasicPay") = Me.RegularPay.ToString
-                _lookUp("TotalOvertimeHours") = Me.TotalOvertimeHours.ToString
-                _lookUp("TotalOvertimePay") = Me.TotalOvertimePay.ToString
-                _lookUp("SpecialHolidayHours") = Me.SpecialHolidayHours.ToString
-                _lookUp("SpecialHolidayPay") = Me.SpecialHolidayPay.ToString
-                _lookUp("LegalHolidayHours") = Me.LegalHolidayHours.ToString
-                _lookUp("LegalHolidayPay") = Me.LegalHolidayPay.ToString
-                _lookUp("GrossPay") = Me.GrossPay.ToString
-                _lookUp("SSSAmount") = Me.SSSAmount.ToString
-                _lookUp("ECAmount") = Me.ECAmount.ToString
-                _lookUp("HDMFAmount") = Me.HDMFAmount.ToString
-                _lookUp("PhilHealthAmount") = Me.PhilHealthAmount.ToString
-                _lookUp("HMOAmount") = Me.HMOAmount.ToString
-                _lookUp("ThirteenthMonthPay") = Me.ThirteenthMonthPay.ToString
-                _lookUp("LeaveAmount") = Me.LeaveAmount.ToString
-                _lookUp("NetPay") = Me.NetPay.ToString
+                _lookUp(EmployeeIdDescription) = Me.EmployeeId.ToString
+                _lookUp(EmployeeNameDescription) = Me.EmployeeName
+                _lookUp(TotalDaysDescription) = Me.RegularDays.ToString
+                _lookUp(TotalHoursDescription) = Me.RegularHours.ToString
+                _lookUp(DailyRateDescription) = Me.DailyRate.ToString
+                _lookUp(HoulyRateDescription) = Me.HourlyRate.ToString
+                _lookUp(BasicPayDescription) = Me.RegularPay.ToString
+                _lookUp(OvertimeHoursDescription) = Me.OvertimeHours.ToString
+                _lookUp(OvertimePayDescription) = Me.OvertimePay.ToString
+                _lookUp(NightDiffHoursDescription) = Me.NightDiffHours.ToString
+                _lookUp(NightDiffPayDescription) = Me.NightDiffPay.ToString
+                _lookUp(NightDiffOvertimeHoursDescription) = Me.NightDiffOvertimeHours.ToString
+                _lookUp(NightDiffOvertimePayDescription) = Me.NightDiffOvertimePay.ToString
+                _lookUp(SpecialHolidayHoursDescription) = Me.SpecialHolidayHours.ToString
+                _lookUp(SpecialHolidayPayDescription) = Me.SpecialHolidayPay.ToString
+                _lookUp(SpecialHolidayOTHoursDescription) = Me.SpecialHolidayOTHours.ToString
+                _lookUp(SpecialHolidayOTPayDescription) = Me.SpecialHolidayOTPay.ToString
+                _lookUp(RegularHolidayHoursDescription) = Me.RegularHolidayHours.ToString
+                _lookUp(RegularHolidayPayDescription) = Me.RegularHolidayPay.ToString
+                _lookUp(RegularHolidayOTHoursDescription) = Me.RegularHolidayOTHours.ToString
+                _lookUp(RegularHolidayOTPayDescription) = Me.RegularHolidayOTPay.ToString
+                _lookUp(GrossPayDescription) = Me.GrossPay.ToString
+                _lookUp(SSSAmountDescription) = Me.SSSAmount.ToString
+                _lookUp(ECAmountDescription) = Me.ECAmount.ToString
+                _lookUp(HDMFAmountDescription) = Me.HDMFAmount.ToString
+                _lookUp(PhilHealthAmountDescription) = Me.PhilHealthAmount.ToString
+                _lookUp(HMOAmountDescription) = Me.HMOAmount.ToString
+                _lookUp(ThirteenthMonthPayDescription) = Me.ThirteenthMonthPay.ToString
+                _lookUp(LeaveAmountDescription) = Me.LeaveAmount.ToString
+                _lookUp(NetPayDescription) = Me.NetPay.ToString
 
                 Return _lookUp
             End Get

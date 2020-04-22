@@ -426,7 +426,7 @@
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
     <Compile Include="Reports\Reports\Providers\ExcelFormatReport.vb" />
     <Compile Include="Reports\Reports\Providers\ExcelReportColumn.vb" />
-    <Compile Include="Reports\Reports\Providers\PayrollSummaryByBranchProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\CostCenterReportProvider.vb" />
     <Compile Include="Reports\Reports\SMDeploymentEndorsement.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

@@ -160,7 +160,7 @@ Public Class PayStubForm
     End Sub
 
     Private Sub ShowOrHidePayrollSummaryByBranch()
-        PayrollSummaryByBranchToolStripMenuItem.Visible = _policy.PayRateCalculationBasis =
+        CostCenterReportToolStripMenuItem.Visible = _policy.PayRateCalculationBasis =
                                                             PayRateCalculationBasis.Branch
     End Sub
 
@@ -2027,9 +2027,9 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub PayrollSummaryByBranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollSummaryByBranchToolStripMenuItem.Click
+    Private Sub PayrollSummaryByBranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CostCenterReportToolStripMenuItem.Click
 
-        Dim provider = New PayrollSummaryByBranchProvider()
+        Dim provider = New CostCenterReportProvider()
 
         provider.Run()
 
