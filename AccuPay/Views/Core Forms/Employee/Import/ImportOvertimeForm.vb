@@ -1,19 +1,18 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 
 Public Class ImportOvertimeForm
 
-    Private _overtimes As List(Of Entities.Overtime)
+    Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository()
 
-    Private overtimeRepository As New Repositories.OvertimeRepository()
+    Private overtimeRepository As New OvertimeRepository()
 
     Public IsSaved As Boolean
 
@@ -50,7 +49,7 @@ Public Class ImportOvertimeForm
 
         If parsedSuccessfully = False Then Return
 
-        _overtimes = New List(Of Entities.Overtime)
+        _overtimes = New List(Of Overtime)
 
         Dim acceptedRecords As New List(Of OvertimeRowRecord)
         Dim rejectedRecords As New List(Of OvertimeRowRecord)
@@ -71,7 +70,7 @@ Public Class ImportOvertimeForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
-            record.Type = Entities.Overtime.DefaultType
+            record.Type = Overtime.DefaultType
 
             If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
@@ -80,17 +79,17 @@ Public Class ImportOvertimeForm
             End If
 
             'For database
-            Dim newOvertime = New Entities.Overtime With {
+            Dim newOvertime = New Overtime With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .Type = record.Type,
-                .OTStartDate = record.EffectiveStartDate.Value,
-                .OTEndDate = record.EffectiveEndDate.Value,
-                .OTStartTime = record.EffectiveStartTime,
-                .OTEndTime = record.EffectiveEndTime,
-                .Status = Entities.Overtime.StatusApproved
+                .OTStartDate = record.StartDate.Value,
+                .OTEndDate = record.EndDate.Value,
+                .OTStartTime = record.StartTime,
+                .OTEndTime = record.EndTime,
+                .Status = Overtime.StatusApproved
             }
 
             acceptedRecords.Add(record)
@@ -113,14 +112,21 @@ Public Class ImportOvertimeForm
 
         'Start Date and End Date is not nullable for Overtime so this validations
         'will not be checked by the overtime Class
-        If record.EffectiveStartDate Is Nothing Then
+        If record.StartDate Is Nothing Then
 
             record.ErrorMessage = "Effective Start Date cannot be empty."
             rejectedRecords.Add(record)
             Return False
         End If
 
-        If record.EffectiveEndDate Is Nothing Then
+        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EndDate Is Nothing Then
 
             record.ErrorMessage = "Effective End Date cannot be empty."
             rejectedRecords.Add(record)
@@ -176,6 +182,19 @@ Public Class ImportOvertimeForm
 
         Try
             Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
+
+            Dim importlist = New List(Of UserActivityItem)
+
+            For Each overtime In _overtimes
+                importlist.Add(New UserActivityItem() With
+                    {
+                    .Description = $"Imported a new Overtime.",
+                    .EntityId = CInt(overtime.RowID)
+                    })
+            Next
+
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
             Me.IsSaved = True
 

@@ -1,6 +1,5 @@
 ﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Utils
 
 Public Class AddOvertimeForm
@@ -9,11 +8,11 @@ Public Class AddOvertimeForm
 
     Private _overtimeRepository As New OvertimeRepository
 
-    Private _currentEmployee As Entity.Employee
+    Private _currentEmployee As Employee
 
     Private _newOvertime As New Overtime
 
-    Sub New(employee As Entity.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -145,6 +144,9 @@ Public Class AddOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
                 Await _overtimeRepository.SaveAsync(z_OrganizationID, z_User, Me._newOvertime)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

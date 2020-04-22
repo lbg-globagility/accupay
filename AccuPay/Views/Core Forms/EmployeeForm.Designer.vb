@@ -292,6 +292,7 @@ Partial Class EmployeeForm
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
         Me.ToolStripButton22 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityEmployeeToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpAwards = New System.Windows.Forms.TabPage()
         Me.Panel17 = New System.Windows.Forms.Panel()
         Me.Label320 = New System.Windows.Forms.Label()
@@ -360,6 +361,7 @@ Partial Class EmployeeForm
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.btnAudittrail = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityDisciplinaryActionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpEducBG = New System.Windows.Forms.TabPage()
         Me.Panel13 = New System.Windows.Forms.Panel()
         Me.Label327 = New System.Windows.Forms.Label()
@@ -518,6 +520,7 @@ Partial Class EmployeeForm
         Me.btnCancePromot = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton18 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton19 = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityPromotionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpBonus = New System.Windows.Forms.TabPage()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label342 = New System.Windows.Forms.Label()
@@ -557,6 +560,7 @@ Partial Class EmployeeForm
         Me.ToolStripButton29 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDelBon = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityBonusToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label344 = New System.Windows.Forms.Label()
@@ -591,6 +595,7 @@ Partial Class EmployeeForm
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.tbpNewSalary = New System.Windows.Forms.TabPage()
         Me.SalaryTab = New AccuPay.SalaryTab()
+        Me.BonusTab = New AccuPay.BonusTab()
         Me.imglstQuestMark = New System.Windows.Forms.ImageList(Me.components)
         Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
@@ -3137,7 +3142,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.ToolStripLabel11, Me.ToolStripButton35, Me.tsprogbarempimport, Me.ToolStripButton22, Me.tsbtnImportEmployee})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnClose, Me.tsbtnAudittrail, Me.ToolStripLabel11, Me.ToolStripButton35, Me.tsprogbarempimport, Me.ToolStripButton22, Me.tsbtnImportEmployee, Me.UserActivityEmployeeToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(854, 25)
@@ -3221,6 +3226,14 @@ Partial Class EmployeeForm
         '
         Me.tsbtnImportEmployee.Name = "tsbtnImportEmployee"
         Me.tsbtnImportEmployee.Size = New System.Drawing.Size(23, 22)
+        '
+        'UserActivityEmployeeToolStripButton
+        '
+        Me.UserActivityEmployeeToolStripButton.Image = CType(resources.GetObject("UserActivityEmployeeToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityEmployeeToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityEmployeeToolStripButton.Name = "UserActivityEmployeeToolStripButton"
+        Me.UserActivityEmployeeToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityEmployeeToolStripButton.Text = "User Activity"
         '
         'tbpAwards
         '
@@ -3872,7 +3885,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip8.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip8.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail})
+        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail, Me.UserActivityDisciplinaryActionToolStripButton})
         Me.ToolStrip8.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip8.Name = "ToolStrip8"
         Me.ToolStrip8.Size = New System.Drawing.Size(854, 25)
@@ -3955,6 +3968,14 @@ Partial Class EmployeeForm
         Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
         Me.btnAudittrail.Text = "ToolStripButton1"
         Me.btnAudittrail.ToolTipText = "Show audit trails"
+        '
+        'UserActivityDisciplinaryActionToolStripButton
+        '
+        Me.UserActivityDisciplinaryActionToolStripButton.Image = CType(resources.GetObject("UserActivityDisciplinaryActionToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityDisciplinaryActionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityDisciplinaryActionToolStripButton.Name = "UserActivityDisciplinaryActionToolStripButton"
+        Me.UserActivityDisciplinaryActionToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityDisciplinaryActionToolStripButton.Text = "User Activity"
         '
         'tbpEducBG
         '
@@ -5450,7 +5471,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip11.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip11.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip11.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewPromot, Me.btnSavePromot, Me.ToolStripLabel4, Me.ToolStripSeparator7, Me.btnDelPromot, Me.ToolStripSeparator8, Me.btnCancePromot, Me.ToolStripButton18, Me.ToolStripButton19})
+        Me.ToolStrip11.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNewPromot, Me.btnSavePromot, Me.ToolStripLabel4, Me.ToolStripSeparator7, Me.btnDelPromot, Me.ToolStripSeparator8, Me.btnCancePromot, Me.ToolStripButton18, Me.ToolStripButton19, Me.UserActivityPromotionToolStripButton})
         Me.ToolStrip11.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip11.Name = "ToolStrip11"
         Me.ToolStrip11.Size = New System.Drawing.Size(854, 25)
@@ -5526,12 +5547,19 @@ Partial Class EmployeeForm
         Me.ToolStripButton19.Text = "ToolStripButton1"
         Me.ToolStripButton19.ToolTipText = "Show audit trails"
         '
+        'UserActivityPromotionToolStripButton
+        '
+        Me.UserActivityPromotionToolStripButton.Image = CType(resources.GetObject("UserActivityPromotionToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityPromotionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityPromotionToolStripButton.Name = "UserActivityPromotionToolStripButton"
+        Me.UserActivityPromotionToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityPromotionToolStripButton.Text = "User Activity"
+        '
         'tbpBonus
         '
         Me.tbpBonus.AccessibleDescription = "Employee Bonus"
         Me.tbpBonus.AutoScroll = True
-        Me.tbpBonus.Controls.Add(Me.Panel3)
-        Me.tbpBonus.Controls.Add(Me.ToolStrip20)
+        Me.tbpBonus.Controls.Add(Me.BonusTab)
         Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
         Me.tbpBonus.Name = "tbpBonus"
         Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
@@ -5947,7 +5975,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon, Me.UserActivityBonusToolStripButton})
         Me.ToolStrip20.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(854, 25)
@@ -6011,6 +6039,14 @@ Partial Class EmployeeForm
         Me.tsbtnDelBon.Name = "tsbtnDelBon"
         Me.tsbtnDelBon.Size = New System.Drawing.Size(96, 22)
         Me.tsbtnDelBon.Text = "Delete bonus"
+        '
+        'UserActivityBonusToolStripButton
+        '
+        Me.UserActivityBonusToolStripButton.Image = CType(resources.GetObject("UserActivityBonusToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityBonusToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityBonusToolStripButton.Name = "UserActivityBonusToolStripButton"
+        Me.UserActivityBonusToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityBonusToolStripButton.Text = "User Activity"
         '
         'tbpAttachment
         '
@@ -9637,6 +9673,7 @@ Partial Class EmployeeForm
     Friend WithEvents txtWorkHoursPerWeek As TextBox
     Friend WithEvents tbpNewSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
+    Friend WithEvents BonusTab As BonusTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
     Friend WithEvents ToolStripLabel11 As ToolStripLabel
@@ -9840,6 +9877,10 @@ Partial Class EmployeeForm
     Friend WithEvents BranchID As DataGridViewTextBoxColumn
     Friend WithEvents BPIInsuranceColumn As DataGridViewTextBoxColumn
     Friend WithEvents Column37 As DataGridViewTextBoxColumn
+    Friend WithEvents UserActivityEmployeeToolStripButton As ToolStripButton
+    Friend WithEvents UserActivityBonusToolStripButton As ToolStripButton
+    Friend WithEvents UserActivityPromotionToolStripButton As ToolStripButton
+    Friend WithEvents UserActivityDisciplinaryActionToolStripButton As ToolStripButton
     Friend WithEvents dtpEvaluationDate As DateTimePicker
     Friend WithEvents dtpRegularizationDate As DateTimePicker
     Friend WithEvents Panel4 As Panel

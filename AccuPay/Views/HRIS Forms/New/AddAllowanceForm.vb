@@ -143,6 +143,9 @@ Public Class AddAllowanceForm
                                                      userID:=z_User,
                                                      allowance:=Me._newAllowance)
 
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID, z_OrganizationID)
+
                 Me.IsSaved = True
 
                 If sender Is btnAddAndNew Then

@@ -504,6 +504,12 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
+      <DependentUpon>UserActivityForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\General Forms\UserActivityForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Time Attendance Form\AddLeaveForm.Designer.vb">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>
     </Compile>
@@ -1951,6 +1957,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\General Forms\UserActivityForm.resx">
+      <DependentUpon>UserActivityForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\AddLeaveForm.resx">
       <DependentUpon>AddLeaveForm.vb</DependentUpon>

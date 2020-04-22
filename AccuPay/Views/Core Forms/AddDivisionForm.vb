@@ -1,6 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
 Imports AccuPay.Repository
+Imports AccuPay.Entity
 Imports AccuPay.Utils
 
 Public Class AddDivisionForm
@@ -135,6 +135,9 @@ Public Class AddDivisionForm
 
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
 
+        Dim repo As New Data.Repositories.UserActivityRepository
+        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID, z_OrganizationID)
+
         Me.IsSaved = True
 
         If sender Is btnAddAndNew Then
@@ -142,7 +145,6 @@ Public Class AddDivisionForm
             ShowBalloonInfo($"Division: {Me._newDivision.Name} was successfully added.", "New Division", 0, -50)
 
             ResetForm()
-
         Else
 
             Me.ShowBalloonSuccess = True
@@ -192,4 +194,5 @@ Public Class AddDivisionForm
     Private Sub ShowBalloonInfo(content As String, title As String, Optional x As Integer = 0, Optional y As Integer = 0)
         myBalloon(content, title, DivisionUserControl1, x, y)
     End Sub
+
 End Class

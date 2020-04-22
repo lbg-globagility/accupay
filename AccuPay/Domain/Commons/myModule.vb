@@ -2055,9 +2055,9 @@ Module myModule
 
                 Dim datread As MySqlDataReader
                 datread = .ExecuteReader()
-                If datread.Read Then
-                    return_value = datread(0)
-                End If
+                'If datread.Read Then
+                return_value = datread(0)
+                'End If
             End With
             hasERR = 0
         Catch ex As Exception

@@ -177,6 +177,9 @@ Public Class AddLeaveForm
             Async Function()
                 Await _leaveRepository.SaveAsync(Me._newLeave)
 
+                Dim repo As New Data.Repositories.UserActivityRepository
+                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID, z_OrganizationID)
+
                 Me.IsSaved = True
 
                 If sender Is AddAndNewButton Then

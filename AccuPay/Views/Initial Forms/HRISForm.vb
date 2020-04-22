@@ -246,7 +246,7 @@ Public Class HRISForm
 
     Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpBonus)
+        Dim index = EmployeeForm.GetBonusTabPageIndex
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
         EmployeeForm.tabIndx = index

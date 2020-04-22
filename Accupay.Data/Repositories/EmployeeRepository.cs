@@ -1,116 +1,237 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
     public class EmployeeRepository
     {
-        public async Task<List<Employee>> GetAllAsync(int organizationID)
+        public class EmployeeBuilder : IDisposable
         {
-            using (var context = new PayrollContext())
+            private PayrollContext _context;
+            private IQueryable<Employee> _query;
+
+            public EmployeeBuilder(int organizationId, ILoggerFactory loggerFactory = null)
             {
-                return await GetAllEmployeeBaseQuery(organizationID, context).ToListAsync();
+                if (loggerFactory != null)
+                {
+                    _context = new PayrollContext(loggerFactory);
+                }
+                else
+                {
+                    _context = new PayrollContext();
+                }
+                _query = _context.Employees.Where(e => e.OrganizationID == organizationId);
+            }
+
+            public EmployeeBuilder(ILoggerFactory loggerFactory = null)
+            {
+                if (loggerFactory != null)
+                {
+                    _context = new PayrollContext(loggerFactory);
+                }
+                else
+                {
+                    _context = new PayrollContext();
+                }
+                _query = _context.Employees;
+            }
+
+            #region Builder Methods
+
+            public EmployeeBuilder IsActive()
+            {
+                _query = _query.Where(x => x.IsActive);
+                return this;
+            }
+
+            public EmployeeBuilder ByEmployeeNumber(string employeeNumber)
+            {
+                _query = _query.Where(x => x.EmployeeNo == employeeNumber);
+                return this;
+            }
+
+            public EmployeeBuilder HasPaystubs(int payPeriodId)
+            {
+                _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: true));
+                return this;
+            }
+
+            public EmployeeBuilder HasNoPaystubs(int payPeriodId)
+            {
+                _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: false));
+                return this;
+            }
+
+            public EmployeeBuilder IncludePayFrequency()
+            {
+                _query = _query.Include(x => x.PayFrequency);
+                return this;
+            }
+
+            public EmployeeBuilder IncludePosition()
+            {
+                _query = _query.Include(x => x.Position);
+                // Note: No need to call WithPosition if WithDivision is already called.
+                return this;
+            }
+
+            public EmployeeBuilder IncludeDivision()
+            {
+                _query = _query.Include(x => x.Position.Division);
+                return this;
+            }
+
+            public EmployeeBuilder IncludeBranch()
+            {
+                _query = _query.Include(x => x.Branch);
+                return this;
+            }
+
+            #endregion Builder Methods
+
+            public IEnumerable<Employee> ToList()
+            {
+                return _query.ToList();
+            }
+
+            public async Task<IEnumerable<Employee>> ToListAsync()
+            {
+                return await _query.ToListAsync();
+            }
+
+            public Employee FirstOrDefault(int? employeeId = null)
+            {
+                if (employeeId != null)
+                {
+                    _query = _query.Where(x => x.RowID == employeeId);
+                }
+
+                return _query.FirstOrDefault();
+            }
+
+            public async Task<Employee> FirstOrDefaultAsync(int? employeeId = null)
+            {
+                if (employeeId != null)
+                {
+                    _query = _query.Where(x => x.RowID == employeeId);
+                }
+
+                return await _query.FirstOrDefaultAsync();
+            }
+
+            public void Dispose()
+            {
+                _context.Dispose();
+            }
+
+            private Expression<Func<Employee, bool>> CheckIfEmployeeHasPaystub(int payPeriodId, bool expected)
+            {
+                return e => _context.Paystubs.Any(p => p.EmployeeID.Value == e.RowID.Value &&
+                                                       p.PayPeriodID.Value == payPeriodId) == expected;
             }
         }
 
-        public async Task<List<Employee>> GetAllActiveAsync(int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Where(l => l.IsActive).ToListAsync();
+                return await builder.ToListAsync();
             }
         }
 
-        public async Task<List<Employee>> GetAllActiveWithoutPayrollAsync(int? payPeriodId, int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllActiveAsync(int organizationId)
         {
-            //PayrollContext.DbCommandConsoleLoggerFactory
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context).Where(l => l.IsActive);
-
-                return await query.Where(e => context.Paystubs.Any(p => p.EmployeeID.Value == e.RowID.Value && p.PayPeriodID.Value == payPeriodId.Value) == false).ToListAsync();
+                return await builder.IsActive().
+                                        ToListAsync();
             }
         }
 
-        public async Task<List<Employee>> GetAllWithPayrollAsync(int payPeriodId, int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
         {
-            //PayrollContext.DbCommandConsoleLoggerFactory
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                return await GetAllEmployeeBaseQuery(organizationID, context).Where(e => context.Paystubs.Any(p => p.EmployeeID.Value == e.RowID.Value && p.PayPeriodID.Value == payPeriodId)).ToListAsync();
+                return await builder.HasNoPaystubs(payPeriodId).
+                                        IsActive().
+                                        ToListAsync();
             }
         }
 
-        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId, int organizationId)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Where(l => l.EmployeeNo == employeeNumber).FirstOrDefaultAsync();
+                return await builder.HasPaystubs(payPeriodId).
+                                        ToListAsync();
             }
         }
 
-        public async Task<List<Employee>> GetAllWithPositionAsync(int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Include(e => e.Position).ToListAsync();
+                return await builder.IncludePosition().ToListAsync();
             }
         }
 
-        public async Task<List<Employee>> GetAllActiveWithPositionAsync(int organizationID)
+        public async Task<IEnumerable<Employee>> GetAllActiveWithPositionAsync(int organizationId)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Include(e => e.Position).Where(l => l.IsActive).ToListAsync();
+                return await builder.IncludePosition().
+                                    IsActive().
+                                    ToListAsync();
             }
         }
 
-        public async Task<Employee> GetEmployeeWithDivisionAsync(int? id, int organizationID)
-        {
-            using (var context = new PayrollContext())
-            {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
+        #region By Employee
 
-                return await query.Include(e => e.Position.Division).Where(l => l.RowID.Value == id.Value).Where(l => l.IsActive).FirstOrDefaultAsync();
+        public async Task<Employee> GetActiveEmployeeWithDivisionAsync(int? employeeId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.IncludeDivision().
+                                    IsActive().
+                                    FirstOrDefaultAsync(employeeId);
             }
         }
+
+        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.IncludePosition().
+                                        ByEmployeeNumber(employeeNumber).
+                                        FirstOrDefaultAsync();
+            }
+        }
+
+        #endregion By Employee
 
         public async Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue)
         {
             if (employees == null || employees.Count() == 0)
                 return employees;
 
-            //var f = (ds) => { };
+            Func<Employee, bool> matchCriteria = (Employee employee) =>
+            {
+                var containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue);
+                var containsFullName = (employee.FirstName.ToLower() + " " + employee.LastName.ToLower()).Contains(searchValue);
 
-            //bool matchCriteria = delegate (Employee employee) =>
-            //{
-            //    var containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue);
-            //    var containsFullName = (employee.FirstName.ToLower() + " " + employee.LastName.ToLower()).Contains(searchValue);
+                var reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower();
+                var containsFullNameInReverse = reverseFullName.Contains(searchValue);
 
-            //    var reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower();
-            //    var containsFullNameInReverse = reverseFullName.Contains(searchValue);
+                return containsEmployeeId | containsFullName | containsFullNameInReverse;
+            };
 
-            //    return containsEmployeeId | containsFullName | containsFullNameInReverse;
-            //};
-
-            return await Task.Run(() => employees.ToList());
-        }
-
-        private IQueryable<Employee> GetAllEmployeeBaseQuery(int organizationID, PayrollContext context)
-        {
-            return context.Employees.Where(e => e.OrganizationID == organizationID);
+            return await Task.Run(() => employees.Where(matchCriteria).ToList());
         }
     }
 }

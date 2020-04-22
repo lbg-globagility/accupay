@@ -175,27 +175,19 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Overtime> GetAllApprovedBetweenDate(int organizationID, DateTime startDate, DateTime endDate, OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        public IEnumerable<Overtime> GetAllApprovedBetweenDate(int organizationID, DateTime startDate, DateTime endDate)
         {
+            // if this is named GetAllApproved, this should only return approved overtimes
+            // another function for others
+
             using (PayrollContext context = new PayrollContext())
             {
-                if (overtimeStatus == OvertimeStatus.All)
-                {
-                    return context.Overtimes.
+                return context.Overtimes.
                         Where(ot => ot.OrganizationID == organizationID).
-                        //Where(o => startDate <= o.OTStartDate && o.OTStartDate <= endDate).
                         Where(o => startDate <= o.OTStartDate).
                         Where(o => o.OTStartDate <= endDate).
+                        Where(o => o.Status == Overtime.StatusApproved).
                         ToList();
-                }
-
-                var status = overtimeStatus.ToString();
-                return context.Overtimes.
-                    Where(ot => ot.OrganizationID == organizationID).
-                    Where(o => startDate <= o.OTStartDate).
-                    Where(o => o.OTStartDate <= endDate).
-                    Where(o => o.Status == status).
-                    ToList();
             }
         }
 

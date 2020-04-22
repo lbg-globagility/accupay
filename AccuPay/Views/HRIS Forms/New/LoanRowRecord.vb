@@ -20,7 +20,7 @@ Namespace Global.Globagility.AccuPay.Loans
         Public Property LoanNumber As String
 
         <ColumnName("Start date")>
-        Public Property DedEffectiveDateFrom As Date?
+        Public Property StartDate As Date?
 
         Public Property TotalLoanAmount As Decimal?
 
