@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -42,7 +43,7 @@ Public Class DayCalculator
                             employeeShift As ShiftSchedule,
                             shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
-                            overtimes As IList(Of Overtime),
+                            overtimes As IList(Of Entities.Overtime),
                             officialBusiness As OfficialBusiness,
                             leaves As IList(Of Leave),
                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
@@ -116,7 +117,7 @@ Public Class DayCalculator
                              timeLog As TimeLog,
                              officialBusiness As OfficialBusiness,
                              leaves As IList(Of Leave),
-                             overtimes As IList(Of Overtime),
+                             overtimes As IList(Of Entities.Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
                              timeAttendanceLogs As IList(Of TimeAttendanceLog),
                              breakTimeBrackets As IList(Of BreakTimeBracket),
@@ -446,7 +447,7 @@ Public Class DayCalculator
     '        Return 0
     'End Function
 
-    Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
+    Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Entities.Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
         If _overtimeSkipCountRounding Then
             Dim overtimeMinutes = overtimes.Sum(
             Function(o) calculator.ComputeOvertimeMinutes(logPeriod, o, currentShift, nightBreaktime))
@@ -632,7 +633,7 @@ Public Class DayCalculator
                                       logPeriod As TimePeriod,
                                       currentDate As Date,
                                       previousDay As Date,
-                                      overtimes As IList(Of Overtime),
+                                      overtimes As IList(Of Entities.Overtime),
                                       nightBreaktime As TimePeriod)
         Dim calculator = New TimeEntryCalculator()
 

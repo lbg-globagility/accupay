@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -10,7 +10,9 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository()
+
+    Private overtimeRepository As New OvertimeRepository()
 
     Public IsSaved As Boolean
 
@@ -179,27 +181,20 @@ Public Class ImportOvertimeForm
         Dim messageTitle = "Import Overtimes"
 
         Try
-            Using context As New PayrollContext
-                For Each overtime In _overtimes
-                    context.Overtimes.Add(overtime)
-                Next
+            Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
 
-                Await context.SaveChangesAsync()
+            Dim importlist = New List(Of UserActivityItem)
 
-                Dim importlist = New List(Of Data.Entities.UserActivityItem)
+            For Each overtime In _overtimes
+                importlist.Add(New UserActivityItem() With
+                    {
+                    .Description = $"Imported a new Overtime.",
+                    .EntityId = CInt(overtime.RowID)
+                    })
+            Next
 
-                For Each overtime In _overtimes
-                    importlist.Add(New Data.Entities.UserActivityItem() With
-                        {
-                        .Description = $"Imported a new Overtime.",
-                        .EntityId = CInt(overtime.RowID)
-                        })
-                Next
-
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
-
-            End Using
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
             Me.IsSaved = True
 

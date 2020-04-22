@@ -29,7 +29,7 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevelRepository As New JobLevelRepository
 
-    Private _positionRepository As New PositionRepository
+    Private _positionRepository As New Repository.PositionRepository
 
     Private _divisionRepository As New DivisionRepository
 
@@ -805,12 +805,10 @@ Public Class NewDivisionPositionForm
 
         Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
 
-
         If Me._currentDivision.IsRoot Then
 
             Dim repo As New UserActivityRepository
             repo.RecordDelete(z_User, "Division Location", CInt(Me._currentDivision.RowID), z_OrganizationID)
-
         Else
 
             Dim repo As New UserActivityRepository

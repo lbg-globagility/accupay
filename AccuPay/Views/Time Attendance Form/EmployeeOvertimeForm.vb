@@ -1,7 +1,6 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
@@ -19,7 +18,7 @@ Public Class EmployeeOvertimeForm
 
     Private _overtimeRepository As New OvertimeRepository
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -100,7 +99,7 @@ Public Class EmployeeOvertimeForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 
@@ -228,52 +227,52 @@ Public Class EmployeeOvertimeForm
 
         If oldOvertime Is Nothing Then Return False
 
-        Dim changes = New List(Of Data.Entities.UserActivityItem)
+        Dim changes = New List(Of UserActivityItem)
 
         If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'"
                         })
         End If
         If newOvertime.OTEndDate <> oldOvertime.OTEndDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'"
                         })
         End If
         If newOvertime.OTStartTime <> oldOvertime.OTStartTime Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'"
                         })
         End If
         If newOvertime.OTEndTime <> oldOvertime.OTEndTime Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'"
                         })
         End If
         If newOvertime.Reason <> oldOvertime.Reason Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'"
                         })
         End If
         If newOvertime.Comments <> oldOvertime.Comments Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'"
                         })
         End If
         If newOvertime.Status <> oldOvertime.Status Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOvertime.RowID,
                         .Description = $"Update overtime status from '{oldOvertime.Status}' to '{newOvertime.Status}'"
@@ -539,7 +538,11 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
+                                            Await _overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, changedOvertimes)
+
+                                            For Each item In changedOvertimes
+                                                RecordUpdate(item)
+                                            Next
 
                                             For Each item In changedOvertimes
                                                 RecordUpdate(item)
