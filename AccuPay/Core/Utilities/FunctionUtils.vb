@@ -86,6 +86,8 @@ Namespace Global.AccuPay.Utils
 
             End Try
 
+            Return False
+
         End Function
 
         Public Shared Function TryCatchExcelParserReadFunctionAsync(
@@ -101,6 +103,9 @@ Namespace Global.AccuPay.Utils
 
                 MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As WorkSheetIsEmptyException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            Catch ex As WorkSheetRowParseValueException
 
                 MessageBoxHelper.ErrorMessage(ex.Message)
             End Try
