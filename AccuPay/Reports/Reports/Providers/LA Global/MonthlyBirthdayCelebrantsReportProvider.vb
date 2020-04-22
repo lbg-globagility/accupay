@@ -1,6 +1,5 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Entity
+Imports AccuPay.Repository
 
 Public Class MonthlyBirthdayCelebrantsReportProvider
     Implements ILaGlobalEmployeeReport
@@ -10,6 +9,8 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
     Private _selectedDate As Date
 
     Private recordFound As Boolean
+
+    Private employeeRepo As New EmployeeRepository()
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
 
@@ -34,35 +35,37 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
     End Function
 
     Private Async Sub SetDataSource()
-        Using context = New PayrollContext
-            Dim employees = Await context.Employees.
+        Dim fetchAll = Await employeeRepo.GetAllAsync()
+
+        Dim employees = fetchAll.
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Where(Function(e) e.IsActive).
                 Where(Function(e) _selectedDate.Month = e.BirthDate.Month).
-                ToListAsync()
-
-            recordFound = employees.Any()
-            If Not recordFound Then
-                Dim monthName = Format(_selectedDate, "MMMM")
-                MessageBox.Show($"No {monthName} birthday celebrant.", "Monthly Birthday Celebrants", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
-                Return
-            End If
-
-            Dim ascendingOrder = employees.OrderBy(Function(e) e.BirthDate).ToList()
-
-            Dim source = ascendingOrder.
-                Select(Function(e) New MonthlyBirthdayCelebrantDateSource With {
-                .Column1 = e.EmployeeNo,
-                .Column2 = $"{e.LastName}, {e.FirstName}{If(Not String.IsNullOrWhiteSpace(e.MiddleName), $" {Left(e.MiddleName, 1)}.", String.Empty)}",
-                .Column3 = e.Branch?.Name,
-                .Column4 = e.BirthDate.ToShortDateString(),
-                .Column5 = _selectedDate.ToShortDateString()}).
                 ToList()
 
-            _reportDocument.SetDataSource(source)
+        recordFound = employees.Any()
+        If Not recordFound Then
+            Dim monthName = Format(_selectedDate, "MMMM")
+            MessageBox.Show($"No {monthName} birthday celebrant.", "Monthly Birthday Celebrants", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
-        End Using
+            Return
+        End If
+
+        Dim ascendingOrder = employees.OrderBy(Function(e) e.BirthDate).ToList()
+
+        Dim source = ascendingOrder.
+            Select(Function(e) New MonthlyBirthdayCelebrantDateSource With {
+            .Column1 = e.EmployeeNo,
+            .Column2 = $"{e.LastName}, {e.FirstName}{If(Not String.IsNullOrWhiteSpace(e.MiddleName), $" {Left(e.MiddleName, 1)}.", String.Empty)}",
+            .Column3 = e.Branch?.Name,
+            .Column4 = e.BirthDate.ToShortDateString(),
+            .Column5 = _selectedDate.ToShortDateString()}).
+            ToList()
+
+        _reportDocument.SetDataSource(source)
+
+        Dim parameterSetter = New CrystalReportParameterValueSetter(_reportDocument)
+        parameterSetter.SetParameter("organizationName", z_CompanyName)
 
         Dim form = New LaGlobalEmployeeReportForm
         form.SetReportSource(_reportDocument)
@@ -86,5 +89,7 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
 
         'Selected Month - in a value of date
         Public Property Column5 As String
+
     End Class
+
 End Class
