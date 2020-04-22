@@ -126,7 +126,10 @@ Public Class TimeEntryGenerator
             '    Where(Function(o) _cutoffStart <= o.OTStartDate AndAlso o.OTStartDate <= _cutoffEnd).
             '    Where(Function(o) o.Status = Entities.Overtime.StatusApproved).
             '    ToList()
-            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID, startDate:=_cutoffStart, endDate:=_cutoffEnd, OvertimeStatuses.Approved).ToList()
+            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID,
+                                                                       startDate:=_cutoffStart,
+                                                                       endDate:=_cutoffEnd,
+                                                                       overtimeStatus:=OvertimeStatus.Approved).ToList()
 
             _officialBusinesses = context.OfficialBusinesses.
                 Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
