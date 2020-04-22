@@ -22,10 +22,10 @@ Partial Class BonusTab
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnNewBon = New System.Windows.Forms.ToolStripButton()
@@ -55,9 +55,9 @@ Partial Class BonusTab
         Me.Label9 = New System.Windows.Forms.Label()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.bon_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Frequency = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.bon_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -258,6 +258,7 @@ Partial Class BonusTab
         Me.cbobonfreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
         Me.cbobonfreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cbobonfreq.FormattingEnabled = True
+        Me.cbobonfreq.Items.AddRange(New Object() {"One time"})
         Me.cbobonfreq.Location = New System.Drawing.Point(171, 168)
         Me.cbobonfreq.Name = "cbobonfreq"
         Me.cbobonfreq.Size = New System.Drawing.Size(190, 21)
@@ -329,47 +330,49 @@ Partial Class BonusTab
         '
         'dgvempbon
         '
+        Me.dgvempbon.AllowUserToAddRows = False
         Me.dgvempbon.AllowUserToDeleteRows = False
         Me.dgvempbon.AllowUserToOrderColumns = True
         Me.dgvempbon.AllowUserToResizeRows = False
         Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvempbon.ColumnHeadersHeight = 34
         Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle23.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle23.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle23.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle23.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle23.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle3
         Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempbon.Location = New System.Drawing.Point(27, 296)
         Me.dgvempbon.MultiSelect = False
         Me.dgvempbon.Name = "dgvempbon"
         Me.dgvempbon.ReadOnly = True
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle24.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle24.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle24.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle24.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle24.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle24.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvempbon.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempbon.Size = New System.Drawing.Size(782, 242)
         Me.dgvempbon.TabIndex = 370
         '
         'bon_RowID
         '
+        Me.bon_RowID.DataPropertyName = "RowID"
         Me.bon_RowID.HeaderText = "RowID"
         Me.bon_RowID.Name = "bon_RowID"
         Me.bon_RowID.ReadOnly = True
@@ -378,17 +381,18 @@ Partial Class BonusTab
         '
         'bon_Type
         '
+        Me.bon_Type.DataPropertyName = "BonusType"
         Me.bon_Type.HeaderText = "Type"
         Me.bon_Type.Name = "bon_Type"
         Me.bon_Type.ReadOnly = True
         Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.bon_Type.Width = 180
         '
         'bon_Amount
         '
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle22
+        Me.bon_Amount.DataPropertyName = "BonusAmount"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle2
         Me.bon_Amount.HeaderText = "Amount"
         Me.bon_Amount.Name = "bon_Amount"
         Me.bon_Amount.ReadOnly = True
@@ -396,11 +400,11 @@ Partial Class BonusTab
         '
         'bon_Frequency
         '
+        Me.bon_Frequency.DataPropertyName = "AllowanceFrequency"
         Me.bon_Frequency.HeaderText = "Frequency"
         Me.bon_Frequency.Name = "bon_Frequency"
         Me.bon_Frequency.ReadOnly = True
         Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Frequency.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
         Me.bon_Frequency.Width = 180
         '
         'bon_Start
@@ -412,6 +416,7 @@ Partial Class BonusTab
         Me.bon_Start.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
         Me.bon_Start.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.bon_Start.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
+        Me.bon_Start.DataPropertyName = "EffectiveStartDate"
         Me.bon_Start.HeaderText = "Effective start date"
         Me.bon_Start.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
         '
@@ -450,6 +455,7 @@ Partial Class BonusTab
         Me.bon_End.BackgroundStyle.Class = "DataGridViewDateTimeBorder"
         Me.bon_End.BackgroundStyle.CornerType = DevComponents.DotNetBar.eCornerType.Square
         Me.bon_End.BackgroundStyle.TextColor = System.Drawing.SystemColors.ControlText
+        Me.bon_End.DataPropertyName = "EffectiveEndDate"
         Me.bon_End.HeaderText = "Effective end date"
         Me.bon_End.InputHorizontalAlignment = DevComponents.Editors.eHorizontalAlignment.Left
         '
@@ -481,6 +487,7 @@ Partial Class BonusTab
         '
         'bon_ProdID
         '
+        Me.bon_ProdID.DataPropertyName = "ProductID"
         Me.bon_ProdID.HeaderText = "ProductID"
         Me.bon_ProdID.Name = "bon_ProdID"
         Me.bon_ProdID.ReadOnly = True
@@ -552,9 +559,9 @@ Partial Class BonusTab
     Friend WithEvents Label9 As Label
     Friend WithEvents dgvempbon As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents bon_RowID As DataGridViewTextBoxColumn
-    Friend WithEvents bon_Type As DataGridViewComboBoxColumn
+    Friend WithEvents bon_Type As DataGridViewTextBoxColumn
     Friend WithEvents bon_Amount As DataGridViewTextBoxColumn
-    Friend WithEvents bon_Frequency As DataGridViewComboBoxColumn
+    Friend WithEvents bon_Frequency As DataGridViewTextBoxColumn
     Friend WithEvents bon_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_ProdID As DataGridViewTextBoxColumn

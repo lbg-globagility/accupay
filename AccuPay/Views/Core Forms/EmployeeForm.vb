@@ -1891,13 +1891,7 @@ Public Class EmployeeForm
                     Label142.Text = "Current salary"
 
                 ElseIf selectedTab Is tbpBonus Then 'Bonus
-                    txtFNameBon.Text = employeefullname
-                    txtEmpIDBon.Text = subdetails '"ID# " & .Cells("Column1").Value
-                    pbEmpPicBon.Image = Nothing
-                    pbEmpPicBon.Image = EmployeeImage
-                    listofEditRowBon.Clear()
-                    VIEW_employeebonus(.Cells("RowID").Value)
-                    dgvempbon_SelectionChanged(sender, e)
+                    BonusTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     txtFNameAtta.Text = employeefullname
                     txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value

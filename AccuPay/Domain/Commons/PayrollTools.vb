@@ -230,7 +230,7 @@ Public Class PayrollTools
         As Task(Of Allowance)
 
         Dim allowanceRepository As New AllowanceRepository
-        Dim productRepository As New ProductRepository
+        Dim productRepository As New Repository.ProductRepository
 
         Using context = New PayrollContext()
             Dim ecolaAllowance As Allowance = Await GetEmployeeEcola(employeeId,

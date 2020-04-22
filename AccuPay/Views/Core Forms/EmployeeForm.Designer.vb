@@ -591,6 +591,7 @@ Partial Class EmployeeForm
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.tbpNewSalary = New System.Windows.Forms.TabPage()
         Me.SalaryTab = New AccuPay.SalaryTab()
+        Me.BonusTab = New AccuPay.BonusTab()
         Me.imglstQuestMark = New System.Windows.Forms.ImageList(Me.components)
         Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
@@ -5529,8 +5530,7 @@ Partial Class EmployeeForm
         '
         Me.tbpBonus.AccessibleDescription = "Employee Bonus"
         Me.tbpBonus.AutoScroll = True
-        Me.tbpBonus.Controls.Add(Me.Panel3)
-        Me.tbpBonus.Controls.Add(Me.ToolStrip20)
+        Me.tbpBonus.Controls.Add(Me.BonusTab)
         Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
         Me.tbpBonus.Name = "tbpBonus"
         Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
@@ -9636,6 +9636,7 @@ Partial Class EmployeeForm
     Friend WithEvents txtWorkHoursPerWeek As TextBox
     Friend WithEvents tbpNewSalary As TabPage
     Friend WithEvents SalaryTab As SalaryTab
+    Friend WithEvents BonusTab As BonusTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
     Friend WithEvents ToolStripLabel11 As ToolStripLabel
