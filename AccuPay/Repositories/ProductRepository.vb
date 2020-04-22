@@ -9,6 +9,15 @@ Namespace Global.AccuPay.Repository
 
     Public Class ProductRepository
 
+        Public Async Function GetBonusTypes() _
+            As Task(Of IEnumerable(Of Product))
+
+            Dim categoryName = ProductConstant.BONUS_TYPE_CATEGORY
+
+            Dim category = Await GetOrCreateCategoryByName(categoryName)
+            Return Await GetProductsByCategory(category.RowID)
+
+        End Function
         Public Async Function GetAllowanceTypes() _
             As Task(Of IEnumerable(Of Product))
 
@@ -146,6 +155,36 @@ Namespace Global.AccuPay.Repository
                 Return adjustmentType
 
             End Using
+
+        End Function
+
+        Public Async Function GetOrCreateBonusType(bonusTypeName As String) As Task(Of Product)
+
+            Using context = New PayrollContext()
+
+                Dim bonusType = Await context.Products.
+                                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                                Where(Function(p) p.PartNo.ToLower = bonusTypeName.ToLower).
+                                FirstOrDefaultAsync
+
+                If bonusType Is Nothing Then
+                    bonusType = Await AddBonusType(bonusTypeName)
+                End If
+
+                Return bonusType
+
+            End Using
+
+        End Function
+
+        Public Async Function AddBonusType(loanName As String, Optional isTaxable As Boolean = False, Optional throwError As Boolean = True) _
+            As Task(Of Product)
+
+            Dim product As New Product
+
+            product.Category = ProductConstant.BONUS_TYPE_CATEGORY
+
+            Return Await AddProduct(loanName, throwError, product, isTaxable)
 
         End Function
 
@@ -379,7 +418,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product) As Task(Of Product)
+        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product, Optional isTaxable As Boolean = False) As Task(Of Product)
 
             Dim categoryId = (Await GetOrCreateCategoryByName(product.Category))?.RowID
 
@@ -407,7 +446,7 @@ Namespace Global.AccuPay.Repository
 
             product.PartNo = productName.Trim()
             product.Name = productName.Trim()
-
+            product.Status = If(isTaxable, "1", "0")
             product.Created = Date.Now
             product.CreatedBy = z_User
             product.OrganizationID = z_OrganizationID
