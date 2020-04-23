@@ -58,8 +58,6 @@ Public Class BonusTab
         Dim productRepo = New ProductRepository
         _products = Await productRepo.GetBonusTypes(z_OrganizationID)
 
-
-
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         BindDataSource()
 
@@ -162,6 +160,11 @@ Public Class BonusTab
     End Sub
 
     Private Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
+
+        If _employee Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Please select an employee first.")
+            Return
+        End If
 
         Dim form As New AddBonusForm(_employee)
         form.ShowDialog()
@@ -380,4 +383,5 @@ Public Class BonusTab
         Dim userActivity As New UserActivityForm("Bonus")
         userActivity.ShowDialog()
     End Sub
+
 End Class

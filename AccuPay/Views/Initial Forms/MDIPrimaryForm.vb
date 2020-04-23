@@ -525,13 +525,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-                            Case .GetBonusTabPageIndex
-                                If .listofEditRowBon.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
                             Case .GetAttachmentTabPageIndex
                                 If .listofEditRoweatt.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)
