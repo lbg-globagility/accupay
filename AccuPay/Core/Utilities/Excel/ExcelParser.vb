@@ -89,7 +89,7 @@ Namespace Global.Globagility.AccuPay
 
                     rowIndex += 1
 
-                    Dim newRow = ParseRow(row, columns, tprops)
+                    Dim newRow = ParseRow(row, columns, tprops, rowIndex)
                     If newRow Is Nothing Then Continue For
 
                     newRow.LineNumber = rowIndex
@@ -100,7 +100,10 @@ Namespace Global.Globagility.AccuPay
             Return records
         End Function
 
-        Private Function ParseRow(row As List(Of Object), colNames As IList(Of Column), tprops As List(Of PropertyInfo)) As T
+        Private Function ParseRow(row As List(Of Object),
+                                  colNames As IList(Of Column),
+                                  tprops As List(Of PropertyInfo),
+                                  lineNumber As Integer) As T
             Dim newRecord = New T()
 
             Dim rowIsBlank As Boolean = True
@@ -143,7 +146,11 @@ Namespace Global.Globagility.AccuPay
                         Continue For
                     End If
 
-                    ParseValue(newRecord, prop, originalValue)
+                    Try
+                        ParseValue(newRecord, prop, originalValue)
+                    Catch ex As Exception
+                        Throw New WorkSheetRowParseValueException(ex, column.Name, lineNumber)
+                    End Try
                 End If
             Next
 
@@ -224,6 +231,9 @@ Namespace Global.Globagility.AccuPay
 
                 ElseIf prop.PropertyType Is GetType(TimeSpan?) Then
                     prop.SetValue(newRecord, ObjectUtils.ToNullableTimeSpan(originalValue))
+
+                ElseIf prop.PropertyType Is GetType(Boolean) OrElse prop.PropertyType Is GetType(Boolean?) Then
+                    prop.SetValue(newRecord, ObjectUtils.ToBoolean(originalValue))
                 Else
 
                     prop.SetValue(newRecord, originalValue)

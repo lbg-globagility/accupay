@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
-Imports AccuPay.Extensions
-Imports Microsoft.EntityFrameworkCore
 
 Public Class TimeEntryCalculator
 
@@ -10,7 +9,6 @@ Public Class TimeEntryCalculator
         workPeriod As TimePeriod,
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal
-
 
         Dim shiftPeriod = currentShift.ShiftPeriod
 
@@ -30,7 +28,6 @@ Public Class TimeEntryCalculator
         workPeriod As TimePeriod,
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal
-
 
         Dim shiftPeriod = currentShift.ShiftPeriod
 
@@ -90,7 +87,6 @@ Public Class TimeEntryCalculator
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal
 
-
         Dim shiftPeriod = currentShift.ShiftPeriod
 
         If workPeriod.EarlierThan(shiftPeriod) Then
@@ -113,7 +109,6 @@ Public Class TimeEntryCalculator
         workPeriod As TimePeriod,
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal
-
 
         Dim shiftPeriod = currentShift.ShiftPeriod
 
@@ -160,7 +155,7 @@ Public Class TimeEntryCalculator
         Return nightDiffHours
     End Function
 
-    Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
+    Public Function ComputeOvertimeHours(workPeriod As TimePeriod, overtime As Entities.Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
         Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
 
         Dim overtimeHours As Decimal?
@@ -173,7 +168,7 @@ Public Class TimeEntryCalculator
         Return If(overtimeHours, 0)
     End Function
 
-    Public Function ComputeOvertimeMinutes(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
+    Public Function ComputeOvertimeMinutes(workPeriod As TimePeriod, overtime As Entities.Overtime, shift As CurrentShift, breaktime As TimePeriod) As Decimal
         Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
 
         Dim overtimeHours As Decimal?
@@ -186,7 +181,7 @@ Public Class TimeEntryCalculator
         Return If(overtimeHours, 0)
     End Function
 
-    Public Function ComputeNightDiffOTHours(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift, nightDiffPeriod As TimePeriod, breaktime As TimePeriod) As Decimal
+    Public Function ComputeNightDiffOTHours(workPeriod As TimePeriod, overtime As Entities.Overtime, shift As CurrentShift, nightDiffPeriod As TimePeriod, breaktime As TimePeriod) As Decimal
         Dim overtimeWorked = GetOvertimeWorked(workPeriod, overtime, shift)
 
         Dim nightOvertimeWorked = overtimeWorked?.Overlap(nightDiffPeriod)
@@ -201,7 +196,7 @@ Public Class TimeEntryCalculator
         Return If(nightDiffOTHours, 0)
     End Function
 
-    Private Function GetOvertimeWorked(workPeriod As TimePeriod, overtime As Overtime, shift As CurrentShift) As TimePeriod
+    Private Function GetOvertimeWorked(workPeriod As TimePeriod, overtime As Entities.Overtime, shift As CurrentShift) As TimePeriod
         Dim otStartTime = If(overtime.OTStartTime, shift.End.TimeOfDay)
         Dim otEndTime = If(overtime.OTEndTime, shift.Start.TimeOfDay)
 
@@ -239,7 +234,6 @@ Public Class TimeEntryCalculator
         currentShift As CurrentShift,
         computeBreakTimeLate As Boolean) As Decimal
 
-
         If currentShift.HasBreaktime() AndAlso computeBreakTimeLate = False Then
             Dim breakPeriod = currentShift.BreakPeriod
 
@@ -268,7 +262,6 @@ Public Class TimeEntryCalculator
                 'still get the time out to get the last OUT
                 If log.IsTimeIn = False Then
                     lastOut = log.TimeStamp
-
                 Else
                     'here in else, we found the first IN since the last employee OUT for breaktime
                     'this will be the late timeperiod

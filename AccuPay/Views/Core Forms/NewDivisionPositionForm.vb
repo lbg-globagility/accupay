@@ -30,7 +30,7 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevelRepository As New JobLevelRepository
 
-    Private _positionRepository As New PositionRepository
+    Private _positionRepository As New Repository.PositionRepository
 
     Private _divisionRepository As New DivisionRepository
 

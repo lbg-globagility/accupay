@@ -53,16 +53,14 @@ Public Class ImportedShiftSchedulesForm
 
                 Dim seek = _employees.Where(Function(ee) ee.EmployeeNo = shiftSched.EmployeeNo)
 
-                Dim isRestDay = If(String.IsNullOrWhiteSpace(shiftSched.IsRestDay), False, CBool(Convert.ToInt16(shiftSched.IsRestDay)))
-
                 Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
                 Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
                 If seek.Any Then
                     Dim employee = seek.FirstOrDefault
 
-                    AppendToDataSourceWithEmployee(shiftSched, isRestDay, dates, employee)
+                    AppendToDataSourceWithEmployee(shiftSched, dates, employee)
                 Else
-                    AppendToDataSourceWithNoEmployee(shiftSched, isRestDay, dates)
+                    AppendToDataSourceWithNoEmployee(shiftSched, dates)
                 End If
 
             Next
@@ -95,27 +93,27 @@ Public Class ImportedShiftSchedulesForm
         End Using
     End Sub
 
-    Private Sub AppendToDataSourceWithNoEmployee(shiftSched As ShiftScheduleRowRecord, isRestDay As Boolean, dates As IEnumerable(Of Date))
+    Private Sub AppendToDataSourceWithNoEmployee(shiftSched As ShiftScheduleRowRecord, dates As IEnumerable(Of Date))
         For Each d In dates
             _dataSource.Add(New ShiftScheduleModel() With {
                         .EmployeeNo = shiftSched.EmployeeNo,
                         .DateValue = d,
                         .BreakFrom = shiftSched.BreakStartTime,
                         .BreakLength = shiftSched.BreakLength,
-                        .IsRestDay = isRestDay,
+                        .IsRestDay = shiftSched.IsRestDay,
                         .TimeFrom = shiftSched.StartTime,
                         .TimeTo = shiftSched.EndTime})
 
         Next
     End Sub
 
-    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord, isRestDay As Boolean, dates As IEnumerable(Of Date), employee As Employee)
+    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord, dates As IEnumerable(Of Date), employee As Employee)
         For Each d In dates
             _dataSource.Add(New ShiftScheduleModel(employee) With {
                         .DateValue = d,
                         .BreakFrom = shiftSched.BreakStartTime,
                         .BreakLength = shiftSched.BreakLength,
-                        .IsRestDay = isRestDay,
+                        .IsRestDay = shiftSched.IsRestDay,
                         .TimeFrom = shiftSched.StartTime,
                         .TimeTo = shiftSched.EndTime})
 

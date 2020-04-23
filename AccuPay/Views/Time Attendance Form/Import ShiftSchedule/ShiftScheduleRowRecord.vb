@@ -29,8 +29,8 @@ Namespace Global.Globagility.AccuPay.ShiftSchedules
         <ColumnName("Break Length (Optional)")>
         Public Property BreakLength As Decimal Implements IShiftScheduleRowRecord.BreakLength
 
-        <ColumnName("Offset")>
-        Public Property IsRestDay As String Implements IShiftScheduleRowRecord.IsRestDay
+        <ColumnName("Offset (Optional) (true/false)")>
+        Public Property IsRestDay As Boolean Implements IShiftScheduleRowRecord.IsRestDay
 
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
     End Class
@@ -45,7 +45,7 @@ Namespace Global.Globagility.AccuPay.ShiftSchedules
         Property EndTime As TimeSpan?
         Property BreakStartTime As TimeSpan?
         Property BreakLength As Decimal
-        Property IsRestDay As String
+        Property IsRestDay As Boolean
     End Interface
 
 End Namespace

@@ -29,6 +29,19 @@ namespace AccuPay.Data.Repositories
                 _query = _context.Employees.Where(e => e.OrganizationID == organizationId);
             }
 
+            public EmployeeBuilder(ILoggerFactory loggerFactory = null)
+            {
+                if (loggerFactory != null)
+                {
+                    _context = new PayrollContext(loggerFactory);
+                }
+                else
+                {
+                    _context = new PayrollContext();
+                }
+                _query = _context.Employees;
+            }
+
             #region Builder Methods
 
             public EmployeeBuilder IsActive()
@@ -160,16 +173,6 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
-        {
-            using (var builder = new EmployeeBuilder(organizationId))
-            {
-                return await builder.IncludePosition().
-                                        ByEmployeeNumber(employeeNumber).
-                                        FirstOrDefaultAsync();
-            }
-        }
-
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
@@ -188,15 +191,29 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Employee> GetActiveEmployeeWithDivisionAsync(int? employeeId, int organizationId)
+        #region By Employee
+
+        public async Task<Employee> GetActiveEmployeeWithDivisionAsync(int? employeeId)
         {
-            using (var builder = new EmployeeBuilder(organizationId))
+            using (var builder = new EmployeeBuilder())
             {
                 return await builder.IncludeDivision().
                                     IsActive().
                                     FirstOrDefaultAsync(employeeId);
             }
         }
+
+        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.IncludePosition().
+                                        ByEmployeeNumber(employeeNumber).
+                                        FirstOrDefaultAsync();
+            }
+        }
+
+        #endregion By Employee
 
         public async Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue)
         {
