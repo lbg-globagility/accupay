@@ -284,7 +284,7 @@ Public Class OfficialBusinessForm
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Official Business", z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Official Business", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function

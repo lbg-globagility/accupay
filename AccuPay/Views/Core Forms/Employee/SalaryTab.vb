@@ -484,7 +484,7 @@ Public Class SalaryTab
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Salary", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Salary", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
         End If
 
         Return False

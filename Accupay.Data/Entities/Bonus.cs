@@ -7,6 +7,14 @@ namespace AccuPay.Data.Entities
     [Table("employeebonus")]
     public class Bonus
     {
+        public const string FREQUENCY_ONE_TIME = "One time";
+
+        public const string FREQUENCY_DAILY = "Daily";
+
+        public const string FREQUENCY_SEMI_MONTHLY = "Semi-monthly";
+
+        public const string FREQUENCY_MONTHLY = "Monthly";
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }

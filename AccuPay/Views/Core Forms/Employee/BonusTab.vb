@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class BonusTab
@@ -17,6 +18,8 @@ Public Class BonusTab
     Private _currentBonus As New Bonus
 
     Private _mode As FormMode = FormMode.Empty
+
+    Private _frequencies As List(Of String)
 
     Dim category As String = "Bonus"
 
@@ -50,12 +53,15 @@ Public Class BonusTab
 
         Dim bonusRepo = New BonusRepository
         _bonuses = bonusRepo.GetByEmployee(_employee.RowID.Value).ToList
+        _frequencies = bonusRepo.GetFrequencyList
 
         Dim productRepo = New ProductRepository
         _products = Await productRepo.GetBonusTypes(z_OrganizationID)
 
+
+
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
-        Await BindDataSource()
+        BindDataSource()
 
         If _bonuses.Count > 0 Then
             SelectBonus(DirectCast(dgvempbon.CurrentRow?.DataBoundItem, Bonus))
@@ -69,15 +75,14 @@ Public Class BonusTab
         AddHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
     End Sub
 
-    Private Async Function BindDataSource() As Task
+    Private Sub BindDataSource()
 
-        Dim payFrequencyRepo = New PayFrequencyRepository
-        cbobonfreq.DataSource = (Await payFrequencyRepo.GetAllAsync()).Select(Function(x) x.Type).ToList()
+        cbobonfreq.DataSource = _frequencies
         cbobontype.DisplayMember = "Name"
         cbobontype.DataSource = _products
         dgvempbon.DataSource = _bonuses
 
-    End Function
+    End Sub
 
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
         EmployeeForm.Close()
@@ -114,8 +119,12 @@ Public Class BonusTab
             cbobontype.Text = _currentBonus.Product.Name
             cbobonfreq.Text = _currentBonus.AllowanceFrequency
             dtpbonstartdate.Value = _currentBonus.EffectiveStartDate
-            dtpbonenddate.Value = _currentBonus.EffectiveStartDate
+            dtpbonenddate.Value = _currentBonus.EffectiveEndDate
             txtbonamt.Text = _currentBonus.BonusAmount.ToString
+
+            If _currentBonus.AllowanceFrequency = Bonus.FREQUENCY_ONE_TIME Then
+                dtpbonenddate.Enabled = False
+            End If
         Else
             ClearForm()
         End If
@@ -137,8 +146,11 @@ Public Class BonusTab
             If result = MsgBoxResult.Yes Then
                 Dim repo = New BonusRepository
                 repo.Delete(_currentBonus)
-                LoadBonuses()
 
+                Dim userActivityRepo = New UserActivityRepository
+                userActivityRepo.RecordDelete(z_User, "Bonus", CInt(_currentBonus.RowID), z_OrganizationID)
+
+                LoadBonuses()
             End If
         End If
     End Sub
@@ -150,11 +162,18 @@ Public Class BonusTab
     End Sub
 
     Private Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
-        _currentBonus = New Bonus
-        ClearForm()
 
-        ChangeMode(FormMode.Creating)
-        DisableBonusGrid()
+        Dim form As New AddBonusForm(_employee)
+        form.ShowDialog()
+
+        If form.isSaved Then
+            LoadBonuses()
+
+            If form.showBalloon Then
+                ShowBalloonInfo("Bonus successfuly added.", "Saved")
+            End If
+
+        End If
     End Sub
 
     Private Function SaveBonus() As Boolean
@@ -184,34 +203,33 @@ Public Class BonusTab
                                  FirstOrDefault
         Try
 
-            With _currentBonus
-                .ProductID = product.RowID
-                .AllowanceFrequency = cbobonfreq.SelectedItem.ToString
-                .EffectiveStartDate = dtpbonstartdate.Value
-                .EffectiveEndDate = dtpbonenddate.Value
-                .BonusAmount = CType(txtbonamt.Text, Decimal?)
-                .EmployeeID = _employee.RowID
-                .OrganizationID = z_OrganizationID
-                .TaxableFlag = product.Status
-            End With
+            If IsChanged(product) Then
+                Dim oldBonus = _currentBonus.CloneJson()
 
-            Dim repo = New BonusRepository
+                With _currentBonus
+                    .ProductID = product.RowID
+                    .Product = product
+                    .AllowanceFrequency = cbobonfreq.SelectedItem.ToString
+                    .EffectiveStartDate = dtpbonstartdate.Value
+                    .EffectiveEndDate = dtpbonenddate.Value
+                    .BonusAmount = CType(txtbonamt.Text, Decimal?)
+                    .EmployeeID = _employee.RowID
+                    .OrganizationID = z_OrganizationID
+                    .TaxableFlag = product.Status
+                End With
 
-            If _currentBonus.RowID.HasValue Then
-                If IsChanged(product) Then
-                    _currentBonus.LastUpdBy = z_User
-                    repo.Update(_currentBonus)
-                    messageTitle = "Update Bonus"
-                    succeed = True
-                Else
-                    MessageBoxHelper.Warning("No value changed")
-                    Return False
-                End If
-            Else
-                _currentBonus.CreatedBy = z_User
-                repo.Create(_currentBonus)
-                messageTitle = "New Bonus"
+                Dim repo = New BonusRepository
+
+                _currentBonus.LastUpdBy = z_User
+                repo.Update(_currentBonus)
+
+                RecordUpdateBonus(oldBonus)
+
+                messageTitle = "Update Bonus"
                 succeed = True
+            Else
+                MessageBoxHelper.Warning("No value changed")
+                Return False
             End If
         Catch ex As Exception
             MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
@@ -227,7 +245,7 @@ Public Class BonusTab
 
     Private Function IsChanged(product As Product) As Boolean
         If _currentBonus.ProductID <> product.RowID Or
-            _currentBonus.Product.Name <> cbobontype.SelectedItem.ToString Or
+            _currentBonus.Product.Name <> cbobontype.Text.ToString Or
             _currentBonus.AllowanceFrequency <> cbobonfreq.SelectedItem.ToString Or
             _currentBonus.BonusAmount <> CType(txtbonamt.Text, Decimal?) Or
             _currentBonus.EffectiveEndDate <> dtpbonenddate.Value Or
@@ -238,7 +256,10 @@ Public Class BonusTab
     End Function
 
     Private Sub dtpbonstartdate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonstartdate.ValueChanged
-        dtpbonenddate.Value = dtpbonstartdate.Value
+        If Not dtpbonenddate.Enabled Or dtpbonenddate.Value < dtpbonstartdate.Value Then
+            dtpbonenddate.Value = dtpbonstartdate.Value
+        End If
+
     End Sub
 
     Private Sub ChangeMode(mode As FormMode)
@@ -294,4 +315,69 @@ Public Class BonusTab
         End If
     End Sub
 
+    Private Sub cbobonfreq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbobonfreq.SelectedIndexChanged
+        If cbobonfreq.SelectedItem Is Nothing Then Return
+
+        If cbobonfreq.SelectedItem.ToString = Bonus.FREQUENCY_ONE_TIME Then
+            dtpbonenddate.Value = dtpbonstartdate.Value
+            dtpbonenddate.Enabled = False
+        Else
+            dtpbonenddate.Enabled = True
+        End If
+    End Sub
+
+    Private Sub RecordUpdateBonus(oldBonus As Bonus)
+        Dim changes As New List(Of UserActivityItem)
+
+        If _currentBonus.ProductID <> oldBonus.ProductID Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldBonus.RowID),
+                        .Description = $"Update bonus type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}'"
+                        })
+        End If
+        If _currentBonus.AllowanceFrequency <> oldBonus.AllowanceFrequency Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldBonus.RowID),
+                        .Description = $"Update bonus frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}'"
+                        })
+        End If
+        If _currentBonus.EffectiveStartDate <> oldBonus.EffectiveStartDate Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldBonus.RowID),
+                        .Description = $"Update bonus start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}'"
+                        })
+        End If
+        If _currentBonus.EffectiveEndDate <> oldBonus.EffectiveEndDate Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldBonus.RowID),
+                        .Description = $"Update bonus end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}'"
+                        })
+        End If
+        If _currentBonus.BonusAmount <> oldBonus.BonusAmount Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldBonus.RowID),
+                        .Description = $"Update bonus amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}'"
+                        })
+        End If
+
+        Dim repo = New UserActivityRepository
+        repo.CreateRecord(z_User, "Bonus", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
+    End Sub
+
+    Private Sub dtpbonenddate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonenddate.ValueChanged
+        If dtpbonenddate.Value < dtpbonstartdate.Value Then
+            dtpbonenddate.Value = dtpbonstartdate.Value
+        End If
+    End Sub
+
+    Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles UserActivity.Click
+        Dim userActivity As New UserActivityForm("Bonus")
+        userActivity.ShowDialog()
+    End Sub
 End Class

@@ -1518,7 +1518,7 @@ Public Class EmployeeForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Employee", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 

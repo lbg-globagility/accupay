@@ -779,7 +779,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Position", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Position", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -878,7 +878,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Division Location", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Division Location", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1124,7 +1124,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Division", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Division", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If

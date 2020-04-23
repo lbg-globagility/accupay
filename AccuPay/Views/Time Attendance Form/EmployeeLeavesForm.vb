@@ -370,7 +370,7 @@ Public Class EmployeeLeavesForm
 
         If changes.Count > 0 Then
             Dim repo = New Data.Repositories.UserActivityRepository
-            repo.CreateRecord(z_User, "Leave", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Leave", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 
