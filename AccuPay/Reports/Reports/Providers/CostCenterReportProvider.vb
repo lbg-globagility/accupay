@@ -124,7 +124,7 @@ Public Class CostCenterReportProvider
 
             End If
 
-            GenerateExcel(payPeriodModels, newFile)
+            GenerateExcel(payPeriodModels, newFile, selectedBranch)
 
             Process.Start(newFile.FullName)
         Catch ex As IOException
@@ -150,14 +150,15 @@ Public Class CostCenterReportProvider
     End Function
 
     Private Sub GenerateExcel(payPeriodModels As List(Of PayPeriodModel),
-                              newFile As IO.FileInfo)
+                              newFile As IO.FileInfo,
+                              selectedBranch As Data.Entities.Branch)
 
         Using excel = New ExcelPackage(newFile)
             Dim subTotalRows = New List(Of Integer)
 
             Dim worksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
-            RenderWorksheet(worksheet, payPeriodModels, _reportColumns)
+            RenderWorksheet(worksheet, payPeriodModels, _reportColumns, selectedBranch)
 
             excel.Save()
         End Using
@@ -298,7 +299,8 @@ Public Class CostCenterReportProvider
 
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 payPeriods As ICollection(Of PayPeriodModel),
-                                viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn))
+                                viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
+                                selectedBranch As Data.Entities.Branch)
         Dim subTotalRows = New List(Of Integer)
 
         worksheet.Cells.Style.Font.Size = FontSize
@@ -320,9 +322,13 @@ Public Class CostCenterReportProvider
         Dim lastCell = String.Empty
 
         For Each payPeriodModel In payPeriods
-            Dim divisionCell = worksheet.Cells(rowIndex, 1)
-            divisionCell.Value = GetPayPeriodDescription(payPeriodModel.PayPeriod)
-            divisionCell.Style.Font.Bold = True
+            Dim branchNameCell = worksheet.Cells(rowIndex, 1)
+            branchNameCell.Value = selectedBranch.Name.ToUpper()
+            branchNameCell.Style.Font.Bold = True
+            rowIndex += 1
+            Dim payPeriodDateCell = worksheet.Cells(rowIndex, 1)
+            payPeriodDateCell.Value = GetPayPeriodDescription(payPeriodModel.PayPeriod)
+            payPeriodDateCell.Style.Font.Bold = True
             rowIndex += 1
 
             RenderColumnHeaders(worksheet, rowIndex, viewableReportColumns)
@@ -351,7 +357,8 @@ Public Class CostCenterReportProvider
         rowIndex += 1
 
         If payPeriods.Count > 1 Then
-            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows)
+            Dim grandTotalRange = $"C{rowIndex}:{lastCell}{rowIndex}"
+            RenderGrandTotal(worksheet, grandTotalRange, subTotalRows)
         End If
 
         rowIndex += 1

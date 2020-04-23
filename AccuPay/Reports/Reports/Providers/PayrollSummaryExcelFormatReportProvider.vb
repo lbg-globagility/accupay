@@ -334,7 +334,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
         rowIndex += 1
 
         If employeeGroups.Count > 1 Then
-            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows)
+            Dim grandTotalRange = $"C{rowIndex}:{lastCell}{rowIndex}"
+            RenderGrandTotal(worksheet, grandTotalRange, subTotalRows)
         End If
 
         rowIndex += 1

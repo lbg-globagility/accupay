@@ -81,10 +81,8 @@ Public Class ExcelFormatReport
     End Sub
 
     Protected Shared Sub RenderGrandTotal(worksheet As ExcelWorksheet,
-                                 rowIndex As Integer,
-                                 lastCellColumn As String,
-                                 subTotalRows As IEnumerable(Of Integer))
-        Dim grandTotalRange = $"C{rowIndex}:{lastCellColumn}{rowIndex}"
+                                            grandTotalRange As String,
+                                            subTotalRows As IEnumerable(Of Integer))
         worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
         worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
         worksheet.Cells(grandTotalRange).Style.Font.Bold = True
