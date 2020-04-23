@@ -224,6 +224,21 @@ Public Class PayrollSummaryExcelFormatReportProvider
         End Try
     End Sub
 
+    Private Function GetDefaultFileName(reportName As String,
+                                                 payrollSelector As PayrollSummaDateSelection) As String
+        Return String.Concat(orgNam,
+                            reportName,
+                            payrollSelector.cboStringParameter.Text.Replace(" ", ""),
+                            "Report",
+                            String.Concat(
+                                payrollSelector.DateFrom.Value.
+                                    ToShortDateString().Replace("/", "-"),
+                                "TO",
+                                payrollSelector.DateTo.Value.
+                                    ToShortDateString().Replace("/", "-")),
+                            ".xlsx")
+    End Function
+
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 employeeGroups As ICollection(Of EmployeeGroup),
                                 short_dates As String(),

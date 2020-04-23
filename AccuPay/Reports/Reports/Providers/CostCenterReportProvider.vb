@@ -6,6 +6,7 @@ Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
@@ -93,15 +94,17 @@ Public Class CostCenterReportProvider
     Public Sub Run() Implements IReportProvider.Run
 
         Try
-            Dim payrollSelector = GetPayrollSelector()
-            If payrollSelector Is Nothing Then Return
+            Dim selectMonthForm As New selectMonth
+
+            If Not selectMonthForm.ShowDialog = Windows.Forms.DialogResult.OK Then
+                Return
+            End If
+            Dim selectedMonth As Date = CDate(selectMonthForm.MonthValue).ToMinimumDateValue
 
             Dim selectedBranch = GetSelectedBranch()
             If selectedBranch Is Nothing Then Return
 
-            MsgBox($"({payrollSelector.PayPeriodFromID} - {payrollSelector.PayPeriodToID}) / {selectedBranch.Name}")
-
-            Dim defaultFileName = GetDefaultFileName("PayrollSummaryByBranch", payrollSelector)
+            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth)
 
             Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
@@ -111,8 +114,7 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim payPeriodModels = GeneratePayPeriodModels(payrollSelector.DateFrom.Value,
-                                                          payrollSelector.DateTo.Value,
+            Dim payPeriodModels = GeneratePayPeriodModels(selectedMonth,
                                                           selectedBranch)
 
             If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
@@ -130,11 +132,22 @@ Public Class CostCenterReportProvider
             MessageBoxHelper.ErrorMessage(ex.Message)
         Catch ex As Exception
 
-            MsgBox(getErrExcptn(ex, Me.Name))
+            Debugger.Break()
+            MessageBoxHelper.DefaultErrorMessage()
 
         End Try
 
     End Sub
+
+    Protected Shared Function GetDefaultFileName(reportName As String,
+                                                 selectedBranch As Data.Entities.Branch,
+                                                 selectedMonth As Date) As String
+        Return String.Concat(selectedBranch.Name, " ",
+                            reportName, " ",
+                            "- ",
+                            selectedMonth.ToString("MMMM"),
+                            ".xlsx")
+    End Function
 
     Private Sub GenerateExcel(payPeriodModels As List(Of PayPeriodModel),
                               newFile As IO.FileInfo)
@@ -150,8 +163,7 @@ Public Class CostCenterReportProvider
         End Using
     End Sub
 
-    Private Function GeneratePayPeriodModels(startDate As Date,
-                                             endDate As Date,
+    Private Function GeneratePayPeriodModels(selectedMonth As Date,
                                              selectedBranch As Data.Entities.Branch) As _
                                              List(Of PayPeriodModel)
 
@@ -162,9 +174,16 @@ Public Class CostCenterReportProvider
             Dim payPeriods = context.PayPeriods.
                                         Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                                         Where(Function(p) p.IsSemiMonthly).
-                                        Where(Function(p) p.PayFromDate >= startDate).
-                                        Where(Function(p) p.PayToDate <= endDate).
+                                        Where(Function(p) p.Year = selectedMonth.Year).
+                                        Where(Function(p) p.Month = selectedMonth.Month).
                                         ToList
+
+            If payPeriods.Count <> 2 Then
+                Throw New Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, 2nd half)")
+            End If
+
+            Dim startDate As Date = {payPeriods(0).PayFromDate, payPeriods(1).PayFromDate}.Min
+            Dim endDate As Date = {payPeriods(0).PayToDate, payPeriods(1).PayToDate}.Max
 
             Dim timeEntries = context.TimeEntries.
                                         Include(Function(t) t.Employee).
@@ -312,44 +331,18 @@ Public Class CostCenterReportProvider
             Dim employeesStartIndex = rowIndex
             Dim employeesLastIndex = 0
 
-            For Each paystub In payPeriodModel.Paystubs
-                Dim letters = GenerateAlphabet.GetEnumerator()
-                Dim propertyLookUp = paystub.LookUp
+            If payPeriodModel.Paystubs.Count > 0 Then
+                RenderGroupedRows(worksheet,
+                                  viewableReportColumns,
+                                  subTotalRows,
+                                  rowIndex,
+                                  lastCell,
+                                  payPeriodModel,
+                                  employeesStartIndex,
+                                  employeesLastIndex)
 
-                For Each reportColumn In viewableReportColumns
-                    letters.MoveNext()
-                    Dim alphabet = letters.Current
+            End If
 
-                    Dim column = $"{alphabet}{rowIndex}"
-
-                    Dim cell = worksheet.Cells(column)
-
-                    Dim value = propertyLookUp(reportColumn.Source)
-                    If reportColumn.Type = ColumnType.Numeric Then
-                        cell.Value = CDec(value)
-                    Else
-                        cell.Value = value
-
-                    End If
-
-                    If reportColumn.Type = ColumnType.Numeric Then
-                        cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
-                        cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
-                    End If
-                Next
-
-                lastCell = letters.Current
-                employeesLastIndex = rowIndex
-                rowIndex += 1
-            Next
-
-            Dim subTotalCellRange = $"C{rowIndex}:{lastCell}{rowIndex}"
-
-            subTotalRows.Add(rowIndex)
-
-            RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
-
-            rowIndex += 2
         Next
 
         worksheet.Cells.AutoFitColumns()
@@ -364,6 +357,55 @@ Public Class CostCenterReportProvider
         rowIndex += 1
 
         SetDefaultPrinterSettings(worksheet.PrinterSettings)
+    End Sub
+
+    Private Sub RenderGroupedRows(worksheet As ExcelWorksheet,
+                                  viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
+                                  subTotalRows As List(Of Integer),
+                                  ByRef rowIndex As Integer,
+                                  ByRef lastCell As String,
+                                  payPeriodModel As PayPeriodModel,
+                                  employeesStartIndex As Integer,
+                                  ByRef employeesLastIndex As Integer)
+
+        For Each paystub In payPeriodModel.Paystubs
+            Dim letters = GenerateAlphabet.GetEnumerator()
+            Dim propertyLookUp = paystub.LookUp
+
+            For Each reportColumn In viewableReportColumns
+                letters.MoveNext()
+                Dim alphabet = letters.Current
+
+                Dim column = $"{alphabet}{rowIndex}"
+
+                Dim cell = worksheet.Cells(column)
+
+                Dim value = propertyLookUp(reportColumn.Source)
+                If reportColumn.Type = ColumnType.Numeric Then
+                    cell.Value = CDec(value)
+                Else
+                    cell.Value = value
+
+                End If
+
+                If reportColumn.Type = ColumnType.Numeric Then
+                    cell.Style.Numberformat.Format = "_(* #,##0.00_);_(* (#,##0.00);_(* ""-""??_);_(@_)"
+                    cell.Style.HorizontalAlignment = ExcelHorizontalAlignment.Right
+                End If
+            Next
+
+            lastCell = letters.Current
+            employeesLastIndex = rowIndex
+            rowIndex += 1
+        Next
+
+        Dim subTotalCellRange = $"B{rowIndex}:{lastCell}{rowIndex}"
+
+        subTotalRows.Add(rowIndex)
+
+        RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
+
+        rowIndex += 2
     End Sub
 
     Private Function GetPayPeriodDescription(payPeriod As PayPeriod) As String

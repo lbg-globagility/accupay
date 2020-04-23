@@ -70,21 +70,6 @@ Public Class ExcelFormatReport
 
     End Function
 
-    Protected Shared Function GetDefaultFileName(reportName As String,
-                                                 payrollSelector As PayrollSummaDateSelection) As String
-        Return String.Concat(orgNam,
-                            reportName,
-                            payrollSelector.cboStringParameter.Text.Replace(" ", ""),
-                            "Report",
-                            String.Concat(
-                                payrollSelector.DateFrom.Value.
-                                    ToShortDateString().Replace("/", "-"),
-                                "TO",
-                                payrollSelector.DateTo.Value.
-                                    ToShortDateString().Replace("/", "-")),
-                            ".xlsx")
-    End Function
-
     Protected Shared Sub RenderSubTotal(worksheet As ExcelWorksheet, subTotalCellRange As String, employeesStartIndex As Integer, employeesLastIndex As Integer)
         worksheet.Cells(subTotalCellRange).Formula = String.Format(
                         "SUM({0})",
