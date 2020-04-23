@@ -343,6 +343,7 @@
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
     <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
+    <Compile Include="Core\Utilities\Excel\WorkSheetRowParseValueException.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
     <Compile Include="Core\Utilities\Helper\NameHelper.vb" />
