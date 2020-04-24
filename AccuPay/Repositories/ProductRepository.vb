@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports Microsoft.EntityFrameworkCore
@@ -18,6 +19,7 @@ Namespace Global.AccuPay.Repository
             Return Await GetProductsByCategory(category.RowID)
 
         End Function
+
         Public Async Function GetAllowanceTypes() _
             As Task(Of IEnumerable(Of Product))
 

@@ -630,7 +630,6 @@
     </Compile>
     <Compile Include="Repositories\EmployeeData.vb" />
     <Compile Include="Repositories\LeaveRepository.vb" />
-    <Compile Include="Repositories\ProductConstant.vb" />
     <Compile Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.Designer.vb">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </Compile>

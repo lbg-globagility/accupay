@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Helpers
 
 Public Class EmployeeAllowanceForm
 

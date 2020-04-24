@@ -2,9 +2,12 @@
 
 Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
+Imports AccuPay.Loans
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -164,246 +167,6 @@ Public Class CostCenterReportProvider
         End Using
     End Sub
 
-    Private Function GeneratePayPeriodModels(selectedMonth As Date,
-                                             selectedBranch As Data.Entities.Branch) As _
-                                             List(Of PayPeriodModel)
-
-        Dim payPeriodModels As New List(Of PayPeriodModel)
-
-        Using context As New PayrollContext
-
-            Dim payPeriods = context.PayPeriods.
-                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(p) p.IsSemiMonthly).
-                                        Where(Function(p) p.Year = selectedMonth.Year).
-                                        Where(Function(p) p.Month = selectedMonth.Month).
-                                        ToList
-
-            If payPeriods.Count <> 2 Then
-                Throw New Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)")
-            End If
-
-            Dim startDate As Date = {payPeriods(0).PayFromDate, payPeriods(1).PayFromDate}.Min
-            Dim endDate As Date = {payPeriods(0).PayToDate, payPeriods(1).PayToDate}.Max
-
-            Dim timeEntries = context.TimeEntries.
-                                        Include(Function(t) t.Employee).
-                                        Where(Function(t) t.Employee.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(t) t.Date >= startDate AndAlso t.Date <= endDate).
-                                        ToList
-
-            Dim employeesWithTimeEntriesInBranch = timeEntries.
-                                                    Where(Function(t) t.BranchID IsNot Nothing).
-                                                    Where(Function(t) t.BranchID.Value = selectedBranch.RowID.Value).
-                                                    GroupBy(Function(t) t.EmployeeID).
-                                                    Select(Function(t) t.Key).
-                                                    ToArray()
-
-            'Get all the employee in the branch
-            'Also get the employees that has at least 1 timelogs on the branch
-            Dim employees = context.Employees.
-                Where(Function(e) e.IsDaily). 'This report is for daily employee only
-                Where(Function(e) (e.BranchID.HasValue AndAlso
-                                    e.BranchID.Value = selectedBranch.RowID.Value) OrElse
-                                   employeesWithTimeEntriesInBranch.Contains(e.RowID.Value)).
-                ToList
-
-            'if timeEntry's BranchID is Nothing, set it to
-            'employee's BranchID for easier querying
-            AddBranchToTimeEntries(timeEntries, employees)
-
-            timeEntries = timeEntries.
-                            Where(Function(t) t.BranchID IsNot Nothing).
-                            Where(Function(t) t.BranchID.Value = selectedBranch.RowID.Value).
-                            ToList
-
-            Dim salaries = context.Salaries.
-                Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= startDate).
-                ToList
-
-            Dim employeePaystubs = context.Paystubs.
-                                        Include(Function(p) p.ThirteenthMonthPay).
-                                        Where(Function(p) p.PayPeriodID.Value = payPeriods(0).RowID.Value OrElse
-                                                            p.PayPeriodID.Value = payPeriods(1).RowID.Value).
-                                        ToList
-
-            Dim taxEffectivityDate = New Date(payPeriods(0).Year, payPeriods(0).Month, 1)
-            Dim sssBrackets = context.SocialSecurityBrackets.
-                                        Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
-                                        Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo).
-                                        ToList()
-
-            Dim employeeMonthlyDeductions = GenerateMonthlyDeductionList(employees, employeePaystubs, sssBrackets)
-
-            payPeriodModels = CreatePayPeriodModels(payPeriods, timeEntries, employees, salaries, employeePaystubs, employeeMonthlyDeductions)
-
-        End Using
-
-        Return payPeriodModels
-
-    End Function
-
-    Private Function GenerateMonthlyDeductionList(employees As List(Of Employee),
-                                                  allPaystubs As List(Of Paystub),
-                                                  sssBrackets As List(Of SocialSecurityBracket)) As List(Of MonthlyDeduction)
-
-        Dim employeeMonthlyDeductions As New List(Of MonthlyDeduction)
-
-        For Each employee In employees
-
-            Dim employeePaystubs = allPaystubs.
-                                    Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
-                                    ToList
-
-            If employeePaystubs.Count > 2 Then
-                Throw New Exception("Only up to 2 paystubs should be computed per employee. First half and end of the month paystubs.")
-            End If
-
-            Dim sssAmount As Decimal = 0
-            Dim ecAmount As Decimal = 0
-            Dim hdmfAmount As Decimal = 0
-            Dim philhealthAmount As Decimal = 0
-            Dim hmoAmount As Decimal = 0
-            Dim thirteenthMonthPay As Decimal = 0
-
-            If employeePaystubs.Any Then
-
-                hdmfAmount = employeePaystubs.Sum(Function(p) p.HdmfEmployerShare)
-                philhealthAmount = employeePaystubs.Sum(Function(p) p.PhilHealthEmployerShare)
-                thirteenthMonthPay = employeePaystubs.Sum(Function(p) p.ThirteenthMonthPay.Amount)
-
-                Dim sssPayables = GetEmployerSSSPayables(sssBrackets,
-                                                         employeePaystubs(0).SssEmployeeShare)
-                sssAmount = sssPayables.EmployerShare
-                ecAmount = sssPayables.ECamount
-
-                'check if there is a 2nd paystub (could be only 1 paystub for the month)
-                If employeePaystubs.Count = 2 Then
-                    sssPayables = GetEmployerSSSPayables(sssBrackets,
-                                                         employeePaystubs(1).SssEmployeeShare)
-                    sssAmount += sssPayables.EmployerShare
-                    ecAmount += sssPayables.ECamount
-                End If
-
-                'TODO: hmoAmount
-            End If
-
-            employeeMonthlyDeductions.Add(MonthlyDeduction.Create(employeeId:=employee.RowID.Value,
-                                                                sssAmount:=sssAmount,
-                                                                ecAmount:=ecAmount,
-                                                                hdmfAmount:=hdmfAmount,
-                                                                philhealthAmount:=philhealthAmount,
-                                                                hmoAmount:=hmoAmount,
-                                                                thirteenthMonthPay:=thirteenthMonthPay))
-
-        Next
-
-        Return employeeMonthlyDeductions
-
-    End Function
-
-    Private Shared Function GetEmployerSSSPayables(sssBrackets As List(Of SocialSecurityBracket),
-                                                   employeeShare As Decimal) _
-                                                   As SSSEmployerShare
-
-        If employeeShare = 0 Then Return SSSEmployerShare.Zero
-
-        'SSS employer share and EC are not saved in the database. To get those data
-        'we need to query the SSS bracket and get by employee contribution amount
-        Dim sssBracket = sssBrackets.
-                Where(Function(s) s.EmployeeContributionAmount = employeeShare).
-                FirstOrDefault
-
-        Dim sssAmount = If(sssBracket?.EmployerContributionAmount, 0)
-        Dim ecAmount = If(sssBracket?.EmployeeECAmount, 0)
-
-        Return New SSSEmployerShare(employerShare:=sssAmount,
-                                    ECamount:=ecAmount)
-    End Function
-
-    Private Sub AddBranchToTimeEntries(timeEntries As List(Of TimeEntry),
-                                       employees As List(Of Employee))
-        For Each timeEntry In timeEntries
-
-            If timeEntry.BranchID.HasValue Then Continue For
-
-            timeEntry.BranchID = employees.
-                FirstOrDefault(Function(e) e.RowID.Value = timeEntry.EmployeeID.Value)?.BranchID
-
-        Next
-
-    End Sub
-
-    Private Shared Function CreatePayPeriodModels(payPeriods As List(Of PayPeriod),
-                                                  allTimeEntries As List(Of TimeEntry),
-                                                  employees As List(Of Employee),
-                                                  salaries As List(Of Salary),
-                                                  paystubs As List(Of Paystub),
-                                                  monthlyDeductions As List(Of MonthlyDeduction)) As _
-                                                  List(Of PayPeriodModel)
-
-        Dim payPeriodModels As New List(Of PayPeriodModel)
-        For Each payPeriod In payPeriods
-
-            Dim payPeriodPaystubs = paystubs.
-                                        Where(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value).
-                                        ToList
-
-            Dim paystubModels = CreatePaystubModels(allTimeEntries, employees, salaries, payPeriod, payPeriodPaystubs, monthlyDeductions)
-
-            payPeriodModels.Add(New PayPeriodModel With
-            {
-                   .PayPeriod = payPeriod,
-                   .Paystubs = paystubModels
-            })
-
-        Next
-
-        Return payPeriodModels
-    End Function
-
-    Private Shared Function CreatePaystubModels(allTimeEntries As List(Of TimeEntry),
-                                                employees As List(Of Employee),
-                                                salaries As List(Of Salary),
-                                                payPeriod As PayPeriod,
-                                                paystubs As List(Of Paystub),
-                                                monthlyDeductions As List(Of MonthlyDeduction)) _
-                                                As List(Of PaystubModel)
-
-        Dim paystubModels As New List(Of PaystubModel)
-
-        For Each employee In employees
-
-            Dim timeEntries = allTimeEntries.
-                                Where(Function(t) t.Date >= payPeriod.PayFromDate).
-                                Where(Function(t) t.Date <= payPeriod.PayToDate).
-                                Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).
-                                ToList
-
-            Dim salary = salaries.
-                Where(Function(s) s.EmployeeID.Value = employee.RowID.Value).
-                Where(Function(s) s.EffectiveFrom <= payPeriod.PayFromDate).
-                OrderByDescending(Function(s) s.EffectiveFrom).
-                FirstOrDefault
-
-            Dim paystub = paystubs.Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
-                        FirstOrDefault
-
-            Dim monthlyDeduction = monthlyDeductions.
-                                    Where(Function(d) d.EmployeeID = employee.RowID.Value).
-                                    FirstOrDefault
-            Dim createdPaystubModel = PaystubModel.Create(employee, salary, timeEntries, paystub, monthlyDeduction)
-
-            If createdPaystubModel IsNot Nothing AndAlso createdPaystubModel.GrossPay > 0 Then
-                paystubModels.Add(createdPaystubModel)
-            End If
-
-        Next
-
-        Return paystubModels
-    End Function
-
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 payPeriods As ICollection(Of PayPeriodModel),
                                 viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
@@ -525,6 +288,269 @@ Public Class CostCenterReportProvider
         rowIndex += 2
     End Sub
 
+#Region "Data Methods"
+
+    Private Function GeneratePayPeriodModels(selectedMonth As Date,
+                                             selectedBranch As Data.Entities.Branch) As _
+                                             List(Of PayPeriodModel)
+
+        Dim payPeriodModels As New List(Of PayPeriodModel)
+
+        Using context As New PayrollContext
+
+            Dim payPeriods = context.PayPeriods.
+                                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+                                        Where(Function(p) p.IsSemiMonthly).
+                                        Where(Function(p) p.Year = selectedMonth.Year).
+                                        Where(Function(p) p.Month = selectedMonth.Month).
+                                        ToList
+
+            If payPeriods.Count <> 2 Then
+                Throw New Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)")
+            End If
+
+            Dim startDate As Date = {payPeriods(0).PayFromDate, payPeriods(1).PayFromDate}.Min
+            Dim endDate As Date = {payPeriods(0).PayToDate, payPeriods(1).PayToDate}.Max
+
+            Dim timeEntries = context.TimeEntries.
+                                        Include(Function(t) t.Employee).
+                                        Where(Function(t) t.Employee.OrganizationID.Value = z_OrganizationID).
+                                        Where(Function(t) t.Date >= startDate AndAlso t.Date <= endDate).
+                                        ToList
+
+            Dim employeesWithTimeEntriesInBranch = timeEntries.
+                                                    Where(Function(t) t.BranchID IsNot Nothing).
+                                                    Where(Function(t) t.BranchID.Value = selectedBranch.RowID.Value).
+                                                    GroupBy(Function(t) t.EmployeeID).
+                                                    Select(Function(t) t.Key).
+                                                    ToArray()
+
+            'Get all the employee in the branch
+            'Also get the employees that has at least 1 timelogs on the branch
+            Dim employees = context.Employees.
+                Where(Function(e) e.IsDaily). 'This report is for daily employee only
+                Where(Function(e) (e.BranchID.HasValue AndAlso
+                                    e.BranchID.Value = selectedBranch.RowID.Value) OrElse
+                                   employeesWithTimeEntriesInBranch.Contains(e.RowID.Value)).
+                ToList
+
+            'if timeEntry's BranchID is Nothing, set it to
+            'employee's BranchID for easier querying
+            AddBranchToTimeEntries(timeEntries, employees)
+
+            timeEntries = timeEntries.
+                            Where(Function(t) t.BranchID IsNot Nothing).
+                            Where(Function(t) t.BranchID.Value = selectedBranch.RowID.Value).
+                            ToList
+
+            Dim salaries = context.Salaries.
+                Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
+                Where(Function(s) s.EffectiveFrom <= startDate).
+                ToList
+
+            Dim employeePaystubs = context.Paystubs.
+                                        Include(Function(p) p.ThirteenthMonthPay).
+                                        Where(Function(p) p.PayPeriodID.Value = payPeriods(0).RowID.Value OrElse
+                                                            p.PayPeriodID.Value = payPeriods(1).RowID.Value).
+                                        ToList
+
+            Dim employeeMonthlyDeductions = GenerateMonthlyDeductionList(payPeriods, employees, employeePaystubs)
+
+            Dim hmoLoanType = New ProductRepository().
+                                GetOrCreateAdjustmentType(ProductConstant.HMO_LOAN,
+                                                          organizationID:=z_OrganizationID,
+                                                          userID:=z_User)
+
+            Dim hmoLoans = context.LoanTransactions.
+                                    Include(Function(l) l.Paystub).
+                                    Where(Function(l) l.PayPeriodID.Value = payPeriods(0).RowID.Value OrElse
+                                                      l.PayPeriodID.Value = payPeriods(1).RowID.Value).
+                                    ToList
+
+            payPeriodModels = CreatePayPeriodModels(payPeriods, timeEntries, employees, salaries, employeePaystubs, employeeMonthlyDeductions, hmoLoans)
+
+        End Using
+
+        Return payPeriodModels
+
+    End Function
+
+    Private Function GenerateMonthlyDeductionList(payPeriods As List(Of PayPeriod),
+                                                  employees As List(Of Employee),
+                                                  allPaystubs As List(Of Paystub)) _
+                                                  As List(Of MonthlyDeduction)
+
+        Dim employeeMonthlyDeductions As New List(Of MonthlyDeduction)
+
+        Dim sssBrackets As List(Of SocialSecurityBracket)
+
+        Using context As New PayrollContext
+            Dim taxEffectivityDate = New Date(payPeriods(0).Year, payPeriods(0).Month, 1)
+            sssBrackets = context.SocialSecurityBrackets.
+                                    Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
+                                    Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo).
+                                    ToList()
+
+        End Using
+
+        For Each employee In employees
+
+            Dim employeePaystubs = allPaystubs.
+                                    Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
+                                    ToList
+
+            If employeePaystubs.Count > 2 Then
+                Throw New Exception("Only up to 2 paystubs should be computed per employee. First half and end of the month paystubs.")
+            End If
+
+            Dim sssAmount As Decimal = 0
+            Dim ecAmount As Decimal = 0
+            Dim hdmfAmount As Decimal = 0
+            Dim philhealthAmount As Decimal = 0
+            Dim thirteenthMonthPay As Decimal = 0
+
+            If employeePaystubs.Any Then
+
+                hdmfAmount = employeePaystubs.Sum(Function(p) p.HdmfEmployerShare)
+                philhealthAmount = employeePaystubs.Sum(Function(p) p.PhilHealthEmployerShare)
+                thirteenthMonthPay = employeePaystubs.Sum(Function(p) p.ThirteenthMonthPay.Amount)
+
+                Dim sssPayables = GetEmployerSSSPayables(sssBrackets,
+                                                         employeePaystubs(0).SssEmployeeShare)
+                sssAmount = sssPayables.EmployerShare
+                ecAmount = sssPayables.ECamount
+
+                'check if there is a 2nd paystub (could be only 1 paystub for the month)
+                If employeePaystubs.Count = 2 Then
+                    sssPayables = GetEmployerSSSPayables(sssBrackets,
+                                                         employeePaystubs(1).SssEmployeeShare)
+                    sssAmount += sssPayables.EmployerShare
+                    ecAmount += sssPayables.ECamount
+                End If
+            End If
+
+            employeeMonthlyDeductions.Add(MonthlyDeduction.Create(employeeId:=employee.RowID.Value,
+                                                                sssAmount:=sssAmount,
+                                                                ecAmount:=ecAmount,
+                                                                hdmfAmount:=hdmfAmount,
+                                                                philhealthAmount:=philhealthAmount,
+                                                                thirteenthMonthPay:=thirteenthMonthPay))
+
+        Next
+
+        Return employeeMonthlyDeductions
+
+    End Function
+
+    Private Shared Function GetEmployerSSSPayables(sssBrackets As List(Of SocialSecurityBracket),
+                                                   employeeShare As Decimal) _
+                                                   As SSSEmployerShare
+
+        If employeeShare = 0 Then Return SSSEmployerShare.Zero
+
+        'SSS employer share and EC are not saved in the database. To get those data
+        'we need to query the SSS bracket and get by employee contribution amount
+        Dim sssBracket = sssBrackets.
+                Where(Function(s) s.EmployeeContributionAmount = employeeShare).
+                FirstOrDefault
+
+        Dim sssAmount = If(sssBracket?.EmployerContributionAmount, 0)
+        Dim ecAmount = If(sssBracket?.EmployeeECAmount, 0)
+
+        Return New SSSEmployerShare(employerShare:=sssAmount,
+                                    ECamount:=ecAmount)
+    End Function
+
+    Private Sub AddBranchToTimeEntries(timeEntries As List(Of TimeEntry),
+                                       employees As List(Of Employee))
+        For Each timeEntry In timeEntries
+
+            If timeEntry.BranchID.HasValue Then Continue For
+
+            timeEntry.BranchID = employees.
+                FirstOrDefault(Function(e) e.RowID.Value = timeEntry.EmployeeID.Value)?.BranchID
+
+        Next
+
+    End Sub
+
+    Private Shared Function CreatePayPeriodModels(payPeriods As List(Of PayPeriod),
+                                                  allTimeEntries As List(Of TimeEntry),
+                                                  employees As List(Of Employee),
+                                                  salaries As List(Of Salary),
+                                                  paystubs As List(Of Paystub),
+                                                  monthlyDeductions As List(Of MonthlyDeduction),
+                                                  hmoLoans As List(Of LoanTransaction)) As _
+                                                  List(Of PayPeriodModel)
+
+        Dim payPeriodModels As New List(Of PayPeriodModel)
+        For Each payPeriod In payPeriods
+            Dim payPeriodPaystubs = paystubs.
+                                        Where(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value).
+                                        ToList
+
+            Dim payPeriodHmoLoans = hmoLoans.
+                                        Where(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value).
+                                        ToList
+
+            Dim paystubModels = CreatePaystubModels(allTimeEntries, employees, salaries, payPeriod, payPeriodPaystubs, monthlyDeductions, payPeriodHmoLoans)
+
+            payPeriodModels.Add(New PayPeriodModel With
+            {
+                   .PayPeriod = payPeriod,
+                   .Paystubs = paystubModels
+            })
+
+        Next
+
+        Return payPeriodModels
+    End Function
+
+    Private Shared Function CreatePaystubModels(allTimeEntries As List(Of TimeEntry),
+                                                employees As List(Of Employee),
+                                                salaries As List(Of Salary),
+                                                payPeriod As PayPeriod,
+                                                paystubs As List(Of Paystub),
+                                                monthlyDeductions As List(Of MonthlyDeduction),
+                                                hmoLoans As List(Of LoanTransaction)) _
+                                                As List(Of PaystubModel)
+
+        Dim paystubModels As New List(Of PaystubModel)
+
+        For Each employee In employees
+
+            Dim timeEntries = allTimeEntries.
+                                Where(Function(t) t.Date >= payPeriod.PayFromDate).
+                                Where(Function(t) t.Date <= payPeriod.PayToDate).
+                                Where(Function(t) t.EmployeeID.Value = employee.RowID.Value).
+                                ToList
+
+            Dim salary = salaries.
+                Where(Function(s) s.EmployeeID.Value = employee.RowID.Value).
+                Where(Function(s) s.EffectiveFrom <= payPeriod.PayFromDate).
+                OrderByDescending(Function(s) s.EffectiveFrom).
+                FirstOrDefault
+
+            Dim paystub = paystubs.Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
+                        FirstOrDefault
+
+            Dim monthlyDeduction = monthlyDeductions.
+                                    Where(Function(d) d.EmployeeID = employee.RowID.Value).
+                                    FirstOrDefault
+
+            Dim hmoLoan = hmoLoans.Where(Function(h) h.EmployeeID.Value = employee.RowID.Value).
+                                    FirstOrDefault
+            Dim createdPaystubModel = PaystubModel.Create(employee, salary, timeEntries, paystub, monthlyDeduction, hmoLoan)
+
+            If createdPaystubModel IsNot Nothing AndAlso createdPaystubModel.GrossPay > 0 Then
+                paystubModels.Add(createdPaystubModel)
+            End If
+
+        Next
+
+        Return paystubModels
+    End Function
+
     Private Function GetPayPeriodDescription(payPeriod As PayPeriod) As String
 
         If payPeriod Is Nothing Then Return String.Empty
@@ -551,13 +577,9 @@ Public Class CostCenterReportProvider
 
     End Function
 
-    Private Shared Function ComputeGovernmentContribution(paystubModel As PaystubModel, branchesCount As Integer, employee As Employee, paystub As List(Of Paystub)) As PaystubModel
+#End Region
 
-        Dim totalPhilHealthEmployerShare = paystub.Sum(Function(p) p.PhilHealthEmployerShare)
-
-        Return paystubModel
-
-    End Function
+#Region "Custom Classes"
 
     Private Class PayPeriodModel
 
@@ -589,7 +611,8 @@ Public Class CostCenterReportProvider
                                         salary As Salary,
                                         timeEntries As List(Of TimeEntry),
                                         currentPaystub As Paystub,
-                                        monthlyDeduction As MonthlyDeduction) As PaystubModel
+                                        monthlyDeduction As MonthlyDeduction,
+                                        hmoLoan As LoanTransaction) As PaystubModel
 
             If employee Is Nothing Then Return Nothing
             If timeEntries Is Nothing OrElse timeEntries.Any = False Then Return Nothing
@@ -607,13 +630,18 @@ Public Class CostCenterReportProvider
                 'If employee worked for 100 hours in total, and he worked 40 hours in this branch,
                 'then he worked 40% of his total worked hours in this branch.
                 Dim workedPercentage = AccuMath.CommercialRound(paystubModel.RegularHours / currentPaystub.RegularHours) '40 / 100
-                paystubModel = ComputeGovernmentDeductions(monthlyDeduction, paystubModel, workedPercentage)
+                paystubModel = ComputeGovernmentDeductions(hmoLoan, monthlyDeduction, paystubModel, workedPercentage)
             End If
 
             Return paystubModel
         End Function
 
-        Private Shared Function ComputeGovernmentDeductions(monthlyDeduction As MonthlyDeduction, paystubModel As PaystubModel, workedPercentage As Decimal) As PaystubModel
+        Private Shared Function ComputeGovernmentDeductions(hmoLoan As LoanTransaction,
+                                                            monthlyDeduction As MonthlyDeduction,
+                                                            paystubModel As PaystubModel,
+                                                            workedPercentage As Decimal) As PaystubModel
+            'Test hmoLoan
+            paystubModel.HMOAmount = MonthlyDeductionAmount.ComputeBranchPercentage(If(hmoLoan?.Amount, 0), workedPercentage)
 
             paystubModel.SSSAmount = monthlyDeduction.SSSAmount.GetBranchPercentage(workedPercentage)
 
@@ -622,8 +650,6 @@ Public Class CostCenterReportProvider
             paystubModel.HDMFAmount = monthlyDeduction.HDMFAmount.GetBranchPercentage(workedPercentage)
 
             paystubModel.PhilHealthAmount = monthlyDeduction.PhilHealthAmount.GetBranchPercentage(workedPercentage)
-
-            paystubModel.HMOAmount = monthlyDeduction.HMOAmount.GetBranchPercentage(workedPercentage)
 
             paystubModel.ThirteenthMonthPay = monthlyDeduction.ThirteenthMonthPay.GetBranchPercentage(workedPercentage)
 
@@ -757,16 +783,24 @@ Public Class CostCenterReportProvider
             End Get
         End Property
 
+        Private ReadOnly Property TotalDeductions As Decimal
+            Get
+                Return SSSAmount +
+                    ECAmount +
+                    HDMFAmount +
+                    PhilHealthAmount +
+                    HMOAmount +
+                    ThirteenthMonthPay +
+                    FiveDaySilpAmount
+            End Get
+        End Property
+
         Private ReadOnly Property NetPay As Decimal
             Get
-                Return GrossPay -
-                    SSSAmount -
-                    ECAmount -
-                    HDMFAmount -
-                    PhilHealthAmount -
-                    HMOAmount -
-                    ThirteenthMonthPay -
-                    FiveDaySilpAmount
+                'Total deductions are added since cost center report is for
+                'franchise/branch owners. They will pay the employer deductions.
+                'Net pay is how much they will per employee
+                Return GrossPay + TotalDeductions
             End Get
         End Property
 
@@ -821,7 +855,6 @@ Public Class CostCenterReportProvider
                                     ecAmount As Decimal,
                                     hdmfAmount As Decimal,
                                     philhealthAmount As Decimal,
-                                    hmoAmount As Decimal,
                                     thirteenthMonthPay As Decimal) As MonthlyDeduction
 
             Return New MonthlyDeduction() With {
@@ -830,7 +863,6 @@ Public Class CostCenterReportProvider
                 .ECAmount = MonthlyDeductionAmount.Create(ecAmount),
                 .HDMFAmount = MonthlyDeductionAmount.Create(hdmfAmount),
                 .PhilHealthAmount = MonthlyDeductionAmount.Create(philhealthAmount),
-                .HMOAmount = MonthlyDeductionAmount.Create(hmoAmount),
                 .ThirteenthMonthPay = MonthlyDeductionAmount.Create(thirteenthMonthPay)
             }
         End Function
@@ -844,7 +876,6 @@ Public Class CostCenterReportProvider
         Public Property ECAmount As MonthlyDeductionAmount
         Public Property HDMFAmount As MonthlyDeductionAmount
         Public Property PhilHealthAmount As MonthlyDeductionAmount
-        Public Property HMOAmount As MonthlyDeductionAmount
         Public Property ThirteenthMonthPay As MonthlyDeductionAmount
 
     End Class
@@ -876,9 +907,15 @@ Public Class CostCenterReportProvider
         End Property
 
         Public Function GetBranchPercentage(branchPercentage As Decimal) As Decimal
-            Return AccuMath.CommercialRound(SemiMonthlyAmount * branchPercentage)
+            Return ComputeBranchPercentage(SemiMonthlyAmount, branchPercentage)
+        End Function
+
+        Public Shared Function ComputeBranchPercentage(amount As Decimal, branchPercentage As Decimal) As Decimal
+            Return AccuMath.CommercialRound(amount * branchPercentage)
         End Function
 
     End Class
+
+#End Region
 
 End Class

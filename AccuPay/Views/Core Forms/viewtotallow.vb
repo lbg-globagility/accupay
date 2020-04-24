@@ -1,4 +1,5 @@
-﻿Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Data.Helpers
+Imports Microsoft.EntityFrameworkCore
 
 Public Class viewtotallow
     Dim categallowID As Object = Nothing
