@@ -58,7 +58,7 @@ Namespace Global.AccuPay.Entity
         Public Property OtherLeaveBalance As Decimal Implements IEmployee.OtherLeaveBalance
 
         <Column("LeaveAllowance")>
-        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.LeaveAllowance
+        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.VacationLeaveAllowance
 
         Public Property SickLeaveAllowance As Decimal Implements IEmployee.SickLeaveAllowance
         Public Property MaternityLeaveAllowance As Decimal Implements IEmployee.MaternityLeaveAllowance

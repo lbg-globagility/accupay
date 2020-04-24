@@ -29,7 +29,7 @@ Public Class PayrollTools
     Private Const PotentialLastWorkDay As Integer = 7
 
     Public Shared Function GetEmployeeMonthlyRate(
-                            employee As Employee,
+                            employee As Entities.Employee,
                             salary As Salary,
                             Optional isActual As Boolean = False) As Decimal
 
@@ -57,7 +57,7 @@ Public Class PayrollTools
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetDailyRate(salary As Salary, employee As Entities.Employee, Optional isActual As Boolean = False) As Decimal
         Dim dailyRate = 0D
 
         If salary Is Nothing Then
@@ -84,7 +84,7 @@ Public Class PayrollTools
         Return dailyRate / WorkHoursPerDay
     End Function
 
-    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Entities.Employee, Optional isActual As Boolean = False) As Decimal
 
         Return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay
     End Function

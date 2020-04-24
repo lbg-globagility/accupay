@@ -693,7 +693,6 @@
     <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
-    <Compile Include="Domain\Paystubs\Category.vb" />
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
     <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
@@ -702,7 +701,6 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
-    <Compile Include="Repositories\CategoryRepository.vb" />
     <Compile Include="Repositories\ListOfValueRepository.vb" />
     <Compile Include="Repositories\LoanScheduleRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />

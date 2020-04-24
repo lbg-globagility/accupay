@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -8,7 +9,7 @@ Namespace Global.AccuPay.Payroll
 
     Public Class PaystubActualCalculator
 
-        Public Sub Compute(employee As Employee,
+        Public Sub Compute(employee As Entities.Employee,
                            salary As Salary,
                            settings As ListOfValueCollection,
                            payperiod As PayPeriod,

@@ -10,7 +10,7 @@ Namespace Benchmark
 
         Private ReadOnly _currentPayPeriod As IPayPeriod
 
-        Private ReadOnly _employee As New Employee
+        Private ReadOnly _employee As New Entities.Employee
 
         Private ReadOnly _regularDays As Decimal
 
@@ -35,7 +35,7 @@ Namespace Benchmark
         Private ReadOnly _employeeRate As BenchmarkPaystubRate
 
         Private Sub New(
-                employee As Employee,
+                employee As Entities.Employee,
                 payrollResources As PayrollResources,
                 currentPayPeriod As IPayPeriod,
                 employeeRate As BenchmarkPaystubRate,
@@ -81,7 +81,7 @@ Namespace Benchmark
         End Class
 
         Public Shared Function DoProcess(
-                                    employee As Employee,
+                                    employee As Entities.Employee,
                                     payrollResources As PayrollResources,
                                     currentPayPeriod As IPayPeriod,
                                     employeeRate As BenchmarkPaystubRate,
@@ -131,7 +131,7 @@ Namespace Benchmark
 
         End Sub
 
-        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
+        Private Function CreatePaystub(employee As Entities.Employee, generator As PayrollGeneration) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
@@ -173,7 +173,7 @@ Namespace Benchmark
             Return New DoProcessOutput(paystub, loans, generator)
         End Function
 
-        Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
+        Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Entities.Employee)
 
             If employee.IsPremiumInclusive Then
 
@@ -436,7 +436,7 @@ Namespace Benchmark
             Next
         End Sub
 
-        Private Sub ComputeTotalEarnings(paystub As Paystub, employee As Employee)
+        Private Sub ComputeTotalEarnings(paystub As Paystub, employee As Entities.Employee)
 
             If employee.IsFixed Then
 

@@ -7,6 +7,7 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Helpers
@@ -1616,14 +1617,15 @@ Public Class EmployeeForm
                 End If
 
                 Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                Dim employee As Employee = Nothing
-                Using context = New PayrollContext()
-                    employee = (From emp In context.Employees.
-                                    Include(Function(emp) emp.PayFrequency).
-                                    Include(Function(emp) emp.Position)
-                                Where CBool(emp.RowID = employeeID)).
-                               FirstOrDefault()
-                End Using
+                Dim employeeRepo = New Repositories.EmployeeRepository
+                Dim employee = Await employeeRepo.GetByIdWithPayFrequencyAsync(organizationID:=z_OrganizationID, rowID:=employeeID)
+                'Using context = New PayrollContext()
+                '    employee = (From emp In context.Employees.
+                '                    Include(Function(emp) emp.PayFrequency).
+                '                    Include(Function(emp) emp.Position)
+                '                Where CBool(emp.RowID = employeeID)).
+                '               FirstOrDefault()
+                'End Using
 
                 Dim selectedTab = tabctrlemp.SelectedTab
 

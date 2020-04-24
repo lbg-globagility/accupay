@@ -7,9 +7,9 @@ Imports System.Threading.Tasks
 
 Public Class EmployeeOvertimeForm
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Entities.Employee)
 
     Private _currentOvertime As Entities.Overtime
 
@@ -19,7 +19,7 @@ Public Class EmployeeOvertimeForm
 
     Private _overtimeRepository As New Repositories.OvertimeRepository
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -102,7 +102,7 @@ Public Class EmployeeOvertimeForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

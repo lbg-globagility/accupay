@@ -36,7 +36,7 @@ Public Class TimeEntrySummaryForm
 
     Private _payPeriods As ICollection(Of PayPeriod)
 
-    Private _employees As ICollection(Of Employee)
+    Private _employees As ICollection(Of Entities.Employee)
 
     Private _selectedEmployee As Employee
 
@@ -50,7 +50,7 @@ Public Class TimeEntrySummaryForm
 
     Private _currentTimeEntryDate As Date
 
-    Private _employeeRepository As EmployeeRepository
+    Private _employeeRepository As Repositories.EmployeeRepository
 
     Private _hideMoneyColumns As Boolean
 
@@ -68,7 +68,7 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        _employeeRepository = New EmployeeRepository
+        _employeeRepository = New Repositories.EmployeeRepository
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -151,13 +151,13 @@ Public Class TimeEntrySummaryForm
         employeesDataGridView.DataSource = _employees
     End Function
 
-    Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
+    Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Entities.Employee))
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync()
+        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
-        Return CType(list, ICollection(Of Employee))
+        Return CType(list, ICollection(Of Entities.Employee))
 
     End Function
 

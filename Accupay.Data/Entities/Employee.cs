@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -53,7 +54,10 @@ namespace AccuPay.Data.Entities
         public decimal SickLeaveBalance { get; set; }
         public decimal MaternityLeaveBalance { get; set; }
         public decimal OtherLeaveBalance { get; set; }
-        public decimal LeaveAllowance { get; set; }
+
+        [Column("LeaveAllowance")]
+        public decimal VacationLeaveAllowance { get; set; }
+
         public decimal SickLeaveAllowance { get; set; }
         public decimal MaternityLeaveAllowance { get; set; }
         public decimal OtherLeaveAllowance { get; set; }
@@ -81,12 +85,15 @@ namespace AccuPay.Data.Entities
         public Byte[] Image { get; set; }
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
+        public int? BranchID { get; set; }
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
 
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
+
+        //public virtual ICollection<Salary> Salaries { get; set; }
 
         public string MiddleInitial
         {

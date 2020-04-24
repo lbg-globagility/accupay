@@ -1,6 +1,7 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
@@ -192,11 +193,16 @@ Public Class ImportEmployeeForm
 
         Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
 
+        Dim employeeRepo = New Repositories.EmployeeRepository
+        Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
+
+        Dim positionRepo = New Repositories.PositionRepository
+        Dim existingPositions = Await positionRepo.GetAll(z_OrganizationID)
+
         Using context = New PayrollContext
-            Dim employees = Await context.Employees.
-                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
+            Dim employees = employees1.
                 Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
-                ToListAsync()
+                ToList()
 
             'for updates
             For Each employee In employees
@@ -218,11 +224,8 @@ Public Class ImportEmployeeForm
                 Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
                 ToList()
 
-            Dim newPositions = New Collection(Of Position)
-
-            Dim existingPositions = Await context.Positions.
-                Where(Function(p) p.OrganizationID = z_OrganizationID).
-                ToListAsync()
+            Dim newPositions = New Collection(Of Entities.Position)
+            Dim importedEmployees = New List(Of Entities.Employee)
 
             For Each model In notExistEmployees
                 Dim position = existingPositions.
@@ -240,7 +243,7 @@ Public Class ImportEmployeeForm
                     newPositions.Add(position)
                 End If
 
-                Dim employee = New Employee With {
+                Dim employee = New Entities.Employee With {
                     .OrganizationID = z_OrganizationID,
                     .Created = Now,
                     .CreatedBy = z_User,
@@ -250,8 +253,11 @@ Public Class ImportEmployeeForm
 
                 AssignChanges(model, employee)
 
-                context.Employees.Add(employee)
+                importedEmployees.Add(employee)
+
             Next
+
+            If importedEmployees.Any Then Await employeeRepo.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, importedEmployees)
 
             Try
                 Await context.SaveChangesAsync()
@@ -265,8 +271,8 @@ Public Class ImportEmployeeForm
     End Function
 
     Private Function CreatePosition(positionName As String,
-                                    division As Division) As Position
-        Dim position As Position = New Position() With {
+                                    division As Division) As Entities.Position
+        Dim position As Entities.Position = New Entities.Position() With {
             .Name = positionName.Trim(),
             .OrganizationID = z_OrganizationID,
             .Created = Now,
@@ -284,7 +290,7 @@ Public Class ImportEmployeeForm
 
 #Region "Methods"
 
-    Private Sub AssignChanges(em As EmployeeModel, e As Employee)
+    Private Sub AssignChanges(em As EmployeeModel, e As Entities.Employee)
         With e
             If Not String.IsNullOrWhiteSpace(em.Address) Then .HomeAddress = em.Address
 

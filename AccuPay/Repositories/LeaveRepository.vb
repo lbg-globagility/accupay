@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.ModelData
@@ -10,6 +11,8 @@ Imports Microsoft.EntityFrameworkCore
 Namespace Global.AccuPay.Repository
 
     Public Class LeaveRepository
+
+        Private _employeeRepository As Repositories.EmployeeRepository
 
         Private VALIDATABLE_TYPES As New List(Of String) From {
                     ProductConstant.SICK_LEAVE,
@@ -68,7 +71,7 @@ Namespace Global.AccuPay.Repository
 
             Dim employeeShifts As New List(Of ShiftSchedule)
             Dim shiftSchedules As New List(Of EmployeeDutySchedule)
-            Dim employees As New List(Of Employee)
+            Dim employees As New List(Of Entities.Employee)
 
             Dim orderedLeaves = leaves.OrderBy(Function(l) l.StartDate).ToList
 
@@ -151,13 +154,12 @@ Namespace Global.AccuPay.Repository
 
             End If
 
+            Dim employee = Await _employeeRepository.GetByIdAsync(organizationID:=z_OrganizationID, rowID:=employeeId)
+
             Using context As New PayrollContext
 
                 '#1. Update employee's leave allowance
                 '#2. Update employee's leave transactions
-
-                Dim employee = Await context.Employees.
-                                FirstOrDefaultAsync(Function(e) e.RowID.Value = employeeId)
 
                 Dim leaveLedgerQuery = context.LeaveLedgers.
                                         Include(Function(l) l.Product).
@@ -278,7 +280,7 @@ Namespace Global.AccuPay.Repository
             End If
         End Function
 
-        Private Shared Sub UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType As LeaveType.LeaveType, newAllowance As Decimal, ByRef employee As Employee, ByRef leaveLedgerQuery As IQueryable(Of LeaveLedger))
+        Private Shared Sub UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType As LeaveType.LeaveType, newAllowance As Decimal, ByRef employee As Entities.Employee, ByRef leaveLedgerQuery As IQueryable(Of LeaveLedger))
             Select Case selectedLeaveType
                 Case LeaveType.LeaveType.Sick
                     leaveLedgerQuery = leaveLedgerQuery.Where(Function(l) l.Product.IsSickLeave)
@@ -304,7 +306,7 @@ Namespace Global.AccuPay.Repository
             End Select
         End Sub
 
-        Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Employee, leave As Leave) As Task
+        Private Async Function ValidateLeaveBalance(policy As PolicyHelper, employeeShifts As List(Of ShiftSchedule), shiftSchedules As List(Of EmployeeDutySchedule), unusedApprovedLeaves As List(Of Leave), employee As Entities.Employee, leave As Leave) As Task
             If leave.Status.Trim.ToLower = Leave.StatusApproved.ToLower AndAlso
                                     policy.ValidateLeaveBalance AndAlso
                                     VALIDATABLE_TYPES.Contains(leave.LeaveType) Then
@@ -335,10 +337,9 @@ Namespace Global.AccuPay.Repository
             End If
         End Function
 
-        Private Shared Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?), context As PayrollContext) As Task(Of List(Of Employee))
-            Return Await context.Employees.
-                            Where(Function(e) employeeIds.Contains(e.RowID)).
-                            ToListAsync
+        Private Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?), context As PayrollContext) As Task(Of List(Of Entities.Employee))
+            Dim ids = employeeIds.Select(Function(id) id.Value).ToList()
+            Return Await _employeeRepository.GetByManyIdAsync(z_OrganizationID, ids)
         End Function
 
         Private Shared Async Function GetShiftSchedules(employeeIds As IEnumerable(Of Integer?), firstLeave As Date, lastLeave As Date, context As PayrollContext) As Task(Of List(Of EmployeeDutySchedule))
@@ -363,7 +364,7 @@ Namespace Global.AccuPay.Repository
                             policy As PolicyHelper,
                             employeeShifts As List(Of ShiftSchedule),
                             shiftSchedules As List(Of EmployeeDutySchedule),
-                            employee As Employee) As Decimal
+                            employee As Entities.Employee) As Decimal
 
             If leaves.Any = False Then Return 0
 

@@ -1,12 +1,17 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 
 Namespace Global.AccuPay.Repository
 
     Public Class PositionRepository
+
+        Private _employeeRepository As New Repositories.EmployeeRepository
+
+        Private _categoryRepository As New Repositories.CategoryRepository
 
         Public Async Function GetAllAsync() As Task(Of List(Of Position))
 
@@ -45,28 +50,17 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function GetEmployeesAsync(positionId As Integer?) As Task(Of List(Of Employee))
+        Public Async Function GetEmployeesAsync(positionId As Integer?) As Task(Of List(Of Entities.Employee))
 
-            Using context As New PayrollContext
+            Dim employees = Await _employeeRepository.GetAllActiveWithPositionAsync(z_OrganizationID)
 
-                Return Await context.Employees.
-                            Where(Function(e) Nullable.Equals(e.PositionID, positionId)).
-                            ToListAsync()
-
-            End Using
-
+            Return employees.Where(Function(e) positionId.Value = e.PositionID.Value).ToList()
         End Function
 
         Public Async Function HasEmployeesAsync(positionId As Integer?) As Task(Of Boolean)
+            Dim employees = Await GetEmployeesAsync(positionId)
 
-            Using context As New PayrollContext
-
-                Return Await context.Employees.
-                            Where(Function(e) Nullable.Equals(e.PositionID, positionId)).
-                            AnyAsync()
-
-            End Using
-
+            Return employees.Any
         End Function
 
         Public Async Function SaveAsync(position As Position) As Task(Of Position)
@@ -77,13 +71,11 @@ Namespace Global.AccuPay.Repository
 
                 If position.RowID Is Nothing Then
                     Insert(position, existingPosition, context)
-
                 Else
                     Update(position, existingPosition, context)
                 End If
 
                 Await context.SaveChangesAsync()
-
 
                 Dim newPosition = Await context.Positions.
                                     FirstOrDefaultAsync(Function(p) Nullable.Equals(p.RowID, position.RowID))
@@ -119,18 +111,10 @@ Namespace Global.AccuPay.Repository
         End Function
 
 #Region "Private Functions"
+
         Private Async Function GetCategoryId(categoryName As String) As Task(Of Integer?)
-
-            Using context = New PayrollContext()
-
-                Dim category = Await context.Categories.
-                                Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                FirstOrDefaultAsync
-
-                Return category?.RowID
-
-            End Using
-
+            Dim category = Await _categoryRepository.GetByName(z_OrganizationID, categoryName)
+            Return category.RowID
         End Function
 
         Private Sub Insert(
@@ -167,6 +151,7 @@ Namespace Global.AccuPay.Repository
             context.Entry(position).State = EntityState.Modified
 
         End Sub
+
 #End Region
 
     End Class
