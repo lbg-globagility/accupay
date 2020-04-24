@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -26,7 +27,7 @@ Public Class PayrollResources
 
     Private _payDateTo As Date
 
-    Private _employees As ICollection(Of Employee)
+    Private _employees As ICollection(Of Entities.Employee)
 
     Private _salaries As ICollection(Of Salary)
 
@@ -70,7 +71,9 @@ Public Class PayrollResources
 
     Private _calendarCollection As CalendarCollection
 
-    Public ReadOnly Property Employees As ICollection(Of Employee)
+    Private _employeeRepository As Repositories.EmployeeRepository
+
+    Public ReadOnly Property Employees As ICollection(Of Entities.Employee)
         Get
             Return _employees
         End Get
@@ -200,6 +203,8 @@ Public Class PayrollResources
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
+
+        _employeeRepository = New Repositories.EmployeeRepository
     End Sub
 
     Public Async Function Load() As Task
@@ -240,14 +245,7 @@ Public Class PayrollResources
 
     Public Async Function LoadEmployees() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = context.Employees.
-                    Include(Function(e) e.Position.Division).
-                    Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(e) e.IsActive)
-
-                _employees = Await query.ToListAsync()
-            End Using
+            _employees = (Await _employeeRepository.GetAllActiveWithPositionAsync(z_OrganizationID)).ToList
         Catch ex As Exception
             Throw New ResourceLoadingException("Employees", ex)
         End Try

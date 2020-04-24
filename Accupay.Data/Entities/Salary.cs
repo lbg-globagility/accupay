@@ -60,6 +60,9 @@ namespace AccuPay.Data.Entities
         [Column("EffectiveDateTo")]
         public DateTime? EffectiveTo { get; set; }
 
+        //[ForeignKey("EmployeeID")]
+        //public virtual Employee Employee { get; set; }
+
         public bool DoPaySSSContribution { get; set; }
 
         public bool AutoComputePhilHealthContribution { get; set; }

@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Entity
-Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddLoanTypeForm
@@ -9,7 +9,6 @@ Public Class AddLoanTypeForm
     Public Property NewLoanType As Product
 
     Public Property IsSaved As Boolean
-
 
     Private Sub AddLoanTypeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -33,18 +32,17 @@ Public Class AddLoanTypeForm
 
         Const messageTitle As String = "New Loan Type"
 
-
         Try
-            Me.NewLoanType = Await _productRepository.AddLoanType(txtLoanName.Text)
+            Me.NewLoanType = Await _productRepository.AddLoanType(txtLoanName.Text,
+                                                                 organizationID:=z_OrganizationID,
+                                                                 userID:=z_User)
 
             Me.IsSaved = True
 
             Me.Close()
-
         Catch ex As ArgumentException
 
             MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
@@ -52,4 +50,5 @@ Public Class AddLoanTypeForm
         End Try
 
     End Sub
+
 End Class

@@ -2,7 +2,6 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay
 Imports AccuPay.Entity
 
 Namespace Global.AccuPay.Loans
@@ -74,7 +73,6 @@ Namespace Global.AccuPay.Loans
                 Return Employee?.EmployeeNo
             End Get
         End Property
-
 
         Public Overridable Sub Credit(payPeriodID As Integer?)
             Dim currentDeductionAmount = If(DeductionAmount > TotalBalanceLeft, TotalBalanceLeft, DeductionAmount)

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utils
@@ -11,7 +12,7 @@ Public Class ImportOBForm
 
     Private _officialbusTypeList As List(Of ListOfValue)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Public IsSaved As Boolean
 
@@ -63,7 +64,7 @@ Public Class ImportOBForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
             record.Status = OfficialBusiness.StatusApproved
 
             If employee Is Nothing Then

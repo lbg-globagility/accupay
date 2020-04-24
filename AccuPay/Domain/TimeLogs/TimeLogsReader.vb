@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -149,7 +150,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property IsTimeIn As Boolean?
 
         Public Property LogDate As Date?
-        Public Property Employee As Employee
+        Public Property Employee As Entities.Employee
         Public Property ShiftSchedule As ShiftSchedule
         Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date

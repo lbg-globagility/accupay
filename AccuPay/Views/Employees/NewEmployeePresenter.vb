@@ -1,12 +1,12 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Entity
 
 Public Class NewEmployeePresenter
 
-    Private _currentEmployee As Employee
+    Private _currentEmployee As Entities.Employee
 
     Private _employees As IList(Of Employee)
 

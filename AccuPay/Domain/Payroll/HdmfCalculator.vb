@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Text.RegularExpressions
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Repository.ListOfValueRepository
 Imports PayrollSys
@@ -13,7 +14,7 @@ Namespace Global.AccuPay.Payroll
 
         Private Const StandardEmployerContribution As Decimal = 100
 
-        Public Sub Calculate(salary As Salary, paystub As Paystub, employee As Employee, payperiod As PayPeriod, settings As ListOfValueCollection)
+        Public Sub Calculate(salary As Salary, paystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, settings As ListOfValueCollection)
             ' Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0
             paystub.HdmfEmployerShare = 0

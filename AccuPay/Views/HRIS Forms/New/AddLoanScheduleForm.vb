@@ -15,17 +15,17 @@ Public Class AddLoanScheduleForm
 
     Private _newLoanSchedule As New LoanSchedule
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New Data.Repositories.ProductRepository
 
     Private _listOfValueRepository As New ListOfValueRepository
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _loanTypeList As List(Of Product)
+    Private _loanTypeList As List(Of Data.Entities.Product)
 
     Private _deductionSchedulesList As List(Of String)
 
-    Public Property NewLoanTypes As List(Of Product)
+    Public Property NewLoanTypes As List(Of Data.Entities.Product)
 
     Public Property IsSaved As Boolean
 
@@ -41,7 +41,7 @@ Public Class AddLoanScheduleForm
 
         Me.IsSaved = False
 
-        Me.NewLoanTypes = New List(Of Product)
+        Me.NewLoanTypes = New List(Of Data.Entities.Product)
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
@@ -303,9 +303,9 @@ Public Class AddLoanScheduleForm
 
         If if_sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
+            Me._loanTypeList = New List(Of Data.Entities.Product)(Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID))
         Else
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+            Me._loanTypeList = New List(Of Data.Entities.Product)(Await _productRepository.GetLoanTypes(z_OrganizationID))
 
         End If
 

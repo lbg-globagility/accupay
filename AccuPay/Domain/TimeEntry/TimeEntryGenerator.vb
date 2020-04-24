@@ -32,6 +32,7 @@ Public Class TimeEntryGenerator
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of BreakTimeBracket)
 
+    Private _employeeRepository As EmployeeRepository
     Private _total As Integer
 
     Private _finished As Integer
@@ -58,11 +59,12 @@ Public Class TimeEntryGenerator
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
 
+        _employeeRepository = New EmployeeRepository()
         _overtimeRepository = New OvertimeRepository()
     End Sub
 
     Public Sub Start()
-        Dim employees As IList(Of Employee) = Nothing
+        Dim employees As IList(Of Entities.Employee) = Nothing
         Dim organization As Organization = Nothing
         Dim settings As ListOfValueCollection = Nothing
         Dim agencies As IList(Of Agency) = Nothing
@@ -74,10 +76,7 @@ Public Class TimeEntryGenerator
             settings = New ListOfValueCollection(context.ListOfValues.ToList())
             timeEntryPolicy = New TimeEntryPolicy(settings)
 
-            employees = context.Employees.
-                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                Include(Function(e) e.Position).
-                ToList()
+            employees = _employeeRepository.GetAllActiveWithPosition(z_OrganizationID).ToList
 
             agencies = context.Agencies.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -186,7 +185,7 @@ Public Class TimeEntryGenerator
             End Sub)
     End Sub
 
-    Private Sub CalculateEmployeeEntries(employee As Employee,
+    Private Sub CalculateEmployeeEntries(employee As Entities.Employee,
                                          organization As Organization,
                                          settings As ListOfValueCollection,
                                          agencies As IList(Of Agency),
@@ -324,7 +323,7 @@ Public Class TimeEntryGenerator
         End Using
     End Sub
 
-    Private Sub PostLegalHolidayCheck(employee As Employee,
+    Private Sub PostLegalHolidayCheck(employee As Entities.Employee,
                                       timeEntries As List(Of TimeEntry),
                                       timeEntryPolicy As TimeEntryPolicy,
                                       regularHolidaysList As List(Of Date),

@@ -1,6 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -71,7 +73,7 @@ Public Class LeaveLedgerReportProvider
         Dim endDate = dateTo.Value.ToMaximumHourValue
         Dim dayBeforeReport = startDate.AddDays(-1).ToMaximumHourValue
 
-        Dim employees = Await _employeeRepository.GetAllActiveAsync()
+        Dim employees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
         Dim employeeIds = employees.Select(Function(e) e.RowID).ToArray()
 
         Using context As New PayrollContext
@@ -122,7 +124,7 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee) As _
+                                employee As Entities.Employee) As _
                                 LeaveLedgerReportModel
 
         Dim currentEmployeeLeaveTransactions = currentLeaveTransactions.
@@ -148,7 +150,7 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee) As _
+                                employee As Entities.Employee) As _
                                 LeaveLedgerReportModel
 
         Dim currentEmployeeLeaveTransactions = currentLeaveTransactions.
@@ -174,7 +176,7 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee,
+                                employee As Entities.Employee,
                                 leaveType As LeaveType.LeaveType) As _
                                 LeaveLedgerReportModel
 

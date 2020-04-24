@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports PayrollSys
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 
 Namespace Global.AccuPay.JobLevels
 
@@ -17,16 +17,20 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
+        Private _employeeRepo As New Repositories.EmployeeRepository
+
+        Private _salaryRepo As New Repositories.SalaryRepository
+
         Public Sub New(view As JobPointsView)
             _view = view
         End Sub
 
-        Private Sub OnLoad() Handles _view.OnLoad
+        Private Async Sub OnLoad() Handles _view.OnLoad
             _context?.Dispose()
             _context = New PayrollContext()
             _jobLevels = GetJobLevels()
 
-            Dim models = GetEmployeeModels()
+            Dim models = Await GetEmployeeModels()
             For Each model In models
                 SetRecommendedLevel(model)
             Next
@@ -73,11 +77,15 @@ Namespace Global.AccuPay.JobLevels
                 ToList()
         End Function
 
-        Private Function GetEmployeeModels() As ICollection(Of EmployeeModel)
+        Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))
+
+            Dim fetchEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+            Dim salaries = Await _salaryRepo.GetAll(z_OrganizationID)
+
             Dim employees =
-                (From e In _context.Employees
-                 From s In _context.Salaries.Where(Function(s) CBool(e.RowID = s.EmployeeID)).DefaultIfEmpty()
-                 From s2 In _context.Salaries.Where(Function(s2) CBool(
+                (From e In fetchEmployees
+                 From s In salaries.Where(Function(s) CBool(e.RowID = s.EmployeeID)).DefaultIfEmpty()
+                 From s2 In salaries.Where(Function(s2) CBool(
                      s2.EmployeeID = s.EmployeeID And
                      s.EffectiveFrom < s2.EffectiveFrom
                  )).DefaultIfEmpty()

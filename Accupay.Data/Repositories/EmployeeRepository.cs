@@ -56,6 +56,18 @@ namespace AccuPay.Data.Repositories
                 return this;
             }
 
+            public EmployeeBuilder ByMultipleEmployeeNumbers(string[] employeeNumbers)
+            {
+                _query = _query.Where(x => employeeNumbers.Contains(x.EmployeeNo));
+                return this;
+            }
+
+            public EmployeeBuilder ByIds(List<int?> rowIds)
+            {
+                _query = _query.Where(x => rowIds.Contains(x.RowID));
+                return this;
+            }
+
             public EmployeeBuilder HasPaystubs(int payPeriodId)
             {
                 _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: true));
@@ -76,13 +88,14 @@ namespace AccuPay.Data.Repositories
 
             public EmployeeBuilder IncludePosition()
             {
-                _query = _query.Include(x => x.Position);
                 // Note: No need to call WithPosition if WithDivision is already called.
+                _query = _query.Include(x => x.Position);
                 return this;
             }
 
             public EmployeeBuilder IncludeDivision()
             {
+                // Note: If needed division, position will also be queried automatically
                 _query = _query.Include(x => x.Position.Division);
                 return this;
             }
@@ -154,13 +167,41 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
+        public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumbersAsync(string[] employeeNumbers, int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId))
             {
-                return await builder.HasNoPaystubs(payPeriodId).
-                                        IsActive().
-                                        ToListAsync();
+                return await builder.
+                    ByMultipleEmployeeNumbers(employeeNumbers).
+                    ToListAsync();
+            }
+        }
+
+        public async Task<Employee> GetByIdAsync(int? rowID)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.FirstOrDefaultAsync(rowID);
+            }
+        }
+
+        public async Task<Employee> GetByIdWithPayFrequencyAsync(int? rowID)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                    IncludePayFrequency().
+                    FirstOrDefaultAsync(rowID);
+            }
+        }
+
+        public async Task<IEnumerable<Employee>> GetByManyIdAsync(List<int?> rowIDs)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                    ByIds(rowIDs).
+                    ToListAsync();
             }
         }
 
@@ -173,11 +214,31 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
+        {
+            using (var builder = new EmployeeBuilder(organizationId))
+            {
+                return await builder.HasNoPaystubs(payPeriodId).
+                                        IsActive().
+                                        ToListAsync();
+            }
+        }
+
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
             {
                 return await builder.IncludePosition().ToListAsync();
+            }
+        }
+
+        public IEnumerable<Employee> GetAllActiveWithPosition(int organizationId)
+        {
+            using (var builder = new EmployeeBuilder(organizationId))
+            {
+                return builder.IncludePosition().
+                                IsActive().
+                                ToList();
             }
         }
 
@@ -191,9 +252,19 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public IEnumerable<Employee> GetAllWithDivisionAndPosition()
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return builder.IncludeDivision().
+                                IsActive().
+                                ToList();
+            }
+        }
+
         #region By Employee
 
-        public async Task<Employee> GetActiveEmployeeWithDivisionAsync(int? employeeId)
+        public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int? employeeId)
         {
             using (var builder = new EmployeeBuilder())
             {
@@ -203,9 +274,9 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber)
+        public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
-            using (var builder = new EmployeeBuilder())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
                 return await builder.ByEmployeeNumber(employeeNumber).
                                     FirstOrDefaultAsync();
@@ -245,6 +316,47 @@ namespace AccuPay.Data.Repositories
             };
 
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
+        }
+
+        public async Task SaveManyAsync(int organizationID, int userID, List<Employee> employees)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                var added = employees.Where(e => !e.RowID.HasValue).ToList();
+                if (added.Any())
+                {
+                    context.Employees.AddRange(added);
+                }
+
+                var updated = employees.Where(e => e.RowID.HasValue).ToList();
+                if (updated.Any())
+                {
+                    await UpdateManyAsync(employees, context);
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private async Task UpdateManyAsync(List<Employee> employees, PayrollContext context)
+        {
+            var employeeIds = employees.Select(e => e.RowID).ToArray();
+
+            var employeesToUpdate = await context.Employees.
+                Where(e => employeeIds.Contains(e.RowID)).
+                ToListAsync();
+            if (!employeesToUpdate.Any()) return;
+
+            foreach (var e in employeesToUpdate)
+            {
+                var updatedEmployee = employees.FirstOrDefault(ee => ee.RowID == e.RowID);
+
+                ApplyChanges(e, updatedEmployee);
+            }
+        }
+
+        private void ApplyChanges(Employee toBeUpdateEmployee, Employee updatedEmployee)
+        {
+            throw new NotImplementedException();
         }
     }
 }

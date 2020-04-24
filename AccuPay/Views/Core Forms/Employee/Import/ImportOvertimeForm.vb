@@ -10,7 +10,7 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _employeeRepository As New EmployeeRepository
 
     Private overtimeRepository As New OvertimeRepository()
 

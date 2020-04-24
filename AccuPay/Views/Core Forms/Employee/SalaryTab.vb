@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Payroll
@@ -17,7 +17,7 @@ Public Class SalaryTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _employee As Data.Entities.Employee
+    Private _employee As Entities.Employee
 
     Private _salaries As List(Of Salary)
 
@@ -62,7 +62,7 @@ Public Class SalaryTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Data.Entities.Employee) As Task
+    Public Async Function SetEmployee(employee As Entities.Employee) As Task
 
         _employee = employee
 
@@ -366,7 +366,7 @@ Public Class SalaryTab
 
                     Await context.SaveChangesAsync
 
-                    Dim repo As New UserActivityRepository
+                    Dim repo As New Repositories.UserActivityRepository
                     repo.RecordAdd(z_User, "Salary", CInt(_currentSalary.RowID), z_OrganizationID)
 
                 End If
@@ -482,8 +482,8 @@ Public Class SalaryTab
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Salary", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Dim repo = New Repositories.UserActivityRepository
+            repo.CreateRecord(z_User, "Salary", z_OrganizationID, Repositories.UserActivityRepository.RecordTypeEdit, changes)
         End If
 
         Return False
@@ -520,7 +520,7 @@ Public Class SalaryTab
                 context.SaveChanges()
             End Using
 
-            Dim repo As New UserActivityRepository
+            Dim repo As New Repositories.UserActivityRepository
             repo.RecordDelete(z_User, "Salary", CInt(_currentSalary.RowID), z_OrganizationID)
 
             LoadSalaries()

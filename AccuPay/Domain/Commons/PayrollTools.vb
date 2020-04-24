@@ -58,7 +58,7 @@ Public Class PayrollTools
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
         Dim dailyRate = 0D
 
         If salary Is Nothing Then
@@ -85,7 +85,7 @@ Public Class PayrollTools
         Return dailyRate / WorkHoursPerDay
     End Function
 
-    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
 
         Return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay
     End Function
@@ -249,7 +249,7 @@ Public Class PayrollTools
 
             End If
 
-            ecolaAllowance = New Data.Entities.Allowance
+            ecolaAllowance = New Entities.Allowance
             ecolaAllowance.EmployeeID = employeeId
             ecolaAllowance.ProductID = ecolaProductId
             ecolaAllowance.AllowanceFrequency = allowanceFrequency
@@ -449,7 +449,7 @@ Public Class PayrollTools
                          ToList()
 
             Return New CalendarCollection(payrates,
-                                          DirectCast(branches, ICollection(Of Data.Entities.Branch)),
+                                          DirectCast(branches, ICollection(Of Entities.Branch)),
                                           calendarDays)
         Else
             Return New CalendarCollection(payrates)

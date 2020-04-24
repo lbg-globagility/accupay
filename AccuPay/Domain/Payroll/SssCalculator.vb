@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -14,7 +15,7 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Employee, payperiod As PayPeriod)
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Entities.Employee, payperiod As PayPeriod)
         ' Reset SSS values to zero
         paystub.SssEmployeeShare = 0
         paystub.SssEmployerShare = 0
@@ -63,7 +64,7 @@ Public Class SssCalculator
     Private Function GetSocialSecurityAmount(paystub As Paystub,
                                              previousPaystub As Paystub,
                                              salary As Salary,
-                                             employee As Employee) As Decimal
+                                             employee As Entities.Employee) As Decimal
 
         Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
 

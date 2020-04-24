@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Repository.ListOfValueRepository
 Imports AccuPay.Utilities
@@ -24,7 +25,7 @@ Namespace Global.AccuPay.Payroll
             _settings = settings
         End Sub
 
-        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, salary As Salary)
+        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, salary As Salary)
             ' Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0
             paystub.TaxableIncome = 0
@@ -103,7 +104,7 @@ Namespace Global.AccuPay.Payroll
             paystub.WithholdingTax = GetTaxWithheld(taxBracket, paystub.TaxableIncome)
         End Sub
 
-        Private Function GetCurrentMinimumWage(employee As Employee) As Decimal
+        Private Function GetCurrentMinimumWage(employee As Entities.Employee) As Decimal
             Dim divisionMinimumWage = _divisionMinimumWages?.
                 FirstOrDefault(Function(t) Nullable.Equals(t.DivisionID, employee.Position?.DivisionID))
             Dim minimumWage = If(divisionMinimumWage?.Amount, 0)

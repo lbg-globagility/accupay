@@ -19,12 +19,12 @@ Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
-    Private _employeeRepository As EmployeeRepository
+    Private _employeeRepository As Repositories.EmployeeRepository
     Private _salaryRepository As SalaryRepository
     Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
-    Private _employees As List(Of Employee)
+    Private _employees As List(Of Entities.Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
 
     Private _selectedDeductions As List(Of AdjustmentInput)
@@ -64,10 +64,10 @@ Public Class BenchmarkPayrollForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New EmployeeRepository
+        _employeeRepository = New Repositories.EmployeeRepository
         _salaryRepository = New SalaryRepository
         _salaries = New List(Of Salary)
-        _employees = New List(Of Employee)
+        _employees = New List(Of Entities.Employee)
 
         _overtimes = New List(Of OvertimeInput)
 
@@ -182,10 +182,11 @@ Public Class BenchmarkPayrollForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = Await _employeeRepository.
-                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
+            _employees = (Await _employeeRepository.
+                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID.Value,
+                                                                z_OrganizationID)).ToList
         Else
-            _employees = New List(Of Employee)
+            _employees = New List(Of Entities.Employee)
         End If
 
         Await FilterEmployeeGridView()
@@ -204,12 +205,14 @@ Public Class BenchmarkPayrollForm
 
             If employeeId Is Nothing Then Return
 
-            Dim employee = Await _employeeRepository.GetEmployeeWithDivisionAsync(employeeId)
+            Dim employee = Await _employeeRepository.GetActiveEmployeeWithDivisionAndPositionAsync(employeeId)
+
+            If employee Is Nothing Then Return
 
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
                             FirstOrDefault
 
             If salary Is Nothing Then
@@ -365,7 +368,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedEmployee() As Employee
+    Private Function GetSelectedEmployee() As Entities.Employee
 
         If EmployeesGridView.CurrentRow Is Nothing Then
 

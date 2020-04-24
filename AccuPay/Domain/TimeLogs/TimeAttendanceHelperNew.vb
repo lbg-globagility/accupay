@@ -18,7 +18,7 @@ Public Class TimeAttendanceHelperNew
 
     Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
-    Private ReadOnly _employees As New List(Of Employee)
+    Private ReadOnly _employees As New List(Of Entities.Employee)
     Private ReadOnly _employeeShifts As New List(Of EmployeeDutySchedule)
 
     Private ReadOnly _employeeOvertimes As List(Of Entities.Overtime)
@@ -29,7 +29,7 @@ Public Class TimeAttendanceHelperNew
 
     Sub New(
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
-           employees As List(Of Employee),
+           employees As List(Of Entities.Employee),
            employeeShifts As List(Of EmployeeDutySchedule),
            employeeOvertimes As List(Of Entities.Overtime))
 

@@ -3,9 +3,9 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Tools
-Imports Microsoft.EntityFrameworkCore
 
 Public Class MassOvertimeForm
 
@@ -47,7 +47,7 @@ Public Class MassOvertimeForm
         _presenter = New MassOvertimePresenter(Me)
     End Sub
 
-    Public Sub ShowEmployees(divisions As IEnumerable(Of Entity.Division), employees As IEnumerable(Of Entity.Employee))
+    Public Sub ShowEmployees(divisions As IEnumerable(Of Entity.Division), employees As IEnumerable(Of Entities.Employee))
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
 
@@ -191,7 +191,7 @@ End Class
 
 Public Class MassOvertimePresenter
 
-    Private _employees As IList(Of Entity.Employee)
+    Private _employees As IList(Of Data.Entities.Employee)
 
     Private _divisions As IList(Of Entity.Division)
 
@@ -199,7 +199,7 @@ Public Class MassOvertimePresenter
 
     Private _models As List(Of OvertimeModel)
 
-    Private overtimeRepository As New Repositories.OvertimeRepository()
+    Private overtimeRepository As New OvertimeRepository()
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
@@ -221,14 +221,9 @@ Public Class MassOvertimePresenter
         End Using
     End Function
 
-    Private Function LoadEmployees() As IList(Of Entity.Employee)
-        Using context = New PayrollContext()
-            Return context.Employees.Include(Function(e) e.Position.Division).
-                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
-                OrderBy(Function(e) e.LastName).
-                ThenBy(Function(e) e.FirstName).
-                ToList()
-        End Using
+    Private Function LoadEmployees() As IList(Of Entities.Employee)
+
+        Return New EmployeeRepository().GetAllWithDivisionAndPosition().ToList
     End Function
 
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Entity.Employee)) As IList(Of IGrouping(Of Integer?, Entities.Overtime))
@@ -243,7 +238,7 @@ Public Class MassOvertimePresenter
 
     Public Async Sub FilterEmployees(needle As String)
         Dim match =
-            Function(employee As Entity.Employee) As Boolean
+            Function(employee As Entities.Employee) As Boolean
                 Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
                 Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                 Dim containsReverseName = reverseName.Contains(needle)

@@ -11,7 +11,7 @@ Public Class AddDivisionForm
 
     Private _divisionRepository As New DivisionRepository
 
-    Private _positionRepository As New PositionRepository
+    Private _positionRepository As New Repository.PositionRepository
 
     Private _payFrequencyRepository As New PayFrequencyRepository
 

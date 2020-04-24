@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
 
@@ -6,7 +7,7 @@ Public Class TotalTimeEntry
 
     Public Shared Function Calculate(timeEntries As ICollection(Of TimeEntry),
                                      salary As Salary,
-                                     employee As Employee,
+                                     employee As IEmployee,
                                      actualtimeentries As ICollection(Of ActualTimeEntry)) _
                                      As TotalTimeEntry
 

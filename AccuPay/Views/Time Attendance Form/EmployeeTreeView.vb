@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeTreeView
 
@@ -18,6 +18,8 @@ Public Class EmployeeTreeView
 
     Private tickedEmployees As IList(Of Employee)
     Private tickedEmployeeIDs As IList(Of Integer)
+
+    Private _employeeRepository As EmployeeRepository
 
     Private _organizationID As Integer
 
@@ -45,6 +47,7 @@ Public Class EmployeeTreeView
         _presenter = New EmployeeTreeViewPresenter(Me)
         tickedEmployees = New List(Of Employee)
         tickedEmployeeIDs = New List(Of Integer)
+        _employeeRepository = New EmployeeRepository()
     End Sub
 
 #End Region
@@ -266,13 +269,8 @@ Public Class EmployeeTreeView
         End Function
 
         Private Function LoadEmployees() As IList(Of Employee)
-            Using context = New PayrollContext()
-                Return context.Employees.Include(Function(e) e.Position.Division).
-                    Where(Function(e) Nullable.Equals(e.OrganizationID, _organizationId)).
-                    OrderBy(Function(e) e.LastName).
-                    ThenBy(Function(e) e.FirstName).
-                    ToList()
-            End Using
+
+            Return New EmployeeRepository().GetAllWithDivisionAndPosition().ToList
         End Function
 
         Public Async Sub FilterEmployees(needle As String, isActiveOnly As Boolean)
