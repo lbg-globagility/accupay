@@ -447,7 +447,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Repositories\CalendarRepository.vb" />
-    <Compile Include="Repositories\ContributionSchedule.vb" />
     <Compile Include="Repositories\DayTypeRepository.vb" />
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />

@@ -8,6 +8,14 @@ Namespace Global.AccuPay.Repository
 
     Public Class ListOfValueRepository
 
+        Public Class ContributionSchedule
+
+            Public Const FIRST_HALF As String = "First half"
+            Public Const END_OF_THE_MONTH As String = "End of the month"
+            Public Const PER_PAY_PERIOD As String = "Per pay period"
+            Public Const LAST_WEEK_OF_THE_MONTH As String = "Last week of the month"
+        End Class
+
         Public Async Function GetDeductionSchedules() _
             As Task(Of IEnumerable(Of ListOfValue))
 
@@ -30,6 +38,7 @@ Namespace Global.AccuPay.Repository
         End Function
 
 #Region "Private Functions"
+
         Private Async Function GetListOfValues(type As String) _
             As Task(Of IEnumerable(Of ListOfValue))
 
@@ -66,6 +75,7 @@ Namespace Global.AccuPay.Repository
             Return stringList
 
         End Function
+
 #End Region
 
     End Class

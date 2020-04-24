@@ -2,6 +2,7 @@
 
 Imports System.Text.RegularExpressions
 Imports AccuPay.Entity
+Imports AccuPay.Repository.ListOfValueRepository
 Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll

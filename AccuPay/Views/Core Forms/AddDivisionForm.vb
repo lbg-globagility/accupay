@@ -27,6 +27,8 @@ Public Class AddDivisionForm
 
     Private _deductionSchedules As List(Of String)
 
+    Private _listOfValueRepository As New ListOfValueRepository
+
     Public Property IsSaved As Boolean
 
     Public Property ShowBalloonSuccess As Boolean
@@ -94,11 +96,12 @@ Public Class AddDivisionForm
 
     End Sub
 
-    Private Sub GetDeductionSchedules()
+    Private Async Function GetDeductionSchedules() As Task
 
-        _deductionSchedules = ContributionSchedule.GetList()
+        _deductionSchedules = _listOfValueRepository.
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
 
-    End Sub
+    End Function
 
     Private Sub ResetForm()
 

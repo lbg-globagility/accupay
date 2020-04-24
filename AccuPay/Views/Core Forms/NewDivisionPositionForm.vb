@@ -30,11 +30,13 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevelRepository As New JobLevelRepository
 
-    Private _positionRepository As New Repository.PositionRepository
+    Private _positionRepository As New PositionRepository
 
     Private _divisionRepository As New DivisionRepository
 
     Private _payFrequencyRepository As New PayFrequencyRepository
+
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Public Property _currentTreeNodes As TreeNode()
 
@@ -544,11 +546,12 @@ Public Class NewDivisionPositionForm
 
     End Sub
 
-    Private Sub GetDeductionSchedules()
+    Private Async Function GetDeductionSchedules() As Task
 
-        _deductionSchedules = ContributionSchedule.GetList()
+        _deductionSchedules = _listOfValueRepository.
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
 
-    End Sub
+    End Function
 
     Private Sub ShowDivisionForm(selectedDivision As Division)
 
@@ -885,6 +888,7 @@ Public Class NewDivisionPositionForm
 
         Return False
     End Function
+
     Private Function RecordUpdateDivision() As Boolean
 
         Dim oldDivision =
@@ -1212,4 +1216,5 @@ Public Class NewDivisionPositionForm
         Dim userActivity As New UserActivityForm("Position")
         userActivity.ShowDialog()
     End Sub
+
 End Class
