@@ -226,8 +226,7 @@ Public Class PayrollTools
                             payDateFrom As Date,
                             payDateTo As Date,
                             Optional allowanceFrequency As String = Allowance.FREQUENCY_SEMI_MONTHLY,
-                            Optional amount As Decimal = 0,
-                            Optional effectiveEndDateShouldBeNull As Boolean = False) _
+                            Optional amount As Decimal = 0) _
         As Task(Of Entities.Allowance)
 
         Dim allowanceRepository As New AllowanceRepository
@@ -239,15 +238,7 @@ Public Class PayrollTools
 
             Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA, z_OrganizationID, z_User))?.RowID
 
-            Dim effectiveEndDate As Date?
-
-            If effectiveEndDateShouldBeNull Then
-
-                effectiveEndDate = Nothing
-            Else
-                effectiveEndDate = Nothing
-
-            End If
+            Dim effectiveEndDate As Date? = Nothing
 
             ecolaAllowance = New Entities.Allowance
             ecolaAllowance.EmployeeID = employeeId

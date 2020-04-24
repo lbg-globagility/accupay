@@ -50,8 +50,7 @@ Namespace Benchmark
                                                 payDateFrom:=payDateFrom,
                                                 payDateTo:=payDateTo,
                                                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
-                                                amount:=0,
-                                                effectiveEndDateShouldBeNull:=True)
+                                                amount:=0)
 
         End Function
 

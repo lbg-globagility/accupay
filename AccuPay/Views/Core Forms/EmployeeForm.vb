@@ -1059,7 +1059,7 @@ Public Class EmployeeForm
                     IncludePayFrequency().
                     IncludePosition().
                     IncludeBranch().
-                    FirstOrDefault(employee_RowID)
+                    GetById(employee_RowID.Value)
 
         End Using
 
@@ -2490,18 +2490,15 @@ Public Class EmployeeForm
     End Sub
 
     Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
-        Dim employee As Employee = Nothing
 
         Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
             Return employeeBuilder.
                     IncludePayFrequency().
                     IncludePosition().
-                    FirstOrDefault(employeeID)
+                    GetById(employeeID)
 
         End Using
-
-        Return employee
     End Function
 
     Dim currDepenCount As Integer

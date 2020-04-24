@@ -9,7 +9,7 @@ Imports AccuPay.Utils
 
 Public Class AddDivisionForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private _divisionRepository As New Repository.DivisionRepository
 
     Private _positionRepository As New Repository.PositionRepository
 

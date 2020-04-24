@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccuPay.Data.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -8,6 +9,9 @@ namespace AccuPay.Data.Entities
     [Table("payperiod")]
     public class PayPeriod : IPayPeriod
     {
+        private const int IsJanuary = 1;
+        private const int IsDecember = 12;
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
@@ -52,6 +56,7 @@ namespace AccuPay.Data.Entities
 
         public PayPeriod NextPayPeriod()
         {
+            // transfer this to a repository, no database call in entity
             if (this.RowID == null) return null;
 
             using (var context = new PayrollContext())
@@ -64,5 +69,15 @@ namespace AccuPay.Data.Entities
                                 FirstOrDefault();
             }
         }
+
+        public bool IsSemiMonthly => PayFrequencyID.Value == PayrollTools.PayFrequencySemiMonthlyId;
+        public bool IsWeekly => PayFrequencyID.Value == PayrollTools.PayFrequencyWeeklyId;
+        public bool IsFirstHalf => Half == 1;
+        public bool IsEndOfTheMonth => Half == 0;
+
+        public bool IsBetween(DateTime date) => date >= PayFromDate && date <= PayToDate;
+
+        public bool IsFirstPayPeriodOfTheYear => IsFirstHalf && Month == IsJanuary;
+        public bool IsLastPayPeriodOfTheYear => IsEndOfTheMonth && Month == IsDecember;
     }
 }

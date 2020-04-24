@@ -62,9 +62,9 @@ namespace AccuPay.Data.Repositories
                 return this;
             }
 
-            public EmployeeBuilder ByIds(List<int?> rowIds)
+            public EmployeeBuilder ByIds(List<int?> employeeIds)
             {
-                _query = _query.Where(x => rowIds.Contains(x.RowID));
+                _query = _query.Where(x => employeeIds.Contains(x.RowID));
                 return this;
             }
 
@@ -118,23 +118,23 @@ namespace AccuPay.Data.Repositories
                 return await _query.ToListAsync();
             }
 
-            public Employee FirstOrDefault(int? employeeId = null)
+            public Employee GetById(int employeeId)
             {
-                if (employeeId != null)
-                {
-                    _query = _query.Where(x => x.RowID == employeeId);
-                }
+                return _query.Where(x => x.RowID == employeeId).FirstOrDefault();
+            }
 
+            public async Task<Employee> GetByIdAsync(int employeeId)
+            {
+                return await _query.Where(x => x.RowID == employeeId).FirstOrDefaultAsync();
+            }
+
+            public Employee FirstOrDefault()
+            {
                 return _query.FirstOrDefault();
             }
 
-            public async Task<Employee> FirstOrDefaultAsync(int? employeeId = null)
+            public async Task<Employee> FirstOrDefaultAsync()
             {
-                if (employeeId != null)
-                {
-                    _query = _query.Where(x => x.RowID == employeeId);
-                }
-
                 return await _query.FirstOrDefaultAsync();
             }
 
@@ -177,21 +177,21 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Employee> GetByIdAsync(int? rowID)
+        public async Task<Employee> GetByIdAsync(int employeeId)
         {
             using (var builder = new EmployeeBuilder())
             {
-                return await builder.FirstOrDefaultAsync(rowID);
+                return await builder.GetByIdAsync(employeeId);
             }
         }
 
-        public async Task<Employee> GetByIdWithPayFrequencyAsync(int? rowID)
+        public async Task<Employee> GetByIdWithPayFrequencyAsync(int employeeId)
         {
             using (var builder = new EmployeeBuilder())
             {
                 return await builder.
-                    IncludePayFrequency().
-                    FirstOrDefaultAsync(rowID);
+                                IncludePayFrequency().
+                                GetByIdAsync(employeeId);
             }
         }
 
@@ -264,13 +264,13 @@ namespace AccuPay.Data.Repositories
 
         #region By Employee
 
-        public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int? employeeId)
+        public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)
         {
             using (var builder = new EmployeeBuilder())
             {
                 return await builder.IncludeDivision().
                                     IsActive().
-                                    FirstOrDefaultAsync(employeeId);
+                                    GetByIdAsync(employeeId);
             }
         }
 

@@ -32,7 +32,7 @@ Public Class NewDivisionPositionForm
 
     Private _positionRepository As New Repository.PositionRepository
 
-    Private _divisionRepository As New DivisionRepository
+    Private _divisionRepository As New Repository.DivisionRepository
 
     Private _payFrequencyRepository As New PayFrequencyRepository
 

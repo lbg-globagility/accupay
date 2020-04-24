@@ -1,12 +1,12 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class NewEmployeePresenter
 
-    Private _currentEmployee As Entities.Employee
+    Private _currentEmployee As Employee
 
     Private _employees As IList(Of Employee)
 
@@ -43,10 +43,19 @@ Public Class NewEmployeePresenter
     End Sub
 
     Private Async Sub OnEmployeeSelected(employeeID As Integer?) Handles _view.EmployeeSelected
-        Using context = New PayrollContext()
-            _currentEmployee = Await context.Employees.
-                Include(Function(e) e.PayFrequency).
-                SingleOrDefaultAsync(Function(e) Nullable.Equals(e.RowID, employeeID))
+
+        If employeeID.HasValue = False Then
+
+            _currentEmployee = Nothing
+            Return
+
+        End If
+
+        Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+
+            _currentEmployee = Await builder.IncludePosition().
+                                        IncludePayFrequency().
+                                        GetByIdAsync(employeeID.Value)
         End Using
 
         If _currentEmployee IsNot Nothing Then
@@ -86,17 +95,22 @@ Public Class NewEmployeePresenter
     Public Async Function GetEmployees() As Task(Of IList(Of Employee))
         Return Await Task.Run(
             Function()
-                Using context = New PayrollContext()
-                    Dim query = context.Employees.
-                        Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID))
+
+                Using builder As New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+
+                    Dim employees As IEnumerable(Of Employee)
 
                     If _view.IsActive Then
-                        query = query.Where(Function(e) e.EmploymentStatus <> "Resigned" And e.EmploymentStatus <> "Terminated")
+                        employees = builder.IsActive().ToList()
+                    Else
+                        employees = builder.ToList()
+
                     End If
 
-                    Return query.
+                    Return employees.
                         OrderBy(Function(e) e.LastName).
                         ThenBy(Function(e) e.FirstName).ToList()
+
                 End Using
             End Function)
     End Function

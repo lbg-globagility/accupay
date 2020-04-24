@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AccuPay.Data.Enums
+﻿namespace AccuPay.Data.Enums
 {
     public enum PayFrequencyType
     {

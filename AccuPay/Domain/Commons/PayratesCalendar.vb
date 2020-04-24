@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
+Imports AccuPay.Data
 
 Public Class PayratesCalendar
 

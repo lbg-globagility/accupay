@@ -205,7 +205,8 @@ Public Class BenchmarkPayrollForm
 
             If employeeId Is Nothing Then Return
 
-            Dim employee = Await _employeeRepository.GetActiveEmployeeWithDivisionAndPositionAsync(employeeId)
+            Dim employee = Await _employeeRepository.
+                                    GetActiveEmployeeWithDivisionAndPositionAsync(employeeId.Value)
 
             If employee Is Nothing Then Return
 

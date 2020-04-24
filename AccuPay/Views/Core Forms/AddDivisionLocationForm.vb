@@ -5,7 +5,7 @@ Imports AccuPay.Utils
 
 Public Class AddDivisionLocationForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private _divisionRepository As New Repository.DivisionRepository
 
     Public Property NewDivision As Division
 
@@ -33,7 +33,6 @@ Public Class AddDivisionLocationForm
 
         Const messageTitle As String = "New Division Location"
 
-
         Try
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
@@ -45,11 +44,9 @@ Public Class AddDivisionLocationForm
             Me.IsSaved = True
 
             Me.Close()
-
         Catch ex As ArgumentException
 
             MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
@@ -57,4 +54,5 @@ Public Class AddDivisionLocationForm
         End Try
 
     End Sub
+
 End Class

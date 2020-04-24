@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Tools
@@ -492,7 +493,7 @@ Public Class ShiftScheduleForm
 
         End Sub
 
-        Public Sub New(employee As Employee)
+        Public Sub New(employee As IEmployee)
             AssignEmployee(employee)
 
         End Sub
@@ -532,7 +533,7 @@ Public Class ShiftScheduleForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As Employee)
+        Private Sub AssignEmployee(employee As IEmployee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)

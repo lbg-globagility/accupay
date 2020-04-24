@@ -123,13 +123,13 @@ Public Class ImportLoansForm
                 Continue For
 
             End If
+            '.Employee = employee,
 
             Dim loanSchedule = New LoanSchedule With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
-                .Employee = employee,
                 .LoanNumber = record.LoanNumber,
                 .Comments = record.Comments,
                 .TotalLoanAmount = record.TotalLoanAmount,

@@ -68,7 +68,8 @@ Public Class ImportAllowanceForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            Dim employee = Await _employeeRepository.
+                                GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
 
             If employee Is Nothing Then
 

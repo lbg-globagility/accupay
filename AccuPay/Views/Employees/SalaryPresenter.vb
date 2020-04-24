@@ -13,7 +13,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private WithEvents _view As SalaryTab2
 
-        Private _employee As Employee
+        Private _employee As Data.Entities.Employee
 
         Private _philHealthPolicy As PhilHealthPolicy
 
@@ -33,7 +33,7 @@ Namespace Global.AccuPay.Views.Employees
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
 
-        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
+        Private Sub OnSelectedEmployee(employee As Data.Entities.Employee) Handles _view.SelectEmployee
             _employee = employee
             _view.ShowEmployee(employee)
             LoadSalaries()

@@ -142,14 +142,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Allowance> GetEmployeeEcola(int employeeId, int organizationID, DateTime payDateFrom, DateTime payDateTo)
+        public async Task<Allowance> GetEmployeeEcola(int employeeId,
+                                                        int organizationId,
+                                                        DateTime payDateFrom,
+                                                        DateTime payDateTo)
         {
             using (var context = new PayrollContext())
             {
-                return await GetAllowancesWithPayPeriodBaseQuery(organizationID,
+                return await GetAllowancesWithPayPeriodBaseQuery(organizationId,
                                                             context,
                                                             payDateFrom: payDateFrom,
                                                             payDateTo: payDateTo).
+
                                     Where(a => a.EmployeeID.Value == employeeId).
                                     Where(a => a.Product.PartNo.ToLower() == ProductConstant.ECOLA).
                                     FirstOrDefaultAsync();
