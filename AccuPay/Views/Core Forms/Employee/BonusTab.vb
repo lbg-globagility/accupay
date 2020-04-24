@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
@@ -9,7 +8,7 @@ Imports AccuPay.Utils
 
 Public Class BonusTab
 
-    Private _employee As Entity.Employee
+    Private _employee As Employee
 
     Private _bonuses As List(Of Bonus)
 
@@ -20,8 +19,6 @@ Public Class BonusTab
     Private _mode As FormMode = FormMode.Empty
 
     Private _frequencies As List(Of String)
-
-    Dim category As String = "Bonus"
 
     Public Sub New()
         InitializeComponent()
@@ -34,7 +31,7 @@ Public Class BonusTab
         dtpbonenddate.Enabled = False
     End Sub
 
-    Public Sub SetEmployee(employee As Entity.Employee)
+    Public Sub SetEmployee(employee As Employee)
         Me.cbobontype.Focus()
         _employee = employee
 

@@ -39,15 +39,11 @@ Public Class PayrollGeneration
 
     Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
-    Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
-
     Private ReadOnly _allowances As ICollection(Of Data.Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
-
-    Private ReadOnly _policy As TimeEntryPolicy
 
     Private ReadOnly _previousPaystub As Paystub
 
@@ -91,7 +87,6 @@ Public Class PayrollGeneration
             Function(p) CBool(p.EmployeeID = _employee.RowID))
 
         _settings = New ListOfValueCollection(resources.ListOfValues)
-        _policy = New TimeEntryPolicy(_settings)
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries = resources.TimeEntries.
@@ -102,12 +97,6 @@ Public Class PayrollGeneration
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             Where(Function(t) _payPeriod.PayFromDate <= t.Date And t.Date <= _payPeriod.PayToDate).
             OrderBy(Function(t) t.Date).
-            ToList()
-
-        _employeeDutySchedules = resources.EmployeeDutySchedule.
-            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
-            Where(Function(t) _payPeriod.PayFromDate <= t.DateSched AndAlso t.DateSched <= _payPeriod.PayToDate).
-            OrderBy(Function(t) t.DateSched).
             ToList()
 
         _actualtimeentries = resources.ActualTimeEntries.

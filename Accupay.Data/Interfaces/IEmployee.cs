@@ -72,5 +72,8 @@ namespace AccuPay.Data
         decimal WorkDaysPerYear { get; set; }
         string WorkPhone { get; set; }
         decimal BPIInsurance { get; set; }
+        bool IsDaily { get; }
+        bool IsMonthly { get; }
+        bool IsFixed { get; }
     }
 }

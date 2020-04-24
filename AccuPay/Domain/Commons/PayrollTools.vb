@@ -30,7 +30,7 @@ Public Class PayrollTools
     Private Const PotentialLastWorkDay As Integer = 7
 
     Public Shared Function GetEmployeeMonthlyRate(
-                            employee As Employee,
+                            employee As IEmployee,
                             salary As Salary,
                             Optional isActual As Boolean = False) As Decimal
 

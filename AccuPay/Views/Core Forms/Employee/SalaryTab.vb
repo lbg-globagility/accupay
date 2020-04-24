@@ -17,7 +17,7 @@ Public Class SalaryTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _employee As Employee
+    Private _employee As Data.Entities.Employee
 
     Private _salaries As List(Of Salary)
 
@@ -62,7 +62,7 @@ Public Class SalaryTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Data.Entities.Employee) As Task
 
         _employee = employee
 
@@ -383,7 +383,6 @@ Public Class SalaryTab
                     RecordUpdateSalary(oldsalary)
                 End If
 
-
                 Dim messageTitle = ""
                 If _mode = FormMode.Creating Then
 
@@ -626,4 +625,5 @@ Public Class SalaryTab
         Dim userActivity As New UserActivityForm("Salary")
         userActivity.ShowDialog()
     End Sub
+
 End Class

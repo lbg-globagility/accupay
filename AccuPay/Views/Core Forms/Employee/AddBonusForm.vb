@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
@@ -12,14 +13,15 @@ Public Class AddBonusForm
 
     Private _frequencies As New List(Of String)
 
-    Private _employee As Entity.Employee
+    Private _employee As Employee
 
     Private _newBonus As New Bonus
 
-    Public Sub New(employee As Entity.Employee)
+    Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
     End Sub
+
     Private Async Sub AddBonusForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         EmployeeNameTextBox.Text = _employee.FullNameWithMiddleInitialLastNameFirst
         EmployeeNumberTextbox.Text = _employee.EmployeeIdWithPositionAndEmployeeType
@@ -109,7 +111,6 @@ Public Class AddBonusForm
 
             Dim userActivityRepo = New UserActivityRepository
             userActivityRepo.RecordAdd(z_User, "Bonus", CInt(_newBonus.RowID), z_OrganizationID)
-
         Catch ex As Exception
             MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
             Return
@@ -136,4 +137,5 @@ Public Class AddBonusForm
             dtpbonenddate.Value = dtpbonstartdate.Value
         End If
     End Sub
+
 End Class

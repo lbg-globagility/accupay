@@ -4,7 +4,6 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Tools
@@ -38,7 +37,6 @@ Public Class TimeEntryGenerator
     Private _finished As Integer
 
     Private _errors As Integer
-    Private _employees As IList(Of Employee)
 
     Public ReadOnly Property ErrorCount As Integer
         Get
@@ -60,7 +58,7 @@ Public Class TimeEntryGenerator
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
 
-        _overtimeRepository = New Repositories.OvertimeRepository()
+        _overtimeRepository = New OvertimeRepository()
     End Sub
 
     Public Sub Start()
@@ -80,7 +78,6 @@ Public Class TimeEntryGenerator
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Include(Function(e) e.Position).
                 ToList()
-            _employees = employees
 
             agencies = context.Agencies.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).

@@ -102,19 +102,19 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
-        Public ReadOnly Property IsDaily As Boolean
+        Public ReadOnly Property IsDaily As Boolean Implements IEmployee.IsDaily
             Get
                 Return (EmployeeType.ToLower = "daily") '"Daily"
             End Get
         End Property
 
-        Public ReadOnly Property IsMonthly As Boolean
+        Public ReadOnly Property IsMonthly As Boolean Implements IEmployee.IsMonthly
             Get
                 Return (EmployeeType.ToLower = "monthly") '"Monthly"
             End Get
         End Property
 
-        Public ReadOnly Property IsFixed As Boolean
+        Public ReadOnly Property IsFixed As Boolean Implements IEmployee.IsFixed
             Get
                 Return (EmployeeType.ToLower = "fixed") '"Fixed"
             End Get
