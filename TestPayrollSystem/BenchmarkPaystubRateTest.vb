@@ -57,7 +57,7 @@ Public Class BenchmarkPaystubRateTest
     End Sub
 
     Private Sub InitializeOvertimeRate()
-        Dim basePay As Decimal = 1
+        Dim basePay As Decimal = 1D
         Dim overtime As Decimal = 1.25D
         Dim nightDifferential As Decimal = 1.1D
         Dim nightDifferentialOvertime As Decimal = 1.375D
@@ -73,7 +73,7 @@ Public Class BenchmarkPaystubRateTest
         Dim specialHolidayRestDayOvertime As Decimal = 1.95D
         Dim specialHolidayRestDayNightDifferential As Decimal = 1.65D
         Dim specialHolidayRestDayNightDifferentialOvertime As Decimal = 2.145D
-        Dim regularHoliday As Decimal = 2
+        Dim regularHoliday As Decimal = 2D
         Dim regularHolidayOvertime As Decimal = 2.6D
         Dim regularHolidayNightDifferential As Decimal = 2.2D
         Dim regularHolidayNightDifferentialOvertime As Decimal = 2.86D
@@ -81,6 +81,14 @@ Public Class BenchmarkPaystubRateTest
         Dim regularHolidayRestDayOvertime As Decimal = 3.38D
         Dim regularHolidayRestDayNightDifferential As Decimal = 2.86D
         Dim regularHolidayRestDayNightDifferentialOvertime As Decimal = 3.718D
+        Dim doubleHoliday As Decimal = 3D
+        Dim doubleHolidayOvertime As Decimal = 3.9D
+        Dim doubleHolidayNightDifferential As Decimal = 3.3D
+        Dim doubleHolidayNightDifferentialOvertime As Decimal = 4.29D
+        Dim doubleHolidayRestDay As Decimal = 3.9D
+        Dim doubleHolidayRestDayOvertime As Decimal = 5.07D
+        Dim doubleHolidayRestDayNightDifferential As Decimal = 4.29D
+        Dim doubleHolidayRestDayNightDifferentialOvertime As Decimal = 5.577D
 
         _overtimeRate = New OvertimeRate(basePay:=basePay,
                     overtime:=overtime,
@@ -105,7 +113,15 @@ Public Class BenchmarkPaystubRateTest
                     regularHolidayRestDay:=regularHolidayRestDay,
                     regularHolidayRestDayOvertime:=regularHolidayRestDayOvertime,
                     regularHolidayRestDayNightDifferential:=regularHolidayRestDayNightDifferential,
-                    regularHolidayRestDayNightDifferentialOvertime:=regularHolidayRestDayNightDifferentialOvertime)
+                    regularHolidayRestDayNightDifferentialOvertime:=regularHolidayRestDayNightDifferentialOvertime,
+                    doubleHoliday:=doubleHoliday,
+                    doubleHolidayOvertime:=doubleHolidayOvertime,
+                    doubleHolidayNightDifferential:=doubleHolidayNightDifferential,
+                    doubleHolidayNightDifferentialOvertime:=doubleHolidayNightDifferentialOvertime,
+                    doubleHolidayRestDay:=doubleHolidayRestDay,
+                    doubleHolidayRestDayOvertime:=doubleHolidayRestDayOvertime,
+                    doubleHolidayRestDayNightDifferential:=doubleHolidayRestDayNightDifferential,
+                    doubleHolidayRestDayNightDifferentialOvertime:=doubleHolidayRestDayNightDifferentialOvertime)
     End Sub
 
     <Test>

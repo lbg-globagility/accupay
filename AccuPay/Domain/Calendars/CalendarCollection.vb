@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Entities
+
 Namespace Global.AccuPay.Entity
 
     Public Class CalendarCollection
@@ -27,10 +29,10 @@ Namespace Global.AccuPay.Entity
             _isUsingCalendars = True
         End Sub
 
-        Public Function GetCalendar(employee As Employee) As PayratesCalendar
+        Public Function GetCalendar(Optional branchId As Integer? = Nothing) As PayratesCalendar
             Dim calendar = If(
                 _isUsingCalendars,
-                FindCalendarByBranch(employee.BranchID),
+                FindCalendarByBranch(branchId),
                 _organizationCalendar)
 
             If calendar Is Nothing Then
@@ -48,7 +50,7 @@ Namespace Global.AccuPay.Entity
 
             Dim branch = _branches.FirstOrDefault(Function(t) t.RowID.Value = branchId.Value)
 
-            If Not _calendars.ContainsKey(branch.CalendarID) Then
+            If branch.CalendarID Is Nothing OrElse Not _calendars.ContainsKey(branch.CalendarID) Then
                 Return _organizationCalendar
                 'Throw New Exception($"Calendar for branch #{branchId} doesn't exist")
             End If

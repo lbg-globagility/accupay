@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Entity
-Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddOvertimeForm
@@ -143,7 +143,10 @@ Public Class AddOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
-                Await _overtimeRepository.SaveAsync(Me._newOvertime)
+                Await _overtimeRepository.SaveAsync(z_OrganizationID, z_User, Me._newOvertime)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

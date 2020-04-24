@@ -1,7 +1,8 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class OfficialBusinessForm
@@ -18,9 +19,9 @@ Public Class OfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repository.EmployeeRepository
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New Data.Repositories.ProductRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -223,6 +224,71 @@ Public Class OfficialBusinessForm
 
     End Function
 
+    Private Function RecordUpdate(newOfficialBusiness As OfficialBusiness)
+        Dim oldOfficialBusiness =
+            Me._changedOfficialBusinesses.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOfficialBusiness.RowID))
+
+        If oldOfficialBusiness Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'"
+                        })
+        End If
+        If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'"
+                        })
+        End If
+        If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'"
+                        })
+        End If
+        If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'"
+                        })
+        End If
+        If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'"
+                        })
+        End If
+        If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'"
+                        })
+        End If
+        If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldOfficialBusiness.RowID,
+                        .Description = $"Update official business status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'"
+                        })
+        End If
+
+        Dim repo = New UserActivityRepository
+        repo.CreateRecord(z_User, "Official Business", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
+        Return True
+    End Function
+
     Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
 
         ResetForm()
@@ -277,6 +343,9 @@ Public Class OfficialBusinessForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _officialBusinessRepository.DeleteAsync(Me._currentOfficialBusiness.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID, z_OrganizationID)
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -458,6 +527,10 @@ Public Class OfficialBusinessForm
                                         Async Function()
                                             Await _officialBusinessRepository.SaveManyAsync(changedOfficialBusinesses)
 
+                                            For Each item In changedOfficialBusinesses
+                                                RecordUpdate(item)
+                                            Next
+
                                             ShowBalloonInfo($"{changedOfficialBusinesses.Count} OfficialBusiness(es) Successfully Updated.", messageTitle)
 
                                             Dim currentEmployee = GetSelectedEmployee()
@@ -476,6 +549,11 @@ Public Class OfficialBusinessForm
 
         UpdateEndDateDependingOnStartAndEndTimes()
 
+    End Sub
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Official Business")
+        userActivity.ShowDialog()
     End Sub
 
 End Class

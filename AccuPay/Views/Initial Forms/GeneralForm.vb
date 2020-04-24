@@ -368,70 +368,10 @@ Public Class GeneralForm
 
     End Sub
 
-    Dim n_BranchForm As New BranchHierarchyForm 'BranchHierarchyForm, BranchForm
-
     Private Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
         Dim form As New AddBranchForm
         form.ShowDialog()
-
-        'Dim ControlExists As Boolean = False
-
-        'For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-        '    If ctrl.Name.Contains("BranchForm") Then
-
-        '        ControlExists = True
-
-        '    End If
-
-        'Next
-
-        'If ControlExists Then
-
-        '    n_BranchForm.Show()
-        '    n_BranchForm.BringToFront()
-        'Else
-        '    n_BranchForm = New BranchHierarchyForm
-
-        '    n_BranchForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-        '    ChangeForm(n_BranchForm, "Branch")
-        '    previousForm = n_BranchForm
-
-        'End If
-
-    End Sub
-
-    Dim n_AreaForm As New AreaForm
-
-    Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ToolStripMenuItem1.Click
-
-        Dim ControlExists As Boolean = False
-
-        For Each ctrl As Form In PanelGeneral.Controls.OfType(Of Form)()
-
-            If ctrl.Name.Contains("AreaForm") Then
-
-                ControlExists = True
-
-            End If
-
-        Next
-
-        If ControlExists Then
-
-            n_AreaForm.Show()
-            n_AreaForm.BringToFront()
-        Else
-            n_AreaForm = New AreaForm
-
-            n_AreaForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-
-            ChangeForm(n_AreaForm, "Area")
-            previousForm = n_AreaForm
-
-        End If
 
     End Sub
 

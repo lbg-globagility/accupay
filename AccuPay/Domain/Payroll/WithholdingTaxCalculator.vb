@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Entity
+Imports AccuPay.Repository.ListOfValueRepository
 Imports AccuPay.Utilities
 Imports PayrollSys
 

@@ -2,6 +2,9 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -28,6 +31,8 @@ Public Class TimeLogsForm2
     Private _useShiftSchedulePolicy As Boolean
 
     Private _originalDates As TimePeriod
+
+    Private overtimeRepository As New OvertimeRepository()
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -330,6 +335,18 @@ Public Class TimeLogsForm2
 
                 Await context.SaveChangesAsync()
 
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each log In timeLogs
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new time log.",
+                        .EntityId = CInt(log.RowID)
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+
             End Using
         Catch ex As Exception
 
@@ -376,7 +393,7 @@ Public Class TimeLogsForm2
 
 #Region "Functions"
 
-    Private Function CreatedResults(employees As List(Of Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
+    Private Function CreatedResults(employees As List(Of Entity.Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
         Dim returnList As New List(Of TimeLogModel)
 
         Dim dateRanges = Calendar.EachDay(startDate, endDate)
@@ -435,7 +452,7 @@ Public Class TimeLogsForm2
         logs = logs.OrderBy(Function(l) l.DateTime).ToList
 
         Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
-        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+        Dim employees As List(Of Entity.Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
 
         Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
         Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
@@ -491,21 +508,16 @@ Public Class TimeLogsForm2
 
     Private Async Function GetEmployeeOvertime(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of Overtime))
 
-        Using context = New PayrollContext()
-            Return Await context.Overtimes.
-                           Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                           Where(Function(s) s.OTStartDate >= firstDate).
-                           Where(Function(s) s.OTStartDate <= lastDate).
-                           ToListAsync()
-        End Using
+        Dim overtimes = Await overtimeRepository.GetAllBetweenDateAsync(z_OrganizationID, startDate:=firstDate, endDate:=lastDate)
 
+        Return overtimes.ToList()
     End Function
 
-    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Employee))
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Entity.Employee))
 
         Using context As New PayrollContext
             If logsGroupedByEmployee.Count < 1 Then
-                Return New List(Of Employee)
+                Return New List(Of Entity.Employee)
             End If
 
             Dim employeeNumbersArray(logsGroupedByEmployee.Count - 1) As String
@@ -535,14 +547,19 @@ Public Class TimeLogsForm2
 #Region "PrivateClass"
 
     Private Class TimeLogModel
+
         Private Const CUSTOM_SHORT_TIME_FORMAT As String = "HH:mm"
+        Public Property RowID As Integer
+        Public Property ShiftSchedule As EmployeeDutySchedule
+        Public Property DateIn As Date
 
         Private _timeLog As TimeLog
-        Private _employee As Employee
+        Private _employee As Entity.Employee
         Private _dateOut, origDateIn, origDateOut As Date
         Private origTimeIn, origTimeOut As String
         Private _dateOutDisplay As Date?
         Private _timeIn, _timeOut As String
+        Private _branchId, origBranchId As Integer?
 
         Sub New(timeLog As TimeLog)
             _timeLog = timeLog
@@ -570,11 +587,14 @@ Public Class TimeLogsForm2
 
                 _timeIn = origTimeIn
                 _timeOut = origTimeOut
+
+                _branchId = .BranchID
+                origBranchId = .BranchID
             End With
 
         End Sub
 
-        Sub New(employee As Employee, d As Date)
+        Sub New(employee As Entity.Employee, d As Date)
             _employee = employee
 
             origDateIn = d
@@ -584,8 +604,6 @@ Public Class TimeLogsForm2
             DateOut = d
 
         End Sub
-
-        Public Property RowID As Integer
 
         Public ReadOnly Property EmployeeID As Integer
             Get
@@ -618,10 +636,6 @@ Public Class TimeLogsForm2
                 Return $"{TimeSpanToString(ShiftSchedule.StartTime)} - {TimeSpanToString(ShiftSchedule.EndTime)}"
             End Get
         End Property
-
-        Public Property ShiftSchedule As EmployeeDutySchedule
-
-        Public Property DateIn As Date
 
         Public Property TimeIn As String
             Get
@@ -669,6 +683,15 @@ Public Class TimeLogsForm2
             End Set
         End Property
 
+        Public Property BranchID As Integer?
+            Get
+                Return _branchId
+            End Get
+            Set(value As Integer?)
+                _branchId = value
+            End Set
+        End Property
+
         Public ReadOnly Property IsExisting As Boolean
             Get
                 Return RowID > 0
@@ -678,9 +701,10 @@ Public Class TimeLogsForm2
         Public ReadOnly Property HasChanged As Boolean
             Get
                 Dim differs = Not Equals(origDateIn, DateIn) _
-                    Or Not Equals(origTimeIn, _timeIn) _
-                    Or Not Equals(origDateOut, DateOut) _
-                    Or Not Equals(origTimeOut, _timeOut)
+                    OrElse Not Equals(origTimeIn, _timeIn) _
+                    OrElse Not Equals(origDateOut, DateOut) _
+                    OrElse Not Equals(origTimeOut, _timeOut) _
+                    OrElse Not origBranchId.NullableEquals(_branchId)
 
                 Return differs
             End Get
@@ -689,7 +713,8 @@ Public Class TimeLogsForm2
         Public ReadOnly Property IsValidToSave As Boolean
             Get
                 Dim hasLog = Not String.IsNullOrWhiteSpace(_timeIn) _
-                    Or Not String.IsNullOrWhiteSpace(_timeOut)
+                    OrElse Not String.IsNullOrWhiteSpace(_timeOut) _
+                    OrElse _branchId IsNot Nothing
 
                 Return hasLog
             End Get
@@ -709,7 +734,8 @@ Public Class TimeLogsForm2
                         .OrganizationID = z_OrganizationID,
                         .LogDate = DateIn,
                         .CreatedBy = z_User,
-                        .Created = Now}
+                        .Created = Now
+                    }
                 End If
 
                 With _timeLog
@@ -718,6 +744,7 @@ Public Class TimeLogsForm2
 
                     .TimeIn = Calendar.ToTimespan(TimeIn)
                     .TimeOut = Calendar.ToTimespan(TimeOut)
+                    .BranchID = _branchId
                 End With
 
                 Return _timeLog
@@ -730,6 +757,7 @@ Public Class TimeLogsForm2
 
             DateOut = origDateOut
             _timeOut = origTimeOut
+            _branchId = origBranchId
         End Sub
 
         Public Sub Commit()
@@ -738,6 +766,7 @@ Public Class TimeLogsForm2
 
             origDateOut = DateOut
             origTimeOut = _timeOut
+            origBranchId = _branchId
 
             Remove()
         End Sub
@@ -745,6 +774,8 @@ Public Class TimeLogsForm2
         Public Sub ClearLogTime()
             _timeIn = Nothing
             _timeOut = Nothing
+
+            _branchId = Nothing
         End Sub
 
         Public Sub ClearLogDateOut()
@@ -794,7 +825,19 @@ Public Class TimeLogsForm2
 
         End If
 
+        Await PopulateBranchComboBox()
+
     End Sub
+
+    Private Async Function PopulateBranchComboBox() As Task
+
+        colBranchID.ValueMember = "RowID"
+        colBranchID.DisplayMember = "Name"
+
+        Dim branchRepository As New BranchRepository()
+        colBranchID.DataSource = Await branchRepository.GetAllAsync
+
+    End Function
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
@@ -850,6 +893,8 @@ Public Class TimeLogsForm2
                     If timeOut IsNot Nothing Then
                         timeLog.TimeStampOut = model.DateOut.ToMinimumHourValue.Add(Calendar.ToTimespan(model.TimeOut).Value)
                     End If
+
+                    timeLog.BranchID = model.BranchID
 
                     timeLog.LastUpdBy = z_User
                     timeLog.LastUpd = Now
@@ -1049,7 +1094,7 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub grid_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles grid.CellEndEdit
-        Dim parseableIndexes = {colTimeIn.Index, colTimeOut.Index}
+        Dim parseableIndexes = {colTimeIn.Index, colTimeOut.Index, colBranchID.Index}
 
         If parseableIndexes.Any(Function(i) i = e.ColumnIndex) Then
             Dim currRow = grid.Rows(e.RowIndex)
@@ -1227,49 +1272,61 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Sub btnExport_Click(sender As Object, e As EventArgs) Handles btnExport.Click
-        Dim saveFileDialog = New SaveFileDialog()
-        saveFileDialog.FileName = z_CompanyName & "_" & dtpDateFrom.Value.ToString("MM'-'dd'-'yyyy") & "_" & dtpDateTo.Value.ToString("MM'-'dd'-'yyyy")
-        saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
 
-        If saveFileDialog.ShowDialog() = DialogResult.OK Then
-            Dim fileName = saveFileDialog.FileName
-            Dim file = New FileInfo(fileName)
+        Try
+            Dim saveFileDialog = New SaveFileDialog()
+            saveFileDialog.FileName = z_CompanyName & "_" & dtpDateFrom.Value.ToString("MM'-'dd'-'yyyy") & "_" & dtpDateTo.Value.ToString("MM'-'dd'-'yyyy")
+            saveFileDialog.Filter = "Excel files (*.xlsx)|*.xlsx"
 
-            If file.Exists() Then
-                file.Delete()
+            If saveFileDialog.ShowDialog() = DialogResult.OK Then
+                Dim fileName = saveFileDialog.FileName
+                Dim file = New FileInfo(fileName)
+
+                If file.Exists() Then
+
+                    file.Delete()
+                End If
+
+                Using excelPackage = New ExcelPackage(file)
+                    Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
+                    worksheet.Column(5).Style.Numberformat.Format = "mm/dd/yyyy"
+                    worksheet.Column(7).Style.Numberformat.Format = "mm/dd/yyyy"
+
+                    worksheet.Cells("A1").Value = "Employee ID"
+                    worksheet.Cells("B1").Value = "Name"
+                    worksheet.Cells("C1").Value = "Shift Schedule"
+                    worksheet.Cells("D1").Value = "Time In"
+                    worksheet.Cells("E1").Value = "Date In"
+                    worksheet.Cells("F1").Value = "Time Out"
+                    worksheet.Cells("G1").Value = "Date Out"
+
+                    Dim i = 2
+                    For Each row As DataGridViewRow In grid.Rows
+                        If row.Cells(7).Value IsNot Nothing Or row.Cells(12).Value IsNot Nothing Then
+                            worksheet.Cells($"A{i}").Value = row.Cells(2).Value
+                            worksheet.Cells($"B{i}").Value = row.Cells(3).Value
+                            worksheet.Cells($"C{i}").Value = row.Cells(4).Value
+                            worksheet.Cells($"D{i}").Value = row.Cells(7).Value
+                            worksheet.Cells($"E{i}").Value = row.Cells(6).Value
+                            worksheet.Cells($"F{i}").Value = row.Cells(12).Value
+                            worksheet.Cells($"G{i}").Value = row.Cells(8).Value
+                            i += 1
+                        End If
+                    Next
+
+                    excelPackage.Save()
+                    MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
+                End Using
             End If
+        Catch ex As IOException
 
-            Using excelPackage = New ExcelPackage(file)
-                Dim worksheet = excelPackage.Workbook.Worksheets.Add("Time logs")
-                worksheet.Column(5).Style.Numberformat.Format = "mm/dd/yyyy"
-                worksheet.Column(7).Style.Numberformat.Format = "mm/dd/yyyy"
+            MessageBoxHelper.ErrorMessage(ex.Message)
+        Catch ex As Exception
 
-                worksheet.Cells("A1").Value = "Employee ID"
-                worksheet.Cells("B1").Value = "Name"
-                worksheet.Cells("C1").Value = "Shift Schedule"
-                worksheet.Cells("D1").Value = "Time In"
-                worksheet.Cells("E1").Value = "Date In"
-                worksheet.Cells("F1").Value = "Time Out"
-                worksheet.Cells("G1").Value = "Date Out"
+            MessageBoxHelper.DefaultErrorMessage()
 
-                Dim i = 2
-                For Each row As DataGridViewRow In grid.Rows
-                    If row.Cells(7).Value IsNot Nothing Or row.Cells(12).Value IsNot Nothing Then
-                        worksheet.Cells($"A{i}").Value = row.Cells(2).Value
-                        worksheet.Cells($"B{i}").Value = row.Cells(3).Value
-                        worksheet.Cells($"C{i}").Value = row.Cells(4).Value
-                        worksheet.Cells($"D{i}").Value = row.Cells(7).Value
-                        worksheet.Cells($"E{i}").Value = row.Cells(6).Value
-                        worksheet.Cells($"F{i}").Value = row.Cells(12).Value
-                        worksheet.Cells($"G{i}").Value = row.Cells(8).Value
-                        i += 1
-                    End If
-                Next
+        End Try
 
-                excelPackage.Save()
-                MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
-            End Using
-        End If
     End Sub
 
 #End Region

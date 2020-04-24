@@ -1,6 +1,7 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddAllowanceForm
@@ -139,7 +140,12 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveAsync(Me._newAllowance)
+                Await _allowanceRepository.SaveAsync(organizationID:=z_OrganizationID,
+                                                     userID:=z_User,
+                                                     allowance:=Me._newAllowance)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -176,7 +182,7 @@ Public Class AddAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes())
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).

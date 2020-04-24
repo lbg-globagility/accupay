@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utils
 
@@ -37,6 +38,9 @@ Public Class AddDivisionLocationForm
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
             Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision)
+
+            Dim repo As New UserActivityRepository
+            repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID, z_OrganizationID)
 
             Me.IsSaved = True
 

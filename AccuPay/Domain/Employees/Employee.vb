@@ -59,7 +59,7 @@ Namespace Global.AccuPay.Entity
         Public Property OtherLeaveBalance As Decimal Implements IEmployee.OtherLeaveBalance
 
         <Column("LeaveAllowance")>
-        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.LeaveAllowance
+        Public Property VacationLeaveAllowance As Decimal Implements IEmployee.VacationLeaveAllowance
 
         Public Property SickLeaveAllowance As Decimal Implements IEmployee.SickLeaveAllowance
         Public Property MaternityLeaveAllowance As Decimal Implements IEmployee.MaternityLeaveAllowance
@@ -84,6 +84,7 @@ Namespace Global.AccuPay.Entity
         Public Property RevealInPayroll As Boolean Implements IEmployee.RevealInPayroll
         Public Property LateGracePeriod As Decimal Implements IEmployee.LateGracePeriod
         Public Property OffsetBalance As Decimal Implements IEmployee.OffsetBalance
+        Public Overridable Property Agency As Agency
         Public Property AgencyID As Integer? Implements IEmployee.AgencyID
         Public Property Image As Byte() Implements IEmployee.Image
         Public Property AdvancementPoints As Integer Implements IEmployee.AdvancementPoints
@@ -107,19 +108,19 @@ Namespace Global.AccuPay.Entity
             End Get
         End Property
 
-        Public ReadOnly Property IsDaily As Boolean
+        Public ReadOnly Property IsDaily As Boolean Implements IEmployee.IsDaily
             Get
                 Return (EmployeeType.ToLower = "daily") '"Daily"
             End Get
         End Property
 
-        Public ReadOnly Property IsMonthly As Boolean
+        Public ReadOnly Property IsMonthly As Boolean Implements IEmployee.IsMonthly
             Get
                 Return (EmployeeType.ToLower = "monthly") '"Monthly"
             End Get
         End Property
 
-        Public ReadOnly Property IsFixed As Boolean
+        Public ReadOnly Property IsFixed As Boolean Implements IEmployee.IsFixed
             Get
                 Return (EmployeeType.ToLower = "fixed") '"Fixed"
             End Get

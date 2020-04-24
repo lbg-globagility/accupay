@@ -6,8 +6,10 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
+Imports AccuPay.Helpers
 Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -30,6 +32,10 @@ Public Class EmployeeForm
     Private _branches As New List(Of Branch)
 
     Private _payFrequencies As New List(Of PayFrequency)
+
+    Private _policy As PolicyHelper
+
+    Private _branchRepository As BranchRepository
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
@@ -683,8 +689,6 @@ Public Class EmployeeForm
     Dim dontUpdateEmp As SByte = 0
 
     Async Sub INSUPD_employee_01(sender As Object, e As EventArgs) Handles tsbtnSaveEmp.Click
-        pbemppic.Focus()
-        pbemppic.Focus()
 
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
@@ -797,6 +801,7 @@ Public Class EmployeeForm
         End If
         Dim null_index() As Integer = {-1, 0}
         Dim new_eRowID = Nothing
+        Dim oldEmployee As Employee = Nothing
 
         Dim succeed As Boolean = False
         Try
@@ -807,6 +812,11 @@ Public Class EmployeeForm
 
             Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
             Dim evaluationDate = If(dtpEvaluationDate.Checked, dtpEvaluationDate.Value, DBNull.Value)
+
+            If tsbtnNewEmp.Enabled = True Then 'Means update and oldEmployee is needed for UserActivity
+                oldEmployee = GetOldEmployee(employee_RowID)
+
+            End If
 
             new_eRowID =
             INSUPDemployee(employee_RowID,
@@ -911,7 +921,13 @@ Public Class EmployeeForm
 
             emp_rcount += 1
             dgvEmp_RowIndex = 0
-            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
+            If succeed Then
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Employee", employee_RowID, z_OrganizationID)
+                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
+
+            End If
         Else 'UPDATE employee
 
             If dgvEmp.CurrentRow Is Nothing Then Exit Sub
@@ -933,7 +949,10 @@ Public Class EmployeeForm
 
             dgvEmp_RowIndex = dgvEmp.CurrentRow.Index
 
-            If succeed Then InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
+            If succeed Then
+                RecordUpdateEmployee(oldEmployee)
+                InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been updated successfully.", "Employee Update Successful", lblforballoon, 0, -69)
+            End If
 
         End If
 
@@ -1029,6 +1048,482 @@ Public Class EmployeeForm
 
         tsbtnSaveEmp.Enabled = True
     End Sub
+
+    Private Shared Function GetOldEmployee(employee_RowID As Integer?) As Employee
+
+        If employee_RowID.HasValue = False Then Return Nothing
+
+        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+
+            Return employeeBuilder.
+                    IncludePayFrequency().
+                    IncludePosition().
+                    IncludeBranch().
+                    FirstOrDefault(employee_RowID)
+
+        End Using
+
+    End Function
+
+    Private Function RecordUpdateEmployee(oldEmployee As Employee) As Boolean
+
+        If oldEmployee Is Nothing Then Return False
+
+        Dim changes = New List(Of UserActivityItem)
+
+        Dim gender = Nothing
+        If rdFMale.Checked Then
+            gender = "F"
+        ElseIf rdMale.Checked Then
+            gender = "M"
+        End If
+
+        If oldEmployee.EmployeeNo <> txtEmpID.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee ID from '{oldEmployee.EmployeeNo}' to '{txtEmpID.Text}'"
+                        })
+        End If
+        If oldEmployee.EmployeeType <> cboEmpType.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee type from '{oldEmployee.EmployeeType}' to '{cboEmpType.Text}'"
+                        })
+        End If
+        If oldEmployee.EmploymentStatus <> cboEmpStat.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee status from '{oldEmployee.EmploymentStatus}' to '{cboEmpStat.Text}'"
+                        })
+        End If
+        If oldEmployee.StartDate <> dtpempstartdate.Value Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee start date from '{oldEmployee.StartDate.ToShortDateString}' to '{dtpempstartdate.Text}'"
+                        })
+        End If
+        If oldEmployee.Salutation <> cboSalut.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee salutation from '{oldEmployee.Salutation}' to '{cboSalut.Text}'"
+                        })
+        End If
+        If oldEmployee.Gender <> gender Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee gender from '{oldEmployee.Gender}' to '{gender}'"
+                        })
+        End If
+        If oldEmployee.FirstName <> txtFName.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee first name from '{oldEmployee.FirstName}' to '{txtFName.Text}'"
+                        })
+        End If
+        If oldEmployee.MiddleName <> txtMName.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee middle name from '{oldEmployee.MiddleName}' to '{txtMName.Text}'"
+                        })
+        End If
+        If oldEmployee.LastName <> txtLName.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee last name from '{oldEmployee.LastName}' to '{txtLName.Text}'"
+                        })
+        End If
+        If oldEmployee.Surname <> txtSName.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee surname from '{oldEmployee.Surname}' to '{txtSName.Text}'"
+                        })
+        End If
+        If oldEmployee.Nickname <> txtNName.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee nickname from '{oldEmployee.Nickname}' to '{txtNName.Text}'"
+                        })
+        End If
+        If oldEmployee.MaritalStatus <> cboMaritStat.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee marital status from '{oldEmployee.MaritalStatus}' to '{cboMaritStat.Text}'"
+                        })
+        End If
+        If oldEmployee.NoOfDependents.ToString <> txtNumDepen.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee number of dependents from '{oldEmployee.NoOfDependents.ToString}' to '{txtNumDepen.Text}'"
+                        })
+        End If
+        If oldEmployee.PayFrequency.Type <> cboPayFreq.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee pay frequency from '{oldEmployee.PayFrequency.Type}' to '{cboPayFreq.Text}'"
+                        })
+        End If
+        If oldEmployee.DayOfRest Is Nothing And cboDayOfRest.Text <> "" Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee rest day from '' to  '{cboDayOfRest.Text}'"
+                        })
+        ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text <> "" Then
+            If WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday) <> cboDayOfRest.Text Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to '{cboDayOfRest.Text}'"
+                        })
+            End If
+        ElseIf oldEmployee.DayOfRest IsNot Nothing And cboDayOfRest.Text = "" Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee rest day from '{WeekdayName(oldEmployee.DayOfRest, False, FirstDayOfWeek.Sunday)}' to ''"
+                        })
+        End If
+        If oldEmployee.DateEvaluated <> dtpEvaluationDate.Value Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to '{dtpEvaluationDate.Text}'"
+                        })
+        End If
+        If (oldEmployee.DateEvaluated Is Nothing And dtpEvaluationDate.Checked) Or
+            (oldEmployee.DateEvaluated IsNot Nothing And dtpEvaluationDate.Checked = False) Then
+            If dtpEvaluationDate.Checked = False Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee evaluation date from '{oldEmployee.DateEvaluated?.ToShortDateString}' to ''"
+                        })
+            Else
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee evaluation date from '' to '{dtpEvaluationDate.Text}'"
+                        })
+            End If
+        End If
+        If oldEmployee.DateRegularized <> dtpRegularizationDate.Value Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to '{dtpRegularizationDate.Text}'"
+                        })
+        End If
+        If (oldEmployee.DateRegularized Is Nothing And dtpRegularizationDate.Checked) Or
+            (oldEmployee.DateRegularized IsNot Nothing And dtpRegularizationDate.Checked = False) Then
+            If dtpRegularizationDate.Checked = False Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee regularization date from '{oldEmployee.DateRegularized?.ToShortDateString}' to ''"
+                        })
+            Else
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee regularization date from '' to '{dtpRegularizationDate.Text}'"
+                        })
+            End If
+        End If
+        If oldEmployee.AtmNo = Nothing And txtATM.Text <> "" Then 'change to deposit
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee salary distribution from 'Cash / Check' to 'Direct Deposit'"
+                        })
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee ATM number from '' to '{txtATM.Text}'"
+                        })
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee bank name from '' to '{cbobank.Text}'"
+                        })
+
+        ElseIf oldEmployee.AtmNo <> Nothing And txtATM.Text = Nothing Then ' change to cash / check
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee salary distribution from 'Direct Deposit' to 'Cash / Check'"
+                        })
+        Else
+            If oldEmployee.AtmNo <> txtATM.Text Then 'change ATM number and Bank Name
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee ATM number from '{oldEmployee.AtmNo}' to '{txtATM.Text}'"
+                        })
+            End If
+            If oldEmployee.BankName <> cbobank.Text Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee bank name from '{oldEmployee.BankName}' to '{cbobank.Text}'"
+                        })
+            End If
+        End If
+        If (oldEmployee.Branch Is Nothing And BranchComboBox.Text <> "") Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee branch from '' to '{BranchComboBox.Text}'"
+                        })
+        ElseIf oldEmployee.Branch IsNot Nothing And BranchComboBox.Text <> "" Then
+            If oldEmployee.Branch.Name <> BranchComboBox.Text Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee branch from '{oldEmployee.Branch.Name}' to '{BranchComboBox.Text}'"
+                        })
+            End If
+        End If
+        If oldEmployee.BPIInsurance <> BPIinsuranceText.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee BPI insurance from '{oldEmployee.BPIInsurance.ToString}' to '{BPIinsuranceText.Text}'"
+                        })
+        End If
+        'If oldEmployee.Position.Division.Name <> txtDivisionName.Text Then
+        '    changes.Add(New UserActivityItem() With
+        '                {
+        '                .EntityId = oldEmployee.RowID,
+        '                .Description = $"Update employee division from '{oldEmployee.Position.Division.Name}' to '{txtDivisionName.Text}'"
+        '                })
+        'End If
+        If oldEmployee.Position.Name <> cboPosit.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee position from '{oldEmployee.Position.Name}' to '{cboPosit.Text}'"
+                        })
+        End If
+        'If oldEmployee.Agency.Name <> cboAgency.Text Then
+        '    changes.Add(New UserActivityItem() With
+        '                {
+        '                .EntityId = oldEmployee.RowID,
+        '                .Description = $"Update employee agency from '{oldEmployee.Agency.Name'} to '{cboAgency.Text}'"
+        '                })
+        'End If
+        If oldEmployee.BirthDate <> dtpempbdate.Value Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee birthday from '{oldEmployee.BirthDate.ToShortDateString}' to '{dtpempbdate.Text}'"
+                        })
+        End If
+        If oldEmployee.EmailAddress <> txtemail.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee email address from '{oldEmployee.EmailAddress}' to '{txtemail.Text}'"
+                        })
+        End If
+        If oldEmployee.TinNo <> txtTIN.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee TIN from '{oldEmployee.TinNo}' to '{txtTIN.Text}'"
+                        })
+        End If
+        If oldEmployee.SssNo <> txtSSS.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee SSS from '{oldEmployee.SssNo}' to '{txtSSS.Text}'"
+                        })
+        End If
+        If oldEmployee.PhilHealthNo <> txtPIN.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee PhilHealth from '{oldEmployee.PhilHealthNo}' to '{txtPIN.Text}'"
+                        })
+        End If
+        If oldEmployee.HdmfNo <> txtHDMF.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee PagIbig from '{oldEmployee.HdmfNo}' to '{txtHDMF.Text}'"
+                        })
+        End If
+        If oldEmployee.HomeAddress <> txtHomeAddr.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee home address from '{oldEmployee.HomeAddress}' to '{txtHomeAddr.Text}'"
+                        })
+        End If
+        If oldEmployee.WorkPhone <> txtWorkPhne.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee work phone from '{oldEmployee.WorkPhone}' to '{txtWorkPhne.Text}'"
+                        })
+        End If
+        If oldEmployee.HomePhone <> txtHomePhne.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee home phone from '{oldEmployee.HomePhone}' to '{txtHomePhne.Text}'"
+                        })
+        End If
+        If oldEmployee.MobilePhone <> txtMobPhne.Text Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee mobile phone from '{oldEmployee.MobilePhone}' to '{txtMobPhne.Text}'"
+                        })
+        End If
+        If oldEmployee.OvertimeOverride <> chkotflag.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate overtime from '{oldEmployee.OvertimeOverride.ToString}' to '{chkotflag.Checked.ToString}'"
+                        })
+        End If
+        If oldEmployee.UndertimeOverride <> chkutflag.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate undertime from '{oldEmployee.UndertimeOverride.ToString}' to '{chkutflag.Checked.ToString}'"
+                        })
+        End If
+        If oldEmployee.LateGracePeriod <> txtUTgrace.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee grace period from '{oldEmployee.LateGracePeriod.ToString}' to '{txtUTgrace.Text}'"
+                        })
+        End If
+        'If oldEmployee.AlphalistExempted <> chkAlphaListExempt.Checked Then
+        '    changes.Add(New UserActivityItem() With
+        '                {
+        '                .EntityId = oldEmployee.RowID,
+        '                .Description = $"Update employee alpha list exemption from '{oldEmployee.AlphalistExempted.ToString}' to '{chkAlphaListExempt.Checked.ToString}'"
+        '                })
+        'End If
+        If oldEmployee.WorkDaysPerYear <> txtWorkDaysPerYear.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee work days per year from '{oldEmployee.WorkDaysPerYear.ToString}' to '{txtWorkDaysPerYear.Text}'"
+                        })
+        End If
+        If oldEmployee.CalcHoliday <> chkcalcHoliday.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate holiday from '{oldEmployee.CalcHoliday.ToString}' to '{chkcalcHoliday.Checked.ToString}'"
+                        })
+        End If
+        If oldEmployee.CalcSpecialHoliday <> chkcalcSpclHoliday.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate special holiday from '{oldEmployee.CalcSpecialHoliday.ToString}' to '{chkcalcSpclHoliday.Checked.ToString}'"
+                        })
+        End If
+        If oldEmployee.CalcNightDiff <> chkcalcNightDiff.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate night differential from '{oldEmployee.CalcNightDiff.ToString}' to '{chkcalcNightDiff.Checked.ToString}'"
+                        })
+        End If
+        If oldEmployee.CalcRestDay <> chkcalcRestDay.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee calculate rest day from '{oldEmployee.CalcRestDay.ToString}' to '{chkcalcRestDay.Checked.ToString}'"
+                        })
+        End If
+        'If oldEmployee.CalcNightDiffOT <> chkcalcNightDiffOT.Checked Then
+        '    changes.Add(New UserActivityItem() With
+        '                {
+        '                .EntityId = oldEmployee.RowID,
+        '                .Description = $"Update employee calculate night diferential overtime from '{oldEmployee.CalcNightDiffOT.ToString}' to '{chkcalcNightDiffOT.Checked.ToString}'"
+        '                })
+        'End If
+        'If oldEmployee.CalcRestDayOT <> chkcalcRestDayOT.Checked Then
+        '    changes.Add(New UserActivityItem() With
+        '                {
+        '                .EntityId = oldEmployee.RowID,
+        '                .Description = $"Update employee calculate rest day overtime from '{oldEmployee.CalcRestDayOT.ToString}' to '{chkcalcRestDayOT.Checked.ToString}'"
+        '                })
+        'End If
+        If oldEmployee.VacationLeaveAllowance <> txtvlallow.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee vacation leave allowance from '{oldEmployee.VacationLeaveAllowance.ToString("#0")}' to '{txtvlallow.Text}'"
+                        })
+        End If
+        If oldEmployee.SickLeaveAllowance <> txtslallow.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee sick leave allowance from '{oldEmployee.SickLeaveAllowance.ToString}' to '{txtslallow.Text}'"
+                        })
+        End If
+        If oldEmployee.MaternityLeaveAllowance <> txtmlallow.Text.ToDecimal Then
+            If gender = "F" Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee maternity leave allowance from '{oldEmployee.MaternityLeaveAllowance.ToString}' to '{txtmlallow.Text}'"
+                        })
+            ElseIf gender = "M" Then
+                changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee paternity leave allowance from '{oldEmployee.MaternityLeaveAllowance.ToString}' to '{txtmlallow.Text}'"
+                        })
+            End If
+        End If
+        If oldEmployee.OtherLeaveAllowance <> txtothrallow.Text.ToDecimal Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee other leave allowance from '{oldEmployee.OtherLeaveAllowance.ToString}' to '{txtothrallow.Text}'"
+                        })
+        End If
+        If oldEmployee.RevealInPayroll <> Not chkbxRevealInPayroll.Checked Then
+            changes.Add(New UserActivityItem() With
+                        {
+                        .EntityId = oldEmployee.RowID,
+                        .Description = $"Update employee hide in payroll from '{(Not oldEmployee.RevealInPayroll).ToString}' to '{chkbxRevealInPayroll.Checked.ToString}'"
+                        })
+        End If
+
+        If changes.Count > 0 Then
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Return True
+        End If
+
+        Return False
+    End Function
 
     Private Async Sub SetEmployeeGridDataRow(rowIndex As Integer)
         Dim gridRow = dgvEmp.Rows(rowIndex)
@@ -1379,6 +1874,9 @@ Public Class EmployeeForm
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
 
+        _policy = New PolicyHelper
+        _branchRepository = New BranchRepository
+
         If if_sysowner_is_benchmark Then
 
             'only salary and employee tabs should be visible
@@ -1425,6 +1923,7 @@ Public Class EmployeeForm
 
         Using context As New PayrollContext
 
+            'Use user repository
             Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
 
             If user Is Nothing Then
@@ -1432,9 +1931,7 @@ Public Class EmployeeForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            If _policy.UseUserLevel = False Then
 
                 Return
 
@@ -1609,16 +2106,6 @@ Public Class EmployeeForm
 
                 End If
 
-                Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                Dim employee As Employee = Nothing
-                Using context = New PayrollContext()
-                    employee = (From emp In context.Employees.
-                                    Include(Function(emp) emp.PayFrequency).
-                                    Include(Function(emp) emp.Position)
-                                Where CBool(emp.RowID = employeeID)).
-                               FirstOrDefault()
-                End Using
-
                 Dim selectedTab = tabctrlemp.SelectedTab
 
                 If selectedTab Is tbpempchklist Then
@@ -1692,11 +2179,18 @@ Public Class EmployeeForm
                     cboEmpType.Text = .Cells("Column34").Value
 
                     txtNumDepen.Text = Val(.Cells("Column32").Value)
+
+                    Dim radioGender As RadioButton
                     If .Cells("Column19").Value = "Male" Then
                         rdMale.Checked = True
+                        radioGender = rdMale
                     Else
                         rdFMale.Checked = True
+                        radioGender = rdFMale
                     End If
+
+                    Gender_CheckedChanged(radioGender, New EventArgs)
+
                     noCurrCellChange = 0
                     dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
 
@@ -1878,13 +2372,11 @@ Public Class EmployeeForm
                     Label142.Text = "Current salary"
 
                 ElseIf selectedTab Is tbpBonus Then 'Bonus
-                    txtFNameBon.Text = employeefullname
-                    txtEmpIDBon.Text = subdetails '"ID# " & .Cells("Column1").Value
-                    pbEmpPicBon.Image = Nothing
-                    pbEmpPicBon.Image = EmployeeImage
-                    listofEditRowBon.Clear()
-                    VIEW_employeebonus(.Cells("RowID").Value)
-                    dgvempbon_SelectionChanged(sender, e)
+
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    BonusTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     txtFNameAtta.Text = employeefullname
                     txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
@@ -1894,6 +2386,12 @@ Public Class EmployeeForm
                     VIEW_employeeattachments(.Cells("RowID").Value)
                     dgvempatta_SelectionChanged(sender, e)
                 ElseIf selectedTab Is tbpNewSalary Then
+
+                    'transferred here so this function will not fetch data from database
+                    'even if the other tabs dont need the employee entity
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
                     Await SalaryTab.SetEmployee(employee)
                 End If
 
@@ -1978,14 +2476,6 @@ Public Class EmployeeForm
 
                     RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
 
-                Case GetBonusTabPageIndex() 'Bonus
-                    txtFNameBon.Text = ""
-                    txtEmpIDBon.Text = ""
-                    pbEmpPicBon.Image = Nothing
-                    listofEditRowBon.Clear()
-
-                    dgvempbon.Rows.Clear()
-
                 Case GetAttachmentTabPageIndex() 'Attachment
                     dgvempatta.Rows.Clear()
                     cboattatype.SelectedIndex = -1
@@ -1997,6 +2487,21 @@ Public Class EmployeeForm
         End If
         listofEditDepen.Clear()
     End Sub
+
+    Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
+        Dim employee As Employee = Nothing
+
+        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+
+            Return employeeBuilder.
+                    IncludePayFrequency().
+                    IncludePosition().
+                    FirstOrDefault(employeeID)
+
+        End Using
+
+        Return employee
+    End Function
 
     Dim currDepenCount As Integer
 
@@ -2044,20 +2549,8 @@ Public Class EmployeeForm
         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
         chkbxRevealInPayroll.Checked = False
 
-        BPIinsuranceText.Text = GetDefaultBPIInsurance()
+        BPIinsuranceText.Text = _policy.DefaultBPIInsurance
     End Sub
-
-    Private Function GetDefaultBPIInsurance() As Decimal
-
-        Using context As New PayrollContext
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            Return settings.GetDecimal("Default.BPIInsurance")
-
-        End Using
-
-    End Function
 
     Dim PayFreqE_asc As String
 
@@ -3262,7 +3755,7 @@ Public Class EmployeeForm
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabctrlemp.SelectedIndexChanged
         Label25.Text = Trim(tabctrlemp.SelectedTab.Text)
 
-        If tabctrlemp.SelectedTab Is tbpNewSalary Then
+        If tabctrlemp.SelectedTab Is tbpNewSalary OrElse tabctrlemp.SelectedTab Is tbpBonus Then
             dgvEmp_SelectionChanged(sender, e)
         End If
     End Sub
@@ -3338,7 +3831,7 @@ Public Class EmployeeForm
 
             Dim payFrequencies = Await (New PayFrequencyRepository()).GetAllAsync()
             _payFrequencies = payFrequencies.
-                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
+                                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
                                     p.RowID = PayFrequencyType.Weekly).ToList
 
             cboPayFreq.ValueMember = "RowID"
@@ -3410,58 +3903,41 @@ Public Class EmployeeForm
 
     Private Sub ShowBranch()
 
-        Using context As New PayrollContext
+        _branches = New List(Of Branch)
 
-            _branches = New List(Of Branch)
+        If _policy.ShowBranch = False Then
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            BranchComboBox.Visible = False
+            BranchLabel.Visible = False
+            AddBranchLinkButton.Visible = False
 
-            Dim showBranch = settings.GetBoolean("Employee Policy.ShowBranch", False)
+            Return
 
-            If showBranch = False Then
+        End If
 
-                BranchComboBox.Visible = False
-                BranchLabel.Visible = False
-                AddBranchLinkButton.Visible = False
+        _branches = _branchRepository.GetAll
 
-                Return
+        BranchComboBox.Visible = True
+        BranchLabel.Visible = True
+        AddBranchLinkButton.Visible = True
 
-            End If
-
-            _branches = context.Branches.ToList
-
-            BranchComboBox.Visible = True
-            BranchLabel.Visible = True
-            AddBranchLinkButton.Visible = True
-
-            BranchComboBox.DisplayMember = "Name"
-            BranchComboBox.DataSource = _branches
-
-        End Using
-
+        BranchComboBox.DisplayMember = "Name"
+        BranchComboBox.DataSource = _branches
     End Sub
 
     Private Sub ShowBPIInsurance()
 
-        Using context As New PayrollContext
+        If _policy.ShowBranch = False Then
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            BPIinsuranceText.Visible = False
+            BPIinsuranceLabel.Visible = False
 
-            Dim showBranch = settings.GetBoolean("Employee Policy.UseBPIInsurance", False)
+            Return
 
-            If showBranch = False Then
+        End If
 
-                BPIinsuranceText.Visible = False
-                BPIinsuranceLabel.Visible = False
-
-                Return
-
-            End If
-
-            BPIinsuranceText.Visible = True
-            BPIinsuranceLabel.Visible = True
-
-        End Using
+        BPIinsuranceText.Visible = True
+        BPIinsuranceLabel.Visible = True
 
     End Sub
 
@@ -4637,6 +5113,10 @@ Public Class EmployeeForm
 
                 fillempdisciplinary()
                 fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Disciplinary Action", dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value, z_OrganizationID)
+
                 myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
             End If
 
@@ -4696,6 +5176,9 @@ Public Class EmployeeForm
 
             Dim sql As New SQL(str_quer)
             sql.ExecuteQuery()
+
+            Dim repo As New UserActivityRepository
+            repo.RecordDelete(z_User, "Disciplinary Action", selected_rowids.First, z_OrganizationID)
 
             If sql.HasError = False Then
 
@@ -5834,6 +6317,9 @@ Public Class EmployeeForm
                                       If(c_char = "1", "Yes", "No"),
                                       paramValues(8),
                                       paramValues(10))
+
+            Dim repo As New UserActivityRepository
+            repo.RecordAdd(z_User, "Promotion", paramValues(0), z_OrganizationID)
         Else
             With dgvPromotionList.CurrentRow
 
@@ -6165,905 +6651,15 @@ Public Class EmployeeForm
 
 #Region "Bonus"
 
-    Public categBonusID As String
-
-    Public bonus_type As New AutoCompleteStringCollection
-
-    Private Sub tbpBonus_Click(sender As Object, e As EventArgs) Handles tbpBonus.Click
-
-    End Sub
-
-    Dim view_IDBon As Integer = Nothing
-
     Sub tbpBonus_Enter(sender As Object, e As EventArgs) Handles tbpBonus.Enter
-
-        tabpageText(tabIndx)
 
         tbpBonus.Text = "EMPLOYEE BONUS               "
 
         Label25.Text = "EMPLOYEE BONUS"
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once = 1
-
-            txtbonamt.ContextMenu = New ContextMenu
-
-            cbobontype.ContextMenu = New ContextMenu
-
-            cbobonfreq.ContextMenu = New ContextMenu
-
-            categBonusID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Bonus" & "' LIMIT 1;")
-
-            If Val(categBonusID) = 0 Then
-                categBonusID = INSUPD_category(, "Bonus")
-            End If
-
-            enlistTheLists("SELECT CONCAT(COALESCE(PartNo,''),'@',RowID) FROM product WHERE CategoryID='" & categBonusID & "' AND OrganizationID=" & orgztnID & ";",
-                           bonus_type) 'cboallowtype
-
-            For Each strval In bonus_type
-                cbobontype.Items.Add(getStrBetween(strval, "", "@"))
-                bon_Type.Items.Add(getStrBetween(strval, "", "@"))
-            Next
-
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' AND OrderBy=3;",
-                           cbobonfreq)
-
-            'enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Allowance Frequency' AND Active='Yes' ORDER BY OrderBy;", _
-            '               cbobonfreq)
-
-            For Each strval In cbobonfreq.Items
-                bon_Frequency.Items.Add(strval)
-            Next
-
-            AddHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
-
-            view_IDBon = VIEW_privilege("Employee Bonus", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDBon)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnNewBon.Visible = 0
-                tsbtnSaveBon.Visible = 0
-                tsbtnDelBon.Visible = False
-                dontUpdateBon = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        tsbtnNewBon.Visible = 0
-                        tsbtnSaveBon.Visible = 0
-                        tsbtnDelBon.Visible = False
-                        dontUpdateBon = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewBon.Visible = 0
-                        Else
-                            tsbtnNewBon.Visible = 1
-                        End If
-
-                        If drow("Deleting").ToString = "N" Then
-                            tsbtnDelBon.Visible = False
-                        Else
-                            tsbtnDelBon.Visible = True
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateBon = 1
-                        Else
-                            dontUpdateBon = 0
-                        End If
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        tabIndx = GetBonusTabPageIndex()
-
-        dgvEmp_SelectionChanged(sender, e)
 
     End Sub
 
-    Sub VIEW_employeebonus(ByVal bon_EmployeeID As Object)
-
-        Dim param(1, 2) As Object
-
-        param(0, 0) = "ebon_EmployeeID"
-        param(1, 0) = "ebon_OrganizationID"
-
-        param(0, 1) = bon_EmployeeID
-        param(1, 1) = orgztnID
-
-        EXEC_VIEW_PROCEDURE(param,
-                           "VIEW_employeebonus",
-                           dgvempbon, , 1)
-
-    End Sub
-
-    Function INSUPD_employeebonus(Optional bon_RowID As Object = Nothing,
-                                      Optional bon_EmployeeID As Object = Nothing,
-                                      Optional bon_AllowanceFrequency As Object = Nothing,
-                                      Optional bon_EffectiveStartDate As Object = Nothing,
-                                      Optional bon_EffectiveEndDate As Object = Nothing,
-                                      Optional bon_BonusAmount As Object = Nothing,
-                                      Optional bon_ProductID As Object = Nothing) As Object
-
-        Dim params(9, 2) As Object
-
-        params(0, 0) = "bon_RowID"
-        params(1, 0) = "bon_OrganizationID"
-        params(2, 0) = "bon_EmployeeID"
-        params(3, 0) = "bon_CreatedBy"
-        params(4, 0) = "bon_LastUpdBy"
-        params(5, 0) = "bon_ProductID"
-        params(6, 0) = "bon_AllowanceFrequency"
-        params(7, 0) = "bon_EffectiveStartDate"
-        params(8, 0) = "bon_EffectiveEndDate"
-        params(9, 0) = "bon_BonusAmount"
-
-        params(0, 1) = If(bon_RowID = Nothing, DBNull.Value, bon_RowID)
-        params(1, 1) = orgztnID
-        params(2, 1) = bon_EmployeeID
-        params(3, 1) = z_User
-        params(4, 1) = z_User
-        params(5, 1) = bon_ProductID
-        params(6, 1) = bon_AllowanceFrequency
-        params(7, 1) = Format(CDate(bon_EffectiveStartDate), "yyyy-MM-dd")
-        params(8, 1) = If(bon_EffectiveEndDate = Nothing, DBNull.Value, Format(CDate(bon_EffectiveEndDate), "yyyy-MM-dd"))
-        params(9, 1) = bon_BonusAmount
-
-        INSUPD_employeebonus = EXEC_INSUPD_PROCEDURE(params,
-                                                    "INSUPD_employeebonus",
-                                                    "bon_ID")
-
-    End Function
-
-    Private Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
-        dgvempbon.EndEdit(1)
-        dgvempbon.Focus()
-
-        For Each dgvrow As DataGridViewRow In dgvempbon.Rows
-            If dgvrow.IsNewRow Then
-                dgvbonRowindx = dgvrow.Index
-                dgvrow.Cells("bon_Type").Selected = 1
-                Exit For
-            End If
-        Next
-
-        cbobontype.SelectedIndex = -1
-        cbobontype.Text = ""
-        cbobonfreq.SelectedIndex = -1
-        cbobonfreq.Text = ""
-        dtpbonstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-        dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-        txtbonamt.Text = ""
-
-        dgvempbon_SelectionChanged(sender, e)
-
-    End Sub
-
-    Dim dontUpdateBon As SByte = 0
-
-    Private Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSaveBon.Click
-        pbEmpPicBon.Focus()
-
-        cbobontype.Focus()
-
-        pbEmpPicBon.Focus()
-
-        cbobonfreq.Focus()
-
-        pbEmpPicBon.Focus()
-
-        dtpbonstartdate.Focus()
-
-        pbEmpPicBon.Focus()
-
-        dtpbonenddate.Focus()
-
-        pbEmpPicBon.Focus()
-
-        txtbonamt.Focus()
-
-        pbEmpPicBon.Focus()
-
-        dgvempbon.EndEdit(1)
-
-        If dontUpdateBon = 1 Then
-            listofEditRowBon.Clear()
-        End If
-
-        If dgvEmp.RowCount = 0 Then
-            Exit Sub
-        End If
-        'RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-
-        Static once As SByte = 0
-
-        For Each dgvrow As DataGridViewRow In dgvempbon.Rows
-            With dgvrow
-                If .IsNewRow = 0 Then
-                    If listofEditRowBon.Contains(dgvrow.Cells("bon_RowID").Value) Then
-
-                        INSUPD_employeebonus(.Cells("bon_RowID").Value,
-                                                 dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                 .Cells("bon_Frequency").Value,
-                                                 .Cells("bon_Start").Value,
-                                                 .Cells("bon_End").Value,
-                                                 .Cells("bon_Amount").Value,
-                                                 .Cells("bon_ProdID").Value)
-                    Else
-                        If .Cells("bon_RowID").Value = Nothing And
-                            tsbtnNewBon.Visible = True Then
-
-                            .Cells("bon_RowID").Value = INSUPD_employeebonus(,
-                                                     dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                     .Cells("bon_Frequency").Value,
-                                                     .Cells("bon_Start").Value,
-                                                     .Cells("bon_End").Value,
-                                                     .Cells("bon_Amount").Value,
-                                                     .Cells("bon_ProdID").Value)
-                        End If
-                    End If
-                End If
-
-            End With
-        Next
-
-        listofEditRowBon.Clear()
-
-        InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-
-        'AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
-
-    End Sub
-
-    Private Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancelBon.Click
-        listofEditRowBon.Clear()
-        dgvEmp_SelectionChanged(sender, e)
-    End Sub
-
-    Private Sub tsbtnDelBon_Click(sender As Object, e As EventArgs) Handles tsbtnDelBon.Click
-
-        Dim bonus_RowID = dgvempbon.Tag
-
-        If bonus_RowID = Nothing Then
-        Else
-
-            Dim result = MessageBox.Show("Are you sure you want to delete bonus ?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation)
-
-            If result = DialogResult.Yes Then
-                dgvempbon.Focus()
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("CALL DEL_employeebonus('" & bonus_RowID & "');")
-
-                dgvempbon.Rows.Remove(dgvempbon.CurrentRow)
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub dgvempbon_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempbon.CellContentClick
-    End Sub
-
-    Dim bon_prevval(4) As Object
-
-    Private Sub dgvempbon_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempbon.SelectionChanged
-        If dgvempbon.RowCount > 1 Then
-            With dgvempbon.CurrentRow
-
-                dgvbonRowindx = .Index
-                If .IsNewRow = 0 Then
-                    bon_prevval(0) = .Cells("bon_Type").Value
-                    bon_prevval(1) = .Cells("bon_Amount").Value
-                    bon_prevval(2) = .Cells("bon_Frequency").Value
-                    bon_prevval(3) = .Cells("bon_Start").Value
-                    bon_prevval(4) = .Cells("bon_End").Value
-
-                    cbobontype.Text = .Cells("bon_Type").Value
-                    cbobonfreq.Text = .Cells("bon_Frequency").Value
-
-                    If Trim(.Cells("bon_Start").Value) <> Nothing Then
-                        dtpbonstartdate.Value = Format(CDate(.Cells("bon_Start").Value), machineShortDateFormat)
-                    Else
-                        dtpbonstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    End If
-
-                    If Trim(.Cells("bon_End").Value) <> Nothing Then
-                        dtpbonenddate.Value = Format(CDate(.Cells("bon_Start").Value), machineShortDateFormat)
-                    Else
-                        dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    End If
-
-                    txtbonamt.Text = .Cells("bon_Amount").Value
-                    dgvempbon.Tag = .Cells("bon_RowID").Value
-                Else
-
-                    bon_prevval(0) = ""
-                    bon_prevval(1) = ""
-                    bon_prevval(2) = ""
-                    bon_prevval(3) = ""
-                    bon_prevval(4) = ""
-
-                    cbobontype.Text = ""
-                    cbobonfreq.Text = ""
-                    dtpbonstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    txtbonamt.Text = ""
-                    dgvempbon.Tag = Nothing
-                End If
-
-            End With
-        Else
-            dgvbonRowindx = 0
-            dgvempbon.Tag = Nothing
-            bon_prevval(0) = ""
-            bon_prevval(1) = ""
-            bon_prevval(2) = ""
-            bon_prevval(3) = ""
-            bon_prevval(4) = ""
-
-            dtpbonstartdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-            dtpbonenddate.Value = Format(CDate(dbnow), machineShortDateFormat)
-        End If
-    End Sub
-
-    Public listofEditRowBon As New List(Of String)
-
-    Private Sub dgvempbon_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempbon.CellEndEdit
-
-        dgvempbon.ShowCellErrors = 1
-
-        Dim colname = dgvempbon.Columns(e.ColumnIndex).Name
-
-        With dgvempbon.Rows(e.RowIndex)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                listofEditRowBon.Add(.Cells("bon_RowID").Value)
-            Else
-            End If
-
-            If colname = "bon_Start" Or colname = "bon_End" Then
-
-            ElseIf colname = "bon_Type" Then
-
-                For Each strval In bonus_type
-                    Dim strcompare = Trim(dgvempbon.Item("bon_Type", e.RowIndex).Value.ToString)
-                    If strcompare = getStrBetween(strval, "", "@") Then
-                        dgvempbon.Item("bon_ProdID", e.RowIndex).Value = StrReverse(getStrBetween(StrReverse(strval), "", "@"))
-                        Exit For
-                    End If
-                Next
-
-            End If
-
-        End With
-
-    End Sub
-
-    Dim dgvbonRowindx As Integer = 0
-
-    Dim bonProductID As String
-
-    Private Sub cbobontype_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbobontype.SelectedIndexChanged
-
-    End Sub
-
-    Private Sub cbobontype_GotFocus(sender As Object, e As EventArgs) Handles cbobontype.GotFocus
-
-        If dgvempbon.RowCount = 1 Then
-        Else
-            dgvempbon.Item("bon_Type", dgvbonRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub cbobontype_Leave(sender As Object, e As EventArgs) Handles cbobontype.Leave
-
-        For Each strval In bonus_type
-            If Trim(cbobontype.Text) = getStrBetween(strval, "", "@") Then
-                bonProductID = StrReverse(getStrBetween(StrReverse(strval), "", "@"))
-                Exit For
-            End If
-        Next
-
-        Dim thegetval = Trim(cbobontype.Text)
-
-        If dgvempbon.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempbon.Rows.Add()
-                dgvbonRowindx = dgvempbon.RowCount - 2
-            End If
-        Else
-            If dgvempbon.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempbon.Rows.Add()
-                    dgvbonRowindx = dgvempbon.RowCount - 2
-                End If
-            Else
-                dgvbonRowindx = dgvempbon.CurrentRow.Index
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempbon.Item("bon_Type", dgvbonRowindx).Value = thegetval
-            dgvempbon.Item("bon_ProdID", dgvbonRowindx).Value = bonProductID
-
-            cbobontype.Text = thegetval
-
-        End If
-
-        With dgvempbon.Rows(dgvbonRowindx)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                If thegetval <> bon_prevval(0) Then
-                    listofEditRowBon.Add(.Cells("bon_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub cbobonfreq_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbobonfreq.SelectedIndexChanged
-
-    End Sub
-
-    Dim IsBonusOneTimeFreq As Boolean = False
-
-    Private Sub cbobonfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cbobonfreq.SelectedValueChanged
-
-        dtpbonstartdate.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-
-        Select Case cbobonfreq.SelectedIndex
-            Case -1 'Nothing
-                dtpbonstartdate.Enabled = 0
-                dtpbonenddate.Enabled = 0
-
-                lblbonstartdate.Visible = 0
-                lblbonenddate.Visible = 0
-            Case 0 'Daily
-
-                IsBonusOneTimeFreq = 1
-                dtpbonstartdate.Enabled = 1
-                dtpbonenddate.Enabled = 0
-
-                lblbonstartdate.Visible = 1
-                lblbonenddate.Visible = 0
-            Case 1 'Monthly
-
-                dtpbonstartdate.Enabled = 1
-                dtpbonenddate.Enabled = 1
-
-                lblbonstartdate.Visible = 1
-                lblbonenddate.Visible = 1
-            Case 2 'One time
-                dtpbonstartdate.Enabled = 1
-                dtpbonenddate.Enabled = 0
-                IsBonusOneTimeFreq = 1
-                lblbonstartdate.Visible = 1
-                lblbonenddate.Visible = 0
-            Case 3 To 4 'Semi-monthly & Weekly
-                dtpbonstartdate.Enabled = 1
-                dtpbonenddate.Enabled = 1
-
-                lblbonstartdate.Visible = 1
-                lblbonenddate.Visible = 1
-
-        End Select
-
-    End Sub
-
-    Private Sub cbobonfreq_GotFocus(sender As Object, e As EventArgs) Handles cbobonfreq.GotFocus
-
-        If dgvempbon.RowCount = 1 Then
-        Else
-            dgvempbon.Item("bon_Frequency", dgvbonRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub cbobonfreq_Leave(sender As Object, e As EventArgs) Handles cbobonfreq.Leave
-
-        Dim thegetval = Trim(cbobonfreq.Text)
-
-        If dgvempbon.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempbon.Rows.Add()
-                dgvbonRowindx = dgvempbon.RowCount - 2
-            End If
-        Else
-            If dgvempbon.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempbon.Rows.Add()
-                    dgvbonRowindx = dgvempbon.RowCount - 2
-                End If
-            Else
-                dgvbonRowindx = dgvempbon.CurrentRow.Index
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempbon.Item("bon_Frequency", dgvbonRowindx).Value = thegetval
-
-            cbobonfreq.Text = thegetval
-
-        End If
-
-        With dgvempbon.Rows(dgvbonRowindx)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                If thegetval <> bon_prevval(2) Then
-                    listofEditRowBon.Add(.Cells("bon_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub dtpbonstartdate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles dtpbonstartdate.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        Static j As SByte = 0
-        Static a As SByte = 0
-        Static m As SByte = 0
-
-        Dim MM As Object = Format(CDate(dtpbonstartdate.Value), "MMM")
-        Dim dd As Object = CDate(dtpbonstartdate.Value).Day
-        dd = If(dd.ToString.Length = 1, "0" & dd, dd)
-        Dim yyyy As Object = CDate(dtpbonstartdate.Value).Year
-
-        If e_asc = 74 Or e_asc = 106 Then 'j
-
-            Select Case j
-                Case 0
-                    dtpbonstartdate.Value = CDate("Jan-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonstartdate.Value = CDate("Jun-" & dd & "-" & yyyy)
-                Case 2
-                    dtpbonstartdate.Value = CDate("Jul-" & dd & "-" & yyyy)
-            End Select
-
-            j += 1
-
-            If j >= 3 Then
-                j = 0
-            End If
-
-        ElseIf e_asc = 65 Or e_asc = 97 Then 'a
-
-            Select Case a
-                Case 0
-                    dtpbonstartdate.Value = CDate("Apr-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonstartdate.Value = CDate("Aug-" & dd & "-" & yyyy)
-            End Select
-
-            a += 1
-
-            If a >= 2 Then
-                a = 0
-            End If
-
-        ElseIf e_asc = 77 Or e_asc = 109 Then 'm
-            Select Case m
-                Case 0
-                    dtpbonstartdate.Value = CDate("Mar-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonstartdate.Value = CDate("May-" & dd & "-" & yyyy)
-            End Select
-
-            m += 1
-
-            If m >= 2 Then
-                m = 0
-            End If
-
-        ElseIf e_asc = 83 Or e_asc = 115 Then 's
-            dtpbonstartdate.Value = CDate("Sep-" & dd & "-" & yyyy)
-        ElseIf e_asc = 78 Or e_asc = 110 Then 'n
-            dtpbonstartdate.Value = CDate("Nov-" & dd & "-" & yyyy)
-        ElseIf e_asc = 68 Or e_asc = 100 Then 'd
-            dtpbonstartdate.Value = CDate("Dec-" & dd & "-" & yyyy)
-        ElseIf e_asc = 79 Or e_asc = 111 Then 'o
-            dtpbonstartdate.Value = CDate("Oct-" & dd & "-" & yyyy)
-        Else
-            dtpbonstartdate.Value = CDate(MM & "-" & dd & "-" & yyyy)
-        End If
-    End Sub
-
-    Private Sub dtpbonstartdate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonstartdate.ValueChanged
-
-        If DateDiff(DateInterval.Day, CDate(dtpbonstartdate.Value), CDate(dtpbonenddate.Value)) < 0 Or IsBonusOneTimeFreq Then
-            dtpbonenddate.Value = dtpbonstartdate.Value
-        End If
-
-    End Sub
-
-    Dim dtpbonstartdateval As Object = Nothing
-
-    Private Sub dtpbonstartdate_TextChanged(sender As Object, e As EventArgs) Handles dtpbonstartdate.TextChanged
-        dtpbonstartdateval = dtpbonstartdate.Value
-    End Sub
-
-    Private Sub dtpbonstartdate_GotFocus(sender As Object, e As EventArgs) Handles dtpbonstartdate.GotFocus
-
-        If dgvempbon.RowCount = 1 Then
-        Else
-            dgvempbon.Item("bon_Start", dgvbonRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub dtpbonstartdate_Leave(sender As Object, e As EventArgs) Handles dtpbonstartdate.Leave
-
-        Dim thegetval = If(dtpbonstartdateval = Nothing, Trim(dtpbonstartdate.Value), Trim(dtpbonstartdateval))
-
-        If dgvempbon.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempbon.Rows.Add()
-                dgvbonRowindx = dgvempbon.RowCount - 2
-            End If
-        Else
-            If dgvempbon.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempbon.Rows.Add()
-                    dgvbonRowindx = dgvempbon.RowCount - 2
-                End If
-            Else
-                dgvbonRowindx = dgvempbon.CurrentRow.Index
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempbon.Item("bon_Start", dgvbonRowindx).Value = Format(CDate(thegetval), machineShortDateFormat)
-
-            dtpbonstartdate.Value = Format(CDate(thegetval), machineShortDateFormat)
-
-        End If
-
-        With dgvempbon.Rows(dgvbonRowindx)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                If thegetval <> bon_prevval(3) Then
-                    listofEditRowBon.Add(.Cells("bon_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub dtpbonenddate_KeyPress(sender As Object, e As KeyPressEventArgs) Handles dtpbonenddate.KeyPress
-        Dim e_asc As String = Asc(e.KeyChar)
-
-        Static j As SByte = 0
-        Static a As SByte = 0
-        Static m As SByte = 0
-
-        Dim MM = Format(CDate(dtpbonenddate.Value), "MMM")
-        Dim dd = CDate(dtpbonenddate.Value).Day
-        dd = If(dd.ToString.Length = 1, "0" & dd, dd)
-        Dim yyyy = CDate(dtpbonenddate.Value).Year
-
-        If e_asc = 74 Or e_asc = 106 Then 'j
-
-            Select Case j
-                Case 0
-                    dtpbonenddate.Value = CDate("Jan-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonenddate.Value = CDate("Jun-" & dd & "-" & yyyy)
-                Case 2
-                    dtpbonenddate.Value = CDate("Jul-" & dd & "-" & yyyy)
-            End Select
-
-            j += 1
-
-            If j >= 3 Then
-                j = 0
-            End If
-
-        ElseIf e_asc = 65 Or e_asc = 97 Then 'a
-
-            Select Case a
-                Case 0
-                    dtpbonenddate.Value = CDate("Apr-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonenddate.Value = CDate("Aug-" & dd & "-" & yyyy)
-            End Select
-
-            a += 1
-
-            If a >= 2 Then
-                a = 0
-            End If
-
-        ElseIf e_asc = 77 Or e_asc = 109 Then 'm
-            Select Case m
-                Case 0
-                    dtpbonenddate.Value = CDate("Mar-" & dd & "-" & yyyy)
-                Case 1
-                    dtpbonenddate.Value = CDate("May-" & dd & "-" & yyyy)
-            End Select
-
-            m += 1
-
-            If m >= 2 Then
-                m = 0
-            End If
-
-        ElseIf e_asc = 83 Or e_asc = 115 Then 's
-            dtpbonenddate.Value = CDate("Sep-" & dd & "-" & yyyy)
-        ElseIf e_asc = 78 Or e_asc = 110 Then 'n
-            dtpbonenddate.Value = CDate("Nov-" & dd & "-" & yyyy)
-        ElseIf e_asc = 68 Or e_asc = 100 Then 'd
-            dtpbonenddate.Value = CDate("Dec-" & dd & "-" & yyyy)
-        ElseIf e_asc = 79 Or e_asc = 111 Then 'o
-            dtpbonenddate.Value = CDate("Oct-" & dd & "-" & yyyy)
-        Else
-            dtpbonenddate.Value = CDate(MM & "-" & dd & "-" & yyyy)
-        End If
-    End Sub
-
-    Private Sub dtpbonenddate_ValueChanged(sender As Object, e As EventArgs) Handles dtpbonenddate.ValueChanged
-
-        If DateDiff(DateInterval.Day, CDate(dtpbonstartdate.Value), CDate(dtpbonenddate.Value)) < 0 Or IsBonusOneTimeFreq Then
-            dtpbonenddate.Value = dtpbonstartdate.Value
-        End If
-
-    End Sub
-
-    Dim dtpbonenddateval As Object = Nothing
-
-    Private Sub dtpbonenddate_TextChanged(sender As Object, e As EventArgs) Handles dtpbonenddate.TextChanged
-        dtpbonenddateval = dtpbonenddate.Value
-    End Sub
-
-    Private Sub dtpbonenddate_GotFocus(sender As Object, e As EventArgs) Handles dtpbonenddate.GotFocus
-
-        If dgvempbon.RowCount = 1 Then
-        Else
-            dgvempbon.Item("bon_End", dgvbonRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub dtpbonenddate_Leave(sender As Object, e As EventArgs) Handles dtpbonenddate.Leave
-
-        Dim thegetval = If(dtpbonenddateval = Nothing, Trim(dtpbonenddate.Value), Trim(dtpbonenddateval))
-
-        If dgvempbon.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempbon.Rows.Add()
-                dgvbonRowindx = dgvempbon.RowCount - 2
-            End If
-        Else
-            If dgvempbon.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempbon.Rows.Add()
-                    dgvbonRowindx = dgvempbon.RowCount - 2
-                End If
-            Else
-                dgvbonRowindx = dgvempbon.CurrentRow.Index
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempbon.Item("bon_End", dgvbonRowindx).Value = Format(CDate(thegetval), machineShortDateFormat)
-
-            dtpbonenddate.Value = Format(CDate(thegetval), machineShortDateFormat)
-
-        End If
-
-        With dgvempbon.Rows(dgvbonRowindx)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                If thegetval <> bon_prevval(4) Then
-                    listofEditRowBon.Add(.Cells("bon_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub txtbonamt_GotFocus(sender As Object, e As EventArgs) Handles txtbonamt.GotFocus
-
-        If dgvempbon.RowCount = 1 Then
-        Else
-            dgvempbon.Item("bon_Amount", dgvbonRowindx).Selected = 1
-        End If
-
-    End Sub
-
-    Private Sub txtbonamt_Leave(sender As Object, e As EventArgs) Handles txtbonamt.Leave
-
-        Dim thegetval = Trim(txtbonamt.Text)
-
-        If dgvempbon.RowCount = 1 Then
-            If thegetval <> "" Then
-                dgvempbon.Rows.Add()
-                dgvbonRowindx = dgvempbon.RowCount - 2
-            End If
-        Else
-            If dgvempbon.CurrentRow.IsNewRow Then
-                If thegetval <> "" Then
-                    dgvempbon.Rows.Add()
-                    dgvbonRowindx = dgvempbon.RowCount - 2
-                End If
-            Else
-                dgvbonRowindx = dgvempbon.CurrentRow.Index
-            End If
-        End If
-
-        If thegetval <> "" Then
-            dgvempbon.Item("bon_Amount", dgvbonRowindx).Value = thegetval
-
-            txtbonamt.Text = thegetval
-
-        End If
-
-        With dgvempbon.Rows(dgvbonRowindx)
-            If Val(.Cells("bon_RowID").Value) <> 0 Then
-                If thegetval <> bon_prevval(1) Then
-                    listofEditRowBon.Add(.Cells("bon_RowID").Value)
-                End If
-            Else
-            End If
-        End With
-
-    End Sub
-
-    Private Sub txtbonamt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtbonamt.KeyPress
-        Dim e_KAsc As String = Asc(e.KeyChar)
-
-        Static onedot As SByte = 0
-
-        If (e_KAsc >= 48 And e_KAsc <= 57) Or e_KAsc = 8 Or e_KAsc = 46 Then
-
-            If e_KAsc = 46 Then
-                onedot += 1
-                If onedot >= 2 Then
-                    If txtbonamt.Text.Contains(".") Then
-                        e.Handled = True
-                        onedot = 2
-                    Else
-                        e.Handled = False
-                        onedot = 0
-                    End If
-                Else
-                    If txtbonamt.Text.Contains(".") Then
-                        e.Handled = True
-                    Else
-                        e.Handled = False
-                    End If
-                End If
-            Else
-                e.Handled = False
-            End If
-        Else
-            e.Handled = True
-        End If
-
-    End Sub
-
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        With newProdBonus
-            .Show()
-            .BringToFront()
-            .TextBox1.Focus()
-        End With
-    End Sub
-
-    Private Sub cbobonfreq_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cbobonfreq.KeyPress, cbobontype.KeyPress
-        e.Handled = True
-    End Sub
-
-#End Region
+#End Region 'Bonus
 
 #Region "Attachment"
 
@@ -7657,13 +7253,8 @@ Public Class EmployeeForm
 
             End If
 
-            Using context As New PayrollContext
-
-                _branches = Await context.Branches.ToListAsync
-
-                BranchComboBox.DataSource = _branches
-
-            End Using
+            _branches = _branchRepository.GetAll
+            BranchComboBox.DataSource = _branches
 
             Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
 
@@ -7677,46 +7268,6 @@ Public Class EmployeeForm
 
         End If
 
-    End Sub
-
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs) Handles btnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDDiscip)
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub tsAudittrail_Click(sender As Object, e As EventArgs) Handles tsAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDEduc)
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub ToolStripButton21_Click(sender As Object, e As EventArgs) Handles ToolStripButton21.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDPrevEmp)
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub ToolStripButton19_Click(sender As Object, e As EventArgs) Handles ToolStripButton19.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDPromot)
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub ToolStripButton29_Click(sender As Object, e As EventArgs) Handles ToolStripButton29.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDBon)
-        showAuditTrail.BringToFront()
-    End Sub
-
-    Private Sub ToolStripButton34_Click(sender As Object, e As EventArgs) Handles ToolStripButton34.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDAttach)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub dgvempawar_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempawar.CellContentClick
@@ -7784,6 +7335,26 @@ Public Class EmployeeForm
         'e.Handled = TrapNumKey(Asc(e.KeyChar))
         e.Handled = New TrapDecimalKey(Asc(e.KeyChar), txtWorkDaysPerYear.Text).ResultTrap
 
+    End Sub
+
+    Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Employee")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityBonusToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityBonusToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Bonus")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityPromotionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPromotionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Promotion")
+        userActivity.ShowDialog()
+    End Sub
+
+    Private Sub UserActivityDisciplinaryActionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityDisciplinaryActionToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Disciplinary Action")
+        userActivity.ShowDialog()
     End Sub
 
     Private Sub rdbDirectDepo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbDirectDepo.CheckedChanged
@@ -7895,31 +7466,29 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub Gender_CheckedChanged(sender As Object, e As EventArgs) Handles rdMale.CheckedChanged,
+    Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged
-
-        Dim obj_sender = DirectCast(sender, RadioButton)
+        If Not sender.Checked Then Return
 
         Dim label_gender = ""
 
-        Dim gender As Gender
-
-        If obj_sender.Name = rdMale.Name Then
-            'And obj_sender.Checked Then
+        If sender.Name = rdMale.Name Then
 
             label_gender = "Paternity"
-            gender = Gender.Male
-        ElseIf obj_sender.Name = rdFMale.Name Then
-            'And obj_sender.Checked Then
+
+            LoadSalutation(Gender.Male)
+
+            Label148.Text = label_gender
+            Label149.Text = label_gender
+        ElseIf sender.Name = rdFMale.Name Then
 
             label_gender = "Maternity"
-            gender = Gender.Female
+
+            LoadSalutation(Gender.Female)
+
+            Label148.Text = label_gender
+            Label149.Text = label_gender
         End If
-
-        LoadSalutation(gender)
-
-        Label148.Text = label_gender
-        Label149.Text = label_gender
 
     End Sub
 
@@ -7986,11 +7555,30 @@ Public Class EmployeeForm
 
             cboSalut.Text = String.Empty
             cboSalut.Items.Clear()
+            cboSalut.Items.Add(String.Empty)
             cboSalut.Items.AddRange(salutations)
 
+            Dim currentRow = dgvEmp.CurrentRow
+            If currentRow IsNot Nothing Then
+                With currentRow
+                    If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+
+                        cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                    End If
+
+                    If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
+                        cboSalut.SelectedIndex = 0
+                        cboSalut.Text = String.Empty
+                    End If
+                End With
+            End If
+
             Colmn2.Items.Clear()
+            Colmn2.Items.Add(String.Empty)
             Colmn2.Items.AddRange(salutations)
+
         End Using
+
     End Sub
 
     Private Enum Gender

@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Repository.ListOfValueRepository
 
 Namespace Global.AccuPay.Entity
 
@@ -126,7 +127,6 @@ Namespace Global.AccuPay.Entity
         Public Property DivisionUniqueID As Integer?
 
         Public Property MinimumWageAmount As Decimal?
-
 
         Public ReadOnly Property IsRoot As Boolean
             Get

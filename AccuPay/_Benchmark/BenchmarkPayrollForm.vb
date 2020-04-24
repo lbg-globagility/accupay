@@ -4,6 +4,7 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.ModelData
@@ -47,7 +48,7 @@ Public Class BenchmarkPayrollForm
 
     Private _overtimes As List(Of OvertimeInput)
 
-    Private _ecola As Allowance
+    Private _ecola As Data.Entities.Allowance
 
     Private _pagibigLoan As LoanSchedule
 

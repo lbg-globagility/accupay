@@ -2,6 +2,8 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
@@ -22,10 +24,13 @@ Public Class PayrollTools
     Public Const PayFrequencySemiMonthlyId As Integer = 1
 
     Public Const PayFrequencyWeeklyId As Integer = 4
-    Private Const fourDays As Integer = 4
+
+    Public Shared ReadOnly MinimumMicrosoftDate As New Date(1753, 1, 1)
+
+    Private Const PotentialLastWorkDay As Integer = 7
 
     Public Shared Function GetEmployeeMonthlyRate(
-                            employee As Employee,
+                            employee As IEmployee,
                             salary As Salary,
                             Optional isActual As Boolean = False) As Decimal
 
@@ -88,10 +93,9 @@ Public Class PayrollTools
     Public Shared Function HasWorkedLastWorkingDay(
                             currentDate As Date,
                             currentTimeEntries As ICollection(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
-        Dim threeDaysPrior = fourDays * -1
-        Dim lastPotentialEntry = currentDate.Date.AddDays(threeDaysPrior)
+        Dim lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay)
 
         Dim lastTimeEntries = currentTimeEntries.
             Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= currentDate.Date).
@@ -115,8 +119,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(lastTimeEntry.Date)
-            If payRate.IsHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(lastTimeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(lastTimeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If
@@ -134,12 +139,12 @@ Public Class PayrollTools
                             legalHolidayDate As Date,
                             endOfCutOff As Date,
                             currentTimeEntries As IList(Of TimeEntry),
-                            payratesCalendar As PayratesCalendar) As Boolean
+                            calendarCollection As CalendarCollection) As Boolean
 
-        Dim thirdDateAfterCurrDate = legalHolidayDate.Date.AddDays(fourDays)
+        Dim lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay)
 
         Dim postTimeEntries = currentTimeEntries.
-            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= thirdDateAfterCurrDate).
+            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= lastPotentialEntry).
             OrderBy(Function(t) t.Date).
             ToList()
 
@@ -159,8 +164,9 @@ Public Class PayrollTools
                 Continue For
             End If
 
-            Dim payRate = payratesCalendar.Find(timeEntry.Date)
-            If payRate.IsRegularHoliday Then
+            Dim payrateCalendar = calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
+            If payrate.IsHoliday Then
                 If totalDayPay > 0 Then
                     Return True
                 End If
@@ -222,52 +228,41 @@ Public Class PayrollTools
                             Optional allowanceFrequency As String = Allowance.FREQUENCY_SEMI_MONTHLY,
                             Optional amount As Decimal = 0,
                             Optional effectiveEndDateShouldBeNull As Boolean = False) _
-        As Task(Of Allowance)
+        As Task(Of Entities.Allowance)
 
         Dim allowanceRepository As New AllowanceRepository
-        Dim productRepository As New ProductRepository
+        Dim productRepository As New Data.Repositories.ProductRepository
 
-        Using context = New PayrollContext()
-            Dim ecolaAllowance As Allowance = Await GetEmployeeEcola(employeeId,
-                                                  payDateFrom,
-                                                  payDateTo,
-                                                  allowanceRepository,
-                                                  context)
+        Dim ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
 
-            If ecolaAllowance Is Nothing Then
+        If ecolaAllowance Is Nothing Then
 
-                Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA))?.RowID
+            Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA, z_OrganizationID, z_User))?.RowID
 
-                Dim effectiveEndDate As Date?
+            Dim effectiveEndDate As Date?
 
-                If effectiveEndDateShouldBeNull Then
+            If effectiveEndDateShouldBeNull Then
 
-                    effectiveEndDate = Nothing
-                Else
-                    effectiveEndDate = Nothing
+                effectiveEndDate = Nothing
+            Else
+                effectiveEndDate = Nothing
 
-                End If
-
-                ecolaAllowance = New Allowance
-                ecolaAllowance.EmployeeID = employeeId
-                ecolaAllowance.ProductID = ecolaProductId
-                ecolaAllowance.AllowanceFrequency = allowanceFrequency
-                ecolaAllowance.EffectiveStartDate = payDateFrom
-                ecolaAllowance.EffectiveEndDate = effectiveEndDate
-                ecolaAllowance.Amount = amount
-
-                Await allowanceRepository.SaveAsync(ecolaAllowance, context)
-                Await context.SaveChangesAsync()
-
-                ecolaAllowance = Await GetEmployeeEcola(employeeId,
-                                                  payDateFrom,
-                                                  payDateTo,
-                                                  allowanceRepository,
-                                                  context)
             End If
 
-            Return ecolaAllowance
-        End Using
+            ecolaAllowance = New Data.Entities.Allowance
+            ecolaAllowance.EmployeeID = employeeId
+            ecolaAllowance.ProductID = ecolaProductId
+            ecolaAllowance.AllowanceFrequency = allowanceFrequency
+            ecolaAllowance.EffectiveStartDate = payDateFrom
+            ecolaAllowance.EffectiveEndDate = effectiveEndDate
+            ecolaAllowance.Amount = amount
+
+            Await allowanceRepository.SaveAsync(organizationID:=z_OrganizationID, userID:=z_User, allowance:=ecolaAllowance)
+
+            ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
+        End If
+
+        Return ecolaAllowance
 
     End Function
 
@@ -295,14 +290,6 @@ Public Class PayrollTools
 
         Return firstPayPeriodOfTheYear?.PayFromDate
 
-    End Function
-
-    Private Shared Async Function GetEmployeeEcola(employeeId As Integer, payDateFrom As Date, payDateTo As Date, allowanceRepository As AllowanceRepository, context As PayrollContext) As Task(Of Allowance)
-        Return Await allowanceRepository.
-                                    GetAllowancesWithPayPeriodBaseQuery(context, payDateFrom, payDateTo).
-                                    Where(Function(a) a.EmployeeID.Value = employeeId).
-                                    Where(Function(a) a.Product.PartNo.ToLower() = ProductConstant.ECOLA).
-                                    FirstOrDefaultAsync
     End Function
 
     Public Shared Sub UpdateLoanSchedule(paypRowID As Integer)
@@ -453,17 +440,37 @@ Public Class PayrollTools
                                                     p.Date <= payDateTo).
                                 ToList()
         If calculationBasis = PayRateCalculationBasis.Branch Then
-            Dim branches = context.Branches.ToList()
+            Dim branchRepository As New BranchRepository()
+            Dim branches = branchRepository.GetAll()
 
             Dim calendarDays = context.CalendarDays.
                          Include(Function(t) t.DayType).
                          Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
                          ToList()
 
-            Return New CalendarCollection(payrates, branches, calendarDays)
+            Return New CalendarCollection(payrates,
+                                          DirectCast(branches, ICollection(Of Data.Entities.Branch)),
+                                          calendarDays)
         Else
             Return New CalendarCollection(payrates)
         End If
+    End Function
+
+    Public Shared Function GetPreviousCutoffDateForCheckingLastWorkingDay(currentCutOffStart As Date) As Date
+        'Used to be 3 days since the starting cut off can be a Monday
+        'so to check the last working day you have to check up to last Friday
+        'and that is 3 days since starting cut off
+
+        'But sometimes, last Friday can be a holiday.
+        'Or more specifically, the last days of the previous cut off are holidays
+        'for example January 1, 2020. December 30 & 31 are holidays, December 28 & 29
+        'are weekends. So last working days is December 27, 5 days since the starting cutoff
+        'so the original 3 days value will not be enough.
+
+        'I chose 7 days but this can be modified if there are scenarios that needs
+        'more than 7 days to check the last working day.
+
+        Return currentCutOffStart.AddDays(-PotentialLastWorkDay)
     End Function
 
 End Class

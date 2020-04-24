@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.ModelData
@@ -408,6 +409,8 @@ Namespace Global.AccuPay.Repository
                                                     Where(Function(p) p.IsSemiMonthly).
                                                     Where(Function(p) p.IsBetween(leave.StartDate)).
                                                     FirstOrDefault
+
+            If currentPayPeriod Is Nothing Then Return New List(Of Leave)
 
             Dim firstDayOfTheYear As Date? = Await PayrollTools.GetFirstDayOfTheYear(context, currentPayPeriod)
 

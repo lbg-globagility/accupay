@@ -20,7 +20,7 @@ Namespace Benchmark
 
         Private ReadOnly _overtimeRate As OvertimeRate
 
-        Private ReadOnly _ecola As Allowance
+        Private ReadOnly _ecola As Data.Entities.Allowance
 
         Private ReadOnly _actualSalaryPolicy As ActualTimeEntryPolicy
 
@@ -47,7 +47,7 @@ Namespace Benchmark
                 selectedDeductions As List(Of AdjustmentInput),
                 selectedIncomes As List(Of AdjustmentInput),
                 overtimes As List(Of OvertimeInput),
-                ecola As Allowance)
+                ecola As Data.Entities.Allowance)
 
             _employee = employee
             _payrollResources = payrollResources
@@ -93,7 +93,7 @@ Namespace Benchmark
                                     selectedDeductions As List(Of AdjustmentInput),
                                     selectedIncomes As List(Of AdjustmentInput),
                                     overtimes As List(Of OvertimeInput),
-                                    ecola As Allowance) As DoProcessOutput
+                                    ecola As Data.Entities.Allowance) As DoProcessOutput
 
             Dim generator As New BenchmarkPayrollGeneration(
                                     employee,

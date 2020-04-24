@@ -124,7 +124,7 @@ Public Class OvertimeHoursTest
         Dim today = Date.Parse("2017-01-01")
         Dim currentShift = GetShift(shiftStartTime, shiftEndTime, today)
 
-        Dim overtime = New Overtime With {
+        Dim overtime = New Data.Entities.Overtime With {
             .OTStartDate = today,
             .OTStartTime = TimeSpan.Parse(otStartTime),
             .OTEndTime = TimeSpan.Parse(otEndTime)

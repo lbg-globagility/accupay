@@ -1,0 +1,12 @@
+ALTER TABLE `employeetimeentrydetails`
+	DROP FOREIGN KEY `employeetimeentrydetails_ibfk_1`,
+	DROP FOREIGN KEY `employeetimeentrydetails_ibfk_2`,
+	DROP FOREIGN KEY `employeetimeentrydetails_ibfk_3`,
+	DROP FOREIGN KEY `FK_employeetimeentrydetails_employee`;
+ALTER TABLE `employeetimeentrydetails`
+	ADD COLUMN `BranchID` INT NULL DEFAULT NULL AFTER `TimeentrylogsImportID`,
+	ADD CONSTRAINT `FK_employeetimeentrydetails_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentrydetails_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentrydetails_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_employeetimeentrydetails_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
+	ADD CONSTRAINT `FK_employeetimeentrydetails_branch_BranchID` FOREIGN KEY (`BranchID`) REFERENCES `branch` (`RowID`);

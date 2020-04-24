@@ -8,16 +8,6 @@ Namespace Global.AccuPay.Repository
 
     Public Class EmployeeRepository
 
-        Public Async Function GetAllAsync() As Task(Of List(Of Employee))
-
-            Using context = New PayrollContext()
-
-                Return Await GetAllEmployeeBaseQuery(context).ToListAsync
-
-            End Using
-
-        End Function
-
         Public Async Function GetAllActiveAsync() As Task(Of List(Of Employee))
 
             Using context = New PayrollContext()

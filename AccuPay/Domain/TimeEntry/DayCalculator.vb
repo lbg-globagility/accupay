@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -7,7 +8,6 @@ Imports PayrollSys
 Public Class DayCalculator
 
     Private Const DEFAULT_WORK_HOURS As Integer = 8
-    Private ReadOnly _payrateCalendar As PayratesCalendar
     Private ReadOnly _settings As ListOfValueCollection
     Private ReadOnly _organization As Organization
     Private ReadOnly _employee As Employee
@@ -19,8 +19,7 @@ Public Class DayCalculator
     Private _overtimeSkipCountRounding As Boolean = False
     Private _overtimeSkipCount As Decimal = 0
 
-    Public Sub New(organization As Organization, settings As ListOfValueCollection, payrateCalendar As PayratesCalendar, employee As Employee)
-        _payrateCalendar = payrateCalendar
+    Public Sub New(organization As Organization, settings As ListOfValueCollection, employee As Employee)
         _settings = settings
         _organization = organization
         _employee = employee
@@ -44,11 +43,14 @@ Public Class DayCalculator
                             employeeShift As ShiftSchedule,
                             shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
-                            overtimes As IList(Of Overtime),
+                            overtimes As IList(Of Entities.Overtime),
                             officialBusiness As OfficialBusiness,
                             leaves As IList(Of Leave),
                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                            breakTimeBrackets As IList(Of BreakTimeBracket)) As TimeEntry
+                            breakTimeBrackets As IList(Of BreakTimeBracket),
+                            payrate As IPayrate,
+                            calendarCollection As CalendarCollection,
+                            branchId As Integer?) As TimeEntry
 
         Dim timeEntry = oldTimeEntries.Where(Function(t) t.Date = currentDate).SingleOrDefault()
 
@@ -74,6 +76,7 @@ Public Class DayCalculator
 
         Dim currentShift = GetCurrentShift(currentDate, employeeShift, shiftSched, _policy.UseShiftSchedule, _policy.RespectDefaultRestDay, _employee.DayOfRest)
 
+        timeEntry.BranchID = branchId
         timeEntry.IsRestDay = currentShift.IsRestDay
         timeEntry.HasShift = currentShift.HasShift
 
@@ -82,10 +85,9 @@ Public Class DayCalculator
             timeEntry.ShiftHours = currentShift.ShiftHours
         End If
 
-        Dim hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries, _payrateCalendar)
-        Dim payrate = _payrateCalendar.Find(currentDate)
+        Dim hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries, calendarCollection)
 
-        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay)
+        ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, oldTimeEntries, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate)
         ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay)
 
         Return timeEntry
@@ -115,12 +117,13 @@ Public Class DayCalculator
                              timeLog As TimeLog,
                              officialBusiness As OfficialBusiness,
                              leaves As IList(Of Leave),
-                             overtimes As IList(Of Overtime),
+                             overtimes As IList(Of Entities.Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
                              timeAttendanceLogs As IList(Of TimeAttendanceLog),
                              breakTimeBrackets As IList(Of BreakTimeBracket),
                              currentShift As CurrentShift,
-                             hasWorkedLastDay As Boolean)
+                             hasWorkedLastDay As Boolean,
+                             payrate As IPayrate)
         Dim previousDay = currentDate.AddDays(-1)
         Dim calculator = New TimeEntryCalculator()
 
@@ -128,7 +131,6 @@ Public Class DayCalculator
 
         Dim hasTimeLog = (timeLog?.TimeIn IsNot Nothing And timeLog?.TimeOut IsNot Nothing) Or
             officialBusiness IsNot Nothing
-        Dim payrate = _payrateCalendar.Find(currentDate)
 
         Dim logPeriod As TimePeriod = Nothing
         If hasTimeLog Then
@@ -229,7 +231,7 @@ Public Class DayCalculator
         End If
 
         ComputeAbsentHours(timeEntry, payrate, hasWorkedLastDay, currentShift, leaves)
-        ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry)
+        ComputeLeaveHours(hasTimeLog, leaves, currentShift, timeEntry, payrate)
     End Sub
 
     Private Sub OverrideLateAndUndertimeHoursComputations(
@@ -445,7 +447,7 @@ Public Class DayCalculator
     '        Return 0
     'End Function
 
-    Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
+    Private Function OvertimeSchemeSkipCountHours(timeEntry As TimeEntry, overtimes As IList(Of Entities.Overtime), currentShift As CurrentShift, calculator As TimeEntryCalculator, logPeriod As TimePeriod, nightBreaktime As TimePeriod) As TimeEntry
         If _overtimeSkipCountRounding Then
             Dim overtimeMinutes = overtimes.Sum(
             Function(o) calculator.ComputeOvertimeMinutes(logPeriod, o, currentShift, nightBreaktime))
@@ -631,7 +633,7 @@ Public Class DayCalculator
                                       logPeriod As TimePeriod,
                                       currentDate As Date,
                                       previousDay As Date,
-                                      overtimes As IList(Of Overtime),
+                                      overtimes As IList(Of Entities.Overtime),
                                       nightBreaktime As TimePeriod)
         Dim calculator = New TimeEntryCalculator()
 
@@ -760,7 +762,13 @@ Public Class DayCalculator
     ''' <param name="leaves">The list of leave for this day.</param>
     ''' <param name="currentShift">The shift for this day.</param>
     ''' <param name="timeEntry">The timeEntry object that will be updated.</param>
-    Private Sub ComputeLeaveHours(hasTimeLog As Boolean, leaves As IList(Of Leave), currentShift As CurrentShift, timeEntry As TimeEntry)
+    ''' <param name="payrate">Used to check if current day is a holiday.</param>
+    Private Sub ComputeLeaveHours(hasTimeLog As Boolean,
+                                  leaves As IList(Of Leave),
+                                  currentShift As CurrentShift,
+                                  timeEntry As TimeEntry,
+                                  payrate As IPayrate)
+
         Dim calculator = New TimeEntryCalculator()
 
         If Not hasTimeLog And leaves.Any() Then
@@ -781,10 +789,7 @@ Public Class DayCalculator
                                                 timeEntry.LateHours +
                                                 timeEntry.UndertimeHours)
 
-            Dim payRate = _payrateCalendar.Find(currentShift.Date)
-
-            If missingHours > 0 _
-                And Not payRate.IsHoliday Then
+            If missingHours > 0 And Not payrate.IsHoliday Then
 
                 timeEntry.UndertimeHours += missingHours
             End If

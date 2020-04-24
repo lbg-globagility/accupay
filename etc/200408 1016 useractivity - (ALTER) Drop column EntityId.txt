@@ -1,0 +1,2 @@
+ALTER TABLE `useractivity`
+	DROP COLUMN `EntityId`;

@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 
@@ -10,7 +10,9 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository()
+
+    Private overtimeRepository As New OvertimeRepository()
 
     Public IsSaved As Boolean
 
@@ -83,10 +85,10 @@ Public Class ImportOvertimeForm
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .Type = record.Type,
-                .OTStartDate = record.EffectiveStartDate.Value,
-                .OTEndDate = record.EffectiveEndDate.Value,
-                .OTStartTime = record.EffectiveStartTime,
-                .OTEndTime = record.EffectiveEndTime,
+                .OTStartDate = record.StartDate.Value,
+                .OTEndDate = record.EndDate.Value,
+                .OTStartTime = record.StartTime,
+                .OTEndTime = record.EndTime,
                 .Status = Overtime.StatusApproved
             }
 
@@ -110,14 +112,21 @@ Public Class ImportOvertimeForm
 
         'Start Date and End Date is not nullable for Overtime so this validations
         'will not be checked by the overtime Class
-        If record.EffectiveStartDate Is Nothing Then
+        If record.StartDate Is Nothing Then
 
             record.ErrorMessage = "Effective Start Date cannot be empty."
             rejectedRecords.Add(record)
             Return False
         End If
 
-        If record.EffectiveEndDate Is Nothing Then
+        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.EndDate Is Nothing Then
 
             record.ErrorMessage = "Effective End Date cannot be empty."
             rejectedRecords.Add(record)
@@ -172,13 +181,20 @@ Public Class ImportOvertimeForm
         Dim messageTitle = "Import Overtimes"
 
         Try
-            Using context As New PayrollContext
-                For Each overtime In _overtimes
-                    context.Overtimes.Add(overtime)
-                Next
+            Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
 
-                Await context.SaveChangesAsync()
-            End Using
+            Dim importlist = New List(Of UserActivityItem)
+
+            For Each overtime In _overtimes
+                importlist.Add(New UserActivityItem() With
+                    {
+                    .Description = $"Imported a new Overtime.",
+                    .EntityId = CInt(overtime.RowID)
+                    })
+            Next
+
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
             Me.IsSaved = True
 

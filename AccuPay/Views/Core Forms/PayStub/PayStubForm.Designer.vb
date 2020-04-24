@@ -283,6 +283,7 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -3036,7 +3037,7 @@ Partial Class PayStubForm
         '
         'ManagePayrollToolStripDropDownButton
         '
-        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
         Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
@@ -3096,16 +3097,23 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
+        '
+        'CostCenterReportToolStripMenuItem
+        '
+        Me.CostCenterReportToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Document
+        Me.CostCenterReportToolStripMenuItem.Name = "CostCenterReportToolStripMenuItem"
+        Me.CostCenterReportToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.CostCenterReportToolStripMenuItem.Text = "Cost Center Report"
         '
         'DeletePayrollToolStripMenuItem
         '
@@ -3803,4 +3811,5 @@ Partial Class PayStubForm
     Friend WithEvents ManagePayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CostCenterReportToolStripMenuItem As ToolStripMenuItem
 End Class

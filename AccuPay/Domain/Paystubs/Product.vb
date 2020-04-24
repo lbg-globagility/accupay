@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
+Imports AccuPay.Data.Helpers
 
 Namespace Global.AccuPay.Entity
 

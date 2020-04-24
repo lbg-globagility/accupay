@@ -3,11 +3,12 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Extensions.Logging.Console
 Imports PayrollSys
 
 Public Class TimeEntryGenerator
@@ -20,8 +21,9 @@ Public Class TimeEntryGenerator
     Private _timeEntries As IList(Of TimeEntry)
     Private _actualTimeEntries As IList(Of ActualTimeEntry)
     Private _timeLogs As IList(Of TimeLog)
-    Private _overtimes As IList(Of Overtime)
+    Private _overtimes As IList(Of Entities.Overtime)
     Private _leaves As IList(Of Leave)
+    Private _overtimeRepository As OvertimeRepository
     Private _officialBusinesses As IList(Of OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
@@ -35,7 +37,6 @@ Public Class TimeEntryGenerator
     Private _finished As Integer
 
     Private _errors As Integer
-    Private _employees As IList(Of Employee)
 
     Public ReadOnly Property ErrorCount As Integer
         Get
@@ -56,6 +57,8 @@ Public Class TimeEntryGenerator
     Public Sub New(cutoffStart As Date, cutoffEnd As Date)
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
+
+        _overtimeRepository = New OvertimeRepository()
     End Sub
 
     Public Sub Start()
@@ -75,7 +78,6 @@ Public Class TimeEntryGenerator
                 Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
                 Include(Function(e) e.Position).
                 ToList()
-            _employees = employees
 
             agencies = context.Agencies.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -92,7 +94,7 @@ Public Class TimeEntryGenerator
                 Select(Function(g) g.FirstOrDefault()).
                 ToList()
 
-            Dim previousCutoff = _cutoffStart.AddDays(-_threeDays)
+            Dim previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart)
             Dim endOfCutOff As Date = _cutoffEnd
             If timeEntryPolicy.PostLegalHolidayCheck Then endOfCutOff = _cutoffEnd.AddDays(_threeDays)
             _timeEntries = context.TimeEntries.
@@ -116,11 +118,10 @@ Public Class TimeEntryGenerator
                 Where(Function(l) l.Status = Leave.StatusApproved).
                 ToList()
 
-            _overtimes = context.Overtimes.
-                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
-                Where(Function(o) _cutoffStart <= o.OTStartDate AndAlso o.OTStartDate <= _cutoffEnd).
-                Where(Function(o) o.Status = Overtime.StatusApproved).
-                ToList()
+            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID,
+                                                                       startDate:=_cutoffStart,
+                                                                       endDate:=_cutoffEnd).
+                                             ToList()
 
             _officialBusinesses = context.OfficialBusinesses.
                 Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
@@ -210,7 +211,7 @@ Public Class TimeEntryGenerator
             Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim overtimesInCutoff As IList(Of Overtime) = _overtimes.
+        Dim overtimesInCutoff As IList(Of Entities.Overtime) = _overtimes.
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 
@@ -239,8 +240,6 @@ Public Class TimeEntryGenerator
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
 
-        Dim payrateCalendar = calendarCollection.GetCalendar(employee)
-
         If employee.IsActive = False Then
             Dim currentTimeEntries = previousTimeEntries.
                 Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd)
@@ -254,9 +253,10 @@ Public Class TimeEntryGenerator
             Return
         End If
 
-        Dim dayCalculator = New DayCalculator(organization, settings, payrateCalendar, employee)
+        Dim dayCalculator = New DayCalculator(organization, settings, employee)
 
         Dim timeEntries = New List(Of TimeEntry)
+        Dim regularHolidaysList = New List(Of Date) 'Used for postlegalholidaycheck
         For Each currentDate In Calendar.EachDay(_cutoffStart, _cutoffEnd)
 
             Try
@@ -267,6 +267,11 @@ Public Class TimeEntryGenerator
                 Dim officialBusiness = officialBusinesses.FirstOrDefault(Function(o) o.StartDate.Value = currentDate)
                 Dim dutyShiftSched = dutyShiftSchedules.FirstOrDefault(Function(es) es.DateSched = currentDate)
                 Dim currentTimeAttendanceLogs = timeAttendanceLogs.Where(Function(l) l.WorkDay = currentDate).ToList()
+
+                Dim branchId = If(timelog?.BranchID, employee?.BranchID)
+                Dim payrate = calendarCollection.
+                                        GetCalendar(branchId).
+                                        Find(currentDate)
 
                 Dim timeEntry = dayCalculator.Compute(
                     currentDate,
@@ -279,7 +284,14 @@ Public Class TimeEntryGenerator
                     officialBusiness,
                     leaves,
                     currentTimeAttendanceLogs,
-                    breakTimeBrackets)
+                    breakTimeBrackets,
+                    payrate,
+                    calendarCollection,
+                    branchId)
+
+                If payrate.IsRegularHoliday Then
+                    regularHolidaysList.Add(currentDate)
+                End If
 
                 timeEntries.Add(timeEntry)
             Catch ex As Exception
@@ -288,7 +300,7 @@ Public Class TimeEntryGenerator
 
         Next
 
-        PostLegalHolidayCheck(timeEntries, payrateCalendar, timeEntryPolicy)
+        PostLegalHolidayCheck(employee, timeEntries, timeEntryPolicy, regularHolidaysList, calendarCollection)
         timeEntries.ForEach(Sub(t)
                                 t.RegularHolidayPay += t.BasicRegularHolidayPay
                                 t.TotalDayPay += t.BasicRegularHolidayPay
@@ -312,29 +324,20 @@ Public Class TimeEntryGenerator
         End Using
     End Sub
 
-    Private Sub PostLegalHolidayCheck(timeEntries As List(Of TimeEntry), payrateCalendar As PayratesCalendar, timeEntryPolicy As TimeEntryPolicy)
+    Private Sub PostLegalHolidayCheck(employee As Employee,
+                                      timeEntries As List(Of TimeEntry),
+                                      timeEntryPolicy As TimeEntryPolicy,
+                                      regularHolidaysList As List(Of Date),
+                                      calendarCollection As CalendarCollection)
         If timeEntryPolicy.PostLegalHolidayCheck Then
-            Dim employeeId = timeEntries.FirstOrDefault?.EmployeeID
-            Dim employees = _employees.
-                Where(Function(e) e.CalcHoliday).
-                Where(Function(e) Equals(employeeId, e.RowID)).
-                ToList()
 
-            Dim isEntitledForLegalHolidayPay = employees.Any()
-            If Not isEntitledForLegalHolidayPay Then Return
+            If Not employee.CalcHoliday Then Return
 
-            Dim legalHolidays = payrateCalendar.LegalHolidays
+            If regularHolidaysList.Any() Then
 
-            If legalHolidays.Any() Then
-                Dim legalHolidayDescDates = legalHolidays.
-                    Select(Function(p) p.Date).
-                    OrderByDescending(Function(d) d).
-                    ToList()
-
-                Dim employee = employees.FirstOrDefault
-                For Each holidayDate In legalHolidayDescDates
+                For Each holidayDate In regularHolidaysList
                     Dim presentAfterLegalHoliday = PayrollTools.HasWorkAfterLegalHoliday(
-                        holidayDate, _cutoffEnd, timeEntries, payrateCalendar)
+                                                    holidayDate, _cutoffEnd, timeEntries, calendarCollection)
 
                     If Not presentAfterLegalHoliday Then
                         Dim timeEntry = timeEntries.Where(Function(t) t.Date = holidayDate).FirstOrDefault
@@ -380,73 +383,5 @@ Public Class TimeEntryGenerator
             End If
         Next
     End Sub
-
-    Private Function GetAgencyFees(context As PayrollContext, employee As Employee) As IList(Of AgencyFee)
-        Return context.AgencyFees.
-            Where(Function(a) Nullable.Equals(a.EmployeeID, employee.RowID)).
-            Where(Function(a) _cutoffStart <= a.Date And a.Date <= _cutoffEnd).
-            ToList()
-    End Function
-
-    Private Function GetSalary(context As PayrollContext, employee As Employee) As Salary
-        Return context.Salaries.
-            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
-            Where(Function(s) s.EffectiveFrom <= _cutoffStart And _cutoffStart <= If(s.EffectiveTo, _cutoffStart)).
-            FirstOrDefault()
-    End Function
-
-    Private Function GetTimeEntries(context As PayrollContext, employee As Employee) As IList(Of TimeEntry)
-        Dim previousCutoff = _cutoffStart.AddDays(-3)
-
-        Return context.TimeEntries.
-            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
-            Where(Function(t) previousCutoff <= t.Date And t.Date <= _cutoffEnd).
-            ToList()
-    End Function
-
-    Private Function GetActualTimeEntries(context As PayrollContext, employee As Employee) As IList(Of ActualTimeEntry)
-        Return context.ActualTimeEntries.
-            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
-            Where(Function(t) _cutoffStart <= t.Date And t.Date <= _cutoffEnd).
-            ToList()
-    End Function
-
-    Private Function GetTimeLogs(context As PayrollContext, employee As Employee) As IList(Of TimeLog)
-        Return context.TimeLogs.
-            Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
-            Where(Function(t) _cutoffStart <= t.LogDate And t.LogDate <= _cutoffEnd).
-            ToList()
-    End Function
-
-    Private Function GetShifts(context As PayrollContext, employee As Employee) As IList(Of ShiftSchedule)
-        Return context.ShiftSchedules.
-            Include(Function(s) s.Shift).
-            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
-            Where(Function(s) s.EffectiveFrom <= _cutoffEnd And _cutoffStart <= s.EffectiveTo).
-            ToList()
-    End Function
-
-    Private Function GetOvertimes(context As PayrollContext, employee As Employee) As IList(Of Overtime)
-        Return context.Overtimes.
-            Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
-            Where(Function(o) o.OTStartDate <= _cutoffEnd And _cutoffStart <= o.OTEndDate).
-            ToList()
-    End Function
-
-    Private Function GetOfficialBusinesses(context As PayrollContext, employee As Employee) As IList(Of OfficialBusiness)
-        Return context.OfficialBusinesses.
-            Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
-            Where(Function(o) o.StartDate.Value <= _cutoffEnd And _cutoffStart <= o.EndDate.Value).
-            Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
-            ToList()
-    End Function
-
-    Private Function GetLeaves(context As PayrollContext, employee As Employee) As IList(Of Leave)
-        Return context.Leaves.
-            Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
-            Where(Function(l) _cutoffStart <= l.StartDate And l.StartDate <= _cutoffEnd).
-            Where(Function(l) l.Status = Leave.StatusApproved).
-            ToList()
-    End Function
 
 End Class

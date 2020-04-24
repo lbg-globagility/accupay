@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 
 Namespace Global.AccuPay.Utils
 
@@ -42,10 +43,10 @@ Namespace Global.AccuPay.Utils
 
                 Await action()
             Catch ex As ArgumentException
-
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As AccuPayRepositoryException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As Exception
-
                 Debugger.Break()
 
                 If baseExceptionErrorMessage Is Nothing Then
@@ -57,6 +58,35 @@ Namespace Global.AccuPay.Utils
                 End If
 
             End Try
+
+        End Function
+
+        Public Shared Async Function TryCatchFunctionAsync(
+                                        messageTitle As String,
+                                        action As Func(Of Task(Of Boolean)),
+                                        Optional baseExceptionErrorMessage As String = Nothing) As Task(Of Boolean)
+
+            Try
+
+                Return Await action()
+            Catch ex As ArgumentException
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As AccuPayRepositoryException
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As Exception
+                Debugger.Break()
+
+                If baseExceptionErrorMessage Is Nothing Then
+
+                    MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+                Else
+
+                    MessageBoxHelper.ErrorMessage(baseExceptionErrorMessage, messageTitle)
+                End If
+
+            End Try
+
+            Return False
 
         End Function
 
@@ -73,6 +103,9 @@ Namespace Global.AccuPay.Utils
 
                 MessageBoxHelper.ErrorMessage(ex.Message)
             Catch ex As WorkSheetIsEmptyException
+
+                MessageBoxHelper.ErrorMessage(ex.Message)
+            Catch ex As WorkSheetRowParseValueException
 
                 MessageBoxHelper.ErrorMessage(ex.Message)
             End Try

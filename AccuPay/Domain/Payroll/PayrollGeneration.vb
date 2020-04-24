@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -38,23 +39,19 @@ Public Class PayrollGeneration
 
     Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
-    Private ReadOnly _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
-
-    Private ReadOnly _payrateCalendar As PayratesCalendar
-
-    Private ReadOnly _allowances As ICollection(Of Allowance)
+    Private ReadOnly _allowances As ICollection(Of Data.Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
 
-    Private ReadOnly _policy As TimeEntryPolicy
-
     Private ReadOnly _previousPaystub As Paystub
 
-    Private _paystub As Paystub
-
     Private ReadOnly _bpiInsuranceProduct As Product
+
+    Private ReadOnly _calendarCollection As CalendarCollection
+
+    Private _paystub As Paystub
 
     Sub New(employee As Employee,
             resources As PayrollResources,
@@ -90,7 +87,6 @@ Public Class PayrollGeneration
             Function(p) CBool(p.EmployeeID = _employee.RowID))
 
         _settings = New ListOfValueCollection(resources.ListOfValues)
-        _policy = New TimeEntryPolicy(_settings)
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries = resources.TimeEntries.
@@ -103,23 +99,17 @@ Public Class PayrollGeneration
             OrderBy(Function(t) t.Date).
             ToList()
 
-        _employeeDutySchedules = resources.EmployeeDutySchedule.
-            Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
-            Where(Function(t) _payPeriod.PayFromDate <= t.DateSched AndAlso t.DateSched <= _payPeriod.PayToDate).
-            OrderBy(Function(t) t.DateSched).
-            ToList()
-
         _actualtimeentries = resources.ActualTimeEntries.
             Where(Function(t) CBool(t.EmployeeID = _employee.RowID)).
             ToList()
-
-        _payrateCalendar = resources.CalendarCollection.GetCalendar(_employee)
 
         _allowances = resources.Allowances.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
 
         _bpiInsuranceProduct = resources.BpiInsuranceProduct
+
+        _calendarCollection = resources.CalendarCollection
     End Sub
 
     Public Sub DoProcess()
@@ -389,7 +379,9 @@ Public Class PayrollGeneration
 
         For Each timeEntry In _timeEntries
 
-            Dim payrate = _payrateCalendar.Find(timeEntry.Date)
+            Dim payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
+
             If Not (timeEntry.IsRestDay Or (timeEntry.TotalLeaveHours > 0) Or
                 payrate.IsRegularHoliday Or payrate.IsSpecialNonWorkingHoliday) Then
 
@@ -488,7 +480,7 @@ Public Class PayrollGeneration
                                 paystub As Paystub,
                                 payperiodId As Integer?,
                                 allowanceId As Integer?,
-                                product As Product) As AllowanceItem
+                                product As Data.Entities.Product) As AllowanceItem
 
         Return New AllowanceItem() With {
                 .OrganizationID = z_OrganizationID,
@@ -504,8 +496,8 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub CreateAllowanceItems()
-        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _payrateCalendar, _previousTimeEntries)
-        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _payrateCalendar, _timeEntries)
+        Dim dailyCalculator = New DailyAllowanceCalculator(_settings, _calendarCollection, _previousTimeEntries)
+        Dim semiMonthlyCalculator = New SemiMonthlyAllowanceCalculator(New AllowancePolicy(_settings), _employee, _paystub, _payPeriod, _calendarCollection, _timeEntries)
 
         For Each allowance In _allowances
 
@@ -841,63 +833,65 @@ Public Class PayrollGeneration
 
         Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
 
-            Me.RegularHours = timeEntries.Sum(Function(t) t.RegularHours)
-            Me.RegularPay = PayrollTools.GetHourlyRateByDailyRate(salary, employee) * Me.RegularHours
-            Me.ActualRegularPay = PayrollTools.GetHourlyRateByDailyRate(salary, employee, isActual:=True) * Me.RegularHours
+            Dim totalTimeEntries = TotalTimeEntry.Calculate(timeEntries, salary, employee, actualtimeentries)
 
-            Me.OvertimeHours = timeEntries.Sum(Function(t) t.OvertimeHours)
-            Me.OvertimePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.OvertimePay))
-            Me.ActualOvertimePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.OvertimePay))
+            Me.RegularHours = totalTimeEntries.RegularHours
+            Me.RegularPay = totalTimeEntries.RegularPay
+            Me.ActualRegularPay = totalTimeEntries.ActualRegularPay
 
-            Me.NightDiffHours = timeEntries.Sum(Function(t) t.NightDiffHours)
-            Me.NightDiffPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.NightDiffPay))
-            Me.ActualNightDiffPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffPay))
+            Me.OvertimeHours = totalTimeEntries.OvertimeHours
+            Me.OvertimePay = totalTimeEntries.OvertimePay
+            Me.ActualOvertimePay = totalTimeEntries.ActualOvertimePay
 
-            Me.NightDiffOvertimeHours = timeEntries.Sum(Function(t) t.NightDiffOTHours)
-            Me.NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.NightDiffOTPay))
-            Me.ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
+            Me.NightDiffHours = totalTimeEntries.NightDiffHours
+            Me.NightDiffPay = totalTimeEntries.NightDiffPay
+            Me.ActualNightDiffPay = totalTimeEntries.ActualNightDiffPay
 
-            Me.RestDayHours = timeEntries.Sum(Function(t) t.RestDayHours)
-            Me.RestDayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RestDayPay))
-            Me.ActualRestDayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RestDayPay))
+            Me.NightDiffOvertimeHours = totalTimeEntries.NightDiffOvertimeHours
+            Me.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay
+            Me.ActualNightDiffOvertimePay = totalTimeEntries.ActualNightDiffOvertimePay
 
-            Me.RestDayOTHours = timeEntries.Sum(Function(t) t.RestDayOTHours)
-            Me.RestDayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RestDayOTPay))
-            Me.ActualRestDayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RestDayOTPay))
+            Me.RestDayHours = totalTimeEntries.RestDayHours
+            Me.RestDayPay = totalTimeEntries.RestDayPay
+            Me.ActualRestDayPay = totalTimeEntries.ActualRestDayPay
 
-            Me.SpecialHolidayHours = timeEntries.Sum(Function(t) t.SpecialHolidayHours)
-            Me.SpecialHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.SpecialHolidayPay))
-            Me.ActualSpecialHolidayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.SpecialHolidayPay))
+            Me.RestDayOTHours = totalTimeEntries.RestDayOTHours
+            Me.RestDayOTPay = totalTimeEntries.RestDayOTPay
+            Me.ActualRestDayOTPay = totalTimeEntries.ActualRestDayOTPay
 
-            Me.SpecialHolidayOTHours = timeEntries.Sum(Function(t) t.SpecialHolidayOTHours)
-            Me.SpecialHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.SpecialHolidayOTPay))
-            Me.ActualSpecialHolidayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.SpecialHolidayOTPay))
+            Me.SpecialHolidayHours = totalTimeEntries.SpecialHolidayHours
+            Me.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay
+            Me.ActualSpecialHolidayPay = totalTimeEntries.ActualSpecialHolidayPay
 
-            Me.RegularHolidayHours = timeEntries.Sum(Function(t) t.RegularHolidayHours)
-            Me.RegularHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RegularHolidayPay))
-            Me.ActualRegularHolidayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RegularHolidayPay))
+            Me.SpecialHolidayOTHours = totalTimeEntries.SpecialHolidayOTHours
+            Me.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay
+            Me.ActualSpecialHolidayOTPay = totalTimeEntries.ActualSpecialHolidayOTPay
 
-            Me.RegularHolidayOTHours = timeEntries.Sum(Function(t) t.RegularHolidayOTHours)
-            Me.RegularHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RegularHolidayOTPay))
-            Me.ActualRegularHolidayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RegularHolidayOTPay))
+            Me.RegularHolidayHours = totalTimeEntries.RegularHolidayHours
+            Me.RegularHolidayPay = totalTimeEntries.RegularHolidayPay
+            Me.ActualRegularHolidayPay = totalTimeEntries.ActualRegularHolidayPay
 
-            Me.HolidayPay = timeEntries.Sum(Function(t) t.HolidayPay)
+            Me.RegularHolidayOTHours = totalTimeEntries.RegularHolidayOTHours
+            Me.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay
+            Me.ActualRegularHolidayOTPay = totalTimeEntries.ActualRegularHolidayOTPay
 
-            Me.LeaveHours = timeEntries.Sum(Function(t) t.TotalLeaveHours)
-            Me.LeavePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.LeavePay))
-            Me.ActualLeavePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.LeavePay))
+            Me.HolidayPay = totalTimeEntries.HolidayPay
 
-            Me.LateHours = timeEntries.Sum(Function(t) t.LateHours)
-            Me.LateDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.LateDeduction))
-            Me.ActualLateDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.LateDeduction))
+            Me.LeaveHours = totalTimeEntries.LeaveHours
+            Me.LeavePay = totalTimeEntries.LeavePay
+            Me.ActualLeavePay = totalTimeEntries.ActualLeavePay
 
-            Me.UndertimeHours = timeEntries.Sum(Function(t) t.UndertimeHours)
-            Me.UndertimeDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.UndertimeDeduction))
-            Me.ActualUndertimeDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.UndertimeDeduction))
+            Me.LateHours = totalTimeEntries.LateHours
+            Me.LateDeduction = totalTimeEntries.LateDeduction
+            Me.ActualLateDeduction = totalTimeEntries.ActualLateDeduction
 
-            Me.AbsentHours = timeEntries.Sum(Function(t) t.AbsentHours)
-            Me.AbsenceDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.AbsentDeduction))
-            Me.ActualAbsenceDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.AbsentDeduction))
+            Me.UndertimeHours = totalTimeEntries.UndertimeHours
+            Me.UndertimeDeduction = totalTimeEntries.UndertimeDeduction
+            Me.ActualUndertimeDeduction = totalTimeEntries.ActualUndertimeDeduction
+
+            Me.AbsentHours = totalTimeEntries.AbsentHours
+            Me.AbsenceDeduction = totalTimeEntries.AbsenceDeduction
+            Me.ActualAbsenceDeduction = totalTimeEntries.ActualAbsenceDeduction
 
         End Sub
 

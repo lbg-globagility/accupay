@@ -1,9 +1,9 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Repository
-Imports AccuPay.Utils
 Imports AccuPay.ModelData
+Imports AccuPay.Repository
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Utils
 
 Public Class EmployeeLeavesForm
 
@@ -301,11 +301,90 @@ Public Class EmployeeLeavesForm
 
     End Function
 
+    Private Function RecordUpdate(newLeave As Leave)
+
+        Dim oldLeave =
+            Me._changedLeaves.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLeave.RowID))
+
+        If oldLeave Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newLeave.StartDate <> oldLeave.StartDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = oldLeave.RowID,
+                        .Description = $"Update leave start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'"
+                        })
+        End If
+        If newLeave.EndDate <> oldLeave.EndDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'"
+                       })
+        End If
+        If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'"
+                       })
+        End If
+        If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'"
+                       })
+        End If
+        If newLeave.Reason <> oldLeave.Reason Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave reason from '{oldLeave.Reason}' to '{newLeave.Reason}'"
+                       })
+        End If
+        If newLeave.Comments <> oldLeave.Comments Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave comments from '{oldLeave.Comments}' to '{newLeave.Comments}'"
+                       })
+        End If
+        If newLeave.LeaveType <> oldLeave.LeaveType Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'"
+                       })
+        End If
+        If newLeave.Status <> oldLeave.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                       {
+                       .EntityId = oldLeave.RowID,
+                       .Description = $"Update leave status from '{oldLeave.Status}' to '{newLeave.Status}'"
+                       })
+        End If
+
+        If changes.Count > 0 Then
+            Dim repo = New Data.Repositories.UserActivityRepository
+            repo.CreateRecord(z_User, "Leave", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeEdit, changes)
+            Return True
+        End If
+
+        Return True
+    End Function
+
     Private Async Function DeleteLeave(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
+
+                                                Dim repo As New Data.Repositories.UserActivityRepository
+                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 
@@ -488,6 +567,10 @@ Public Class EmployeeLeavesForm
                                         Async Function()
                                             Await _leaveRepository.SaveManyAsync(changedLeaves)
 
+                                            For Each item In changedLeaves
+                                                RecordUpdate(item)
+                                            Next
+
                                             ShowBalloonInfo($"{changedLeaves.Count} Leave(s) Successfully Updated.", messageTitle)
 
                                             Dim currentEmployee = GetSelectedEmployee()
@@ -506,6 +589,11 @@ Public Class EmployeeLeavesForm
 
         UpdateEndDateDependingOnStartAndEndTimes()
 
+    End Sub
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Leave")
+        userActivity.ShowDialog()
     End Sub
 
 End Class

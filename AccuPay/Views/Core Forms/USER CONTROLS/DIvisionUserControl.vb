@@ -6,7 +6,7 @@ Public Class DivisionUserControl
     Private _division As Division
     Private _parentDivisions As List(Of Division)
     Private _positions As List(Of Position)
-    Private _payFrequencies As List(Of PayFrequency)
+    Private _payFrequencies As List(Of Data.Entities.PayFrequency)
     Private _divisionTypes As List(Of String)
     Private _deductionSchedules As List(Of String)
 
@@ -25,7 +25,7 @@ Public Class DivisionUserControl
                 parentDivisions As List(Of Division),
                 positions As List(Of Position),
                 divisionTypes As List(Of String),
-                payFrequencies As List(Of PayFrequency),
+                payFrequencies As List(Of Data.Entities.PayFrequency),
                 deductionSchedules As List(Of String))
 
         _division = division

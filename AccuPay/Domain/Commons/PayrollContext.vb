@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Loans
@@ -94,8 +95,6 @@ Public Class PayrollContext
 
     Public Overridable Property Leaves As DbSet(Of Leave)
 
-    Public Overridable Property Overtimes As DbSet(Of Overtime)
-
     Public Overridable Property OfficialBusinesses As DbSet(Of OfficialBusiness)
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
@@ -107,10 +106,6 @@ Public Class PayrollContext
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
     Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
-
-    Public Overridable Property PayFrequencies As DbSet(Of PayFrequency)
-
-    Public Overridable Property Branches As DbSet(Of Branch)
 
     Public Overridable Property Users As DbSet(Of User)
 

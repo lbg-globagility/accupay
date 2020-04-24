@@ -1,6 +1,7 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
@@ -33,10 +34,12 @@ Public Class ImportEmployeeForm
         _noLastName,
         _noFirstName,
         _noBirthDate,
+        _invalidBirthDate,
         _noGender,
         _noMaritalStatus,
         _noJob,
         _noEmploymentDate,
+        _invalidEmploymentDate,
         _noPayFrequency,
         _noEmploymentStatus As Boolean
 
@@ -123,11 +126,13 @@ Public Class ImportEmployeeForm
                 If _noEmployeeNo Then resultStrings.Add("no Employee No")
                 If _noLastName Then resultStrings.Add("no Last Name")
                 If _noFirstName Then resultStrings.Add("no First Name")
-                If _noBirthDate Then resultStrings.Add("no Birthdate")
+                If _noBirthDate Then resultStrings.Add("no Birth Date")
+                If _invalidBirthDate Then resultStrings.Add("Birth Date cannot be earlier than January 1, 1753")
                 If _noGender Then resultStrings.Add("no Gender")
                 If _noMaritalStatus Then resultStrings.Add("no Marital Status")
                 If _noJob Then resultStrings.Add("no Job Position")
                 If _noEmploymentDate Then resultStrings.Add("no Employment Date")
+                If _invalidEmploymentDate Then resultStrings.Add("Employment Date cannot be earlier than January 1, 1753")
                 If _noPayFrequency Then resultStrings.Add("no Pay Frequency")
                 If _noEmploymentStatus Then resultStrings.Add("no Employment Status")
 
@@ -143,10 +148,12 @@ Public Class ImportEmployeeForm
                 _noLastName = String.IsNullOrWhiteSpace(LastName)
                 _noFirstName = String.IsNullOrWhiteSpace(FirstName)
                 _noBirthDate = Not BirthDate.HasValue
+                _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < PayrollTools.MinimumMicrosoftDate
                 _noGender = String.IsNullOrWhiteSpace(Gender)
                 _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
                 _noJob = String.IsNullOrWhiteSpace(Job)
                 _noEmploymentDate = Not DateEmployed.HasValue
+                _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < PayrollTools.MinimumMicrosoftDate
                 _noPayFrequency = String.IsNullOrWhiteSpace(PayFrequency)
                 _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
 
@@ -155,10 +162,12 @@ Public Class ImportEmployeeForm
                 Or _noLastName _
                 Or _noFirstName _
                 Or _noBirthDate _
+                Or _invalidBirthDate _
                 Or _noGender _
                 Or _noMaritalStatus _
                 Or _noJob _
                 Or _noEmploymentDate _
+                Or _invalidEmploymentDate _
                 Or _noPayFrequency _
                 Or _noEmploymentStatus
             End Get
@@ -224,6 +233,8 @@ Public Class ImportEmployeeForm
                 Where(Function(p) p.OrganizationID = z_OrganizationID).
                 ToListAsync()
 
+            Dim newEmpList As New List(Of Employee)
+
             For Each model In notExistEmployees
                 Dim position = existingPositions.
                     Where(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job)).
@@ -249,12 +260,32 @@ Public Class ImportEmployeeForm
                 }
 
                 AssignChanges(model, employee)
-
+                newEmpList.Add(employee)
                 context.Employees.Add(employee)
             Next
 
             Try
                 Await context.SaveChangesAsync()
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each item In newEmpList
+
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new employee.",
+                        .EntityId = item.RowID
+                        })
+                Next
+
+                For Each model In employees
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Updated an employee",
+                        .EntityId = model.RowID
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
             Catch ex As Exception
                 logger.Error("EmployeeImportProfile", ex)
                 'Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")

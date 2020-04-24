@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports Microsoft.EntityFrameworkCore
@@ -379,7 +380,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product) As Task(Of Product)
+        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product, Optional isTaxable As Boolean = False) As Task(Of Product)
 
             Dim categoryId = (Await GetOrCreateCategoryByName(product.Category))?.RowID
 
@@ -407,7 +408,7 @@ Namespace Global.AccuPay.Repository
 
             product.PartNo = productName.Trim()
             product.Name = productName.Trim()
-
+            product.Status = If(isTaxable, "1", "0")
             product.Created = Date.Now
             product.CreatedBy = z_User
             product.OrganizationID = z_OrganizationID

@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -57,7 +58,7 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
-    Private _allowances As ICollection(Of Allowance)
+    Private _allowances As ICollection(Of Data.Entities.Allowance)
 
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
@@ -153,7 +154,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Allowances As ICollection(Of Allowance)
+    Public ReadOnly Property Allowances As ICollection(Of Data.Entities.Allowance)
         Get
             Return _allowances
         End Get
@@ -253,13 +254,13 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadTimeEntries() As Task
-        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
+        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
             Using context = New PayrollContext()
                 Dim query = From t In context.TimeEntries
                             Where t.OrganizationID.Value = z_OrganizationID AndAlso
-                                threeDaysBeforeCutoff <= t.Date AndAlso
+                                previousCutoffDateForCheckingLastWorkingDay <= t.Date AndAlso
                                 t.Date <= _payDateTo
                             Select t
 
@@ -271,13 +272,13 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadEmployeeDutySchedules() As Task
-        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
+        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
             Using context = New PayrollContext(logger)
                 Dim query = From e In context.EmployeeDutySchedules
                             Where e.OrganizationID.Value = z_OrganizationID AndAlso
-                                e.DateSched >= threeDaysBeforeCutoff AndAlso
+                                e.DateSched >= previousCutoffDateForCheckingLastWorkingDay AndAlso
                                 e.DateSched <= _payDateTo
 
                 _employeeDutySchedules = Await query.ToListAsync()
@@ -288,24 +289,23 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadCalendarCollection() As Task
-        Dim threeDaysBeforeCutoff = GetPreviousThreeDaysBeforeCutoff()
+        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
-            Await Task.Run(
-               Sub()
-                   Using context = New PayrollContext(logger)
+            Using context = New PayrollContext(logger)
 
-                       Dim settings = New ListOfValueCollection(_listOfValues)
-                       Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                                                PayRateCalculationBasis.Organization)
+                Dim listOfValues = Await context.ListOfValues.ToListAsync()
 
-                       _calendarCollection = PayrollTools.GetCalendarCollection(threeDaysBeforeCutoff,
-                                                                                _payDateTo,
-                                                                                context,
-                                                                                calculationBasis)
+                Dim settings = New ListOfValueCollection(listOfValues)
+                Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+                                                         PayRateCalculationBasis.Organization)
 
-                   End Using
-               End Sub)
+                _calendarCollection = PayrollTools.GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
+                                                                         _payDateTo,
+                                                                         context,
+                                                                         calculationBasis)
+
+            End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
         End Try
@@ -496,14 +496,9 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Try
-            Using context = New PayrollContext(logger)
-                Dim query As IQueryable(Of Allowance) = New AllowanceRepository().
-                                                GetAllowancesWithPayPeriodBaseQuery(context,
-                                                                       _payDateFrom:=_payDateFrom,
-                                                                       _payDateTo:=_payDateTo)
+            Dim allowanceRepo = New Data.Repositories.AllowanceRepository()
 
-                _allowances = Await query.ToListAsync()
-            End Using
+            _allowances = Await (allowanceRepo.GetByPayPeriodWithProduct(organizationID:=z_OrganizationID, payDateFrom:=_payDateFrom, payDateTo:=_payDateTo))
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
         End Try
@@ -532,10 +527,6 @@ Public Class PayrollResources
         Catch ex As Exception
             Throw New ResourceLoadingException("DivisionMinimumWage", ex)
         End Try
-    End Function
-
-    Private Function GetPreviousThreeDaysBeforeCutoff() As Date
-        Return _payDateFrom.AddDays(-3)
     End Function
 
     Private Async Function LoadBpiInsuranceProduct() As Task

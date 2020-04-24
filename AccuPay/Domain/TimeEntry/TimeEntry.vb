@@ -2,7 +2,7 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports Acupay
+Imports AccuPay.Data.Helpers
 
 Namespace Global.AccuPay.Entity
 
@@ -16,6 +16,8 @@ Namespace Global.AccuPay.Entity
         Public Property OrganizationID As Integer?
 
         Public Property EmployeeID As Integer?
+
+        Public Property BranchID As Integer?
 
         Public Property EmployeeShiftID As Integer?
 

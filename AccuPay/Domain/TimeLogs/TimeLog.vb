@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 
@@ -37,6 +38,7 @@ Namespace Global.AccuPay.Entity
         Public Property TimeStampOut As Date?
 
         Public Property TimeentrylogsImportID As String
+        Public Property BranchID As Integer?
 
         Public ReadOnly Property HasLogs As Boolean
             Get
@@ -56,4 +58,5 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property Employee As Employee
 
     End Class
+
 End Namespace

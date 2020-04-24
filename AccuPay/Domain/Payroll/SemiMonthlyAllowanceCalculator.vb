@@ -10,22 +10,22 @@ Public Class SemiMonthlyAllowanceCalculator
 
     Private ReadOnly _payperiod As PayPeriod
 
-    Private ReadOnly _payrateCalendar As PayratesCalendar
+    Private ReadOnly _calendarCollection As CalendarCollection
 
     Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
     Private ReadOnly _allowancePolicy As AllowancePolicy
 
-    Public Sub New(allowancePolicy As AllowancePolicy, employee As Employee, paystub As Paystub, payperiod As PayPeriod, payrateCalendar As PayratesCalendar, timeEntries As ICollection(Of TimeEntry))
+    Public Sub New(allowancePolicy As AllowancePolicy, employee As Employee, paystub As Paystub, payperiod As PayPeriod, calendarCollection As CalendarCollection, timeEntries As ICollection(Of TimeEntry))
         _employee = employee
         _paystub = paystub
         _payperiod = payperiod
-        _payrateCalendar = payrateCalendar
+        _calendarCollection = calendarCollection
         _timeEntries = timeEntries
         _allowancePolicy = allowancePolicy
     End Sub
 
-    Public Function Calculate(allowance As Allowance) As AllowanceItem
+    Public Function Calculate(allowance As Data.Entities.Allowance) As AllowanceItem
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
                                                 paystub:=_paystub,
@@ -51,20 +51,21 @@ Public Class SemiMonthlyAllowanceCalculator
 
             Dim additionalAmount = 0D
 
-            Dim payRate = _payrateCalendar.Find(timeEntry.Date)
+            Dim payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID)
+            Dim payrate = payrateCalendar.Find(timeEntry.Date)
 
             If _allowancePolicy.IsSpecialHolidayPaid Then
 
-                If (payRate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday) Then
-                    additionalAmount = timeEntry.SpecialHolidayHours * hourlyRate * (payRate.RegularRate - 1D)
+                If (payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday) Then
+                    additionalAmount = timeEntry.SpecialHolidayHours * hourlyRate * (payrate.RegularRate - 1D)
                 End If
 
             End If
 
             If _allowancePolicy.IsRegularHolidayPaid Then
 
-                If (payRate.IsRegularHoliday And _employee.CalcHoliday) Then
-                    additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payRate.RegularRate - 1D)
+                If (payrate.IsRegularHoliday And _employee.CalcHoliday) Then
+                    additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payrate.RegularRate - 1D)
                 End If
 
             End If

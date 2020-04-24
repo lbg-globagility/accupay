@@ -1,16 +1,20 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
 Public Class AddBranchForm
 
+    Private _branchRepository As BranchRepository
+
     Private _branches As IEnumerable(Of Branch)
 
-    Private _calendars As IEnumerable(Of PayCalendar)
+    Private _calendars As IEnumerable(Of Entity.PayCalendar)
 
     Private _currentBranch As Branch
 
@@ -27,13 +31,15 @@ Public Class AddBranchForm
 
         Me.LastAddedBranchId = Nothing
 
-        ShowBranch()
+        ShowCalendar()
+
+        _branchRepository = New BranchRepository()
 
         Await RefreshForm()
 
     End Sub
 
-    Private Sub ShowBranch()
+    Private Sub ShowCalendar()
 
         Using context As New PayrollContext
 
@@ -54,9 +60,9 @@ Public Class AddBranchForm
 
     Private Async Function RefreshForm() As Task
 
-        Using context As New PayrollContext
+        _branches = Await _branchRepository.GetAllAsync()
 
-            _branches = Await context.Branches.ToListAsync
+        Using context As New PayrollContext
 
             _calendars = Await context.Calendars.ToListAsync()
 
@@ -179,19 +185,7 @@ Public Class AddBranchForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Branch",
                 Async Function()
 
-                    Using context As New PayrollContext
-
-                        Dim existingBranch = context.Branches.FirstOrDefault(Function(b) b.RowID.Value = branchId.Value)
-
-                        If existingBranch IsNot Nothing Then
-
-                            context.Branches.Remove(existingBranch)
-
-                            Await context.SaveChangesAsync
-
-                        End If
-
-                    End Using
+                    Await _branchRepository.DeleteAsync(branch)
 
                     Await RefreshForm()
 
@@ -227,7 +221,7 @@ Public Class AddBranchForm
                                 Async Function()
 
                                     Dim branchName = NameTextBox.Text.Trim
-                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
+                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, Entity.PayCalendar)
 
                                     Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
                                     Dim successMesage = ""
@@ -255,56 +249,31 @@ Public Class AddBranchForm
 
     End Sub
 
-    Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
+    Private Async Function SaveBranch(branchName As String, calendar As Entity.PayCalendar) As Task(Of Integer?)
 
-        Using context As New PayrollContext
+        Dim branch As New Branch
+        If _currentFormType = FormMode.Creating Then
 
-            Dim branch As New Branch
+            branch.CreatedBy = z_User
+            branch.Code = NameTextBox.Text
+            branch.Name = NameTextBox.Text
+            branch.CalendarID = calendar?.RowID
 
-            Dim branchNameValidationQuery = context.Branches.
-                Where(Function(b) b.Code.Trim.ToUpper = branchName.Trim.ToUpper)
+            branch.RowID = Await _branchRepository.CreateAsync(branch)
 
-            If _currentFormType = FormMode.Creating Then
+        ElseIf _currentFormType = FormMode.Editing Then
 
-                branch.CreatedBy = z_User
-                branch.Code = NameTextBox.Text
-                branch.Name = NameTextBox.Text
-                branch.CalendarID = calendar?.RowID
+            branch = _currentBranch.CloneJson()
+            branch.Code = branchName
+            branch.Name = branchName
+            branch.CalendarID = calendar?.RowID
+            branch.LastUpdBy = z_User
 
-                context.Branches.Add(branch)
+            Await _branchRepository.UpdateAsync(branch)
 
-            ElseIf _currentFormType = FormMode.Editing Then
+        End If
 
-                Dim currentBranchId = _currentBranch.RowID.Value
-
-                branch = Await context.Branches.FirstOrDefaultAsync(Function(b) b.RowID.Value = currentBranchId)
-
-                If branch Is Nothing Then
-
-                    Throw New ArgumentException("Branch has already been deleted. Please reopen the form.")
-
-                End If
-
-                branchNameValidationQuery = branchNameValidationQuery.Where(Function(b) b.RowID.Value <> currentBranchId)
-
-                branch.Code = branchName
-                branch.Name = branchName
-                branch.CalendarID = calendar?.RowID
-                branch.LastUpdBy = z_User
-
-            End If
-
-            If Await branchNameValidationQuery.AnyAsync Then
-
-                Throw New ArgumentException("Branch already exists.")
-
-            End If
-
-            Await context.SaveChangesAsync
-
-            Return branch.RowID
-
-        End Using
+        Return branch.RowID
 
     End Function
 
