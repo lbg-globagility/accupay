@@ -26,6 +26,8 @@ Public Class EmployeeForm
 
     Private if_sysowner_is_benchmark As Boolean
 
+    Private if_sysowner_is_laglobal As Boolean
+
     Private threadArrayList As New List(Of Thread)
 
     Private _branches As New List(Of Branch)
@@ -674,8 +676,7 @@ Public Class EmployeeForm
         End If
     End Sub
 
-    Public Sub Print201(sender As Object, e As EventArgs) Handles ToolStripButton22.Click
-
+    Private Sub Print201Report()
         Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
 
         If employeeID Is Nothing Then Return
@@ -1872,6 +1873,7 @@ Public Class EmployeeForm
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_laglobal = sys_ownr.CurrentSystemOwner = SystemOwner.LAGlobal
 
         _policy = New PolicyHelper
         _branchRepository = New BranchRepository
@@ -7288,7 +7290,7 @@ Public Class EmployeeForm
         e.Control.ContextMenu = New ContextMenu
     End Sub
 
-    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
+    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
         Using importForm = New ImportEmployeeForm()
             If Not importForm.ShowDialog() = DialogResult.OK Then
                 Return
@@ -7491,6 +7493,10 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub Print201ReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Print201ReportToolStripMenuItem.Click
+        Print201Report()
+    End Sub
+
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting
 
         Dim view_name As String = String.Empty
@@ -7592,7 +7598,6 @@ Public Class EmployeeForm
         EmploymentContractToolStripMenuItem.Click,
         EndOfContractReportToolStripMenuItem.Click,
         MonthlyBirthdayReportToolStripMenuItem.Click,
-        PayrollSummaryByBranchToolStripMenuItem.Click,
         DeploymentEndorsementToolStripMenuItem.Click,
         WorkOrderToolStripMenuItem.Click
 
@@ -7618,18 +7623,24 @@ Public Class EmployeeForm
         report.Print(selectedReport)
     End Sub
 
-    Private Sub LaGlobalEmployeeReportMenu1_Click(sender As Object, e As EventArgs) Handles DeploymentEndorsementToolStripMenuItem.Click, WorkOrderToolStripMenuItem.Click, PayrollSummaryByBranchToolStripMenuItem.Click, MonthlyBirthdayReportToolStripMenuItem.Click, EndOfContractReportToolStripMenuItem.Click, EmploymentContractToolStripMenuItem.Click, BPIInsuranceAmountReportToolStripMenuItem.Click, ActiveEmployeeChecklistReportToolStripMenuItem.Click
-
-    End Sub
-
     Private Sub InitializeLaGlobalReportList()
+
+        If if_sysowner_is_laglobal = False Then
+            ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
+            BPIInsuranceAmountReportToolStripMenuItem.Visible = False
+            EmploymentContractToolStripMenuItem.Visible = False
+            EndOfContractReportToolStripMenuItem.Visible = False
+            MonthlyBirthdayReportToolStripMenuItem.Visible = False
+            DeploymentEndorsementToolStripMenuItem.Visible = False
+            WorkOrderToolStripMenuItem.Visible = False
+        End If
+
         _laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
             {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
             {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
             {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
             {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyEndofContractReport},
             {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
-            {PayrollSummaryByBranchToolStripMenuItem.Name, LaGlobalEmployeeReportName.PayrollSummaryByBranch},
             {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
             {WorkOrderToolStripMenuItem.Name, LaGlobalEmployeeReportName.WorkOrder}}
     End Sub

@@ -8,6 +8,8 @@ Public Class BaseSystemOwner
 
     Const text_benchmark As String = "Benchmark"
 
+    Const text_laglobal As String = "LA Global"
+
     Const text_default As String = "Default"
 
     Public Overridable ReadOnly Property CurrentSystemOwner As String
@@ -38,6 +40,12 @@ Public Class BaseSystemOwner
     Public Shared ReadOnly Property Benchmark As String
         Get
             Return text_benchmark
+        End Get
+    End Property
+
+    Public Shared ReadOnly Property LAGlobal As String
+        Get
+            Return text_laglobal
         End Get
     End Property
 
