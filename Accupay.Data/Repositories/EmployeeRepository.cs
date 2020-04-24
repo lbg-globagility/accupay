@@ -154,7 +154,47 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
+        public async Task<List<Employee>> GetByEmployeeNumbersAsync(string[] employeeNumbers, int organizationID)
+        {
+            using (var context = new PayrollContext())
+            {
+                var query = GetAllEmployeeBaseQuery(organizationID, context);
+
+                return await query.Where(l => employeeNumbers.Contains(l.EmployeeNo)).ToListAsync();
+            }
+        }
+
+        public async Task<Employee> GetByIdAsync(int organizationID, int rowID)
+        {
+            using (var context = new PayrollContext())
+            {
+                var query = GetAllEmployeeBaseQuery(organizationID, context);
+
+                return await query.Where(e => e.RowID == rowID).FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<Employee> GetByIdWithPayFrequencyAsync(int organizationID, int rowID)
+        {
+            using (var context = new PayrollContext())
+            {
+                var query = GetAllEmployeeBaseQuery(organizationID, context);
+
+                return await query.Include(e => e.PayFrequency).Where(e => e.RowID == rowID).FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<List<Employee>> GetByManyIdAsync(int organizationID, List<int> rowIDs)
+        {
+            using (var context = new PayrollContext())
+            {
+                var query = GetAllEmployeeBaseQuery(organizationID, context);
+
+                return await query.Where(e => rowIDs.Contains(e.RowID.Value)).ToListAsync();
+            }
+        }
+
+        public async Task<List<Employee>> GetAllWithPositionAsync(int organizationID)
         {
             using (var builder = new EmployeeBuilder(organizationId))
             {
@@ -173,6 +213,16 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
+        {
+            using (var builder = new EmployeeBuilder(organizationId))
+            {
+                return await builder.HasNoPaystubs(payPeriodId).
+                                        IsActive().
+                                        ToListAsync();
+            }
+        }
+        
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
@@ -232,6 +282,47 @@ namespace AccuPay.Data.Repositories
             };
 
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
+        }
+
+        public async Task SaveManyAsync(int organizationID, int userID, List<Employee> employees)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                var added = employees.Where(e => !e.RowID.HasValue).ToList();
+                if (added.Any())
+                {
+                    context.Employees.AddRange(added);
+                }
+
+                var updated = employees.Where(e => e.RowID.HasValue).ToList();
+                if (updated.Any())
+                {
+                    await UpdateManyAsync(employees, context);
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+
+        private async Task UpdateManyAsync(List<Employee> employees, PayrollContext context)
+        {
+            var employeeIds = employees.Select(e => e.RowID).ToArray();
+
+            var employeesToUpdate = await context.Employees.
+                Where(e => employeeIds.Contains(e.RowID)).
+                ToListAsync();
+            if (!employeesToUpdate.Any()) return;
+
+            foreach (var e in employeesToUpdate)
+            {
+                var updatedEmployee = employees.FirstOrDefault(ee => ee.RowID == e.RowID);
+
+                ApplyChanges(e, updatedEmployee);
+            }
+        }
+
+        private void ApplyChanges(Employee toBeUpdateEmployee, Employee updatedEmployee)
+        {
+            throw new NotImplementedException();
         }
     }
 }

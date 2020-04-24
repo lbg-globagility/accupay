@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.ModelData
 Imports AccuPay.Repository
@@ -7,9 +8,9 @@ Imports AccuPay.Utils
 
 Public Class EmployeeLeavesForm
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Entities.Employee)
 
     Private _currentLeave As Leave
 
@@ -19,7 +20,7 @@ Public Class EmployeeLeavesForm
 
     Private _leaveRepository As New LeaveRepository
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -103,7 +104,7 @@ Public Class EmployeeLeavesForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

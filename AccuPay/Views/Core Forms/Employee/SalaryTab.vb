@@ -2,7 +2,7 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Payroll
@@ -17,7 +17,7 @@ Public Class SalaryTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _employee As Employee
+    Private _employee As Entities.Employee
 
     Private _salaries As List(Of Salary)
 
@@ -62,7 +62,7 @@ Public Class SalaryTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Entities.Employee) As Task
 
         _employee = employee
 

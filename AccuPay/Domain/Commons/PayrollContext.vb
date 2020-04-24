@@ -1,6 +1,5 @@
 Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Loans
@@ -20,8 +19,6 @@ Public Class PayrollContext
     Public Overridable Property Agencies As DbSet(Of Agency)
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
-
-    Public Overridable Property Categories As DbSet(Of Category)
 
     Public Overridable Property JobCategories As DbSet(Of JobCategory)
 

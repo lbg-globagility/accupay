@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -12,7 +13,7 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
@@ -72,7 +73,7 @@ Public Class ImportLoansForm
 
         For Each record In records
 
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber)
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
             If employee Is Nothing Then
 

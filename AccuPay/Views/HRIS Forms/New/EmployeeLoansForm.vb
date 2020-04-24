@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Repository
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Utilities
@@ -14,16 +14,16 @@ Public Class EmployeeLoansForm
 
     Private sysowner_is_benchmark As Boolean
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
     Private _productRepository As New ProductRepository
     Private _listOfValueRepository As New ListOfValueRepository
     Private _loanScheduleRepository As New LoanScheduleRepository
 
     Private _loanTypeList As List(Of Product)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Entities.Employee)
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
     Private _currentLoanSchedule As LoanSchedule
 
@@ -931,7 +931,7 @@ Public Class EmployeeLoansForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

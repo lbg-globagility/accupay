@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -16,7 +17,7 @@ Namespace Global.AccuPay.Payroll
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Employee, payperiod As PayPeriod, allowances As ICollection(Of Data.Entities.Allowance))
+        Public Sub Calculate(salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, allowances As ICollection(Of Data.Entities.Allowance))
             ' Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0
             paystub.PhilHealthEmployerShare = 0
@@ -80,7 +81,7 @@ Namespace Global.AccuPay.Payroll
         Private Function GetTotalContribution(salary As Salary,
                                               paystub As Paystub,
                                               previousPaystub As Paystub,
-                                              employee As Employee,
+                                              employee As Entities.Employee,
                                               allowances As ICollection(Of Data.Entities.Allowance)) As Decimal
 
             Dim calculationBasis = _policy.CalculationBasis

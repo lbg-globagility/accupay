@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Payroll
@@ -26,7 +26,7 @@ Public Class ImportSalaryForm
 
     End Sub
 
-    Private Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
+    Private Async Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
         Dim browseFile = New OpenFileDialog With {
             .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
@@ -60,11 +60,15 @@ Public Class ImportSalaryForm
         Dim salaryViewModels = New List(Of SalaryViewModel)
         _salaries = New List(Of Salary)
 
+        Dim employeeNos = records.Select(Function(s) s.EmployeeNo).ToArray()
+
+        Dim employeeRepo = New Repositories.EmployeeRepository
+        Dim employeesss = Await employeeRepo.GetByEmployeeNumbersAsync(employeeNos, z_OrganizationID)
+
         Using context = New PayrollContext()
             For Each record In records
 
-                Dim employee = context.Employees.
-                    FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo AndAlso t.OrganizationID = z_OrganizationID))
+                Dim employee = employeesss.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
 
                 If employee Is Nothing Then
                     record.ErrorMessage = "Employee does not exist!"
@@ -219,9 +223,9 @@ Public Class ImportSalaryForm
 
         Private ReadOnly _salary As Salary
 
-        Private ReadOnly _employee As Employee
+        Private ReadOnly _employee As Entities.Employee
 
-        Public Sub New(salary As Salary, employee As Employee)
+        Public Sub New(salary As Salary, employee As Entities.Employee)
             _salary = salary
             _employee = employee
         End Sub

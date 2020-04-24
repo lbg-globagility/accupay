@@ -2,7 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -21,6 +21,8 @@ Public Class ImportLeaveForm
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
+    Private _employeeRepo As New Repositories.EmployeeRepository
+    Private _categoryRepo As New Repositories.CategoryRepository
 
 #Region "Properties"
 
@@ -65,11 +67,12 @@ Public Class ImportLeaveForm
 
         Dim dataSource As New List(Of LeaveModel)
 
+        Dim employeeFromRepo = Await _employeeRepo.GetAllAsync(z_OrganizationID)
+        Dim employees = employeeFromRepo.
+            Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
+            ToList()
+
         Using context = New PayrollContext
-            Dim employees = Await context.Employees.
-                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
-                ToListAsync()
 
             For Each model In models
 
@@ -111,7 +114,7 @@ Public Class ImportLeaveForm
         End If
     End Sub
 
-    Private Shared Function CreateLeaveModel(model As LeaveModel, employee As Employee) As LeaveModel
+    Private Shared Function CreateLeaveModel(model As LeaveModel, employee As Entities.Employee) As LeaveModel
         Return New LeaveModel(employee) With {
             .Status = model.Status,
             .Comment = model.Comment,
@@ -240,7 +243,7 @@ Public Class ImportLeaveForm
         Private Const REASON_LENGTH As Integer = 500
         Private Const COMMENT_LENGTH As Integer = 2000
         Private VALID_STATUS As String() = {AccuPay.Entity.Leave.StatusApproved.ToLower, AccuPay.Entity.Leave.StatusPending.ToLower} '{"approved", "pending"}
-        Private _employee As Employee
+        Private _employee As Entities.Employee
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean
         Private _noStartDate As Boolean
@@ -267,7 +270,7 @@ Public Class ImportLeaveForm
             _grantsAdditionalVacationLeaveTypeFeaure = checker.HasAccess(Feature.AdditionalVacationLeaveType)
         End Sub
 
-        Public Sub New(employee As Employee)
+        Public Sub New(employee As Entities.Employee)
             FeatureAdditionalVacationLeaveType()
 
             If employee IsNot Nothing Then
@@ -479,20 +482,17 @@ Public Class ImportLeaveForm
             Using package As New ExcelPackage(fileInfo)
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
-                Dim leaveTypes As List(Of String)
-                Using context As New PayrollContext
-                    Dim categleavID = Await context.Categories.
-                                        Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                        Where(Function(c) Nullable.Equals(c.CategoryName, "Leave Type")).
-                                        Select(Function(c) c.RowID).
-                                        FirstOrDefaultAsync()
+                Dim leaveTypes
+                Dim leaveCateogry = Await _categoryRepo.GetByName(z_OrganizationID, "Leave Type")
+                Dim categleavID = leaveCateogry.RowID
 
+                Using context As New PayrollContext
                     leaveTypes = Await context.Products.
-                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                    Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
-                                    Select(Function(p) p.PartNo).
-                                    OrderBy(Function(p) p).
-                                    ToListAsync()
+                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                        Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
+                        Select(Function(p) p.PartNo).
+                        OrderBy(Function(p) p).
+                        ToListAsync()
                 End Using
 
                 For index = 0 To leaveTypes.Count - 1

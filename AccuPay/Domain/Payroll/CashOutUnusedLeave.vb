@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 
 Public Class CashOutUnusedLeave
@@ -24,14 +26,20 @@ Public Class CashOutUnusedLeave
         _sickLeaveId As Integer
 
     Private _leaveLedger As DataTable
-
+    Private _categoryRepository As CategoryRepository
     Private Const strAdjType = "Adjustment Type"
 
     Private Const strLeaveType = "Leave Type"
 
+    Private _employeeRepository As Repositories.EmployeeRepository
+
     Public Sub New(PayPeriodFromId As Integer,
                    PayPeriodToId As Integer,
                    CurrentPeriodID As Integer)
+
+        _categoryRepository = New Repositories.CategoryRepository
+
+        _employeeRepository = New Repositories.EmployeeRepository
 
         _organizationId = Convert.ToInt32(z_OrganizationID)
 
@@ -62,10 +70,18 @@ Public Class CashOutUnusedLeave
         _payPeriodToId = PayPeriodToId
         _currentPeriodId = CurrentPeriodID
 
-        _adjUnusedVacationLeaveId = GetAdjUnusedVacationLeaveId()
+        LoadAdjUnusedVacationLeaveId()
 
-        _vacationLeaveId = GetVacationLeaveId()
+        LoadVacationLeaveId()
 
+    End Sub
+
+    Private Async Sub LoadVacationLeaveId()
+        _vacationLeaveId = Await GetVacationLeaveId()
+    End Sub
+
+    Private Async Sub LoadAdjUnusedVacationLeaveId()
+        _adjUnusedVacationLeaveId = Await GetAdjUnusedVacationLeaveId()
     End Sub
 
     Private Function GetLatestLeaveLedger() As DataTable
@@ -85,14 +101,14 @@ Public Class CashOutUnusedLeave
         Return query.Read()
     End Function
 
-    Private Function GetVacationLeaveId() As Integer
+    Private Async Function GetVacationLeaveId() As Threading.Tasks.Task(Of Integer)
         Dim value As Integer
         Dim strVacationLeave = String.Join(Space(1), LeaveType.Vacation.ToString(), "Leave")
 
+        Dim leaveCategory = Await _categoryRepository.GetByName(z_OrganizationID, strVacationLeave)
+        Dim leaveCategoryId = leaveCategory.RowID
+
         Using context = New PayrollContext()
-            Dim leaveCategoryId = context.Categories.
-                Where(Function(c) Equals(c.OrganizationID, _organizationId) _
-                And Equals(c.CategoryName, strLeaveType)).Select(Function(c) c.RowID).FirstOrDefault
 
             Dim product = context.Products.
                 Where(Function(p) Equals(p.PartNo.ToLower, strVacationLeave.ToLower) _
@@ -106,14 +122,13 @@ Public Class CashOutUnusedLeave
         Return value
     End Function
 
-    Private Function GetAdjUnusedVacationLeaveId() As Integer
+    Private Async Function GetAdjUnusedVacationLeaveId() As Threading.Tasks.Task(Of Integer)
         Dim value As Integer
 
-        Using context = New PayrollContext()
-            Dim adjustmentCategoryId = context.Categories.
-                Where(Function(c) Equals(c.OrganizationID, _organizationId) _
-                And Equals(c.CategoryName, strAdjType)).Select(Function(c) c.RowID).FirstOrDefault
+        Dim adjustmentCategory = Await _categoryRepository.GetByName(z_OrganizationID, strAdjType)
+        Dim adjustmentCategoryId = adjustmentCategory.RowID
 
+        Using context = New PayrollContext()
             Dim product = context.Products.
                 Where(Function(p) Equals(p.PartNo.ToLower, _adjUnusedVacationLeave.ToLower) _
                        And Equals(p.OrganizationID.Value, _organizationId) _
@@ -131,14 +146,13 @@ Public Class CashOutUnusedLeave
         Return value
     End Function
 
-    Private Function GetAdjUnusedSickLeaveId() As Integer
+    Private Async Function GetAdjUnusedSickLeaveId() As Threading.Tasks.Task(Of Integer)
         Dim value As Integer
 
-        Using context = New PayrollContext()
-            Dim adjustmentCategoryId = context.Categories.
-                Where(Function(c) Equals(c.OrganizationID, _organizationId) _
-                And Equals(c.CategoryName, strAdjType)).Select(Function(c) c.RowID).FirstOrDefault
+        Dim adjustmentCategory = Await _categoryRepository.GetByName(z_OrganizationID, strAdjType)
+        Dim adjustmentCategoryId = adjustmentCategory.RowID
 
+        Using context = New PayrollContext()
             Dim product = context.Products.
                 Where(Function(p) Equals(p.PartNo.ToLower, _adjUnusedSickLeave.ToLower) _
                        And Equals(p.OrganizationID.Value, _organizationId) _
@@ -262,8 +276,8 @@ Public Class CashOutUnusedLeave
 
     End Sub
 
-    Private Sub ZeroOutEmployeeLeaveBalance(context As PayrollContext, employeeRowId As Integer)
-        Dim employee = context.Employees.Where(Function(e) Nullable.Equals(e.RowID, employeeRowId)).FirstOrDefault
+    Private Async Sub ZeroOutEmployeeLeaveBalance(context As PayrollContext, employeeRowId As Integer)
+        Dim employee = Await _employeeRepository.GetByIdAsync(organizationID:=z_OrganizationID, rowID:=employeeRowId)
 
         If employee IsNot Nothing Then
             With employee

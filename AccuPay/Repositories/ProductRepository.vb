@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports Microsoft.EntityFrameworkCore
@@ -321,60 +322,52 @@ Namespace Global.AccuPay.Repository
 #Region "Private Functions"
 
         'this may only apply to "Loan Type" use with caution
-        Private Shared Async Function GetOrCreateCategoryByName(categoryName As String) As Task(Of Category)
-            Using context = New PayrollContext()
+        Private Shared Async Function GetOrCreateCategoryByName(categoryName As String) As Task(Of Entities.Category)
+            Dim _categoryRepository As New Repositories.CategoryRepository()
+            Dim categoryProduct = Await _categoryRepository.GetByName(z_OrganizationID, categoryName)
 
-                Dim categoryProduct = Await context.Categories.
-                                    Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                    Where(Function(c) c.CategoryName = categoryName).
-                                    FirstOrDefaultAsync
+            If categoryProduct Is Nothing Then
+                'get the existing category with same name to use as CategoryID
+                Dim existingCategoryProduct = Await _categoryRepository.GetByName(z_OrganizationID, categoryName)
 
-                If categoryProduct Is Nothing Then
-                    'get the existing category with same name to use as CategoryID
-                    Dim existingCategoryProduct = Await context.Categories.
-                                    Where(Function(c) c.CategoryName = categoryName).
-                                    FirstOrDefaultAsync
+                Dim existingCategoryProductId = existingCategoryProduct?.RowID
 
-                    Dim existingCategoryProductId = existingCategoryProduct?.RowID
+                categoryProduct = New Entities.Category
+                categoryProduct.CategoryID = existingCategoryProductId
+                categoryProduct.CategoryName = categoryName
+                categoryProduct.OrganizationID = z_OrganizationID
+                categoryProduct.CatalogID = Nothing
+                categoryProduct.LastUpd = Date.Now
 
-                    categoryProduct = New Category
-                    categoryProduct.CategoryID = existingCategoryProductId
-                    categoryProduct.CategoryName = categoryName
-                    categoryProduct.OrganizationID = z_OrganizationID
-                    categoryProduct.CatalogID = Nothing
-                    categoryProduct.LastUpd = Date.Now
+                Await _categoryRepository.SaveAsync(z_OrganizationID, categoryProduct)
 
-                    context.Categories.Add(categoryProduct)
-                    context.SaveChanges()
+                'if there is no existing category with same name,
+                'use the newly added category's RowID as its CategoryID
 
-                    'if there is no existing category with same name,
-                    'use the newly added category's RowID as its CategoryID
+                If existingCategoryProductId Is Nothing Then
+                    Dim errorOccured = False
+                    Try
+                        categoryProduct.CategoryID = categoryProduct.RowID
+                        Await _categoryRepository.SaveAsync(z_OrganizationID, categoryProduct)
+                    Catch ex As Exception
+                        'if for some reason hindi na update, we can't let that row
+                        'to have no CategoryID so dapat i-delete rin yung added category
 
-                    If existingCategoryProductId Is Nothing Then
+                        errorOccured = True
+                        Throw ex
+                    End Try
 
-                        Try
-                            categoryProduct.CategoryID = categoryProduct.RowID
-                            Await context.SaveChangesAsync()
-                        Catch ex As Exception
-                            'if for some reason hindi na update, we can't let that row
-                            'to have no CategoryID so dapat i-delete rin yung added category
-                            context.Categories.Remove(categoryProduct)
-                            context.SaveChanges()
-
-                            Throw ex
-                        End Try
-
-                    End If
+                    If errorOccured Then Await _categoryRepository.DeleteAsync(categoryProduct.RowID)
                 End If
+            End If
 
-                If categoryProduct Is Nothing Then
-                    Dim ex = New Exception("ProductRepository->GetOrCreate: Category not found.")
-                    Throw ex
-                End If
+            If categoryProduct Is Nothing Then
+                Dim ex = New Exception("ProductRepository->GetOrCreate: Category not found.")
+                Throw ex
+            End If
 
-                Return categoryProduct
+            Return categoryProduct
 
-            End Using
         End Function
 
         Private Async Function GetProductsByCategory(categoryId As Integer?) _

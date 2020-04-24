@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -16,7 +17,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _notifyMainWindow As NotifyMainWindow
 
-    Private ReadOnly _employee As Employee
+    Private ReadOnly _employee As Entities.Employee
 
     Private ReadOnly _resources As PayrollResources
 
@@ -56,7 +57,7 @@ Public Class PayrollGeneration
 
     Private _paystub As Paystub
 
-    Sub New(employee As Employee,
+    Sub New(employee As Entities.Employee,
             resources As PayrollResources,
             Optional paystubForm As PayStubForm = Nothing)
         _formCaller = paystubForm
@@ -841,7 +842,7 @@ Public Class PayrollGeneration
         Public Property AbsenceDeduction As Decimal Implements IPaystubRate.AbsenceDeduction
         Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
-        Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
+        Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Entities.Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
 
             Me.RegularHours = timeEntries.Sum(Function(t) t.RegularHours)
             Me.RegularPay = PayrollTools.GetHourlyRateByDailyRate(salary, employee) * Me.RegularHours

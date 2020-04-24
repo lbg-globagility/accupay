@@ -6,9 +6,9 @@ Imports AccuPay.Utils
 
 Public Class EmployeeOvertimeForm
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Entities.Employee)
 
     Private _currentOvertime As Overtime
 
@@ -18,7 +18,7 @@ Public Class EmployeeOvertimeForm
 
     Private _overtimeRepository As New OvertimeRepository
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 

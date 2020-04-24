@@ -1,5 +1,5 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
@@ -7,9 +7,9 @@ Imports AccuPay.Utils
 
 Public Class OfficialBusinessForm
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _allEmployees As New List(Of Entities.Employee)
 
     Private _currentOfficialBusiness As OfficialBusiness
 
@@ -19,7 +19,7 @@ Public Class OfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New Repositories.EmployeeRepository
 
     Private _productRepository As New Data.Repositories.ProductRepository
 
@@ -101,7 +101,7 @@ Public Class OfficialBusinessForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 

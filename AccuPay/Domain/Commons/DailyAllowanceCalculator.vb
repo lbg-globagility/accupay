@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Entity
 
 Public Class DailyAllowanceCalculator
@@ -16,7 +17,7 @@ Public Class DailyAllowanceCalculator
         _previousTimeEntries = previousTimeEntries
     End Sub
 
-    Public Function Compute(payperiod As PayPeriod, allowance As Data.Entities.Allowance, employee As Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
+    Public Function Compute(payperiod As PayPeriod, allowance As Data.Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(

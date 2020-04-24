@@ -27,45 +27,45 @@ namespace AccuPay.Data.Entities
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual int? RowID { get; set; }
+        public int? RowID { get; set; }
 
-        public virtual int? OrganizationID { get; set; }
+        public int? OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public virtual int? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public virtual DateTime? LastUpd { get; set; }
+        public DateTime? LastUpd { get; set; }
 
-        public virtual int? LastUpdBy { get; set; }
+        public int? LastUpdBy { get; set; }
 
-        public virtual int? EmployeeID { get; set; }
+        public int? EmployeeID { get; set; }
 
         [Column("OTType")]
-        public virtual string Type { get; set; }
+        public string Type { get; set; }
 
-        public virtual TimeSpan? OTStartTime { get; set; }
+        public TimeSpan? OTStartTime { get; set; }
 
-        public virtual TimeSpan? OTEndTime { get; set; }
+        public TimeSpan? OTEndTime { get; set; }
 
-        public virtual DateTime OTStartDate { get; set; }
+        public DateTime OTStartDate { get; set; }
 
-        public virtual DateTime OTEndDate { get; set; }
+        public DateTime OTEndDate { get; set; }
 
         [Column("OTStatus")]
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
         [NotMapped]
-        public virtual DateTime? Start { get; set; }
+        public DateTime? Start { get; set; }
 
         [NotMapped]
-        public virtual DateTime? End { get; set; }
+        public DateTime? End { get; set; }
 
-        public virtual string Reason { get; set; }
+        public string Reason { get; set; }
 
-        public virtual string Comments { get; set; }
+        public string Comments { get; set; }
 
         public Overtime()
         {

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data
+Imports AccuPay.Entity
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 
@@ -13,6 +14,8 @@ Public Class PreviewLeaveBalanceForm
     Private _employeeModels As IList(Of EmployeeModel)
 
     Private policy As New RenewLeaveBalancePolicy
+
+    Private _employeeRepo As New Repositories.EmployeeRepository
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load
         Using context = New PayrollContext
@@ -74,12 +77,10 @@ Public Class PreviewLeaveBalanceForm
     Private Async Function RenewLeaveBalances() As Threading.Tasks.Task
         RemovePreviousLeaveCreditsAsync()
 
+        Dim categoryRepo = New Repositories.CategoryRepository
+        Dim leaveCategory = Await categoryRepo.GetByName(z_OrganizationID, "Leave Type")
+
         Using context = New PayrollContext()
-            Dim leaveCategory =
-                Await context.Categories.
-                Where(Function(c) c.OrganizationID = z_OrganizationID).
-                Where(Function(c) c.CategoryName = "Leave Type").
-                FirstOrDefaultAsync
             Dim leaveCategoryId = leaveCategory.RowID
 
             Dim leaveTypeList = New String() {ProductConstant.VACATION_LEAVE, ProductConstant.SICK_LEAVE}
@@ -135,7 +136,7 @@ Public Class PreviewLeaveBalanceForm
 
             Next
 
-            Dim empProfiles = Await context.Employees.Where(Function(e) employeeIds.Any(Function(id) Nullable.Equals(id, e.RowID))).ToListAsync()
+            Dim empProfiles = Await _employeeRepo.GetByManyIdAsync(z_OrganizationID, employeeIds)
 
             For Each employee In empProfiles
                 Dim eId = employee.RowID
@@ -238,13 +239,11 @@ Public Class PreviewLeaveBalanceForm
     Private Async Function LoadEmployees() As Threading.Tasks.Task
         Dim unemployedStatuses = New String() {"Resigned", "Terminated"}
 
-        Using context = New PayrollContext()
-            _employees = Await context.Employees.
-                Where(Function(e) Nullable.Equals(e.OrganizationID, z_OrganizationID)).
-                Where(Function(e) unemployedStatuses.Any(Function(strValue) Equals(strValue, e.EmploymentStatus)) = False).
-                OrderBy(Function(e) String.Concat(e.LastName, e.FirstName, e.MiddleName)).
-                ToListAsync()
-        End Using
+        Dim activeEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+
+        _employees = activeEmployees.
+            OrderBy(Function(e) e.FullNameWithMiddleInitial).
+            ToList()
 
         _employeeModels = _employees.Select(Function(e) New EmployeeModel(e)).ToList()
 
