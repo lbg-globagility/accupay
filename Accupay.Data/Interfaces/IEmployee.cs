@@ -36,7 +36,7 @@ namespace AccuPay.Data
         DateTime? LastUpd { get; set; }
         int? LastUpdBy { get; set; }
         decimal LateGracePeriod { get; set; }
-        decimal LeaveAllowance { get; set; }
+        decimal VacationLeaveAllowance { get; set; }
         decimal LeaveBalance { get; set; }
         decimal LeavePerPayPeriod { get; set; }
         string MaritalStatus { get; set; }

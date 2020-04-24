@@ -180,6 +180,9 @@ Public Class AddLoanScheduleForm
             Async Function()
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
+                Dim repo As New Data.Repositories.UserActivityRepository
+                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID, z_OrganizationID)
+
                 Me.IsSaved = True
 
                 If sender Is btnAddAndNew Then

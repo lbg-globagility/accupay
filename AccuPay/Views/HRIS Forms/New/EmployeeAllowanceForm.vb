@@ -152,6 +152,10 @@ Public Class EmployeeAllowanceForm
                                         Async Function()
                                             Await _allowanceRepository.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, currentAllowances:=changedAllowances)
 
+                                            For Each item In changedAllowances
+                                                RecordUpdate(item)
+                                            Next
+
                                             ShowBalloonInfo($"{changedAllowances.Count} Allowance(s) Successfully Updated.", messageTitle)
 
                                             Dim currentEmployee = GetSelectedEmployee()
@@ -173,7 +177,7 @@ Public Class EmployeeAllowanceForm
                 Me._currentAllowance.ProductID = Nothing
             Else
                 Me._currentAllowance.ProductID = selectedAllowanceType.RowID
-                Me._currentAllowance.Product.PartNo = selectedAllowanceType.PartNo
+                Me._currentAllowance.Product = selectedAllowanceType.CloneJson()
 
                 'force commit to gridview
                 'ForceAllowanceGridViewCommit()
@@ -313,6 +317,9 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
                                                 Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID)
+
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, "Allowance", CInt(Me._currentAllowance.RowID), z_OrganizationID)
 
                                                 Await LoadAllowances(currentEmployee)
 
@@ -511,6 +518,65 @@ Public Class EmployeeAllowanceForm
 
     End Function
 
+    Private Function RecordUpdate(newAllowance As Allowance) As Boolean
+
+        Dim oldAllowance =
+            Me._changedAllowances.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newAllowance.RowID))
+
+        If oldAllowance Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newAllowance.Type <> oldAllowance.Type Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldAllowance.RowID),
+                        .Description = $"Update allowance type from '{oldAllowance.Type}' to '{newAllowance.Type}'"
+                        })
+        End If
+        If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldAllowance.RowID),
+                        .Description = $"Update allowance frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'"
+                        })
+        End If
+        If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldAllowance.RowID),
+                        .Description = $"Update allowance start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'"
+                        })
+        End If
+        If newAllowance.EffectiveEndDate.ToString <> oldAllowance.EffectiveEndDate.ToString Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldAllowance.RowID),
+                        .Description = $"Update allowance end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'"
+                        })
+        End If
+        If newAllowance.Amount <> oldAllowance.Amount Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldAllowance.RowID),
+                        .Description = $"Update allowance amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'"
+                        })
+        End If
+
+        Dim repo = New UserActivityRepository
+        repo.CreateRecord(z_User, "Allowance", z_OrganizationID, "EDIT", changes)
+
+        Return True
+    End Function
+
+    Private Function CheckIfBothNullorBothHaveValue(object1 As Object, object2 As Object) As Boolean
+
+        Return (object1 Is Nothing AndAlso object2 Is Nothing) OrElse
+            (object1 IsNot Nothing AndAlso object2 IsNot Nothing)
+
+    End Function
+
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
@@ -532,6 +598,11 @@ Public Class EmployeeAllowanceForm
 
         Await FilterEmployees()
     End Function
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Allowance")
+        userActivity.ShowDialog()
+    End Sub
 
     Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
         If _currentAllowance Is Nothing Then Return

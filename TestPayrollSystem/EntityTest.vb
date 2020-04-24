@@ -10,10 +10,26 @@ Imports Microsoft.EntityFrameworkCore
 Public Class EntityTest
 
     <Test>
-    Public Sub EnumsShouldParseAsYes()
-        Dim answer = True
+    Public Sub Test1()
 
-        Assert.AreEqual(True, answer)
+        Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
+
+        'Dim repo As New UserActivityRepository()
+
+        'repo.RecordAdd(1, "a")
+        'repo.RecordDelete(1, "a")
+        'repo.RecordAdd(1, "")
+        'repo.RecordDelete(1, "")
+        'repo.RecordAdd(1, "Employee")
+        'repo.RecordDelete(1, "Employee")
+        'repo.RecordAdd(1, "Paystub")
+        'repo.RecordDelete(1, "Paystub")
+
+        'Assert.AreEqual(4, repo.List.Count)
+
+        'Dim answer = True
+
+        'Assert.AreEqual(True, answer)
     End Sub
 
     <Test>

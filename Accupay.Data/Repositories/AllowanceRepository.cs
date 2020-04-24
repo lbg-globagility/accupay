@@ -88,7 +88,13 @@ namespace AccuPay.Data.Repositories
                 }
             }
             else
+            {
                 await SaveAsyncFunction(userID, newAllowance, passedContext);
+            }
+
+            // we used clone json at the top so the passed allowance
+            // won't have the new RowID if the SaveAsync is Insert
+            allowance.RowID = newAllowance.RowID;
         }
 
         public async Task SaveAsync(int organizationID, int userID, Allowance allowance/* TODO Change to default(_) if this is not a reference type */)

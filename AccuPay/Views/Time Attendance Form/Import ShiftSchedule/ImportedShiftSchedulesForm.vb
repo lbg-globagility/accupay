@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Tools
@@ -421,6 +422,9 @@ Public Class ImportedShiftSchedulesForm
                 Where(Function(eds) employeeIDs.Contains(eds.EmployeeID)).
                 ToListAsync()
 
+            Dim newShiftScheduleList As New List(Of EmployeeDutySchedule)
+            Dim existingShiftScheduleList As New List(Of EmployeeDutySchedule)
+
             For Each ssm In _dataSourceOk
                 Dim seek = eDutyScheds.
                     Where(Function(eSched) eSched.EmployeeID.Value = ssm.EmployeeId.Value).
@@ -438,8 +442,11 @@ Public Class ImportedShiftSchedulesForm
 
                     eds.ShiftHours = ssm.ShiftHours
                     eds.WorkHours = ssm.WorkHours
+
+                    existingShiftScheduleList.Add(eds)
                 Else
 
+                    newShiftScheduleList.Add(ssm.ToEmployeeDutySchedule)
                     context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
                 End If
 
@@ -448,6 +455,27 @@ Public Class ImportedShiftSchedulesForm
             Dim succeed As Boolean = False
             Try
                 Dim i = Await context.SaveChangesAsync
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+
+                For Each schedule In newShiftScheduleList
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new shift schedule.",
+                        .EntityId = schedule.RowID
+                        })
+                Next
+                For Each schedule In existingShiftScheduleList
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Updated a shift schedule.",
+                        .EntityId = schedule.RowID
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Shift Schedule", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+
                 succeed = True
             Catch ex As Exception
                 succeed = False

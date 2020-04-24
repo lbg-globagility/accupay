@@ -66,6 +66,7 @@ Partial Class NewDivisionPositionForm
         Me.AddDivisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddPositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -76,6 +77,7 @@ Partial Class NewDivisionPositionForm
         Me.LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.MiddleName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserActivityPositionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.PositionTabPage.SuspendLayout()
         Me.PositionGroupBox.SuspendLayout()
         CType(Me.EmployeeDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -188,7 +190,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.ToolStrip2.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip2.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SavePositionToolStripButton, Me.ToolStripSeparator3, Me.DeletePositionToolStripButton, Me.ToolStripSeparator4, Me.CancelPositionToolStripButton, Me.CloseFormToolStripItem2, Me.ToolStripButton13})
+        Me.ToolStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SavePositionToolStripButton, Me.ToolStripSeparator3, Me.DeletePositionToolStripButton, Me.ToolStripSeparator4, Me.CancelPositionToolStripButton, Me.CloseFormToolStripItem2, Me.ToolStripButton13, Me.UserActivityPositionToolStripButton})
         Me.ToolStrip2.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip2.Name = "ToolStrip2"
         Me.ToolStrip2.Size = New System.Drawing.Size(796, 25)
@@ -280,7 +282,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.DivisionLocationGroupBox.Controls.Add(Me.TableLayoutPanel4)
         Me.DivisionLocationGroupBox.Font = New System.Drawing.Font("Segoe UI", 9.75!, System.Drawing.FontStyle.Bold)
-        Me.DivisionLocationGroupBox.Location = New System.Drawing.Point(6, 42)
+        Me.DivisionLocationGroupBox.Location = New System.Drawing.Point(6, 84)
         Me.DivisionLocationGroupBox.Name = "DivisionLocationGroupBox"
         Me.DivisionLocationGroupBox.Size = New System.Drawing.Size(240, 93)
         Me.DivisionLocationGroupBox.TabIndex = 395
@@ -356,7 +358,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveDivisionToolStripButton, Me.ToolStripSeparator1, Me.DeleteDivisionToolStripButton, Me.ToolStripSeparator2, Me.CancelDivisionToolStripButton, Me.CloseFormToolStripItem, Me.ToolStripButton6})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.SaveDivisionToolStripButton, Me.ToolStripSeparator1, Me.DeleteDivisionToolStripButton, Me.ToolStripSeparator2, Me.CancelDivisionToolStripButton, Me.CloseFormToolStripItem, Me.ToolStripButton6, Me.UserActivityToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(779, 25)
@@ -451,6 +453,7 @@ Partial Class NewDivisionPositionForm
         '
         Me.SearchToolStripTextBox.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
         Me.SearchToolStripTextBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.SearchToolStripTextBox.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.SearchToolStripTextBox.Margin = New System.Windows.Forms.Padding(1, 0, 20, 0)
         Me.SearchToolStripTextBox.Name = "SearchToolStripTextBox"
         Me.SearchToolStripTextBox.Size = New System.Drawing.Size(200, 25)
@@ -489,6 +492,14 @@ Partial Class NewDivisionPositionForm
         Me.ToolStripLabel1.Margin = New System.Windows.Forms.Padding(0, 1, 5, 2)
         Me.ToolStripLabel1.Name = "ToolStripLabel1"
         Me.ToolStripLabel1.Size = New System.Drawing.Size(16, 22)
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'DataGridViewTextBoxColumn1
         '
@@ -561,6 +572,14 @@ Partial Class NewDivisionPositionForm
         Me.MiddleName.HeaderText = "Middle Name"
         Me.MiddleName.Name = "MiddleName"
         Me.MiddleName.ReadOnly = True
+        '
+        'UserActivityPositionToolStripButton
+        '
+        Me.UserActivityPositionToolStripButton.Image = CType(resources.GetObject("UserActivityPositionToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityPositionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityPositionToolStripButton.Name = "UserActivityPositionToolStripButton"
+        Me.UserActivityPositionToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityPositionToolStripButton.Text = "User Activity"
         '
         'NewDivisionPositionForm
         '
@@ -652,4 +671,6 @@ Partial Class NewDivisionPositionForm
     Friend WithEvents ToolStripLabel1 As ToolStripLabel
     Protected Friend WithEvents DivisionPositionTreeView As TreeView
     Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents UserActivityToolStripButton As ToolStripButton
+    Friend WithEvents UserActivityPositionToolStripButton As ToolStripButton
 End Class

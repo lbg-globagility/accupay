@@ -133,7 +133,7 @@ Public Class ImportLoansForm
                 .Comments = record.Comments,
                 .TotalLoanAmount = record.TotalLoanAmount,
                 .TotalBalanceLeft = record.TotalBalanceLeft,
-                .DedEffectiveDateFrom = record.DedEffectiveDateFrom,
+                .DedEffectiveDateFrom = record.StartDate,
                 .DeductionAmount = record.DeductionAmount,
                 .DeductionPercentage = 0,
                 .LoanName = record.LoanName,
@@ -161,9 +161,16 @@ Public Class ImportLoansForm
 
     Private Function CheckIfRecordIsValid(record As LoanRowRecord, rejectedRecords As List(Of LoanRowRecord)) As Boolean
 
-        If record.DedEffectiveDateFrom Is Nothing Then
+        If record.StartDate Is Nothing Then
 
             record.ErrorMessage = "Start date cannot be empty."
+            rejectedRecords.Add(record)
+            Return False
+        End If
+
+        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
             rejectedRecords.Add(record)
             Return False
         End If
@@ -229,6 +236,18 @@ Public Class ImportLoansForm
                 Next
 
                 Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
+
+                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                For Each item In loansWithOutEmployeeObject
+                    importList.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .Description = $"Imported a new loan.",
+                        .EntityId = item.RowID
+                        })
+                Next
+
+                Dim repo = New Data.Repositories.UserActivityRepository
+                repo.CreateRecord(z_User, "Loan", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

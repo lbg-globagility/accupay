@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace AccuPay.Data.Helpers
+﻿namespace AccuPay.Data.Helpers
 {
     public class ProductConstant
     {
@@ -36,5 +32,4 @@ namespace AccuPay.Data.Helpers
 
         public static readonly string BPI_INSURANCE_ADJUSTMENT = "BPI Insurance";
     }
-
 }

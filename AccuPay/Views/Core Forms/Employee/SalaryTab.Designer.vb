@@ -26,16 +26,6 @@ Partial Class SalaryTab
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SalaryTab))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -46,6 +36,16 @@ Partial Class SalaryTab
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
@@ -113,6 +113,7 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn18 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserActivitySalaryToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.c_fromdate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_todate = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_EmpSal = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -135,7 +136,7 @@ Partial Class SalaryTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnImport, Me.UserActivitySalaryToolStripButton})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -798,6 +799,13 @@ Partial Class SalaryTab
         Me.DataGridViewTextBoxColumn19.Name = "DataGridViewTextBoxColumn19"
         Me.DataGridViewTextBoxColumn19.Visible = False
         '
+        'UserActivitySalaryToolStripButton
+        '
+        Me.UserActivitySalaryToolStripButton.Image = CType(resources.GetObject("UserActivitySalaryToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivitySalaryToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivitySalaryToolStripButton.Name = "UserActivitySalaryToolStripButton"
+        Me.UserActivitySalaryToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivitySalaryToolStripButton.Text = "User Activity"
         'c_fromdate
         '
         Me.c_fromdate.DataPropertyName = "EffectiveFrom"
@@ -1021,9 +1029,6 @@ Partial Class SalaryTab
     Friend WithEvents chkPaySSS As CheckBox
     Friend WithEvents chkPayPhilHealth As CheckBox
     Friend WithEvents ChkPagIbig As CheckBox
-    Friend WithEvents txtEcola As TextBox
-    Friend WithEvents lblEcolaPeroSign As Label
-    Friend WithEvents lblEcola As Label
     Friend WithEvents OverlapWarningLabel As Label
     Friend WithEvents c_fromdate As DataGridViewTextBoxColumn
     Friend WithEvents c_todate As DataGridViewTextBoxColumn
@@ -1037,4 +1042,8 @@ Partial Class SalaryTab
     Friend WithEvents Column3 As DataGridViewTextBoxColumn
     Friend WithEvents c_BasicDailyPaySal As DataGridViewTextBoxColumn
     Friend WithEvents c_BasicHourlyPaySal As DataGridViewTextBoxColumn
+    Friend WithEvents txtEcola As TextBox
+    Friend WithEvents lblEcolaPeroSign As Label
+    Friend WithEvents lblEcola As Label
+    Friend WithEvents UserActivitySalaryToolStripButton As ToolStripButton
 End Class

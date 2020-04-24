@@ -139,7 +139,12 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveAsync(organizationID:=z_OrganizationID, userID:=z_User, Me._newAllowance)
+                Await _allowanceRepository.SaveAsync(organizationID:=z_OrganizationID,
+                                                     userID:=z_User,
+                                                     allowance:=Me._newAllowance)
+
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
 

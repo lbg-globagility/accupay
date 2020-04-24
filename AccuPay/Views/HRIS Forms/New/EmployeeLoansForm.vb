@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Repository
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -49,6 +49,8 @@ Public Class EmployeeLoansForm
             AddHandler searchTextBox.TextChanged, AddressOf searchTextBox_TextChanged
             RemoveHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
         End If
+
+        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
 
         DetailsTabControl.Enabled = False
 
@@ -112,12 +114,20 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Sub loanSchedulesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles loanSchedulesDataGridView.SelectionChanged
+    Private Async Sub loanSchedulesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        RemoveHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
+
         ResetLoanScheduleForm()
 
         DetailsTabControl.Enabled = False
 
-        If loanSchedulesDataGridView.CurrentRow Is Nothing Then Return
+        If loanSchedulesDataGridView.CurrentRow Is Nothing Then
+
+            AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
+            Return
+
+        End If
 
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
 
@@ -125,14 +135,14 @@ Public Class EmployeeLoansForm
         If currentLoanSchedule IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
            Nullable.Equals(currentLoanSchedule.EmployeeID, currentEmployee.RowID) Then
 
-            Await LoadLoanTransactions(currentLoanSchedule)
-
-            PopulateLoanScheduleForm(currentLoanSchedule)
+            Await UpdateSelectedLoanScheduleData()
 
             tbpHistory.Text = $"{LOAN_HISTORY_TAB_TEXT} ({Me._currentLoanTransactions.Count})"
 
             DetailsTabControl.Enabled = True
         End If
+
+        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
 
     End Sub
 
@@ -259,8 +269,12 @@ Public Class EmployeeLoansForm
         End If
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-            Async Function()
+            Async Function() As Task
                 Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
+
+                For Each item In changedLoanSchedules
+                    RecordUpdate(item)
+                Next
 
                 ShowBalloonInfo($"{changedLoanSchedules.Count} Loan(s) Successfully Updated.", messageTitle)
 
@@ -439,6 +453,9 @@ Public Class EmployeeLoansForm
 
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
 
+            Dim repo As New Data.Repositories.UserActivityRepository
+            repo.RecordDelete(z_User, "Loan", CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
+
             Await LoadLoanSchedules(currentEmployee)
 
             ShowBalloonInfo($"Loan{If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)}Successfully Deleted.", messageTitle)
@@ -608,7 +625,10 @@ Public Class EmployeeLoansForm
         Return whereFunction
     End Function
 
-    Private Async Function LoadLoanTransactions(currentLoanSchedule As LoanSchedule) As Task
+    Private Async Function UpdateSelectedLoanScheduleData() As Task
+
+        Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
+        If currentLoanSchedule Is Nothing Then Return
 
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
             (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriod(currentLoanSchedule.RowID))
@@ -622,6 +642,8 @@ Public Class EmployeeLoansForm
             loanHistoryGridView.CurrentCell = loanHistoryGridView.Rows(loanHistoryCount - 1).Cells(0)
 
         End If
+
+        PopulateLoanScheduleForm(currentLoanSchedule)
 
     End Function
 
@@ -827,6 +849,86 @@ Public Class EmployeeLoansForm
 
     End Function
 
+    Private Function RecordUpdate(newLoanSchedule As LoanSchedule) As Boolean
+
+        Dim oldLoanSchedule =
+            Me._changedLoanSchedules.
+                FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLoanSchedule.RowID))
+
+        If oldLoanSchedule Is Nothing Then Return False
+
+        Dim changes = New List(Of Data.Entities.UserActivityItem)
+
+        If newLoanSchedule.LoanName <> oldLoanSchedule.LoanName Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}'"
+                        })
+        End If
+        If newLoanSchedule.LoanNumber <> oldLoanSchedule.LoanNumber Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}'"
+                        })
+        End If
+        If newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan total amount from '{oldLoanSchedule.TotalLoanAmount.ToString}' to '{newLoanSchedule.TotalLoanAmount.ToString}'"
+                        })
+        End If
+        If newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString}'"
+                        })
+        End If
+        If newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan deduction amount from '{oldLoanSchedule.DeductionAmount.ToString}' to '{newLoanSchedule.DeductionAmount.ToString}'"
+                        })
+        End If
+        If newLoanSchedule.Status <> oldLoanSchedule.Status Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}'"
+                        })
+        End If
+        If newLoanSchedule.DeductionPercentage <> oldLoanSchedule.DeductionPercentage Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan interest percentage from '{oldLoanSchedule.DeductionPercentage.ToString}' to '{newLoanSchedule.DeductionPercentage.ToString}'"
+                        })
+        End If
+        If newLoanSchedule.DeductionSchedule <> oldLoanSchedule.DeductionSchedule Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}'"
+                        })
+        End If
+        If newLoanSchedule.Comments <> oldLoanSchedule.Comments Then
+            changes.Add(New Data.Entities.UserActivityItem() With
+                        {
+                        .EntityId = CInt(oldLoanSchedule.RowID),
+                        .Description = $"Update loan comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'"
+                        })
+        End If
+
+        Dim repo = New Data.Repositories.UserActivityRepository
+        repo.CreateRecord(z_User, "Loan", z_OrganizationID, "EDIT", changes)
+
+        Return True
+    End Function
+
     Private Async Function LoadEmployees() As Task
 
         Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
@@ -848,6 +950,11 @@ Public Class EmployeeLoansForm
 
         Await FilterEmployees()
     End Function
+
+    Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
+        Dim userActivity As New UserActivityForm("Loan")
+        userActivity.ShowDialog()
+    End Sub
 
 #End Region
 

@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository
@@ -110,7 +111,6 @@ Public Class AddPositionForm
 
         End If
 
-
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                           Async Function()
                               Await SavePosition(messageTitle, sender)
@@ -122,6 +122,9 @@ Public Class AddPositionForm
 
         Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition)
 
+        Dim repo As New UserActivityRepository
+        repo.RecordAdd(z_User, "Position", Me._newPosition.RowID, z_OrganizationID)
+
         Me.IsSaved = True
 
         If sender Is btnAddAndNew Then
@@ -129,7 +132,6 @@ Public Class AddPositionForm
             ShowBalloonInfo($"Position: {Me._newPosition.Name} was successfully added.", "New Position", 0, -80)
 
             ResetForm()
-
         Else
 
             Me.ShowBalloonSuccess = True
@@ -145,4 +147,5 @@ Public Class AddPositionForm
     Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
         Me.Close()
     End Sub
+
 End Class
