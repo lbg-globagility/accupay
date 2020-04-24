@@ -40,12 +40,12 @@ Partial Class EmployeeForm
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle25 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -522,6 +522,41 @@ Partial Class EmployeeForm
         Me.ToolStripButton19 = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityPromotionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.tbpBonus = New System.Windows.Forms.TabPage()
+        Me.BonusTab = New AccuPay.BonusTab()
+        Me.tbpAttachment = New System.Windows.Forms.TabPage()
+        Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.Label344 = New System.Windows.Forms.Label()
+        Me.Label343 = New System.Windows.Forms.Label()
+        Me.pbEmpPicAtta = New System.Windows.Forms.PictureBox()
+        Me.dgvempatta = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
+        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.eatt_viewthis = New System.Windows.Forms.DataGridViewButtonColumn()
+        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.txtFNameAtta = New System.Windows.Forms.TextBox()
+        Me.cboattatype = New System.Windows.Forms.ComboBox()
+        Me.txtEmpIDAtta = New System.Windows.Forms.TextBox()
+        Me.btnattaclear = New System.Windows.Forms.Button()
+        Me.pbatta = New System.Windows.Forms.PictureBox()
+        Me.btnattadl = New System.Windows.Forms.Button()
+        Me.btnattabrowse = New System.Windows.Forms.Button()
+        Me.Label235 = New System.Windows.Forms.Label()
+        Me.ToolStrip21 = New System.Windows.Forms.ToolStrip()
+        Me.tsbtnNewAtta = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnSaveAtta = New System.Windows.Forms.ToolStripButton()
+        Me.tsbtnCancelAtta = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
+        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.Label342 = New System.Windows.Forms.Label()
         Me.pbEmpPicBon = New System.Windows.Forms.PictureBox()
@@ -561,41 +596,6 @@ Partial Class EmployeeForm
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDelBon = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityBonusToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.tbpAttachment = New System.Windows.Forms.TabPage()
-        Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.Label344 = New System.Windows.Forms.Label()
-        Me.Label343 = New System.Windows.Forms.Label()
-        Me.pbEmpPicAtta = New System.Windows.Forms.PictureBox()
-        Me.dgvempatta = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.eatt_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_Type = New System.Windows.Forms.DataGridViewComboBoxColumn()
-        Me.eatt_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_FileType = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_Created = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_CreatedBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_LastUpdBy = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_AttachedFile = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.eatt_viewthis = New System.Windows.Forms.DataGridViewButtonColumn()
-        Me.Column38 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.txtFNameAtta = New System.Windows.Forms.TextBox()
-        Me.cboattatype = New System.Windows.Forms.ComboBox()
-        Me.txtEmpIDAtta = New System.Windows.Forms.TextBox()
-        Me.btnattaclear = New System.Windows.Forms.Button()
-        Me.pbatta = New System.Windows.Forms.PictureBox()
-        Me.btnattadl = New System.Windows.Forms.Button()
-        Me.btnattabrowse = New System.Windows.Forms.Button()
-        Me.Label235 = New System.Windows.Forms.Label()
-        Me.ToolStrip21 = New System.Windows.Forms.ToolStrip()
-        Me.tsbtnNewAtta = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnSaveAtta = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnCancelAtta = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
-        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
-        Me.SalaryTab = New AccuPay.SalaryTab()
-        Me.BonusTab = New AccuPay.BonusTab()
         Me.imglstQuestMark = New System.Windows.Forms.ImageList(Me.components)
         Me.ecert_DateIssued = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.ecert_Expiration = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
@@ -968,10 +968,6 @@ Partial Class EmployeeForm
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip11.SuspendLayout
         Me.tbpBonus.SuspendLayout
-        Me.Panel3.SuspendLayout
-        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip20.SuspendLayout
         Me.tbpAttachment.SuspendLayout
         Me.Panel2.SuspendLayout
         CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).BeginInit
@@ -979,6 +975,10 @@ Partial Class EmployeeForm
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip21.SuspendLayout
         Me.tbpNewSalary.SuspendLayout
+        Me.Panel3.SuspendLayout
+        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip20.SuspendLayout
         Me.TabControl2.SuspendLayout
         Me.TabPage2.SuspendLayout
         Me.TabPage3.SuspendLayout
@@ -5568,6 +5568,358 @@ Partial Class EmployeeForm
         Me.tbpBonus.Text = "BONUS"
         Me.tbpBonus.UseVisualStyleBackColor = True
         '
+        'BonusTab
+        '
+        Me.BonusTab.BackColor = System.Drawing.Color.White
+        Me.BonusTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BonusTab.Location = New System.Drawing.Point(3, 3)
+        Me.BonusTab.Name = "BonusTab"
+        Me.BonusTab.Size = New System.Drawing.Size(854, 480)
+        Me.BonusTab.TabIndex = 0
+        '
+        'tbpAttachment
+        '
+        Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
+        Me.tbpAttachment.AutoScroll = True
+        Me.tbpAttachment.Controls.Add(Me.Panel2)
+        Me.tbpAttachment.Controls.Add(Me.ToolStrip21)
+        Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
+        Me.tbpAttachment.Name = "tbpAttachment"
+        Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpAttachment.Size = New System.Drawing.Size(860, 486)
+        Me.tbpAttachment.TabIndex = 18
+        Me.tbpAttachment.Text = "ATTACH"
+        Me.tbpAttachment.UseVisualStyleBackColor = True
+        '
+        'Panel2
+        '
+        Me.Panel2.AutoScroll = True
+        Me.Panel2.Controls.Add(Me.Label344)
+        Me.Panel2.Controls.Add(Me.Label343)
+        Me.Panel2.Controls.Add(Me.pbEmpPicAtta)
+        Me.Panel2.Controls.Add(Me.dgvempatta)
+        Me.Panel2.Controls.Add(Me.txtFNameAtta)
+        Me.Panel2.Controls.Add(Me.cboattatype)
+        Me.Panel2.Controls.Add(Me.txtEmpIDAtta)
+        Me.Panel2.Controls.Add(Me.btnattaclear)
+        Me.Panel2.Controls.Add(Me.pbatta)
+        Me.Panel2.Controls.Add(Me.btnattadl)
+        Me.Panel2.Controls.Add(Me.btnattabrowse)
+        Me.Panel2.Controls.Add(Me.Label235)
+        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel2.Location = New System.Drawing.Point(3, 28)
+        Me.Panel2.Name = "Panel2"
+        Me.Panel2.Size = New System.Drawing.Size(854, 455)
+        Me.Panel2.TabIndex = 345
+        '
+        'Label344
+        '
+        Me.Label344.AutoSize = True
+        Me.Label344.ForeColor = System.Drawing.Color.White
+        Me.Label344.Location = New System.Drawing.Point(847, 269)
+        Me.Label344.Name = "Label344"
+        Me.Label344.Size = New System.Drawing.Size(25, 13)
+        Me.Label344.TabIndex = 505
+        Me.Label344.Text = "___"
+        '
+        'Label343
+        '
+        Me.Label343.AutoSize = True
+        Me.Label343.ForeColor = System.Drawing.Color.White
+        Me.Label343.Location = New System.Drawing.Point(29, 439)
+        Me.Label343.Name = "Label343"
+        Me.Label343.Size = New System.Drawing.Size(25, 13)
+        Me.Label343.TabIndex = 504
+        Me.Label343.Text = "___"
+        '
+        'pbEmpPicAtta
+        '
+        Me.pbEmpPicAtta.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.pbEmpPicAtta.Location = New System.Drawing.Point(32, 8)
+        Me.pbEmpPicAtta.Name = "pbEmpPicAtta"
+        Me.pbEmpPicAtta.Size = New System.Drawing.Size(89, 77)
+        Me.pbEmpPicAtta.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbEmpPicAtta.TabIndex = 343
+        Me.pbEmpPicAtta.TabStop = False
+        '
+        'dgvempatta
+        '
+        Me.dgvempatta.AllowUserToDeleteRows = False
+        Me.dgvempatta.AllowUserToOrderColumns = True
+        Me.dgvempatta.AllowUserToResizeRows = False
+        Me.dgvempatta.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
+        Me.dgvempatta.ColumnHeadersHeight = 34
+        Me.dgvempatta.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eatt_RowID, Me.eatt_Type, Me.eatt_FileName, Me.eatt_FileType, Me.eatt_EmployeeID, Me.eatt_Created, Me.eatt_CreatedBy, Me.eatt_LastUpd, Me.eatt_LastUpdBy, Me.eatt_AttachedFile, Me.eatt_viewthis, Me.Column38})
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle17.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle17.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle17.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle17.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle17.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle17
+        Me.dgvempatta.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvempatta.Location = New System.Drawing.Point(32, 91)
+        Me.dgvempatta.MultiSelect = False
+        Me.dgvempatta.Name = "dgvempatta"
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle18
+        Me.dgvempatta.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
+        Me.dgvempatta.TabIndex = 0
+        '
+        'eatt_RowID
+        '
+        Me.eatt_RowID.HeaderText = "RowID"
+        Me.eatt_RowID.Name = "eatt_RowID"
+        Me.eatt_RowID.Visible = False
+        Me.eatt_RowID.Width = 128
+        '
+        'eatt_Type
+        '
+        Me.eatt_Type.HeaderText = "Type"
+        Me.eatt_Type.Name = "eatt_Type"
+        Me.eatt_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eatt_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.eatt_Type.Width = 200
+        '
+        'eatt_FileName
+        '
+        Me.eatt_FileName.HeaderText = "File name"
+        Me.eatt_FileName.MaxInputLength = 200
+        Me.eatt_FileName.Name = "eatt_FileName"
+        Me.eatt_FileName.Width = 160
+        '
+        'eatt_FileType
+        '
+        Me.eatt_FileType.HeaderText = "File extension"
+        Me.eatt_FileType.Name = "eatt_FileType"
+        Me.eatt_FileType.ReadOnly = True
+        Me.eatt_FileType.Width = 160
+        '
+        'eatt_EmployeeID
+        '
+        Me.eatt_EmployeeID.HeaderText = "Column42"
+        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
+        Me.eatt_EmployeeID.Visible = False
+        '
+        'eatt_Created
+        '
+        Me.eatt_Created.HeaderText = "Column43"
+        Me.eatt_Created.Name = "eatt_Created"
+        Me.eatt_Created.Visible = False
+        '
+        'eatt_CreatedBy
+        '
+        Me.eatt_CreatedBy.HeaderText = "Column44"
+        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
+        Me.eatt_CreatedBy.Visible = False
+        '
+        'eatt_LastUpd
+        '
+        Me.eatt_LastUpd.HeaderText = "Column45"
+        Me.eatt_LastUpd.Name = "eatt_LastUpd"
+        Me.eatt_LastUpd.Visible = False
+        '
+        'eatt_LastUpdBy
+        '
+        Me.eatt_LastUpdBy.HeaderText = "Column46"
+        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
+        Me.eatt_LastUpdBy.Visible = False
+        '
+        'eatt_AttachedFile
+        '
+        Me.eatt_AttachedFile.HeaderText = "Column47"
+        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
+        Me.eatt_AttachedFile.Visible = False
+        '
+        'eatt_viewthis
+        '
+        Me.eatt_viewthis.HeaderText = ""
+        Me.eatt_viewthis.Name = "eatt_viewthis"
+        Me.eatt_viewthis.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.eatt_viewthis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.eatt_viewthis.Width = 120
+        '
+        'Column38
+        '
+        Me.Column38.HeaderText = "Attachment Type"
+        Me.Column38.Name = "Column38"
+        Me.Column38.Visible = False
+        '
+        'txtFNameAtta
+        '
+        Me.txtFNameAtta.BackColor = System.Drawing.Color.White
+        Me.txtFNameAtta.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtFNameAtta.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.txtFNameAtta.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.txtFNameAtta.Location = New System.Drawing.Point(127, 22)
+        Me.txtFNameAtta.MaxLength = 250
+        Me.txtFNameAtta.Name = "txtFNameAtta"
+        Me.txtFNameAtta.ReadOnly = True
+        Me.txtFNameAtta.Size = New System.Drawing.Size(516, 28)
+        Me.txtFNameAtta.TabIndex = 342
+        '
+        'cboattatype
+        '
+        Me.cboattatype.FormattingEnabled = True
+        Me.cboattatype.Location = New System.Drawing.Point(32, 91)
+        Me.cboattatype.Name = "cboattatype"
+        Me.cboattatype.Size = New System.Drawing.Size(121, 21)
+        Me.cboattatype.TabIndex = 1
+        Me.cboattatype.Visible = False
+        '
+        'txtEmpIDAtta
+        '
+        Me.txtEmpIDAtta.BackColor = System.Drawing.Color.White
+        Me.txtEmpIDAtta.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtEmpIDAtta.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.txtEmpIDAtta.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.txtEmpIDAtta.Location = New System.Drawing.Point(127, 49)
+        Me.txtEmpIDAtta.MaxLength = 50
+        Me.txtEmpIDAtta.Name = "txtEmpIDAtta"
+        Me.txtEmpIDAtta.ReadOnly = True
+        Me.txtEmpIDAtta.Size = New System.Drawing.Size(516, 22)
+        Me.txtEmpIDAtta.TabIndex = 341
+        '
+        'btnattaclear
+        '
+        Me.btnattaclear.Location = New System.Drawing.Point(766, 287)
+        Me.btnattaclear.Name = "btnattaclear"
+        Me.btnattaclear.Size = New System.Drawing.Size(75, 21)
+        Me.btnattaclear.TabIndex = 2
+        Me.btnattaclear.Text = "Clear"
+        Me.btnattaclear.UseVisualStyleBackColor = True
+        '
+        'pbatta
+        '
+        Me.pbatta.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.pbatta.Location = New System.Drawing.Point(649, 91)
+        Me.pbatta.Name = "pbatta"
+        Me.pbatta.Size = New System.Drawing.Size(192, 191)
+        Me.pbatta.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbatta.TabIndex = 183
+        Me.pbatta.TabStop = False
+        '
+        'btnattadl
+        '
+        Me.btnattadl.Location = New System.Drawing.Point(649, 314)
+        Me.btnattadl.Name = "btnattadl"
+        Me.btnattadl.Size = New System.Drawing.Size(75, 21)
+        Me.btnattadl.TabIndex = 3
+        Me.btnattadl.Text = "Download"
+        Me.btnattadl.UseVisualStyleBackColor = True
+        '
+        'btnattabrowse
+        '
+        Me.btnattabrowse.Location = New System.Drawing.Point(649, 287)
+        Me.btnattabrowse.Name = "btnattabrowse"
+        Me.btnattabrowse.Size = New System.Drawing.Size(75, 21)
+        Me.btnattabrowse.TabIndex = 1
+        Me.btnattabrowse.Text = "&Browse..."
+        Me.btnattabrowse.UseVisualStyleBackColor = True
+        '
+        'Label235
+        '
+        Me.Label235.AutoSize = True
+        Me.Label235.Location = New System.Drawing.Point(592, 91)
+        Me.Label235.Name = "Label235"
+        Me.Label235.Size = New System.Drawing.Size(51, 13)
+        Me.Label235.TabIndex = 344
+        Me.Label235.Text = "Label235"
+        '
+        'ToolStrip21
+        '
+        Me.ToolStrip21.BackColor = System.Drawing.Color.Transparent
+        Me.ToolStrip21.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewAtta, Me.tsbtnSaveAtta, Me.tsbtnCancelAtta, Me.ToolStripButton16, Me.ToolStripButton34})
+        Me.ToolStrip21.Location = New System.Drawing.Point(3, 3)
+        Me.ToolStrip21.Name = "ToolStrip21"
+        Me.ToolStrip21.Size = New System.Drawing.Size(854, 25)
+        Me.ToolStrip21.TabIndex = 344
+        Me.ToolStrip21.Text = "ToolStrip21"
+        '
+        'tsbtnNewAtta
+        '
+        Me.tsbtnNewAtta.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.tsbtnNewAtta.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnNewAtta.Name = "tsbtnNewAtta"
+        Me.tsbtnNewAtta.Size = New System.Drawing.Size(117, 22)
+        Me.tsbtnNewAtta.Text = "&New Attachment"
+        '
+        'tsbtnSaveAtta
+        '
+        Me.tsbtnSaveAtta.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.tsbtnSaveAtta.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnSaveAtta.Name = "tsbtnSaveAtta"
+        Me.tsbtnSaveAtta.Size = New System.Drawing.Size(117, 22)
+        Me.tsbtnSaveAtta.Text = "&Save Attachment"
+        '
+        'tsbtnCancelAtta
+        '
+        Me.tsbtnCancelAtta.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.tsbtnCancelAtta.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.tsbtnCancelAtta.Name = "tsbtnCancelAtta"
+        Me.tsbtnCancelAtta.Size = New System.Drawing.Size(63, 22)
+        Me.tsbtnCancelAtta.Text = "Cancel"
+        '
+        'ToolStripButton16
+        '
+        Me.ToolStripButton16.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripButton16.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.ToolStripButton16.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton16.Name = "ToolStripButton16"
+        Me.ToolStripButton16.Size = New System.Drawing.Size(56, 22)
+        Me.ToolStripButton16.Text = "Close"
+        '
+        'ToolStripButton34
+        '
+        Me.ToolStripButton34.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.ToolStripButton34.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.ToolStripButton34.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
+        Me.ToolStripButton34.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.ToolStripButton34.Name = "ToolStripButton34"
+        Me.ToolStripButton34.Size = New System.Drawing.Size(23, 22)
+        Me.ToolStripButton34.Text = "ToolStripButton1"
+        Me.ToolStripButton34.ToolTipText = "Show audit trails"
+        '
+        'tbpNewSalary
+        '
+        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
+        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
+        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
+        Me.tbpNewSalary.Name = "tbpNewSalary"
+        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
+        Me.tbpNewSalary.TabIndex = 19
+        Me.tbpNewSalary.Text = "SALARY"
+        Me.tbpNewSalary.UseVisualStyleBackColor = True
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.PhilHealth = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
+        Me.SalaryTab.TabIndex = 0
+        '
         'Panel3
         '
         Me.Panel3.AutoScroll = True
@@ -5729,29 +6081,6 @@ Partial Class EmployeeForm
         Me.dgvempbon.AllowUserToOrderColumns = True
         Me.dgvempbon.AllowUserToResizeRows = False
         Me.dgvempbon.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle16.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle16.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle16.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle16.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle16.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle16.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle16
-        Me.dgvempbon.ColumnHeadersHeight = 34
-        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle18
-        Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
-        Me.dgvempbon.MultiSelect = False
-        Me.dgvempbon.Name = "dgvempbon"
-        Me.dgvempbon.ReadOnly = True
         DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle19.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle19.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -5759,7 +6088,30 @@ Partial Class EmployeeForm
         DataGridViewCellStyle19.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle19.SelectionForeColor = System.Drawing.SystemColors.HighlightText
         DataGridViewCellStyle19.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle19
+        Me.dgvempbon.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle19
+        Me.dgvempbon.ColumnHeadersHeight = 34
+        Me.dgvempbon.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.bon_RowID, Me.bon_Type, Me.bon_Amount, Me.bon_Frequency, Me.bon_Start, Me.bon_End, Me.bon_ProdID})
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempbon.DefaultCellStyle = DataGridViewCellStyle21
+        Me.dgvempbon.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvempbon.Location = New System.Drawing.Point(32, 225)
+        Me.dgvempbon.MultiSelect = False
+        Me.dgvempbon.Name = "dgvempbon"
+        Me.dgvempbon.ReadOnly = True
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempbon.RowHeadersDefaultCellStyle = DataGridViewCellStyle22
         Me.dgvempbon.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempbon.Size = New System.Drawing.Size(783, 345)
         Me.dgvempbon.TabIndex = 5
@@ -5783,8 +6135,8 @@ Partial Class EmployeeForm
         '
         'bon_Amount
         '
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle20
         Me.bon_Amount.HeaderText = "Amount"
         Me.bon_Amount.Name = "bon_Amount"
         Me.bon_Amount.ReadOnly = True
@@ -6047,349 +6399,6 @@ Partial Class EmployeeForm
         Me.UserActivityBonusToolStripButton.Name = "UserActivityBonusToolStripButton"
         Me.UserActivityBonusToolStripButton.Size = New System.Drawing.Size(93, 22)
         Me.UserActivityBonusToolStripButton.Text = "User Activity"
-        '
-        'tbpAttachment
-        '
-        Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
-        Me.tbpAttachment.AutoScroll = True
-        Me.tbpAttachment.Controls.Add(Me.Panel2)
-        Me.tbpAttachment.Controls.Add(Me.ToolStrip21)
-        Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
-        Me.tbpAttachment.Name = "tbpAttachment"
-        Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAttachment.Size = New System.Drawing.Size(860, 486)
-        Me.tbpAttachment.TabIndex = 18
-        Me.tbpAttachment.Text = "ATTACH"
-        Me.tbpAttachment.UseVisualStyleBackColor = True
-        '
-        'Panel2
-        '
-        Me.Panel2.AutoScroll = True
-        Me.Panel2.Controls.Add(Me.Label344)
-        Me.Panel2.Controls.Add(Me.Label343)
-        Me.Panel2.Controls.Add(Me.pbEmpPicAtta)
-        Me.Panel2.Controls.Add(Me.dgvempatta)
-        Me.Panel2.Controls.Add(Me.txtFNameAtta)
-        Me.Panel2.Controls.Add(Me.cboattatype)
-        Me.Panel2.Controls.Add(Me.txtEmpIDAtta)
-        Me.Panel2.Controls.Add(Me.btnattaclear)
-        Me.Panel2.Controls.Add(Me.pbatta)
-        Me.Panel2.Controls.Add(Me.btnattadl)
-        Me.Panel2.Controls.Add(Me.btnattabrowse)
-        Me.Panel2.Controls.Add(Me.Label235)
-        Me.Panel2.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel2.Location = New System.Drawing.Point(3, 28)
-        Me.Panel2.Name = "Panel2"
-        Me.Panel2.Size = New System.Drawing.Size(854, 455)
-        Me.Panel2.TabIndex = 345
-        '
-        'Label344
-        '
-        Me.Label344.AutoSize = True
-        Me.Label344.ForeColor = System.Drawing.Color.White
-        Me.Label344.Location = New System.Drawing.Point(847, 269)
-        Me.Label344.Name = "Label344"
-        Me.Label344.Size = New System.Drawing.Size(25, 13)
-        Me.Label344.TabIndex = 505
-        Me.Label344.Text = "___"
-        '
-        'Label343
-        '
-        Me.Label343.AutoSize = True
-        Me.Label343.ForeColor = System.Drawing.Color.White
-        Me.Label343.Location = New System.Drawing.Point(29, 439)
-        Me.Label343.Name = "Label343"
-        Me.Label343.Size = New System.Drawing.Size(25, 13)
-        Me.Label343.TabIndex = 504
-        Me.Label343.Text = "___"
-        '
-        'pbEmpPicAtta
-        '
-        Me.pbEmpPicAtta.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmpPicAtta.Location = New System.Drawing.Point(32, 8)
-        Me.pbEmpPicAtta.Name = "pbEmpPicAtta"
-        Me.pbEmpPicAtta.Size = New System.Drawing.Size(89, 77)
-        Me.pbEmpPicAtta.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmpPicAtta.TabIndex = 343
-        Me.pbEmpPicAtta.TabStop = False
-        '
-        'dgvempatta
-        '
-        Me.dgvempatta.AllowUserToDeleteRows = False
-        Me.dgvempatta.AllowUserToOrderColumns = True
-        Me.dgvempatta.AllowUserToResizeRows = False
-        Me.dgvempatta.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle20.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle20.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle20.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle20.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle20.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle20.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle20
-        Me.dgvempatta.ColumnHeadersHeight = 34
-        Me.dgvempatta.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eatt_RowID, Me.eatt_Type, Me.eatt_FileName, Me.eatt_FileType, Me.eatt_EmployeeID, Me.eatt_Created, Me.eatt_CreatedBy, Me.eatt_LastUpd, Me.eatt_LastUpdBy, Me.eatt_AttachedFile, Me.eatt_viewthis, Me.Column38})
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle21.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle21
-        Me.dgvempatta.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvempatta.Location = New System.Drawing.Point(32, 91)
-        Me.dgvempatta.MultiSelect = False
-        Me.dgvempatta.Name = "dgvempatta"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle22.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle22.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle22.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle22.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle22.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle22.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle22
-        Me.dgvempatta.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
-        Me.dgvempatta.TabIndex = 0
-        '
-        'eatt_RowID
-        '
-        Me.eatt_RowID.HeaderText = "RowID"
-        Me.eatt_RowID.Name = "eatt_RowID"
-        Me.eatt_RowID.Visible = False
-        Me.eatt_RowID.Width = 128
-        '
-        'eatt_Type
-        '
-        Me.eatt_Type.HeaderText = "Type"
-        Me.eatt_Type.Name = "eatt_Type"
-        Me.eatt_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eatt_Type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.eatt_Type.Width = 200
-        '
-        'eatt_FileName
-        '
-        Me.eatt_FileName.HeaderText = "File name"
-        Me.eatt_FileName.MaxInputLength = 200
-        Me.eatt_FileName.Name = "eatt_FileName"
-        Me.eatt_FileName.Width = 160
-        '
-        'eatt_FileType
-        '
-        Me.eatt_FileType.HeaderText = "File extension"
-        Me.eatt_FileType.Name = "eatt_FileType"
-        Me.eatt_FileType.ReadOnly = True
-        Me.eatt_FileType.Width = 160
-        '
-        'eatt_EmployeeID
-        '
-        Me.eatt_EmployeeID.HeaderText = "Column42"
-        Me.eatt_EmployeeID.Name = "eatt_EmployeeID"
-        Me.eatt_EmployeeID.Visible = False
-        '
-        'eatt_Created
-        '
-        Me.eatt_Created.HeaderText = "Column43"
-        Me.eatt_Created.Name = "eatt_Created"
-        Me.eatt_Created.Visible = False
-        '
-        'eatt_CreatedBy
-        '
-        Me.eatt_CreatedBy.HeaderText = "Column44"
-        Me.eatt_CreatedBy.Name = "eatt_CreatedBy"
-        Me.eatt_CreatedBy.Visible = False
-        '
-        'eatt_LastUpd
-        '
-        Me.eatt_LastUpd.HeaderText = "Column45"
-        Me.eatt_LastUpd.Name = "eatt_LastUpd"
-        Me.eatt_LastUpd.Visible = False
-        '
-        'eatt_LastUpdBy
-        '
-        Me.eatt_LastUpdBy.HeaderText = "Column46"
-        Me.eatt_LastUpdBy.Name = "eatt_LastUpdBy"
-        Me.eatt_LastUpdBy.Visible = False
-        '
-        'eatt_AttachedFile
-        '
-        Me.eatt_AttachedFile.HeaderText = "Column47"
-        Me.eatt_AttachedFile.Name = "eatt_AttachedFile"
-        Me.eatt_AttachedFile.Visible = False
-        '
-        'eatt_viewthis
-        '
-        Me.eatt_viewthis.HeaderText = ""
-        Me.eatt_viewthis.Name = "eatt_viewthis"
-        Me.eatt_viewthis.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.eatt_viewthis.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.eatt_viewthis.Width = 120
-        '
-        'Column38
-        '
-        Me.Column38.HeaderText = "Attachment Type"
-        Me.Column38.Name = "Column38"
-        Me.Column38.Visible = False
-        '
-        'txtFNameAtta
-        '
-        Me.txtFNameAtta.BackColor = System.Drawing.Color.White
-        Me.txtFNameAtta.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFNameAtta.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFNameAtta.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFNameAtta.Location = New System.Drawing.Point(127, 22)
-        Me.txtFNameAtta.MaxLength = 250
-        Me.txtFNameAtta.Name = "txtFNameAtta"
-        Me.txtFNameAtta.ReadOnly = True
-        Me.txtFNameAtta.Size = New System.Drawing.Size(516, 28)
-        Me.txtFNameAtta.TabIndex = 342
-        '
-        'cboattatype
-        '
-        Me.cboattatype.FormattingEnabled = True
-        Me.cboattatype.Location = New System.Drawing.Point(32, 91)
-        Me.cboattatype.Name = "cboattatype"
-        Me.cboattatype.Size = New System.Drawing.Size(121, 21)
-        Me.cboattatype.TabIndex = 1
-        Me.cboattatype.Visible = False
-        '
-        'txtEmpIDAtta
-        '
-        Me.txtEmpIDAtta.BackColor = System.Drawing.Color.White
-        Me.txtEmpIDAtta.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpIDAtta.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmpIDAtta.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpIDAtta.Location = New System.Drawing.Point(127, 49)
-        Me.txtEmpIDAtta.MaxLength = 50
-        Me.txtEmpIDAtta.Name = "txtEmpIDAtta"
-        Me.txtEmpIDAtta.ReadOnly = True
-        Me.txtEmpIDAtta.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpIDAtta.TabIndex = 341
-        '
-        'btnattaclear
-        '
-        Me.btnattaclear.Location = New System.Drawing.Point(766, 287)
-        Me.btnattaclear.Name = "btnattaclear"
-        Me.btnattaclear.Size = New System.Drawing.Size(75, 21)
-        Me.btnattaclear.TabIndex = 2
-        Me.btnattaclear.Text = "Clear"
-        Me.btnattaclear.UseVisualStyleBackColor = True
-        '
-        'pbatta
-        '
-        Me.pbatta.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbatta.Location = New System.Drawing.Point(649, 91)
-        Me.pbatta.Name = "pbatta"
-        Me.pbatta.Size = New System.Drawing.Size(192, 191)
-        Me.pbatta.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbatta.TabIndex = 183
-        Me.pbatta.TabStop = False
-        '
-        'btnattadl
-        '
-        Me.btnattadl.Location = New System.Drawing.Point(649, 314)
-        Me.btnattadl.Name = "btnattadl"
-        Me.btnattadl.Size = New System.Drawing.Size(75, 21)
-        Me.btnattadl.TabIndex = 3
-        Me.btnattadl.Text = "Download"
-        Me.btnattadl.UseVisualStyleBackColor = True
-        '
-        'btnattabrowse
-        '
-        Me.btnattabrowse.Location = New System.Drawing.Point(649, 287)
-        Me.btnattabrowse.Name = "btnattabrowse"
-        Me.btnattabrowse.Size = New System.Drawing.Size(75, 21)
-        Me.btnattabrowse.TabIndex = 1
-        Me.btnattabrowse.Text = "&Browse..."
-        Me.btnattabrowse.UseVisualStyleBackColor = True
-        '
-        'Label235
-        '
-        Me.Label235.AutoSize = True
-        Me.Label235.Location = New System.Drawing.Point(592, 91)
-        Me.Label235.Name = "Label235"
-        Me.Label235.Size = New System.Drawing.Size(51, 13)
-        Me.Label235.TabIndex = 344
-        Me.Label235.Text = "Label235"
-        '
-        'ToolStrip21
-        '
-        Me.ToolStrip21.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip21.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewAtta, Me.tsbtnSaveAtta, Me.tsbtnCancelAtta, Me.ToolStripButton16, Me.ToolStripButton34})
-        Me.ToolStrip21.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip21.Name = "ToolStrip21"
-        Me.ToolStrip21.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip21.TabIndex = 344
-        Me.ToolStrip21.Text = "ToolStrip21"
-        '
-        'tsbtnNewAtta
-        '
-        Me.tsbtnNewAtta.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.tsbtnNewAtta.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnNewAtta.Name = "tsbtnNewAtta"
-        Me.tsbtnNewAtta.Size = New System.Drawing.Size(117, 22)
-        Me.tsbtnNewAtta.Text = "&New Attachment"
-        '
-        'tsbtnSaveAtta
-        '
-        Me.tsbtnSaveAtta.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.tsbtnSaveAtta.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnSaveAtta.Name = "tsbtnSaveAtta"
-        Me.tsbtnSaveAtta.Size = New System.Drawing.Size(117, 22)
-        Me.tsbtnSaveAtta.Text = "&Save Attachment"
-        '
-        'tsbtnCancelAtta
-        '
-        Me.tsbtnCancelAtta.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.tsbtnCancelAtta.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnCancelAtta.Name = "tsbtnCancelAtta"
-        Me.tsbtnCancelAtta.Size = New System.Drawing.Size(63, 22)
-        Me.tsbtnCancelAtta.Text = "Cancel"
-        '
-        'ToolStripButton16
-        '
-        Me.ToolStripButton16.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton16.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.ToolStripButton16.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton16.Name = "ToolStripButton16"
-        Me.ToolStripButton16.Size = New System.Drawing.Size(56, 22)
-        Me.ToolStripButton16.Text = "Close"
-        '
-        'ToolStripButton34
-        '
-        Me.ToolStripButton34.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton34.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton34.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton34.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton34.Name = "ToolStripButton34"
-        Me.ToolStripButton34.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton34.Text = "ToolStripButton1"
-        Me.ToolStripButton34.ToolTipText = "Show audit trails"
-        '
-        'tbpNewSalary
-        '
-        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
-        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
-        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
-        Me.tbpNewSalary.Name = "tbpNewSalary"
-        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
-        Me.tbpNewSalary.TabIndex = 19
-        Me.tbpNewSalary.Text = "SALARY"
-        Me.tbpNewSalary.UseVisualStyleBackColor = True
-        '
-        'SalaryTab
-        '
-        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.BackColor = System.Drawing.Color.White
-        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
-        Me.SalaryTab.Name = "SalaryTab"
-        Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
-        Me.SalaryTab.TabIndex = 0
         '
         'imglstQuestMark
         '
@@ -9016,13 +9025,6 @@ Partial Class EmployeeForm
         Me.ToolStrip11.ResumeLayout(False)
         Me.ToolStrip11.PerformLayout
         Me.tbpBonus.ResumeLayout(False)
-        Me.tbpBonus.PerformLayout
-        Me.Panel3.ResumeLayout(False)
-        Me.Panel3.PerformLayout
-        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip20.ResumeLayout(False)
-        Me.ToolStrip20.PerformLayout
         Me.tbpAttachment.ResumeLayout(False)
         Me.tbpAttachment.PerformLayout
         Me.Panel2.ResumeLayout(False)
@@ -9033,6 +9035,12 @@ Partial Class EmployeeForm
         Me.ToolStrip21.ResumeLayout(False)
         Me.ToolStrip21.PerformLayout
         Me.tbpNewSalary.ResumeLayout(False)
+        Me.Panel3.ResumeLayout(False)
+        Me.Panel3.PerformLayout
+        CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).EndInit
+        Me.ToolStrip20.ResumeLayout(False)
+        Me.ToolStrip20.PerformLayout
         Me.TabControl2.ResumeLayout(False)
         Me.TabPage2.ResumeLayout(False)
         Me.TabPage2.PerformLayout

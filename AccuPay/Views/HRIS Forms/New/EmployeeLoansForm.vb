@@ -924,7 +924,7 @@ Public Class EmployeeLoansForm
         End If
 
         Dim repo = New Data.Repositories.UserActivityRepository
-        repo.CreateRecord(z_User, "Loan", z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Loan", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function

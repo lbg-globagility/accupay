@@ -11,6 +11,14 @@ namespace AccuPay.Data.Repositories
 {
     public class ProductRepository
     {
+        public async Task<IEnumerable<Product>> GetBonusTypes(int organizationID)
+        {
+            var categoryName = ProductConstant.BONUS_TYPE_CATEGORY;
+
+            var category = await GetOrCreateCategoryByName(categoryName, organizationID);
+            return await GetProductsByCategory(category.RowID, organizationID);
+        }
+
         public async Task<IEnumerable<Product>> GetAllowanceTypes(int organizationID)
         {
             var categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY;
@@ -109,6 +117,28 @@ namespace AccuPay.Data.Repositories
 
                 return adjustmentType;
             }
+        }
+
+        public async Task<Product> GetOrCreateBonusType(string bonusTypeName, int organizationID, int userID, bool isTaxable = false)
+        {
+            using (var context = new PayrollContext())
+            {
+                var adjustmentType = await context.Products.Where(p => p.OrganizationID == organizationID).Where(p => p.PartNo.ToLower() == bonusTypeName.ToLower()).FirstOrDefaultAsync();
+
+                if (adjustmentType == null)
+                    adjustmentType = await AddBonusType(bonusTypeName, organizationID, userID, isTaxable);
+
+                return adjustmentType;
+            }
+        }
+
+        public async Task<Product> AddBonusType(string loanName, int organizationID, int userID, bool isTaxable = false, bool throwError = true)
+        {
+            Product product = new Product();
+
+            product.Category = ProductConstant.BONUS_TYPE_CATEGORY;
+
+            return await AddProduct(loanName, throwError, product, organizationID, userID, isTaxable);
         }
 
         public async Task<Product> AddLoanType(string loanName, int organizationID, int userID, bool throwError = true)
@@ -310,7 +340,7 @@ namespace AccuPay.Data.Repositories
             return GetProductsByCategoryBaseQuery(category.RowID, context, organizationID);
         }
 
-        private async Task<Product> AddProduct(string productName, bool throwError, Product product, int organizationID, int userID)
+        private async Task<Product> AddProduct(string productName, bool throwError, Product product, int organizationID, int userID, bool isTaxable = false)
         {
             var categoryId = (await GetOrCreateCategoryByName(product.Category, organizationID))?.RowID;
 
@@ -334,6 +364,7 @@ namespace AccuPay.Data.Repositories
 
             product.PartNo = productName.Trim();
             product.Name = productName.Trim();
+            product.Status = isTaxable ? "1" : "0";
 
             product.Created = DateTime.Now;
             product.CreatedBy = userID;

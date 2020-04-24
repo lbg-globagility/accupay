@@ -280,7 +280,7 @@ Public Class EmployeeOvertimeForm
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Overtime", z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function

@@ -2,6 +2,7 @@
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
@@ -17,7 +18,7 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevels As New List(Of JobLevel)
 
-    Private _payFrequencies As New List(Of PayFrequency)
+    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
 
     Private _divisionTypes As List(Of String)
 
@@ -531,7 +532,9 @@ Public Class NewDivisionPositionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.OrderBy(Function(p) p.Type).ToList
+        _payFrequencies = payFrequencies.
+                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
+                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
 
     End Function
 
@@ -776,7 +779,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Position", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Position", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -875,7 +878,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Division Location", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Division Location", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1120,7 +1123,7 @@ Public Class NewDivisionPositionForm
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Division", z_OrganizationID, "EDIT", changes)
+            repo.CreateRecord(z_User, "Division", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If

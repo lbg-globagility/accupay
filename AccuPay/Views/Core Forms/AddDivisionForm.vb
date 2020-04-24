@@ -1,6 +1,10 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Repository
+﻿Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
+Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AddDivisionForm
@@ -17,7 +21,7 @@ Public Class AddDivisionForm
 
     Private _positions As New List(Of Position)
 
-    Private _payFrequencies As New List(Of PayFrequency)
+    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
 
     Private _divisionTypes As List(Of String)
 
@@ -78,7 +82,9 @@ Public Class AddDivisionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.OrderBy(Function(p) p.Type).ToList
+        _payFrequencies = payFrequencies.
+                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
+                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
 
     End Function
 
@@ -135,8 +141,8 @@ Public Class AddDivisionForm
 
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
 
-        Dim repo As New Data.Repositories.UserActivityRepository
-        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID, z_OrganizationID)
+        Dim repo As New UserActivityRepository
+        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

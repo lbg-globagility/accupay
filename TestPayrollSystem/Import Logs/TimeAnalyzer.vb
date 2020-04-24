@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -277,9 +276,9 @@ Public Class TimeAnalyzer
 
     End Function
 
-    Protected Function GetSampleEmployeeOvertimes() As List(Of Overtime)
+    Protected Function GetSampleEmployeeOvertimes() As List(Of AccuPay.Data.Entities.Overtime)
 
-        Return New List(Of Overtime)
+        Return New List(Of AccuPay.Data.Entities.Overtime)
 
     End Function
 

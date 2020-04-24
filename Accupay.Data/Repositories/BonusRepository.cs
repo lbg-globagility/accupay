@@ -1,14 +1,22 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
     public class BonusRepository
     {
+        public List<string> GetFrequencyList()
+        {
+            return new List<string>()
+            {
+                Bonus.FREQUENCY_ONE_TIME,
+                Bonus.FREQUENCY_DAILY,
+                Bonus.FREQUENCY_SEMI_MONTHLY,
+                Bonus.FREQUENCY_MONTHLY
+            };
+        }
         public IEnumerable<Bonus> GetByEmployee(int employeeID)
         {
             using (PayrollContext context = new PayrollContext())

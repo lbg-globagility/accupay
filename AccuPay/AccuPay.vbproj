@@ -452,7 +452,6 @@
     <Compile Include="Repositories\DivisionRepository.vb" />
     <Compile Include="Repositories\JobLevelRepository.vb" />
     <Compile Include="Repositories\OfficialBusinessRepository.vb" />
-    <Compile Include="Repositories\PayFrequencyRepository.vb" />
     <Compile Include="Repositories\PositionRepository.vb" />
     <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
@@ -501,6 +500,12 @@
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddBonusForm.Designer.vb">
+      <DependentUpon>AddBonusForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddBonusForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
@@ -1964,6 +1969,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddBonusForm.resx">
+      <DependentUpon>AddBonusForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>

@@ -566,7 +566,7 @@ Public Class EmployeeAllowanceForm
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Allowance", z_OrganizationID, "EDIT", changes)
+        repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
