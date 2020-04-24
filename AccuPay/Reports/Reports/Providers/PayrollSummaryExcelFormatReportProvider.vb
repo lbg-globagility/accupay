@@ -4,8 +4,8 @@ Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
 Imports AccuPay.ExcelReportColumn
+Imports AccuPay.Helpers
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
@@ -323,7 +323,11 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             subTotalRows.Add(rowIndex)
 
-            RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
+            RenderSubTotal(worksheet,
+                           subTotalCellRange,
+                           employeesStartIndex,
+                           employeesLastIndex,
+                           formulaColumnStart:=3)
 
             rowIndex += 2
         Next
@@ -334,8 +338,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         rowIndex += 1
 
         If employeeGroups.Count > 1 Then
-            Dim grandTotalRange = $"C{rowIndex}:{lastCell}{rowIndex}"
-            RenderGrandTotal(worksheet, grandTotalRange, subTotalRows)
+            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows, "C"c)
         End If
 
         rowIndex += 1

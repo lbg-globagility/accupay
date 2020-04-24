@@ -23,69 +23,69 @@ Public Class CostCenterReportProvider
 
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ExcelReportColumn) = GetReportColumns()
 
-    Private Const EmployeeIdDescription As String = "EmployeeId"
-    Private Const EmployeeNameDescription As String = "EmployeeName"
-    Private Const TotalDaysDescription As String = "TotalDays"
-    Private Const TotalHoursDescription As String = "TotalHours"
-    Private Const DailyRateDescription As String = "DailyRate"
-    Private Const HoulyRateDescription As String = "HoulyRate"
-    Private Const BasicPayDescription As String = "BasicPay"
-    Private Const OvertimeHoursDescription As String = "OvertimeHours"
-    Private Const OvertimePayDescription As String = "OvertimePay"
-    Private Const NightDiffHoursDescription As String = "NightDiffHours"
-    Private Const NightDiffPayDescription As String = "NightDiffPay"
-    Private Const NightDiffOvertimeHoursDescription As String = "NightDiffOvertimeHours"
-    Private Const NightDiffOvertimePayDescription As String = "NightDiffOvertimePay"
-    Private Const SpecialHolidayHoursDescription As String = "SpecialHolidayHours"
-    Private Const SpecialHolidayPayDescription As String = "SpecialHolidayPay"
-    Private Const SpecialHolidayOTHoursDescription As String = "SpecialHolidayOTHours"
-    Private Const SpecialHolidayOTPayDescription As String = "SpecialHolidayOTPay"
-    Private Const RegularHolidayHoursDescription As String = "RegularHolidayHours"
-    Private Const RegularHolidayPayDescription As String = "RegularHolidayPay"
-    Private Const RegularHolidayOTHoursDescription As String = "RegularHolidayOTHours"
-    Private Const RegularHolidayOTPayDescription As String = "RegularHolidayOTPay"
-    Private Const GrossPayDescription As String = "GrossPay"
-    Private Const SSSAmountDescription As String = "SSSAmount"
-    Private Const ECAmountDescription As String = "ECAmount"
-    Private Const HDMFAmountDescription As String = "HDMFAmount"
-    Private Const PhilHealthAmountDescription As String = "PhilHealthAmount"
-    Private Const HMOAmountDescription As String = "HMOAmount"
-    Private Const ThirteenthMonthPayDescription As String = "ThirteenthMonthPay"
-    Private Const LeaveAmountDescription As String = "LeaveAmount"
-    Private Const NetPayDescription As String = "NetPay"
+    Private Const EmployeeIdKey As String = "EmployeeId"
+    Private Const EmployeeNameKey As String = "EmployeeName"
+    Private Const TotalDaysKey As String = "TotalDays"
+    Private Const TotalHoursKey As String = "TotalHours"
+    Private Const DailyRateKey As String = "DailyRate"
+    Private Const HoulyRateKey As String = "HoulyRate"
+    Private Const BasicPayKey As String = "BasicPay"
+    Private Const OvertimeHoursKey As String = "OvertimeHours"
+    Private Const OvertimePayKey As String = "OvertimePay"
+    Private Const NightDiffHoursKey As String = "NightDiffHours"
+    Private Const NightDiffPayKey As String = "NightDiffPay"
+    Private Const NightDiffOvertimeHoursKey As String = "NightDiffOvertimeHours"
+    Private Const NightDiffOvertimePayKey As String = "NightDiffOvertimePay"
+    Private Const SpecialHolidayHoursKey As String = "SpecialHolidayHours"
+    Private Const SpecialHolidayPayKey As String = "SpecialHolidayPay"
+    Private Const SpecialHolidayOTHoursKey As String = "SpecialHolidayOTHours"
+    Private Const SpecialHolidayOTPayKey As String = "SpecialHolidayOTPay"
+    Private Const RegularHolidayHoursKey As String = "RegularHolidayHours"
+    Private Const RegularHolidayPayKey As String = "RegularHolidayPay"
+    Private Const RegularHolidayOTHoursKey As String = "RegularHolidayOTHours"
+    Private Const RegularHolidayOTPayKey As String = "RegularHolidayOTPay"
+    Private Const GrossPayKey As String = "GrossPay"
+    Private Const SSSAmountKey As String = "SSSAmount"
+    Private Const ECAmountKey As String = "ECAmount"
+    Private Const HDMFAmountKey As String = "HDMFAmount"
+    Private Const PhilHealthAmountKey As String = "PhilHealthAmount"
+    Private Const HMOAmountKey As String = "HMOAmount"
+    Private Const ThirteenthMonthPayKey As String = "ThirteenthMonthPay"
+    Private Const FiveDaySilpAmountKey As String = "LeaveAmount"
+    Private Const NetPayKey As String = "NetPay"
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
         Dim reportColumns = New List(Of ExcelReportColumn)({
-                New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameDescription, ColumnType.Text),
-                New ExcelReportColumn("NO. OF DAYS", TotalDaysDescription),
-                New ExcelReportColumn("NO. OF HOURS", TotalHoursDescription),
-                New ExcelReportColumn("RATE", DailyRateDescription),
-                New ExcelReportColumn("HOURLY", HoulyRateDescription),
-                New ExcelReportColumn("GROSS PAY", BasicPayDescription),
-                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursDescription),
-                New ExcelReportColumn("OT PAY", OvertimePayDescription),
-                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursDescription),
-                New ExcelReportColumn("ND PAY", NightDiffPayDescription),
-                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursDescription),
-                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayDescription),
-                New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursDescription),
-                New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayDescription),
-                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursDescription),
-                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayDescription),
-                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursDescription),
-                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayDescription),
-                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursDescription),
-                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayDescription),
-                New ExcelReportColumn("TOTAL GROSS PAY", GrossPayDescription),
-                New ExcelReportColumn("SSS", SSSAmountDescription),
-                New ExcelReportColumn("EREC", ECAmountDescription),
-                New ExcelReportColumn("PAG-IBIG", HDMFAmountDescription),
-                New ExcelReportColumn("PHILHEALTH", PhilHealthAmountDescription),
-                New ExcelReportColumn("HMO", HMOAmountDescription),
-                New ExcelReportColumn("13TH MONTH PAY", ThirteenthMonthPayDescription),
-                New ExcelReportColumn("5 DAY SILP", LeaveAmountDescription),
-                New ExcelReportColumn("NET PAY", NetPayDescription)
+                New ExcelReportColumn("NAME OF EMPLOYEES", EmployeeNameKey, ColumnType.Text),
+                New ExcelReportColumn("NO. OF DAYS", TotalDaysKey),
+                New ExcelReportColumn("NO. OF HOURS", TotalHoursKey),
+                New ExcelReportColumn("RATE", DailyRateKey),
+                New ExcelReportColumn("HOURLY", HoulyRateKey),
+                New ExcelReportColumn("GROSS PAY", BasicPayKey),
+                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursKey),
+                New ExcelReportColumn("OT PAY", OvertimePayKey),
+                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursKey),
+                New ExcelReportColumn("ND PAY", NightDiffPayKey),
+                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey),
+                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey),
+                New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey),
+                New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey),
+                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey),
+                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayKey),
+                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursKey),
+                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey),
+                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey),
+                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey),
+                New ExcelReportColumn("TOTAL GROSS PAY", GrossPayKey),
+                New ExcelReportColumn("SSS", SSSAmountKey),
+                New ExcelReportColumn("EREC", ECAmountKey),
+                New ExcelReportColumn("PAG-IBIG", HDMFAmountKey),
+                New ExcelReportColumn("PHILHEALTH", PhilHealthAmountKey),
+                New ExcelReportColumn("HMO", HMOAmountKey),
+                New ExcelReportColumn("13TH MONTH PAY", ThirteenthMonthPayKey),
+                New ExcelReportColumn("5 DAY SILP", FiveDaySilpAmountKey),
+                New ExcelReportColumn("NET PAY", NetPayKey)
             })
 
         Return New ReadOnlyCollection(Of ExcelReportColumn)(reportColumns)
@@ -180,7 +180,7 @@ Public Class CostCenterReportProvider
                                         ToList
 
             If payPeriods.Count <> 2 Then
-                Throw New Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, 2nd half)")
+                Throw New Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)")
             End If
 
             Dim startDate As Date = {payPeriods(0).PayFromDate, payPeriods(1).PayFromDate}.Min
@@ -211,6 +211,7 @@ Public Class CostCenterReportProvider
             'if timeEntry's BranchID is Nothing, set it to
             'employee's BranchID for easier querying
             AddBranchToTimeEntries(timeEntries, employees)
+
             timeEntries = timeEntries.
                             Where(Function(t) t.BranchID IsNot Nothing).
                             Where(Function(t) t.BranchID.Value = selectedBranch.RowID.Value).
@@ -221,12 +222,104 @@ Public Class CostCenterReportProvider
                 Where(Function(s) s.EffectiveFrom <= startDate).
                 ToList
 
-            payPeriodModels = CreatePayPeriodModels(payPeriods, timeEntries, employees, salaries)
+            Dim employeePaystubs = context.Paystubs.
+                                        Include(Function(p) p.ThirteenthMonthPay).
+                                        Where(Function(p) p.PayPeriodID.Value = payPeriods(0).RowID.Value OrElse
+                                                            p.PayPeriodID.Value = payPeriods(1).RowID.Value).
+                                        ToList
+
+            Dim taxEffectivityDate = New Date(payPeriods(0).Year, payPeriods(0).Month, 1)
+            Dim sssBrackets = context.SocialSecurityBrackets.
+                                        Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
+                                        Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo).
+                                        ToList()
+
+            Dim employeeMonthlyDeductions = GenerateMonthlyDeductionList(employees, employeePaystubs, sssBrackets)
+
+            payPeriodModels = CreatePayPeriodModels(payPeriods, timeEntries, employees, salaries, employeePaystubs, employeeMonthlyDeductions)
 
         End Using
 
         Return payPeriodModels
 
+    End Function
+
+    Private Function GenerateMonthlyDeductionList(employees As List(Of Employee),
+                                                  allPaystubs As List(Of Paystub),
+                                                  sssBrackets As List(Of SocialSecurityBracket)) As List(Of MonthlyDeduction)
+
+        Dim employeeMonthlyDeductions As New List(Of MonthlyDeduction)
+
+        For Each employee In employees
+
+            Dim employeePaystubs = allPaystubs.
+                                    Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
+                                    ToList
+
+            If employeePaystubs.Count > 2 Then
+                Throw New Exception("Only up to 2 paystubs should be computed per employee. First half and end of the month paystubs.")
+            End If
+
+            Dim sssAmount As Decimal = 0
+            Dim ecAmount As Decimal = 0
+            Dim hdmfAmount As Decimal = 0
+            Dim philhealthAmount As Decimal = 0
+            Dim hmoAmount As Decimal = 0
+            Dim thirteenthMonthPay As Decimal = 0
+
+            If employeePaystubs.Any Then
+
+                hdmfAmount = employeePaystubs.Sum(Function(p) p.HdmfEmployerShare)
+                philhealthAmount = employeePaystubs.Sum(Function(p) p.PhilHealthEmployerShare)
+                thirteenthMonthPay = employeePaystubs.Sum(Function(p) p.ThirteenthMonthPay.Amount)
+
+                Dim sssPayables = GetEmployerSSSPayables(sssBrackets,
+                                                         employeePaystubs(0).SssEmployeeShare)
+                sssAmount = sssPayables.EmployerShare
+                ecAmount = sssPayables.ECamount
+
+                'check if there is a 2nd paystub (could be only 1 paystub for the month)
+                If employeePaystubs.Count = 2 Then
+                    sssPayables = GetEmployerSSSPayables(sssBrackets,
+                                                         employeePaystubs(1).SssEmployeeShare)
+                    sssAmount += sssPayables.EmployerShare
+                    ecAmount += sssPayables.ECamount
+                End If
+
+                'TODO: hmoAmount
+            End If
+
+            employeeMonthlyDeductions.Add(MonthlyDeduction.Create(employeeId:=employee.RowID.Value,
+                                                                sssAmount:=sssAmount,
+                                                                ecAmount:=ecAmount,
+                                                                hdmfAmount:=hdmfAmount,
+                                                                philhealthAmount:=philhealthAmount,
+                                                                hmoAmount:=hmoAmount,
+                                                                thirteenthMonthPay:=thirteenthMonthPay))
+
+        Next
+
+        Return employeeMonthlyDeductions
+
+    End Function
+
+    Private Shared Function GetEmployerSSSPayables(sssBrackets As List(Of SocialSecurityBracket),
+                                                   employeeShare As Decimal) _
+                                                   As SSSEmployerShare
+
+        If employeeShare = 0 Then Return SSSEmployerShare.Zero
+
+        'SSS employer share and EC are not saved in the database. To get those data
+        'we need to query the SSS bracket and get by employee contribution amount
+        Dim sssBracket = sssBrackets.
+                Where(Function(s) s.EmployeeContributionAmount = employeeShare).
+                FirstOrDefault
+
+        Dim sssAmount = If(sssBracket?.EmployerContributionAmount, 0)
+        Dim ecAmount = If(sssBracket?.EmployeeECAmount, 0)
+
+        Return New SSSEmployerShare(employerShare:=sssAmount,
+                                    ECamount:=ecAmount)
     End Function
 
     Private Sub AddBranchToTimeEntries(timeEntries As List(Of TimeEntry),
@@ -245,18 +338,24 @@ Public Class CostCenterReportProvider
     Private Shared Function CreatePayPeriodModels(payPeriods As List(Of PayPeriod),
                                                   allTimeEntries As List(Of TimeEntry),
                                                   employees As List(Of Employee),
-                                                  salaries As List(Of Salary)) As _
+                                                  salaries As List(Of Salary),
+                                                  paystubs As List(Of Paystub),
+                                                  monthlyDeductions As List(Of MonthlyDeduction)) As _
                                                   List(Of PayPeriodModel)
 
         Dim payPeriodModels As New List(Of PayPeriodModel)
         For Each payPeriod In payPeriods
 
-            Dim paystubs = CreatePaystubModels(allTimeEntries, employees, salaries, payPeriod)
+            Dim payPeriodPaystubs = paystubs.
+                                        Where(Function(p) p.PayPeriodID.Value = payPeriod.RowID.Value).
+                                        ToList
+
+            Dim paystubModels = CreatePaystubModels(allTimeEntries, employees, salaries, payPeriod, payPeriodPaystubs, monthlyDeductions)
 
             payPeriodModels.Add(New PayPeriodModel With
             {
                    .PayPeriod = payPeriod,
-                   .Paystubs = paystubs
+                   .Paystubs = paystubModels
             })
 
         Next
@@ -267,10 +366,12 @@ Public Class CostCenterReportProvider
     Private Shared Function CreatePaystubModels(allTimeEntries As List(Of TimeEntry),
                                                 employees As List(Of Employee),
                                                 salaries As List(Of Salary),
-                                                payPeriod As PayPeriod) _
+                                                payPeriod As PayPeriod,
+                                                paystubs As List(Of Paystub),
+                                                monthlyDeductions As List(Of MonthlyDeduction)) _
                                                 As List(Of PaystubModel)
 
-        Dim paystubs As New List(Of PaystubModel)
+        Dim paystubModels As New List(Of PaystubModel)
 
         For Each employee In employees
 
@@ -286,15 +387,21 @@ Public Class CostCenterReportProvider
                 OrderByDescending(Function(s) s.EffectiveFrom).
                 FirstOrDefault
 
-            Dim paystub = PaystubModel.CreateModel(employee, salary, timeEntries)
+            Dim paystub = paystubs.Where(Function(p) p.EmployeeID.Value = employee.RowID.Value).
+                        FirstOrDefault
 
-            If paystub IsNot Nothing AndAlso paystub.GrossPay > 0 Then
-                paystubs.Add(paystub)
+            Dim monthlyDeduction = monthlyDeductions.
+                                    Where(Function(d) d.EmployeeID = employee.RowID.Value).
+                                    FirstOrDefault
+            Dim createdPaystubModel = PaystubModel.Create(employee, salary, timeEntries, paystub, monthlyDeduction)
+
+            If createdPaystubModel IsNot Nothing AndAlso createdPaystubModel.GrossPay > 0 Then
+                paystubModels.Add(createdPaystubModel)
             End If
 
         Next
 
-        Return paystubs
+        Return paystubModels
     End Function
 
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
@@ -357,8 +464,7 @@ Public Class CostCenterReportProvider
         rowIndex += 1
 
         If payPeriods.Count > 1 Then
-            Dim grandTotalRange = $"C{rowIndex}:{lastCell}{rowIndex}"
-            RenderGrandTotal(worksheet, grandTotalRange, subTotalRows)
+            RenderGrandTotal(worksheet, rowIndex, lastCell, subTotalRows, "B"c)
         End If
 
         rowIndex += 1
@@ -410,7 +516,11 @@ Public Class CostCenterReportProvider
 
         subTotalRows.Add(rowIndex)
 
-        RenderSubTotal(worksheet, subTotalCellRange, employeesStartIndex, employeesLastIndex)
+        RenderSubTotal(worksheet,
+                       subTotalCellRange,
+                       employeesStartIndex,
+                       employeesLastIndex,
+                       formulaColumnStart:=2)
 
         rowIndex += 2
     End Sub
@@ -441,6 +551,14 @@ Public Class CostCenterReportProvider
 
     End Function
 
+    Private Shared Function ComputeGovernmentContribution(paystubModel As PaystubModel, branchesCount As Integer, employee As Employee, paystub As List(Of Paystub)) As PaystubModel
+
+        Dim totalPhilHealthEmployerShare = paystub.Sum(Function(p) p.PhilHealthEmployerShare)
+
+        Return paystubModel
+
+    End Function
+
     Private Class PayPeriodModel
 
         Public Property PayPeriod As PayPeriod
@@ -449,19 +567,73 @@ Public Class CostCenterReportProvider
 
     End Class
 
+    Private Class SSSEmployerShare
+
+        Public Sub New(employerShare As Decimal, ECamount As Decimal)
+            Me.EmployerShare = employerShare
+            Me.ECamount = ECamount
+        End Sub
+
+        Public ReadOnly Property EmployerShare As Decimal
+        Public ReadOnly Property ECamount As Decimal
+
+        Friend Shared Function Zero() As SSSEmployerShare
+            Return New SSSEmployerShare(0, 0)
+        End Function
+
+    End Class
+
     Private Class PaystubModel
 
-        Public Shared Function CreateModel(employee As Employee,
-                                           salary As Salary,
-                                           timeEntries As List(Of TimeEntry)) As PaystubModel
+        Public Shared Function Create(employee As Employee,
+                                        salary As Salary,
+                                        timeEntries As List(Of TimeEntry),
+                                        currentPaystub As Paystub,
+                                        monthlyDeduction As MonthlyDeduction) As PaystubModel
 
             If employee Is Nothing Then Return Nothing
             If timeEntries Is Nothing OrElse timeEntries.Any = False Then Return Nothing
 
             Dim paystubModel As New PaystubModel
-            paystubModel.EmployeeId = employee.RowID.Value
-            paystubModel.EmployeeName = employee.FullNameWithMiddleInitialLastNameFirst.ToUpper + " " + employee.EmployeeNo
+            paystubModel.Employee = employee
 
+            If salary IsNot Nothing Then
+                paystubModel = ComputeHoursAndPay(paystubModel, employee, salary, timeEntries)
+
+            End If
+
+            If currentPaystub IsNot Nothing Then
+                'Check the percentage of work hours the employee worked in this branch
+                'If employee worked for 100 hours in total, and he worked 40 hours in this branch,
+                'then he worked 40% of his total worked hours in this branch.
+                Dim workedPercentage = AccuMath.CommercialRound(paystubModel.RegularHours / currentPaystub.RegularHours) '40 / 100
+                paystubModel = ComputeGovernmentDeductions(monthlyDeduction, paystubModel, workedPercentage)
+            End If
+
+            Return paystubModel
+        End Function
+
+        Private Shared Function ComputeGovernmentDeductions(monthlyDeduction As MonthlyDeduction, paystubModel As PaystubModel, workedPercentage As Decimal) As PaystubModel
+
+            paystubModel.SSSAmount = monthlyDeduction.SSSAmount.GetBranchPercentage(workedPercentage)
+
+            paystubModel.ECAmount = monthlyDeduction.ECAmount.GetBranchPercentage(workedPercentage)
+
+            paystubModel.HDMFAmount = monthlyDeduction.HDMFAmount.GetBranchPercentage(workedPercentage)
+
+            paystubModel.PhilHealthAmount = monthlyDeduction.PhilHealthAmount.GetBranchPercentage(workedPercentage)
+
+            paystubModel.HMOAmount = monthlyDeduction.HMOAmount.GetBranchPercentage(workedPercentage)
+
+            paystubModel.ThirteenthMonthPay = monthlyDeduction.ThirteenthMonthPay.GetBranchPercentage(workedPercentage)
+
+            Return paystubModel
+        End Function
+
+        Private Sub New()
+        End Sub
+
+        Private Shared Function ComputeHoursAndPay(paystubModel As PaystubModel, employee As Employee, salary As Salary, timeEntries As List(Of TimeEntry)) As PaystubModel
             Dim totalTimeEntries = TotalTimeEntry.Calculate(timeEntries, salary, employee, New List(Of ActualTimeEntry))
 
             paystubModel.RegularHours = totalTimeEntries.RegularHours
@@ -487,18 +659,22 @@ Public Class CostCenterReportProvider
 
             paystubModel.RegularHolidayOTHours = AccuMath.CommercialRound(totalTimeEntries.RegularHolidayOTHours)
             paystubModel.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay
-
-            'paystubModel.LeaveHours = totalTimeEntries.LeaveHours
-            'paystubModel.LeavePay = totalTimeEntries.LeavePay
             Return paystubModel
         End Function
 
-        Private Sub New()
+        Private Property Employee As Employee
 
-        End Sub
+        Private ReadOnly Property EmployeeId As Integer
+            Get
+                Return Employee.RowID.Value
+            End Get
+        End Property
 
-        Private Property EmployeeId As Integer
-        Private Property EmployeeName As String
+        Private ReadOnly Property EmployeeName As String
+            Get
+                Return Employee.FullNameWithMiddleInitialLastNameFirst.ToUpper & " " & Employee.EmployeeNo
+            End Get
+        End Property
 
         Private ReadOnly Property RegularDays As Decimal
             Get
@@ -565,8 +741,34 @@ Public Class CostCenterReportProvider
         Private Property PhilHealthAmount As Decimal
         Private Property HMOAmount As Decimal
         Private Property ThirteenthMonthPay As Decimal
-        Private Property LeaveAmount As Decimal
-        Private Property NetPay As Decimal
+
+        Private ReadOnly Property FiveDaySilpAmount As Decimal
+            Get
+                Dim daysPerCutoff As Integer = 13 'this should probably be retrieved from employee.WorkDaysPerYear / 12 / 2
+
+                Dim vacationLeavePerYearInDays = Employee.VacationLeaveAllowance / PayrollTools.WorkHoursPerDay
+
+                Dim basicRate = DailyRate * daysPerCutoff 'this should probably be retrieved from PayrollTools.GetEmployeeMonthlyRate / 2
+
+                Return AccuMath.CommercialRound(basicRate *
+                                                vacationLeavePerYearInDays /
+                                                PayrollTools.MonthsPerYear /
+                                                daysPerCutoff)
+            End Get
+        End Property
+
+        Private ReadOnly Property NetPay As Decimal
+            Get
+                Return GrossPay -
+                    SSSAmount -
+                    ECAmount -
+                    HDMFAmount -
+                    PhilHealthAmount -
+                    HMOAmount -
+                    ThirteenthMonthPay -
+                    FiveDaySilpAmount
+            End Get
+        End Property
 
         Private _lookUp As Dictionary(Of String, String)
 
@@ -575,40 +777,107 @@ Public Class CostCenterReportProvider
                 If _lookUp IsNot Nothing Then Return _lookUp
 
                 _lookUp = New Dictionary(Of String, String)
-                _lookUp(EmployeeIdDescription) = Me.EmployeeId.ToString
-                _lookUp(EmployeeNameDescription) = Me.EmployeeName
-                _lookUp(TotalDaysDescription) = Me.RegularDays.ToString
-                _lookUp(TotalHoursDescription) = Me.RegularHours.ToString
-                _lookUp(DailyRateDescription) = Me.DailyRate.ToString
-                _lookUp(HoulyRateDescription) = Me.HourlyRate.ToString
-                _lookUp(BasicPayDescription) = Me.RegularPay.ToString
-                _lookUp(OvertimeHoursDescription) = Me.OvertimeHours.ToString
-                _lookUp(OvertimePayDescription) = Me.OvertimePay.ToString
-                _lookUp(NightDiffHoursDescription) = Me.NightDiffHours.ToString
-                _lookUp(NightDiffPayDescription) = Me.NightDiffPay.ToString
-                _lookUp(NightDiffOvertimeHoursDescription) = Me.NightDiffOvertimeHours.ToString
-                _lookUp(NightDiffOvertimePayDescription) = Me.NightDiffOvertimePay.ToString
-                _lookUp(SpecialHolidayHoursDescription) = Me.SpecialHolidayHours.ToString
-                _lookUp(SpecialHolidayPayDescription) = Me.SpecialHolidayPay.ToString
-                _lookUp(SpecialHolidayOTHoursDescription) = Me.SpecialHolidayOTHours.ToString
-                _lookUp(SpecialHolidayOTPayDescription) = Me.SpecialHolidayOTPay.ToString
-                _lookUp(RegularHolidayHoursDescription) = Me.RegularHolidayHours.ToString
-                _lookUp(RegularHolidayPayDescription) = Me.RegularHolidayPay.ToString
-                _lookUp(RegularHolidayOTHoursDescription) = Me.RegularHolidayOTHours.ToString
-                _lookUp(RegularHolidayOTPayDescription) = Me.RegularHolidayOTPay.ToString
-                _lookUp(GrossPayDescription) = Me.GrossPay.ToString
-                _lookUp(SSSAmountDescription) = Me.SSSAmount.ToString
-                _lookUp(ECAmountDescription) = Me.ECAmount.ToString
-                _lookUp(HDMFAmountDescription) = Me.HDMFAmount.ToString
-                _lookUp(PhilHealthAmountDescription) = Me.PhilHealthAmount.ToString
-                _lookUp(HMOAmountDescription) = Me.HMOAmount.ToString
-                _lookUp(ThirteenthMonthPayDescription) = Me.ThirteenthMonthPay.ToString
-                _lookUp(LeaveAmountDescription) = Me.LeaveAmount.ToString
-                _lookUp(NetPayDescription) = Me.NetPay.ToString
+                _lookUp(EmployeeIdKey) = Me.EmployeeId.ToString
+                _lookUp(EmployeeNameKey) = Me.EmployeeName
+                _lookUp(TotalDaysKey) = Me.RegularDays.ToString
+                _lookUp(TotalHoursKey) = Me.RegularHours.ToString
+                _lookUp(DailyRateKey) = Me.DailyRate.ToString
+                _lookUp(HoulyRateKey) = Me.HourlyRate.ToString
+                _lookUp(BasicPayKey) = Me.RegularPay.ToString
+                _lookUp(OvertimeHoursKey) = Me.OvertimeHours.ToString
+                _lookUp(OvertimePayKey) = Me.OvertimePay.ToString
+                _lookUp(NightDiffHoursKey) = Me.NightDiffHours.ToString
+                _lookUp(NightDiffPayKey) = Me.NightDiffPay.ToString
+                _lookUp(NightDiffOvertimeHoursKey) = Me.NightDiffOvertimeHours.ToString
+                _lookUp(NightDiffOvertimePayKey) = Me.NightDiffOvertimePay.ToString
+                _lookUp(SpecialHolidayHoursKey) = Me.SpecialHolidayHours.ToString
+                _lookUp(SpecialHolidayPayKey) = Me.SpecialHolidayPay.ToString
+                _lookUp(SpecialHolidayOTHoursKey) = Me.SpecialHolidayOTHours.ToString
+                _lookUp(SpecialHolidayOTPayKey) = Me.SpecialHolidayOTPay.ToString
+                _lookUp(RegularHolidayHoursKey) = Me.RegularHolidayHours.ToString
+                _lookUp(RegularHolidayPayKey) = Me.RegularHolidayPay.ToString
+                _lookUp(RegularHolidayOTHoursKey) = Me.RegularHolidayOTHours.ToString
+                _lookUp(RegularHolidayOTPayKey) = Me.RegularHolidayOTPay.ToString
+                _lookUp(GrossPayKey) = Me.GrossPay.ToString
+                _lookUp(SSSAmountKey) = Me.SSSAmount.ToString
+                _lookUp(ECAmountKey) = Me.ECAmount.ToString
+                _lookUp(HDMFAmountKey) = Me.HDMFAmount.ToString
+                _lookUp(PhilHealthAmountKey) = Me.PhilHealthAmount.ToString
+                _lookUp(HMOAmountKey) = Me.HMOAmount.ToString
+                _lookUp(ThirteenthMonthPayKey) = Me.ThirteenthMonthPay.ToString
+                _lookUp(FiveDaySilpAmountKey) = Me.FiveDaySilpAmount.ToString
+                _lookUp(NetPayKey) = Me.NetPay.ToString
 
                 Return _lookUp
             End Get
         End Property
+
+    End Class
+
+    Private Class MonthlyDeduction
+
+        Public Shared Function Create(employeeId As Integer,
+                                    sssAmount As Decimal,
+                                    ecAmount As Decimal,
+                                    hdmfAmount As Decimal,
+                                    philhealthAmount As Decimal,
+                                    hmoAmount As Decimal,
+                                    thirteenthMonthPay As Decimal) As MonthlyDeduction
+
+            Return New MonthlyDeduction() With {
+                .EmployeeID = employeeId,
+                .SSSAmount = MonthlyDeductionAmount.Create(sssAmount),
+                .ECAmount = MonthlyDeductionAmount.Create(ecAmount),
+                .HDMFAmount = MonthlyDeductionAmount.Create(hdmfAmount),
+                .PhilHealthAmount = MonthlyDeductionAmount.Create(philhealthAmount),
+                .HMOAmount = MonthlyDeductionAmount.Create(hmoAmount),
+                .ThirteenthMonthPay = MonthlyDeductionAmount.Create(thirteenthMonthPay)
+            }
+        End Function
+
+        Private Sub New()
+        End Sub
+
+        Public Property EmployeeID As Integer
+
+        Public Property SSSAmount As MonthlyDeductionAmount
+        Public Property ECAmount As MonthlyDeductionAmount
+        Public Property HDMFAmount As MonthlyDeductionAmount
+        Public Property PhilHealthAmount As MonthlyDeductionAmount
+        Public Property HMOAmount As MonthlyDeductionAmount
+        Public Property ThirteenthMonthPay As MonthlyDeductionAmount
+
+    End Class
+
+    Private Class MonthlyDeductionAmount
+
+        Private ReadOnly _amount As Decimal
+
+        Public Shared Function Create(amount As Decimal) As MonthlyDeductionAmount
+
+            Return New MonthlyDeductionAmount(amount)
+
+        End Function
+
+        Private Sub New(amount As Decimal)
+            _amount = AccuMath.CommercialRound(amount)
+        End Sub
+
+        Public ReadOnly Property MonthlyAmount As Decimal
+            Get
+                Return _amount
+            End Get
+        End Property
+
+        Public ReadOnly Property SemiMonthlyAmount As Decimal
+            Get
+                Return AccuMath.CommercialRound(MonthlyAmount / 2)
+            End Get
+        End Property
+
+        Public Function GetBranchPercentage(branchPercentage As Decimal) As Decimal
+            Return AccuMath.CommercialRound(SemiMonthlyAmount * branchPercentage)
+        End Function
 
     End Class
 

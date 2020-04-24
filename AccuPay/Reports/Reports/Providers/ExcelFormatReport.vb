@@ -70,10 +70,17 @@ Public Class ExcelFormatReport
 
     End Function
 
-    Protected Shared Sub RenderSubTotal(worksheet As ExcelWorksheet, subTotalCellRange As String, employeesStartIndex As Integer, employeesLastIndex As Integer)
+    Protected Shared Sub RenderSubTotal(worksheet As ExcelWorksheet,
+                                        subTotalCellRange As String,
+                                        employeesStartIndex As Integer,
+                                        employeesLastIndex As Integer,
+                                        formulaColumnStart As Integer)
         worksheet.Cells(subTotalCellRange).Formula = String.Format(
                         "SUM({0})",
-                        New ExcelAddress(employeesStartIndex, 3, employeesLastIndex, 3).Address)
+                        New ExcelAddress(employeesStartIndex,
+                                         formulaColumnStart,
+                                         employeesLastIndex,
+                                         formulaColumnStart).Address)
 
         worksheet.Cells(subTotalCellRange).Style.Font.Bold = True
         worksheet.Cells(subTotalCellRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
@@ -81,9 +88,12 @@ Public Class ExcelFormatReport
     End Sub
 
     Protected Shared Sub RenderGrandTotal(worksheet As ExcelWorksheet,
-                                            grandTotalRange As String,
-                                            subTotalRows As IEnumerable(Of Integer))
-        worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"C{s}")))
+                                         rowIndex As Integer,
+                                         lastCellColumn As String,
+                                         subTotalRows As IEnumerable(Of Integer),
+                                         startingLetter As Char)
+        Dim grandTotalRange = $"{startingLetter}{rowIndex}:{lastCellColumn}{rowIndex}"
+        worksheet.Cells(grandTotalRange).Formula = String.Format("SUM({0})", String.Join(",", subTotalRows.Select(Function(s) $"{startingLetter}{s}")))
         worksheet.Cells(grandTotalRange).Style.Border.Top.Style = ExcelBorderStyle.Double
         worksheet.Cells(grandTotalRange).Style.Font.Bold = True
         worksheet.Cells(grandTotalRange).Style.Numberformat.Format = "#,##0.00_);(#,##0.00)"
