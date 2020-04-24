@@ -1,5 +1,5 @@
-﻿Imports AccuPay.Entity
-Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class MonthlyEndofContractReportProvider
     Implements ILaGlobalEmployeeReport
@@ -38,12 +38,21 @@ Public Class MonthlyEndofContractReportProvider
     End Function
 
     Private Async Sub SetDataSource()
-        Dim fetchAll = Await employeeRepo.GetAllAsync()
+
+        Dim fetchAll As New List(Of Employee)
+
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+
+            fetchAll = Await employeeBuilder.
+                            IsActive().
+                            IncludeBranch().
+                            ToListAsync()
+        End Using
+
         Dim employees = fetchAll.
-            Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-            Where(Function(e) e.IsActive).
             Where(Function(e) e.DateRegularized.HasValue).
-            Where(Function(e) e.DateRegularized.Value.Date >= _startDate AndAlso e.DateRegularized.Value.Date <= _endDate).
+            Where(Function(e) e.DateRegularized.Value.Date >= _startDate AndAlso
+                                e.DateRegularized.Value.Date <= _endDate).
             ToList()
 
         recordFound = employees.Any()

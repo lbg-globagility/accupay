@@ -1,18 +1,14 @@
-﻿Imports AccuPay.Entity
-Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class ActiveEmployeeChecklistReportProvider
     Implements ILaGlobalEmployeeReport
 
     Private _reportDocument As ActiveEmployeeChecklistReport
 
-    Private recordFound As Boolean
-
     Private _startDate As Date
 
     Private _endDate As Date
-
-    Private _periodID As Integer
 
     Private employeeRepo As New EmployeeRepository()
 
@@ -24,8 +20,6 @@ Public Class ActiveEmployeeChecklistReportProvider
 
         succeed = form.ShowDialog = DialogResult.OK
         If Not succeed Then Return False
-
-        _periodID = form.RowID
 
         _startDate = form.PayFromDate
         _endDate = form.PayToDate
@@ -42,36 +36,19 @@ Public Class ActiveEmployeeChecklistReportProvider
         Return succeed
     End Function
 
-    Private Function ActiveCheck(e As Employee) As Boolean
-        If Not e.TerminationDate.HasValue Then
-            Return True
-        End If
+    Private Sub SetDataSource()
 
-        Dim employeeStartDate = e.StartDate
-        Dim terminationDate = e.TerminationDate.Value.Date
+        Dim employees As New List(Of Employee)
 
-        If employeeStartDate <= _startDate And terminationDate >= _endDate Then
-            Return True
-        ElseIf _startDate <= employeeStartDate And _endDate >= employeeStartDate Then
-            Return True
-        ElseIf _startDate <= terminationDate And _endDate >= terminationDate Then
-            Return True
-        End If
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
-        Return False
-    End Function
+            employees = employeeBuilder.
+                            IsActive().
+                            IncludeBranch().
+                            ToList()
+        End Using
 
-    Private Async Sub SetDataSource()
-        Dim fetchAll = Await employeeRepo.GetAllAsync()
-        Dim records = fetchAll.
-            Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-            Where(Function(e) e.IsActive).
-            ToList()
-
-        Dim employees = records.Where(Function(e) ActiveCheck(e)).ToList()
-
-        recordFound = records.Any()
-        If Not recordFound Then
+        If Not employees.Any Then
             MessageBox.Show($"No record found.", "Active Employee Checklist Report", MessageBoxButtons.OK, MessageBoxIcon.Information)
 
             Return

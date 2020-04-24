@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Entities
 
 Public Class SmDeploymentEndorsementReportProvider
     Implements ILaGlobalEmployeeReport

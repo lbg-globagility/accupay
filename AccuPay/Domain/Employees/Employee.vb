@@ -97,9 +97,6 @@ Namespace Global.AccuPay.Entity
         <ForeignKey("PayFrequencyID")>
         Public Overridable Property PayFrequency As PayFrequency
 
-        <ForeignKey("BranchID")>
-        Public Overridable Property Branch As Branch
-
         Public Overridable Property Salaries As ICollection(Of Salary)
 
         Public ReadOnly Property MiddleInitial As String

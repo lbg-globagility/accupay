@@ -207,13 +207,26 @@ namespace AccuPay.Data.Repositories
         {
             using (var builder = new EmployeeBuilder())
             {
-                return await builder.IncludePosition().
-                                        ByEmployeeNumber(employeeNumber).
-                                        FirstOrDefaultAsync();
+                return await builder.ByEmployeeNumber(employeeNumber).
+                                    FirstOrDefaultAsync();
             }
         }
 
         #endregion By Employee
+
+        public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
+        {
+            date = date ?? DateTime.Now;
+
+            using (var context = new PayrollContext())
+            {
+                return await context.Salaries.
+                                Where(x => x.EmployeeID == employeeId).
+                                Where(x => x.EffectiveFrom <= date).
+                                OrderByDescending(x => x.EffectiveFrom).
+                                FirstOrDefaultAsync();
+            }
+        }
 
         public async Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue)
         {

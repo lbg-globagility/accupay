@@ -10,7 +10,6 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -890,9 +889,9 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim leaveRepository As New LeaveRepository
+                Dim leaveRepository As New Repository.LeaveRepository
                 Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employeeId,
-                                                                AccuPay.LeaveType.LeaveType.Vacation,
+                                                                LeaveType.LeaveType.Vacation,
                                                                 LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
@@ -1053,7 +1052,7 @@ Public Class EmployeeForm
 
         If employee_RowID.HasValue = False Then Return Nothing
 
-        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
             Return employeeBuilder.
                     IncludePayFrequency().
@@ -2491,7 +2490,7 @@ Public Class EmployeeForm
     Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
         Dim employee As Employee = Nothing
 
-        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
             Return employeeBuilder.
                     IncludePayFrequency().
@@ -7586,9 +7585,7 @@ Public Class EmployeeForm
         Female
     End Enum
 
-    Private laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
-
-    Private repo As New EmployeeRepository
+    Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
 
     Private Async Sub LaGlobalEmployeeReportMenu_Click(sender As ToolStripMenuItem, e As EventArgs) Handles ActiveEmployeeChecklistReportToolStripMenuItem.Click,
         BPIInsuranceAmountReportToolStripMenuItem.Click,
@@ -7602,11 +7599,20 @@ Public Class EmployeeForm
         Dim employeeRow = dgvEmp.CurrentRow
         If employeeRow Is Nothing Then Return
 
-        Dim employeeID = employeeRow.Cells(Column1.Name).Value
+        Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
 
-        Dim employee = Await repo.GetByEmployeeNumberAsync(employeeID)
+        Dim repo As New EmployeeRepository
 
-        Dim selectedReport = laGlobalEmployeeReports(sender.Name)
+        Dim employee As Employee
+        Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+
+            employee = Await builder.IncludePosition().
+                                        IncludeBranch().
+                                        ByEmployeeNumber(employeeNumber).
+                                        FirstOrDefaultAsync()
+        End Using
+
+        Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
 
         Dim report = New LaGlobalEmployeeReports(employee)
         report.Print(selectedReport)
@@ -7617,7 +7623,7 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub InitializeLaGlobalReportList()
-        laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
+        _laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
             {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
             {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
             {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},

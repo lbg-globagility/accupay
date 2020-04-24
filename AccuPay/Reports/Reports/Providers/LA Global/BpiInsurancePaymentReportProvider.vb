@@ -1,6 +1,8 @@
 ﻿Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
 
@@ -8,7 +10,7 @@ Public Class BpiInsurancePaymentReportProvider
     Implements ILaGlobalEmployeeReport
     Private _logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
 
-    Private reportDocument As BpiInsuranceAmountReport
+    Private _reportDocument As BpiInsuranceAmountReport
 
     Private _selectedDate As Date
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
@@ -22,7 +24,7 @@ Public Class BpiInsurancePaymentReportProvider
         _selectedDate = CDate(monthSelector.MonthFirstDate)
 
         Try
-            reportDocument = New BpiInsuranceAmountReport
+            _reportDocument = New BpiInsuranceAmountReport
 
             SetDataSource()
 
@@ -33,38 +35,30 @@ Public Class BpiInsurancePaymentReportProvider
         Return succeed
     End Function
 
-    Private Async Function LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources)) As Task
-        Await ThreadingPayrollGeneration(t.Result)
-    End Function
+    Private Async Sub SetDataSource()
 
-    Private Sub LoadingPayrollDataOnError(t As Task)
-        _logger.Error("Error loading one of the payroll data.", t.Exception)
-        MsgBox("Something went wrong while loading the payroll data needed for computation. Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Resources")
-
-    End Sub
-
-    Private Async Function ThreadingPayrollGeneration(resources As PayrollResources) As Task
-
-        Dim bpiInsuranceProductID = resources.BpiInsuranceProduct.RowID.Value
+        Dim bpiInsuranceProductID = (Await (New ProductRepository().
+                                                GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                                                organizationID:=z_OrganizationID,
+                                                userID:=z_User))).RowID
 
         Using context = New PayrollContext
-            Dim periods = Await context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
+            Dim periods = context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                 Where(Function(p) p.Year = _selectedDate.Year).
                 Where(Function(p) p.Month = _selectedDate.Month).
-                Where(Function(p) p.PayFrequencyID = 1).
-                ToListAsync()
+                Where(Function(p) p.PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId).
+                ToList
 
             Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()
 
-            Dim adjustmens = Await context.Adjustments.
+            Dim adjustmens = context.Adjustments.
                     Include(Function(a) a.Paystub.Employee).
                     Where(Function(a) periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
                     Where(Function(a) bpiInsuranceProductID = a.ProductID.Value).
-                    ToListAsync()
+                    ToList()
 
             If Not adjustmens.Any Then
                 MessageBox.Show($"No record found.", "BPI Insurance Payment Report", MessageBoxButtons.OK, MessageBoxIcon.Information)
-
                 Return
             End If
 
@@ -74,67 +68,22 @@ Public Class BpiInsurancePaymentReportProvider
                     OrderBy(Function(a) a.Column2).
                     ToList()
 
-            reportDocument.SetDataSource(source)
+            _reportDocument.SetDataSource(source)
 
-            Dim parameterSetter = New CrystalReportParameterValueSetter(reportDocument)
+            Dim parameterSetter = New CrystalReportParameterValueSetter(_reportDocument)
             With parameterSetter
                 .SetParameter("organizationName", z_CompanyName)
 
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
-            form.SetReportSource(reportDocument)
+            form.SetReportSource(_reportDocument)
             form.Show()
 
         End Using
-    End Function
-
-    Private Async Sub SetDataSource()
-        Using context = New PayrollContext
-            Dim periods = Await context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                Where(Function(p) p.Year = _selectedDate.Year).
-                Where(Function(p) p.Month = _selectedDate.Month).
-                Where(Function(p) p.PayFrequencyID = 1).
-                ToListAsync()
-
-            Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()
-
-            Dim firstPeriod = periods.FirstOrDefault
-
-            LoadPayrollResource(firstPeriod)
-
-            'Dim payrollResource = New PayrollResources(firstPeriod.RowID.Value, firstPeriod.PayFromDate, firstPeriod.PayToDate)
-
-        End Using
-
     End Sub
 
-    Private Sub LoadPayrollResource(firstPeriod As PayPeriod)
-        Dim loadTask = Task.Factory.StartNew(
-            Function()
-                Dim resources = New PayrollResources(firstPeriod.RowID.Value, firstPeriod.PayFromDate, firstPeriod.PayToDate)
-                Dim resourcesTask = resources.Load()
-                resourcesTask.Wait()
-
-                Return resources
-            End Function,
-            0)
-
-        loadTask.ContinueWith(
-        AddressOf LoadingPayrollDataOnSuccess,
-        CancellationToken.None,
-        TaskContinuationOptions.OnlyOnRanToCompletion,
-        TaskScheduler.FromCurrentSynchronizationContext)
-
-        loadTask.ContinueWith(
-            AddressOf LoadingPayrollDataOnError,
-            CancellationToken.None,
-            TaskContinuationOptions.OnlyOnFaulted,
-            TaskScheduler.FromCurrentSynchronizationContext
-        )
-    End Sub
-
-    Private Function ConvertToDataSource(a As IGrouping(Of Integer?, Adjustment)) As BpiInsuranceDataSource
+    Private Function ConvertToDataSource(a As IGrouping(Of Integer?, Entity.Adjustment)) As BpiInsuranceDataSource
         Dim e = a.FirstOrDefault.Paystub.Employee
         Dim middleName = If(Not String.IsNullOrWhiteSpace(e.MiddleName), $"{Left(e.MiddleName, 1)}.", String.Empty)
         Dim nameParts = {e.LastName, e.FirstName, middleName}

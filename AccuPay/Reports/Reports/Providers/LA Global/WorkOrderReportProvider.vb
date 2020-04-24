@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Entities
 
 Public Class WorkOrderReportProvider
     Implements ILaGlobalEmployeeReport
@@ -38,4 +38,5 @@ Public Class WorkOrderReportProvider
         End Try
         Return succeed
     End Function
+
 End Class

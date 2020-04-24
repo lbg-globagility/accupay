@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Entities
 
 Public Class LaGlobalEmployeeReports
     Private ReadOnly _employee As Employee
@@ -19,10 +19,11 @@ Public Class LaGlobalEmployeeReports
     End Sub
 
     Public Sub Print(report As LaGlobalEmployeeReportName)
-        Dim reportProvider = reportProviders(report)
+        Dim reportProvider As ILaGlobalEmployeeReport = reportProviders(report)
         reportProvider.Employee = _employee
         reportProvider.Output()
     End Sub
+
 End Class
 
 Public Enum LaGlobalEmployeeReportName
