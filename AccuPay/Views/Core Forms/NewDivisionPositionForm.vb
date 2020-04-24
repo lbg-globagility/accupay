@@ -885,7 +885,6 @@ Public Class NewDivisionPositionForm
 
         Return False
     End Function
-
     Private Function RecordUpdateDivision() As Boolean
 
         Dim oldDivision =
@@ -1213,5 +1212,4 @@ Public Class NewDivisionPositionForm
         Dim userActivity As New UserActivityForm("Position")
         userActivity.ShowDialog()
     End Sub
-
 End Class

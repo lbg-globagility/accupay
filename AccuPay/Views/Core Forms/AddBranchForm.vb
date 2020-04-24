@@ -31,15 +31,15 @@ Public Class AddBranchForm
 
         Me.LastAddedBranchId = Nothing
 
-        _branchRepository = New BranchRepository()
+        ShowCalendar()
 
-        ShowBranch()
+        _branchRepository = New BranchRepository()
 
         Await RefreshForm()
 
     End Sub
 
-    Private Sub ShowBranch()
+    Private Sub ShowCalendar()
 
         Using context As New PayrollContext
 

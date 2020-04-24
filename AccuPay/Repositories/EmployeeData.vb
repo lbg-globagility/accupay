@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 
@@ -20,7 +21,6 @@ Namespace Global.AccuPay.ModelData
 
         End Function
 
-
         Private Shared Async Function GetLeaveBalance(employeeId As Integer?, partNo As String) As Task(Of Decimal)
 
             Dim defaultBalance = 0
@@ -34,7 +34,6 @@ Namespace Global.AccuPay.ModelData
                                         FirstOrDefaultAsync
 
                 If leaveledger?.LastTransactionID Is Nothing Then Return defaultBalance
-
 
                 Dim leaveTransaction = Await context.LeaveTransactions.
                                     Where(Function(l) Nullable.Equals(l.RowID, leaveledger.LastTransactionID)).

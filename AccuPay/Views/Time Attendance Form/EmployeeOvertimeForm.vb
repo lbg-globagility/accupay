@@ -544,6 +544,10 @@ Public Class EmployeeOvertimeForm
                                                 RecordUpdate(item)
                                             Next
 
+                                            For Each item In changedOvertimes
+                                                RecordUpdate(item)
+                                            Next
+
                                             ShowBalloonInfo($"{changedOvertimes.Count} Overtime(s) Successfully Updated.", messageTitle)
 
                                             Dim currentEmployee = GetSelectedEmployee()

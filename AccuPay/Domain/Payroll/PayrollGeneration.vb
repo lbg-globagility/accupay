@@ -1,5 +1,6 @@
 Option Strict On
 
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -843,63 +844,65 @@ Public Class PayrollGeneration
 
         Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
 
-            Me.RegularHours = timeEntries.Sum(Function(t) t.RegularHours)
-            Me.RegularPay = PayrollTools.GetHourlyRateByDailyRate(salary, employee) * Me.RegularHours
-            Me.ActualRegularPay = PayrollTools.GetHourlyRateByDailyRate(salary, employee, isActual:=True) * Me.RegularHours
+            Dim totalTimeEntries = TotalTimeEntry.Calculate(timeEntries, salary, employee, actualtimeentries)
 
-            Me.OvertimeHours = timeEntries.Sum(Function(t) t.OvertimeHours)
-            Me.OvertimePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.OvertimePay))
-            Me.ActualOvertimePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.OvertimePay))
+            Me.RegularHours = totalTimeEntries.RegularHours
+            Me.RegularPay = totalTimeEntries.RegularPay
+            Me.ActualRegularPay = totalTimeEntries.ActualRegularPay
 
-            Me.NightDiffHours = timeEntries.Sum(Function(t) t.NightDiffHours)
-            Me.NightDiffPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.NightDiffPay))
-            Me.ActualNightDiffPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffPay))
+            Me.OvertimeHours = totalTimeEntries.OvertimeHours
+            Me.OvertimePay = totalTimeEntries.OvertimePay
+            Me.ActualOvertimePay = totalTimeEntries.ActualOvertimePay
 
-            Me.NightDiffOvertimeHours = timeEntries.Sum(Function(t) t.NightDiffOTHours)
-            Me.NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.NightDiffOTPay))
-            Me.ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.NightDiffOTPay))
+            Me.NightDiffHours = totalTimeEntries.NightDiffHours
+            Me.NightDiffPay = totalTimeEntries.NightDiffPay
+            Me.ActualNightDiffPay = totalTimeEntries.ActualNightDiffPay
 
-            Me.RestDayHours = timeEntries.Sum(Function(t) t.RestDayHours)
-            Me.RestDayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RestDayPay))
-            Me.ActualRestDayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RestDayPay))
+            Me.NightDiffOvertimeHours = totalTimeEntries.NightDiffOvertimeHours
+            Me.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay
+            Me.ActualNightDiffOvertimePay = totalTimeEntries.ActualNightDiffOvertimePay
 
-            Me.RestDayOTHours = timeEntries.Sum(Function(t) t.RestDayOTHours)
-            Me.RestDayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RestDayOTPay))
-            Me.ActualRestDayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RestDayOTPay))
+            Me.RestDayHours = totalTimeEntries.RestDayHours
+            Me.RestDayPay = totalTimeEntries.RestDayPay
+            Me.ActualRestDayPay = totalTimeEntries.ActualRestDayPay
 
-            Me.SpecialHolidayHours = timeEntries.Sum(Function(t) t.SpecialHolidayHours)
-            Me.SpecialHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.SpecialHolidayPay))
-            Me.ActualSpecialHolidayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.SpecialHolidayPay))
+            Me.RestDayOTHours = totalTimeEntries.RestDayOTHours
+            Me.RestDayOTPay = totalTimeEntries.RestDayOTPay
+            Me.ActualRestDayOTPay = totalTimeEntries.ActualRestDayOTPay
 
-            Me.SpecialHolidayOTHours = timeEntries.Sum(Function(t) t.SpecialHolidayOTHours)
-            Me.SpecialHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.SpecialHolidayOTPay))
-            Me.ActualSpecialHolidayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.SpecialHolidayOTPay))
+            Me.SpecialHolidayHours = totalTimeEntries.SpecialHolidayHours
+            Me.SpecialHolidayPay = totalTimeEntries.SpecialHolidayPay
+            Me.ActualSpecialHolidayPay = totalTimeEntries.ActualSpecialHolidayPay
 
-            Me.RegularHolidayHours = timeEntries.Sum(Function(t) t.RegularHolidayHours)
-            Me.RegularHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RegularHolidayPay))
-            Me.ActualRegularHolidayPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RegularHolidayPay))
+            Me.SpecialHolidayOTHours = totalTimeEntries.SpecialHolidayOTHours
+            Me.SpecialHolidayOTPay = totalTimeEntries.SpecialHolidayOTPay
+            Me.ActualSpecialHolidayOTPay = totalTimeEntries.ActualSpecialHolidayOTPay
 
-            Me.RegularHolidayOTHours = timeEntries.Sum(Function(t) t.RegularHolidayOTHours)
-            Me.RegularHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.RegularHolidayOTPay))
-            Me.ActualRegularHolidayOTPay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.RegularHolidayOTPay))
+            Me.RegularHolidayHours = totalTimeEntries.RegularHolidayHours
+            Me.RegularHolidayPay = totalTimeEntries.RegularHolidayPay
+            Me.ActualRegularHolidayPay = totalTimeEntries.ActualRegularHolidayPay
 
-            Me.HolidayPay = timeEntries.Sum(Function(t) t.HolidayPay)
+            Me.RegularHolidayOTHours = totalTimeEntries.RegularHolidayOTHours
+            Me.RegularHolidayOTPay = totalTimeEntries.RegularHolidayOTPay
+            Me.ActualRegularHolidayOTPay = totalTimeEntries.ActualRegularHolidayOTPay
 
-            Me.LeaveHours = timeEntries.Sum(Function(t) t.TotalLeaveHours)
-            Me.LeavePay = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.LeavePay))
-            Me.ActualLeavePay = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.LeavePay))
+            Me.HolidayPay = totalTimeEntries.HolidayPay
 
-            Me.LateHours = timeEntries.Sum(Function(t) t.LateHours)
-            Me.LateDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.LateDeduction))
-            Me.ActualLateDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.LateDeduction))
+            Me.LeaveHours = totalTimeEntries.LeaveHours
+            Me.LeavePay = totalTimeEntries.LeavePay
+            Me.ActualLeavePay = totalTimeEntries.ActualLeavePay
 
-            Me.UndertimeHours = timeEntries.Sum(Function(t) t.UndertimeHours)
-            Me.UndertimeDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.UndertimeDeduction))
-            Me.ActualUndertimeDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.UndertimeDeduction))
+            Me.LateHours = totalTimeEntries.LateHours
+            Me.LateDeduction = totalTimeEntries.LateDeduction
+            Me.ActualLateDeduction = totalTimeEntries.ActualLateDeduction
 
-            Me.AbsentHours = timeEntries.Sum(Function(t) t.AbsentHours)
-            Me.AbsenceDeduction = AccuMath.CommercialRound(timeEntries.Sum(Function(t) t.AbsentDeduction))
-            Me.ActualAbsenceDeduction = AccuMath.CommercialRound(actualtimeentries.Sum(Function(t) t.AbsentDeduction))
+            Me.UndertimeHours = totalTimeEntries.UndertimeHours
+            Me.UndertimeDeduction = totalTimeEntries.UndertimeDeduction
+            Me.ActualUndertimeDeduction = totalTimeEntries.ActualUndertimeDeduction
+
+            Me.AbsentHours = totalTimeEntries.AbsentHours
+            Me.AbsenceDeduction = totalTimeEntries.AbsenceDeduction
+            Me.ActualAbsenceDeduction = totalTimeEntries.ActualAbsenceDeduction
 
         End Sub
 

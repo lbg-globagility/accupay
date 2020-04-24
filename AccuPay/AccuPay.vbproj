@@ -382,6 +382,7 @@
     <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Core\Enums\AdjustmentType.vb" />
+    <Compile Include="Domain\Payroll\TotalTimeEntry.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\Paystubs\IPayrate.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
@@ -424,6 +425,9 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\ExcelFormatReport.vb" />
+    <Compile Include="Reports\Reports\Providers\ExcelReportColumn.vb" />
+    <Compile Include="Reports\Reports\Providers\CostCenterReportProvider.vb" />
     <Compile Include="Reports\Reports\SMDeploymentEndorsement.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -502,6 +506,12 @@
       <DependentUpon>AddBonusForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddBonusForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
+      <DependentUpon>SelectBranchForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
@@ -625,7 +635,6 @@
     </Compile>
     <Compile Include="Repositories\EmployeeData.vb" />
     <Compile Include="Repositories\LeaveRepository.vb" />
-    <Compile Include="Repositories\ProductConstant.vb" />
     <Compile Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.Designer.vb">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </Compile>
@@ -1964,6 +1973,9 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddBonusForm.resx">
       <DependentUpon>AddBonusForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
+      <DependentUpon>SelectBranchForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </EmbeddedResource>
@@ -2084,6 +2096,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
