@@ -34,11 +34,17 @@ Public Class EntityTest
 
     <Test>
     Public Sub TestEntity()
+        'for checking if we can access the accupay.data repository without error
         Dim repo As New PaystubRepository()
 
         Dim count = repo.List.Count
 
-        Assert.IsTrue(repo.List.Count > 0)
+        Assert.IsTrue(count > 0)
+        Dim branchRepo As New BranchRepository()
+
+        Dim count1 = branchRepo.GetAll().Count
+
+        Assert.IsTrue(count1 > 0)
     End Sub
 
     <Test>
