@@ -136,7 +136,7 @@ Public Class PreviewLeaveBalanceForm
 
             Next
 
-            Dim empProfiles = Await _employeeRepo.GetByManyIdAsync(z_OrganizationID, employeeIds)
+            Dim empProfiles = Await _employeeRepo.GetByManyIdAsync(employeeIds)
 
             For Each employee In empProfiles
                 Dim eId = employee.RowID

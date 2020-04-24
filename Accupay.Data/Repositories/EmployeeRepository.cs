@@ -56,6 +56,18 @@ namespace AccuPay.Data.Repositories
                 return this;
             }
 
+            public EmployeeBuilder ByEmployeeNumbers(string[] employeeNumbers)
+            {
+                _query = _query.Where(x => employeeNumbers.Contains(x.EmployeeNo));
+                return this;
+            }
+
+            public EmployeeBuilder ByIds(List<int?> rowIds)
+            {
+                _query = _query.Where(x => rowIds.Contains(x.RowID));
+                return this;
+            }
+
             public EmployeeBuilder HasPaystubs(int payPeriodId)
             {
                 _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: true));
@@ -154,53 +166,41 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<List<Employee>> GetByEmployeeNumbersAsync(string[] employeeNumbers, int organizationID)
+        public async Task<IEnumerable<Employee>> GetByEmployeeNumbersAsync(string[] employeeNumbers)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder())
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Where(l => employeeNumbers.Contains(l.EmployeeNo)).ToListAsync();
+                return await builder.
+                    ByEmployeeNumbers(employeeNumbers).
+                    ToListAsync();
             }
         }
 
-        public async Task<Employee> GetByIdAsync(int organizationID, int rowID)
+        public async Task<Employee> GetByIdAsync(int? rowID)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder())
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Where(e => e.RowID == rowID).FirstOrDefaultAsync();
+                return await builder.FirstOrDefaultAsync(rowID);
             }
         }
 
-        public async Task<Employee> GetByIdWithPayFrequencyAsync(int organizationID, int rowID)
+        public async Task<Employee> GetByIdWithPayFrequencyAsync(int? rowID)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder())
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Include(e => e.PayFrequency).Where(e => e.RowID == rowID).FirstOrDefaultAsync();
+                return await builder.
+                    IncludePayFrequency().
+                    FirstOrDefaultAsync(rowID);
             }
         }
 
-        public async Task<List<Employee>> GetByManyIdAsync(int organizationID, List<int> rowIDs)
+        public async Task<IEnumerable<Employee>> GetByManyIdAsync(List<int?> rowIDs)
         {
-            using (var context = new PayrollContext())
+            using (var builder = new EmployeeBuilder())
             {
-                var query = GetAllEmployeeBaseQuery(organizationID, context);
-
-                return await query.Where(e => rowIDs.Contains(e.RowID.Value)).ToListAsync();
-            }
-        }
-
-        public async Task<List<Employee>> GetAllWithPositionAsync(int organizationID)
-        {
-            using (var builder = new EmployeeBuilder(organizationId))
-            {
-                return await builder.HasNoPaystubs(payPeriodId).
-                                        IsActive().
-                                        ToListAsync();
+                return await builder.
+                    ByIds(rowIDs).
+                    ToListAsync();
             }
         }
 
@@ -222,7 +222,7 @@ namespace AccuPay.Data.Repositories
                                         ToListAsync();
             }
         }
-        
+
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))

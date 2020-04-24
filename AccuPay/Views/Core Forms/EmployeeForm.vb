@@ -2107,7 +2107,7 @@ Public Class EmployeeForm
 
                 Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                 Dim employeeRepo = New Repositories.EmployeeRepository
-                Dim employee = Await employeeRepo.GetByIdWithPayFrequencyAsync(organizationID:=z_OrganizationID, rowID:=employeeID)
+                Dim employee = Await employeeRepo.GetByIdWithPayFrequencyAsync(employeeID)
                 'Using context = New PayrollContext()
                 '    employee = (From emp In context.Employees.
                 '                    Include(Function(emp) emp.PayFrequency).

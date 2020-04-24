@@ -1,5 +1,5 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.JobLevels
 Imports AccuPay.Repository

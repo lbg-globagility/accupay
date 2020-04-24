@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
+Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -15,11 +16,11 @@ Public Class EmployeeLoansForm
     Private sysowner_is_benchmark As Boolean
 
     Private _employeeRepository As New Repositories.EmployeeRepository
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New Repositories.ProductRepository
     Private _listOfValueRepository As New ListOfValueRepository
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _loanTypeList As List(Of Product)
+    Private _loanTypeList As List(Of Entities.Product)
 
     Private _allEmployees As New List(Of Entities.Employee)
 
@@ -651,9 +652,9 @@ Public Class EmployeeLoansForm
 
         If sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
+            Me._loanTypeList = New List(Of Entities.Product)(Await _productRepository.GetGovernmentLoanTypes())
         Else
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+            Me._loanTypeList = New List(Of Entities.Product)(Await _productRepository.GetLoanTypes())
 
         End If
 

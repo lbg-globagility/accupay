@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Utilities
@@ -104,7 +105,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Public Async Function SaveManyAsync(currentLoanSchedules As List(Of LoanSchedule), loanTypes As IEnumerable(Of Product)) As Task
+        Public Async Function SaveManyAsync(currentLoanSchedules As List(Of LoanSchedule), loanTypes As IEnumerable(Of Entities.Product)) As Task
 
             Using context As New PayrollContext
 
@@ -121,7 +122,7 @@ Namespace Global.AccuPay.Repository
 
         Public Async Function SaveAsync(
             loanSchedule As LoanSchedule,
-            loanTypes As IEnumerable(Of Product),
+            loanTypes As IEnumerable(Of Entities.Product),
             Optional passedContext As PayrollContext = Nothing) As Task
 
             'if completed yung loan, hindi pwede ma i-insert or update
@@ -247,7 +248,7 @@ Namespace Global.AccuPay.Repository
 
         Private Sub Insert(
             loanSchedule As LoanSchedule,
-            loanTypes As IEnumerable(Of Product),
+            loanTypes As IEnumerable(Of Entities.Product),
             context As PayrollContext)
 
             loanSchedule.LoanPayPeriodLeft =

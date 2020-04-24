@@ -277,7 +277,7 @@ Public Class CashOutUnusedLeave
     End Sub
 
     Private Async Sub ZeroOutEmployeeLeaveBalance(context As PayrollContext, employeeRowId As Integer)
-        Dim employee = Await _employeeRepository.GetByIdAsync(organizationID:=z_OrganizationID, rowID:=employeeRowId)
+        Dim employee = Await _employeeRepository.GetByIdAsync(employeeRowId)
 
         If employee IsNot Nothing Then
             With employee

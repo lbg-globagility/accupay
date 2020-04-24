@@ -19,6 +19,7 @@ Namespace Global.AccuPay.Repository
             Return Await GetProductsByCategory(category.RowID)
 
         End Function
+
         Public Async Function GetAllowanceTypes() _
             As Task(Of IEnumerable(Of Product))
 
@@ -190,7 +191,7 @@ Namespace Global.AccuPay.Repository
         End Function
 
         Public Async Function AddLoanType(loanName As String, Optional throwError As Boolean = True) _
-            As Task(Of Product)
+            As Task(Of Entities.Product)
 
             Dim product As New Product
 
@@ -411,7 +412,7 @@ Namespace Global.AccuPay.Repository
 
         End Function
 
-        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product, Optional isTaxable As Boolean = False) As Task(Of Product)
+        Private Async Function AddProduct(productName As String, throwError As Boolean, product As Product, Optional isTaxable As Boolean = False) As Task(Of Entities.Product)
 
             Dim categoryId = (Await GetOrCreateCategoryByName(product.Category))?.RowID
 

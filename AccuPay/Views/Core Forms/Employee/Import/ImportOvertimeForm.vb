@@ -10,7 +10,7 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New Repositories.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private overtimeRepository As New OvertimeRepository()
 
@@ -57,7 +57,7 @@ Public Class ImportOvertimeForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
 
             If employee Is Nothing Then
 

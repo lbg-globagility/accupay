@@ -154,7 +154,7 @@ Namespace Global.AccuPay.Repository
 
             End If
 
-            Dim employee = Await _employeeRepository.GetByIdAsync(organizationID:=z_OrganizationID, rowID:=employeeId)
+            Dim employee = Await _employeeRepository.GetByIdAsync(employeeId)
 
             Using context As New PayrollContext
 
@@ -338,8 +338,8 @@ Namespace Global.AccuPay.Repository
         End Function
 
         Private Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?), context As PayrollContext) As Task(Of List(Of Entities.Employee))
-            Dim ids = employeeIds.Select(Function(id) id.Value).ToList()
-            Return Await _employeeRepository.GetByManyIdAsync(z_OrganizationID, ids)
+            Dim ids = employeeIds.Select(Function(id) id).ToList()
+            Return (Await _employeeRepository.GetByManyIdAsync(ids)).ToList()
         End Function
 
         Private Shared Async Function GetShiftSchedules(employeeIds As IEnumerable(Of Integer?), firstLeave As Date, lastLeave As Date, context As PayrollContext) As Task(Of List(Of EmployeeDutySchedule))
