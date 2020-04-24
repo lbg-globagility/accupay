@@ -270,7 +270,9 @@ Public Class EmployeeTreeView
 
         Private Function LoadEmployees() As IList(Of Employee)
 
-            Dim employees = New EmployeeRepository().GetAllWithDivisionAndPosition().ToList
+            Dim employees = New EmployeeRepository().
+                                    GetAllWithDivisionAndPosition(z_OrganizationID).
+                                    ToList
 
             Return employees.
                         OrderBy(Function(e) e.LastName).

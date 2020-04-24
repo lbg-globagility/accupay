@@ -223,7 +223,9 @@ Public Class MassOvertimePresenter
 
     Private Function LoadEmployees() As IList(Of Entities.Employee)
 
-        Return New EmployeeRepository().GetAllWithDivisionAndPosition().ToList
+        Return New EmployeeRepository().
+                        GetAllWithDivisionAndPosition(z_OrganizationID).
+                        ToList
     End Function
 
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Entity.Employee)) As IList(Of IGrouping(Of Integer?, Entities.Overtime))

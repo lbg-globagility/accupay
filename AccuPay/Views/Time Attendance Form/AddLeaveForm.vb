@@ -11,11 +11,11 @@ Public Class AddLeaveForm
 
     Private _productRepository As New ProductRepository
 
-    Private _currentEmployee As Employee
+    Private _currentEmployee As Data.Entities.Employee
 
     Private _newLeave As New Leave
 
-    Sub New(employee As Employee)
+    Sub New(employee As Data.Entities.Employee)
 
         ' This call is required by the designer.
         InitializeComponent()

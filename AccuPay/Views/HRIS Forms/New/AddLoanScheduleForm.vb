@@ -11,7 +11,7 @@ Public Class AddLoanScheduleForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private _currentEmployee As Employee
+    Private _currentEmployee As Data.Entities.Employee
 
     Private _newLoanSchedule As New LoanSchedule
 
@@ -31,7 +31,7 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Employee)
+    Sub New(employee As Data.Entities.Employee)
 
         ' This call is required by the designer.
         InitializeComponent()

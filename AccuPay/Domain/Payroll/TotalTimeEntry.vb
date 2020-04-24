@@ -16,7 +16,7 @@ Public Class TotalTimeEntry
 
     Private Sub New(timeEntries As ICollection(Of TimeEntry),
                     salary As Salary,
-                    employee As Employee,
+                    employee As IEmployee,
                     actualtimeentries As ICollection(Of ActualTimeEntry))
 
         _hourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee)

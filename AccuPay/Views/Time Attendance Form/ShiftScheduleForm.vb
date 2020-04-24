@@ -584,7 +584,7 @@ Public Class ShiftScheduleForm
             Dim shiftStart = Calendar.ToTimespan(_timeFrom)
             Dim shiftEnd = Calendar.ToTimespan(_timeTo)
 
-            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
+            Dim isValidForCompute = shiftEnd.HasValue And shiftStart.HasValue
 
             If isValidForCompute Then
                 Dim sdfsd = shiftEnd - shiftStart

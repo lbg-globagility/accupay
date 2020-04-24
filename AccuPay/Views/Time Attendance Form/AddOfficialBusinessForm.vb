@@ -10,11 +10,11 @@ Public Class AddOfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _currentEmployee As Employee
+    Private _currentEmployee As Data.Entities.Employee
 
     Private _newOfficialBusiness As New OfficialBusiness
 
-    Sub New(employee As Employee)
+    Sub New(employee As Data.Entities.Employee)
 
         ' This call is required by the designer.
         InitializeComponent()

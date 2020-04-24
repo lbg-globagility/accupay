@@ -309,7 +309,7 @@ Public Class EmployeeLoansForm
 
     Private Async Sub tsbtnNewLoan_Click(sender As Object, e As EventArgs) Handles tsbtnNewLoan.Click
 
-        Dim employee As Employee = GetSelectedEmployee()
+        Dim employee As Entities.Employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")
@@ -449,7 +449,9 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Function DeleteLoanSchedule(currentEmployee As Employee, messageTitle As String, loanNumberString As String) As Task
+    Private Async Function DeleteLoanSchedule(currentEmployee As Entities.Employee,
+                                              messageTitle As String,
+                                              loanNumberString As String) As Task
         Try
 
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID)
@@ -568,7 +570,7 @@ Public Class EmployeeLoansForm
 
     End Function
 
-    Private Async Function LoadLoanSchedules(currentEmployee As Employee) As Task
+    Private Async Function LoadLoanSchedules(currentEmployee As Entities.Employee) As Task
         If currentEmployee Is Nothing Then Return
 
         Dim inProgressChecked = chkInProgressFilter.Checked
@@ -676,10 +678,10 @@ Public Class EmployeeLoansForm
         cmbDeductionSchedule.DataSource = deductionSchedules
     End Function
 
-    Private Function GetSelectedEmployee() As Employee
+    Private Function GetSelectedEmployee() As Entities.Employee
         If employeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Entities.Employee)
     End Function
 
     Private Sub PopulateLoanScheduleForm(loanSchedule As LoanSchedule)

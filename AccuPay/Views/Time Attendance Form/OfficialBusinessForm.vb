@@ -154,10 +154,10 @@ Public Class OfficialBusinessForm
         Await ShowEmployeeList()
     End Sub
 
-    Private Function GetSelectedEmployee() As Employee
+    Private Function GetSelectedEmployee() As Entities.Employee
         If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Entities.Employee)
     End Function
 
     Private Sub ForceGridViewCommit()
@@ -166,7 +166,7 @@ Public Class OfficialBusinessForm
         UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
-    Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
+    Private Async Function LoadOfficialBusinesses(currentEmployee As Entities.Employee) As Task
         If currentEmployee Is Nothing Then Return
 
         Me._currentOfficialBusinesses = (Await _officialBusinessRepository.GetByEmployeeAsync(currentEmployee.RowID)).
@@ -339,7 +339,7 @@ Public Class OfficialBusinessForm
 
     End Sub
 
-    Private Async Function DeleteOfficialBusiness(currentEmployee As Employee, messageTitle As String) As Task
+    Private Async Function DeleteOfficialBusiness(currentEmployee As Entities.Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
@@ -386,7 +386,7 @@ Public Class OfficialBusinessForm
 
     Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
-        Dim employee As Employee = GetSelectedEmployee()
+        Dim employee As Entities.Employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")

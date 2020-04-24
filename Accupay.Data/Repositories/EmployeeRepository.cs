@@ -252,13 +252,21 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Employee> GetAllWithDivisionAndPosition()
+        public IEnumerable<Employee> GetAllWithDivisionAndPosition(int organizationId)
         {
-            using (var builder = new EmployeeBuilder())
+            using (var builder = new EmployeeBuilder(organizationId))
             {
-                return builder.IncludeDivision().
-                                IsActive().
-                                ToList();
+                return builder.IncludeDivision().ToList();
+            }
+        }
+
+        public async Task<IEnumerable<Employee>> GetAllActiveWithDivisionAndPositionAsync(int organizationId)
+        {
+            using (var builder = new EmployeeBuilder(organizationId))
+            {
+                return await builder.IncludeDivision().
+                                        IsActive().
+                                        ToListAsync();
             }
         }
 

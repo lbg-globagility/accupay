@@ -38,7 +38,7 @@ Public Class TimeEntrySummaryForm
 
     Private _employees As ICollection(Of Entities.Employee)
 
-    Private _selectedEmployee As Employee
+    Private _selectedEmployee As Data.Entities.Employee
 
     Private _breakTimeBrackets As List(Of BreakTimeBracket)
 
@@ -396,7 +396,7 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Data.Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim calendarCollection As CalendarCollection
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
@@ -644,7 +644,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetActualTimeEntries(employee As Data.Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim calendarCollection As CalendarCollection
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
@@ -942,7 +942,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Data.Entities.Employee)
         If employee Is _selectedEmployee Then
             Return
         End If

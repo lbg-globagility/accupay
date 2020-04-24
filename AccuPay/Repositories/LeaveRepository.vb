@@ -15,6 +15,10 @@ Namespace Global.AccuPay.Repository
 
         Private _employeeRepository As Repositories.EmployeeRepository
 
+        Sub New()
+            _employeeRepository = New Repositories.EmployeeRepository()
+        End Sub
+
         Private VALIDATABLE_TYPES As New List(Of String) From {
                     ProductConstant.SICK_LEAVE,
                     ProductConstant.VACATION_LEAVE
@@ -86,7 +90,7 @@ Namespace Global.AccuPay.Repository
 
                     employeeShifts = Await GetEmployeeShifts(employeeIds, firstLeave, lastLeave, context)
                     shiftSchedules = Await GetShiftSchedules(employeeIds, firstLeave, lastLeave, context)
-                    employees = Await GetEmployees(employeeIds, context)
+                    employees = Await GetEmployees(employeeIds)
 
                 End If
 
@@ -338,7 +342,7 @@ Namespace Global.AccuPay.Repository
             End If
         End Function
 
-        Private Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?), context As PayrollContext) As Task(Of List(Of Entities.Employee))
+        Private Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?)) As Task(Of List(Of Entities.Employee))
             Dim ids = employeeIds.Select(Function(id) id).ToList()
             Return (Await _employeeRepository.GetByManyIdAsync(ids)).ToList()
         End Function

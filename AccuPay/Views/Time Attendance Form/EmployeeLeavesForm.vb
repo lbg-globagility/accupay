@@ -159,10 +159,10 @@ Public Class EmployeeLeavesForm
         Await ShowEmployeeList()
     End Sub
 
-    Private Function GetSelectedEmployee() As Employee
+    Private Function GetSelectedEmployee() As Data.Entities.Employee
         If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Data.Entities.Employee)
     End Function
 
     Private Sub ForceGridViewCommit()
@@ -171,7 +171,7 @@ Public Class EmployeeLeavesForm
         UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
-    Private Async Function LoadLeaves(currentEmployee As Employee) As Task
+    Private Async Function LoadLeaves(currentEmployee As Data.Entities.Employee) As Task
         If currentEmployee Is Nothing Then Return
 
         Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID)).
@@ -378,7 +378,7 @@ Public Class EmployeeLeavesForm
         Return True
     End Function
 
-    Private Async Function DeleteLeave(currentEmployee As Employee, messageTitle As String) As Task
+    Private Async Function DeleteLeave(currentEmployee As Data.Entities.Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
@@ -426,7 +426,7 @@ Public Class EmployeeLeavesForm
 
     Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
-        Dim employee As Employee = GetSelectedEmployee()
+        Dim employee As Data.Entities.Employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")

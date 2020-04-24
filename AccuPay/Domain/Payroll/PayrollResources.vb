@@ -245,7 +245,8 @@ Public Class PayrollResources
 
     Public Async Function LoadEmployees() As Task
         Try
-            _employees = (Await _employeeRepository.GetAllActiveWithPositionAsync(z_OrganizationID)).ToList
+            _employees = (Await _employeeRepository.
+                                    GetAllActiveWithDivisionAndPositionAsync(z_OrganizationID)).ToList
         Catch ex As Exception
             Throw New ResourceLoadingException("Employees", ex)
         End Try
