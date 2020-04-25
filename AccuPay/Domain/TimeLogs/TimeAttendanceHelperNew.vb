@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools

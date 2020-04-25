@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports AccuPay.Utilities

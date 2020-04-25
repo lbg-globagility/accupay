@@ -995,7 +995,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Domain\TimeEntry\TimePeriod.vb" />
     <Compile Include="Domain\TimeLogs\TimeLog.vb" />
     <Compile Include="Domain\Payroll\PayrollResources.vb" />
     <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />

@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 
 Public Class TimeEntryCalculator

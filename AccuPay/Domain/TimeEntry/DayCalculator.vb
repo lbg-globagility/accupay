@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys

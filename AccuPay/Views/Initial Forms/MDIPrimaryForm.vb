@@ -819,7 +819,7 @@ Public Class MDIPrimaryForm
         If if_sysowner_is_hyundai Then
 
             Dim pend_leave As New SQL(str_pending_leave,
-                                  New Object() {orgztnID, AccuPay.Entity.Leave.StatusPending})
+                                  New Object() {orgztnID, Data.Entities.Leave.StatusPending})
 
             dt_pend_leave = pend_leave.GetFoundRows.Tables(0)
 

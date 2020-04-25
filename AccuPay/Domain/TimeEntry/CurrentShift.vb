@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Utilities.Extensions
 
