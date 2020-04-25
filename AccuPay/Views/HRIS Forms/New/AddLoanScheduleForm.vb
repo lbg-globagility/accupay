@@ -17,7 +17,7 @@ Public Class AddLoanScheduleForm
 
     Private _productRepository As New Data.Repositories.ProductRepository
 
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _listOfValueRepository As New Data.Repositories.ListOfValueRepository
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
@@ -322,7 +322,7 @@ Public Class AddLoanScheduleForm
     Private Async Function LoadDeductionSchedules() As Task
 
         Me._deductionSchedulesList = _listOfValueRepository.
-            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         cmbDeductionSchedule.DataSource = Me._deductionSchedulesList
 

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay.Data.Services
+Imports AccuPay.Utils
 
 Public Class UsersForm
     Dim isNew As Integer = 0
@@ -332,30 +333,26 @@ Public Class UsersForm
 
     Private Sub FillUserLevel()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        If settings.GetBoolean("User Policy.UseUserLevel", False) Then
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) Then
+            UserLevelLabel.Visible = True
+            UserLevelComboBox.Visible = True
+            UserLevelDescriptionColumn.Visible = True
 
-                UserLevelLabel.Visible = True
-                UserLevelComboBox.Visible = True
-                UserLevelDescriptionColumn.Visible = True
+            UserPrivilegeLabel.Visible = False
+            dgvPrivilege.Visible = False
+        Else
 
-                UserPrivilegeLabel.Visible = False
-                dgvPrivilege.Visible = False
-            Else
+            UserLevelLabel.Visible = False
+            UserLevelComboBox.Visible = False
+            UserLevelDescriptionColumn.Visible = False
 
-                UserLevelLabel.Visible = False
-                UserLevelComboBox.Visible = False
-                UserLevelDescriptionColumn.Visible = False
+            UserPrivilegeLabel.Visible = False
+            dgvPrivilege.Visible = False
 
-                UserPrivilegeLabel.Visible = False
-                dgvPrivilege.Visible = False
-
-            End If
-
-        End Using
+        End If
 
         UserLevelComboBox.DataSource = [Enum].GetValues(GetType(UserLevel)).Cast(Of UserLevel)().ToList
 

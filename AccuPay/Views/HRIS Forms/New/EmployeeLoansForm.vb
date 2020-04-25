@@ -17,7 +17,7 @@ Public Class EmployeeLoansForm
 
     Private _employeeRepository As New Repositories.EmployeeRepository
     Private _productRepository As New Repositories.ProductRepository
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _listOfValueRepository As New Data.Repositories.ListOfValueRepository
     Private _loanScheduleRepository As New LoanScheduleRepository
 
     Private _loanTypeList As List(Of Entities.Product)
@@ -673,7 +673,7 @@ Public Class EmployeeLoansForm
     Private Async Function LoadDeductionSchedules() As Task
 
         Dim deductionSchedules = _listOfValueRepository.
-                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         cmbDeductionSchedule.DataSource = deductionSchedules
     End Function

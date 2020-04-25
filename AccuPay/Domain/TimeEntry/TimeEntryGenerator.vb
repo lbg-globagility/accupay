@@ -5,6 +5,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
@@ -68,15 +69,13 @@ Public Class TimeEntryGenerator
     Public Sub Start()
         Dim employees As IList(Of Entities.Employee) = Nothing
         Dim organization As Organization = Nothing
-        Dim settings As ListOfValueCollection = Nothing
         Dim agencies As IList(Of Agency) = Nothing
         Dim calendarCollection As CalendarCollection
 
-        Dim timeEntryPolicy As TimeEntryPolicy
-        Using context = New PayrollContext()
+        Dim settings As ListOfValueCollection = ListOfValueCollection.Create()
+        Dim timeEntryPolicy As New TimeEntryPolicy(settings)
 
-            settings = New ListOfValueCollection(context.ListOfValues.ToList())
-            timeEntryPolicy = New TimeEntryPolicy(settings)
+        Using context = New PayrollContext()
 
             employees = _employeeRepository.GetAllActiveWithPosition(z_OrganizationID).ToList
 
@@ -159,12 +158,13 @@ Public Class TimeEntryGenerator
             End If
 
             Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            AccuPay.PayRateCalculationBasis.Organization)
+                                            Data.Enums.PayRateCalculationBasis.Organization)
 
-            calendarCollection = PayrollTools.GetCalendarCollection(previousCutoff,
-                                                                    _cutoffEnd,
-                                                                    context,
-                                                                    payrateCalculationBasis)
+            calendarCollection = Data.Helpers.PayrollTools.
+                                    GetCalendarCollection(previousCutoff,
+                                                        _cutoffEnd,
+                                                        payrateCalculationBasis,
+                                                        z_OrganizationID)
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)

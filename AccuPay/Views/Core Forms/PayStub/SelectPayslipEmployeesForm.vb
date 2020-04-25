@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
@@ -53,20 +54,16 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
 
-            Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+        If showActual = False Then
 
-            If showActual = False Then
+            PayslipTypePanel.Visible = False
+            PayslipTypeComboBox.Text = Declared
 
-                PayslipTypePanel.Visible = False
-                PayslipTypeComboBox.Text = Declared
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 

@@ -351,13 +351,11 @@
     <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
-    <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
     <Compile Include="Domain\AgencyFees\Agency.vb" />
     <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
-    <Compile Include="Domain\Calendars\CalendarCollection.vb" />
     <Compile Include="Domain\Calendars\CalendarDay.vb" />
     <Compile Include="Domain\Calendars\DayType.vb" />
     <Compile Include="Domain\Calendars\PayCalendar.vb" />
@@ -382,7 +380,6 @@
     <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Core\Enums\AdjustmentType.vb" />
-    <Compile Include="Domain\Payroll\TotalTimeEntry.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
@@ -749,8 +746,6 @@
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
-    <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
-    <Compile Include="Domain\Commons\PayratesCalendar.vb" />
     <Compile Include="Domain\Commons\PayrollConstants.vb" />
     <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
@@ -766,7 +761,6 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
-    <Compile Include="Repositories\ListOfValueRepository.vb" />
     <Compile Include="Repositories\LoanScheduleRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
@@ -862,7 +856,6 @@
     <Compile Include="Domain\Leaves\LeaveLedger.vb" />
     <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
     <Compile Include="Domain\Leaves\LeaveType.vb" />
-    <Compile Include="Domain\Paystubs\ListOfValue.vb" />
     <Compile Include="Domain\Paystubs\Organization.vb" />
     <Compile Include="Domain\Paystubs\PayPeriod.vb" />
     <Compile Include="Domain\Paystubs\PayRate.vb" />
@@ -985,7 +978,6 @@
     <Compile Include="Domain\TimeEntry\TimeEmployeeNo.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryPolicy.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </Compile>

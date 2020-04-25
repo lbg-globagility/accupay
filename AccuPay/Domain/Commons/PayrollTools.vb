@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
@@ -296,17 +297,9 @@ Public Class PayrollTools
 
     Public Shared Function CheckIfUsingUserLevel() As Boolean
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) Then
-                Return True
-            End If
-
-        End Using
-
-        Return False
+        Return settings.GetBoolean("User Policy.UseUserLevel", False)
 
     End Function
 
@@ -418,33 +411,6 @@ Public Class PayrollTools
 
         Return Convert.ToString(New SQL(str_quer_address).GetFoundRow)
 
-    End Function
-
-    Public Shared Function GetCalendarCollection(threeDaysBeforeCutoff As Date,
-                                                    payDateTo As Date,
-                                                    context As PayrollContext,
-                                                    calculationBasis As PayRateCalculationBasis) _
-                                                    As CalendarCollection
-        Dim payrates = context.PayRates.
-                                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso
-                                                    p.Date <= payDateTo).
-                                ToList()
-        If calculationBasis = PayRateCalculationBasis.Branch Then
-            Dim branchRepository As New BranchRepository()
-            Dim branches = branchRepository.GetAll()
-
-            Dim calendarDays = context.CalendarDays.
-                         Include(Function(t) t.DayType).
-                         Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
-                         ToList()
-
-            Return New CalendarCollection(payrates,
-                                          DirectCast(branches, ICollection(Of Entities.Branch)),
-                                          calendarDays)
-        Else
-            Return New CalendarCollection(payrates)
-        End If
     End Function
 
     Public Shared Function GetPreviousCutoffDateForCheckingLastWorkingDay(currentCutOffStart As Date) As Date

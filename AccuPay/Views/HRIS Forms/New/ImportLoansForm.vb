@@ -19,7 +19,7 @@ Public Class ImportLoansForm
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _listOfValueRepository As New Repositories.ListOfValueRepository
 
     Private _deductionSchedulesList As List(Of String)
 
@@ -32,7 +32,7 @@ Public Class ImportLoansForm
         Me.IsSaved = False
 
         Me._deductionSchedulesList = _listOfValueRepository.
-            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         Me._loanTypeList = New List(Of Product) _
                 (Await _productRepository.GetLoanTypes())

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Enums
+﻿Imports AccuPay.Data.Services
+Imports AccuPay.Enums
 Imports AccuPay.Utils
 
 Public Class HRISForm
@@ -291,7 +292,7 @@ Public Class HRISForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 

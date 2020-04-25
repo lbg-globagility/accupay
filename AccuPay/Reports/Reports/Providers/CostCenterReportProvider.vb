@@ -50,7 +50,7 @@ Public Class CostCenterReportProvider
     Private Const PhilHealthAmountKey As String = "PhilHealthAmount"
     Private Const HMOAmountKey As String = "HMOAmount"
     Private Const ThirteenthMonthPayKey As String = "ThirteenthMonthPay"
-    Private Const FiveDaySilpAmountKey As String = "LeaveAmount"
+    Private Const FiveDaySilpAmountKey As String = "FiveDaySilpAmount" '5 Day SILP (leave)
     Private Const NetPayKey As String = "NetPay"
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)

@@ -2,6 +2,7 @@ Option Strict On
 
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -40,7 +41,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
-    Private ReadOnly _allowances As ICollection(Of Data.Entities.Allowance)
+    Private ReadOnly _allowances As ICollection(Of Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
@@ -87,7 +88,7 @@ Public Class PayrollGeneration
         _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
             Function(p) CBool(p.EmployeeID = _employee.RowID))
 
-        _settings = New ListOfValueCollection(resources.ListOfValues)
+        _settings = resources.ListOfValueCollection
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries = resources.TimeEntries.
@@ -832,9 +833,15 @@ Public Class PayrollGeneration
         Public Property AbsenceDeduction As Decimal Implements IPaystubRate.AbsenceDeduction
         Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
-        Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Entities.Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
+        Public Sub Compute(timeEntries As ICollection(Of TimeEntry),
+                           salary As Salary,
+                           employee As Entities.Employee,
+                           actualtimeentries As ICollection(Of ActualTimeEntry))
 
-            Dim totalTimeEntries = TotalTimeEntry.Calculate(timeEntries, salary, employee, actualtimeentries)
+            Dim totalTimeEntries = TotalTimeEntryCalculator.Calculate(timeEntries,
+                                                                      salary,
+                                                                      employee,
+                                                                      actualtimeentries)
 
             Me.RegularHours = totalTimeEntries.RegularHours
             Me.RegularPay = totalTimeEntries.RegularPay

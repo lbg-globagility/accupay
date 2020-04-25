@@ -8,12 +8,11 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
-Imports AccuPay.Helpers
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
 Public Class EmployeeForm
@@ -38,7 +37,26 @@ Public Class EmployeeForm
 
     Private _branchRepository As BranchRepository
 
+    Private _listOfValueRepository As ListOfValueRepository
+
     Private _positionRepository As PositionRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        'repositories should be initialized on the constructor
+        'since form events can trigger without the form being loaded by VB
+        'Still, VB can bypass the constructor on the order of call
+        'since it allows calling its form methods by outside code statically
+        _policy = New PolicyHelper
+        _branchRepository = New BranchRepository()
+        _listOfValueRepository = New ListOfValueRepository()
+        _positionRepository = New PositionRepository()
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
@@ -1876,10 +1894,6 @@ Public Class EmployeeForm
 
         if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
         if_sysowner_is_laglobal = sys_ownr.CurrentSystemOwner = SystemOwner.LAGlobal
-
-        _policy = New PolicyHelper
-        _branchRepository = New BranchRepository()
-        _positionRepository = New PositionRepository()
 
         If if_sysowner_is_benchmark Then
 
@@ -7541,43 +7555,42 @@ Public Class EmployeeForm
     Private Async Sub LoadSalutation(gender As Gender)
         Dim genderList = {"Neutral", indentifyGender(gender)}
 
-        Using context = New PayrollContext
-            Dim salutationList = Await context.ListOfValues.
-                Where(Function(l) l.Type = "Salutation").
-                Where(Function(l) genderList.Contains(l.ParentLIC)).
-                OrderBy(Function(l) l.DisplayValue).
-                ToListAsync()
+        If _listOfValueRepository Is Nothing Then Return
 
-            Dim salutations = salutationList.
+        Dim salutationList = Await _listOfValueRepository.
+                            GetFilteredListOfValues(Function(l) l.Type = "Salutation" AndAlso
+                                                                genderList.Contains(l.ParentLIC))
+
+        salutationList = salutationList.OrderBy(Function(l) l.DisplayValue).ToList()
+
+        Dim salutations = salutationList.
                 GroupBy(Function(l) l.DisplayValue).
                 Select(Function(l) l.FirstOrDefault.DisplayValue).
                 ToArray()
 
-            cboSalut.Text = String.Empty
-            cboSalut.Items.Clear()
-            cboSalut.Items.Add(String.Empty)
-            cboSalut.Items.AddRange(salutations)
+        cboSalut.Text = String.Empty
+        cboSalut.Items.Clear()
+        cboSalut.Items.Add(String.Empty)
+        cboSalut.Items.AddRange(salutations)
 
-            Dim currentRow = dgvEmp.CurrentRow
-            If currentRow IsNot Nothing Then
-                With currentRow
-                    If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+        Dim currentRow = dgvEmp.CurrentRow
+        If currentRow IsNot Nothing Then
+            With currentRow
+                If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
 
-                        cboSalut.Text = CStr(.Cells(Column9.Name).Value)
-                    End If
+                    cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                End If
 
-                    If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
-                        cboSalut.SelectedIndex = 0
-                        cboSalut.Text = String.Empty
-                    End If
-                End With
-            End If
+                If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
+                    cboSalut.SelectedIndex = 0
+                    cboSalut.Text = String.Empty
+                End If
+            End With
+        End If
 
-            Colmn2.Items.Clear()
-            Colmn2.Items.Add(String.Empty)
-            Colmn2.Items.AddRange(salutations)
-
-        End Using
+        Colmn2.Items.Clear()
+        Colmn2.Items.Add(String.Empty)
+        Colmn2.Items.AddRange(salutations)
 
     End Sub
 
@@ -7600,8 +7613,6 @@ Public Class EmployeeForm
         If employeeRow Is Nothing Then Return
 
         Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
-
-        Dim repo As New EmployeeRepository
 
         Dim employee As Employee
         Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)

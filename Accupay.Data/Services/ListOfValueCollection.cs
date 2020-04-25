@@ -1,10 +1,12 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -12,7 +14,53 @@ namespace AccuPay.Data.Services
     {
         private IReadOnlyList<ListOfValue> _values;
 
-        public ListOfValueCollection(IEnumerable<ListOfValue> values)
+        public static ListOfValueCollection Create(string type = null)
+        {
+            using (var context = new PayrollContext())
+            {
+                List<ListOfValue> listOfValues;
+
+                if (type == null)
+                {
+                    listOfValues = context.ListOfValues.ToList();
+                }
+                else
+                {
+                    listOfValues = context.ListOfValues.
+                                            Where(x => x.Type.ToLower() == type.ToLower()).
+                                            ToList();
+                }
+
+                return new ListOfValueCollection(listOfValues);
+            }
+        }
+
+        public static async Task<ListOfValueCollection> CreateAsync(string type = null)
+        {
+            using (var context = new PayrollContext())
+            {
+                List<ListOfValue> listOfValues;
+
+                if (type == null)
+                {
+                    listOfValues = await context.ListOfValues.ToListAsync();
+                }
+                else
+                {
+                    listOfValues = await context.ListOfValues.
+                                            Where(x => x.Type.ToLower() == type.ToLower()).
+                                            ToListAsync();
+                }
+                return new ListOfValueCollection(listOfValues);
+            }
+        }
+
+        public static ListOfValueCollection Create(IEnumerable<ListOfValue> values)
+        {
+            return new ListOfValueCollection(values);
+        }
+
+        private ListOfValueCollection(IEnumerable<ListOfValue> values)
         {
             _values = new ReadOnlyCollection<ListOfValue>(values.ToList());
         }

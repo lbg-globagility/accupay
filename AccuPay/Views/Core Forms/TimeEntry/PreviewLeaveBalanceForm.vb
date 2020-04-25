@@ -1,5 +1,6 @@
 ﻿Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
@@ -19,20 +20,16 @@ Public Class PreviewLeaveBalanceForm
     Private _employeeRepo As New Repositories.EmployeeRepository
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load
-        Using context = New PayrollContext
-            Dim resetPolicy = Await context.ListOfValues.Where(Function(l) l.Type = "ResetLeaveBalancePolicy").ToListAsync()
-            Dim basis As New ListOfValueCollection(resetPolicy)
+        Dim basis = Await ListOfValueCollection.CreateAsync("ResetLeaveBalancePolicy")
 
-            Dim leaveAllowanceAmountBasis = basis.GetValue("LeaveAllowanceAmountBasis")
+        Dim leaveAllowanceAmountBasis = basis.GetValue("LeaveAllowanceAmountBasis")
 
-            If RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.NumberOfService.ToString = leaveAllowanceAmountBasis Then
-            Else
-                policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default
-            End If
+        If RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.NumberOfService.ToString = leaveAllowanceAmountBasis Then
+        Else
+            policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default
+        End If
 
-            policy.ProrateOnFirstAnniversary = basis.GetBoolean("ResetLeaveBalancePolicy", "ProrateOnFirstAnniversary", False)
-
-        End Using
+        policy.ProrateOnFirstAnniversary = basis.GetBoolean("ResetLeaveBalancePolicy", "ProrateOnFirstAnniversary", False)
 
         Await LoadEmployees()
     End Sub

@@ -34,7 +34,7 @@ Public Class NewDivisionPositionForm
 
     Private _payFrequencyRepository As New PayFrequencyRepository
 
-    Private _listOfValueRepository As New Repository.ListOfValueRepository
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -549,7 +549,7 @@ Public Class NewDivisionPositionForm
     Private Async Function GetDeductionSchedules() As Task
 
         _deductionSchedules = _listOfValueRepository.
-                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
     End Function
 

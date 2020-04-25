@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
+    [Table("payrate")]
     public class PayRate : IPayrate
     {
         public const string RegularDay = "Regular Day";

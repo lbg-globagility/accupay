@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
@@ -136,11 +137,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Dim payrollSelector = GetPayrollSelector()
         If payrollSelector Is Nothing Then Return
 
-        Using context As New PayrollContext
-
-            _settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-        End Using
+        _settings = ListOfValueCollection.Create()
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 

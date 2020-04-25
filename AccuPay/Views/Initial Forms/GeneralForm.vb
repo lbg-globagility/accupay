@@ -1,4 +1,5 @@
 ﻿Imports AccuPay
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
@@ -103,7 +104,7 @@ Public Class GeneralForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetEnum("Pay rate.CalculationBasis",
                    PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then

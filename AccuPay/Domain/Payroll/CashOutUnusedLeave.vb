@@ -1,5 +1,6 @@
-﻿Imports AccuPay.Data
+﻿Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 
@@ -31,32 +32,31 @@ Public Class CashOutUnusedLeave
 
     Private Const strLeaveType = "Leave Type"
 
-    Private _employeeRepository As Repositories.EmployeeRepository
+    Private _employeeRepository As EmployeeRepository
+
+    Private _listOfValRepository As ListOfValueRepository
 
     Public Sub New(PayPeriodFromId As Integer,
                    PayPeriodToId As Integer,
                    CurrentPeriodID As Integer)
 
-        _categoryRepository = New Repositories.CategoryRepository
+        _categoryRepository = New CategoryRepository
 
-        _employeeRepository = New Repositories.EmployeeRepository
+        _employeeRepository = New EmployeeRepository
 
         _organizationId = Convert.ToInt32(z_OrganizationID)
 
-        Using context = New PayrollContext()
-            Dim listOfValues = context.ListOfValues.Where(Function(l) Equals(l.Type, "LeaveConvertiblePolicy")).ToList()
+        Dim listOfValues = _listOfValRepository.GetLeaveConvertiblePolicies()
 
-            Dim _leaveType = listOfValues.Where(Function(l) Equals(l.LIC, "LeaveType")).FirstOrDefault
+        Dim _leaveType = listOfValues.Where(Function(l) Equals(l.LIC, "LeaveType")).FirstOrDefault
 
-            _isVLOnly = _leaveType.DisplayValue = LeaveType.Vacation.ToString()
+        _isVLOnly = _leaveType.DisplayValue = LeaveType.Vacation.ToString()
 
-            _isSLOnly = _leaveType.DisplayValue = LeaveType.Sick.ToString()
+        _isSLOnly = _leaveType.DisplayValue = LeaveType.Sick.ToString()
 
-            Dim _amountTreatment = listOfValues.Where(Function(l) Equals(l.LIC, "AmountTreatment")).FirstOrDefault
+        Dim _amountTreatment = listOfValues.Where(Function(l) Equals(l.LIC, "AmountTreatment")).FirstOrDefault
 
-            _asAdjustment = _amountTreatment.DisplayValue = AmountTreatment.Adjustment.ToString()
-
-        End Using
+        _asAdjustment = _amountTreatment.DisplayValue = AmountTreatment.Adjustment.ToString()
 
         'Dim policy = _settings.GetSublist("LeaveConvertiblePolicy")
 

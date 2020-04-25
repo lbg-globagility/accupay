@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports Microsoft.EntityFrameworkCore
@@ -144,12 +146,10 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub LoadPhilHealthBrackets()
-            Using context = New PayrollContext()
-                Dim listOfValues = context.ListOfValues.
-                    Where(Function(l) l.Type = "PhilHealth").
-                    ToList()
 
-                Dim values = New ListOfValueCollection(listOfValues)
+            Dim values = ListOfValueCollection.Create("PhilHealth")
+
+            Using context = New PayrollContext()
 
                 _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),

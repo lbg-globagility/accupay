@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -41,20 +42,16 @@ Public Class AddBranchForm
 
     Private Sub ShowCalendar()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+        _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                             PayRateCalculationBasis.Organization)
 
-            If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
+        If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
-                CalendarPanel.Visible = False
+            CalendarPanel.Visible = False
 
-            End If
-
-        End Using
+        End If
 
     End Sub
 

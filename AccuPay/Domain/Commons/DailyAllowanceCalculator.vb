@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 
 Public Class DailyAllowanceCalculator

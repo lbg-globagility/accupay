@@ -26,7 +26,7 @@ Public Class AddDivisionForm
 
     Private _deductionSchedules As List(Of String)
 
-    Private _listOfValueRepository As New Repository.ListOfValueRepository
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Public Property IsSaved As Boolean
 
@@ -98,7 +98,7 @@ Public Class AddDivisionForm
     Private Async Function GetDeductionSchedules() As Task
 
         _deductionSchedules = _listOfValueRepository.
-                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
     End Function
 

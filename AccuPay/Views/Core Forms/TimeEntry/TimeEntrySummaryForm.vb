@@ -5,6 +5,7 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -137,13 +138,11 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Using context As New PayrollContext
-            Return PayrollTools.GetCalendarCollection(payPeriod.PayFromDate,
+        Return Data.Helpers.PayrollTools.
+                                    GetCalendarCollection(payPeriod.PayFromDate,
                                                         payPeriod.PayToDate,
-                                                        context,
-                                                        _policy.PayRateCalculationBasis)
-        End Using
-
+                                                        _policy.PayRateCalculationBasis,
+                                                        z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -644,7 +643,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Function GetActualTimeEntries(employee As Data.Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetActualTimeEntries(employee As Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim calendarCollection As CalendarCollection
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then

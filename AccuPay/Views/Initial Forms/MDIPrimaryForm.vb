@@ -1,5 +1,6 @@
 Imports System.Configuration
 Imports System.Threading
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo
 Imports MySql.Data.MySqlClient
@@ -299,7 +300,7 @@ Public Class MDIPrimaryForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -924,7 +925,7 @@ Public Class MDIPrimaryForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 

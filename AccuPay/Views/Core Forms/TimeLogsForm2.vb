@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -221,14 +222,9 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Function GetShiftSchedulePolicy() As Boolean
-        Using context = New PayrollContext()
-
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            Dim policy = New TimeEntryPolicy(settings)
-
-            Return policy.UseShiftSchedule
-        End Using
+        Dim settings = ListOfValueCollection.Create()
+        Dim policy = New TimeEntryPolicy(settings)
+        Return policy.UseShiftSchedule
     End Function
 
     Private Async Sub NewTimeEntryAlternateLineImport()

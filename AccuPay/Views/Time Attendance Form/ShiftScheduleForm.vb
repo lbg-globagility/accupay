@@ -2,8 +2,9 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -718,7 +719,7 @@ Public Class ShiftScheduleForm
 
         Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As New ListOfValueRepository
+        Private _listOfValueRepository As New Repositories.ListOfValueRepository
 
         Private settings As ListOfValueCollection = Nothing
 
@@ -735,9 +736,9 @@ Public Class ShiftScheduleForm
         End Function
 
         Private Async Function Load() As Task
-            _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPolicies()
+            _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
 
-            settings = New ListOfValueCollection(_dutyShiftPolicy.ToList)
+            settings = ListOfValueCollection.Create(_dutyShiftPolicy.ToList)
 
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)

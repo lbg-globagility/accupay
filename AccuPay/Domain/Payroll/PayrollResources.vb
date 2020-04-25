@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Helpers
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Repository
@@ -49,8 +50,6 @@ Public Class PayrollResources
 
     Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
 
-    Private _listOfValues As ICollection(Of ListOfValue)
-
     Private _paystubs As ICollection(Of Paystub)
 
     Private _previousPaystubs As ICollection(Of Paystub)
@@ -72,6 +71,14 @@ Public Class PayrollResources
     Private _calendarCollection As CalendarCollection
 
     Private _employeeRepository As Repositories.EmployeeRepository
+
+    Private _listOfValueCollection As ListOfValueCollection
+
+    Public ReadOnly Property ListOfValueCollection As ListOfValueCollection
+        Get
+            Return _listOfValueCollection
+        End Get
+    End Property
 
     Public ReadOnly Property Employees As ICollection(Of Entities.Employee)
         Get
@@ -145,12 +152,6 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property ListOfValues As ICollection(Of ListOfValue)
-        Get
-            Return _listOfValues
-        End Get
-    End Property
-
     Public ReadOnly Property PayPeriod As PayPeriod
         Get
             Return _payPeriod
@@ -210,8 +211,10 @@ Public Class PayrollResources
     Public Async Function Load() As Task
 
         'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-
         Await LoadPayPeriod()
+
+        'LoadSettings() should be executed before LoadCalendarCollection()
+        Await LoadListOfValueCollection()
 
         Await Task.WhenAll({
             LoadSystemOwner(),
@@ -225,7 +228,6 @@ Public Class PayrollResources
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
-            LoadSettings(),
             LoadAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
@@ -237,10 +239,25 @@ Public Class PayrollResources
         })
     End Function
 
+    Public Async Function LoadListOfValueCollection() As Task
+        Try
+
+            _listOfValueCollection = Await ListOfValueCollection.CreateAsync()
+        Catch ex As Exception
+            Throw New ResourceLoadingException("ListOfValueCollection", ex)
+
+        End Try
+    End Function
+
     Public Async Function LoadSystemOwner() As Task
-        Await Task.Run(Sub()
-                           _systemOwner = New SystemOwner
-                       End Sub)
+        Try
+            Await Task.Run(Sub()
+                               _systemOwner = New SystemOwner
+                           End Sub)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("SystemOwner", ex)
+
+        End Try
     End Function
 
     Public Async Function LoadEmployees() As Task
@@ -291,20 +308,18 @@ Public Class PayrollResources
         Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
-            Using context = New PayrollContext(logger)
+            Await Task.Run(
+                Sub()
+                    Dim calculationBasis = _listOfValueCollection.GetEnum("Pay rate.CalculationBasis",
+                                                              Data.Enums.PayRateCalculationBasis.Organization)
 
-                Dim listOfValues = Await context.ListOfValues.ToListAsync()
+                    _calendarCollection = Data.Helpers.PayrollTools.
+                                               GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
+                                                                   _payDateTo,
+                                                                   calculationBasis,
+                                                                   z_OrganizationID)
 
-                Dim settings = New ListOfValueCollection(listOfValues)
-                Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                                         PayRateCalculationBasis.Organization)
-
-                _calendarCollection = PayrollTools.GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
-                                                                         _payDateTo,
-                                                                         context,
-                                                                         calculationBasis)
-
-            End Using
+                End Sub)
         Catch ex As Exception
             Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
         End Try
@@ -465,18 +480,6 @@ Public Class PayrollResources
             End Using
         Catch ex As Exception
             Throw New ResourceLoadingException("WithholdingTaxBrackets", ex)
-        End Try
-    End Function
-
-    Private Async Function LoadSettings() As Task
-        Try
-            Using context = New PayrollContext()
-                Dim query = From s In context.ListOfValues
-
-                _listOfValues = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("ListOfValues", ex)
         End Try
     End Function
 

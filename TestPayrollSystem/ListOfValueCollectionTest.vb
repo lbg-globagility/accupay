@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
-Imports System.Data.Common
-Imports AccuPay.Entity
-Imports AccuPay
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class ListOfValueCollectionTest

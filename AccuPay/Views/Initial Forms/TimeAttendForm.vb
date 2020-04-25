@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Services
+Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class TimeAttendForm
@@ -9,7 +10,7 @@ Public Class TimeAttendForm
 
     Private sys_ownr As New SystemOwner
 
-    Private lRepo As ListOfValueRepository
+    Private lRepo As Data.Repositories.ListOfValueRepository
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -111,14 +112,14 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
-        lRepo = New ListOfValueRepository
-        Dim shiftPolicies = Await lRepo.GetShiftPolicies()
+        lRepo = New Data.Repositories.ListOfValueRepository
+        Dim shiftPolicies = Await lRepo.GetShiftPoliciesAsync()
 
         If Not shiftPolicies.Any() Then
             ShiftScheduleToolStripMenuItem.Visible = False
             Return
         End If
-        Dim settings = New ListOfValueCollection(shiftPolicies)
+        Dim settings = ListOfValueCollection.Create(shiftPolicies)
         Dim _policy = New TimeEntryPolicy(settings)
 
         Dim _bool = _policy.UseShiftSchedule
@@ -137,7 +138,7 @@ Public Class TimeAttendForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 

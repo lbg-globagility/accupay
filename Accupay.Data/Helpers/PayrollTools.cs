@@ -296,15 +296,9 @@ namespace AccuPay.Data.Helpers
 
         public static bool CheckIfUsingUserLevel()
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                var settings = new ListOfValueCollection(context.ListOfValues.ToList());
+            var settings = ListOfValueCollection.Create();
 
-                if (settings.GetBoolean("User Policy.UseUserLevel", false))
-                    return true;
-            }
-
-            return false;
+            return settings.GetBoolean("User Policy.UseUserLevel", false);
         }
 
         // TODO: DeletePaystub

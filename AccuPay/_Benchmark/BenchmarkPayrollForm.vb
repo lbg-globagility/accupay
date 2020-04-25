@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.ModelData
@@ -144,13 +145,9 @@ Public Class BenchmarkPayrollForm
 
         _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings As New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
-
-        End Using
+        _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
 
         'TODO: Add loading bar
 

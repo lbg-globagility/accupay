@@ -1,4 +1,6 @@
 ﻿Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -12,7 +14,9 @@ Public Class ImportOBForm
 
     Private _officialbusTypeList As List(Of ListOfValue)
 
-    Private _employeeRepository As New Repositories.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
+
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Public IsSaved As Boolean
 
@@ -20,12 +24,9 @@ Public Class ImportOBForm
 
         Me.IsSaved = False
 
-        Using context = New PayrollContext()
-            _officialbusTypeList = Await context.ListOfValues.
-                                    Where(Function(l) l.Type = "Official Business Type").
-                                    Where(Function(l) l.Active = "Yes").
-                                    ToListAsync
-        End Using
+        _listOfValueRepository = New ListOfValueRepository()
+
+        _officialbusTypeList = Await _listOfValueRepository.GetOfficialBusinessTypesAsync()
 
         OBDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -83,45 +84,8 @@ Public Class ImportOBForm
 
             End If
 
-            Dim officialbusType As New ListOfValue
-
-            Using context = New PayrollContext()
-
-                officialbusType = Await context.ListOfValues.
-                                    Where(Function(l) l.Type = "Official Business Type").
-                                    Where(Function(l) l.Active = "Yes").
-                                    Where(Function(l) l.DisplayValue.Equals(record.Type, StringComparison.InvariantCultureIgnoreCase)).
-                                    FirstOrDefaultAsync()
-
-                If officialbusType Is Nothing Then
-                    Try
-                        Using OBContext = New PayrollContext
-
-                            Dim listOfVal As New ListOfValue
-                            listOfVal.DisplayValue = record.Type.Trim()
-                            listOfVal.Type = "Official Business Type"
-                            listOfVal.Active = "Yes"
-
-                            listOfVal.Created = Date.Now
-                            listOfVal.CreatedBy = z_User
-                            listOfVal.LastUpd = Date.Now
-                            listOfVal.LastUpdBy = z_User
-                            OBContext.ListOfValues.Add(listOfVal)
-
-                            Await OBContext.SaveChangesAsync()
-
-                            officialbusType = Await context.ListOfValues.
-                            FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
-
-                        End Using
-                    Catch ex As DbUpdateException
-                        officialbusType = Nothing
-                    Catch ex As Exception
-                        officialbusType = Nothing
-                    End Try
-                End If
-
-            End Using
+            Dim officialbusType = Await _listOfValueRepository.
+                                            GetOrCreateOfficialBusinessTypeAsync(record.Type, z_User)
 
             If officialbusType Is Nothing Then
 
