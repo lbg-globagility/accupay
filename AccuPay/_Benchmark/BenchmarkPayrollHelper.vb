@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.ValueObjects
 Imports log4net
 
 Namespace Benchmark
@@ -45,9 +46,9 @@ Namespace Benchmark
         Public Shared Async Function GetEcola(
                                         employeeId As Integer,
                                         payDateFrom As Date,
-                                        payDateTo As Date) As Task(Of Data.Entities.Allowance)
+                                        payDateTo As Date) As Task(Of Allowance)
 
-            Dim timePeriod = New Data.ValueObjects.TimePeriod(payDateFrom, payDateTo)
+            Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
             Return Await Data.Helpers.PayrollTools.GetOrCreateEmployeeEcola(
                                                 employeeId:=employeeId,

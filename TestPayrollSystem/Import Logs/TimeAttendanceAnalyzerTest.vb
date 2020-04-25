@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeAttendanceAnalyzer
 Imports AccuPay.Helper.TimeLogsReader
@@ -17,7 +18,7 @@ Public Class TimeAttendanceAnalyzerTest
         logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of AccuPay.Data.Entities.Employee) = GetSampleEmployees()
 
         Dim analyzer = New TimeAttendanceAnalyzer()
 
@@ -42,7 +43,7 @@ Public Class TimeAttendanceAnalyzerTest
         logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As New List(Of ShiftSchedule)
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of AccuPay.Data.Entities.Employee) = GetSampleEmployees()
 
         Dim analyzer = New TimeAttendanceAnalyzer()
 
@@ -67,7 +68,7 @@ Public Class TimeAttendanceAnalyzerTest
         logs = logs.OrderByDescending(Function(x) x.EmployeeNumber).ThenBy(Function(y) y.DateTime).ToList
 
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of AccuPay.Data.Entities.Employee) = GetSampleEmployees()
 
         Dim analyzer = New TimeAttendanceAnalyzer()
 

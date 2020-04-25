@@ -379,7 +379,6 @@
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
     <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
-    <Compile Include="Core\Enums\AdjustmentType.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
@@ -759,7 +758,6 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
-    <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

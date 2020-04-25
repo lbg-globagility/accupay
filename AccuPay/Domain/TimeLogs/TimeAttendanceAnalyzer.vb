@@ -9,7 +9,7 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
     Public Class TimeAttendanceAnalyzer
 
         Public Function Analyze(
-        employees As List(Of Employee),
+        employees As List(Of Data.Entities.Employee),
         logGroups As List(Of IGrouping(Of String, ImportTimeAttendanceLog)),
         employeeShifts As IList(Of ShiftSchedule)
     ) As List(Of TimeLog)
@@ -35,7 +35,9 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
 
         End Function
 
-        Private Function GetEmployeeTimeLogs(employee As Employee, logGroup As IList(Of ImportTimeAttendanceLog), employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
+        Private Function GetEmployeeTimeLogs(employee As Data.Entities.Employee,
+                                             logGroup As IList(Of ImportTimeAttendanceLog),
+                                             employeeShifts As IList(Of ShiftSchedule)) As IList(Of TimeLog)
             Dim earliestDate = logGroup.FirstOrDefault().DateTime.Date
             Dim lastDate = logGroup.LastOrDefault().DateTime.Date
 
@@ -93,7 +95,6 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
             Dim logOuts = sortedLogs.
                 Where(Function(l) timeOutBounds.Min <= l And l <= timeOutBounds.Max)
 
-
             If logOuts.Any() Then
                 Dim timeOut = logOuts.Max()
                 sortedLogs.Remove(timeOut)
@@ -111,7 +112,6 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
             If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
                 shiftMinBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
                 shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
-
             Else
                 Dim shiftTime = currentShift.Shift
                 Dim timeFromMinBound = shiftTime.TimeFrom.Add(TimeSpan.FromHours(-4))
@@ -136,7 +136,6 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
             If currentShift Is Nothing OrElse currentShift.Shift Is Nothing Then
                 shiftMinBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 0, 0, 0)
                 shiftMaxBound = New DateTime(currentDate.Year, currentDate.Month, currentDate.Day, 23, 59, 59)
-
             Else
                 Dim shiftTime = currentShift.Shift
                 Dim minBoundTime = shiftTime.TimeTo.Add(TimeSpan.FromHours(-4))
@@ -156,4 +155,5 @@ Namespace Global.AccuPay.Helper.TimeAttendanceAnalyzer
         End Function
 
     End Class
+
 End Namespace

@@ -214,7 +214,7 @@ Public Class PayrollResources
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
 
-        _payPeriodSpan = New ValueObjects.TimePeriod(_payDateFrom, _payDateTo)
+        _payPeriodSpan = New TimePeriod(_payDateFrom, _payDateTo)
     End Sub
 
     Public Async Function Load() As Task

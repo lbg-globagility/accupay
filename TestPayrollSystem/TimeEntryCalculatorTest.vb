@@ -2,6 +2,7 @@
 
 Imports System.Text
 Imports AccuPay
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 
 <TestFixture>

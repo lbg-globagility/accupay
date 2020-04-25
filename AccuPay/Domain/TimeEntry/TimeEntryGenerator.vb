@@ -6,6 +6,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
@@ -77,7 +78,7 @@ Public Class TimeEntryGenerator
         Dim settings As ListOfValueCollection = ListOfValueCollection.Create()
         Dim timeEntryPolicy As New TimeEntryPolicy(settings)
 
-        Dim cuttOffPeriod As New ValueObjects.TimePeriod(_cutoffStart, _cutoffEnd)
+        Dim cuttOffPeriod As New TimePeriod(_cutoffStart, _cutoffEnd)
 
         Using context = New PayrollContext()
 
