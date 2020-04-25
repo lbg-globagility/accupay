@@ -23,6 +23,7 @@ Public Class TimeEntryGenerator
     Private _timeLogs As IList(Of TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
     Private _leaves As IList(Of Leave)
+    Private _breakTimeBracketRepository As BreakTimeBracketRepository
     Private _overtimeRepository As OvertimeRepository
     Private _officialBusinesses As IList(Of OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
@@ -30,7 +31,7 @@ Public Class TimeEntryGenerator
     Private _salaries As IList(Of Salary)
     Private _shiftSchedules As IList(Of EmployeeDutySchedule)
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
-    Private _breakTimeBrackets As List(Of BreakTimeBracket)
+    Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
     Private _employeeRepository As EmployeeRepository
     Private _total As Integer
@@ -59,6 +60,7 @@ Public Class TimeEntryGenerator
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
 
+        _breakTimeBracketRepository = New BreakTimeBracketRepository()
         _employeeRepository = New EmployeeRepository()
         _overtimeRepository = New OvertimeRepository()
     End Sub
@@ -150,13 +152,10 @@ Public Class TimeEntryGenerator
                                 Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
                                 ToList()
 
-                _breakTimeBrackets = context.BreakTimeBrackets.
-                                Include(Function(b) b.Division).
-                                Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
-                                ToList()
+                _breakTimeBrackets = _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
             Else
                 _timeAttendanceLogs = New List(Of TimeAttendanceLog)
-                _breakTimeBrackets = New List(Of BreakTimeBracket)
+                _breakTimeBrackets = New List(Of Entities.BreakTimeBracket)
             End If
 
             Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
@@ -235,7 +234,7 @@ Public Class TimeEntryGenerator
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim breakTimeBrackets As IList(Of BreakTimeBracket) = _breakTimeBrackets.
+        Dim breakTimeBrackets As IList(Of Data.Entities.BreakTimeBracket) = _breakTimeBrackets.
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
 

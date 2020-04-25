@@ -63,7 +63,7 @@ Public Class ImportSalaryForm
         Dim employeeNos = records.Select(Function(s) s.EmployeeNo).ToArray()
 
         Dim employeeRepo = New Repositories.EmployeeRepository
-        Dim employeesss = Await employeeRepo.GetByMultipleEmployeeNumbersAsync(employeeNos, z_OrganizationID)
+        Dim employeesss = Await employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
         Using context = New PayrollContext()
             For Each record In records

@@ -20,10 +20,10 @@ Public Class BenchmarkPayrollForm
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
     Private _employeeRepository As Repositories.EmployeeRepository
-    Private _salaryRepository As SalaryRepository
+    Private _salaryRepository As Repositories.SalaryRepository
     Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
-    Private _salaries As List(Of Salary)
+    Private _salaries As List(Of Entities.Salary)
     Private _employees As List(Of Entities.Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
 
@@ -65,8 +65,8 @@ Public Class BenchmarkPayrollForm
 
         ' Add any initialization after the InitializeComponent() call.
         _employeeRepository = New Repositories.EmployeeRepository
-        _salaryRepository = New SalaryRepository
-        _salaries = New List(Of Salary)
+        _salaryRepository = New Repositories.SalaryRepository
+        _salaries = New List(Of Entities.Salary)
         _employees = New List(Of Entities.Employee)
 
         _overtimes = New List(Of OvertimeInput)
@@ -119,8 +119,9 @@ Public Class BenchmarkPayrollForm
 
         Await LoadPayrollResourcesAsync()
 
-        _salaries = Await _salaryRepository.
-                                GetAllByCutOff(_currentPayPeriod.PayFromDate)
+        _salaries = (Await _salaryRepository.
+                            GetAllByCutOff(z_OrganizationID, _currentPayPeriod.PayFromDate)).
+                    ToList()
 
         Await ShowEmployees()
 

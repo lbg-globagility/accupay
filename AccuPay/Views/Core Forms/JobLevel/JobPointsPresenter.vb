@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Namespace Global.AccuPay.JobLevels
 
@@ -17,9 +17,11 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
-        Private _employeeRepo As New Repositories.EmployeeRepository
+        Private _employeeRepo As New EmployeeRepository
 
-        Private _salaryRepo As New Repositories.SalaryRepository
+        Private _salaryRepo As New SalaryRepository
+
+        Private _jobLevelRepositories As New JobLevelRepository
 
         Public Sub New(view As JobPointsView)
             _view = view
@@ -72,9 +74,7 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Function GetJobLevels() As ICollection(Of JobLevel)
-            Return _context.JobLevels.
-                Where(Function(j) CBool(j.OrganizationID = z_OrganizationID)).
-                ToList()
+            Return _jobLevelRepositories.GetAll(z_OrganizationID).ToList
         End Function
 
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))

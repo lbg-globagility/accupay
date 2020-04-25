@@ -53,7 +53,7 @@ Public Class ImportedShiftSchedulesForm
                                                     Select(Function(s) s.EmployeeNo).
                                                     ToArray
 
-        _employees = New List(Of IEmployee)((Await _employeeRepository.GetByMultipleEmployeeNumbersAsync(
+        _employees = New List(Of IEmployee)((Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
                                                 employeeNumberList,
                                                 z_OrganizationID)))
         Using context = New PayrollContext

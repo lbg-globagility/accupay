@@ -76,7 +76,7 @@ Public Class TimeLogsForm2
 
         Dim employeeIDs = EmployeeTreeView1.GetTickedEmployees.Select(Function(emp) emp.RowID).ToList()
 
-        Dim employees = (Await _employeeRepo.GetByManyIdAsync(employeeIDs)).ToList()
+        Dim employees = (Await _employeeRepo.GetByMultipleIdAsync(employeeIDs)).ToList()
 
         Using context = New PayrollContext
             Dim shiftSchedules = Await context.EmployeeDutySchedules.
@@ -525,7 +525,7 @@ Public Class TimeLogsForm2
                 employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
             Next
 
-            Dim employees = Await _employeeRepo.GetByMultipleEmployeeNumbersAsync(employeeNumbersArray, z_OrganizationID)
+            Dim employees = Await _employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNumbersArray, z_OrganizationID)
 
             Return employees.ToList()
         End Using
@@ -1191,7 +1191,7 @@ Public Class TimeLogsForm2
             ToList()
 
         Dim employeeNos = timeLogsByEmployee.Select(Function(emp) emp.Key).ToArray()
-        Dim employeess = Await _employeeRepo.GetByMultipleEmployeeNumbersAsync(employeeNos, z_OrganizationID)
+        Dim employeess = Await _employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
         Using context = New PayrollContext()
             Dim dateCreated = Date.Now

@@ -68,7 +68,7 @@ Public Class PersonalInfoTab
             New PositionDto(Nothing)}
 
         Dim positionRepository As New PositionRepository
-        Dim positions = Await positionRepository.GetAll(z_OrganizationID)
+        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
         positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
 

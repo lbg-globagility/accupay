@@ -439,30 +439,8 @@ Public Class UsersForm
     End Sub
 
     Private Sub lblAddPosition_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddPosition.LinkClicked
-
-        Dim n_EmpPosition As New EmpPosition
-
-        With n_EmpPosition
-
-            .ShowMeAsDialog = True
-
-            .Size = New Size(901, 477)
-
-            .StartPosition = FormStartPosition.CenterScreen
-
-            .WindowState = FormWindowState.Normal
-
-            .MinimizeBox = False
-
-            .MaximizeBox = False
-
-            .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-
-            .ShowDialog()
-
-        End With
-
-        'AddPostionForm.ShowDialog()
+        'Removed the old position form
+        'When this button is visible again, add code to show the new add position form
 
     End Sub
 

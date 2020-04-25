@@ -17,9 +17,9 @@ Public Class BenchmarkPaystubForm
 
     Private _employeeRepository As Repositories.EmployeeRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private _salaryRepository As Repositories.SalaryRepository
 
-    Private _salaries As List(Of Salary)
+    Private _salaries As List(Of Entities.Salary)
 
     Private _employees As List(Of Entities.Employee)
 
@@ -40,9 +40,9 @@ Public Class BenchmarkPaystubForm
 
         ' Add any initialization after the InitializeComponent() call.
         _employeeRepository = New Repositories.EmployeeRepository
-        _salaryRepository = New SalaryRepository
+        _salaryRepository = New Repositories.SalaryRepository
         _productRepository = New ProductRepository
-        _salaries = New List(Of Salary)
+        _salaries = New List(Of Entities.Salary)
         _employees = New List(Of Entities.Employee)
 
         '_overtimes = New List(Of OvertimeInput)
@@ -98,7 +98,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Function LoadPayrollDetails() As Task
         _salaries = Await _salaryRepository.
-                                        GetAllByCutOff(_currentPayPeriod.PayFromDate)
+                                        GetAllByCutOff(z_OrganizationID, _currentPayPeriod.PayFromDate)
 
         Await ShowEmployees()
 

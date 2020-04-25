@@ -17,15 +17,17 @@ namespace AccuPay.Data
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
-
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
         public virtual DbSet<Bonus> Bonuses { get; set; }
+        public virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<CalendarDay> CalendarDays { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<JobCategory> JobCategories { get; set; }
+        public virtual DbSet<JobLevel> JobLevels { get; set; }
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }

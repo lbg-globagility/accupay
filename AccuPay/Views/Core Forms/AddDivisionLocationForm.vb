@@ -1,11 +1,10 @@
 ﻿Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
 
 Public Class AddDivisionLocationForm
 
-    Private _divisionRepository As New Repository.DivisionRepository
+    Private _divisionRepository As New DivisionRepository
 
     Public Property NewDivision As Division
 
@@ -13,7 +12,7 @@ Public Class AddDivisionLocationForm
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.NewDivision = Division.CreateEmptyDivision()
+        Me.NewDivision = Division.CreateEmptyDivision(z_OrganizationID)
 
         Me.IsSaved = False
 
@@ -36,7 +35,9 @@ Public Class AddDivisionLocationForm
         Try
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
-            Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision)
+            Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision,
+                                                                 organizationId:=z_OrganizationID,
+                                                                 userId:=z_User)
 
             Dim repo As New UserActivityRepository
             repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID, z_OrganizationID)

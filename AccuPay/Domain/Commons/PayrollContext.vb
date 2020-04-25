@@ -20,10 +20,6 @@ Public Class PayrollContext
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
 
-    Public Overridable Property JobCategories As DbSet(Of JobCategory)
-
-    Public Overridable Property JobLevels As DbSet(Of JobLevel)
-
     Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
@@ -41,8 +37,6 @@ Public Class PayrollContext
     Public Overridable Property Paystubs As DbSet(Of Paystub)
 
     Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
-
-    Public Overridable Property Positions As DbSet(Of Position)
 
     Public Overridable Property Products As DbSet(Of Product)
 
@@ -69,8 +63,6 @@ Public Class PayrollContext
     Public Overridable Property PayRates As DbSet(Of PayRate)
 
     Public Overridable Property Organizations As DbSet(Of Organization)
-
-    Public Overridable Property Divisions As DbSet(Of Division)
 
     Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
 
@@ -99,8 +91,6 @@ Public Class PayrollContext
     Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
 
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
-
-    Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
 
     Public Overridable Property Users As DbSet(Of User)
 

@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -38,9 +39,9 @@ Public Class TimeEntrySummaryForm
 
     Private _employees As ICollection(Of Entities.Employee)
 
-    Private _selectedEmployee As Data.Entities.Employee
+    Private _selectedEmployee As Entities.Employee
 
-    Private _breakTimeBrackets As List(Of BreakTimeBracket)
+    Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
     Private _selectedPayPeriod As PayPeriod
 
@@ -49,6 +50,8 @@ Public Class TimeEntrySummaryForm
     Private _isAmPm As Boolean = False
 
     Private _currentTimeEntryDate As Date
+
+    Private _breakTimeBracketRepository As Repositories.BreakTimeBracketRepository
 
     Private _employeeRepository As Repositories.EmployeeRepository
 
@@ -68,7 +71,9 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        _employeeRepository = New Repositories.EmployeeRepository
+        _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
+
+        _employeeRepository = New Repositories.EmployeeRepository()
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -79,7 +84,7 @@ Public Class TimeEntrySummaryForm
         Await LoadEmployees()
         Await LoadPayPeriods()
 
-        _breakTimeBrackets = New List(Of BreakTimeBracket)
+        _breakTimeBrackets = New List(Of Entities.BreakTimeBracket)
         If _policy.ComputeBreakTimeLate Then
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
@@ -122,14 +127,9 @@ Public Class TimeEntrySummaryForm
         End Using
     End Sub
 
-    Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
+    Private Function GetBreakTimeBrackets() As List(Of Entities.BreakTimeBracket)
 
-        Using context As New PayrollContext
-            Return context.BreakTimeBrackets.
-                            Include(Function(b) b.Division).
-                            Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
-                            ToList()
-        End Using
+        Return _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
 
     End Function
 

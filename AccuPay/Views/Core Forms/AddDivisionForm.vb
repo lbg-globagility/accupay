@@ -1,17 +1,16 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AddDivisionForm
 
-    Private _divisionRepository As New Repository.DivisionRepository
+    Private _divisionRepository As New DivisionRepository
 
-    Private _positionRepository As New Repository.PositionRepository
+    Private _positionRepository As New PositionRepository
 
     Private _payFrequencyRepository As New PayFrequencyRepository
 
@@ -21,13 +20,13 @@ Public Class AddDivisionForm
 
     Private _positions As New List(Of Position)
 
-    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
+    Private _payFrequencies As New List(Of PayFrequency)
 
     Private _divisionTypes As List(Of String)
 
     Private _deductionSchedules As List(Of String)
 
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _listOfValueRepository As New Repository.ListOfValueRepository
 
     Public Property IsSaved As Boolean
 
@@ -66,7 +65,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllParentsAsync()
+        Dim divisions = Await _divisionRepository.GetAllParentsAsync(z_OrganizationID)
 
         _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -74,7 +73,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync()
+        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -105,7 +104,7 @@ Public Class AddDivisionForm
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.CreateEmptyDivision()
+        Me._newDivision = Division.CreateEmptyDivision(z_OrganizationID)
 
         DivisionUserControl1.SetDivision(Me._newDivision,
                                          _parentDivisions,
@@ -142,7 +141,9 @@ Public Class AddDivisionForm
 
     Private Async Function SaveDivision(messageTitle As String, sender As Object) As Task
 
-        Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
+        Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision,
+                                                                   organizationId:=z_OrganizationID,
+                                                                   userId:=z_User)
 
         Dim repo As New UserActivityRepository
         repo.RecordAdd(z_User, "Division", Me._newDivision.RowID.Value, z_OrganizationID)

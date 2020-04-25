@@ -1,15 +1,13 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
-Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportEmployeeForm
 
@@ -202,11 +200,11 @@ Public Class ImportEmployeeForm
 
         Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
 
-        Dim employeeRepo = New Repositories.EmployeeRepository
+        Dim employeeRepo = New EmployeeRepository
         Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
 
-        Dim positionRepo = New Repositories.PositionRepository
-        Dim existingPositions = Await positionRepo.GetAll(z_OrganizationID)
+        Dim positionRepo = New PositionRepository
+        Dim existingPositions = Await positionRepo.GetAllAsync(z_OrganizationID)
 
         Using context = New PayrollContext
             Dim employees = employees1.
@@ -224,17 +222,15 @@ Public Class ImportEmployeeForm
                 End If
             Next
 
-            Dim division = Await context.Divisions.
-                Where(Function(d) d.OrganizationID = z_OrganizationID).
-                FirstOrDefaultAsync(Function(d) d.ParentDivisionID.HasValue)
+            Dim division = Await New DivisionRepository().FirstOrDefaultAsync(z_OrganizationID)
 
             'for insert
             Dim notExistEmployees = models.
                 Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
                 ToList()
 
-            Dim newPositions = New Collection(Of Entities.Position)
-            Dim importedEmployees = New List(Of Entities.Employee)
+            Dim newPositions = New Collection(Of Position)
+            Dim importedEmployees = New List(Of Employee)
 
             Dim newEmpList As New List(Of Employee)
 
@@ -254,7 +250,7 @@ Public Class ImportEmployeeForm
                     newPositions.Add(position)
                 End If
 
-                Dim employee = New Entities.Employee With {
+                Dim employee = New Employee With {
                     .OrganizationID = z_OrganizationID,
                     .Created = Now,
                     .CreatedBy = z_User,
@@ -304,8 +300,8 @@ Public Class ImportEmployeeForm
     End Function
 
     Private Function CreatePosition(positionName As String,
-                                    division As Division) As Entities.Position
-        Dim position As Entities.Position = New Entities.Position() With {
+                                    division As Division) As Position
+        Dim position As Position = New Position() With {
             .Name = positionName.Trim(),
             .OrganizationID = z_OrganizationID,
             .Created = Now,
@@ -323,7 +319,7 @@ Public Class ImportEmployeeForm
 
 #Region "Methods"
 
-    Private Sub AssignChanges(em As EmployeeModel, e As Entities.Employee)
+    Private Sub AssignChanges(em As EmployeeModel, e As Employee)
         With e
             If Not String.IsNullOrWhiteSpace(em.Address) Then .HomeAddress = em.Address
 

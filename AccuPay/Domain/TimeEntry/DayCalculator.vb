@@ -47,7 +47,7 @@ Public Class DayCalculator
                             officialBusiness As OfficialBusiness,
                             leaves As IList(Of Leave),
                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                            breakTimeBrackets As IList(Of BreakTimeBracket),
+                            breakTimeBrackets As IList(Of Entities.BreakTimeBracket),
                             payrate As IPayrate,
                             calendarCollection As CalendarCollection,
                             branchId As Integer?) As TimeEntry
@@ -120,7 +120,7 @@ Public Class DayCalculator
                              overtimes As IList(Of Entities.Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
                              timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                             breakTimeBrackets As IList(Of BreakTimeBracket),
+                             breakTimeBrackets As IList(Of Entities.BreakTimeBracket),
                              currentShift As CurrentShift,
                              hasWorkedLastDay As Boolean,
                              payrate As IPayrate)

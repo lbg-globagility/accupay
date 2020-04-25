@@ -56,15 +56,9 @@ namespace AccuPay.Data.Repositories
                 return this;
             }
 
-            public EmployeeBuilder ByMultipleEmployeeNumbers(string[] employeeNumbers)
+            public EmployeeBuilder Filter(Expression<Func<Employee, bool>> filter)
             {
-                _query = _query.Where(x => employeeNumbers.Contains(x.EmployeeNo));
-                return this;
-            }
-
-            public EmployeeBuilder ByIds(List<int?> employeeIds)
-            {
-                _query = _query.Where(x => employeeIds.Contains(x.RowID));
+                _query = _query.Where(filter);
                 return this;
             }
 
@@ -150,6 +144,8 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        #region Employee List
+
         public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
         {
             using (var builder = new EmployeeBuilder(organizationId))
@@ -164,44 +160,6 @@ namespace AccuPay.Data.Repositories
             {
                 return await builder.IsActive().
                                         ToListAsync();
-            }
-        }
-
-        public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumbersAsync(string[] employeeNumbers, int organizationId)
-        {
-            using (var builder = new EmployeeBuilder(organizationId))
-            {
-                return await builder.
-                    ByMultipleEmployeeNumbers(employeeNumbers).
-                    ToListAsync();
-            }
-        }
-
-        public async Task<Employee> GetByIdAsync(int employeeId)
-        {
-            using (var builder = new EmployeeBuilder())
-            {
-                return await builder.GetByIdAsync(employeeId);
-            }
-        }
-
-        public async Task<Employee> GetByIdWithPayFrequencyAsync(int employeeId)
-        {
-            using (var builder = new EmployeeBuilder())
-            {
-                return await builder.
-                                IncludePayFrequency().
-                                GetByIdAsync(employeeId);
-            }
-        }
-
-        public async Task<IEnumerable<Employee>> GetByManyIdAsync(List<int?> rowIDs)
-        {
-            using (var builder = new EmployeeBuilder())
-            {
-                return await builder.
-                    ByIds(rowIDs).
-                    ToListAsync();
             }
         }
 
@@ -270,7 +228,58 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers,
+                                                                                int organizationId)
+        {
+            using (var builder = new EmployeeBuilder(organizationId))
+            {
+                return await builder.
+                    Filter(x => employeeNumbers.Contains(x.EmployeeNo)).
+                    ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(List<int?> employeeIdList)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                    Filter(x => employeeIdList.Contains(x.RowID)).
+                    ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Employee>> GetByPositionAsync(int positionId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                                Filter(x => x.PositionID == positionId).
+                                ToListAsync();
+            }
+        }
+
+        #endregion Employee List
+
         #region By Employee
+
+        public async Task<Employee> GetByIdAsync(int employeeId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.GetByIdAsync(employeeId);
+            }
+        }
+
+        public async Task<Employee> GetByIdWithPayFrequencyAsync(int employeeId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                                IncludePayFrequency().
+                                GetByIdAsync(employeeId);
+            }
+        }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)
         {
@@ -326,6 +335,8 @@ namespace AccuPay.Data.Repositories
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
         }
 
+        #region CRUD
+
         public async Task SaveManyAsync(int organizationID, int userID, List<Employee> employees)
         {
             using (PayrollContext context = new PayrollContext())
@@ -361,6 +372,8 @@ namespace AccuPay.Data.Repositories
                 ApplyChanges(e, updatedEmployee);
             }
         }
+
+        #endregion CRUD
 
         private void ApplyChanges(Employee toBeUpdateEmployee, Employee updatedEmployee)
         {

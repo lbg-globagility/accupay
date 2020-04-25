@@ -1,10 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Tools
 
 Public Class MassOvertimeForm
@@ -47,7 +45,7 @@ Public Class MassOvertimeForm
         _presenter = New MassOvertimePresenter(Me)
     End Sub
 
-    Public Sub ShowEmployees(divisions As IEnumerable(Of Entity.Division), employees As IEnumerable(Of Entities.Employee))
+    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee))
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
 
@@ -98,17 +96,17 @@ Public Class MassOvertimeForm
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Public Function GetActiveEmployees() As IList(Of Entity.Employee)
-        Dim list = New List(Of Entity.Employee)
+    Public Function GetActiveEmployees() As IList(Of Employee)
+        Dim list = New List(Of Employee)
         For Each node As TreeNode In EmployeeTreeView.Nodes
             TraverseNodes(node, list)
         Next
         Return list
     End Function
 
-    Private Sub TraverseNodes(node As TreeNode, list As IList(Of Entity.Employee))
-        If TypeOf node.Tag Is Entity.Employee And node.Checked Then
-            list.Add(DirectCast(node.Tag, Entity.Employee))
+    Private Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
+        If TypeOf node.Tag Is Employee And node.Checked Then
+            list.Add(DirectCast(node.Tag, Employee))
         End If
 
         If node.GetNodeCount(False) >= 1 Then
@@ -191,9 +189,9 @@ End Class
 
 Public Class MassOvertimePresenter
 
-    Private _employees As IList(Of Data.Entities.Employee)
+    Private _employees As IList(Of Employee)
 
-    Private _divisions As IList(Of Entity.Division)
+    Private _divisions As IList(Of Division)
 
     Private _view As MassOvertimeForm
 
@@ -212,23 +210,19 @@ Public Class MassOvertimePresenter
         _view.ShowEmployees(_divisions, _employees)
     End Sub
 
-    Private Function LoadDivisions() As IList(Of Entity.Division)
-        Using context = New PayrollContext()
-            Return context.Divisions.
-                Where(Function(d) Nullable.Equals(d.OrganizationID, z_OrganizationID)).
-                OrderBy(Function(d) d.Name).
-                ToList()
-        End Using
+    Private Function LoadDivisions() As IList(Of Division)
+
+        Return New DivisionRepository().GetAll(z_OrganizationID).ToList
     End Function
 
-    Private Function LoadEmployees() As IList(Of Entities.Employee)
+    Private Function LoadEmployees() As IList(Of Employee)
 
         Return New EmployeeRepository().
                         GetAllWithDivisionAndPosition(z_OrganizationID).
                         ToList
     End Function
 
-    Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Entity.Employee)) As IList(Of IGrouping(Of Integer?, Entities.Overtime))
+    Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
         Dim overtimes = overtimeRepository.GetByEmployeeIDsBetweenDate(z_OrganizationID, employeeIds, startDate:=dateFrom, endDate:=dateTo)
@@ -240,7 +234,7 @@ Public Class MassOvertimePresenter
 
     Public Async Sub FilterEmployees(needle As String)
         Dim match =
-            Function(employee As Entities.Employee) As Boolean
+            Function(employee As Employee) As Boolean
                 Dim contains = employee.FullNameWithMiddleInitialLastNameFirst.ToLower().Contains(needle)
                 Dim reverseName = ($"{employee.LastName} {employee.FirstName}").ToLower()
                 Dim containsReverseName = reverseName.Contains(needle)
@@ -319,8 +313,8 @@ Public Class MassOvertimePresenter
         If deletableOvertimeIDs.Any Then Await overtimeRepository.DeleteManyAsync(deletableOvertimeIDs)
     End Function
 
-    Private Shared Function ConverToOvertime(model As OvertimeModel) As Entities.Overtime
-        Return New Entities.Overtime() With {
+    Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime
+        Return New Overtime() With {
             .EmployeeID = model.EmployeeID,
             .OrganizationID = z_OrganizationID,
             .CreatedBy = z_User,
@@ -348,7 +342,7 @@ Public Class OvertimeModel
 
     Public Property EndTime As TimeSpan?
 
-    Public Property Overtime As Entities.Overtime
+    Public Property Overtime As Overtime
 
     Public ReadOnly Property HasValue As Boolean
         Get

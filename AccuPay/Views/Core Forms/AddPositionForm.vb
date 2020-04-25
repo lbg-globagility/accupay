@@ -1,8 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Data
-Imports AccuPay.Entity
-Imports AccuPay.JobLevels
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddPositionForm
@@ -48,7 +46,7 @@ Public Class AddPositionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllAsync()
+        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -56,7 +54,7 @@ Public Class AddPositionForm
 
     Private Async Function LoadJobLevels() As Task
 
-        Dim jobLevels = Await _jobLevelRepository.GetAllAsync()
+        Dim jobLevels = Await _jobLevelRepository.GetAllAsync(z_OrganizationID)
 
         _jobLevels = jobLevels.OrderBy(Function(j) j.Name).ToList
 
@@ -113,16 +111,18 @@ Public Class AddPositionForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                           Async Function()
-                              Await SavePosition(messageTitle, sender)
+                              Await SavePosition(sender)
                           End Function)
 
     End Sub
 
-    Private Async Function SavePosition(messageTitle As String, sender As Object) As Task
+    Private Async Function SavePosition(sender As Object) As Task
 
-        Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition)
+        Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition,
+                                                                   organizationId:=z_OrganizationID,
+                                                                   userId:=z_User)
 
-        Dim repo As New Data.Repositories.UserActivityRepository
+        Dim repo As New UserActivityRepository
         repo.RecordAdd(z_User, "Position", Me._newPosition.RowID, z_OrganizationID)
 
         Me.IsSaved = True

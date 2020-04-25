@@ -54,6 +54,21 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        /// <summary>
+        /// Used to get the first division on the database. Use this with caution.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
+        public async Task<Division> FirstOrDefaultAsync(int organizationId)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                return await context.Divisions.
+                                        Where(d => d.OrganizationID == organizationId).
+                                        FirstOrDefaultAsync();
+            }
+        }
+
         public async Task<Division> SaveAsync(Division division, int organizationId, int userId)
         {
             using (PayrollContext context = new PayrollContext())

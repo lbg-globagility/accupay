@@ -38,6 +38,8 @@ Public Class EmployeeForm
 
     Private _branchRepository As BranchRepository
 
+    Private _positionRepository As PositionRepository
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
         MyBase.OnLoad(e)
@@ -1876,7 +1878,8 @@ Public Class EmployeeForm
         if_sysowner_is_laglobal = sys_ownr.CurrentSystemOwner = SystemOwner.LAGlobal
 
         _policy = New PolicyHelper
-        _branchRepository = New BranchRepository
+        _branchRepository = New BranchRepository()
+        _positionRepository = New PositionRepository()
 
         If if_sysowner_is_benchmark Then
 
@@ -2003,15 +2006,10 @@ Public Class EmployeeForm
             Dim positionId = cboPosit.SelectedValue
             Dim divisionName = String.Empty
 
-            Using context = New PayrollContext
-                Dim position = Await context.Positions.
-                    Include(Function(pos) pos.Division).
-                    Where(Function(pos) Equals(pos.RowID, positionId)).FirstOrDefaultAsync
-
-                If position IsNot Nothing Then
-                    divisionName = position.Division.Name
-                End If
-            End Using
+            Dim position = Await _positionRepository.GetByIdWithDivisionAsync(positionId)
+            If position IsNot Nothing Then
+                divisionName = position.Division.Name
+            End If
             txtDivisionName.Text = divisionName
         End If
     End Sub
@@ -2585,8 +2583,8 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
-
-        HRISForm.PositionToolStripMenuItem_Click(HRISForm.PositionToolStripMenuItem, New EventArgs)
+        'Removed the old position form
+        'When this button is visible again, add code to show the new add position form
     End Sub
 
     Private Sub cboEmpStat_TextChanged(sender As Object, e As EventArgs) 'Handles cboEmpStat.TextChanged

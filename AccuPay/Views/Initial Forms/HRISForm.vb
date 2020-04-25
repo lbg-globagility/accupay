@@ -118,22 +118,6 @@ Public Class HRISForm
         End Try
     End Sub
 
-    Sub PositionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PositionToolStripMenuItem.Click
-
-        Dim n_UserAccessRights As New UserAccessRights(EmpPosition.ViewIdentification)
-
-        'If n_UserAccessRights.ResultValue(AccessRightName.HasReadOnly) Then
-
-        ChangeForm(EmpPosition, "Position")
-        previousForm = EmpPosition
-
-        'End If
-
-        'ChangeForm(Positn)
-        'previousForm = Positn
-
-    End Sub
-
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DivisionToolStripMenuItem.Click
         ChangeForm(NewDivisionPositionForm, "Division")
 

@@ -13,7 +13,7 @@ Namespace Benchmark
         Public Const WorkHoursPerDay As Decimal = 8
 
         Public Property Employee As Entities.Employee
-        Public Property Salary As Salary
+        Public Property Salary As Entities.Salary
         Public Property MonthlyRate As Decimal
         Public Property DailyRate As Decimal
         Public Property HourlyRate As Decimal
@@ -21,19 +21,19 @@ Namespace Benchmark
         Public Property ActualDailyRate As Decimal
         Public Property ActualHourlyRate As Decimal
 
-        Sub New(employee As Entities.Employee, salary As Salary)
+        Sub New(employee As Entities.Employee, salary As Entities.Salary)
 
             Me.Employee = employee
 
             Me.Salary = salary
 
-            Me.MonthlyRate = AccuMath.CommercialRound(PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary), 4)
-            Me.DailyRate = AccuMath.CommercialRound(PayrollTools.GetDailyRate(Me.MonthlyRate, employee.WorkDaysPerYear), 4)
-            Me.HourlyRate = AccuMath.CommercialRound(PayrollTools.GetHourlyRateByDailyRate(Me.DailyRate), 4)
+            Me.MonthlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary), 4)
+            Me.DailyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetDailyRate(Me.MonthlyRate, employee.WorkDaysPerYear), 4)
+            Me.HourlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(Me.DailyRate), 4)
 
-            Me.ActualMonthlyRate = AccuMath.CommercialRound(PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary, isActual:=True), 4)
-            Me.ActualDailyRate = AccuMath.CommercialRound(PayrollTools.GetDailyRate(Me.ActualMonthlyRate, employee.WorkDaysPerYear), 4)
-            Me.ActualHourlyRate = AccuMath.CommercialRound(PayrollTools.GetHourlyRateByDailyRate(Me.ActualDailyRate), 4)
+            Me.ActualMonthlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, Me.Salary, isActual:=True), 4)
+            Me.ActualDailyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetDailyRate(Me.ActualMonthlyRate, employee.WorkDaysPerYear), 4)
+            Me.ActualHourlyRate = AccuMath.CommercialRound(Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(Me.ActualDailyRate), 4)
 
         End Sub
 

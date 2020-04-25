@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Entity
 
 Public Class TimeEntryCalculator
@@ -51,7 +52,7 @@ Public Class TimeEntryCalculator
                         workPeriod As TimePeriod,
                         currentShift As CurrentShift,
                         timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                        breakTimeBrackets As IList(Of BreakTimeBracket)) As Decimal
+                        breakTimeBrackets As IList(Of Entities.BreakTimeBracket)) As Decimal
 
         Dim shiftPeriod = currentShift.ShiftPeriod
 
@@ -72,7 +73,9 @@ Public Class TimeEntryCalculator
 
         End If
 
-        Dim breakTimeDuration = BreakTimeBracketHelper.GetBreakTimeDuration(breakTimeBrackets, shiftPeriod.Length.TotalHours)
+        Dim breakTimeDuration = BreakTimeBracketHelper.
+                                    GetBreakTimeDuration(breakTimeBrackets,
+                                                         shiftPeriod.Length.TotalHours)
 
         Dim finalBreakTimeLateHours = totalBreakTimeLateHours - breakTimeDuration
 

@@ -25,7 +25,9 @@ namespace AccuPay.Data.Repositories
             {
                 return await context.Salaries.
                     Where(s => s.OrganizationID == organizationID).
-                    Where(s => s.EffectiveFrom <= cutoffStart && cutoffStart <= (s.EffectiveTo ?? cutoffStart)).ToListAsync();
+                    Where(s => s.EffectiveFrom <= cutoffStart).
+                    Where(s => cutoffStart <= (s.EffectiveTo ?? cutoffStart)).
+                    ToListAsync();
             }
         }
     }

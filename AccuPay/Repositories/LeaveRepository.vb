@@ -344,7 +344,7 @@ Namespace Global.AccuPay.Repository
 
         Private Async Function GetEmployees(employeeIds As IEnumerable(Of Integer?)) As Task(Of List(Of Entities.Employee))
             Dim ids = employeeIds.Select(Function(id) id).ToList()
-            Return (Await _employeeRepository.GetByManyIdAsync(ids)).ToList()
+            Return (Await _employeeRepository.GetByMultipleIdAsync(ids)).ToList()
         End Function
 
         Private Shared Async Function GetShiftSchedules(employeeIds As IEnumerable(Of Integer?), firstLeave As Date, lastLeave As Date, context As PayrollContext) As Task(Of List(Of EmployeeDutySchedule))
