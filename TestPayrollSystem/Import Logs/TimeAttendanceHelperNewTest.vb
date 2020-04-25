@@ -16,7 +16,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
 
@@ -45,7 +45,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As New List(Of EmployeeDutySchedule)
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
 
@@ -71,7 +71,7 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift()
-        Dim employees As List(Of Employee) = GetSampleEmployees()
+        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
 
         Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
 

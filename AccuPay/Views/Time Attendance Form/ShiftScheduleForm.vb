@@ -2,7 +2,6 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Tools
@@ -717,7 +716,7 @@ Public Class ShiftScheduleForm
         Private Const DEFAULT_SHIFT_HOUR As Integer = 9
         Private Const DEFAULT_BREAK_HOUR As Integer = 1
 
-        Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
+        Private _dutyShiftPolicy As IEnumerable(Of Entities.ListOfValue)
 
         Private _listOfValueRepository As New Repositories.ListOfValueRepository
 

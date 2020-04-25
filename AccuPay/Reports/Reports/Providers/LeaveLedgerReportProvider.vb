@@ -2,6 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
@@ -142,7 +143,7 @@ Public Class LeaveLedgerReportProvider
                                     Where(Function(t) t.VacationLeaveHours > 0).
                                     ToList
 
-        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.LeaveType.Vacation)
+        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.Vacation)
 
     End Function
 
@@ -168,7 +169,7 @@ Public Class LeaveLedgerReportProvider
                                     Where(Function(t) t.SickLeaveHours > 0).
                                     ToList
 
-        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.LeaveType.Sick)
+        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.Sick)
 
     End Function
 
@@ -177,7 +178,7 @@ Public Class LeaveLedgerReportProvider
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
                                 employee As Entities.Employee,
-                                leaveType As LeaveType.LeaveType) As _
+                                leaveType As LeaveType) As _
                                 LeaveLedgerReportModel
 
         Dim leaveBeginningTransaction As New LeaveTransaction
@@ -204,11 +205,11 @@ Public Class LeaveLedgerReportProvider
         'get total availed leave
         Dim totalAvailedLeave As Decimal = 0
 
-        If leaveType = AccuPay.LeaveType.LeaveType.Vacation Then
+        If leaveType = LeaveType.Vacation Then
 
             totalAvailedLeave = timeEntries.Sum(Function(t) t.VacationLeaveHours)
 
-        ElseIf leaveType = AccuPay.LeaveType.LeaveType.Sick Then
+        ElseIf leaveType = LeaveType.Sick Then
 
             totalAvailedLeave = timeEntries.Sum(Function(t) t.SickLeaveHours)
 

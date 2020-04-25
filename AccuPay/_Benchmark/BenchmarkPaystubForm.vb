@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.ModelData
 Imports AccuPay.Repository
@@ -746,9 +747,11 @@ Public Class BenchmarkPaystubForm
         End Using
 
         'Reset Leave Balance
-        Dim leaveRepository As New LeaveRepository
+        Dim leaveRepository As New Repositories.LeaveRepository
         Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee.RowID.Value,
-                                                                AccuPay.LeaveType.LeaveType.Vacation,
+                                                                z_OrganizationID,
+                                                                z_User,
+                                                                Data.Enums.LeaveType.Vacation,
                                                                 employee.VacationLeaveAllowance)
     End Function
 

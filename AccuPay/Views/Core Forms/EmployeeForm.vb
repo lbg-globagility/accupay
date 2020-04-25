@@ -37,6 +37,8 @@ Public Class EmployeeForm
 
     Private _branchRepository As BranchRepository
 
+    Private _leaveRepository As LeaveRepository
+
     Private _listOfValueRepository As ListOfValueRepository
 
     Private _positionRepository As PositionRepository
@@ -54,6 +56,7 @@ Public Class EmployeeForm
         'since it allows calling its form methods by outside code statically
         _policy = New PolicyHelper
         _branchRepository = New BranchRepository()
+        _leaveRepository = New LeaveRepository()
         _listOfValueRepository = New ListOfValueRepository()
         _positionRepository = New PositionRepository()
     End Sub
@@ -910,10 +913,13 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim leaveRepository As New Repository.LeaveRepository
-                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employeeId,
-                                                                LeaveType.LeaveType.Vacation,
-                                                                LeaveAllowanceTextBox.Text.ToDecimal)
+                Dim newleaveBalance = Await _leaveRepository.
+                                            ForceUpdateLeaveAllowance(
+                                                        employeeId:=employeeId,
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
+                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
+                                                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If

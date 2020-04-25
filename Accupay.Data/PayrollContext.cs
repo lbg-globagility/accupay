@@ -17,8 +17,8 @@ namespace AccuPay.Data
 
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
-        public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
+        public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
         public virtual DbSet<Bonus> Bonuses { get; set; }
         public virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
@@ -26,8 +26,12 @@ namespace AccuPay.Data
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
+        public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
         public virtual DbSet<JobCategory> JobCategories { get; set; }
         public virtual DbSet<JobLevel> JobLevels { get; set; }
+        public virtual DbSet<Leave> Leaves { get; set; }
+        public virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
+        public virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
@@ -41,6 +45,7 @@ namespace AccuPay.Data
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
+        public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
         public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }

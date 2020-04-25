@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -124,35 +125,39 @@ namespace AccuPay.Data.Repositories
             await context.SaveChangesAsync();
         }
 
-        internal IQueryable<Allowance> GetAllowancesWithPayPeriodBaseQuery(int organizationID, PayrollContext context, DateTime payDateFrom, DateTime payDateTo)
+        internal IQueryable<Allowance> GetAllowancesWithPayPeriodBaseQuery(int organizationID,
+                                                                            PayrollContext context,
+                                                                            TimePeriod timePeriod)
         {
-            // Retrieve all allowances whose begin and end date spans the cutoff dates.
-            return context.Allowances.Include(a => a.Product).Where(a => a.OrganizationID.Value == organizationID).Where(a => a.EffectiveStartDate <= payDateTo).Where(a => a.EffectiveEndDate == null ? true : payDateFrom <= a.EffectiveEndDate.Value);
+            // Retrieve all allowances which begin and end date spans the cutoff dates.
+            return context.Allowances.
+                    Include(a => a.Product).
+                    Where(a => a.OrganizationID.Value == organizationID).
+                    Where(a => a.EffectiveStartDate <= timePeriod.End).
+                    Where(a => a.EffectiveEndDate == null ? true : timePeriod.Start <= a.EffectiveEndDate.Value);
         }
 
-        public async Task<ICollection<Allowance>> GetByPayPeriodWithProduct(int organizationID, DateTime payDateFrom, DateTime payDateTo)
+        public async Task<ICollection<Allowance>> GetByPayPeriodWithProduct(int organizationId,
+                                                                            TimePeriod timePeriod)
         {
             using (var context = new PayrollContext())
             {
-                return await GetAllowancesWithPayPeriodBaseQuery(organizationID,
+                return await GetAllowancesWithPayPeriodBaseQuery(organizationId,
                                                             context,
-                                                            payDateFrom: payDateFrom,
-                                                            payDateTo: payDateTo).
+                                                            timePeriod).
                                                             ToListAsync();
             }
         }
 
         public async Task<Allowance> GetEmployeeEcola(int employeeId,
                                                         int organizationId,
-                                                        DateTime payDateFrom,
-                                                        DateTime payDateTo)
+                                                        TimePeriod timePeriod)
         {
             using (var context = new PayrollContext())
             {
                 return await GetAllowancesWithPayPeriodBaseQuery(organizationId,
                                                             context,
-                                                            payDateFrom: payDateFrom,
-                                                            payDateTo: payDateTo).
+                                                            timePeriod).
 
                                     Where(a => a.EmployeeID.Value == employeeId).
                                     Where(a => a.Product.PartNo.ToLower() == ProductConstant.ECOLA).

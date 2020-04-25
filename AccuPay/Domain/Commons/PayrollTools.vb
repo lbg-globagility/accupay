@@ -222,42 +222,6 @@ Public Class PayrollTools
 
     End Function
 
-    Friend Shared Async Function GetOrCreateEmployeeEcola(
-                            employeeId As Integer,
-                            payDateFrom As Date,
-                            payDateTo As Date,
-                            Optional allowanceFrequency As String = Allowance.FREQUENCY_SEMI_MONTHLY,
-                            Optional amount As Decimal = 0) _
-        As Task(Of Entities.Allowance)
-
-        Dim allowanceRepository As New AllowanceRepository
-        Dim productRepository As New Data.Repositories.ProductRepository
-
-        Dim ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
-
-        If ecolaAllowance Is Nothing Then
-
-            Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA, z_OrganizationID, z_User))?.RowID
-
-            Dim effectiveEndDate As Date? = Nothing
-
-            ecolaAllowance = New Entities.Allowance
-            ecolaAllowance.EmployeeID = employeeId
-            ecolaAllowance.ProductID = ecolaProductId
-            ecolaAllowance.AllowanceFrequency = allowanceFrequency
-            ecolaAllowance.EffectiveStartDate = payDateFrom
-            ecolaAllowance.EffectiveEndDate = effectiveEndDate
-            ecolaAllowance.Amount = amount
-
-            Await allowanceRepository.SaveAsync(organizationID:=z_OrganizationID, userID:=z_User, allowance:=ecolaAllowance)
-
-            ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
-        End If
-
-        Return ecolaAllowance
-
-    End Function
-
     Friend Shared Async Function GetFirstPayPeriodOfTheYear(context As PayrollContext, currentPayPeriod As PayPeriod) As Task(Of PayPeriod)
 
         Dim currentPayPeriodYear = currentPayPeriod?.Year

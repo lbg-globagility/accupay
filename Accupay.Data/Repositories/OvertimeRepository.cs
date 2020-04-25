@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -175,17 +176,16 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Overtime> GetAllApprovedBetweenDate(int organizationID, DateTime startDate, DateTime endDate)
+        public IEnumerable<Overtime> GetAllApprovedBetweenDates(int organizationID, TimePeriod timePeriod)
         {
             // if this is named GetAllApproved, this should only return approved overtimes
             // another function for others
-
             using (PayrollContext context = new PayrollContext())
             {
                 return context.Overtimes.
                         Where(ot => ot.OrganizationID == organizationID).
-                        Where(o => startDate <= o.OTStartDate).
-                        Where(o => o.OTStartDate <= endDate).
+                        Where(o => timePeriod.Start <= o.OTStartDate).
+                        Where(o => o.OTStartDate <= timePeriod.End).
                         Where(o => o.Status == Overtime.StatusApproved).
                         ToList();
             }

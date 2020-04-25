@@ -45,10 +45,13 @@ Namespace Benchmark
                                         payDateFrom As Date,
                                         payDateTo As Date) As Task(Of Data.Entities.Allowance)
 
-            Return Await PayrollTools.GetOrCreateEmployeeEcola(
-                                                employeeId,
-                                                payDateFrom:=payDateFrom,
-                                                payDateTo:=payDateTo,
+            Dim timePeriod = New Data.ValueObjects.TimePeriod(payDateFrom, payDateTo)
+
+            Return Await Data.Helpers.PayrollTools.GetOrCreateEmployeeEcola(
+                                                employeeId:=employeeId,
+                                                organizationId:=z_OrganizationID,
+                                                userId:=z_User,
+                                                timePeriod:=timePeriod,
                                                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
                                                 amount:=0)
 

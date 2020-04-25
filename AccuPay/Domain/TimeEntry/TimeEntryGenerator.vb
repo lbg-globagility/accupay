@@ -23,9 +23,10 @@ Public Class TimeEntryGenerator
     Private _actualTimeEntries As IList(Of ActualTimeEntry)
     Private _timeLogs As IList(Of TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
-    Private _leaves As IList(Of Leave)
+    Private _leaves As IList(Of Entities.Leave)
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
     Private _overtimeRepository As OvertimeRepository
+    Private _leaveRepository As LeaveRepository
     Private _officialBusinesses As IList(Of OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
@@ -63,6 +64,7 @@ Public Class TimeEntryGenerator
 
         _breakTimeBracketRepository = New BreakTimeBracketRepository()
         _employeeRepository = New EmployeeRepository()
+        _leaveRepository = New LeaveRepository()
         _overtimeRepository = New OvertimeRepository()
     End Sub
 
@@ -74,6 +76,8 @@ Public Class TimeEntryGenerator
 
         Dim settings As ListOfValueCollection = ListOfValueCollection.Create()
         Dim timeEntryPolicy As New TimeEntryPolicy(settings)
+
+        Dim cuttOffPeriod As New ValueObjects.TimePeriod(_cutoffStart, _cutoffEnd)
 
         Using context = New PayrollContext()
 
@@ -112,16 +116,11 @@ Public Class TimeEntryGenerator
                 Where(Function(t) _cutoffStart <= t.LogDate AndAlso t.LogDate <= _cutoffEnd).
                 ToList()
 
-            _leaves = context.Leaves.
-                Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
-                Where(Function(l) _cutoffStart <= l.StartDate AndAlso l.StartDate <= _cutoffEnd).
-                Where(Function(l) l.Status = Leave.StatusApproved).
-                ToList()
+            _leaves = _leaveRepository.
+                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
 
-            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID,
-                                                                       startDate:=_cutoffStart,
-                                                                       endDate:=_cutoffEnd).
-                                             ToList()
+            _overtimes = _overtimeRepository.
+                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
 
             _officialBusinesses = context.OfficialBusinesses.
                 Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
@@ -217,7 +216,7 @@ Public Class TimeEntryGenerator
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim leavesInCutoff As IList(Of Leave) = _leaves.
+        Dim leavesInCutoff As IList(Of Entities.Leave) = _leaves.
             Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
             Where(Function(l) l.LeaveType <> "Leave w/o Pay").
             ToList()

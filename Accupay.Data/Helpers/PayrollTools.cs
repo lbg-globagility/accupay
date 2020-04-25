@@ -2,6 +2,7 @@
 using AccuPay.Data.Enums;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -211,18 +212,19 @@ namespace AccuPay.Data.Helpers
             });
         }
 
-        internal static async Task<Allowance> GetOrCreateEmployeeEcola(int employeeId,
-                                                                        DateTime payDateFrom,
-                                                                        DateTime payDateTo,
+        public static async Task<Allowance> GetOrCreateEmployeeEcola(int employeeId,
                                                                         int organizationId,
                                                                         int userId,
+                                                                        TimePeriod timePeriod,
                                                                         string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
                                                                         decimal amount = 0)
         {
             var allowanceRepository = new AllowanceRepository();
             var productRepository = new ProductRepository();
 
-            var ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId, organizationId, payDateFrom, payDateTo);
+            var ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId: employeeId,
+                                                                            organizationId: organizationId,
+                                                                            timePeriod: timePeriod);
 
             if (ecolaAllowance == null)
             {
@@ -236,7 +238,7 @@ namespace AccuPay.Data.Helpers
                 ecolaAllowance.EmployeeID = employeeId;
                 ecolaAllowance.ProductID = ecolaProductId;
                 ecolaAllowance.AllowanceFrequency = allowanceFrequency;
-                ecolaAllowance.EffectiveStartDate = payDateFrom;
+                ecolaAllowance.EffectiveStartDate = timePeriod.Start;
                 ecolaAllowance.EffectiveEndDate = effectiveEndDate;
                 ecolaAllowance.Amount = amount;
 
@@ -246,8 +248,7 @@ namespace AccuPay.Data.Helpers
 
                 ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId: employeeId,
                                                                             organizationId: organizationId,
-                                                                            payDateFrom: payDateFrom,
-                                                                            payDateTo: payDateTo);
+                                                                            timePeriod: timePeriod);
             }
 
             return ecolaAllowance;

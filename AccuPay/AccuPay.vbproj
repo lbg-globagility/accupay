@@ -674,8 +674,6 @@
     <Compile Include="Views\Core Forms\NewDivisionPositionForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Repositories\EmployeeData.vb" />
-    <Compile Include="Repositories\LeaveRepository.vb" />
     <Compile Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.Designer.vb">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </Compile>
@@ -855,7 +853,6 @@
     <Compile Include="Domain\Leaves\Leave.vb" />
     <Compile Include="Domain\Leaves\LeaveLedger.vb" />
     <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
-    <Compile Include="Domain\Leaves\LeaveType.vb" />
     <Compile Include="Domain\Paystubs\Organization.vb" />
     <Compile Include="Domain\Paystubs\PayPeriod.vb" />
     <Compile Include="Domain\Paystubs\PayRate.vb" />

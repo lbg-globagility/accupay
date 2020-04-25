@@ -47,6 +47,8 @@ Public Class PayrollGeneration
 
     Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
 
+    Private ReadOnly _leaves As IReadOnlyCollection(Of Entities.Leave)
+
     Private ReadOnly _previousPaystub As Paystub
 
     Private ReadOnly _bpiInsuranceProduct As Product
@@ -106,6 +108,10 @@ Public Class PayrollGeneration
             ToList()
 
         _allowances = resources.Allowances.
+            Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
+            ToList()
+
+        _leaves = resources.Leaves.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
 
@@ -579,12 +585,10 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub UpdateLeaveLedger(context As PayrollContext)
-        Dim leaves = context.Leaves.
-            Where(Function(l) _payPeriod.PayFromDate <= l.StartDate).
-            Where(Function(l) l.StartDate <= _payPeriod.PayToDate).
-            Where(Function(l) CBool(l.EmployeeID = _employee.RowID)).
-            OrderBy(Function(l) l.StartDate).
-            ToList()
+        Dim leaves = _leaves.
+                        Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                        OrderBy(Function(l) l.StartDate).
+                        ToList()
 
         Dim leaveIds = leaves.Select(Function(l) l.RowID)
 

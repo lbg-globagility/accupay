@@ -30,12 +30,12 @@ Public Class TimeAnalyzer
         Return logs
     End Function
 
-    Protected Function GetSampleEmployees() As List(Of Employee)
-        Dim employees = New List(Of Employee)
+    Protected Function GetSampleEmployees() As List(Of AccuPay.Data.Entities.Employee)
+        Dim employees = New List(Of AccuPay.Data.Entities.Employee)
 
         Dim employeeId As Integer? = 1
 
-        Dim employee As New Employee With {
+        Dim employee As New AccuPay.Data.Entities.Employee With {
             .RowID = employeeId,
             .EmployeeNo = "10123"
         }

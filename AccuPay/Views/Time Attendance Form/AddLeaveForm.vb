@@ -1,6 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddLeaveForm
@@ -11,11 +11,11 @@ Public Class AddLeaveForm
 
     Private _productRepository As New ProductRepository
 
-    Private _currentEmployee As Data.Entities.Employee
+    Private _currentEmployee As Employee
 
     Private _newLeave As New Leave
 
-    Sub New(employee As Data.Entities.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -57,7 +57,7 @@ Public Class AddLeaveForm
 
     Private Async Function LoadLeaveTypes() As Task
 
-        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes(z_OrganizationID))
 
         leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -175,9 +175,11 @@ Public Class AddLeaveForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Await _leaveRepository.SaveAsync(Me._newLeave)
+                Await _leaveRepository.SaveAsync(Me._newLeave,
+                                                organizationId:=z_OrganizationID,
+                                                userId:=z_User)
 
-                Dim repo As New Data.Repositories.UserActivityRepository
+                Dim repo As New UserActivityRepository
                 repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID, z_OrganizationID)
 
                 Me.IsSaved = True
