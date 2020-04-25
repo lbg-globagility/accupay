@@ -33,6 +33,7 @@ namespace AccuPay.Data
         public virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
         public virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
+        public virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }

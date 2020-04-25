@@ -1,8 +1,6 @@
-﻿Imports AccuPay.Data
-Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -13,13 +11,13 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New Repositories.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
     Private _productRepository As New ProductRepository
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _listOfValueRepository As New Repositories.ListOfValueRepository
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Private _deductionSchedulesList As List(Of String)
 
@@ -35,7 +33,7 @@ Public Class ImportLoansForm
             ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         Me._loanTypeList = New List(Of Product) _
-                (Await _productRepository.GetLoanTypes())
+                (Await _productRepository.GetLoanTypes(z_OrganizationID))
 
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -93,7 +91,9 @@ Public Class ImportLoansForm
                 Continue For
             End If
 
-            Dim loanType = Await Me._productRepository.GetOrCreateLoanType(record.LoanName)
+            Dim loanType = Await Me._productRepository.GetOrCreateLoanType(record.LoanName,
+                                                                    organizationID:=z_OrganizationID,
+                                                                    userID:=z_User)
 
             If loanType Is Nothing Then
 
@@ -236,19 +236,22 @@ Public Class ImportLoansForm
                     loan.Employee = Nothing
                 Next
 
-                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
+                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject,
+                                                            Me._loanTypeList,
+                                                            organizationId:=z_OrganizationID,
+                                                            userId:=z_User)
 
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                Dim importList = New List(Of UserActivityItem)
                 For Each item In loansWithOutEmployeeObject
-                    importList.Add(New Data.Entities.UserActivityItem() With
+                    importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new loan.",
                         .EntityId = item.RowID
                         })
                 Next
 
-                Dim repo = New Data.Repositories.UserActivityRepository
-                repo.CreateRecord(z_User, "Loan", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeImport, importList)
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Loan", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

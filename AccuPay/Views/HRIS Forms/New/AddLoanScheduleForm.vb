@@ -1,7 +1,6 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 
@@ -11,21 +10,21 @@ Public Class AddLoanScheduleForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private _currentEmployee As Data.Entities.Employee
+    Private _currentEmployee As Employee
 
     Private _newLoanSchedule As New LoanSchedule
 
-    Private _productRepository As New Data.Repositories.ProductRepository
+    Private _productRepository As New ProductRepository
 
-    Private _listOfValueRepository As New Data.Repositories.ListOfValueRepository
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Private _loanScheduleRepository As New LoanScheduleRepository
 
-    Private _loanTypeList As List(Of Data.Entities.Product)
+    Private _loanTypeList As List(Of Product)
 
     Private _deductionSchedulesList As List(Of String)
 
-    Public Property NewLoanTypes As List(Of Data.Entities.Product)
+    Public Property NewLoanTypes As List(Of Product)
 
     Public Property IsSaved As Boolean
 
@@ -178,9 +177,12 @@ Public Class AddLoanScheduleForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
+                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule,
+                                                        Me._loanTypeList,
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User)
 
-                Dim repo As New Data.Repositories.UserActivityRepository
+                Dim repo As New UserActivityRepository
                 repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID, z_OrganizationID)
 
                 Me.IsSaved = True

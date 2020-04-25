@@ -3,10 +3,11 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
 Imports Microsoft.Extensions.Logging.Console
@@ -28,7 +29,7 @@ Public Class PayrollResources
 
     Private _payDateTo As Date
 
-    Private _payPeriodSpan As ValueObjects.TimePeriod
+    Private _payPeriodSpan As TimePeriod
 
     Private _employees As ICollection(Of Entities.Employee)
 
@@ -40,7 +41,7 @@ Public Class PayrollResources
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
-    Private _loanSchedules As ICollection(Of LoanSchedule)
+    Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
     Private _loanTransactions As ICollection(Of LoanTransaction)
 
@@ -60,7 +61,7 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
-    Private _allowances As ICollection(Of Data.Entities.Allowance)
+    Private _allowances As ICollection(Of Entities.Allowance)
 
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
@@ -68,7 +69,7 @@ Public Class PayrollResources
 
     Private _systemOwner As SystemOwner
 
-    Private _bpiInsuranceProduct As Product
+    Private _bpiInsuranceProduct As Entities.Product
 
     Private _calendarCollection As CalendarCollection
 
@@ -100,7 +101,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property LoanSchedules As ICollection(Of LoanSchedule)
+    Public ReadOnly Property LoanSchedules As ICollection(Of Entities.LoanSchedule)
         Get
             Return _loanSchedules
         End Get
@@ -202,7 +203,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property BpiInsuranceProduct As Product
+    Public ReadOnly Property BpiInsuranceProduct As Entities.Product
         Get
             Return _bpiInsuranceProduct
         End Get
@@ -352,15 +353,9 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanSchedules() As Task
         Try
-            Using context = New PayrollContext(logger)
-                Dim query = From l In context.LoanSchedules
-                            Select l
-                            Where l.OrganizationID.Value = z_OrganizationID AndAlso
-                                l.DedEffectiveDateFrom <= _payDateTo AndAlso
-                                l.Status = "In Progress" AndAlso
-                                l.BonusID Is Nothing
-                _loanSchedules = Await query.ToListAsync()
-            End Using
+            _loanSchedules = (Await New LoanScheduleRepository().
+                                GetCurrentPayrollLoansAsync(z_OrganizationID, _payDateTo)).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("LoanSchedules", ex)
         End Try
@@ -546,7 +541,10 @@ Public Class PayrollResources
         Try
 
             _bpiInsuranceProduct = Await New ProductRepository().
-                                        GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT)
+                                        GetOrCreateAdjustmentType(
+                                            ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                                            organizationID:=z_OrganizationID,
+                                            userID:=z_User)
         Catch ex As Exception
             Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
         End Try

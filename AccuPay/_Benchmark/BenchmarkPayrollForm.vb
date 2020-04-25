@@ -5,23 +5,21 @@ Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.ModelData
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
-Imports PayrollSys
 
 Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
-    Private _employeeRepository As Repositories.EmployeeRepository
-    Private _salaryRepository As Repositories.SalaryRepository
+    Private _employeeRepository As EmployeeRepository
+    Private _salaryRepository As SalaryRepository
     Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Entities.Salary)
@@ -49,11 +47,11 @@ Public Class BenchmarkPayrollForm
 
     Private _overtimes As List(Of OvertimeInput)
 
-    Private _ecola As Data.Entities.Allowance
+    Private _ecola As Entities.Allowance
 
-    Private _pagibigLoan As LoanSchedule
+    Private _pagibigLoan As Entities.LoanSchedule
 
-    Private _sssLoan As LoanSchedule
+    Private _sssLoan As Entities.LoanSchedule
 
     Private _leaveBalance As Decimal
 
@@ -581,7 +579,7 @@ Public Class BenchmarkPayrollForm
         SummaryGroupBox.Enabled = True
     End Sub
 
-    Private Function GetSelectedDeduction() As Product
+    Private Function GetSelectedDeduction() As Entities.Product
 
         If DeductionComboBox.SelectedIndex < 0 OrElse
             DeductionComboBox.SelectedIndex >= _benchmarkPayrollHelper.DeductionList.Count Then
@@ -594,7 +592,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedIncome() As Product
+    Private Function GetSelectedIncome() As Entities.Product
 
         If OtherIncomeComboBox.SelectedIndex < 0 OrElse
             OtherIncomeComboBox.SelectedIndex >= _benchmarkPayrollHelper.IncomeList.Count Then

@@ -1,7 +1,6 @@
 Option Strict On
 
 Imports AccuPay.Entity
-Imports AccuPay.JobLevels
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
@@ -19,8 +18,6 @@ Public Class PayrollContext
     Public Overridable Property Agencies As DbSet(Of Agency)
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
-
-    Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
@@ -57,8 +54,6 @@ Public Class PayrollContext
     Public Overridable Property CalendarDays As DbSet(Of CalendarDay)
 
     Public Overridable Property DayTypes As DbSet(Of DayType)
-
-    Public Overridable Property PayRates As DbSet(Of PayRate)
 
     Public Overridable Property Organizations As DbSet(Of Organization)
 

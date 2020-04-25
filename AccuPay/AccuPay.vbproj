@@ -759,7 +759,6 @@
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
-    <Compile Include="Repositories\LoanScheduleRepository.vb" />
     <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
