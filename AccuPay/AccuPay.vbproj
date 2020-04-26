@@ -356,9 +356,6 @@
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
-    <Compile Include="Domain\Calendars\CalendarDay.vb" />
-    <Compile Include="Domain\Calendars\DayType.vb" />
-    <Compile Include="Domain\Calendars\PayCalendar.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Commons\CalendarConstants.vb" />
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
@@ -485,8 +482,6 @@
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Repositories\CalendarRepository.vb" />
-    <Compile Include="Repositories\DayTypeRepository.vb" />
     <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
       <DependentUpon>CalendarDayControl.vb</DependentUpon>
     </Compile>
@@ -2770,7 +2765,9 @@
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Repositories\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

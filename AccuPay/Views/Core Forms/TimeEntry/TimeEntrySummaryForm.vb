@@ -8,8 +8,6 @@ Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -1241,9 +1239,9 @@ Public Class TimeEntrySummaryForm
                                         GetCalendar(BranchID).
                                         Find(EntryDate.Value)
 
-            If TypeOf currentPayRate Is CalendarDay Then
+            If TypeOf currentPayRate Is Entities.CalendarDay Then
 
-                Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
+                Dim calendarDayName = DirectCast(currentPayRate, Entities.CalendarDay)?.DayType?.Name
 
                 If {PayRate.DoubleHoliday,
                     PayRate.RegularHoliday,

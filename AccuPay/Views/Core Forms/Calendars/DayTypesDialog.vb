@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class DayTypesDialog
 

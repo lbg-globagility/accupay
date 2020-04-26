@@ -49,12 +49,6 @@ Public Class PayrollContext
 
     Public Overridable Property Shifts As DbSet(Of Shift)
 
-    Public Overridable Property Calendars As DbSet(Of PayCalendar)
-
-    Public Overridable Property CalendarDays As DbSet(Of CalendarDay)
-
-    Public Overridable Property DayTypes As DbSet(Of DayType)
-
     Public Overridable Property Organizations As DbSet(Of Organization)
 
     Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)

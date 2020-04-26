@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 
 Public Class DayTypeControl
 
