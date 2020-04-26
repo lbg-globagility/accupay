@@ -10,8 +10,6 @@ Public Class ImportOBForm
 
     Private _employeeRepository As New EmployeeRepository
 
-    Private _listOfValueRepository As New ListOfValueRepository
-
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
     Public IsSaved As Boolean
@@ -76,21 +74,6 @@ Public Class ImportOBForm
 
             End If
 
-            Dim officialbusType = Await _listOfValueRepository.
-                                            GetOrCreateOfficialBusinessTypeAsync(record.Type, z_User)
-
-            If officialbusType Is Nothing Then
-
-                record.ErrorMessage = "Cannot get or create official business type. Please contact " & My.Resources.AppCreator
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            record.Type = officialbusType.DisplayValue 'For displaying on datagrid view
-
             If Not record.StartDate.HasValue Then
                 record.ErrorMessage = "No start date"
                 rejectedRecords.Add(record)
@@ -113,7 +96,6 @@ Public Class ImportOBForm
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
-                .Type = record.Type,
                 .StartDate = record.StartDate.Value,
                 .EndDate = record.EndDate.Value,
                 .StartTime = record.StartTime,
@@ -186,13 +168,6 @@ Public Class ImportOBForm
     End Sub
 
     Private Function CheckIfRecordIsValid(record As OBRowRecord, rejectedRecords As List(Of OBRowRecord)) As Boolean
-
-        If String.IsNullOrWhiteSpace(record.Type) Then
-
-            record.ErrorMessage = "OB Type cannot be blank."
-            rejectedRecords.Add(record)
-            Return False
-        End If
 
         Dim officialBusiness = record.ToOfficialBusiness()
 

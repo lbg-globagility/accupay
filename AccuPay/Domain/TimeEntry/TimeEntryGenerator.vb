@@ -176,6 +176,7 @@ Public Class TimeEntryGenerator
                 Try
                     CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection)
                 Catch ex As Exception
+                    'can error if employee type is null
                     logger.Error(ex.Message, ex)
                     _errors += 1
                 End Try

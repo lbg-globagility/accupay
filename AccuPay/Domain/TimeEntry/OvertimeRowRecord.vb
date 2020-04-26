@@ -13,9 +13,6 @@ Public Class OvertimeRowRecord
     <ColumnName("Employee ID")>
     Public Property EmployeeID As String
 
-    <ColumnName("Type")>
-    Public Property Type As String
-
     <ColumnName("Effective start date")>
     Public Property StartDate As Date?
 

@@ -13,8 +13,6 @@ namespace AccuPay.Data.Entities
 
         public const string StatusPending = "Pending";
 
-        public const string DefaultType = "Overtime";
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }

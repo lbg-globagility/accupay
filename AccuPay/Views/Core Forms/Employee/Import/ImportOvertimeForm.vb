@@ -70,7 +70,6 @@ Public Class ImportOvertimeForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
-            record.Type = Overtime.DefaultType
 
             If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
@@ -84,7 +83,6 @@ Public Class ImportOvertimeForm
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
-                .Type = record.Type,
                 .OTStartDate = record.StartDate.Value,
                 .OTEndDate = record.EndDate.Value,
                 .OTStartTime = record.StartTime,
