@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Enums
 Imports AccuPay.Payroll
@@ -13,7 +14,7 @@ Imports PayrollSys
 
 Public Class SalaryTab
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As SystemOwnerService
 
     Private _mode As FormMode = FormMode.Empty
 
@@ -59,6 +60,8 @@ Public Class SalaryTab
     Public Sub New()
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
+
+        sys_ownr = New SystemOwnerService()
 
     End Sub
 
@@ -145,7 +148,7 @@ Public Class SalaryTab
         LoadSalaries()
 
         OverlapWarningLabel.Visible = False
-        _isSystemOwnerBenchMark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        _isSystemOwnerBenchMark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         ToggleBenchmarkEcola()
 

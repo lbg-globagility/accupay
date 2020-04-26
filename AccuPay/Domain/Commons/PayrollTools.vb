@@ -193,7 +193,7 @@ Public Class PayrollTools
                                   'replace this with a policy
                                   'fourlinq can use this feature also
                                   'for clients that has the same attendance and payroll period
-                                  Dim isBenchmarkOwner = ((New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark)
+                                  Dim isBenchmarkOwner = ((New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark)
 
                                   Dim currentDay = Date.Today.ToMinimumHourValue
 
@@ -288,9 +288,9 @@ Public Class PayrollTools
 
     Public Shared Async Function ValidatePayPeriodAction(payPeriodId As Integer?) As Task(Of Boolean)
 
-        Dim sys_ownr As New SystemOwner
+        Dim sys_ownr As New SystemOwnerService()
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             'Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
             Return True

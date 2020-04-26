@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
 using AccuPay.Utilities;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -212,7 +213,7 @@ namespace AccuPay.Data.Repositories
                 throw new ArgumentException("Invalid loan.");
 
             var sys_ownr = new SystemOwnerService();
-            if (sys_ownr.CurrentSystemOwner == SystemOwnerService.Benchmark)
+            if (sys_ownr.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {
                 // IF benchmark
                 // #1. Only Pagibig loan or SSS loan can be saved

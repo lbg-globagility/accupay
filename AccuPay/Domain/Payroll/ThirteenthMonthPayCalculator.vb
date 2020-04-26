@@ -50,7 +50,7 @@ Namespace Global.AccuPay.Payroll
 
                     Dim hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave
 
-                    If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
+                    If (New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso employee.IsPremiumInclusive Then
 
                         hoursWorked = paystub.RegularHoursAndTotalRestDay
                     End If

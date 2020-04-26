@@ -999,7 +999,6 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportAllowance.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOB.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOvertime.vb" />
-    <Compile Include="Views\Core Forms\USER CONTROLS\SystemOwner.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -2750,10 +2749,6 @@
     <ProjectReference Include="..\Accupay.Payslip\AccuPay.Payslip.vbproj">
       <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
       <Name>AccuPay.Payslip</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Accupay.Reference\AccuPay.Reference.vbproj">
-      <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
-      <Name>AccuPay.Reference</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>

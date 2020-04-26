@@ -1,12 +1,15 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 
 Public Class AddLoanScheduleForm
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -30,7 +33,7 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Data.Entities.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -40,9 +43,9 @@ Public Class AddLoanScheduleForm
 
         Me.IsSaved = False
 
-        Me.NewLoanTypes = New List(Of Data.Entities.Product)
+        Me.NewLoanTypes = New List(Of Product)
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
     End Sub
 
@@ -183,7 +186,7 @@ Public Class AddLoanScheduleForm
                                                         userId:=z_User)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID, z_OrganizationID)
+                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -305,9 +308,9 @@ Public Class AddLoanScheduleForm
 
         If if_sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Data.Entities.Product)(Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID))
         Else
-            Me._loanTypeList = New List(Of Data.Entities.Product)(Await _productRepository.GetLoanTypes(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes(z_OrganizationID))
 
         End If
 

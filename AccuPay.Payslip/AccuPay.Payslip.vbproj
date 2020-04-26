@@ -6,7 +6,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D36DB97B-FFC0-4DBB-A13C-A1C75A016256}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>Accupay.Payslip</RootNamespace>
+    <RootNamespace>AccuPay.Payslip</RootNamespace>
     <AssemblyName>AccuPay.Payslip</AssemblyName>
     <FileAlignment>512</FileAlignment>
     <MyType>Windows</MyType>
@@ -180,10 +180,6 @@
     <ProjectReference Include="..\Accupay.DB\AccuPay.DB.vbproj">
       <Project>{2e134199-5c8f-4425-8b40-4566b4ea87da}</Project>
       <Name>AccuPay.DB</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Accupay.Reference\AccuPay.Reference.vbproj">
-      <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
-      <Name>AccuPay.Reference</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

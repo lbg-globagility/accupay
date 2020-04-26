@@ -3,7 +3,6 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -55,7 +54,7 @@ Public Class PayStubForm
     Dim dtJosh As DataTable
     Dim da As New MySqlDataAdapter()
 
-    Private sys_ownr As New SystemOwner
+    Private sys_ownr As New SystemOwnerService()
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
@@ -1765,7 +1764,7 @@ Public Class PayStubForm
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
         Static _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
         If _bool Then
             Dim str_empty As String = String.Empty
             TabPage1.Text = str_empty
@@ -1777,7 +1776,7 @@ Public Class PayStubForm
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 
         Static _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
         e.Cancel = _bool
 

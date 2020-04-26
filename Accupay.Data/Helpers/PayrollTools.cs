@@ -191,7 +191,7 @@ namespace AccuPay.Data.Helpers
                 // replace this with a policy
                 // fourlinq can use this feature also
                 // for clients that has the same attendance and payroll period
-                var isBenchmarkOwner = ((new SystemOwnerService()).CurrentSystemOwner ==
+                var isBenchmarkOwner = ((new SystemOwnerService()).GetCurrentSystemOwner() ==
                                                                     SystemOwnerService.Benchmark);
 
                 var currentDay = DateTime.Today.ToMinimumHourValue();
@@ -322,7 +322,7 @@ namespace AccuPay.Data.Helpers
         {
             var systemOwner = new SystemOwnerService();
 
-            if (systemOwner.CurrentSystemOwner == SystemOwnerService.Benchmark)
+            if (systemOwner.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {
                 // Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
                 return FunctionResult.Success();

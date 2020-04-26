@@ -1,15 +1,14 @@
 ﻿Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
-Imports AccuPay.Enums
 Imports AccuPay.Utils
 
 Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
-    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -19,7 +18,7 @@ Public Class HRISForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         PrepareFormForBenchmark()
     End Sub
@@ -268,7 +267,7 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If sys_ownr.CurrentSystemOwner <> SystemOwner.Hyundai Then
+        If sys_ownr.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False
@@ -365,7 +364,7 @@ Public Class HRISForm
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OffSetToolStripMenuItem.Visible =
-            (curr_sys_owner_name = SystemOwner.Cinema2000)
+            (curr_sys_owner_name = SystemOwnerService.Cinema2000)
 
         MyBase.OnLoad(e)
 

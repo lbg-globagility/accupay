@@ -67,7 +67,7 @@ Public Class PayrollResources
 
     Private _filingStatuses As DataTable
 
-    Private _systemOwner As SystemOwner
+    Private _systemOwner As SystemOwnerService
 
     Private _bpiInsuranceProduct As Entities.Product
 
@@ -191,7 +191,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property SystemOwner As SystemOwner
+    Public ReadOnly Property SystemOwner As SystemOwnerService
         Get
             Return _systemOwner
         End Get
@@ -262,7 +262,7 @@ Public Class PayrollResources
     Public Async Function LoadSystemOwner() As Task
         Try
             Await Task.Run(Sub()
-                               _systemOwner = New SystemOwner
+                               _systemOwner = New SystemOwnerService
                            End Sub)
         Catch ex As Exception
             Throw New ResourceLoadingException("SystemOwner", ex)

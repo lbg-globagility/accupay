@@ -187,9 +187,9 @@ Public Class CostCenterReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwner
+        Dim sys_ownr As New SystemOwnerService()
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

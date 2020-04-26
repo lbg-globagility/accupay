@@ -21,7 +21,7 @@ Public Class EmployeeForm
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -1898,8 +1898,8 @@ Public Class EmployeeForm
 
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
-        if_sysowner_is_laglobal = sys_ownr.CurrentSystemOwner = SystemOwner.LAGlobal
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_laglobal = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
 
         If if_sysowner_is_benchmark Then
 
@@ -3907,7 +3907,7 @@ Public Class EmployeeForm
             AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
             Panel1.Visible =
-                (Panel1.AccessibleDescription = sys_ownr.CurrentSystemOwner)
+                (Panel1.AccessibleDescription = sys_ownr.GetCurrentSystemOwner())
 
         End If
 

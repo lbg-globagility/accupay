@@ -1,12 +1,11 @@
-﻿Imports AccuPay
-Imports AccuPay.Data.Services
+﻿Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
     Private _payRateCalculationBasis As PayRateCalculationBasis
 
@@ -391,7 +390,7 @@ Public Class GeneralForm
             Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
 
         AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.CurrentSystemOwner)
+            ownr.Contains(sys_ownr.GetCurrentSystemOwner())
 
         MyBase.OnLoad(e)
 

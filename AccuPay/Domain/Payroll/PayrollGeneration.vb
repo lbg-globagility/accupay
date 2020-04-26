@@ -217,7 +217,7 @@ Public Class PayrollGeneration
                 context.LoanTransactions.Add(newLoanTransaction)
             Next
 
-            If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
+            If _resources.SystemOwner.GetCurrentSystemOwner() <> SystemOwnerService.Benchmark Then
                 UpdateLeaveLedger(context)
                 UpdatePaystubItems(context)
             Else
@@ -241,7 +241,7 @@ Public Class PayrollGeneration
 
         End If
 
-        If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
+        If _resources.SystemOwner.GetCurrentSystemOwner() <> SystemOwnerService.Benchmark Then
 
             ComputeBasicHoursAndPay()
 

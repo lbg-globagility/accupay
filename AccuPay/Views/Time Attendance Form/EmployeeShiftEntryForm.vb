@@ -1,10 +1,10 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Services
+Imports AccuPay.Entity
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
-Imports AccuPay.Entity
-Imports AccuPay.DB
 
 Public Class EmployeeShiftEntryForm
 
@@ -37,7 +37,7 @@ Public Class EmployeeShiftEntryForm
 
     Dim ArrayWeekFormat() As String
 
-    Private sys_ownr As New SystemOwner
+    Private sys_ownr As New SystemOwnerService()
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim n_SQLQueryToDatatable As _
@@ -1276,7 +1276,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub CustomColoredTabControl1_SelectingTabPage(sender As Object, e As TabControlCancelEventArgs)
 
         e.Cancel =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000 _
+            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
             And CustomColoredTabControl1.SelectedIndex = 1)
 
     End Sub
@@ -1284,7 +1284,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub setProperInterfaceBaseOnSystemOwner()
 
         Dim _bool As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000)
+            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
         If _bool Then
             TabPage2.Text = String.Empty
