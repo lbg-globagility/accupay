@@ -223,7 +223,11 @@ namespace AccuPay.Data.Repositories
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return await context.Products.Where(p => p.PartNo.Trim() == productName.Trim()).Where(p => p.CategoryID.Value == categoryId.Value).Where(p => p.OrganizationID.Value == organizationID).AnyAsync();
+                return await context.Products.
+                                Where(p => p.PartNo.Trim() == productName.Trim()).
+                                Where(p => p.CategoryID.Value == categoryId.Value).
+                                Where(p => p.OrganizationID.Value == organizationID).
+                                AnyAsync();
             }
         }
 
@@ -313,7 +317,8 @@ namespace AccuPay.Data.Repositories
         {
             using (var context = new PayrollContext())
             {
-                var listOfValues = await GetProductsByCategoryBaseQuery(categoryId, context, organizationID).ToListAsync();
+                var listOfValues = await GetProductsByCategoryBaseQuery(categoryId, context, organizationID).
+                                            ToListAsync();
 
                 return listOfValues;
             }
@@ -321,7 +326,9 @@ namespace AccuPay.Data.Repositories
 
         private IQueryable<Product> GetProductsByCategoryBaseQuery(int? categoryId, PayrollContext context, int organizationID)
         {
-            return context.Products.Where(p => p.OrganizationID == organizationID).Where(p => p.CategoryID == categoryId);
+            return context.Products.
+                            Where(p => p.OrganizationID == organizationID).
+                            Where(p => p.CategoryID == categoryId);
         }
 
         private async Task<IQueryable<Product>> GetAdjustmentTypesBaseQuery(PayrollContext context, int organizationID)

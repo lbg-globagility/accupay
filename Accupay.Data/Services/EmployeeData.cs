@@ -7,17 +7,17 @@ namespace AccuPay.Data.Services
 {
     public class EmployeeData
     {
-        public static async Task<decimal> GetVacationLeaveBalance(int? employeeId)
+        public static async Task<decimal> GetVacationLeaveBalance(int employeeId)
         {
             return await GetLeaveBalance(employeeId, ProductConstant.VACATION_LEAVE);
         }
 
-        public static async Task<decimal> GetSickLeaveBalance(int? employeeId)
+        public static async Task<decimal> GetSickLeaveBalance(int employeeId)
         {
             return await GetLeaveBalance(employeeId, ProductConstant.SICK_LEAVE);
         }
 
-        private static async Task<decimal> GetLeaveBalance(int? employeeId, string partNo)
+        private static async Task<decimal> GetLeaveBalance(int employeeId, string partNo)
         {
             var defaultBalance = 0;
 

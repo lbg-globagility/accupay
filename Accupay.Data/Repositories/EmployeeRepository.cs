@@ -329,7 +329,7 @@ namespace AccuPay.Data.Repositories
                 var reverseFullName = employee.LastName.ToLower() + " " + employee.FirstName.ToLower();
                 var containsFullNameInReverse = reverseFullName.Contains(searchValue);
 
-                return containsEmployeeId | containsFullName | containsFullNameInReverse;
+                return containsEmployeeId || containsFullName || containsFullNameInReverse;
             };
 
             return await Task.Run(() => employees.Where(matchCriteria).ToList());

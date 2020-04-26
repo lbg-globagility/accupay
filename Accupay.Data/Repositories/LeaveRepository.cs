@@ -37,20 +37,20 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        public async Task<Leave> GetByIdAsync(int? id)
+        public async Task<Leave> GetByIdAsync(int id)
         {
             using (var context = new PayrollContext())
             {
-                return await context.Leaves.FirstOrDefaultAsync(l => l.RowID.Value == id.Value);
+                return await context.Leaves.FirstOrDefaultAsync(l => l.RowID.Value == id);
             }
         }
 
-        public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int? employeeId)
+        public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int employeeId)
         {
             using (var context = new PayrollContext())
             {
                 return await context.Leaves.
-                                    Where(l => l.EmployeeID.Value == employeeId.Value).
+                                    Where(l => l.EmployeeID.Value == employeeId).
                                     ToListAsync();
             }
         }
@@ -90,7 +90,7 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int? id)
+        public async Task DeleteAsync(int id)
         {
             using (var context = new PayrollContext())
             {
@@ -377,14 +377,14 @@ namespace AccuPay.Data.Repositories
 
                 if (leave.LeaveType == ProductConstant.SICK_LEAVE)
                 {
-                    var sickLeaveBalance = await EmployeeData.GetSickLeaveBalance(employee.RowID);
+                    var sickLeaveBalance = await EmployeeData.GetSickLeaveBalance(employee.RowID.Value);
 
                     if (totalLeaveHours > sickLeaveBalance)
                         throw new ArgumentException("Employee will exceed the allowable sick leave hours.");
                 }
                 else if (leave.LeaveType == ProductConstant.VACATION_LEAVE)
                 {
-                    var vacationLeaveBalance = await EmployeeData.GetVacationLeaveBalance(employee.RowID);
+                    var vacationLeaveBalance = await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value);
 
                     if (totalLeaveHours > vacationLeaveBalance)
                         throw new ArgumentException("Employee will exceed the allowable vacation leave hours.");

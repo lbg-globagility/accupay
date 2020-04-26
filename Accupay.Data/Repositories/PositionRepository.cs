@@ -64,7 +64,8 @@ namespace AccuPay.Data.Repositories
 
                 await context.SaveChangesAsync();
 
-                var newPosition = await context.Positions.FirstOrDefaultAsync(p => Nullable.Equals(p.RowID, position.RowID));
+                var newPosition = await context.Positions.
+                                        FirstOrDefaultAsync(p => p.RowID == position.RowID);
 
                 if (newPosition == null)
                     throw new ArgumentException("There was a problem inserting the new position. Please try again.");
@@ -103,7 +104,7 @@ namespace AccuPay.Data.Repositories
 
         private void Update(Position position, Position existingPosition, PayrollContext context, int userId)
         {
-            if (existingPosition != null && Nullable.Equals(position.RowID, existingPosition.RowID) == false)
+            if (existingPosition != null && position.RowID != existingPosition.RowID)
                 throw new ArgumentException("Position name already exists!");
 
             position.LastUpdBy = userId;

@@ -34,7 +34,7 @@ namespace AccuPay.Data.Entities
 
         public decimal WorkHours { get; set; }
 
-        public bool HasBreaktime => BreaktimeFrom.HasValue & BreaktimeTo.HasValue;
+        public bool HasBreaktime => BreaktimeFrom.HasValue && BreaktimeTo.HasValue;
 
         public Shift()
         {

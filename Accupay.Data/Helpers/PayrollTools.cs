@@ -100,7 +100,7 @@ namespace AccuPay.Data.Helpers
             var lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay);
 
             var lastTimeEntries = currentTimeEntries.
-                                    Where(t => lastPotentialEntry <= t.Date & t.Date <= currentDate.Date).
+                                    Where(t => lastPotentialEntry <= t.Date && t.Date <= currentDate.Date).
                                     OrderByDescending(t => t.Date).
                                     ToList();
 
@@ -130,7 +130,7 @@ namespace AccuPay.Data.Helpers
                     continue;
                 }
 
-                return lastTimeEntry.RegularHours > 0 | lastTimeEntry.TotalLeaveHours > 0;
+                return lastTimeEntry.RegularHours > 0 || lastTimeEntry.TotalLeaveHours > 0;
             }
 
             return false;
@@ -143,7 +143,10 @@ namespace AccuPay.Data.Helpers
         {
             var lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay);
 
-            var postTimeEntries = currentTimeEntries.Where(t => legalHolidayDate.Date < t.Date & t.Date <= lastPotentialEntry).OrderBy(t => t.Date).ToList();
+            var postTimeEntries = currentTimeEntries.
+                                    Where(t => legalHolidayDate.Date < t.Date && t.Date <= lastPotentialEntry).
+                                    OrderBy(t => t.Date).
+                                    ToList();
 
             foreach (var timeEntry in postTimeEntries)
             {
@@ -170,12 +173,12 @@ namespace AccuPay.Data.Helpers
                     continue;
                 }
 
-                return timeEntry.RegularHours > 0 | timeEntry.TotalLeaveHours > 0;
+                return timeEntry.RegularHours > 0 || timeEntry.TotalLeaveHours > 0;
             }
 
             // If holiday exactly falls in ending date of cut-off, and no attendance 3days after it
             // will treat it that employee was present
-            if (!postTimeEntries.Any() & endOfCutOff == legalHolidayDate)
+            if (!postTimeEntries.Any() && endOfCutOff == legalHolidayDate)
                 return true;
 
             return false;
@@ -359,14 +362,11 @@ namespace AccuPay.Data.Helpers
             return FunctionResult.Success();
         }
 
-        public static PayPeriod GetNextPayPeriod(int? payPeriodId)
+        public static PayPeriod GetNextPayPeriod(int payPeriodId)
         {
-            if (payPeriodId == null)
-                return null/* TODO Change to default(_) if this is not a reference type */;
-
             using (PayrollContext context = new PayrollContext())
             {
-                var currentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.RowID.Value == payPeriodId.Value);
+                var currentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.RowID.Value == payPeriodId);
 
                 if (currentPayPeriod == null)
                     return null/* TODO Change to default(_) if this is not a reference type */;

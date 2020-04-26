@@ -96,7 +96,7 @@ namespace AccuPay.Data.Entities
             if ((StartTime.HasValue && EndTime == null) || (EndTime.HasValue && StartTime == null))
                 return "Both Start Time and End Time should have value or both should be empty.";
 
-            if (StartTime == null & EndTime == null)
+            if (StartTime == null && EndTime == null)
             {
                 if (StartDate.Date > EndDate.Value.Date)
                     return "Start Date cannot be greater than End Date (empty start and end times)";

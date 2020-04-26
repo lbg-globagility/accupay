@@ -210,7 +210,7 @@ Public Class BenchmarkPayrollForm
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
+                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
                             FirstOrDefault
 
             If salary Is Nothing Then
@@ -223,7 +223,7 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 

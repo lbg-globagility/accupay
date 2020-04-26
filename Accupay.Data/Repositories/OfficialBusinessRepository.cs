@@ -20,11 +20,12 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        public async Task<OfficialBusiness> GetByIdAsync(int? id)
+        public async Task<OfficialBusiness> GetByIdAsync(int id)
         {
             using (var context = new PayrollContext())
             {
-                return await context.OfficialBusinesses.FirstOrDefaultAsync(l => l.RowID.Value == id.Value);
+                return await context.OfficialBusinesses.
+                                FirstOrDefaultAsync(l => l.RowID.Value == id);
             }
         }
 
@@ -53,7 +54,7 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int? id)
+        public async Task DeleteAsync(int id)
         {
             using (var context = new PayrollContext())
             {
@@ -118,7 +119,11 @@ namespace AccuPay.Data.Repositories
 
         private async Task SaveAsyncFunction(OfficialBusiness officialBusiness, PayrollContext context, int userId)
         {
-            if (context.OfficialBusinesses.Where(l => officialBusiness.RowID == null ? true : Nullable.Equals(officialBusiness.RowID, l.RowID) == false).Where(l => l.EmployeeID.Value == officialBusiness.EmployeeID.Value).Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).Any())
+            if (context.OfficialBusinesses.
+                    Where(l => officialBusiness.RowID == null ? true : officialBusiness.RowID != l.RowID).
+                    Where(l => l.EmployeeID.Value == officialBusiness.EmployeeID.Value).
+                    Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).
+                    Any())
                 throw new ArgumentException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
 
             if (officialBusiness.RowID == null)
@@ -132,7 +137,8 @@ namespace AccuPay.Data.Repositories
 
         private async Task UpdateAsync(OfficialBusiness officialBusiness, PayrollContext context, int userId)
         {
-            var currentOfficialBusiness = await context.OfficialBusinesses.FirstOrDefaultAsync(l => Nullable.Equals(l.RowID, officialBusiness.RowID));
+            var currentOfficialBusiness = await context.OfficialBusinesses.
+                                                FirstOrDefaultAsync(l => l.RowID == officialBusiness.RowID);
 
             if (currentOfficialBusiness == null)
                 return;

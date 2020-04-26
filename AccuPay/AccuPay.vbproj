@@ -366,7 +366,6 @@
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
-    <Compile Include="Domain\Payroll\OvertimeRateService.vb" />
     <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
     <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />

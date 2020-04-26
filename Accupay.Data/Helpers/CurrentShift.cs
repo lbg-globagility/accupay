@@ -89,7 +89,7 @@ namespace AccuPay.Data.Helpers
                                             ShiftSchedule?.Shift?.ShiftHours ??
                                                 StandardWorkingHours + 1;
 
-        public bool HasShift => Shift != null | _shiftSchedule2 != null;
+        public bool HasShift => Shift != null || _shiftSchedule2 != null;
 
         public bool HasBreaktime => BreakPeriod != null;
 

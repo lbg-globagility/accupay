@@ -18,7 +18,10 @@ namespace AccuPay.Data.Repositories
         {
             using (var context = new PayrollContext())
             {
-                var category = await context.Categories.Where(c => c.OrganizationID == organizationID).FirstOrDefaultAsync();
+                var category = await context.Categories.
+                                        Where(c => c.OrganizationID == organizationID).
+                                        Where(c => c.CategoryName == categoryName).
+                                        FirstOrDefaultAsync();
 
                 return category?.RowID;
             }

@@ -32,11 +32,11 @@ namespace AccuPay.Data.ValueObjects
 
         public decimal TotalMinutes => Convert.ToDecimal(Length.TotalMinutes);
 
-        public bool Contains(DateTime moment) => (Start <= moment) & (moment <= End);
+        public bool Contains(DateTime moment) => (Start <= moment) && (moment <= End);
 
         public bool Intersects(TimePeriod period)
         {
-            return this.Start <= period.End & this.End >= period.Start;
+            return this.Start <= period.End && this.End >= period.Start;
         }
 
         public bool EarlierThan(TimePeriod period) => this.Start <= period.Start;

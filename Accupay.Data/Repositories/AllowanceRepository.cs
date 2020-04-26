@@ -23,23 +23,26 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        public async Task<IEnumerable<Allowance>> GetByEmployeeIncludesProductAsync(int? employeeId)
+        public async Task<IEnumerable<Allowance>> GetByEmployeeIncludesProductAsync(int employeeId)
         {
             using (var context = new PayrollContext())
             {
-                return await context.Allowances.Include(p => p.Product).Where(l => l.EmployeeID == employeeId).ToListAsync();
+                return await context.Allowances.
+                                Include(p => p.Product).
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
             }
         }
 
-        public async Task<Allowance> GetByIdAsync(int? id)
+        public async Task<Allowance> GetByIdAsync(int id)
         {
             using (var context = new PayrollContext())
             {
-                return await context.Allowances.FirstOrDefaultAsync(l => l.RowID.Value == id.Value);
+                return await context.Allowances.FirstOrDefaultAsync(l => l.RowID.Value == id);
             }
         }
 
-        public async Task<bool> CheckIfAlreadyUsed(int? id)
+        public async Task<bool> CheckIfAlreadyUsed(int id)
         {
             using (var context = new PayrollContext())
             {
@@ -47,7 +50,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(int? id)
+        public async Task DeleteAsync(int id)
         {
             using (var context = new PayrollContext())
             {

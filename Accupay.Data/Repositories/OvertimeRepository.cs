@@ -21,11 +21,11 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        public async Task<Overtime> GetByIdAsync(int? id)
+        public async Task<Overtime> GetByIdAsync(int id)
         {
             using (var context = new PayrollContext())
             {
-                return await context.Overtimes.FirstOrDefaultAsync(l => l.RowID.Value == id.Value);
+                return await context.Overtimes.FirstOrDefaultAsync(l => l.RowID.Value == id);
             }
         }
 
@@ -37,7 +37,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(int? id)
+        public async Task DeleteAsync(int id)
         {
             using (var context = new PayrollContext())
             {

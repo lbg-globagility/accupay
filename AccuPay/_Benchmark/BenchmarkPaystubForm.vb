@@ -271,7 +271,7 @@ Public Class BenchmarkPaystubForm
 
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID))).ToString
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value))).ToString
 
         GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()

@@ -217,14 +217,14 @@ namespace AccuPay.Data.Services
             if (type == null)
                 value = _values?.FirstOrDefault(f => f.LIC == lic);
             else
-                value = _values?.FirstOrDefault(f => f.LIC == lic & f.Type == type);
+                value = _values?.FirstOrDefault(f => f.LIC == lic && f.Type == type);
 
             return value?.DisplayValue;
         }
 
         private ListOfValue GetListOfValue(string type, string lic)
         {
-            return _values?.FirstOrDefault(f => f.Type == type & f.LIC == lic);
+            return _values?.FirstOrDefault(f => f.Type == type && f.LIC == lic);
         }
     }
 }

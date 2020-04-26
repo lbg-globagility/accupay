@@ -74,7 +74,7 @@ namespace AccuPay.Data.Repositories
             using (PayrollContext context = new PayrollContext())
             {
                 Division existingDivision = await GetByNameAndParentDivisionAsync(division.Name,
-                                                                                    parentDivisionId: division.ParentDivisionID,
+                                                                                    parentDivisionId: division.ParentDivisionID.Value,
                                                                                     organizationId: organizationId);
 
                 if (division.RowID == null)
@@ -94,7 +94,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(int? divisionId)
+        public async Task DeleteAsync(int divisionId)
         {
             using (var context = new PayrollContext())
             {
@@ -114,7 +114,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Division> GetByNameAndParentDivisionAsync(string positionName, int? parentDivisionId, int organizationId)
+        public async Task<Division> GetByNameAndParentDivisionAsync(string positionName, int parentDivisionId, int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {

@@ -60,7 +60,7 @@ namespace AccuPay.Data.Entities
 
         public bool IsRegularDay => PayType == RegularDay;
 
-        public bool IsHoliday => IsSpecialNonWorkingHoliday | IsRegularHoliday;
+        public bool IsHoliday => IsSpecialNonWorkingHoliday || IsRegularHoliday;
 
         public bool IsSpecialNonWorkingHoliday => PayType == SpecialNonWorkingHoliday;
 

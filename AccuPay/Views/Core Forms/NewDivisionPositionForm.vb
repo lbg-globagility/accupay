@@ -207,7 +207,7 @@ Public Class NewDivisionPositionForm
     Private Async Sub DeleteDivisionToolStripButton_Click(sender As Object, e As EventArgs) _
         Handles DeleteDivisionToolStripButton.Click
 
-        If Me._currentDivision Is Nothing Then
+        If Me._currentDivision?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No division selected!")
 
             Return
@@ -828,7 +828,7 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
+        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
 
         If Me._currentDivision.IsRoot Then
 
