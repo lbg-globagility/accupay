@@ -51,7 +51,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId, int divisionId)
         {
             var existingPosition = await GetByNameAsync(organizationId, positionName);
 
@@ -61,16 +61,16 @@ namespace AccuPay.Data.Repositories
             {
                 Name = positionName,
                 OrganizationID = organizationId
-                // Before Update Trigger will populate the DivisionID,
-                // That should be coded in a service
             };
 
-            return await SaveAsync(position, organizationId, userId);
+            return await SaveAsync(position, organizationId, userId, divisionId);
         }
 
-        public async Task<Position> SaveAsync(Position position, int organizationId, int userId)
+        public async Task<Position> SaveAsync(Position position, int organizationId, int userId, int divisionId)
         {
+            // divisionId is passed as an additional check to have a divisionId that is not null
             position.Name = position.Name.Trim().ToLower();
+            position.DivisionID = divisionId;
 
             using (PayrollContext context = new PayrollContext())
             {

@@ -127,13 +127,10 @@ namespace AccuPay.Data.Entities
 
         public decimal? MinimumWageAmount { get; set; }
 
-        public bool IsRoot
-        {
-            get
-            {
-                return ParentDivisionID == null;
-            }
-        }
+        // calling this from EF core would not result to this
+        // being translated into sql queries. Instead the database will
+        // query all data then filter this in memory
+        public bool IsRoot => ParentDivisionID == null;
 
         public string FullDivisionName
         {
@@ -150,11 +147,11 @@ namespace AccuPay.Data.Entities
             return ParentDivisionID == division.RowID;
         }
 
-        public static Division CreateEmptyDivision(int organizationID)
+        public static Division CreateEmptyDivision(int organizationId)
         {
             return new Division()
             {
-                OrganizationID = organizationID,
+                OrganizationID = organizationId,
                 GracePeriod = 0,
                 WorkDaysPerYear = 313,
                 PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
@@ -169,7 +166,7 @@ namespace AccuPay.Data.Entities
                 AgencySssDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,
                 AgencyWithholdingTaxSchedule = ContributionSchedule.END_OF_THE_MONTH,
                 DivisionUniqueID = 1,
-                MinimumWageAmount = 466,
+                MinimumWageAmount = 537,
                 AutomaticOvertimeFiling = false,
                 WeeklySSSDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,
                 WeeklyPhilHealthDeductionSchedule = ContributionSchedule.LAST_WEEK_OF_THE_MONTH,

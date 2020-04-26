@@ -23,6 +23,12 @@ namespace AccuPay.Utilities.Extensions
 
         public static string ToTrimmedLowerCase(this string text)
         {
+            // Calling this from EF core would not result to this
+            // being translated into sql queries. Instead the database will
+            // query all data then filter this in memory.
+
+            // Although this will work to variables but not to database columns.
+            // Ex: .Where(x => x.Trim()?.ToUpper() == str.ToTrimmedLowerCase()) is valid
             return text?.Trim()?.ToUpper();
         }
 

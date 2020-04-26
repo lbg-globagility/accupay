@@ -1,3 +1,5 @@
+Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
@@ -171,16 +173,11 @@ Public Class ImportEmployeeForm
 
 #Region "Properties"
 
-    Private Property FileDirectory As String
-        Get
-            Return _filePath
-        End Get
-        Set(value As String)
-            _filePath = value
+    Private Async Function SetFileDirectory(value As String) As Task
+        _filePath = value
 
-            FilePathChanged()
-        End Set
-    End Property
+        Await FilePathChanged()
+    End Function
 
 #End Region
 
@@ -264,7 +261,7 @@ Public Class ImportEmployeeForm
                 importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new employee.",
-                        .EntityId = item.RowID
+                        .EntityId = item.RowID.Value
                         })
             Next
 
@@ -272,7 +269,7 @@ Public Class ImportEmployeeForm
                 importList.Add(New UserActivityItem() With
                     {
                     .Description = $"Updated an employee",
-                    .EntityId = model.RowID
+                    .EntityId = model.RowID.Value
                     })
             Next
 
@@ -340,7 +337,7 @@ Public Class ImportEmployeeForm
 
     End Sub
 
-    Private Sub FilePathChanged()
+    Private Async Function FilePathChanged() As Task
 
         Dim models As New List(Of EmployeeModel)
 
@@ -358,7 +355,7 @@ Public Class ImportEmployeeForm
             Return
         End If
 
-        AddPositionIdToModels(models)
+        Await AddPositionIdToModels(models)
 
         _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
@@ -373,12 +370,23 @@ Public Class ImportEmployeeForm
 
         UpdateStatusLabel(_failModels.Count)
 
-    End Sub
+    End Function
 
-    Private Async Sub AddPositionIdToModels(models As List(Of EmployeeModel))
+    Private Async Function AddPositionIdToModels(models As List(Of EmployeeModel)) As Task
 
-        Dim positionRepo = New PositionRepository
-        Dim existingPositions = Await positionRepo.GetAllAsync(z_OrganizationID)
+        Dim positionRepository = New PositionRepository
+        Dim divisionRepository = New DivisionRepository
+
+        Dim defaultDivision = Await divisionRepository.
+                                        GetOrCreateDefaultDivisionAsync(
+                                                organizationId:=z_OrganizationID,
+                                                userId:=z_User)
+
+        If defaultDivision?.RowID Is Nothing Then
+            Throw New ArgumentException("Cannot create default division.")
+        End If
+
+        Dim existingPositions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
         For Each model In models
             Dim currentPosition = existingPositions.
@@ -390,10 +398,11 @@ Public Class ImportEmployeeForm
                 model.PositionId = currentPosition.RowID
             Else
 
-                currentPosition = Await positionRepo.
+                currentPosition = Await positionRepository.
                                     GetByNameOrCreateAsync(model.Position,
                                                            organizationId:=z_OrganizationID,
-                                                           userId:=z_User)
+                                                           userId:=z_User,
+                                                            divisionId:=defaultDivision.RowID.Value)
 
                 model.PositionId = currentPosition?.RowID
 
@@ -407,7 +416,7 @@ Public Class ImportEmployeeForm
 
         Next
 
-    End Sub
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then
@@ -444,7 +453,7 @@ Public Class ImportEmployeeForm
         TabPage2.Text = $"Failed ({DataGridView2.Rows.Count()})"
     End Sub
 
-    Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
+    Private Async Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
 
         Dim browseFile = New OpenFileDialog With {
             .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
@@ -454,8 +463,10 @@ Public Class ImportEmployeeForm
 
         If Not browseFile.ShowDialog() = DialogResult.OK Then Return
 
-        FileDirectory = browseFile.FileName
-
+        Await FunctionUtils.TryCatchFunctionAsync("Load Employee Data",
+                                                Async Function()
+                                                    Await SetFileDirectory(browseFile.FileName)
+                                                End Function)
     End Sub
 
     Private Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click

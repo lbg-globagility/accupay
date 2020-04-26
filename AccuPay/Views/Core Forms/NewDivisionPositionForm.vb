@@ -744,7 +744,8 @@ Public Class NewDivisionPositionForm
 
         Await _positionRepository.SaveAsync(Me._currentPosition,
                                             organizationId:=z_OrganizationID,
-                                            userId:=z_User)
+                                            userId:=z_User,
+                                            divisionId:=Me._currentPosition.DivisionID.Value)
 
         RecordUpdatePosition()
 

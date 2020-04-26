@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
 
@@ -40,7 +42,7 @@ Public Class AddDivisionLocationForm
                                                                  userId:=z_User)
 
             Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID, z_OrganizationID)
+            repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID.Value, z_OrganizationID)
 
             Me.IsSaved = True
 
