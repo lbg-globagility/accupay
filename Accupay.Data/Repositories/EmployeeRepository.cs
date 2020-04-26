@@ -339,45 +339,26 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(int organizationID, int userID, List<Employee> employees)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (PayrollContext context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
             {
-                var added = employees.Where(e => !e.RowID.HasValue).ToList();
-                if (added.Any())
-                {
-                    context.Employees.AddRange(added);
-                }
-
                 var updated = employees.Where(e => e.RowID.HasValue).ToList();
                 if (updated.Any())
                 {
-                    await UpdateManyAsync(employees, context);
+                    updated.ForEach(x => context.Entry(x).State = EntityState.Modified);
+                }
+
+                var added = employees.Where(e => !e.RowID.HasValue).ToList();
+                if (added.Any())
+                {
+                    // this adds a value to RowID (int minimum value)
+                    // so if there is a code checking for null to RowID
+                    // it will always be false
+                    context.Employees.AddRange(added);
                 }
                 await context.SaveChangesAsync();
             }
         }
 
-        private async Task UpdateManyAsync(List<Employee> employees, PayrollContext context)
-        {
-            var employeeIds = employees.Select(e => e.RowID).ToArray();
-
-            var employeesToUpdate = await context.Employees.
-                Where(e => employeeIds.Contains(e.RowID)).
-                ToListAsync();
-            if (!employeesToUpdate.Any()) return;
-
-            foreach (var e in employeesToUpdate)
-            {
-                var updatedEmployee = employees.FirstOrDefault(ee => ee.RowID == e.RowID);
-
-                ApplyChanges(e, updatedEmployee);
-            }
-        }
-
         #endregion CRUD
-
-        private void ApplyChanges(Employee toBeUpdateEmployee, Employee updatedEmployee)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

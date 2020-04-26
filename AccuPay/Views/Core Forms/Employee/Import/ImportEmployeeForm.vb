@@ -1,21 +1,16 @@
-Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports log4net
 
 Public Class ImportEmployeeForm
 
 #Region "VariableDeclarations"
 
-    Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
-
-    Private _worksheetName As String
     Private _ep As New ExcelParser(Of EmployeeModel)
     Private _filePath As String
     Private _okModels As List(Of EmployeeModel)
@@ -79,7 +74,10 @@ Public Class ImportEmployeeForm
         Public Property ContactNo As String
 
         <ColumnName("Job position")>
-        Public Property Job As String
+        Public Property Position As String
+
+        <Ignore>
+        Public Property PositionId As Integer?
 
         <ColumnName("TIN")>
         Public Property TIN As String
@@ -107,9 +105,6 @@ Public Class ImportEmployeeForm
 
         <ColumnName("Leave allowance per year")>
         Public Property LeaveAllowance As Decimal
-
-        '<ColumnName("Leave per pay period")>
-        'Public Property fsdfsd As String
 
         <ColumnName("Works days per year")>
         Public Property WorkDaysPerYear As Decimal
@@ -150,7 +145,7 @@ Public Class ImportEmployeeForm
                 _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < PayrollTools.MinimumMicrosoftDate
                 _noGender = String.IsNullOrWhiteSpace(Gender)
                 _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
-                _noJob = String.IsNullOrWhiteSpace(Job)
+                _noJob = String.IsNullOrWhiteSpace(Position)
                 _noEmploymentDate = Not DateEmployed.HasValue
                 _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < PayrollTools.MinimumMicrosoftDate
                 _noPayFrequency = String.IsNullOrWhiteSpace(PayFrequency)
@@ -203,116 +198,88 @@ Public Class ImportEmployeeForm
         Dim employeeRepo = New EmployeeRepository
         Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
 
-        Dim positionRepo = New PositionRepository
-        Dim existingPositions = Await positionRepo.GetAllAsync(z_OrganizationID)
+        Dim employees = employees1.
+            Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
+            ToList()
 
-        Using context = New PayrollContext
-            Dim employees = employees1.
-                Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
-                ToList()
+        Dim existingEmployees = New List(Of Employee)
+        'for updates
+        For Each employee In employees
+            Dim model = models.
+                FirstOrDefault(Function(m) m.EmployeeNo = employee.EmployeeNo)
 
-            'for updates
-            For Each employee In employees
-                Dim model = models.
-                    FirstOrDefault(Function(m) m.EmployeeNo = employee.EmployeeNo)
-
-                If model IsNot Nothing Then
-                    AssignChanges(model, employee)
-                    employee.LastUpdBy = z_User
-                End If
-            Next
-
-            Dim division = Await New DivisionRepository().FirstOrDefaultAsync(z_OrganizationID)
-
-            'for insert
-            Dim notExistEmployees = models.
-                Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
-                ToList()
-
-            Dim newPositions = New Collection(Of Position)
-            Dim importedEmployees = New List(Of Employee)
-
-            Dim newEmpList As New List(Of Employee)
-
-            For Each model In notExistEmployees
-                Dim position = existingPositions.
-                    Where(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job)).
-                    FirstOrDefault()
-
-                If position Is Nothing Then
-                    position = newPositions.
-                        FirstOrDefault(Function(p) StringUtils.Normalize(p.Name) = StringUtils.Normalize(model.Job))
-                End If
-
-                If position Is Nothing Then
-                    position = CreatePosition(model.Job, division)
-
-                    newPositions.Add(position)
-                End If
-
-                Dim employee = New Employee With {
-                    .OrganizationID = z_OrganizationID,
-                    .Created = Now,
-                    .CreatedBy = z_User,
-                    .PayFrequencyID = If(model.PayFrequency.ToLower() = "semi-monthly", 1, 4),
-                    .Position = position
-                }
-
+            If model IsNot Nothing Then
                 AssignChanges(model, employee)
+                employee.LastUpdBy = z_User
 
-                importedEmployees.Add(employee)
+                existingEmployees.Add(employee)
+            End If
 
-            Next
+        Next
 
-            If importedEmployees.Any Then Await employeeRepo.SaveManyAsync(organizationID:=z_OrganizationID,
-                                                                           userID:=z_User,
-                                                                           employees:=importedEmployees)
+        'for insert
+        Dim notExistEmployees = models.
+            Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
+            ToList()
 
-            Try
-                Await context.SaveChangesAsync()
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
-                For Each item In newEmpList
+        Dim newEmployees = New List(Of Employee)
 
-                    importList.Add(New Data.Entities.UserActivityItem() With
+        For Each model In notExistEmployees
+
+            Dim employee = New Employee With {
+                .RowID = Nothing,
+                .OrganizationID = z_OrganizationID,
+                .Created = Now,
+                .CreatedBy = z_User,
+                .PayFrequencyID = If(model.PayFrequency.ToLower() = "semi-monthly",
+                                                                    PayrollTools.PayFrequencySemiMonthlyId,
+                                                                    PayrollTools.PayFrequencyWeeklyId)
+            }
+
+            AssignChanges(model, employee)
+
+            newEmployees.Add(employee)
+
+        Next
+
+        Await SaveToDatabase(employeeRepo, existingEmployees, newEmployees)
+    End Function
+
+    Private Shared Async Function SaveToDatabase(employeeRepo As EmployeeRepository,
+                                                 existingEmployees As List(Of Employee),
+                                                 newEmployees As List(Of Employee)) As Task
+
+        Dim importedEmployees = existingEmployees
+        importedEmployees.AddRange(newEmployees)
+
+        If importedEmployees.Any Then
+
+            Await employeeRepo.SaveManyAsync(organizationID:=z_OrganizationID,
+                                            userID:=z_User,
+                                            employees:=importedEmployees)
+
+            Dim importList = New List(Of UserActivityItem)
+            For Each item In newEmployees
+
+                importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new employee.",
                         .EntityId = item.RowID
                         })
-                Next
+            Next
 
-                For Each model In employees
-                    importList.Add(New Data.Entities.UserActivityItem() With
-                        {
-                        .Description = $"Updated an employee",
-                        .EntityId = model.RowID
-                        })
-                Next
+            For Each model In existingEmployees
+                importList.Add(New UserActivityItem() With
+                    {
+                    .Description = $"Updated an employee",
+                    .EntityId = model.RowID
+                    })
+            Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
-            Catch ex As Exception
-                logger.Error("EmployeeImportProfile", ex)
-                'Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                'MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
-                Throw
-            End Try
-        End Using
-    End Function
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-    Private Function CreatePosition(positionName As String,
-                                    division As Division) As Position
-        Dim position As Position = New Position() With {
-            .Name = positionName.Trim(),
-            .OrganizationID = z_OrganizationID,
-            .Created = Now,
-            .CreatedBy = z_User
-        }
-
-        If division IsNot Nothing Then
-            position.DivisionID = division.RowID
         End If
-
-        Return position
     End Function
 
 #End Region
@@ -343,7 +310,7 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo
 
-            'em.Job
+            e.PositionID = em.PositionId
 
             If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName
 
@@ -373,18 +340,6 @@ Public Class ImportEmployeeForm
 
     End Sub
 
-    Private Sub ExcelParserPreparation(filePath As String, Optional worksheetName As String = Nothing)
-
-        _filePath = filePath
-
-        If Not String.IsNullOrWhiteSpace(worksheetName) Then
-            _worksheetName = worksheetName
-            _ep = New ExcelParser(Of EmployeeModel)(_worksheetName)
-        End If
-
-        _ep = New ExcelParser(Of EmployeeModel)
-    End Sub
-
     Private Sub FilePathChanged()
 
         Dim models As New List(Of EmployeeModel)
@@ -403,6 +358,8 @@ Public Class ImportEmployeeForm
             Return
         End If
 
+        AddPositionIdToModels(models)
+
         _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
 
@@ -415,6 +372,40 @@ Public Class ImportEmployeeForm
         TabPage2.Text = $"Failed ({Me._failModels.Count})"
 
         UpdateStatusLabel(_failModels.Count)
+
+    End Sub
+
+    Private Async Sub AddPositionIdToModels(models As List(Of EmployeeModel))
+
+        Dim positionRepo = New PositionRepository
+        Dim existingPositions = Await positionRepo.GetAllAsync(z_OrganizationID)
+
+        For Each model In models
+            Dim currentPosition = existingPositions.
+                           FirstOrDefault(Function(p) p.Name.ToTrimmedLowerCase() =
+                                                        model.Position.ToTrimmedLowerCase())
+
+            If currentPosition IsNot Nothing Then
+
+                model.PositionId = currentPosition.RowID
+            Else
+
+                currentPosition = Await positionRepo.
+                                    GetByNameOrCreateAsync(model.Position,
+                                                           organizationId:=z_OrganizationID,
+                                                           userId:=z_User)
+
+                model.PositionId = currentPosition?.RowID
+
+                'add the newly added position to the list of existing positions
+                If currentPosition IsNot Nothing Then
+
+                    existingPositions.Add(currentPosition)
+
+                End If
+            End If
+
+        Next
 
     End Sub
 
@@ -445,16 +436,8 @@ Public Class ImportEmployeeForm
         DataGridView2.AutoGenerateColumns = False
     End Sub
 
-    Private Sub DataGridView1_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles DataGridView1.CellContentClick
-
-    End Sub
-
     Private Sub DataGridView1_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView1.DataSourceChanged
         TabPage1.Text = $"OK ({DataGridView1.Rows.Count()})"
-    End Sub
-
-    Private Sub DataGridView2_CellContentClick(sender As Object, e As DataGridViewCellEventArgs)
-
     End Sub
 
     Private Sub DataGridView2_DataSourceChanged(sender As Object, e As EventArgs) Handles DataGridView2.DataSourceChanged

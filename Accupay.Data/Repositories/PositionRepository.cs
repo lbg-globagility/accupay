@@ -51,8 +51,27 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
+        {
+            var existingPosition = await GetByNameAsync(organizationId, positionName);
+
+            if (existingPosition != null) return existingPosition;
+
+            var position = new Position()
+            {
+                Name = positionName,
+                OrganizationID = organizationId
+                // Before Update Trigger will populate the DivisionID,
+                // That should be coded in a service
+            };
+
+            return await SaveAsync(position, organizationId, userId);
+        }
+
         public async Task<Position> SaveAsync(Position position, int organizationId, int userId)
         {
+            position.Name = position.Name.Trim().ToLower();
+
             using (PayrollContext context = new PayrollContext())
             {
                 Position existingPosition = await GetByNameAsync(organizationId, position.Name);

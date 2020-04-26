@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace AccuPay.Utilities.Extensions
 {
@@ -17,6 +19,21 @@ namespace AccuPay.Utilities.Extensions
         public static decimal? ToNullableDecimal(this string num)
         {
             return ObjectUtils.ToNullableDecimal(num);
+        }
+
+        public static string ToTrimmedLowerCase(this string text)
+        {
+            return text?.Trim()?.ToUpper();
+        }
+
+        public static string ToPascal(this string text)
+        {
+            if (text == null) return null;
+
+            string newText = Regex.Replace(text, "([A-Z])", " $1");
+
+            var info = CultureInfo.CurrentCulture.TextInfo;
+            return info.ToTitleCase(newText).Replace(" ", string.Empty);
         }
 
         public static string Ellipsis(this string input, int maxCharacters)
