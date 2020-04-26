@@ -71,14 +71,12 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public DateTime? EndTimeFull
         {
-            get
-            {
-                // Using Nothing as output on ternary operator does not work
-                return EndTime == null ? (DateTime?)null :
-                                        EndDate == null ?
-                                            DateTime.Now.ToMinimumHourValue().Add(EndTime.Value) :
-                                            EndDate.Value.Date.ToMinimumHourValue().Add(EndTime.Value);
-            }
+            get => EndTime == null ?
+                        (DateTime?)null :
+                        EndDate == null ?
+                                DateTime.Now.ToMinimumHourValue().Add(EndTime.Value) :
+                                EndDate.Value.Date.ToMinimumHourValue().Add(EndTime.Value);
+
             set => EndTime = value == null ? null : value?.TimeOfDay;
         }
 

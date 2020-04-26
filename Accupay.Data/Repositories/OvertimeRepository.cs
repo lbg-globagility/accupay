@@ -183,10 +183,10 @@ namespace AccuPay.Data.Repositories
             using (PayrollContext context = new PayrollContext())
             {
                 return context.Overtimes.
-                        Where(ot => ot.OrganizationID == organizationID).
+                        Where(o => o.OrganizationID == organizationID).
+                        Where(o => o.Status == Overtime.StatusApproved).
                         Where(o => timePeriod.Start <= o.OTStartDate).
                         Where(o => o.OTStartDate <= timePeriod.End).
-                        Where(o => o.Status == Overtime.StatusApproved).
                         ToList();
             }
         }

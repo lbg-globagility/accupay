@@ -180,38 +180,29 @@ Public Class ImportOvertimeForm
 
         Dim messageTitle = "Import Overtimes"
 
-        Try
-            Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
 
-            Dim importlist = New List(Of UserActivityItem)
+                Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
 
-            For Each overtime In _overtimes
-                importlist.Add(New UserActivityItem() With
-                    {
-                    .Description = $"Imported a new Overtime.",
-                    .EntityId = CInt(overtime.RowID)
-                    })
-            Next
+                Dim importlist = New List(Of UserActivityItem)
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                For Each overtime In _overtimes
+                    importlist.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new Overtime.",
+                        .EntityId = CInt(overtime.RowID)
+                        })
+                Next
 
-            Me.IsSaved = True
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
-            Me.Close()
-        Catch ex As ArgumentException
+                Me.IsSaved = True
 
-            Dim errorMessage = "One of the overtimes has an error:" & Environment.NewLine & ex.Message
+                Me.Close()
 
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+            End Function)
 
     End Sub
 

@@ -35,6 +35,8 @@ namespace AccuPay.Data
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
         public virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
+
+        public virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }
         public virtual DbSet<PayFrequency> PayFrequencies { get; set; }

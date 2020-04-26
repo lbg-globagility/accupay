@@ -487,7 +487,6 @@
     </Compile>
     <Compile Include="Repositories\CalendarRepository.vb" />
     <Compile Include="Repositories\DayTypeRepository.vb" />
-    <Compile Include="Repositories\OfficialBusinessRepository.vb" />
     <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
       <DependentUpon>CalendarDayControl.vb</DependentUpon>
     </Compile>
@@ -965,7 +964,6 @@
     </Compile>
     <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
     <Compile Include="Domain\Employees\Employee.vb" />
-    <Compile Include="Domain\TimeEntry\OfficialBusiness.vb" />
     <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
     <Compile Include="Domain\Shifts\Shift.vb" />
     <Compile Include="Domain\TimeEntry\CurrentShift.vb" />

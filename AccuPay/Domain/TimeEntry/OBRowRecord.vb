@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities
 
 Public Class OBRowRecord

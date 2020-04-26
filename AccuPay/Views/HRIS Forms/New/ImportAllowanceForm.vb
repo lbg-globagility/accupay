@@ -200,26 +200,26 @@ Public Class ImportAllowanceForm
         Dim messageTitle = "Import Allowances"
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(z_OrganizationID, z_User, _allowances)
+            Async Function()
+                Await _allowanceRepository.SaveManyAsync(z_OrganizationID, z_User, _allowances)
 
-                                            Dim importList = New List(Of Data.Entities.UserActivityItem)
-                                            For Each item In _allowances
-                                                importList.Add(New Data.Entities.UserActivityItem() With
-                                                    {
-                                                    .Description = $"Imported a new allowance.",
-                                                    .EntityId = item.RowID
-                                                    })
-                                            Next
+                Dim importList = New List(Of UserActivityItem)
+                For Each item In _allowances
+                    importList.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new allowance.",
+                        .EntityId = item.RowID
+                        })
+                Next
 
-                                            Dim repo = New UserActivityRepository
-                                            repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                                            Me.IsSaved = True
-                                            Me.Cursor = Cursors.Default
-                                            Me.Close()
+                Me.IsSaved = True
+                Me.Cursor = Cursors.Default
+                Me.Close()
 
-                                        End Function)
+            End Function)
 
         Me.Cursor = Cursors.Default
     End Sub

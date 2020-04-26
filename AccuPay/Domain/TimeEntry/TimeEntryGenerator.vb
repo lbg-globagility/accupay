@@ -25,10 +25,7 @@ Public Class TimeEntryGenerator
     Private _timeLogs As IList(Of TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
     Private _leaves As IList(Of Entities.Leave)
-    Private _breakTimeBracketRepository As BreakTimeBracketRepository
-    Private _overtimeRepository As OvertimeRepository
-    Private _leaveRepository As LeaveRepository
-    Private _officialBusinesses As IList(Of OfficialBusiness)
+    Private _officialBusinesses As IList(Of Entities.OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
     Private _salaries As IList(Of Salary)
@@ -36,7 +33,12 @@ Public Class TimeEntryGenerator
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
+    Private _breakTimeBracketRepository As BreakTimeBracketRepository
     Private _employeeRepository As EmployeeRepository
+    Private _leaveRepository As LeaveRepository
+    Private _officialBusinessRepository As OfficialBusinessRepository
+    Private _overtimeRepository As OvertimeRepository
+
     Private _total As Integer
 
     Private _finished As Integer
@@ -66,6 +68,7 @@ Public Class TimeEntryGenerator
         _breakTimeBracketRepository = New BreakTimeBracketRepository()
         _employeeRepository = New EmployeeRepository()
         _leaveRepository = New LeaveRepository()
+        _officialBusinessRepository = New OfficialBusinessRepository
         _overtimeRepository = New OvertimeRepository()
     End Sub
 
@@ -123,11 +126,8 @@ Public Class TimeEntryGenerator
             _overtimes = _overtimeRepository.
                             GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
 
-            _officialBusinesses = context.OfficialBusinesses.
-                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
-                Where(Function(o) o.StartDate.Value <= _cutoffEnd AndAlso _cutoffStart <= o.EndDate.Value).
-                Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
-                ToList()
+            _officialBusinesses = _officialBusinessRepository.
+                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
 
             _agencyFees = context.AgencyFees.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -213,7 +213,7 @@ Public Class TimeEntryGenerator
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim officialBusinesses As IList(Of OfficialBusiness) = _officialBusinesses.
+        Dim officialBusinesses As IList(Of Entities.OfficialBusiness) = _officialBusinesses.
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 

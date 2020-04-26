@@ -1,32 +1,24 @@
-﻿Imports AccuPay.Data
-Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportOBForm
 
     Private _officialbus As List(Of OfficialBusiness)
 
-    Private _officialbusTypeList As List(Of ListOfValue)
-
     Private _employeeRepository As New EmployeeRepository
 
     Private _listOfValueRepository As New ListOfValueRepository
 
+    Private _officialBusinessRepository As New OfficialBusinessRepository
+
     Public IsSaved As Boolean
 
-    Private Async Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.IsSaved = False
-
-        _listOfValueRepository = New ListOfValueRepository()
-
-        _officialbusTypeList = Await _listOfValueRepository.GetOfficialBusinessTypesAsync()
 
         OBDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -173,31 +165,17 @@ Public Class ImportOBForm
 
         Dim messageTitle = "Import Official Businesses"
 
-        Try
-            Using context As New PayrollContext
-                For Each officialbus In _officialbus
-                    context.OfficialBusinesses.Add(officialbus)
-                Next
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
 
-                Await context.SaveChangesAsync()
-            End Using
+                Await _officialBusinessRepository.SaveManyAsync(_officialbus,
+                                                            organizationId:=z_OrganizationID,
+                                                            userId:=z_User)
+                Me.IsSaved = True
 
-            Me.IsSaved = True
+                Me.Close()
 
-            Me.Close()
-        Catch ex As ArgumentException
-
-            Dim errorMessage = "One of the official businesses has an error:" & Environment.NewLine & ex.Message
-
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+            End Function)
 
     End Sub
 

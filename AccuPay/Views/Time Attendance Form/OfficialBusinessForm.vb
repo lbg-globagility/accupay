@@ -1,16 +1,14 @@
 ﻿Imports System.Threading.Tasks
-Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class OfficialBusinessForm
 
-    Private _employees As New List(Of Entities.Employee)
+    Private _employees As New List(Of Employee)
 
-    Private _allEmployees As New List(Of Entities.Employee)
+    Private _allEmployees As New List(Of Employee)
 
     Private _currentOfficialBusiness As OfficialBusiness
 
@@ -20,9 +18,9 @@ Public Class OfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _employeeRepository As New Repositories.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
-    Private _productRepository As New Data.Repositories.ProductRepository
+    Private _productRepository As New ProductRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -154,10 +152,10 @@ Public Class OfficialBusinessForm
         Await ShowEmployeeList()
     End Sub
 
-    Private Function GetSelectedEmployee() As Entities.Employee
+    Private Function GetSelectedEmployee() As Employee
         If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Entities.Employee)
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
     Private Sub ForceGridViewCommit()
@@ -166,7 +164,7 @@ Public Class OfficialBusinessForm
         UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
-    Private Async Function LoadOfficialBusinesses(currentEmployee As Entities.Employee) As Task
+    Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee Is Nothing Then Return
 
         Me._currentOfficialBusinesses = (Await _officialBusinessRepository.GetByEmployeeAsync(currentEmployee.RowID)).
@@ -339,7 +337,7 @@ Public Class OfficialBusinessForm
 
     End Sub
 
-    Private Async Function DeleteOfficialBusiness(currentEmployee As Entities.Employee, messageTitle As String) As Task
+    Private Async Function DeleteOfficialBusiness(currentEmployee As Employee, messageTitle As String) As Task
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
@@ -386,7 +384,7 @@ Public Class OfficialBusinessForm
 
     Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
-        Dim employee As Entities.Employee = GetSelectedEmployee()
+        Dim employee As Employee = GetSelectedEmployee()
 
         If employee Is Nothing Then
             MessageBoxHelper.Warning("No employee selected!")
@@ -526,7 +524,10 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _officialBusinessRepository.SaveManyAsync(changedOfficialBusinesses)
+                                            Await _officialBusinessRepository.SaveManyAsync(
+                                                                        changedOfficialBusinesses,
+                                                                        organizationId:=z_OrganizationID,
+                                                                        userId:=z_User)
 
                                             For Each item In changedOfficialBusinesses
                                                 RecordUpdate(item)

@@ -1,7 +1,5 @@
-﻿Imports AccuPay
+﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AddOfficialBusinessForm
@@ -10,11 +8,11 @@ Public Class AddOfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _currentEmployee As Data.Entities.Employee
+    Private _currentEmployee As Employee
 
     Private _newOfficialBusiness As New OfficialBusiness
 
-    Sub New(employee As Data.Entities.Employee)
+    Sub New(employee As Employee)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -145,7 +143,9 @@ Public Class AddOfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()
-                Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
+                Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness,
+                                                            organizationId:=z_OrganizationID,
+                                                            userId:=z_User)
 
                 Dim repo As New UserActivityRepository
                 repo.RecordAdd(z_User, "Official Business", Me._newOfficialBusiness.RowID, z_OrganizationID)

@@ -46,7 +46,7 @@ Public Class DayCalculator
                             shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
                             overtimes As IList(Of Entities.Overtime),
-                            officialBusiness As OfficialBusiness,
+                            officialBusiness As Entities.OfficialBusiness,
                             leaves As IList(Of Entities.Leave),
                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
                             breakTimeBrackets As IList(Of Entities.BreakTimeBracket),
@@ -98,7 +98,7 @@ Public Class DayCalculator
     Private Sub ComputeHours(currentDate As Date,
                              timeEntry As TimeEntry,
                              timeLog As TimeLog,
-                             officialBusiness As OfficialBusiness,
+                             officialBusiness As Entities.OfficialBusiness,
                              leaves As IList(Of Entities.Leave),
                              overtimes As IList(Of Entities.Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
@@ -779,7 +779,10 @@ Public Class DayCalculator
         End If
     End Sub
 
-    Public Function GetLogPeriod(timeLog As TimeLog, officialBusiness As OfficialBusiness, currentShift As CurrentShift, currentDate As Date) As TimePeriod
+    Public Function GetLogPeriod(timeLog As TimeLog,
+                                 officialBusiness As Entities.OfficialBusiness,
+                                 currentShift As CurrentShift,
+                                 currentDate As Date) As TimePeriod
         Dim appliedIn = {timeLog?.TimeIn, officialBusiness?.StartTime}.
             Where(Function(i) i.HasValue).
             Min()

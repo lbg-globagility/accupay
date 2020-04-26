@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
+﻿using AccuPay.Utilities.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AccuPay.Utilities.Extensions;
+using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
@@ -75,43 +65,21 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public DateTime? OTStartTimeFull
         {
-            get
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (OTStartTime == null)
-                    return default(DateTime?);
-                else
-                    return OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
-            }
-            set
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (value == null)
-                    OTStartTime = default(TimeSpan?);
-                else
-                    OTStartTime = value?.TimeOfDay;
-            }
+            get => OTStartTime == null ?
+                        (DateTime?)null :
+                        OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
+
+            set => OTStartTime = value == null ? null : value?.TimeOfDay;
         }
 
         [NotMapped]
         public DateTime? OTEndTimeFull
         {
-            get
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (OTEndTime == null)
-                    return default(DateTime?);
-                else
-                    return OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
-            }
-            set
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (value == null)
-                    OTEndTime = default(TimeSpan?);
-                else
-                    OTEndTime = value?.TimeOfDay;
-            }
+            get => OTEndTime == null ?
+                        (DateTime?)null :
+                        OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
+
+            set => OTEndTime = value == null ? null : value?.TimeOfDay;
         }
 
         public string Validate()
