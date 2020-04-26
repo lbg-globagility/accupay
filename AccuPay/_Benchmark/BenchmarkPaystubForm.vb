@@ -9,6 +9,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Data
+Imports AccuPay.Data.ValueObjects
 
 Public Class BenchmarkPaystubForm
 
@@ -315,31 +316,31 @@ Public Class BenchmarkPaystubForm
 
         If payStub.RestDayHours <> 0 Then
 
-            total += payStub.RestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RestDay.Rate)
+            total += payStub.RestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RestDay.CurrentRate)
 
         End If
 
         If payStub.SpecialHolidayHours <> 0 Then
 
-            total += payStub.SpecialHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHoliday.Rate)
+            total += payStub.SpecialHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHoliday.CurrentRate)
 
         End If
 
         If payStub.SpecialHolidayRestDayHours <> 0 Then
 
-            total += payStub.SpecialHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHolidayRestDay.Rate)
+            total += payStub.SpecialHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHolidayRestDay.CurrentRate)
 
         End If
 
         If payStub.RegularHolidayHours <> 0 Then
 
-            total += payStub.RegularHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHoliday.Rate)
+            total += payStub.RegularHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHoliday.CurrentRate)
 
         End If
 
         If payStub.RegularHolidayRestDayHours <> 0 Then
 
-            total += payStub.RegularHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHolidayRestDay.Rate)
+            total += payStub.RegularHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHolidayRestDay.CurrentRate)
 
         End If
 

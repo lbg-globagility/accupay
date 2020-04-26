@@ -366,11 +366,8 @@
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
     <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
-    <Compile Include="Domain\Payroll\IPaystubRate.vb" />
-    <Compile Include="Domain\Payroll\OvertimeRate.vb" />
     <Compile Include="Domain\Payroll\OvertimeRateService.vb" />
     <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
-    <Compile Include="Domain\Payroll\Rate.vb" />
     <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
@@ -1724,7 +1721,6 @@
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
     <Compile Include="Domain\Commons\FileObserver.vb" />
-    <Compile Include="Domain\Loans\ImportLoans.vb" />
     <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
@@ -2765,9 +2761,7 @@
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

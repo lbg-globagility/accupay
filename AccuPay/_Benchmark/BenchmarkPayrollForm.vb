@@ -7,6 +7,7 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Utilities

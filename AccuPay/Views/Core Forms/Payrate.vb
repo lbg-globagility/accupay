@@ -1,3 +1,5 @@
+Imports AccuPay.Data.ValueObjects
+
 Public Class PayRateForm
     Dim view_ID As Integer = Nothing
 
@@ -955,7 +957,7 @@ Public Class PayRateForm
 
     Private Function GetPayRate(rate As Rate) As String
 
-        Dim number As Decimal = rate.Rate * 100
+        Dim number As Decimal = rate.CurrentRate * 100
 
         Return number.ToString("#.#")
 
