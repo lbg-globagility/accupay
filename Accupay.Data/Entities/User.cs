@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace AccuPay.Data.Entities
 {
@@ -10,23 +8,43 @@ namespace AccuPay.Data.Entities
     public class User
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
+
+        public string LastName { get; set; }
+
+        public string FirstName { get; set; }
+
+        public string MiddleName { get; set; }
+
+        public string UserID { get; set; }
+
+        public string Password { get; set; }
+
+        public int OrganizationID { get; set; }
+
+        public int PositionID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime? Created { get; set; }
+
+        public int? LastUpdBy { get; set; }
 
         public int? CreatedBy { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
 
-        public int? LastUpdBy { get; set; }
+        public string Status { get; set; }
 
-        public int OrganizationID { get; set; }
+        public string EmailAddress { get; set; }
+
+        //public char? AllowLimitedAccess { get; set; }
+
+        //public char? InSession { get; set; }
+
         public int UserLevel { get; set; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
+        [ForeignKey("PositionID")]
+        public virtual Position Position { get; set; }
     }
 }
