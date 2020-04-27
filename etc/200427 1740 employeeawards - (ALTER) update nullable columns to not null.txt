@@ -1,0 +1,10 @@
+ALTER TABLE `employeeawards`
+	ALTER `EmployeeID` DROP DEFAULT,
+	ALTER `AwardType` DROP DEFAULT,
+	ALTER `AwardDescription` DROP DEFAULT,
+	ALTER `AwardDate` DROP DEFAULT;
+ALTER TABLE `employeeawards`
+	CHANGE COLUMN `EmployeeID` `EmployeeID` INT(10) NOT NULL AFTER `LastUpdBy`,
+	CHANGE COLUMN `AwardType` `AwardType` VARCHAR(50) NOT NULL AFTER `EmployeeID`,
+	CHANGE COLUMN `AwardDescription` `AwardDescription` VARCHAR(500) NOT NULL AFTER `AwardType`,
+	CHANGE COLUMN `AwardDate` `AwardDate` DATE NOT NULL AFTER `AwardDescription`;

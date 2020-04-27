@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
@@ -17,39 +18,39 @@ namespace AccuPay.Data.Repositories
                 Bonus.FREQUENCY_MONTHLY
             };
         }
-        public IEnumerable<Bonus> GetByEmployee(int employeeID)
+        public async Task<IEnumerable<Bonus>> GetAllByEmployeeAsync(int employeeId)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return context.Bonuses.Include(x => x.Product).Where(x => x.EmployeeID == employeeID).ToList();
+                return await context.Bonuses.Include(x => x.Product).Where(x => x.EmployeeID == employeeId).ToListAsync();
             }
         }
 
-        public void Delete(Bonus currentBonus)
+        public async Task DeleteAsync(Bonus currentBonus)
         {
             using (PayrollContext context = new PayrollContext())
             {
                 context.Bonuses.Attach(currentBonus);
                 context.Bonuses.Remove(currentBonus);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }  
         }
 
-        public void Create(Bonus bonus)
+        public async Task CreateAsync(Bonus bonus)
         {
             using (PayrollContext context = new PayrollContext())
             {
                 context.Bonuses.Add(bonus);
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 
-        public void Update(Bonus bonus)
+        public async Task UpdateAsync(Bonus bonus)
         {
             using (PayrollContext context = new PayrollContext())
             {
                 context.Entry(bonus).State = EntityState.Modified;
-                context.SaveChanges();
+                await context.SaveChangesAsync();
             }
         }
 

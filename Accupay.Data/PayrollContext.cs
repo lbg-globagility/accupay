@@ -18,6 +18,7 @@ namespace AccuPay.Data
         public virtual DbSet<Address> Addresses { get; set; }
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
+        public virtual DbSet<Award> Awards { get; set; }
         public virtual DbSet<Bonus> Bonuses { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Category> Categories { get; set; }

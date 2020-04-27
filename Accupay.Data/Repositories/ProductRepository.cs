@@ -11,12 +11,12 @@ namespace AccuPay.Data.Repositories
 {
     public class ProductRepository
     {
-        public async Task<IEnumerable<Product>> GetBonusTypes(int organizationID)
+        public async Task<IEnumerable<Product>> GetBonusTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.BONUS_TYPE_CATEGORY;
 
-            var category = await GetOrCreateCategoryByName(categoryName, organizationID);
-            return await GetProductsByCategory(category.RowID, organizationID);
+            var category = await GetOrCreateCategoryByName(categoryName, organizationId);
+            return await GetProductsByCategory(category.RowID, organizationId);
         }
 
         public async Task<IEnumerable<Product>> GetAllowanceTypes(int organizationID)

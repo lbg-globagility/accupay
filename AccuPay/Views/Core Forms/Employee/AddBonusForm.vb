@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Utils
 
 Public Class AddBonusForm
 
@@ -28,7 +29,7 @@ Public Class AddBonusForm
         EmployeePictureBox.Image = ConvByteToImage(_employee.Image)
 
         Dim productRepo = New ProductRepository
-        _products = Await productRepo.GetBonusTypes(z_OrganizationID)
+        _products = Await productRepo.GetBonusTypesAsync(z_OrganizationID)
 
         Dim bonusRepo = New BonusRepository
         _frequencies = bonusRepo.GetFrequencyList
@@ -73,9 +74,9 @@ Public Class AddBonusForm
         End If
     End Sub
 
-    Private Sub SaveButton_Click(sender As Object, e As EventArgs) Handles AddAndCloseButton.Click, AddAndNewButton.Click
+    Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles AddAndCloseButton.Click, AddAndNewButton.Click
         EmployeePictureBox.Focus() 'To lose focus on current control
-
+        Dim succeed As Boolean
         Dim messageTitle = ""
         If cbobontype.SelectedItem Is Nothing Then
             messageTitle = "Invalid Bonus Type"
@@ -93,7 +94,8 @@ Public Class AddBonusForm
         Dim product = _products.Where(Function(x) x.Name = cbobontype.Text).
                                  FirstOrDefault
         _newBonus = New Bonus
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync("New Award",
+        Async Function()
             With _newBonus
                 .ProductID = product.RowID
                 .AllowanceFrequency = cbobonfreq.SelectedItem.ToString
@@ -107,25 +109,25 @@ Public Class AddBonusForm
             End With
 
             Dim bonusRepo = New BonusRepository
-            bonusRepo.Create(_newBonus)
+            Await bonusRepo.CreateAsync(_newBonus)
 
             Dim userActivityRepo = New UserActivityRepository
             userActivityRepo.RecordAdd(z_User, "Bonus", CInt(_newBonus.RowID), z_OrganizationID)
-        Catch ex As Exception
-            MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
-            Return
-        End Try
+            succeed = True
+        End Function)
 
-        isSaved = True
-        showBalloon = True
+        If succeed Then
+            isSaved = True
 
-        If sender Is AddAndNewButton Then
-            ShowBalloonInfo("Bonus successfully added.", "Saved")
-            ClearForm()
-            showBalloon = False
-        Else
-            Me.Close()
+            If sender Is AddAndNewButton Then
+                ShowBalloonInfo("Bonus successfully added.", "Saved")
+                ClearForm()
+            Else
+                showBalloon = True
+                Me.Close()
+            End If
         End If
+
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
