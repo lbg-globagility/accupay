@@ -381,7 +381,6 @@
     <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
-    <Compile Include="Domain\User.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
       <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
     </Compile>
