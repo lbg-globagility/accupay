@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccuPay.Data.Helpers;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -46,5 +47,16 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
+    }
+
+    partial class User
+    {
+        public bool IsActive
+        {
+            get
+            {
+                return Status == UserConstants.ACTIVE_STATUS;
+            }
+        }
     }
 }
