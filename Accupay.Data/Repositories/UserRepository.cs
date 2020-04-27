@@ -37,6 +37,12 @@ namespace AccuPay.Data.Repositories
                 return this;
             }
 
+            public UserBuilder IsActive()
+            {
+                _query = _query.Where(u => u.IsActive);
+                return this;
+            }
+
             public UserBuilder IncludePosition()
             {
                 _query = _query.Include(u => u.Position);
@@ -69,6 +75,16 @@ namespace AccuPay.Data.Repositories
             using (var builder = new UserBuilder())
             {
                 return await builder.ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<User>> GetAllActiveAsync()
+        {
+            using (var builder = new UserBuilder())
+            {
+                return await builder.
+                    IsActive().
+                    ToListAsync();
             }
         }
 
