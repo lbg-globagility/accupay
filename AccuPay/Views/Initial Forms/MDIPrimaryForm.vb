@@ -514,20 +514,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-                            Case .GetAwardsTabPageIndex
-                                If .listofEditRowAward.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetCertificationTabPageIndex
-                                If .listofEditRowCert.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
                             Case .GetAttachmentTabPageIndex
                                 If .listofEditRoweatt.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)

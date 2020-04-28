@@ -26,6 +26,7 @@ namespace AccuPay.Data
         public virtual DbSet<PayCalendar> Calendars { get; set; }
         public virtual DbSet<CalendarDay> CalendarDays { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<DayType> DayTypes { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }

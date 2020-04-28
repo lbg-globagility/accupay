@@ -1,45 +1,47 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class AwardRepository
+    public class CertificationRepository
     {
-        public async Task DeleteAsync(Award award)
+        public async Task DeleteAsync(Certification certification)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Awards.Remove(award);
+                context.Certifications.Remove(certification);
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task CreateAsync(Award award)
+        public async Task CreateAsync(Certification certification)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Awards.Add(award);
+                context.Certifications.Add(certification);
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task UpdateAsync(Award award)
+        public async Task UpdateAsync(Certification certification)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Entry(award).State = EntityState.Modified;
+                context.Entry(certification).State = EntityState.Modified;
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task<IEnumerable<Award>> GetByEmployeeAsync(int employeeId)
+        public async Task<IEnumerable<Certification>> GetByEmployeeAsync(int employeeId)
         {
             using (var context = new PayrollContext())
             {
-                return await context.Awards.Where(l => l.EmployeeID == employeeId).ToListAsync();
+                return await context.Certifications.Where(l => l.EmployeeID == employeeId).ToListAsync();
             }
         }
     }
