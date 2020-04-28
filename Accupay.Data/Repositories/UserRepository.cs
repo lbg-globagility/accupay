@@ -4,8 +4,8 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
+using static AccuPay.Data.Helpers.UserConstants;
 
 namespace AccuPay.Data.Repositories
 {
@@ -34,6 +34,12 @@ namespace AccuPay.Data.Repositories
             public UserBuilder ById(int rowId)
             {
                 _query = _query.Where(u => u.RowID.Value == rowId);
+                return this;
+            }
+
+            public UserBuilder ByUsername(string username)
+            {
+                _query = _query.Where(u => u.UserID == username);
                 return this;
             }
 
@@ -88,11 +94,22 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<User>> GetAllActiveWithPositionAsync()
+        {
+            using (var builder = new UserBuilder())
+            {
+                return await builder.
+                    IncludePosition().
+                    IsActive().
+                    ToListAsync();
+            }
+        }
+
         #endregion User List
 
         #region By User
 
-        public async Task<User> GetById(int rowId)
+        public async Task<User> GetByIdAsync(int rowId)
         {
             using (var builder = new UserBuilder())
             {
@@ -102,13 +119,23 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<User> GetByIdWithPosition(int rowId)
+        public async Task<User> GetByIdWithPositionAsync(int rowId)
         {
             using (var builder = new UserBuilder())
             {
                 return await builder.
                     IncludePosition().
                     ById(rowId).
+                    FirstOrDefaultAsync();
+            }
+        }
+
+        public async Task<User> GetByUsernameAsync(string username)
+        {
+            using (var builder = new UserBuilder())
+            {
+                return await builder.
+                    ByUsername(username).
                     FirstOrDefaultAsync();
             }
         }
@@ -143,6 +170,20 @@ namespace AccuPay.Data.Repositories
                     // it will always be false
                     context.Users.AddRange(added);
                 }
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task SoftDeleteAsync(int id)
+        {
+            using (var context = new PayrollContext())
+            {
+                var user = await GetByIdAsync(id);
+
+                user.SetStatus(UserStatus.Inactive);
+
+                context.Entry(user).State = EntityState.Modified;
+
                 await context.SaveChangesAsync();
             }
         }
