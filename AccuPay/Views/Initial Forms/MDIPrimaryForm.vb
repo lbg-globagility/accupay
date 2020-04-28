@@ -1,5 +1,6 @@
 Imports System.Configuration
 Imports System.Threading
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo

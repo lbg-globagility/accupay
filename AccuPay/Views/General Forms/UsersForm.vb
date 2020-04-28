@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Services
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class UsersForm
@@ -36,7 +38,8 @@ Public Class UsersForm
                             dgvUserList.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
                             dgvUserList.Rows.Item(n).Cells(c_emailadd.Index).Value = .Item("EmailAddress").ToString
                             dgvUserList.Rows.Item(n).Cells(UserLevelColumn.Index).Value = .Item("UserLevel")
-                            dgvUserList.Rows.Item(n).Cells(UserLevelDescriptionColumn.Index).Value = UserLevelHelper.GetUserLevelDescription(.Item("UserLevel"))
+                            dgvUserList.Rows.Item(n).Cells(UserLevelDescriptionColumn.Index).Value = UserLevelHelper.
+                                                                                        GetUserLevelDescription(.Item("UserLevel"))
                             'dgvUserList.Rows.Item(n).Cells(5).Value = .Item("PositionID").ToString
                         Catch ex As Exception
 

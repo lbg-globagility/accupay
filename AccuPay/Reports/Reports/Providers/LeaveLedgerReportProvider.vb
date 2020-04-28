@@ -5,8 +5,6 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
@@ -218,7 +216,7 @@ Public Class LeaveLedgerReportProvider
         ' return LeaveLedgerReportModel object
         Return New LeaveLedgerReportModel(
             employeeNumber:=employee.EmployeeNo,
-            fullName:=NameHelper.FullNameWithMiddleNameInitialLastNameFirst(employee.FirstName, employee.MiddleName, employee.LastName),
+            fullName:=employee.FullNameWithMiddleInitialLastNameFirst,
             leaveType:=leaveType,
             beginningBalance:=leaveBeginningBalance,
             availedLeave:=totalAvailedLeave
