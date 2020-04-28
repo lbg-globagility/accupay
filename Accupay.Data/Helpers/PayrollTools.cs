@@ -200,7 +200,7 @@ namespace AccuPay.Data.Helpers
                 {
                     if (payperiods == null || payperiods.Count() == 0)
                         payperiods = context.PayPeriods.
-                                        Where(p => p.OrganizationID.Value == organizationId).
+                                        Where(p => p.OrganizationID == organizationId).
                                         Where(p => p.IsSemiMonthly);
 
                     if (isBenchmarkOwner)
@@ -244,10 +244,10 @@ namespace AccuPay.Data.Helpers
                 ecolaAllowance.EffectiveStartDate = timePeriod.Start;
                 ecolaAllowance.EffectiveEndDate = effectiveEndDate;
                 ecolaAllowance.Amount = amount;
+                ecolaAllowance.CreatedBy = userId;
+                ecolaAllowance.OrganizationID = organizationId;
 
-                await allowanceRepository.SaveAsync(organizationID: organizationId,
-                                                    userID: userId,
-                                                    allowance: ecolaAllowance);
+                await allowanceRepository.SaveAsync(ecolaAllowance);
 
                 ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId: employeeId,
                                                                             organizationId: organizationId,
@@ -264,14 +264,14 @@ namespace AccuPay.Data.Helpers
             var currentPayPeriodYear = currentPayPeriod?.Year;
 
             if (currentPayPeriodYear == null)
-                return null/* TODO Change to default(_) if this is not a reference type */;
+                return null;
 
             if (context == null)
                 context = new PayrollContext();
 
-            return await context.PayPeriods.Where(p => p.OrganizationID.Value == organizationId).
+            return await context.PayPeriods.Where(p => p.OrganizationID == organizationId).
+                                            Where(p => p.Year == currentPayPeriodYear).
                                             Where(p => p.IsSemiMonthly).
-                                            Where(p => p.Year == currentPayPeriodYear.Value).
                                             Where(p => p.IsFirstPayPeriodOfTheYear).
                                             FirstOrDefaultAsync();
         }
@@ -335,7 +335,8 @@ namespace AccuPay.Data.Helpers
                     return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
                 }
 
-                var payPeriod = await context.PayPeriods.FirstOrDefaultAsync(p => p.RowID.Value == payPeriodId.Value);
+                var payPeriod = await context.PayPeriods.
+                                FirstOrDefaultAsync(p => p.RowID == payPeriodId);
 
                 if (payPeriod == null)
                 {
@@ -344,9 +345,9 @@ namespace AccuPay.Data.Helpers
 
                 var otherProcessingPayPeriod = await context.Paystubs.
                                                             Include(p => p.PayPeriod).
-                                                            Where(p => p.PayPeriod.RowID.Value != payPeriodId.Value).
+                                                            Where(p => p.PayPeriod.RowID != payPeriodId).
                                                             Where(p => p.PayPeriod.IsClosed == false).
-                                                            Where(p => p.PayPeriod.OrganizationID.Value == organizationId).
+                                                            Where(p => p.PayPeriod.OrganizationID == organizationId).
                                                             FirstOrDefaultAsync();
 
                 if (payPeriod.IsClosed)
@@ -366,10 +367,10 @@ namespace AccuPay.Data.Helpers
         {
             using (PayrollContext context = new PayrollContext())
             {
-                var currentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.RowID.Value == payPeriodId);
+                var currentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.RowID == payPeriodId);
 
                 if (currentPayPeriod == null)
-                    return null/* TODO Change to default(_) if this is not a reference type */;
+                    return null;
 
                 return context.PayPeriods.
                                 Where(p => p.OrganizationID == currentPayPeriod.OrganizationID).
@@ -396,7 +397,7 @@ namespace AccuPay.Data.Helpers
             using (var context = new PayrollContext())
             {
                 var payrates = context.PayRates.
-                                    Where(p => p.OrganizationID.Value == organizationId).
+                                    Where(p => p.OrganizationID == organizationId).
                                     Where(p => threeDaysBeforeCutoff <= p.Date && p.Date <= payDateTo).
                                     ToList();
                 if (calculationBasis == PayRateCalculationBasis.Branch)

@@ -66,8 +66,10 @@ Public Class AddLoanScheduleForm
     Private Sub ResetForm()
         Me._newLoanSchedule = New LoanSchedule
         Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
-        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
+        Me._newLoanSchedule.OrganizationID = z_OrganizationID
+        Me._newLoanSchedule.CreatedBy = z_User
 
+        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
         Me._newLoanSchedule.Status = LoanScheduleRepository.STATUS_IN_PROGRESS
 
         Dim firstLoanType = Me._loanTypeList.FirstOrDefault()
@@ -180,10 +182,7 @@ Public Class AddLoanScheduleForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule,
-                                                        Me._loanTypeList,
-                                                        organizationId:=z_OrganizationID,
-                                                        userId:=z_User)
+                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
                 Dim repo As New UserActivityRepository
                 repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID.Value, z_OrganizationID)

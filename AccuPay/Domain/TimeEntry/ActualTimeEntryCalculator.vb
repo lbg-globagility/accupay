@@ -6,11 +6,11 @@ Imports PayrollSys
 
 Public Class ActualTimeEntryCalculator
 
-    Private ReadOnly _salary As Salary
+    Private ReadOnly _salary As Data.Entities.Salary
     Private ReadOnly _actualTimeEntries As IList(Of ActualTimeEntry)
     Private ReadOnly _policy As ActualTimeEntryPolicy
 
-    Public Sub New(salary As Salary, actualTimeEntries As IList(Of ActualTimeEntry), actualTimeEntryPolicy As ActualTimeEntryPolicy)
+    Public Sub New(salary As Data.Entities.Salary, actualTimeEntries As IList(Of ActualTimeEntry), actualTimeEntryPolicy As ActualTimeEntryPolicy)
         _salary = salary
         _actualTimeEntries = actualTimeEntries
         _policy = actualTimeEntryPolicy

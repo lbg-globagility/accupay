@@ -742,9 +742,9 @@ Public Class NewDivisionPositionForm
 
     Private Async Function SavePosition(messageTitle As String) As Task
 
+        Me._currentPosition.LastUpdBy = z_User
         Await _positionRepository.SaveAsync(Me._currentPosition,
                                             organizationId:=z_OrganizationID,
-                                            userId:=z_User,
                                             divisionId:=Me._currentPosition.DivisionID.Value)
 
         RecordUpdatePosition()
@@ -1160,7 +1160,8 @@ Public Class NewDivisionPositionForm
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
 
-        Await _divisionRepository.SaveAsync(division, organizationId:=z_OrganizationID, userId:=z_User)
+        division.LastUpdBy = z_User
+        Await _divisionRepository.SaveAsync(division, z_OrganizationID)
 
         If isRoot Then
             RecordUpdateDivisionLocation()

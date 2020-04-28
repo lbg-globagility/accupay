@@ -17,6 +17,7 @@ namespace AccuPay.Data.Repositories
                 Bonus.FREQUENCY_MONTHLY
             };
         }
+
         public IEnumerable<Bonus> GetByEmployee(int employeeID)
         {
             using (PayrollContext context = new PayrollContext())
@@ -32,7 +33,7 @@ namespace AccuPay.Data.Repositories
                 context.Bonuses.Attach(currentBonus);
                 context.Bonuses.Remove(currentBonus);
                 context.SaveChanges();
-            }  
+            }
         }
 
         public void Create(Bonus bonus)
@@ -52,6 +53,5 @@ namespace AccuPay.Data.Repositories
                 context.SaveChanges();
             }
         }
-
     }
 }

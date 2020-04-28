@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
@@ -34,8 +36,8 @@ Public Class AddLoanTypeForm
 
         Try
             Me.NewLoanType = Await _productRepository.AddLoanType(txtLoanName.Text,
-                                                                 organizationID:=z_OrganizationID,
-                                                                 userID:=z_User)
+                                                                 organizationId:=z_OrganizationID,
+                                                                 userId:=z_User)
 
             Me.IsSaved = True
 

@@ -118,7 +118,11 @@ Public Class TimeAttendanceHelperNew
             Dim earliestDate = {earliestLog, earliestLogDate}.Min
             Dim lastDate = {lastlog, lastLogDate}.Max
 
-            For Each currentDate In Calendar.EachDay(earliestDate, lastDate)
+            If earliestDate.HasValue = False OrElse lastDate.HasValue = False Then
+                Continue For
+            End If
+
+            For Each currentDate In Calendar.EachDay(earliestDate.Value, lastDate.Value)
 
                 Dim currentEmployeeLogs = employeeLogs.
                                             Where(Function(l) Nullable.Equals(l.LogDate, currentDate)).
@@ -646,7 +650,7 @@ Public Class TimeAttendanceHelperNew
         ElseIf currentDayEndTime IsNot Nothing Then
             'currentDayEndTime IsNot Nothing AndAlso nextDayStartDateTime Is Nothing
 
-            shiftMaxBound = currentDayEndTime.ToMaximumHourValue
+            shiftMaxBound = currentDayEndTime.ToMaximumHourValue.Value
 
             ''''OLD CODE BELOW
             'if no next day shift or over time but has

@@ -62,16 +62,16 @@ namespace AccuPay.Data.Entities
             using (var context = new PayrollContext())
             {
                 return context.PayPeriods.
-                                Where(p => p.OrganizationID.Value == this.OrganizationID.Value).
-                                Where(p => p.PayFrequencyID.Value == this.PayFrequencyID.Value).
+                                Where(p => p.OrganizationID == this.OrganizationID).
+                                Where(p => p.PayFrequencyID == this.PayFrequencyID).
                                 Where(p => p.PayFromDate > this.PayFromDate).
                                 OrderBy(p => p.PayFromDate).
                                 FirstOrDefault();
             }
         }
 
-        public bool IsSemiMonthly => PayFrequencyID.Value == PayrollTools.PayFrequencySemiMonthlyId;
-        public bool IsWeekly => PayFrequencyID.Value == PayrollTools.PayFrequencyWeeklyId;
+        public bool IsSemiMonthly => PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId;
+        public bool IsWeekly => PayFrequencyID == PayrollTools.PayFrequencyWeeklyId;
         public bool IsFirstHalf => Half == 1;
         public bool IsEndOfTheMonth => Half == 0;
 

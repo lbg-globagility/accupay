@@ -24,7 +24,7 @@
         'Do not modify it using the code editor.
         <System.Diagnostics.DebuggerStepThrough()>
         Private Sub InitializeComponent()
-            Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+            Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
             Me.AuditDataGridView = New System.Windows.Forms.DataGridView()
             Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
             Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -59,8 +59,8 @@
             'Column3
             '
             Me.Column3.DataPropertyName = "Details"
-            DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-            Me.Column3.DefaultCellStyle = DataGridViewCellStyle2
+            DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+            Me.Column3.DefaultCellStyle = DataGridViewCellStyle1
             Me.Column3.HeaderText = "Change"
             Me.Column3.Name = "Column3"
             '
@@ -71,7 +71,7 @@
             Me.ClientSize = New System.Drawing.Size(1184, 473)
             Me.Controls.Add(Me.AuditDataGridView)
             Me.Name = "TimeLogForm"
-            Me.Text = "TimeLogForm"
+            Me.Text = " "
             CType(Me.AuditDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
             Me.ResumeLayout(False)
 

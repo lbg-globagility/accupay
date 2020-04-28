@@ -252,6 +252,7 @@ Public Class EmployeeLoansForm
         For Each loanSchedule In Me._currentloanSchedules
 
             If CheckIfLoanScheduleIsChanged(loanSchedule) Then
+                loanSchedule.LastUpdBy = z_User
                 changedLoanSchedules.Add(loanSchedule)
             End If
 
@@ -270,10 +271,7 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
-                Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules,
-                                                            Me._loanTypeList,
-                                                            organizationId:=z_OrganizationID,
-                                                            userId:=z_User)
+                Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
 
                 For Each item In changedLoanSchedules
                     RecordUpdate(item)

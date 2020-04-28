@@ -21,8 +21,8 @@ Public Class newProdBonus
 
                 Dim productRepo = New ProductRepository
                 _newProduct = Await productRepo.AddBonusType(TextBox1.Text,
-                                                             organizationID:=z_OrganizationID,
-                                                             userID:=z_User,
+                                                             organizationId:=z_OrganizationID,
+                                                             userId:=z_User,
                                                              isTaxable:=chktaxab.Checked)
 
             End If

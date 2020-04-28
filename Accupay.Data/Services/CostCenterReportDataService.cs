@@ -25,6 +25,9 @@ namespace AccuPay.Data.Services
             this._selectedBranch = selectedBranch;
             this._organizationId = organizationId;
             this._userId = userId;
+
+            if (_selectedBranch?.RowID == null)
+                throw new Exception("Branch does not exists.");
         }
 
         public List<PayPeriodModel> GetData()
@@ -34,7 +37,7 @@ namespace AccuPay.Data.Services
             using (PayrollContext context = new PayrollContext())
             {
                 var payPeriods = context.PayPeriods.
-                                            Where(p => p.OrganizationID.Value == _organizationId).
+                                            Where(p => p.OrganizationID == _organizationId).
                                             Where(p => p.IsSemiMonthly).
                                             Where(p => p.Year == _selectedMonth.Year).
                                             Where(p => p.Month == _selectedMonth.Month).
@@ -48,18 +51,23 @@ namespace AccuPay.Data.Services
 
                 var timeEntries = context.TimeEntries.
                                             Include(t => t.Employee).
-                                            Where(t => t.Employee.OrganizationID.Value == _organizationId).
+                                            Where(t => t.Employee.OrganizationID == _organizationId).
                                             Where(t => t.Date >= startDate && t.Date <= endDate).
                                             ToList();
 
-                var employeesWithTimeEntriesInBranch = timeEntries.Where(t => t.BranchID != null).Where(t => t.BranchID.Value == _selectedBranch.RowID.Value).GroupBy(t => t.EmployeeID).Select(t => t.Key).ToArray();
+                var employeesWithTimeEntriesInBranch = timeEntries.
+                                                            Where(t => t.BranchID != null).
+                                                            Where(t => t.BranchID == _selectedBranch.RowID).
+                                                            GroupBy(t => t.EmployeeID).
+                                                            Select(t => t.Key).
+                                                            ToArray();
 
                 // Get all the employee in the branch
                 // Also get the employees that has at least 1 timelogs on the branch
                 var employees = context.Employees.
                                             Where(e => e.IsDaily).
                                             Where(e => (e.BranchID.HasValue &&
-                                                            e.BranchID.Value == _selectedBranch.RowID.Value) ||
+                                                            e.BranchID == _selectedBranch.RowID.Value) ||
                                                         employeesWithTimeEntriesInBranch.Contains(e.RowID.Value)).
                                             ToList();
 
@@ -69,31 +77,31 @@ namespace AccuPay.Data.Services
 
                 timeEntries = timeEntries.
                                 Where(t => t.BranchID != null).
-                                Where(t => t.BranchID.Value == _selectedBranch.RowID.Value).
+                                Where(t => t.BranchID == _selectedBranch.RowID).
                                 ToList();
 
                 var salaries = context.Salaries.
-                                        Where(s => s.OrganizationID.Value == _organizationId).
+                                        Where(s => s.OrganizationID == _organizationId).
                                         Where(s => s.EffectiveFrom <= startDate).
                                         ToList();
 
                 var employeePaystubs = context.Paystubs.
                                                 Include(p => p.ThirteenthMonthPay).
-                                                Where(p => p.PayPeriodID.Value == payPeriods[0].RowID.Value ||
-                                                                p.PayPeriodID.Value == payPeriods[1].RowID.Value).
+                                                Where(p => p.PayPeriodID == payPeriods[0].RowID ||
+                                                                p.PayPeriodID == payPeriods[1].RowID).
                                                 ToList();
 
                 var employeeMonthlyDeductions = GenerateMonthlyDeductionList(payPeriods, employees, employeePaystubs);
 
                 var hmoLoanType = new ProductRepository().
                                         GetOrCreateAdjustmentType(ProductConstant.HMO_LOAN,
-                                                                    organizationID: _organizationId,
-                                                                    userID: _userId);
+                                                                    organizationId: _organizationId,
+                                                                    userId: _userId);
 
                 var hmoLoans = context.LoanTransactions.
                                         Include(l => l.Paystub).
-                                        Where(l => l.PayPeriodID.Value == payPeriods[0].RowID
-                                                        || l.PayPeriodID.Value == payPeriods[1].RowID).
+                                        Where(l => l.PayPeriodID == payPeriods[0].RowID
+                                                        || l.PayPeriodID == payPeriods[1].RowID).
                                         ToList();
 
                 payPeriodModels = CreatePayPeriodModels(payPeriods, timeEntries, employees, salaries, employeePaystubs, employeeMonthlyDeductions, hmoLoans);
@@ -119,8 +127,11 @@ namespace AccuPay.Data.Services
 
             foreach (var employee in employees)
             {
+                if (employee.RowID == null)
+                    throw new Exception("Employee does not exists");
+
                 var employeePaystubs = allPaystubs.
-                                        Where(p => p.EmployeeID.Value == employee.RowID.Value).
+                                        Where(p => p.EmployeeID == employee.RowID).
                                         ToList();
 
                 if (employeePaystubs.Count > 2)
@@ -153,7 +164,13 @@ namespace AccuPay.Data.Services
                     }
                 }
 
-                employeeMonthlyDeductions.Add(MonthlyDeduction.Create(employeeId: employee.RowID.Value, sssAmount: sssAmount, ecAmount: ecAmount, hdmfAmount: hdmfAmount, philhealthAmount: philhealthAmount, thirteenthMonthPay: thirteenthMonthPay));
+                employeeMonthlyDeductions.Add(MonthlyDeduction.
+                                            Create(employeeId: employee.RowID.Value,
+                                                    sssAmount: sssAmount,
+                                                    ecAmount: ecAmount,
+                                                    hdmfAmount: hdmfAmount,
+                                                    philhealthAmount: philhealthAmount,
+                                                    thirteenthMonthPay: thirteenthMonthPay));
             }
 
             return employeeMonthlyDeductions;
@@ -183,7 +200,7 @@ namespace AccuPay.Data.Services
                     continue;
 
                 timeEntry.BranchID = employees.
-                            FirstOrDefault(e => e.RowID.Value == timeEntry.EmployeeID.Value)?.BranchID;
+                            FirstOrDefault(e => e.RowID == timeEntry.EmployeeID)?.BranchID;
             }
         }
 
@@ -193,11 +210,11 @@ namespace AccuPay.Data.Services
             foreach (var payPeriod in payPeriods)
             {
                 var payPeriodPaystubs = paystubs.
-                                            Where(p => p.PayPeriodID.Value == payPeriod.RowID.Value).
+                                            Where(p => p.PayPeriodID == payPeriod.RowID).
                                             ToList();
 
                 var payPeriodHmoLoans = hmoLoans.
-                                            Where(p => p.PayPeriodID.Value == payPeriod.RowID.Value).
+                                            Where(p => p.PayPeriodID == payPeriod.RowID).
                                             ToList();
 
                 var paystubModels = CreatePaystubModels(allTimeEntries,
@@ -227,25 +244,25 @@ namespace AccuPay.Data.Services
                 var timeEntries = allTimeEntries.
                                     Where(t => t.Date >= payPeriod.PayFromDate).
                                     Where(t => t.Date <= payPeriod.PayToDate).
-                                    Where(t => t.EmployeeID.Value == employee.RowID.Value).
+                                    Where(t => t.EmployeeID == employee.RowID).
                                     ToList();
 
                 var salary = salaries.
-                                Where(s => s.EmployeeID.Value == employee.RowID.Value).
+                                Where(s => s.EmployeeID == employee.RowID).
                                 Where(s => s.EffectiveFrom <= payPeriod.PayFromDate).
                                 OrderByDescending(s => s.EffectiveFrom).
                                 FirstOrDefault();
 
                 var paystub = paystubs.
-                                Where(p => p.EmployeeID.Value == employee.RowID.Value).
+                                Where(p => p.EmployeeID == employee.RowID).
                                 FirstOrDefault();
 
                 var monthlyDeduction = monthlyDeductions.
-                                        Where(d => d.EmployeeID == employee.RowID.Value).
+                                        Where(d => d.EmployeeID == employee.RowID).
                                         FirstOrDefault();
 
                 var hmoLoan = hmoLoans.
-                                Where(h => h.EmployeeID.Value == employee.RowID.Value).
+                                Where(h => h.EmployeeID == employee.RowID).
                                 FirstOrDefault();
 
                 var createdPaystubModel = PaystubModel.Create(employee,
@@ -374,13 +391,7 @@ namespace AccuPay.Data.Services
 
             private Employee Employee { get; set; }
 
-            private int EmployeeId
-            {
-                get
-                {
-                    return Employee.RowID.Value;
-                }
-            }
+            private int EmployeeId => Employee.RowID.Value;
 
             private string EmployeeName => Employee.FullNameWithMiddleInitialLastNameFirst.ToUpper() +
                                             " " +
@@ -397,14 +408,8 @@ namespace AccuPay.Data.Services
 
             private decimal HourlyRate
             {
-                get
-                {
-                    return AccuMath.CommercialRound(_hourlyRate);
-                }
-                set
-                {
-                    _hourlyRate = value;
-                }
+                get => AccuMath.CommercialRound(_hourlyRate);
+                set => _hourlyRate = value;
             }
 
             private decimal RegularPay => AccuMath.CommercialRound(_hourlyRate * RegularHours);

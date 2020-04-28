@@ -1,4 +1,6 @@
-﻿Imports System.Threading
+﻿Option Strict On
+
+Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
@@ -39,14 +41,18 @@ Public Class BpiInsurancePaymentReportProvider
 
         Dim bpiInsuranceProductID = (Await (New ProductRepository().
                                                 GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                                organizationID:=z_OrganizationID,
-                                                userID:=z_User))).RowID
+                                                organizationId:=z_OrganizationID,
+                                                userId:=z_User))).RowID
+
+        If bpiInsuranceProductID.HasValue = False Then
+            Throw New Exception("Cannot get BPI Insurance data.")
+        End If
 
         Using context = New PayrollContext
             Dim periods = context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                 Where(Function(p) p.Year = _selectedDate.Year).
                 Where(Function(p) p.Month = _selectedDate.Month).
-                Where(Function(p) p.PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId).
+                Where(Function(p) p.PayFrequencyID.Value = PayrollTools.PayFrequencySemiMonthlyId).
                 ToList
 
             Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()
@@ -54,7 +60,7 @@ Public Class BpiInsurancePaymentReportProvider
             Dim adjustmens = context.Adjustments.
                     Include(Function(a) a.Paystub.Employee).
                     Where(Function(a) periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
-                    Where(Function(a) bpiInsuranceProductID = a.ProductID.Value).
+                    Where(Function(a) bpiInsuranceProductID.Value = a.ProductID.Value).
                     ToList()
 
             If Not adjustmens.Any Then
@@ -92,7 +98,7 @@ Public Class BpiInsurancePaymentReportProvider
         Dim result As New BpiInsuranceDataSource With {
             .Column1 = e.EmployeeNo,
             .Column2 = fullName,
-            .Column3 = a.Sum(Function(adj) adj.Amount),
+            .Column3 = a.Sum(Function(adj) adj.Amount).ToString(),
             .Column4 = _selectedDate.ToShortDateString()}
 
         Return result

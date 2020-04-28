@@ -98,7 +98,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Function LoadPayrollDetails() As Task
         _salaries = Await _salaryRepository.
-                                        GetAllByCutOff(z_OrganizationID, _currentPayPeriod.PayFromDate)
+                                        GetAllByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)
 
         Await ShowEmployees()
 

@@ -79,7 +79,7 @@ namespace AccuPay.Data.Services
             {
                 value = _values?.FirstOrDefault(f => f.LIC == lic &&
                                                 f.OrganizationID != null &&
-                                                f.OrganizationID.Value == organizationId);
+                                                f.OrganizationID == organizationId);
 
                 if (value == null)
                     value = _values?.FirstOrDefault(f => f.LIC == lic);
@@ -99,7 +99,7 @@ namespace AccuPay.Data.Services
                 value = _values?.FirstOrDefault(f => f.Type == type &&
                                                     f.LIC == lic &&
                                                     f.OrganizationID != null &&
-                                                    f.OrganizationID.Value == organizationId);
+                                                    f.OrganizationID == organizationId);
 
                 if (value == null)
                     value = _values?.FirstOrDefault(f => f.Type == type && f.LIC == lic);
@@ -212,7 +212,7 @@ namespace AccuPay.Data.Services
 
         private string GetStringValue(string type, string lic)
         {
-            ListOfValue value = null/* TODO Change to default(_) if this is not a reference type */;
+            ListOfValue value = null;
 
             if (type == null)
                 value = _values?.FirstOrDefault(f => f.LIC == lic);

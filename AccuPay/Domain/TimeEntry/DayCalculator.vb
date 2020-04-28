@@ -40,7 +40,7 @@ Public Class DayCalculator
     End Sub
 
     Public Function Compute(currentDate As DateTime,
-                            salary As Salary,
+                            salary As Entities.Salary,
                             oldTimeEntries As IList(Of TimeEntry),
                             employeeShift As ShiftSchedule,
                             shiftSched As EmployeeDutySchedule,
@@ -498,7 +498,7 @@ Public Class DayCalculator
     Private Sub ComputePay(timeEntry As TimeEntry,
                            currentDate As Date,
                            currentShift As CurrentShift,
-                           salary As Salary,
+                           salary As Entities.Salary,
                            payrate As IPayrate,
                            hasWorkedLastDay As Boolean)
         If currentDate < _employee.StartDate Then
@@ -508,8 +508,8 @@ Public Class DayCalculator
             Return
         End If
 
-        Dim dailyRate = PayrollTools.GetDailyRate(salary, _employee)
-        Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+        Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(salary, _employee)
+        Dim hourlyRate = Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
         timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate
         timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate

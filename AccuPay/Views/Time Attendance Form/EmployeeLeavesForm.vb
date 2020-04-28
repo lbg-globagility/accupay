@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -171,9 +173,9 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
 
@@ -197,18 +199,22 @@ Public Class EmployeeLeavesForm
 
         Dim currentEmployee = GetSelectedEmployee()
 
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
         EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
         EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
         EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
 
-        VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance
-        SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance
+        VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance.ToString()
+        SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance.ToString()
 
-        VacationLeaveBalanceTextBox.Text = Await EmployeeData.GetVacationLeaveBalance(currentEmployee.RowID)
-        SickLeaveBalanceTextBox.Text = Await EmployeeData.GetSickLeaveBalance(currentEmployee.RowID)
+        VacationLeaveBalanceTextBox.Text = (Await EmployeeData.
+                                            GetVacationLeaveBalance(currentEmployee.RowID.Value)).
+                                            ToString()
+        SickLeaveBalanceTextBox.Text = (Await EmployeeData.
+                                            GetSickLeaveBalance(currentEmployee.RowID.Value)).
+                                            ToString()
 
         Await LoadLeaves(currentEmployee)
 
@@ -301,7 +307,7 @@ Public Class EmployeeLeavesForm
 
     End Function
 
-    Private Function RecordUpdate(newLeave As Leave)
+    Private Function RecordUpdate(newLeave As Leave) As Boolean
 
         Dim oldLeave =
             Me._changedLeaves.
@@ -314,56 +320,56 @@ Public Class EmployeeLeavesForm
         If newLeave.StartDate <> oldLeave.StartDate Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldLeave.RowID,
+                        .EntityId = oldLeave.RowID.Value,
                         .Description = $"Update leave start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'"
                         })
         End If
         If newLeave.EndDate <> oldLeave.EndDate Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'"
                        })
         End If
         If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'"
                        })
         End If
         If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'"
                        })
         End If
         If newLeave.Reason <> oldLeave.Reason Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave reason from '{oldLeave.Reason}' to '{newLeave.Reason}'"
                        })
         End If
         If newLeave.Comments <> oldLeave.Comments Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave comments from '{oldLeave.Comments}' to '{newLeave.Comments}'"
                        })
         End If
         If newLeave.LeaveType <> oldLeave.LeaveType Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'"
                        })
         End If
         If newLeave.Status <> oldLeave.Status Then
             changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
+                       .EntityId = oldLeave.RowID.Value,
                        .Description = $"Update leave status from '{oldLeave.Status}' to '{newLeave.Status}'"
                        })
         End If
@@ -381,10 +387,10 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
+                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID, z_OrganizationID)
+                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID.Value, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 
@@ -405,7 +411,11 @@ Public Class EmployeeLeavesForm
 
         End If
 
-        EndDatePicker.Value = Me._currentLeave.EndDate
+        If Me._currentLeave.EndDate.HasValue Then
+            EndDatePicker.Value = Me._currentLeave.EndDate.Value
+
+        End If
+
     End Sub
 
     Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
@@ -505,14 +515,13 @@ Public Class EmployeeLeavesForm
 
         Const messageTitle As String = "Delete Leave"
 
-        If Me._currentLeave Is Nothing OrElse
-            Me._currentLeave.RowID Is Nothing Then
+        If Me._currentLeave?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No leave selected!")
 
             Return
         End If
 
-        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID)
+        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID.Value)
 
         If currentLeave Is Nothing Then
 
@@ -548,6 +557,7 @@ Public Class EmployeeLeavesForm
                     Return
                 End If
 
+                item.LastUpdBy = z_User
                 changedLeaves.Add(item)
             End If
         Next
@@ -565,9 +575,9 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _leaveRepository.SaveManyAsync(changedLeaves,
-                                                                                organizationId:=z_OrganizationID,
-                                                                                userId:=z_User)
+                                            Await _leaveRepository.
+                                            SaveManyAsync(changedLeaves,
+                                                        organizationId:=z_OrganizationID)
 
                                             For Each item In changedLeaves
                                                 RecordUpdate(item)

@@ -2273,7 +2273,7 @@ Public Class EmployeeForm
                     txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
                     txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
                     txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                    If IsDBNull(.Cells("ATMNo").Value) OrElse .Cells("ATMNo").Value Is Nothing OrElse .Cells("ATMNo").Value Is Nothing Then
+                    If String.IsNullOrWhiteSpace(txtATM.Text) Then
                         rdbCash.Checked = True
                         rdbDirectDepo.Checked = False
                     Else

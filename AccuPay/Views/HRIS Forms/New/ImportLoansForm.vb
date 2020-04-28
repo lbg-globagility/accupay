@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Extensions
@@ -71,6 +73,7 @@ Public Class ImportLoansForm
 
         For Each record In records
 
+            'TODO: this is an N+1 query problem. Refactor this
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
             If employee Is Nothing Then
@@ -92,8 +95,8 @@ Public Class ImportLoansForm
             End If
 
             Dim loanType = Await Me._productRepository.GetOrCreateLoanType(record.LoanName,
-                                                                    organizationID:=z_OrganizationID,
-                                                                    userID:=z_User)
+                                                                    organizationId:=z_OrganizationID,
+                                                                    userId:=z_User)
 
             If loanType Is Nothing Then
 
@@ -123,26 +126,28 @@ Public Class ImportLoansForm
                 Continue For
 
             End If
-            '.Employee = employee,
 
+            'TODO: use a ViewModel instead of showing the entity to the gridview
+            'problems with detaching Employee
             Dim loanSchedule = New LoanSchedule With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
+                .Employee = employee,
                 .LoanNumber = record.LoanNumber,
                 .Comments = record.Comments,
-                .TotalLoanAmount = record.TotalLoanAmount,
-                .TotalBalanceLeft = record.TotalBalanceLeft,
-                .DedEffectiveDateFrom = record.StartDate,
-                .DeductionAmount = record.DeductionAmount,
+                .TotalLoanAmount = record.TotalLoanAmount.Value,
+                .TotalBalanceLeft = record.TotalBalanceLeft.Value,
+                .DedEffectiveDateFrom = record.StartDate.Value,
+                .DeductionAmount = record.DeductionAmount.Value,
                 .DeductionPercentage = 0,
                 .LoanName = record.LoanName,
                 .LoanTypeID = loanType.RowID,
                 .Status = LoanScheduleRepository.STATUS_IN_PROGRESS,
                 .DeductionSchedule = deductionSchedule,
-                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount, record.DeductionAmount),
-                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft, record.DeductionAmount)
+                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount.Value, record.DeductionAmount.Value),
+                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft.Value, record.DeductionAmount.Value)
             }
 
             _loans.Add(loanSchedule)
@@ -237,16 +242,14 @@ Public Class ImportLoansForm
                 Next
 
                 Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject,
-                                                            Me._loanTypeList,
-                                                            organizationId:=z_OrganizationID,
-                                                            userId:=z_User)
+                                                            Me._loanTypeList)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In loansWithOutEmployeeObject
                     importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new loan.",
-                        .EntityId = item.RowID
+                        .EntityId = item.RowID.Value
                         })
                 Next
 

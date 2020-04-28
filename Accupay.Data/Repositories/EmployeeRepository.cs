@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -11,6 +12,34 @@ namespace AccuPay.Data.Repositories
 {
     public class EmployeeRepository
     {
+        #region CRUD
+
+        public async Task SaveManyAsync(List<Employee> employees)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                var updated = employees.Where(e => e.RowID.HasValue).ToList();
+                if (updated.Any())
+                {
+                    updated.ForEach(x => context.Entry(x).State = EntityState.Modified);
+                }
+
+                var added = employees.Where(e => !e.RowID.HasValue).ToList();
+                if (added.Any())
+                {
+                    // this adds a value to RowID (int minimum value)
+                    // so if there is a code checking for null to RowID
+                    // it will always be false
+                    context.Employees.AddRange(added);
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+
+        #endregion CRUD
+
+        #region Queries
+
         public class EmployeeBuilder : IDisposable
         {
             private PayrollContext _context;
@@ -52,7 +81,8 @@ namespace AccuPay.Data.Repositories
 
             public EmployeeBuilder ByEmployeeNumber(string employeeNumber)
             {
-                _query = _query.Where(x => x.EmployeeNo == employeeNumber);
+                _query = _query.Where(x => x.EmployeeNo.Trim().ToLower() ==
+                                            employeeNumber.ToTrimmedLowerCase());
                 return this;
             }
 
@@ -139,12 +169,13 @@ namespace AccuPay.Data.Repositories
 
             private Expression<Func<Employee, bool>> CheckIfEmployeeHasPaystub(int payPeriodId, bool expected)
             {
-                return e => _context.Paystubs.Any(p => p.EmployeeID.Value == e.RowID.Value &&
-                                                       p.PayPeriodID.Value == payPeriodId) == expected;
+                return e => _context.Paystubs.
+                                        Any(p => p.EmployeeID == e.RowID &&
+                                            p.PayPeriodID == payPeriodId) == expected;
             }
         }
 
-        #region Employee List
+        #region List of entities
 
         public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
         {
@@ -184,7 +215,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
+            using (var builder = new EmployeeBuilder(organizationId))
             {
                 return await builder.IncludePosition().ToListAsync();
             }
@@ -197,16 +228,6 @@ namespace AccuPay.Data.Repositories
                 return builder.IncludePosition().
                                 IsActive().
                                 ToList();
-            }
-        }
-
-        public async Task<IEnumerable<Employee>> GetAllActiveWithPositionAsync(int organizationId)
-        {
-            using (var builder = new EmployeeBuilder(organizationId))
-            {
-                return await builder.IncludePosition().
-                                    IsActive().
-                                    ToListAsync();
             }
         }
 
@@ -259,25 +280,15 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        #endregion Employee List
+        #endregion List of entities
 
-        #region By Employee
+        #region Single entity
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
             using (var builder = new EmployeeBuilder())
             {
                 return await builder.GetByIdAsync(employeeId);
-            }
-        }
-
-        public async Task<Employee> GetByIdWithPayFrequencyAsync(int employeeId)
-        {
-            using (var builder = new EmployeeBuilder())
-            {
-                return await builder.
-                                IncludePayFrequency().
-                                GetByIdAsync(employeeId);
             }
         }
 
@@ -293,14 +304,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
-            using (var builder = new EmployeeBuilder(organizationId))
+            using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
             {
                 return await builder.ByEmployeeNumber(employeeNumber).
                                     FirstOrDefaultAsync();
             }
         }
 
-        #endregion By Employee
+        #endregion Single entity
+
+        #region Others
 
         public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
         {
@@ -316,10 +329,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        #endregion Others
+
+        #endregion Queries
+
+        #region TODO: Move to service
+
         public async Task<IEnumerable<Employee>> SearchSimpleLocal(IEnumerable<Employee> employees, string searchValue)
         {
             if (employees == null || employees.Count() == 0)
                 return employees;
+
+            searchValue = searchValue.ToLower();
 
             Func<Employee, bool> matchCriteria = (Employee employee) =>
             {
@@ -335,30 +356,6 @@ namespace AccuPay.Data.Repositories
             return await Task.Run(() => employees.Where(matchCriteria).ToList());
         }
 
-        #region CRUD
-
-        public async Task SaveManyAsync(int organizationID, int userID, List<Employee> employees)
-        {
-            using (PayrollContext context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
-            {
-                var updated = employees.Where(e => e.RowID.HasValue).ToList();
-                if (updated.Any())
-                {
-                    updated.ForEach(x => context.Entry(x).State = EntityState.Modified);
-                }
-
-                var added = employees.Where(e => !e.RowID.HasValue).ToList();
-                if (added.Any())
-                {
-                    // this adds a value to RowID (int minimum value)
-                    // so if there is a code checking for null to RowID
-                    // it will always be false
-                    context.Employees.AddRange(added);
-                }
-                await context.SaveChangesAsync();
-            }
-        }
-
-        #endregion CRUD
+        #endregion TODO: Move to service
     }
 }

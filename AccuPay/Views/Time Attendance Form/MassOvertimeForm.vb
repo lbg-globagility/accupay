@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Tools
 
 Public Class MassOvertimeForm
@@ -225,7 +226,10 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
-        Dim overtimes = overtimeRepository.GetByEmployeeIDsBetweenDate(z_OrganizationID, employeeIds, startDate:=dateFrom, endDate:=dateTo)
+        Dim overtimes = overtimeRepository.
+                            GetAllByEmployeeIDsAndDatePeriod(z_OrganizationID,
+                                                            New TimePeriod(dateFrom, dateTo),
+                                                            employeeIds)
 
         Return overtimes.
             GroupBy(Function(o) o.EmployeeID).
@@ -303,7 +307,12 @@ Public Class MassOvertimePresenter
             Select(Function(ot) ConverToOvertime(ot)).
             ToList()
 
-        If changedOvertimes.Any Then Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, changedOvertimes)
+        If changedOvertimes.Any Then
+
+            changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
+            Await overtimeRepository.SaveManyAsync(changedOvertimes)
+
+        End If
 
         Dim deletableOvertimeIDs = _models.
             Where(Function(ot) ot.IsDelete).
