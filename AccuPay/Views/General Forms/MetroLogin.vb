@@ -1,10 +1,18 @@
 ﻿Imports AccuPay.Data.Enums
+﻿Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class MetroLogin
+    Private _userRepository As UserRepository
+
+    Private _organizationRepository As OrganizationRepository
+    Private err_count As Integer
+    Private freq As String
 
     Protected Overrides Sub OnLoad(e As EventArgs)
+        _userRepository = New UserRepository()
+        _organizationRepository = New OrganizationRepository
 
         ReloadOrganization()
 
@@ -105,13 +113,13 @@ Public Class MetroLogin
 
     End Sub
 
-    Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
+    Async Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
 
         btnlogin.Enabled = False
 
-        Dim n_edUserID As New EncryptData(txtbxUserID.Text)
+        Dim n_edUserID As New EncryptString(txtbxUserID.Text)
 
-        Dim n_edPWord As New EncryptData(txtbxPword.Text)
+        Dim n_edPWord As New EncryptString(txtbxPword.Text)
 
         Dim n_ReadSQLFunction As New ReadSQLFunction("user_improper_out",
                                                      "return_val",
@@ -121,9 +129,7 @@ Public Class MetroLogin
 
         z_User = UserAuthentication(n_edPWord.ResultValue)
 
-        Console.WriteLine(DecrypedData("¯õæøøüô÷"))
-
-        Static err_count As SByte = 0
+        Console.WriteLine(DecryptData("¯õæøøüô÷"))
 
         If z_User > 0 Then
 
@@ -167,8 +173,6 @@ Public Class MetroLogin
 
                 End If
 
-                Static freq As Integer = -1
-
                 If cbxorganiz.SelectedIndex <> -1 Then
 
                     numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
@@ -195,7 +199,7 @@ Public Class MetroLogin
 
                 If orgztnID <> Nothing Then
 
-                    If CheckIfAuthorizedByUserLevel() Then
+                    If Await CheckIfAuthorizedByUserLevel() Then
                         MDIPrimaryForm.Show()
                     End If
 
@@ -229,56 +233,51 @@ Public Class MetroLogin
         btnlogin.Enabled = True
     End Sub
 
-    Private Function CheckIfAuthorizedByUserLevel() As Boolean
+    Private Async Function CheckIfAuthorizedByUserLevel() As Threading.Tasks.Task(Of Boolean)
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-        Using context As New PayrollContext
+        If user Is Nothing Then
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+            MessageBoxHelper.ErrorMessage("User does not exists.")
+            Return False
+        End If
 
-            If user Is Nothing Then
+        Dim settings = ListOfValueCollection.Create()
 
-                MessageBoxHelper.ErrorMessage("User does not exists.")
-                Return False
-            End If
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            Return True
+        End If
 
-            Dim settings = ListOfValueCollection.Create()
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-                Return True
-            End If
-
-            If user.UserLevel = UserLevel.One OrElse
+        If user.UserLevel = UserLevel.One OrElse
                 user.UserLevel = UserLevel.Two OrElse
                 user.UserLevel = UserLevel.Four OrElse
                 user.UserLevel = UserLevel.Five Then
 
+            Return True
+
+        End If
+
+        Dim organization = _organizationRepository.FindById(z_OrganizationID)
+
+        If organization Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Organization does not exists.")
+            Return False
+        End If
+
+        If user.UserLevel = UserLevel.Three Then
+
+            If organization.IsAgency = True Then
+
                 Return True
+            Else
 
-            End If
-
-            Dim organization = context.Organizations.FirstOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
-
-            If organization Is Nothing Then
-
-                MessageBoxHelper.ErrorMessage("Organization does not exists.")
+                MessageBoxHelper.ErrorMessage("You are not authorized to access this organization.")
                 Return False
-            End If
-
-            If user.UserLevel = UserLevel.Three Then
-
-                If organization.IsAgency = True Then
-
-                    Return True
-                Else
-
-                    MessageBoxHelper.ErrorMessage("You are not authorized to access this organization.")
-                    Return False
-
-                End If
 
             End If
 
-        End Using
+        End If
 
         Return False
 
@@ -287,7 +286,7 @@ Public Class MetroLogin
     Function UserAuthentication(Optional pass_word As Object = Nothing)
         Dim n_ReadSQLFunction As New ReadSQLFunction("UserAuthentication",
                                                      "returnvaue",
-                                                     New EncryptData(txtbxUserID.Text).ResultValue,
+                                                     New EncryptString(txtbxUserID.Text).ResultValue,
                                                      pass_word,
                                                      orgztnID)
 
@@ -447,7 +446,7 @@ Public Class MetroLogin
 
 End Class
 
-Friend Class EncryptData
+Friend Class EncryptString
 
     Dim n_ResultValue = Nothing
 

@@ -1,6 +1,7 @@
 Imports System.Configuration
 Imports System.Threading
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo
@@ -32,6 +33,8 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_hyundai As Boolean
 
     Private sys_ownr As New SystemOwnerService()
+
+    Private _userRepository As UserRepository
 
     Sub New()
         ' This call is required by the designer.
@@ -259,6 +262,8 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _userRepository = New UserRepository()
+
         Try
             PrepareForm(sender, e)
         Catch ex As Exception
@@ -290,44 +295,40 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Private Sub RestrictByUserLevel()
+    Private Async Sub RestrictByUserLevel()
 
-        Using context As New PayrollContext
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = ListOfValueCollection.Create()
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            Return
 
-                Return
+        End If
 
-            End If
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+            GeneralToolStripButton.Visible = False
+            PayrollToolStripButton.Visible = False
+            ReportsToolStripButton.Visible = False
 
-                GeneralToolStripButton.Visible = False
-                PayrollToolStripButton.Visible = False
-                ReportsToolStripButton.Visible = False
+            LoanBalanceCollapsibleGroupBox.Visible = False
+            NegativePayslipsCollapsibleGroupBox.Visible = False
+            PendingOfficialBusinessCollapsibleGroupBox.Visible = False
 
-                LoanBalanceCollapsibleGroupBox.Visible = False
-                NegativePayslipsCollapsibleGroupBox.Visible = False
-                PendingOfficialBusinessCollapsibleGroupBox.Visible = False
+            If user.UserLevel = UserLevel.Five Then
 
-                If user.UserLevel = UserLevel.Five Then
-
-                    TimeToolStripButton.Visible = False
-
-                End If
+                TimeToolStripButton.Visible = False
 
             End If
 
-        End Using
+        End If
 
     End Sub
 
@@ -915,28 +916,25 @@ Public Class MDIPrimaryForm
         End If
     End Sub
 
-    Private Sub RestrictDashboardByPrivilege()
+    Private Async Sub RestrictDashboardByPrivilege()
 
-        Using context As New PayrollContext
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = ListOfValueCollection.Create()
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            RestrictByPosition()
+        Else
 
-                RestrictByPosition()
-            Else
+            RestrictByUserLevel()
 
-                RestrictByUserLevel()
-
-            End If
-        End Using
+        End If
 
     End Sub
 

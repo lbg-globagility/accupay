@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Data.Enums
+﻿Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
@@ -11,6 +12,8 @@ Public Class TimeAttendForm
     Private sys_ownr As New SystemOwnerService
 
     Private lRepo As Data.Repositories.ListOfValueRepository
+
+    Private _userRepository As UserRepository
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -103,6 +106,8 @@ Public Class TimeAttendForm
     End Sub
 
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _userRepository = New UserRepository()
+
         Dim checker = FeatureListChecker.Instance
         MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
@@ -127,39 +132,35 @@ Public Class TimeAttendForm
         TimeEntToolStripMenuItem.Visible = Not _bool
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
 
-        Using context As New PayrollContext
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = ListOfValueCollection.Create()
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            Return
 
-                Return
+        End If
 
-            End If
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+            LeaveToolStripMenuItem.Visible = False
+            OfficialBusinessToolStripMenuItem.Visible = False
 
-                LeaveToolStripMenuItem.Visible = False
-                OfficialBusinessToolStripMenuItem.Visible = False
+            If user.UserLevel = UserLevel.Five Then
 
-                If user.UserLevel = UserLevel.Five Then
-
-                    OvertimeToolStripMenuItem.Visible = False
-
-                End If
+                OvertimeToolStripMenuItem.Visible = False
 
             End If
 
-        End Using
+        End If
 
     End Sub
 

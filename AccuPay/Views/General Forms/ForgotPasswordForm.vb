@@ -11,7 +11,7 @@ Public Class ForgotPasswordForm
 
         End If
 
-        Dim emailadd As String = getStringItem("Select EmailAddress from user where UserID = '" & EncrypedData(txtUserID.Text) & "'")
+        Dim emailadd As String = getStringItem("Select EmailAddress from user where UserID = '" & mdlValidation.EncryptData(txtUserID.Text) & "'")
         Dim getemailadd As String = emailadd
 
         If emailadd = "" Then
@@ -20,8 +20,8 @@ Public Class ForgotPasswordForm
         End If
 
         Try
-            Dim pw As String = getStringItem("Select Password from user where userid = '" & EncrypedData(txtUserID.Text) & "'")
-            Dim getpw As String = DecrypedData(pw)
+            Dim pw As String = getStringItem("Select Password from user where userid = '" & mdlValidation.EncryptData(txtUserID.Text) & "'")
+            Dim getpw As String = DecryptData(pw)
 
             SendEmail(emailadd, getpw)
 

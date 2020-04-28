@@ -62,6 +62,8 @@ Public Class TimeEntrySummaryForm
 
     Private _policy As PolicyHelper
 
+    Private _userRepository As Repositories.UserRepository
+
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         _formHasLoaded = True
@@ -75,6 +77,8 @@ Public Class TimeEntrySummaryForm
         _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
 
         _employeeRepository = New Repositories.EmployeeRepository()
+
+        _userRepository = New Repositories.UserRepository()
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -105,27 +109,23 @@ Public Class TimeEntrySummaryForm
         CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
 
-    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
-        Using context As New PayrollContext
+    Private Async Sub CheckIfMoneyColumnsAreGoingToBeHidden()
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If _policy.UseUserLevel = False Then
 
-            If _policy.UseUserLevel = False Then
+            Return
 
-                Return
+        End If
 
-            End If
-
-            _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
+        _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
                                 user.UserLevel <> UserLevel.Two AndAlso
                                 user.UserLevel <> UserLevel.Three
-
-        End Using
     End Sub
 
     Private Function GetBreakTimeBrackets() As List(Of Entities.BreakTimeBracket)

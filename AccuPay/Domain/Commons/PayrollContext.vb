@@ -75,8 +75,6 @@ Public Class PayrollContext
 
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
-    Public Overridable Property Users As DbSet(Of User)
-
     Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
 
     Public Sub New()

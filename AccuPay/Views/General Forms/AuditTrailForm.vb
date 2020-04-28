@@ -13,7 +13,7 @@
             If cbUserID.Text = "All" Then
                 userid = ""
             Else
-                userid = " And usr.UserID = '" & EncrypedData(cbUserID.Text) & "' "
+                userid = " And usr.UserID = '" & mdlValidation.EncryptData(cbUserID.Text) & "' "
             End If
             Dim dt As New DataTable
             dt = getDataTableForSQL("Select * From AuditTrail aud inner join user usr on aud.LastUpdBy = usr.RowID " & _
@@ -31,7 +31,7 @@
                     Dim n As Integer = dgvAuditList.Rows.Add()
                     With dr
                         dgvAuditList.Rows.Item(n).Cells(0).Value = CDate(.Item("lastupd")).ToString
-                        dgvAuditList.Rows.Item(n).Cells(1).Value = DecrypedData(.Item("UserID"))
+                        dgvAuditList.Rows.Item(n).Cells(1).Value = DecryptData(.Item("UserID"))
                         dgvAuditList.Rows.Item(n).Cells(2).Value = .Item("FieldChanged")
                         dgvAuditList.Rows.Item(n).Cells(3).Value = .Item("ChangedRowID")
                         dgvAuditList.Rows.Item(n).Cells(4).Value = .Item("OldValue")

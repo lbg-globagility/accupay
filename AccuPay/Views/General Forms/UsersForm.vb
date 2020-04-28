@@ -1,112 +1,65 @@
 ﻿Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class UsersForm
-    Dim isNew As Integer = 0
+    Private isNew As Boolean = False
     Dim rowid As Integer
+
+    Private userRepo As New UserRepository
+
+    Private dataSource As List(Of UserBoundItem)
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OjbAssignNoContextMenu(cmbPosition)
 
+        dgvUserList.AutoGenerateColumns = False
+
         MyBase.OnLoad(e)
 
     End Sub
 
-    Private Sub fillUsers()
+    Private Async Sub FillUsers()
+        Dim users = Await userRepo.GetAllActiveWithPositionAsync()
 
-        Try
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select u.RowID, u.UserID, p.PositionName, u.LastName, u.Firstname, u.MiddleName, u.RowID, u.EmailAddress, u.UserLevel from User u " &
-                                    " inner join Position p on u.PositionID = p.RowID WHERE u.Status <> 'Inactive' ORDER BY u.Rowid ASC;")
+        Dim source = users.Select(Function(u) New UserBoundItem(u))
+        dataSource = source.ToList()
+        'dataSource = New BindingList(Of UserBoundItem)
+        'For Each s In source
+        '    dataSource.Add(s)
+        'Next
 
-            'Where u.OrganizationID = '" & Z_OrganizationID & "' And Status = 'Active'
+        dgvUserList.DataSource = dataSource
 
-            dgvUserList.Rows.Clear()
-            If dt.Rows.Count > 0 Then
-                For Each drow As DataRow In dt.Rows
-                    Dim n As Integer = dgvUserList.Rows.Add()
-                    With drow
-                        Try
-                            dgvUserList.Rows.Item(n).Cells(c_userid.Index).Value = DecrypedData(.Item("UserID").ToString)
-                            dgvUserList.Rows.Item(n).Cells(c_Position.Index).Value = .Item("PositionName").ToString
-                            dgvUserList.Rows.Item(n).Cells(c_lname.Index).Value = .Item("LastName").ToString
-                            dgvUserList.Rows.Item(n).Cells(c_fname.Index).Value = .Item("FirstName").ToString
-                            dgvUserList.Rows.Item(n).Cells(c_Mname.Index).Value = .Item("MiddleName").ToString
-                            dgvUserList.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
-                            dgvUserList.Rows.Item(n).Cells(c_emailadd.Index).Value = .Item("EmailAddress").ToString
-                            dgvUserList.Rows.Item(n).Cells(UserLevelColumn.Index).Value = .Item("UserLevel")
-                            dgvUserList.Rows.Item(n).Cells(UserLevelDescriptionColumn.Index).Value = UserLevelHelper.
-                                                                                        GetUserLevelDescription(.Item("UserLevel"))
-                            'dgvUserList.Rows.Item(n).Cells(5).Value = .Item("PositionID").ToString
-                        Catch ex As Exception
-
-                        End Try
-
-                    End With
-                Next
-            End If
-
-            If dgvUserList.Rows.Count = 0 Then
-            Else
-                DisplayValue(dgvUserList.CurrentRow.Cells(c_rowid.Index).Value)
-
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, "Error code fillUsers")
-        End Try
+        DisplayValue()
     End Sub
 
-    Private Function DisplayValue(ByVal UserID As Integer) As Boolean
-        Try
-            txtPassword.Clear()
-            txtConfirmPassword.Clear()
-            If dgvUserList.Rows.Count = 0 Then
-            Else
-                Dim dt As New DataTable
-                dt = getDataTableForSQL("select * from user where RowID = " & UserID & ";") ' And OrganizationID = " & z_OrganizationID & "
-                For Each drow As DataRow In dt.Rows
-                    With drow
-                        Dim posID As Integer = .Item("PositionID").ToString
+    Private Sub DisplayValue()
+        Dim user = GetUserBoundItem()
+        If user Is Nothing Then Return
 
-                        Dim n_SQLQueryToDatatable As _
-                            New SQLQueryToDatatable(
-                                String.Concat("CALL USER_dropdownposition(", orgztnID, ",", UserID, ");"))
-                        cboxposition.ValueMember = n_SQLQueryToDatatable.ResultTable.Columns(0).ColumnName
-                        cboxposition.DisplayMember = n_SQLQueryToDatatable.ResultTable.Columns(1).ColumnName
-                        cboxposition.DataSource = n_SQLQueryToDatatable.ResultTable
+        With user
+            txtUserName.Text = .UserID
+            txtPassword.Text = DecryptData(.Password)
+            txtConfirmPassword.Text = txtPassword.Text
+            txtConfirmPassword.Tag = txtConfirmPassword.Text
+            txtLastName.Text = .LastName
+            txtFirstName.Text = .FirstName
+            txtMiddleName.Text = .MiddleName
+            txtEmailAdd.Text = .EmailAddress
+            cmbPosition.Text = .PositionName
+            cboxposition.SelectedValue = .PositionID
 
-                        Dim postname As String = getStringItem("Select PositionName from position where rowID = '" & posID & "'")
-                        Dim getpostname As String = postname
-                        txtUserName.Text = DecrypedData(.Item("UserID").ToString)
-                        txtPassword.Text = DecrypedData(.Item("Password").ToString)
-                        txtConfirmPassword.Text = txtPassword.Text
-                        txtConfirmPassword.Tag = txtConfirmPassword.Text
-                        txtLastName.Text = .Item("LastName").ToString
-                        txtFirstName.Text = .Item("FirstName").ToString
-                        txtMiddleName.Text = .Item("Middlename").ToString
-                        txtEmailAdd.Text = .Item("EmailAddress").ToString
-                        cmbPosition.Text = getpostname
-                        cboxposition.SelectedValue = posID
+            UserLevelComboBox.SelectedIndex = .UserLevel
 
-                        UserLevelComboBox.SelectedIndex = .Item("UserLevel")
+            rowid = .RowID
+        End With
 
-                        rowid = .Item("RowID")
-
-                    End With
-
-                Next
-
-            End If
-
-            Return True
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, "Error code DisplayValue")
-        End Try
-        Return True
-    End Function
+    End Sub
 
     Sub fillPosition()
 
@@ -169,7 +122,6 @@ Public Class UsersForm
         cleartextbox()
         btnNew.Enabled = False
         dgvUserList.Enabled = False
-        isNew = 1
 
     End Sub
 
@@ -177,13 +129,18 @@ Public Class UsersForm
         cleartextbox()
         btnNew.Enabled = True
         dgvUserList.Enabled = True
+
         Z_ErrorProvider.Dispose()
+
+        btnCancel.Enabled = False
+        FillUsers()
+        btnCancel.Enabled = True
     End Sub
 
     Dim dontUpdate As SByte = 0
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        If isNew = 1 Then
+    Private Sub btnSave_Click(sender As Object, e As EventArgs)
+        If isNew Then
             Z_ErrorProvider.Dispose()
 
             If txtLastName.Text.Trim.Length = 0 Or txtFirstName.Text.Trim.Length = 0 Or txtUserName.Text.Trim.Length = 0 Or txtPassword.Text.Trim.Length = 0 _
@@ -198,9 +155,9 @@ Public Class UsersForm
                 Dim getposition As Integer = Val(position) 'ValNoComma(cboxposition.SelectedValue)
 
                 Dim status As String = "Active"
-                Dim userid As String = getStringItem("Select UserID from user Where UserID = '" & EncrypedData(txtUserName.Text) & "' AND OrganizationID = '" & z_OrganizationID & "'")
+                Dim userid As String = getStringItem("Select UserID from user Where UserID = '" & EncryptData(txtUserName.Text) & "' AND OrganizationID = '" & z_OrganizationID & "'")
                 Dim getuserid As String = userid
-                If getuserid = EncrypedData(txtUserName.Text) Then
+                If getuserid = EncryptData(txtUserName.Text) Then
                     SetWarning(txtUserName, "User ID Already exist.")
                     'myBalloonWarn("User ID Already exist.", "Duplicate", txtUserName, , -65)
                 Else
@@ -208,8 +165,8 @@ Public Class UsersForm
                         I_UsersProc(txtLastName.Text,
                                     txtFirstName.Text,
                                     txtMiddleName.Text,
-                               EncrypedData(txtUserName.Text),
-                                    EncrypedData(txtConfirmPassword.Text),
+                               EncryptData(txtUserName.Text),
+                                    EncryptData(txtConfirmPassword.Text),
                                z_OrganizationID,
                                     getposition,
                                     Date.Now.ToString("yyyy-MM-dd HH:mm:ss"),
@@ -222,10 +179,9 @@ Public Class UsersForm
                         'audittrail(
 
                         myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
-                        fillUsers()
+                        FillUsers()
                         btnNew.Enabled = True
                         dgvUserList.Enabled = True
-                        isNew = 0
                     Else
                         SetWarning(txtConfirmPassword, "Password does not match.")
                         'myBalloonWarn("Password does not match", "Not Match", txtConfirmPassword, , -65)
@@ -241,9 +197,9 @@ Public Class UsersForm
                 'myBalloonWarn("Password mismatch", "Incorrect data", txtConfirmPassword, , -65)
             Else
 
-                Dim enc_userid = New EncryptData(txtUserName.Text.Trim).ResultValue
+                Dim enc_userid = New EncryptString(txtUserName.Text.Trim).ResultValue
 
-                Dim enc_pword = New EncryptData(txtConfirmPassword.Tag).ResultValue
+                Dim enc_pword = New EncryptString(txtConfirmPassword.Tag).ResultValue
 
                 If dontUpdate = 1 Then
                     Exit Sub
@@ -289,14 +245,99 @@ Public Class UsersForm
                                         enc_pword,
                                         UserLevelComboBox.SelectedIndex)
 
-                'SetBalloonTip("Updated", "Successfully Save.")
+                'SetBalloonTip("Updated, "Successfully Save.")
                 myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
-                fillUsers()
+                FillUsers()
 
             End If
 
         End If
 
+    End Sub
+
+    Private Async Sub SaveUser_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+        btnSave.Enabled = False
+
+        Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
+        Dim username = EncryptData(txtUserName.Text)
+        Dim password = EncryptData(txtPassword.Text)
+
+        If Not passwordConfirmed Then
+            SetWarning(txtConfirmPassword, "Password does not match.")
+            Return
+        End If
+
+        If isNew Then
+            Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
+            If usernameExists Then
+                SetWarning(txtUserName, "User ID Already exist.")
+                Return
+            End If
+
+            Dim newUser = User.NewUser(z_OrganizationID, z_User)
+
+            ApplyChanges(newUser)
+            Await userRepo.SaveAsync(newUser)
+
+            myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
+
+            FillUsers()
+
+            btnNew.Enabled = True
+            dgvUserList.Enabled = True
+        Else
+            Dim userBoundItem = GetUserBoundItem()
+            If userBoundItem Is Nothing Then Return
+
+            Dim user = Await userRepo.GetByIdWithPositionAsync(userBoundItem.RowID)
+
+            ApplyChanges(user)
+            Await userRepo.SaveAsync(user)
+
+            myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
+        End If
+
+        btnSave.Enabled = True
+    End Sub
+
+    Private Function GetUserBoundItem() As UserBoundItem
+        Dim currentRow = dgvUserList.CurrentRow
+        If currentRow Is Nothing Then Return Nothing
+        Return DirectCast(currentRow.DataBoundItem, UserBoundItem)
+    End Function
+
+    Private Sub ApplyChanges(ByRef u As User)
+        With u
+            .UserID = EncryptData(txtUserName.Text)
+            .Password = EncryptData(txtPassword.Text)
+            .LastName = txtLastName.Text
+            .FirstName = txtFirstName.Text
+            .MiddleName = txtMiddleName.Text
+            .EmailAddress = txtEmailAdd.Text
+            .PositionID = cboxposition.SelectedValue
+            .UserLevel = UserLevelComboBox.SelectedIndex
+        End With
+
+        If isNew Then Return
+        Dim userId = u.RowID
+
+        Dim boundItem = dataSource.FirstOrDefault(Function(b) b.RowID = userId)
+        With boundItem
+            .UserID = txtUserName.Text
+            .PositionName = u.Position.Name
+            .LastName = u.LastName
+            .FirstName = u.FirstName
+            .MiddleName = u.MiddleName
+            .EmailAddress = u.EmailAddress
+            .UserLevel = u.UserLevel
+            .UserLevelIndex = UserLevelHelper.GetUserLevelDescription(u.UserLevel)
+            .Password = u.Password
+            .PositionID = u.PositionID
+            .RowID = u.RowID
+        End With
+
+        dgvUserList.DataSource = dataSource
+        dgvUserList.Refresh()
     End Sub
 
     Private Sub SetWarning(textbox As Control, errorMessage As String)
@@ -364,7 +405,7 @@ Public Class UsersForm
     Private Sub UsersForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         FillUserLevel()
         fillPosition()
-        fillUsers()
+        FillUsers()
 
         view_ID = VIEW_privilege("Users", orgztnID)
 
@@ -416,6 +457,10 @@ Public Class UsersForm
 
     End Sub
 
+    Private Sub dgvUserList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvUserList.CellContentClick
+
+    End Sub
+
     Private Sub dgvUserList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvUserList.CellClick
 
         RemoveHandler txtPassword.TextChanged, AddressOf txtConfirmPassword_TextChanged
@@ -424,7 +469,7 @@ Public Class UsersForm
 
         Try
 
-            DisplayValue(dgvUserList.CurrentRow.Cells(c_rowid.Index).Value)
+            DisplayValue()
         Catch ex As Exception
         Finally
 
@@ -444,17 +489,28 @@ Public Class UsersForm
 
     End Sub
 
-    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Try
+    Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        If MsgBox("Are you sure you want to remove this user?", MsgBoxStyle.YesNo, "Removing...") = MsgBoxResult.Yes Then
+            btnDelete.Enabled = False
 
-            If MsgBox("Are you sure you want to remove this user?", MsgBoxStyle.YesNo, "Removing...") = MsgBoxResult.Yes Then
+            Dim user = GetUserBoundItem()
+            Await userRepo.SoftDeleteAsync(user.RowID)
 
-                DirectCommand("Update user Set Status = 'Inactive' Where RowID = '" & dgvUserList.CurrentRow.Cells(c_rowid.Index).Value & "'")
-                fillUsers()
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message, MsgBoxStyle.Critical, "Error code btnDelete_Click")
-        End Try
+            dgvUserList.ClearSelection()
+
+            Dim source = dataSource.Where(Function(u) Not u.RowID = user.RowID)
+            dataSource = source.ToList()
+
+            dgvUserList.DataSource = dataSource
+            dgvUserList.Refresh()
+        End If
+
+        btnDelete.Enabled = True
+    End Sub
+
+    Private Sub dgvUserList_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvUserList.DataError
+        e.ThrowException = False
+
     End Sub
 
     Private Sub tsAuditTrail_Click(sender As Object, e As EventArgs) Handles tsAuditTrail.Click
@@ -476,10 +532,6 @@ Public Class UsersForm
 
     End Sub
 
-    Private Sub dgvUserList_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvUserList.CellContentClick
-
-    End Sub
-
     Private Sub txtConfirmPassword_TextChanged(sender As Object, e As EventArgs) 'Handles txtConfirmPassword.TextChanged
 
         If txtConfirmPassword.Text.Trim = txtPassword.Text.Trim Then
@@ -489,5 +541,40 @@ Public Class UsersForm
         End If
 
     End Sub
+
+    Private Sub btnNew_EnabledChanged(sender As Object, e As EventArgs) Handles btnNew.EnabledChanged
+        isNew = Not btnNew.Enabled
+    End Sub
+
+    Private Class UserBoundItem
+
+        Public Sub New(u As User)
+            Dim userName As String = u.UserID
+            _UserID = Convert.ToString(DecryptData(userName))
+
+            _PositionName = u.Position.Name
+            _LastName = u.LastName
+            _FirstName = u.FirstName
+            _MiddleName = u.MiddleName
+            _EmailAddress = u.EmailAddress
+            _UserLevel = u.UserLevel
+            _UserLevelIndex = UserLevelHelper.GetUserLevelDescription(u.UserLevel)
+            _Password = u.Password
+            _PositionID = u.PositionID
+            _RowID = u.RowID
+        End Sub
+
+        Public Property UserID As String
+        Public Property PositionName As String
+        Public Property LastName As String
+        Public Property FirstName As String
+        Public Property MiddleName As String
+        Public Property EmailAddress As String
+        Public Property UserLevel As String
+        Public Property UserLevelIndex As String
+        Public Property Password As String
+        Public Property PositionID As Integer
+        Public Property RowID As Integer?
+    End Class
 
 End Class
