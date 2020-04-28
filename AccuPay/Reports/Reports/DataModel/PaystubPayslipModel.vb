@@ -1,8 +1,8 @@
 ﻿Imports System.Text
-Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Data.Enums
 Imports AccuPay.Entity
-Imports AccuPay.Enums
 Imports AccuPay.Loans
+Imports AccuPay.Utilities.Extensions
 
 Public Class PaystubPayslipModel
 

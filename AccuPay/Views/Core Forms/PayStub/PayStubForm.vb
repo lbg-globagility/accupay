@@ -1,6 +1,7 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Payslip

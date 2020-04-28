@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn

@@ -3,7 +3,7 @@ Option Strict On
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay.Data
-Imports AccuPay.Enums
+Imports AccuPay.Data.Enums
 Imports PayrollSys
 
 Namespace Global.AccuPay.Entity

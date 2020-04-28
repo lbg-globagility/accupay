@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects

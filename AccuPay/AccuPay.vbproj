@@ -335,7 +335,6 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
-    <Compile Include="Core\Enums\PayFrequencyType.vb" />
     <Compile Include="Core\PayPeriodStatusData.vb" />
     <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
@@ -365,12 +364,9 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
-    <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
     <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
     <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
-    <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
-    <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
     <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
@@ -745,7 +741,6 @@
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
     <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
-    <Compile Include="Domain\Commons\PayrollConstants.vb" />
     <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Domain\Payroll\PayrollException.vb" />
@@ -755,7 +750,6 @@
     <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
     <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />
     <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
@@ -979,7 +973,6 @@
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeEntry\RenewLeaveBalancePolicy.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </Compile>

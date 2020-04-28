@@ -1,8 +1,7 @@
 Option Strict On
 
-Imports AccuPay
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports PayrollSys
 
 Public Class ActualTimeEntryCalculator
 

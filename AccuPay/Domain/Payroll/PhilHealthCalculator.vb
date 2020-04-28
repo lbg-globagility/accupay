@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity

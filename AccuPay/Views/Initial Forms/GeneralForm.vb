@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Data.Services
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
@@ -6,8 +7,6 @@ Public Class GeneralForm
     Public listGeneralForm As New List(Of String)
 
     Dim sys_ownr As New SystemOwnerService()
-
-    Private _payRateCalculationBasis As PayRateCalculationBasis
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 

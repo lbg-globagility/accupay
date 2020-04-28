@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Loans
@@ -13,6 +14,8 @@ Namespace Benchmark
 
         Private ReadOnly _employee As New Entities.Employee
 
+        Private ReadOnly _ecola As Entities.Allowance
+
         Private ReadOnly _regularDays As Decimal
 
         Private ReadOnly _lateDays As Decimal
@@ -20,8 +23,6 @@ Namespace Benchmark
         Private ReadOnly _leaveDays As Decimal
 
         Private ReadOnly _overtimeRate As OvertimeRate
-
-        Private ReadOnly _ecola As Data.Entities.Allowance
 
         Private ReadOnly _actualSalaryPolicy As ActualTimeEntryPolicy
 

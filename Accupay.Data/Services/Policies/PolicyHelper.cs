@@ -4,9 +4,9 @@ namespace AccuPay.Data.Services
 {
     public class PolicyHelper
     {
-        private TimeEntryPolicy _policy;
+        private readonly TimeEntryPolicy _policy;
 
-        private ListOfValueCollection _settings;
+        private readonly ListOfValueCollection _settings;
 
         public PolicyHelper()
         {

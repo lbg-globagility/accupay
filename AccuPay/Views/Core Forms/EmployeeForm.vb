@@ -7,9 +7,9 @@ Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Enums
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
