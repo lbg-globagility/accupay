@@ -2310,13 +2310,11 @@ Public Class EmployeeForm
 
                     Await AwardTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpCertifications Then
-                    txtFNameCert.Text = employeefullname
-                    txtEmpIDCert.Text = subdetails '"ID# " & .Cells("Column1").Value
 
-                    pbEmpPicCert.Image = Nothing
-                    pbEmpPicCert.Image = EmployeeImage
-                    listofEditRowCert.Clear()
-                    VIEW_employeecertification(.Cells("RowID").Value)
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    Await CertificationTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpDiscipAct Then
                     controlclear()
                     controlfalseDiscipAct()
@@ -3751,7 +3749,7 @@ Public Class EmployeeForm
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabctrlemp.SelectedIndexChanged
         Label25.Text = Trim(tabctrlemp.SelectedTab.Text)
 
-        If tabctrlemp.SelectedTab Is tbpNewSalary OrElse tabctrlemp.SelectedTab Is tbpBonus Then
+        If tabctrlemp.SelectedTab Is tbpNewSalary OrElse tabctrlemp.SelectedTab Is tbpBonus OrElse tabctrlemp.SelectedTab Is tbpCertifications Then
             dgvEmp_SelectionChanged(sender, e)
         End If
     End Sub

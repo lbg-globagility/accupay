@@ -22,6 +22,7 @@ namespace AccuPay.Data
         public virtual DbSet<Bonus> Bonuses { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
         public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<PayFrequency> PayFrequencies { get; set; }
