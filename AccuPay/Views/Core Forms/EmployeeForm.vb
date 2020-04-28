@@ -77,7 +77,7 @@ Public Class EmployeeForm
         InfoBalloon(, , txtHDMF, , , 1)
         InfoBalloon(, , txtSSS, , , 1)
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
         tbpempchklist.Text = "CHECK LIST               "
         Label25.Text = "CHECK LIST"
         Static once As SByte = 0
@@ -1752,12 +1752,6 @@ Public Class EmployeeForm
                 If tsbtnNewEmp.Enabled = False Or
                     listofEditDepen.Count <> 0 Then
                 End If
-            Case GetAwardsTabPageIndex()
-                If listofEditRowAward.Count <> 0 Then
-                End If
-            Case GetCertificationTabPageIndex()
-                If listofEditRowCert.Count <> 0 Then
-                End If
             Case GetDisciplinaryActionTabPageIndex()
                 If btnNew.Enabled = False Then
                 End If
@@ -2331,13 +2325,11 @@ Public Class EmployeeForm
 
                     Await AwardTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpCertifications Then
-                    txtFNameCert.Text = employeefullname
-                    txtEmpIDCert.Text = subdetails '"ID# " & .Cells("Column1").Value
 
-                    pbEmpPicCert.Image = Nothing
-                    pbEmpPicCert.Image = EmployeeImage
-                    listofEditRowCert.Clear()
-                    VIEW_employeecertification(.Cells("RowID").Value)
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    Await CertificationTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpDiscipAct Then
                     controlclear()
                     controlfalseDiscipAct()
@@ -2440,20 +2432,6 @@ Public Class EmployeeForm
                     chkutflag.Checked = 0
                     chkotflag.Checked = 0
                     listofEditDepen.Clear()
-
-                Case GetAwardsTabPageIndex() 'Awards
-                    txtEmpIDAwar.Text = ""
-                    txtFNameAwar.Text = ""
-                    pbEmpPicAwar.Image = Nothing
-                    listofEditRowAward.Clear()
-                    dgvempawar.Rows.Clear()
-
-                Case GetCertificationTabPageIndex() 'Certifications
-                    txtEmpIDCert.Text = ""
-                    txtFNameCert.Text = ""
-                    pbEmpPicCert.Image = Nothing
-                    listofEditRowCert.Clear()
-                    dgvempcert.Rows.Clear()
 
                 Case GetDisciplinaryActionTabPageIndex() 'Disciplinary Action
                     controlclear()
@@ -3768,17 +3746,13 @@ Public Class EmployeeForm
 
     Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tabctrlemp.SelectedIndexChanged
         Label25.Text = Trim(tabctrlemp.SelectedTab.Text)
-
-        If tabctrlemp.SelectedTab Is tbpNewSalary OrElse tabctrlemp.SelectedTab Is tbpBonus Then
-            dgvEmp_SelectionChanged(sender, e)
-        End If
     End Sub
 
     Dim emp_ralation As New AutoCompleteStringCollection
 
     Async Sub tbpEmployee_Enter(sender As Object, e As EventArgs) Handles tbpEmployee.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpEmployee.Text = "PERSONAL PROFILE               "
 
@@ -4244,443 +4218,30 @@ Public Class EmployeeForm
 
 #Region "Awards"
 
-    Dim view_IDAwar As Integer
-
     Sub tbpAwards_Enter(sender As Object, e As EventArgs) Handles tbpAwards.Enter
-        tabpageText(tabIndx)
 
-        tbpAwards.Text = "AWARDS              "
+        UpdateTabPageText()
 
+        tbpAwards.Text = "AWARDS               "
         Label25.Text = "AWARDS"
-        Static once As SByte = 0
-        If once = 0 Then
-            once = 1
-            view_IDAwar = VIEW_privilege("Employee Award", orgztnID)
 
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDAwar)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnNewempawar.Visible = 0
-                tsbtnSaveempawar.Visible = 0
-
-                dontUpdateAwar = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-                        tsbtnNewempawar.Visible = 0
-                        tsbtnSaveempawar.Visible = 0
-
-                        dontUpdateAwar = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewempawar.Visible = 0
-                        Else
-                            tsbtnNewempawar.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateAwar = 1
-                        Else
-                            dontUpdateAwar = 0
-                        End If
-
-                    End If
-                Next
-            End If
-        End If
-
-        tabIndx = GetAwardsTabPageIndex()
         dgvEmp_SelectionChanged(sender, e)
 
-    End Sub
-
-    Private Sub tbpAwards_Leave(sender As Object, e As EventArgs) 'Handles tbpAwards.Leave
-        tbpAwards.Text = "AWARD"
-    End Sub
-
-    Sub VIEW_employeeawards(ByVal EmployeeID As Object)
-
-        Dim param(1, 2) As Object
-
-        param(0, 0) = "eawar_EmployeeID"
-        param(1, 0) = "eawar_OrganizationID"
-
-        param(0, 1) = EmployeeID
-        param(1, 1) = orgztnID
-
-        EXEC_VIEW_PROCEDURE(param,
-                           "VIEW_employeeawards",
-                           dgvempawar)
-
-    End Sub
-
-    Sub tsbtnNewempawar_Click(sender As Object, e As EventArgs) Handles tsbtnNewempawar.Click
-        For Each r As DataGridViewRow In dgvempawar.Rows
-            If r.IsNewRow Then
-                r.Cells("eawar_Type").Selected = True
-
-            End If
-        Next
-        dgvempawar.Focus()
-    End Sub
-
-    Dim dontUpdateAwar As SByte = 0
-
-    Sub SaveEmployeeAward(sender As Object, e As EventArgs) Handles tsbtnSaveempawar.Click
-
-        dgvempawar.EndEdit(True)
-
-        If dontUpdateAwar = 1 Then
-            listofEditRowAward.Clear()
-        End If
-
-        If dgvEmp.RowCount = 0 Then
-            Exit Sub
-        End If
-
-        Dim dbnow As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %T');")
-
-        Dim param(9, 2) As Object
-
-        param(0, 0) = "eawa_RowID"
-        param(1, 0) = "eawa_OrganizationID"
-        param(2, 0) = "eawa_Created"
-        param(3, 0) = "eawa_CreatedBy"
-        param(4, 0) = "eawa_LastUpd"
-        param(5, 0) = "eawa_LastUpdBy"
-        param(6, 0) = "eawa_EmployeeID"
-        param(7, 0) = "eawa_AwardType"
-        param(8, 0) = "eawa_AwardDescription"
-        param(9, 0) = "eawa_AwardDate"
-
-        For Each r As DataGridViewRow In dgvempawar.Rows
-            If Val(r.Cells("eawar_RowID").Value) = 0 And
-                tsbtnNewempawar.Visible = True Then
-
-                If r.IsNewRow = False Then
-                    param(0, 1) = DBNull.Value
-                    param(1, 1) = orgztnID
-                    param(2, 1) = dbnow
-                    param(3, 1) = z_User  'CreatedBy
-                    param(4, 1) = dbnow 'Created
-                    param(5, 1) = z_User 'LastUpdBy
-                    param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("eawar_Type").Value Is Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
-                    param(8, 1) = If(r.Cells("eawar_Description").Value Is Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
-                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value Is Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
-
-                    r.Cells("eawar_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeawards", "eawa_int")
-                End If
-            Else
-                'eawar_RowID@RowID&True
-                'eawar_EmployeeID@EmployeeID&False
-                'eawar_Type@Award Type&True
-                'eawar_Description@Award Description&True
-                'eawar_DateAwarded@Date awarded&True
-                'DataGridViewTextBoxColumn69@Column6&False
-                'DataGridViewTextBoxColumn70@Column7&False
-                'DataGridViewTextBoxColumn71@Column8&False
-                'DataGridViewTextBoxColumn72@Column9&False
-
-                If listofEditRowAward.Contains(r.Cells("eawar_RowID").Value) Then
-                    param(0, 1) = r.Cells("eawar_RowID").Value
-                    param(1, 1) = orgztnID
-                    param(2, 1) = dbnow
-                    param(3, 1) = z_User 'CreatedBy
-                    param(4, 1) = dbnow 'Created
-                    param(5, 1) = z_User 'LastUpdBy
-                    param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("eawar_Type").Value Is Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
-                    param(8, 1) = If(r.Cells("eawar_Description").Value Is Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
-                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value Is Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
-
-                    EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeawards", "eawa_int")
-                End If
-            End If
-        Next
-
-        listofEditRowAward.Clear()
-        '                                           'dgvEmp                   'Employee ID
-        InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-
-    End Sub
-
-    Dim prevsvalueaward As Object
-    Dim prevsRowaward As Integer
-    Dim prevsColaward As Integer
-
-    Private Sub dgvempawar_CellBeginEdit(sender As Object, e As DataGridViewCellCancelEventArgs) Handles dgvempawar.CellBeginEdit
-
-        If dgvempawar.RowCount <> 0 Then
-
-            prevsvalueaward = dgvempawar.Item(e.ColumnIndex, e.RowIndex).Value
-
-        End If
-
-    End Sub
-
-    Public listofEditRowAward As New AutoCompleteStringCollection
-
-    Private Sub dgvempawar_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempawar.CellEndEdit
-
-        prevsRowaward = e.RowIndex
-        prevsColaward = e.ColumnIndex
-
-        If dgvempawar.RowCount <> 0 Then
-
-            If dgvempawar.Item("eawar_RowID", prevsRowaward).Value <> Nothing Then
-
-                If dgvempawar.Item(prevsColaward, prevsRowaward).Value <> prevsvalueaward Then
-                    listofEditRowAward.Add(dgvempawar.Item("eawar_RowID", prevsRowaward).Value)
-                End If
-            End If
-
-        End If
-
-        dgvempawar.AutoResizeRow(e.RowIndex)
-        dgvempawar.PerformLayout()
-    End Sub
-
-    Private Sub tsbtnCancelempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCancelempawar.Click
-        listofEditRowAward.Clear()
-        dgvEmp_SelectionChanged(sender, e)
     End Sub
 
 #End Region 'Awards
 
 #Region "Certifications"
 
-    Dim view_IDCert As Integer
-
     Sub tbpCertifications_Enter(sender As Object, e As EventArgs) Handles tbpCertifications.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpCertifications.Text = "CERTIFICATIONS               "
-
         Label25.Text = "CERTIFICATIONS"
-        Static once As SByte = 0
-        If once = 0 Then
-            once = 1
-            view_IDCert = VIEW_privilege("Employee Certification", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDCert)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnNewempcert.Visible = 0
-                tsbtnSaveempcert.Visible = 0
-
-                dontUpdateCert = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-                        tsbtnNewempcert.Visible = 0
-                        tsbtnSaveempcert.Visible = 0
-
-                        dontUpdateCert = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewempcert.Visible = 0
-                        Else
-                            tsbtnNewempcert.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateCert = 1
-                        Else
-                            dontUpdateCert = 0
-                        End If
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        tabIndx = GetCertificationTabPageIndex()
 
         dgvEmp_SelectionChanged(sender, e)
 
-    End Sub
-
-    Private Sub TabPage5_Leave(sender As Object, e As EventArgs) 'Handles tbpCertifications.Leave
-        tbpCertifications.Text = "CERTI"
-    End Sub
-
-    Sub VIEW_employeecertification(ByVal EmployeeID As Object)
-
-        Dim param(1, 2) As Object
-
-        param(0, 0) = "ecert_EmployeeID"
-        param(1, 0) = "ecert_OrganizationID"
-
-        param(0, 1) = EmployeeID
-        param(1, 1) = orgztnID
-
-        EXEC_VIEW_PROCEDURE(param,
-                            "VIEW_employeecertification",
-                            dgvempcert, , 1)
-
-    End Sub
-
-    Private Sub tsbtnNewempcert_Click(sender As Object, e As EventArgs) Handles tsbtnNewempcert.Click
-        For Each r As DataGridViewRow In dgvempcert.Rows
-            If r.IsNewRow Then
-                r.Cells("ecert_Type").Selected = True
-            End If
-        Next
-        dgvempcert.Focus()
-    End Sub
-
-    Dim dontUpdateCert As SByte = 0
-
-    Sub SaveEmployeeCertif(sender As Object, e As EventArgs) Handles tsbtnSaveempcert.Click
-
-        dgvempcert.EndEdit(True)
-
-        If dontUpdateCert = 1 Then
-            listofEditRowCert.Clear()
-        End If
-
-        If hasDateErrCert = 1 Then
-            WarnBalloon("Please input a valid date.", "Invalid Date issued or Date of expiration", lblforballoon, 0, -69)
-            Exit Sub
-        ElseIf dgvEmp.RowCount = 0 Then
-            Exit Sub
-        End If
-
-        Dim dbnow As Object = EXECQUER("SELECT DATE_FORMAT(NOW(),'%Y-%m-%d %T');")
-
-        Dim param(12, 2) As Object
-
-        param(0, 0) = "ecer_RowID"
-        param(1, 0) = "ecer_OrganizationID"
-        param(2, 0) = "ecer_Created"
-        param(3, 0) = "ecer_CreatedBy"
-        param(4, 0) = "ecer_LastUpd"
-        param(5, 0) = "ecer_LastUpdBy"
-        param(6, 0) = "ecer_EmployeeID"
-        param(7, 0) = "ecer_CertificationType"
-        param(8, 0) = "ecer_IssuingAuthority"
-        param(9, 0) = "ecer_CertificationNo"
-        param(10, 0) = "ecer_IssueDate"
-        param(11, 0) = "ecer_ExpirationDate"
-        param(12, 0) = "ecer_Comments"
-
-        For Each r As DataGridViewRow In dgvempcert.Rows
-
-            If Val(r.Cells("ecert_RowID").Value) = 0 And
-                tsbtnNewempcert.Visible = True Then
-
-                If r.IsNewRow = False Then
-                    param(0, 1) = DBNull.Value
-                    param(1, 1) = orgztnID
-                    param(2, 1) = dbnow
-                    param(3, 1) = z_User
-                    param(4, 1) = DBNull.Value
-                    param(5, 1) = z_User
-                    param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("ecert_Type").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
-                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
-                    param(9, 1) = If(r.Cells("ecert_CertNum").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
-                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
-                    param(11, 1) = If(r.Cells("ecert_Expiration").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
-                    param(12, 1) = If(r.Cells("ecert_Comments").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
-
-                    r.Cells("ecert_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeecertification", "ecer_int")
-                End If
-            Else
-
-                If listofEditRowCert.Contains(r.Cells("ecert_RowID").Value) Then
-                    param(0, 1) = r.Cells("ecert_RowID").Value
-                    param(1, 1) = orgztnID
-                    param(2, 1) = dbnow
-                    param(3, 1) = z_User
-                    param(4, 1) = DBNull.Value
-                    param(5, 1) = z_User
-                    param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("ecert_Type").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
-                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
-                    param(9, 1) = If(r.Cells("ecert_CertNum").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
-                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
-                    param(11, 1) = If(r.Cells("ecert_Expiration").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
-                    param(12, 1) = If(r.Cells("ecert_Comments").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
-
-                    EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeecertification", "ecer_int")
-                End If
-            End If
-        Next
-
-        listofEditRowCert.Clear()
-
-        InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-
-    End Sub
-
-    Public listofEditRowCert As New AutoCompleteStringCollection
-
-    Dim hasDateErrCert As SByte = -1
-
-    Dim prevsRowCert As Integer
-
-    Private Sub dgvempcert_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempcert.CellEndEdit
-        prevsRowCert = e.RowIndex
-
-        Dim colName As String = dgvempcert.Columns(e.ColumnIndex).Name
-
-        dgvempcert.ShowCellErrors = True
-
-        Static num As Integer = 0
-
-        If dgvempcert.RowCount <> 0 Then
-            listofEditRowCert.Add(dgvempcert.Item("ecert_RowID", prevsRowCert).Value)
-
-            If colName = "ecert_DateIssued" _
-                And dgvempcert.Item("ecert_DateIssued", prevsRowCert).Value <> Nothing Then 'e.ColumnIndex
-                Try
-                    dgvempcert.Item("ecert_DateIssued", prevsRowCert).Value = Format(CDate(dgvempcert.Item("ecert_DateIssued", prevsRowCert).Value), machineShortDateFormat)
-                    hasDateErrCert = 0
-                    dgvempcert.Item("ecert_DateIssued", prevsRowCert).ErrorText = Nothing
-                Catch ex As Exception
-                    hasDateErrCert = 1
-                    dgvempcert.Item("ecert_DateIssued", prevsRowCert).ErrorText = "     Invalid date value"
-                    'Return
-                End Try
-                ' And dgvempcert.Columns("Column6").Index = e.ColumnIndex
-            ElseIf colName = "ecert_Expiration" _
-                And dgvempcert.Item("ecert_Expiration", prevsRowCert).Value <> Nothing Then 'e.ColumnIndex
-                Try
-                    dgvempcert.Item("ecert_Expiration", prevsRowCert).Value = Format(CDate(dgvempcert.Item("ecert_Expiration", prevsRowCert).Value), machineShortDateFormat)
-                    hasDateErrCert = 0
-                    dgvempcert.Item("ecert_Expiration", prevsRowCert).ErrorText = Nothing
-                Catch ex As Exception
-                    hasDateErrCert = 1
-                    dgvempcert.Item("ecert_Expiration", prevsRowCert).ErrorText = "     Invalid date value"
-                    'Return
-                End Try
-            Else
-                hasDateErrCert = 0
-                dgvempcert.Item(colName, prevsRowCert).ErrorText = Nothing
-            End If
-
-        End If
-
-        dgvempcert.AutoResizeRow(e.RowIndex)
-        dgvempcert.PerformLayout()
-    End Sub
-
-    Private Sub tsbtnCancelempcert_Click(sender As Object, e As EventArgs) Handles tsbtnCancelempcert.Click
-        listofEditRowCert.Clear()
-
-        dgvEmp_SelectionChanged(sender, e)
     End Sub
 
 #End Region 'Certifications
@@ -4853,7 +4414,7 @@ Public Class EmployeeForm
 
     Sub tbpDiscipAct_Enter(sender As Object, e As EventArgs) Handles tbpDiscipAct.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpDiscipAct.Text = "DISCIPLINARY ACTION               "
 
@@ -5235,7 +4796,7 @@ Public Class EmployeeForm
     Dim view_IDEduc As Integer
 
     Sub tbpEducBG_Enter(sender As Object, e As EventArgs) Handles tbpEducBG.Enter
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpEducBG.Text = "EDUCATIONAL BACKGROUND               "
 
@@ -5473,7 +5034,7 @@ Public Class EmployeeForm
 
     Sub tbpPrevEmp_Enter(sender As Object, e As EventArgs) Handles tbpPrevEmp.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpPrevEmp.Text = "PREVIOUS EMPLOYER               "
         Label25.Text = "PREVIOUS EMPLOYER"
@@ -5783,7 +5344,7 @@ Public Class EmployeeForm
 
     Sub tbpPromotion_Enter(sender As Object, e As EventArgs) Handles tbpPromotion.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpPromotion.Text = "PROMOTION               "
 
@@ -6657,7 +6218,12 @@ Public Class EmployeeForm
 
     Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
 
+        UpdateTabPageText()
+
+        tbpNewSalary.Text = "SALARY               "
         Label25.Text = "SALARY"
+
+        dgvEmp_SelectionChanged(sender, e)
 
     End Sub
 
@@ -6667,9 +6233,12 @@ Public Class EmployeeForm
 
     Sub tbpBonus_Enter(sender As Object, e As EventArgs) Handles tbpBonus.Enter
 
-        tbpBonus.Text = "EMPLOYEE BONUS               "
+        UpdateTabPageText()
 
+        tbpBonus.Text = "EMPLOYEE BONUS               "
         Label25.Text = "EMPLOYEE BONUS"
+
+        dgvEmp_SelectionChanged(sender, e)
 
     End Sub
 
@@ -6687,7 +6256,7 @@ Public Class EmployeeForm
 
     Sub tbpAttachment_Enter(sender As Object, e As EventArgs) Handles tbpAttachment.Enter
 
-        tabpageText(tabIndx)
+        UpdateTabPageText()
 
         tbpAttachment.Text = "ATTACHMENT               "
 
@@ -7151,7 +6720,7 @@ Public Class EmployeeForm
 
 #End Region
 
-    Sub tabpageText(ByVal tbpIndex As Integer)
+    Sub UpdateTabPageText()
         Static once As SByte = 0
 
         If once = 0 Then
@@ -7159,42 +6728,17 @@ Public Class EmployeeForm
             Exit Sub
         End If
 
-        Select Case tbpIndex
-            Case GetCheckListTabPageIndex()
-                tbpempchklist.Text = "CHECKLIST"
-
-            Case GetEmployeeProfileTabPageIndex()
-                tbpEmployee.Text = "PERSON"
-
-            Case GetAwardsTabPageIndex()
-                tbpAwards.Text = "AWARD"
-
-            Case GetCertificationTabPageIndex()
-                tbpCertifications.Text = "CERTI"
-
-            Case GetDisciplinaryActionTabPageIndex()
-                tbpDiscipAct.Text = "DISCIP"
-
-            Case GetEducationalBackgroundTabPageIndex()
-                tbpEducBG.Text = "EDUC"
-
-            Case GetPreviousEmployerTabPageIndex()
-                tbpPrevEmp.Text = "PREV EMP"
-
-            Case GetPromotionTabPageIndex()
-                tbpPromotion.Text = "PROMOT"
-
-            Case GetBonusTabPageIndex()
-                tbpBonus.Text = "BONUS"
-
-            Case GetAttachmentTabPageIndex()
-                tbpAttachment.Text = "ATTACH"
-
-            Case GetSalaryTabPageIndex()
-                tbpNewSalary.Text = "SALARY"
-            Case Else
-
-        End Select
+        tbpempchklist.Text = "CHECKLIST"
+        tbpEmployee.Text = "PERSON"
+        tbpAwards.Text = "AWARD"
+        tbpCertifications.Text = "CERTI"
+        tbpDiscipAct.Text = "DISCIP"
+        tbpEducBG.Text = "EDUC"
+        tbpPrevEmp.Text = "PREV EMP"
+        tbpPromotion.Text = "PROMOT"
+        tbpBonus.Text = "BONUS"
+        tbpAttachment.Text = "ATTACH"
+        tbpNewSalary.Text = "SALARY"
 
     End Sub
 
@@ -7227,24 +6771,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub ToolStripButton14_Click(sender As Object, e As EventArgs) Handles ToolStripButton14.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_IDAwar)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub ToolStripButton15_Click(sender As Object, e As EventArgs) Handles ToolStripButton15.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_IDCert)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Private Sub ToolStripButton20_Click(sender As Object, e As EventArgs)
         showAuditTrail.Show()
         showAuditTrail.loadAudTrail(view_IDMed)
@@ -7252,7 +6778,7 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Async Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
+    Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
         Dim form As New AddBranchForm
         form.ShowDialog()

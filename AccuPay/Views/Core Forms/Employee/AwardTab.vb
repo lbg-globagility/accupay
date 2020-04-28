@@ -136,7 +136,7 @@ Public Class AwardTab
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-        Dim result = MsgBox("Are you sure you want to delete this Bonus?", MsgBoxStyle.YesNo, "Delete Bonus")
+        Dim result = MsgBox("Are you sure you want to delete this Award?", MsgBoxStyle.YesNo, "Delete Award")
 
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
@@ -209,7 +209,7 @@ Public Class AwardTab
 
                     RecordUpdateAward(oldAward)
 
-                    messageTitle = "Update Bonus"
+                    messageTitle = "Update Award"
                     succeed = True
                 Else
                     MessageBoxHelper.Warning("No value changed")
