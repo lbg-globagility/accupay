@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static AccuPay.Data.Helpers.UserConstants;
 
 namespace AccuPay.Data.Entities
 {
@@ -47,16 +48,27 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
-    }
 
-    partial class User
-    {
+        #region Functions
+
         public bool IsActive
         {
             get
             {
-                return Status == UserConstants.ACTIVE_STATUS;
+                return Status == ACTIVE_STATUS;
             }
         }
+
+        public void SetStatus(UserStatus userStatus)
+        {
+            Status = UserStatusToString(userStatus);
+        }
+
+        public static User NewUser(int organizationId, int userId)
+        {
+            return new User() { OrganizationID = organizationId, CreatedBy = userId, Status = ACTIVE_STATUS };
+        }
+
+        #endregion Functions
     }
 }
