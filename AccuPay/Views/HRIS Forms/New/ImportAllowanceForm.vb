@@ -30,7 +30,7 @@ Public Class ImportAllowanceForm
 
         Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
-        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypes(z_OrganizationID)).ToList()
+        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).ToList()
 
         AllowancesDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -95,7 +95,7 @@ Public Class ImportAllowanceForm
 
             End If
 
-            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceType(record.Type, z_OrganizationID, z_User)
+            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceTypeAsync(record.Type, z_OrganizationID, z_User)
 
             If allowanceType Is Nothing Then
 

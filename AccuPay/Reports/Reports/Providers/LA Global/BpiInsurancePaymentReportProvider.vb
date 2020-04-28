@@ -40,7 +40,7 @@ Public Class BpiInsurancePaymentReportProvider
     Private Async Sub SetDataSource()
 
         Dim bpiInsuranceProductID = (Await (New ProductRepository().
-                                                GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                                                GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
                                                 organizationId:=z_OrganizationID,
                                                 userId:=z_User))).RowID
 

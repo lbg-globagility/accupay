@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -472,7 +473,8 @@ Public Class ImportLeaveForm
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
                 Dim leaveTypes As New List(Of String)
-                Dim leaveCateogry = Await _categoryRepo.GetByName(z_OrganizationID, "Leave Type")
+                Dim leaveCateogry = Await _categoryRepo.GetByNameAsync(z_OrganizationID,
+                                                                       ProductConstant.LEAVE_TYPE_CATEGORY)
                 Dim categleavID = leaveCateogry.RowID
 
                 Using context As New PayrollContext

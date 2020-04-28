@@ -37,7 +37,7 @@ Public Class AwardTab
         If _employee?.RowID Is Nothing Then Return
 
         Dim awardRepo = New AwardRepository
-        _awards = Await awardRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
         dgvAwards.DataSource = _awards

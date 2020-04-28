@@ -21,7 +21,7 @@ Public Class DayTypesDialog
     End Sub
 
     Private Async Sub DayTypesDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _dayTypes = Await _repository.GetAll()
+        _dayTypes = Await _repository.GetAllAsync()
         DayTypesGridView.DataSource = _dayTypes
     End Sub
 
@@ -33,7 +33,7 @@ Public Class DayTypesDialog
 
     Private Async Sub SaveButton_Click(sender As Object, e As EventArgs) Handles SaveButton.Click
         Dim dayType = DayTypeControl.DayType
-        Await _repository.Save(dayType)
+        Await _repository.SaveAsync(dayType)
     End Sub
 
 End Class

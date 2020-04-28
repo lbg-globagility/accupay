@@ -184,7 +184,7 @@ Public Class AddAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).

@@ -45,7 +45,7 @@ Public Class NewCalendarDialog
 
         Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
 
-        Await _repository.Create(calendar, copiedCalendar)
+        Await _repository.CreateAsync(calendar, copiedCalendar)
 
         DialogResult = DialogResult.OK
     End Sub

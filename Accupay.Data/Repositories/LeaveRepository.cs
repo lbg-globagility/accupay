@@ -192,11 +192,11 @@ namespace AccuPay.Data.Repositories
             currentLeave.LastUpdBy = leave.LastUpdBy;
         }
 
-        public async Task<decimal> ForceUpdateLeaveAllowance(int employeeId,
-                                                            int organizationId,
-                                                            int userId,
-                                                            LeaveType selectedLeaveType,
-                                                            decimal newAllowance)
+        public async Task<decimal> ForceUpdateLeaveAllowanceAsync(int employeeId,
+                                                                int organizationId,
+                                                                int userId,
+                                                                LeaveType selectedLeaveType,
+                                                                decimal newAllowance)
         {
             decimal newBalance = newAllowance;
 
@@ -371,7 +371,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Leave>> GetAllByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
+        public async Task<IEnumerable<Leave>> GetByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
         {
             using (var context = new PayrollContext())
             {

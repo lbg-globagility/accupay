@@ -504,7 +504,7 @@ Public Class TimeLogsForm2
 
     Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Entities.Overtime))
 
-        Dim overtimes = Await _overtimeRepository.GetAllBetweenDatePeriodAsync(z_OrganizationID, timePeriod)
+        Dim overtimes = Await _overtimeRepository.GetByDatePeriodAsync(z_OrganizationID, timePeriod)
 
         Return overtimes.ToList()
     End Function

@@ -67,7 +67,7 @@ Public Class BenchmarkPayrollForm
         _employeeRepository = New EmployeeRepository()
         _loanScheduleRepository = New LoanScheduleRepository()
         _salaryRepository = New SalaryRepository()
-        
+
         _salaries = New List(Of Entities.Salary)
         _employees = New List(Of Entities.Employee)
 
@@ -121,7 +121,7 @@ Public Class BenchmarkPayrollForm
         Await LoadPayrollResourcesAsync()
 
         _salaries = (Await _salaryRepository.
-                            GetAllByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)).
+                            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)).
                     ToList()
 
         Await ShowEmployees()

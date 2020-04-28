@@ -61,7 +61,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID)
+        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID)
 
         _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
         _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
@@ -97,8 +97,9 @@ Public Class BenchmarkPaystubForm
     End Function
 
     Private Async Function LoadPayrollDetails() As Task
-        _salaries = Await _salaryRepository.
-                                        GetAllByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)
+        _salaries = (Await _salaryRepository.
+                            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)
+                    ).ToList()
 
         Await ShowEmployees()
 
@@ -751,7 +752,7 @@ Public Class BenchmarkPaystubForm
 
         'Reset Leave Balance
         Dim leaveRepository As New LeaveRepository
-        Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee.RowID.Value,
+        Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowanceAsync(employee.RowID.Value,
                                                                 z_OrganizationID,
                                                                 z_User,
                                                                 Data.Enums.LeaveType.Vacation,

@@ -20,7 +20,7 @@ Public Class newProdBonus
                 TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
                 Dim productRepo = New ProductRepository
-                _newProduct = Await productRepo.AddBonusType(TextBox1.Text,
+                _newProduct = Await productRepo.AddBonusTypeAsync(TextBox1.Text,
                                                              organizationId:=z_OrganizationID,
                                                              userId:=z_User,
                                                              isTaxable:=chktaxab.Checked)

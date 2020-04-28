@@ -59,7 +59,7 @@ Public Class AddLeaveForm
 
     Private Async Function LoadLeaveTypes() As Task
 
-        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes(z_OrganizationID))
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypesAsync(z_OrganizationID))
 
         leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).

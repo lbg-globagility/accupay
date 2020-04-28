@@ -914,7 +914,7 @@ Public Class EmployeeForm
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
                 Dim newleaveBalance = Await _leaveRepository.
-                                            ForceUpdateLeaveAllowance(
+                                            ForceUpdateLeaveAllowanceAsync(
                                                         employeeId:=employeeId,
                                                         organizationId:=z_OrganizationID,
                                                         userId:=z_User,
@@ -7562,7 +7562,7 @@ Public Class EmployeeForm
         If _listOfValueRepository Is Nothing Then Return
 
         Dim salutationList = Await _listOfValueRepository.
-                            GetFilteredListOfValues(Function(l) l.Type = "Salutation" AndAlso
+                            GetFilteredListOfValuesAsync(Function(l) l.Type = "Salutation" AndAlso
                                                                 genderList.Contains(l.ParentLIC))
 
         salutationList = salutationList.OrderBy(Function(l) l.DisplayValue).ToList()

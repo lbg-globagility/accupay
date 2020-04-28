@@ -15,7 +15,7 @@ namespace AccuPay.Data.Repositories
             return GetListOfValues("LeaveConvertiblePolicy");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValues(Expression<Func<ListOfValue, bool>> filter)
+        public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
         {
             using (var context = new PayrollContext())
 

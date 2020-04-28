@@ -119,7 +119,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<List<Position>> GetAllAsync(int organizationId)
+        public async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {

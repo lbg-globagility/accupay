@@ -135,7 +135,7 @@ Namespace Benchmark
 
         Private Async Function InitializeLoanIds(logger As ILog) As Task(Of Boolean)
 
-            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID)
+            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID)
 
             Dim pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
             Dim sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
@@ -156,8 +156,8 @@ Namespace Benchmark
 
         Private Async Function InitializeAdjustmentsLists() As Task(Of Boolean)
 
-            _deductionList = New List(Of Product)(Await _productRepository.GetDeductionAdjustmentTypes(z_OrganizationID))
-            _incomeList = New List(Of Product)(Await _productRepository.GetAdditionAdjustmentTypes(z_OrganizationID))
+            _deductionList = New List(Of Product)(Await _productRepository.GetDeductionAdjustmentTypesAsync(z_OrganizationID))
+            _incomeList = New List(Of Product)(Await _productRepository.GetAdditionAdjustmentTypesAsync(z_OrganizationID))
 
             If _deductionList Is Nothing OrElse _incomeList Is Nothing Then Return False
 

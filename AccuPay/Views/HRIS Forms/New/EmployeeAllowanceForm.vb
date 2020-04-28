@@ -392,7 +392,7 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim allowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID.Value)).
+        Dim allowances = (Await _allowanceRepository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.EffectiveEndDate).
                                 ToList
 
@@ -415,7 +415,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).

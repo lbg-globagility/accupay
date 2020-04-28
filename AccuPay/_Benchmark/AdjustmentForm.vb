@@ -40,18 +40,18 @@ Public Class AdjustmentForm
     Private Async Function RefreshForm() As Task
         If _adjustmentType = AdjustmentType.Deduction Then
 
-            _adjustments = Await _productRepository.GetDeductionAdjustmentTypes(z_OrganizationID)
+            _adjustments = Await _productRepository.GetDeductionAdjustmentTypesAsync(z_OrganizationID)
 
             Me.Text = "Deduction Adjustments"
 
         ElseIf _adjustmentType = AdjustmentType.OtherIncome Then
 
-            _adjustments = Await _productRepository.GetAdditionAdjustmentTypes(z_OrganizationID)
+            _adjustments = Await _productRepository.GetAdditionAdjustmentTypesAsync(z_OrganizationID)
 
             Me.Text = "Other Income Adjustments"
         Else
 
-            _adjustments = Await _productRepository.GetAdjustmentTypes(z_OrganizationID)
+            _adjustments = Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)
 
         End If
 
@@ -199,7 +199,7 @@ Public Class AdjustmentForm
 
                                     If _currentFormType = FormMode.Creating Then
 
-                                        Await _productRepository.AddAdjustmentType(
+                                        Await _productRepository.AddAdjustmentTypeAsync(
                                                         organizationId:=z_OrganizationID,
                                                         userId:=z_User,
                                                         adjustmentName:=adjustmentName,
@@ -212,9 +212,9 @@ Public Class AdjustmentForm
 
                                         Dim currentAdjustmentId = _currentAdjustment.RowID.Value
 
-                                        Await _productRepository.UpdateAdjustmentType(
+                                        Await _productRepository.UpdateAdjustmentTypeAsync(
                                                                     id:=currentAdjustmentId,
-                                                                    userID:=z_User,
+                                                                    userId:=z_User,
                                                                     adjustmentName:=adjustmentName,
                                                                     code:=CodeTextBox.Text.Trim)
 

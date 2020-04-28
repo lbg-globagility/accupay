@@ -8,7 +8,7 @@ namespace AccuPay.Data.Repositories
 {
     public class CategoryRepository
     {
-        public async Task<Category> GetByName(int organizationId, string categoryName)
+        public async Task<Category> GetByNameAsync(int organizationId, string categoryName)
         {
             if (string.IsNullOrWhiteSpace(categoryName)) return null;
 

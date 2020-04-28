@@ -35,7 +35,7 @@ Public Class AddLoanTypeForm
         Const messageTitle As String = "New Loan Type"
 
         Try
-            Me.NewLoanType = Await _productRepository.AddLoanType(txtLoanName.Text,
+            Me.NewLoanType = Await _productRepository.AddLoanTypeAsync(txtLoanName.Text,
                                                                  organizationId:=z_OrganizationID,
                                                                  userId:=z_User)
 

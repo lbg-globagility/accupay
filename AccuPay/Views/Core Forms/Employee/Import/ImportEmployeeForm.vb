@@ -384,7 +384,7 @@ Public Class ImportEmployeeForm
             Throw New ArgumentException("Cannot create default division.")
         End If
 
-        Dim existingPositions = Await positionRepository.GetAllAsync(z_OrganizationID)
+        Dim existingPositions = (Await positionRepository.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models
             Dim currentPosition = existingPositions.

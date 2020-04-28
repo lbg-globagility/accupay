@@ -116,7 +116,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Overtime>> GetAllBetweenDatePeriodAsync(
+        public async Task<IEnumerable<Overtime>> GetByDatePeriodAsync(
                                                         int organizationId,
                                                         TimePeriod timePeriod,
                                                         OvertimeStatus overtimeStatus = OvertimeStatus.All)
@@ -131,10 +131,9 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Overtime> GetAllByDatePeriod(
-                                                        int organizationId,
-                                                        TimePeriod timePeriod,
-                                                        OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        public IEnumerable<Overtime> GetByDatePeriod(int organizationId,
+                                                    TimePeriod timePeriod,
+                                                    OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -146,7 +145,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Overtime> GetAllByEmployeeIDsAndDatePeriod(int organizationId,
+        public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
                                                                 TimePeriod timePeriod,
                                                                 List<int> employeeIdList,
                                                                 OvertimeStatus overtimeStatus = OvertimeStatus.All)

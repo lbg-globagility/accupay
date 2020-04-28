@@ -8,32 +8,13 @@ namespace AccuPay.Data.Repositories
 {
     public class BonusRepository
     {
-        public List<string> GetFrequencyList()
-        {
-            return new List<string>()
-            {
-                Bonus.FREQUENCY_ONE_TIME,
-                Bonus.FREQUENCY_DAILY,
-                Bonus.FREQUENCY_SEMI_MONTHLY,
-                Bonus.FREQUENCY_MONTHLY
-            };
-        }
-        public async Task<IEnumerable<Bonus>> GetAllByEmployeeAsync(int employeeId)
-        {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Bonuses.Include(x => x.Product).Where(x => x.EmployeeID == employeeId).ToListAsync();
-            }
-        }
-
         public async Task DeleteAsync(Bonus currentBonus)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Bonuses.Attach(currentBonus);
                 context.Bonuses.Remove(currentBonus);
                 await context.SaveChangesAsync();
-            }  
+            }
         }
 
         public async Task CreateAsync(Bonus bonus)
@@ -51,6 +32,25 @@ namespace AccuPay.Data.Repositories
             {
                 context.Entry(bonus).State = EntityState.Modified;
                 await context.SaveChangesAsync();
+            }
+        }
+
+        public List<string> GetFrequencyList()
+        {
+            return new List<string>()
+            {
+                Bonus.FREQUENCY_ONE_TIME,
+                Bonus.FREQUENCY_DAILY,
+                Bonus.FREQUENCY_SEMI_MONTHLY,
+                Bonus.FREQUENCY_MONTHLY
+            };
+        }
+
+        public async Task<IEnumerable<Bonus>> GetByEmployeeAsync(int employeeId)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                return await context.Bonuses.Include(x => x.Product).Where(x => x.EmployeeID == employeeId).ToListAsync();
             }
         }
     }

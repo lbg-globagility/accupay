@@ -50,7 +50,7 @@ Public Class BonusTab
         End If
 
         Dim bonusRepo = New BonusRepository
-        _bonuses = Await bonusRepo.GetAllByEmployeeAsync(_employee.RowID.Value)
+        _bonuses = Await bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _frequencies = bonusRepo.GetFrequencyList
 
         Dim productRepo = New ProductRepository

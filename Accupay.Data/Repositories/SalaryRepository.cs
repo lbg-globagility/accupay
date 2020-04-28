@@ -9,7 +9,7 @@ namespace AccuPay.Data.Repositories
 {
     public class SalaryRepository
     {
-        public async Task<List<Salary>> GetAll(int organizationId)
+        public async Task<IEnumerable<Salary>> GetAll(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -19,7 +19,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public IEnumerable<Salary> GetAllByCutOff(int organizationId, DateTime cutoffStart)
+        public IEnumerable<Salary> GetByCutOff(int organizationId, DateTime cutoffStart)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<List<Salary>> GetAllByCutOffAsync(int organizationId, DateTime cutoffStart)
+        public async Task<IEnumerable<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffStart)
         {
             using (PayrollContext context = new PayrollContext())
             {

@@ -505,7 +505,7 @@ Public Class PayrollResources
             Dim allowanceRepo = New Repositories.AllowanceRepository()
 
             _allowances = Await (allowanceRepo.
-                            GetByPayPeriodWithProduct(organizationId:=z_OrganizationID,
+                            GetByPayPeriodWithProductAsync(organizationId:=z_OrganizationID,
                                                       timePeriod:=_payPeriodSpan))
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
@@ -541,7 +541,7 @@ Public Class PayrollResources
         Try
 
             _bpiInsuranceProduct = Await New ProductRepository().
-                                        GetOrCreateAdjustmentType(
+                                        GetOrCreateAdjustmentTypeAsync(
                                             ProductConstant.BPI_INSURANCE_ADJUSTMENT,
                                             organizationId:=z_OrganizationID,
                                             userId:=z_User)
@@ -553,7 +553,7 @@ Public Class PayrollResources
     Private Async Function LoadLeaves() As Task
         Try
             _leaves = (Await New Repositories.LeaveRepository().
-                                GetAllByTimePeriodAsync(organizationId:=z_OrganizationID,
+                                GetByTimePeriodAsync(organizationId:=z_OrganizationID,
                                                         timePeriod:=_payPeriodSpan)).
                       ToList()
         Catch ex As Exception

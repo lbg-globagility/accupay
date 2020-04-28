@@ -36,7 +36,7 @@ Public Class UserActivityForm
     Public Sub populateDataGrid()
 
         Dim repo As New UserActivityRepository
-        Dim userActivities = repo.List(z_OrganizationID, type)
+        Dim userActivities = repo.GetAllAsync(z_OrganizationID, type)
         Dim list As New List(Of ActivityItem)
 
         For Each activity In userActivities

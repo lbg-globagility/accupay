@@ -5,7 +5,7 @@ namespace AccuPay.Data.Repositories
 {
     public class PayPeriodRepository
     {
-        public PayPeriod FindById(int id)
+        public PayPeriod GetById(int id)
         {
             using (PayrollContext context = new PayrollContext())
             {

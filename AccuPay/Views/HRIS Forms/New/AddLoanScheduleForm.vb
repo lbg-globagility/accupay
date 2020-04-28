@@ -307,9 +307,9 @@ Public Class AddLoanScheduleForm
 
         If if_sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
         Else
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypesAsync(z_OrganizationID))
 
         End If
 

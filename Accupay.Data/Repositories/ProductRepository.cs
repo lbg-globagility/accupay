@@ -26,37 +26,37 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Product> AddBonusType(string loanName, int organizationId, int userId, bool isTaxable = false)
+        public async Task<Product> AddBonusTypeAsync(string loanName, int organizationId, int userId, bool isTaxable = false)
         {
             Product product = new Product
             {
                 Category = ProductConstant.BONUS_TYPE_CATEGORY
             };
 
-            return await AddProduct(loanName, product, organizationId, userId, isTaxable);
+            return await AddProductAsync(loanName, product, organizationId, userId, isTaxable);
         }
 
-        public async Task<Product> AddLoanType(string loanName, int organizationId, int userId)
+        public async Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId)
         {
             Product product = new Product
             {
                 Category = ProductConstant.LOAN_TYPE_CATEGORY
             };
 
-            return await AddProduct(loanName, product, organizationId, userId);
+            return await AddProductAsync(loanName, product, organizationId, userId);
         }
 
-        public async Task<Product> AddAllowanceType(string allowanceName, int organizationId, int userId)
+        public async Task<Product> AddAllowanceTypeAsync(string allowanceName, int organizationId, int userId)
         {
             Product product = new Product
             {
                 Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
             };
 
-            return await AddProduct(allowanceName, product, organizationId, userId);
+            return await AddProductAsync(allowanceName, product, organizationId, userId);
         }
 
-        public async Task<Product> AddAdjustmentType(string adjustmentName, int organizationId, int userId, AdjustmentType adjustmentType = AdjustmentType.Blank, string comments = "")
+        public async Task<Product> AddAdjustmentTypeAsync(string adjustmentName, int organizationId, int userId, AdjustmentType adjustmentType = AdjustmentType.Blank, string comments = "")
         {
             Product product = new Product
             {
@@ -65,10 +65,10 @@ namespace AccuPay.Data.Repositories
                 Category = ProductConstant.ADJUSTMENT_TYPE_CATEGORY
             };
 
-            return await AddProduct(adjustmentName, product, organizationId, userId);
+            return await AddProductAsync(adjustmentName, product, organizationId, userId);
         }
 
-        private async Task<Product> AddProduct(string productName, Product product, int organizationId, int userId, bool isTaxable = false)
+        private async Task<Product> AddProductAsync(string productName, Product product, int organizationId, int userId, bool isTaxable = false)
         {
             var categoryId = (await GetOrCreateCategoryByName(product.Category, organizationId))?.RowID;
 
@@ -100,7 +100,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Product> UpdateAdjustmentType(int id, int userId, string adjustmentName, string code)
+        public async Task<Product> UpdateAdjustmentTypeAsync(int id, int userId, string adjustmentName, string code)
         {
             using (var context = new PayrollContext())
             {
@@ -128,7 +128,7 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Product> GetOrCreateLoanType(string loanTypeName, int organizationId, int userId)
+        public async Task<Product> GetOrCreateLoanTypeAsync(string loanTypeName, int organizationId, int userId)
         {
             var categoryId = (await GetOrCreateCategoryByName(ProductConstant.LOAN_TYPE_CATEGORY, organizationId))?.RowID;
 
@@ -138,12 +138,12 @@ namespace AccuPay.Data.Repositories
             var loanType = await GetProductByNameAndCategory(loanTypeName, categoryId.Value, organizationId);
 
             if (loanType == null)
-                loanType = await AddLoanType(loanTypeName, organizationId: organizationId, userId: userId);
+                loanType = await AddLoanTypeAsync(loanTypeName, organizationId: organizationId, userId: userId);
 
             return loanType;
         }
 
-        public async Task<Product> GetOrCreateAllowanceType(string allowanceTypeName, int organizationId, int userId)
+        public async Task<Product> GetOrCreateAllowanceTypeAsync(string allowanceTypeName, int organizationId, int userId)
         {
             var categoryId = (await GetOrCreateCategoryByName(ProductConstant.ALLOWANCE_TYPE_CATEGORY, organizationId))?.RowID;
 
@@ -153,12 +153,12 @@ namespace AccuPay.Data.Repositories
             var allowanceType = await GetProductByNameAndCategory(allowanceTypeName, categoryId.Value, organizationId);
 
             if (allowanceType == null)
-                allowanceType = await AddAllowanceType(allowanceTypeName, organizationId, userId);
+                allowanceType = await AddAllowanceTypeAsync(allowanceTypeName, organizationId, userId);
 
             return allowanceType;
         }
 
-        public async Task<Product> GetOrCreateAdjustmentType(string adjustmentTypeName, int organizationId, int userId)
+        public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
         {
             var categoryId = (await GetOrCreateCategoryByName(ProductConstant.ADJUSTMENT_TYPE_CATEGORY, organizationId))?.RowID;
 
@@ -168,7 +168,7 @@ namespace AccuPay.Data.Repositories
             var adjustmentType = await GetProductByNameAndCategory(adjustmentTypeName, categoryId.Value, organizationId);
 
             if (adjustmentType == null)
-                adjustmentType = await AddAdjustmentType(adjustmentTypeName, organizationId, userId);
+                adjustmentType = await AddAdjustmentTypeAsync(adjustmentTypeName, organizationId, userId);
 
             return adjustmentType;
         }
@@ -185,7 +185,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetAllowanceTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetAllowanceTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.ALLOWANCE_TYPE_CATEGORY;
 
@@ -193,7 +193,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetLeaveTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetLeaveTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.LEAVE_TYPE_CATEGORY;
 
@@ -201,7 +201,7 @@ namespace AccuPay.Data.Repositories
             return await GetProductsByCategory(category.RowID, organizationId);
         }
 
-        public async Task<IEnumerable<Product>> GetLoanTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetLoanTypesAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -210,7 +210,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetGovernmentLoanTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetGovernmentLoanTypesAsync(int organizationId)
         {
             string[] governmentLoans = {
                 ProductConstant.PAG_IBIG_LOAN,
@@ -225,7 +225,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAdjustmentTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetAdjustmentTypesAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -234,7 +234,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetDeductionAdjustmentTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetDeductionAdjustmentTypesAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -242,7 +242,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Product>> GetAdditionAdjustmentTypes(int organizationId)
+        public async Task<IEnumerable<Product>> GetAdditionAdjustmentTypesAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {

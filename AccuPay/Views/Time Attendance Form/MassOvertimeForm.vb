@@ -227,7 +227,7 @@ Public Class MassOvertimePresenter
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
         Dim overtimes = overtimeRepository.
-                            GetAllByEmployeeIDsAndDatePeriod(z_OrganizationID,
+                            GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
                                                             New TimePeriod(dateFrom, dateTo),
                                                             employeeIds)
 

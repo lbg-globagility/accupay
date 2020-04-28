@@ -61,11 +61,11 @@ Public Class PayslipCreator
         'test this before deploying
         Dim rptdoc As Object = Nothing
 
-        Dim organization = New OrganizationRepository().FindById(orgztnID)
-        Dim payperiod = New PayPeriodRepository().FindById(_payPeriodId)
+        Dim organization = New OrganizationRepository().GetById(orgztnID)
+        Dim payperiod = New PayPeriodRepository().GetById(_payPeriodId)
         Dim address As Entities.Address = If(organization?.PrimaryAddressId Is Nothing,
                                                 Nothing,
-                                                New AddressRepository().FindById(organization?.PrimaryAddressId))
+                                                New AddressRepository().GetById(organization?.PrimaryAddressId))
 
         Dim organizationName = organization.Name
 

@@ -225,13 +225,13 @@ namespace AccuPay.Data.Helpers
             var allowanceRepository = new AllowanceRepository();
             var productRepository = new ProductRepository();
 
-            var ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId: employeeId,
+            var ecolaAllowance = await allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
                                                                             organizationId: organizationId,
                                                                             timePeriod: timePeriod);
 
             if (ecolaAllowance == null)
             {
-                var ecolaProductId = (await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA,
+                var ecolaProductId = (await productRepository.GetOrCreateAllowanceTypeAsync(ProductConstant.ECOLA,
                                                                                         organizationId,
                                                                                         userId))?.RowID;
 
@@ -249,7 +249,7 @@ namespace AccuPay.Data.Helpers
 
                 await allowanceRepository.SaveAsync(ecolaAllowance);
 
-                ecolaAllowance = await allowanceRepository.GetEmployeeEcola(employeeId: employeeId,
+                ecolaAllowance = await allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
                                                                             organizationId: organizationId,
                                                                             timePeriod: timePeriod);
             }

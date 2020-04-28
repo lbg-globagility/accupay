@@ -8,14 +8,6 @@ namespace AccuPay.Data.Repositories
 {
     public class AwardRepository
     {
-        public async Task<IEnumerable<Award>> GetListByEmployeeAsync(int employeeId)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Awards.Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
-        }
-
         public async Task DeleteAsync(Award award)
         {
             using (PayrollContext context = new PayrollContext())
@@ -41,6 +33,14 @@ namespace AccuPay.Data.Repositories
             {
                 context.Entry(award).State = EntityState.Modified;
                 await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Award>> GetByEmployeeAsync(int employeeId)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Awards.Where(l => l.EmployeeID == employeeId).ToListAsync();
             }
         }
     }

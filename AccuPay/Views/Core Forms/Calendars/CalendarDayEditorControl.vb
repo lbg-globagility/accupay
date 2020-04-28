@@ -28,7 +28,7 @@ Public Class CalendarDayEditorControl
     End Sub
 
     Private Async Sub LoadDayTypes()
-        _dayTypes = Await _repository.GetAll()
+        _dayTypes = Await _repository.GetAllAsync()
         DayTypesComboBox.DataSource = _dayTypes
     End Sub
 

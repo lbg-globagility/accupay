@@ -35,7 +35,7 @@ Public Class ImportLoansForm
             ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         Me._loanTypeList = New List(Of Product) _
-                (Await _productRepository.GetLoanTypes(z_OrganizationID))
+                (Await _productRepository.GetLoanTypesAsync(z_OrganizationID))
 
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -94,7 +94,7 @@ Public Class ImportLoansForm
                 Continue For
             End If
 
-            Dim loanType = Await Me._productRepository.GetOrCreateLoanType(record.LoanName,
+            Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(record.LoanName,
                                                                     organizationId:=z_OrganizationID,
                                                                     userId:=z_User)
 

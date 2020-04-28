@@ -105,7 +105,7 @@ Public Class CashOutUnusedLeave
         Dim value As Integer
         Dim strVacationLeave = String.Join(Space(1), LeaveType.Vacation.ToString(), "Leave")
 
-        Dim leaveCategory = Await _categoryRepository.GetByName(z_OrganizationID, strVacationLeave)
+        Dim leaveCategory = Await _categoryRepository.GetByNameAsync(z_OrganizationID, strVacationLeave)
         Dim leaveCategoryId = leaveCategory.RowID
 
         Using context = New PayrollContext()
@@ -125,7 +125,7 @@ Public Class CashOutUnusedLeave
     Private Async Function GetAdjUnusedVacationLeaveId() As Threading.Tasks.Task(Of Integer)
         Dim value As Integer
 
-        Dim adjustmentCategory = Await _categoryRepository.GetByName(z_OrganizationID, strAdjType)
+        Dim adjustmentCategory = Await _categoryRepository.GetByNameAsync(z_OrganizationID, strAdjType)
         Dim adjustmentCategoryId = adjustmentCategory.RowID
 
         Using context = New PayrollContext()
@@ -149,7 +149,7 @@ Public Class CashOutUnusedLeave
     Private Async Function GetAdjUnusedSickLeaveId() As Threading.Tasks.Task(Of Integer)
         Dim value As Integer
 
-        Dim adjustmentCategory = Await _categoryRepository.GetByName(z_OrganizationID, strAdjType)
+        Dim adjustmentCategory = Await _categoryRepository.GetByNameAsync(z_OrganizationID, strAdjType)
         Dim adjustmentCategoryId = adjustmentCategory.RowID
 
         Using context = New PayrollContext()

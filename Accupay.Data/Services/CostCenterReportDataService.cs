@@ -94,7 +94,7 @@ namespace AccuPay.Data.Services
                 var employeeMonthlyDeductions = GenerateMonthlyDeductionList(payPeriods, employees, employeePaystubs);
 
                 var hmoLoanType = new ProductRepository().
-                                        GetOrCreateAdjustmentType(ProductConstant.HMO_LOAN,
+                                        GetOrCreateAdjustmentTypeAsync(ProductConstant.HMO_LOAN,
                                                                     organizationId: _organizationId,
                                                                     userId: _userId);
 

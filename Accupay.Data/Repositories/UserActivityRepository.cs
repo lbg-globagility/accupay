@@ -14,7 +14,7 @@ namespace AccuPay.Data.Repositories
         public const string RecordTypeDelete = "DELETE";
         public const string RecordTypeImport = "IMPORT";
 
-        public IEnumerable<UserActivity> List(int organizationId = 0, string entityName = null)
+        public IEnumerable<UserActivity> GetAllAsync(int organizationId = 0, string entityName = null)
         {
             using (PayrollContext context = new PayrollContext())
             {

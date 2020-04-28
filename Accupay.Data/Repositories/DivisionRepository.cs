@@ -31,7 +31,7 @@ namespace AccuPay.Data.Repositories
                     throw new ArgumentException("Division already has positions therefore cannot be deleted.");
 
                 var division = await context.Divisions.
-                                                FirstOrDefaultAsync(d => d.RowID == divisionId);
+                                FirstOrDefaultAsync(d => d.RowID == divisionId);
 
                 context.Remove(division);
 
@@ -172,7 +172,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<List<Division>> GetAllAsync(int organizationId)
+        public async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {
@@ -182,7 +182,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<List<Division>> GetAllParentsAsync(int organizationId)
+        public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
         {
             using (PayrollContext context = new PayrollContext())
             {

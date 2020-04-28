@@ -98,7 +98,7 @@ Public Class TimeEntryGenerator
             organization = context.Organizations.
                 SingleOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
 
-            _salaries = _salaryRepository.GetAllByCutOff(z_OrganizationID, _cutoffStart).ToList()
+            _salaries = _salaryRepository.GetByCutOff(z_OrganizationID, _cutoffStart).ToList()
 
             Dim previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart)
             Dim endOfCutOff As Date = _cutoffEnd
@@ -122,7 +122,7 @@ Public Class TimeEntryGenerator
                             GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
             _overtimes = _overtimeRepository.
-                            GetAllByDatePeriod(z_OrganizationID, cuttOffPeriod, OvertimeStatus.Approved).
+                            GetByDatePeriod(z_OrganizationID, cuttOffPeriod, OvertimeStatus.Approved).
                             ToList()
 
             _officialBusinesses = _officialBusinessRepository.

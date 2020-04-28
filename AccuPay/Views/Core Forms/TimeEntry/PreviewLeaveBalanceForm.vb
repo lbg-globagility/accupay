@@ -76,7 +76,8 @@ Public Class PreviewLeaveBalanceForm
         RemovePreviousLeaveCreditsAsync()
 
         Dim categoryRepo = New Repositories.CategoryRepository
-        Dim leaveCategory = Await categoryRepo.GetByName(z_OrganizationID, "Leave Type")
+        Dim leaveCategory = Await categoryRepo.GetByNameAsync(z_OrganizationID,
+                                                              ProductConstant.LEAVE_TYPE_CATEGORY)
 
         Using context = New PayrollContext()
             Dim leaveCategoryId = leaveCategory.RowID

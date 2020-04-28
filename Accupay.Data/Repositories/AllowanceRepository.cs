@@ -108,7 +108,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<Allowance> GetEmployeeEcola(int employeeId,
+        public async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,
                                                         int organizationId,
                                                         TimePeriod timePeriod)
         {
@@ -128,7 +128,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Allowance>> GetByEmployeeIncludesProductAsync(int employeeId)
+        public async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
         {
             using (var context = new PayrollContext())
             {
@@ -139,8 +139,8 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<ICollection<Allowance>> GetByPayPeriodWithProduct(int organizationId,
-                                                                            TimePeriod timePeriod)
+        public async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId,
+                                                                                TimePeriod timePeriod)
         {
             using (var context = new PayrollContext())
             {
