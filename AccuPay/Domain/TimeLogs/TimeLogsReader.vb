@@ -2,6 +2,7 @@
 
 Imports System.IO
 Imports System.Text.RegularExpressions
+Imports AccuPay.Data
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -80,6 +81,14 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
 
                 Dim employeeNo = Trim(parts(0))
 
+                If (Regex.Split(parts(1), " ").Count < 2) Then
+                    Return (New ImportTimeAttendanceLog() With {
+                        .LineContent = lineContent,
+                        .LineNumber = lineNumber,
+                        .ErrorMessage = "Date log must consist of Date (1 space) Time."
+                    })
+                End If
+
                 Dim logDate = ObjectUtils.ToNullableDateTime(parts(1))
 
                 If logDate Is Nothing Then
@@ -149,7 +158,7 @@ Namespace Global.AccuPay.Helper.TimeLogsReader
         Public Property IsTimeIn As Boolean?
 
         Public Property LogDate As Date?
-        Public Property Employee As Employee
+        Public Property Employee As Entities.Employee
         Public Property ShiftSchedule As ShiftSchedule
         Public Property EmployeeDutySchedule As EmployeeDutySchedule
         Public Property ShiftTimeInBounds As Date

@@ -1,11 +1,11 @@
-﻿Imports AccuPay
+﻿Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
     Private _payRateCalculationBasis As PayRateCalculationBasis
 
@@ -103,7 +103,7 @@ Public Class GeneralForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetEnum("Pay rate.CalculationBasis",
                    PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
@@ -390,7 +390,7 @@ Public Class GeneralForm
             Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
 
         AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.CurrentSystemOwner)
+            ownr.Contains(sys_ownr.GetCurrentSystemOwner())
 
         MyBase.OnLoad(e)
 

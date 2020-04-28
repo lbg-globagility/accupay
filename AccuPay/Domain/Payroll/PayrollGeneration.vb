@@ -1,6 +1,8 @@
 Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports AccuPay.Payroll
@@ -17,13 +19,13 @@ Public Class PayrollGeneration
 
     Private ReadOnly _notifyMainWindow As NotifyMainWindow
 
-    Private ReadOnly _employee As Employee
+    Private ReadOnly _employee As Entities.Employee
 
     Private ReadOnly _resources As PayrollResources
 
     Private ReadOnly _salary As Salary
 
-    Private ReadOnly _loanSchedules As ICollection(Of LoanSchedule)
+    Private ReadOnly _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
 
@@ -39,21 +41,23 @@ Public Class PayrollGeneration
 
     Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
 
-    Private ReadOnly _allowances As ICollection(Of Data.Entities.Allowance)
+    Private ReadOnly _allowances As ICollection(Of Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
     Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
 
+    Private ReadOnly _leaves As IReadOnlyCollection(Of Entities.Leave)
+
     Private ReadOnly _previousPaystub As Paystub
 
-    Private ReadOnly _bpiInsuranceProduct As Product
+    Private ReadOnly _bpiInsuranceProduct As Entities.Product
 
     Private ReadOnly _calendarCollection As CalendarCollection
 
     Private _paystub As Paystub
 
-    Sub New(employee As Employee,
+    Sub New(employee As Entities.Employee,
             resources As PayrollResources,
             Optional paystubForm As PayStubForm = Nothing)
         _formCaller = paystubForm
@@ -86,7 +90,7 @@ Public Class PayrollGeneration
         _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(
             Function(p) CBool(p.EmployeeID = _employee.RowID))
 
-        _settings = New ListOfValueCollection(resources.ListOfValues)
+        _settings = resources.ListOfValueCollection
         _payPeriod = resources.PayPeriod
 
         _previousTimeEntries = resources.TimeEntries.
@@ -104,6 +108,10 @@ Public Class PayrollGeneration
             ToList()
 
         _allowances = resources.Allowances.
+            Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
+            ToList()
+
+        _leaves = resources.Leaves.
             Where(Function(a) CBool(a.EmployeeID = _employee.RowID)).
             ToList()
 
@@ -209,7 +217,7 @@ Public Class PayrollGeneration
                 context.LoanTransactions.Add(newLoanTransaction)
             Next
 
-            If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
+            If _resources.SystemOwner.GetCurrentSystemOwner() <> SystemOwnerService.Benchmark Then
                 UpdateLeaveLedger(context)
                 UpdatePaystubItems(context)
             Else
@@ -233,7 +241,7 @@ Public Class PayrollGeneration
 
         End If
 
-        If _resources.SystemOwner.CurrentSystemOwner <> SystemOwner.Benchmark Then
+        If _resources.SystemOwner.GetCurrentSystemOwner() <> SystemOwnerService.Benchmark Then
 
             ComputeBasicHoursAndPay()
 
@@ -577,12 +585,10 @@ Public Class PayrollGeneration
     End Sub
 
     Private Sub UpdateLeaveLedger(context As PayrollContext)
-        Dim leaves = context.Leaves.
-            Where(Function(l) _payPeriod.PayFromDate <= l.StartDate).
-            Where(Function(l) l.StartDate <= _payPeriod.PayToDate).
-            Where(Function(l) CBool(l.EmployeeID = _employee.RowID)).
-            OrderBy(Function(l) l.StartDate).
-            ToList()
+        Dim leaves = _leaves.
+                        Where(Function(l) l.EmployeeID.Value = _employee.RowID.Value).
+                        OrderBy(Function(l) l.StartDate).
+                        ToList()
 
         Dim leaveIds = leaves.Select(Function(l) l.RowID)
 
@@ -831,9 +837,15 @@ Public Class PayrollGeneration
         Public Property AbsenceDeduction As Decimal Implements IPaystubRate.AbsenceDeduction
         Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
-        Public Sub Compute(timeEntries As ICollection(Of TimeEntry), salary As Salary, employee As Employee, actualtimeentries As ICollection(Of ActualTimeEntry))
+        Public Sub Compute(timeEntries As ICollection(Of TimeEntry),
+                           salary As Salary,
+                           employee As Entities.Employee,
+                           actualtimeentries As ICollection(Of ActualTimeEntry))
 
-            Dim totalTimeEntries = TotalTimeEntry.Calculate(timeEntries, salary, employee, actualtimeentries)
+            Dim totalTimeEntries = TotalTimeEntryCalculator.Calculate(timeEntries,
+                                                                      salary,
+                                                                      employee,
+                                                                      actualtimeentries)
 
             Me.RegularHours = totalTimeEntries.RegularHours
             Me.RegularPay = totalTimeEntries.RegularPay

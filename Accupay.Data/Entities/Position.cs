@@ -37,7 +37,7 @@ namespace AccuPay.Data.Entities
         [ForeignKey("DivisionID")]
         public virtual Division Division { get; set; }
 
-        //[ForeignKey("JobLevelID")]
-        //public virtual JobLevel JobLevel { get; set; }
+        [ForeignKey("JobLevelID")]
+        public virtual JobLevel JobLevel { get; set; }
     }
 }

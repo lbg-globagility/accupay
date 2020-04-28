@@ -4,9 +4,10 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
-Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -36,11 +37,11 @@ Public Class TimeEntrySummaryForm
 
     Private _payPeriods As ICollection(Of PayPeriod)
 
-    Private _employees As ICollection(Of Employee)
+    Private _employees As ICollection(Of Entities.Employee)
 
-    Private _selectedEmployee As Employee
+    Private _selectedEmployee As Entities.Employee
 
-    Private _breakTimeBrackets As List(Of BreakTimeBracket)
+    Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
     Private _selectedPayPeriod As PayPeriod
 
@@ -50,7 +51,9 @@ Public Class TimeEntrySummaryForm
 
     Private _currentTimeEntryDate As Date
 
-    Private _employeeRepository As EmployeeRepository
+    Private _breakTimeBracketRepository As Repositories.BreakTimeBracketRepository
+
+    Private _employeeRepository As Repositories.EmployeeRepository
 
     Private _hideMoneyColumns As Boolean
 
@@ -68,7 +71,9 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        _employeeRepository = New EmployeeRepository
+        _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
+
+        _employeeRepository = New Repositories.EmployeeRepository()
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -79,7 +84,7 @@ Public Class TimeEntrySummaryForm
         Await LoadEmployees()
         Await LoadPayPeriods()
 
-        _breakTimeBrackets = New List(Of BreakTimeBracket)
+        _breakTimeBrackets = New List(Of Entities.BreakTimeBracket)
         If _policy.ComputeBreakTimeLate Then
             _breakTimeBrackets = GetBreakTimeBrackets()
         End If
@@ -122,14 +127,9 @@ Public Class TimeEntrySummaryForm
         End Using
     End Sub
 
-    Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
+    Private Function GetBreakTimeBrackets() As List(Of Entities.BreakTimeBracket)
 
-        Using context As New PayrollContext
-            Return context.BreakTimeBrackets.
-                            Include(Function(b) b.Division).
-                            Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
-                            ToList()
-        End Using
+        Return _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
 
     End Function
 
@@ -137,13 +137,11 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Using context As New PayrollContext
-            Return PayrollTools.GetCalendarCollection(payPeriod.PayFromDate,
+        Return Data.Helpers.PayrollTools.
+                                    GetCalendarCollection(payPeriod.PayFromDate,
                                                         payPeriod.PayToDate,
-                                                        context,
-                                                        _policy.PayRateCalculationBasis)
-        End Using
-
+                                                        _policy.PayRateCalculationBasis,
+                                                        z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -151,13 +149,13 @@ Public Class TimeEntrySummaryForm
         employeesDataGridView.DataSource = _employees
     End Function
 
-    Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
+    Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Entities.Employee))
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync()
+        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
-        Return CType(list, ICollection(Of Employee))
+        Return CType(list, ICollection(Of Entities.Employee))
 
     End Function
 
@@ -396,7 +394,7 @@ Public Class TimeEntrySummaryForm
         Return years
     End Function
 
-    Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetTimeEntries(employee As Data.Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim calendarCollection As CalendarCollection
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
@@ -644,7 +642,7 @@ Public Class TimeEntrySummaryForm
         Return timeEntries
     End Function
 
-    Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
+    Private Async Function GetActualTimeEntries(employee As Entities.Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
         Dim calendarCollection As CalendarCollection
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
@@ -942,7 +940,7 @@ Public Class TimeEntrySummaryForm
             Return
         End If
 
-        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Dim employee = DirectCast(employeesDataGridView.CurrentRow.DataBoundItem, Data.Entities.Employee)
         If employee Is _selectedEmployee Then
             Return
         End If
@@ -1241,9 +1239,9 @@ Public Class TimeEntrySummaryForm
                                         GetCalendar(BranchID).
                                         Find(EntryDate.Value)
 
-            If TypeOf currentPayRate Is CalendarDay Then
+            If TypeOf currentPayRate Is Entities.CalendarDay Then
 
-                Dim calendarDayName = DirectCast(currentPayRate, CalendarDay)?.DayType?.Name
+                Dim calendarDayName = DirectCast(currentPayRate, Entities.CalendarDay)?.DayType?.Name
 
                 If {PayRate.DoubleHoliday,
                     PayRate.RegularHoliday,
@@ -1574,7 +1572,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeIn IsNot Nothing Then
 
-                    actualTimeIn = dateTimeIn.
+                    actualTimeIn = dateTimeIn.Value.
                                     ToMinimumHourValue.
                                     Add(timeIn.Value.TimeOfDay)
                 Else
@@ -1598,7 +1596,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeOut IsNot Nothing Then
 
-                    actualTimeOut = dateTimeOut.
+                    actualTimeOut = dateTimeOut.Value.
                                     ToMinimumHourValue.
                                     Add(timeOut.Value.TimeOfDay)
                 Else

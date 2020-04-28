@@ -63,16 +63,8 @@ namespace AccuPay.Data.Repositories
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Entry(branch).State = EntityState.Deleted;
+                context.Branches.Remove(branch);
                 await context.SaveChangesAsync();
-            }
-        }
-
-        public Branch FindById(int id)
-        {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Branches.FirstOrDefault(x => x.RowID == id);
             }
         }
     }

@@ -300,7 +300,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
-    Private Async Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
+    Private Sub ValidateLogs(Optional isFirstLoad As Boolean = False)
         Me.Cursor = Cursors.WaitCursor
 
         _timeAttendanceHelper.Validate()

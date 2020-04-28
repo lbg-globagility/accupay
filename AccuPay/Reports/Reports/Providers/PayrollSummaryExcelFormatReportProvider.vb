@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
@@ -113,9 +114,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 New ExcelReportColumn("Total", "Total")
             })
 
-        Dim sys_ownr As New SystemOwner
+        Dim sys_ownr As New SystemOwnerService()
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             Dim allowanceColumn = reportColumns.Where(Function(r) r.Name = allowanceColumnName).FirstOrDefault
 
@@ -136,11 +137,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         Dim payrollSelector = GetPayrollSelector()
         If payrollSelector Is Nothing Then Return
 
-        Using context As New PayrollContext
-
-            _settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-        End Using
+        _settings = ListOfValueCollection.Create()
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
@@ -248,9 +245,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwner
+        Dim sys_ownr As New SystemOwnerService()
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

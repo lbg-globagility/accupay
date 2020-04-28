@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeesalary")]
-    public class Salary
+    public class Salary : ISalary
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -59,6 +59,9 @@ namespace AccuPay.Data.Entities
 
         [Column("EffectiveDateTo")]
         public DateTime? EffectiveTo { get; set; }
+
+        //[ForeignKey("EmployeeID")]
+        //public virtual Employee Employee { get; set; }
 
         public bool DoPaySSSContribution { get; set; }
 

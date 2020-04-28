@@ -1,7 +1,8 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
@@ -19,9 +20,9 @@ Public Class OfficialBusinessForm
 
     Private _officialBusinessRepository As New OfficialBusinessRepository
 
-    Private _employeeRepository As New Repository.EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository
 
-    Private _productRepository As New Data.Repositories.ProductRepository
+    Private _productRepository As New ProductRepository
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -101,7 +102,7 @@ Public Class OfficialBusinessForm
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 
@@ -166,9 +167,10 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentOfficialBusinesses = (Await _officialBusinessRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+        Me._currentOfficialBusinesses = (Await _officialBusinessRepository.
+                                GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
 
@@ -224,61 +226,61 @@ Public Class OfficialBusinessForm
 
     End Function
 
-    Private Function RecordUpdate(newOfficialBusiness As OfficialBusiness)
+    Private Function RecordUpdate(newOfficialBusiness As OfficialBusiness) As Boolean
         Dim oldOfficialBusiness =
             Me._changedOfficialBusinesses.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOfficialBusiness.RowID))
 
         If oldOfficialBusiness Is Nothing Then Return False
 
-        Dim changes = New List(Of Data.Entities.UserActivityItem)
+        Dim changes = New List(Of UserActivityItem)
 
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'"
                         })
         End If
         If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'"
                         })
         End If
         If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'"
                         })
         End If
         If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'"
                         })
         End If
         If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'"
                         })
         End If
         If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'"
                         })
         End If
         If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOfficialBusiness.RowID,
+                        .EntityId = oldOfficialBusiness.RowID.Value,
                         .Description = $"Update official business status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'"
                         })
         End If
@@ -342,10 +344,11 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _officialBusinessRepository.DeleteAsync(Me._currentOfficialBusiness.RowID)
+                                                Await _officialBusinessRepository.
+                                                    DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID, z_OrganizationID)
+                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID.Value, z_OrganizationID)
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -365,7 +368,11 @@ Public Class OfficialBusinessForm
 
         End If
 
-        EndDatePicker.Value = Me._currentOfficialBusiness.EndDate
+        If Me._currentOfficialBusiness.EndDate.HasValue Then
+            EndDatePicker.Value = Me._currentOfficialBusiness.EndDate.Value
+
+        End If
+
     End Sub
 
     Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OfficialBusinessGridView.SelectionChanged
@@ -465,14 +472,14 @@ Public Class OfficialBusinessForm
 
         Const messageTitle As String = "Delete Official Business"
 
-        If Me._currentOfficialBusiness Is Nothing OrElse
-            Me._currentOfficialBusiness.RowID Is Nothing Then
+        If Me._currentOfficialBusiness?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No official business selected!")
 
             Return
         End If
 
-        Dim currentOfficialBusiness = Await _officialBusinessRepository.GetByIdAsync(Me._currentOfficialBusiness.RowID)
+        Dim currentOfficialBusiness = Await _officialBusinessRepository.
+                                        GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
 
         If currentOfficialBusiness Is Nothing Then
 
@@ -508,6 +515,7 @@ Public Class OfficialBusinessForm
                     Return
                 End If
 
+                item.LastUpdBy = z_User
                 changedOfficialBusinesses.Add(item)
             End If
         Next
@@ -525,7 +533,8 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _officialBusinessRepository.SaveManyAsync(changedOfficialBusinesses)
+                                            Await _officialBusinessRepository.
+                                                        SaveManyAsync(changedOfficialBusinesses)
 
                                             For Each item In changedOfficialBusinesses
                                                 RecordUpdate(item)

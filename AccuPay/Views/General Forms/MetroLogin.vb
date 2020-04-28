@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Utils
+﻿Imports AccuPay.Data.Services
+Imports AccuPay.Utils
 
 Public Class MetroLogin
 
@@ -239,7 +240,7 @@ Public Class MetroLogin
                 Return False
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
                 Return True

@@ -1,5 +1,6 @@
 Imports System.Configuration
 Imports System.Threading
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo
 Imports MySql.Data.MySqlClient
@@ -29,15 +30,15 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
-    Private sys_ownr As New SystemOwner
+    Private sys_ownr As New SystemOwnerService()
 
     Sub New()
         ' This call is required by the designer.
         InitializeComponent()
         ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
-        if_sysowner_is_cinema2k = sys_ownr.CurrentSystemOwner = SystemOwner.Cinema2000
-        if_sysowner_is_hyundai = sys_ownr.CurrentSystemOwner = SystemOwner.Hyundai
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_cinema2k = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
+        if_sysowner_is_hyundai = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
         PrepareFormForBenchmark()
     End Sub
 
@@ -299,7 +300,7 @@ Public Class MDIPrimaryForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -818,7 +819,7 @@ Public Class MDIPrimaryForm
         If if_sysowner_is_hyundai Then
 
             Dim pend_leave As New SQL(str_pending_leave,
-                                  New Object() {orgztnID, AccuPay.Entity.Leave.StatusPending})
+                                  New Object() {orgztnID, Data.Entities.Leave.StatusPending})
 
             dt_pend_leave = pend_leave.GetFoundRows.Tables(0)
 
@@ -924,7 +925,7 @@ Public Class MDIPrimaryForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -1076,7 +1077,7 @@ Public Class MDIPrimaryForm
 
         For Each collapgpbox In _list
             Dim _bool As Boolean =
-                (collapgpbox.AccessibleDescription = SystemOwner.Cinema2000)
+                (collapgpbox.AccessibleDescription = SystemOwnerService.Cinema2000)
 
             collapgpbox.Visible = _bool
 

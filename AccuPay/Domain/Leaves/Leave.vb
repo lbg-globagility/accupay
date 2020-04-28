@@ -4,6 +4,8 @@ Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay.Utilities.Extensions
 
+'Not transferred yet because need by leave transaction and ledger
+'and both are tighly coupled to PayrollGeneration and some other reports
 Namespace Global.AccuPay.Entity
 
     <Table("employeeleave")>

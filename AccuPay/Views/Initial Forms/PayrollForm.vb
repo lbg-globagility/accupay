@@ -1,8 +1,10 @@
+Imports AccuPay.Data.Services
+
 Public Class PayrollForm
 
     Public listPayrollForm As New List(Of String)
 
-    Private sys_ownr As New SystemOwner
+    Private sys_ownr As New SystemOwnerService()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -157,11 +159,11 @@ Public Class PayrollForm
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
 
         Dim showBonusForm As Boolean =
-            (sys_ownr.CurrentSystemOwner = SystemOwner.Goldwings)
+            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
 
         BonusToolStripMenuItem.Visible = showBonusForm
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         If if_sysowner_is_benchmark Then
 

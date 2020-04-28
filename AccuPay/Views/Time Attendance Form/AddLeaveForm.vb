@@ -1,6 +1,8 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+﻿Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddLeaveForm
@@ -57,7 +59,7 @@ Public Class AddLeaveForm
 
     Private Async Function LoadLeaveTypes() As Task
 
-        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes(z_OrganizationID))
 
         leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -72,6 +74,9 @@ Public Class AddLeaveForm
 
         Me._newLeave = New Leave
         Me._newLeave.EmployeeID = _currentEmployee.RowID
+        Me._newLeave.OrganizationID = z_OrganizationID
+        Me._newLeave.CreatedBy = z_User
+
         Me._newLeave.StartDate = Date.Now
         Me._newLeave.EndDate = Date.Now
         Me._newLeave.StartTime = Date.Now.TimeOfDay
@@ -152,7 +157,11 @@ Public Class AddLeaveForm
 
         End If
 
-        EndDatePicker.Value = Me._newLeave.EndDate
+        If Me._newLeave.EndDate.HasValue Then
+            EndDatePicker.Value = Me._newLeave.EndDate.Value
+
+        End If
+
     End Sub
 
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
@@ -177,8 +186,8 @@ Public Class AddLeaveForm
             Async Function()
                 Await _leaveRepository.SaveAsync(Me._newLeave)
 
-                Dim repo As New Data.Repositories.UserActivityRepository
-                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID, z_OrganizationID)
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

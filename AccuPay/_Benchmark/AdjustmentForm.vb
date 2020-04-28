@@ -1,9 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AdjustmentForm
@@ -39,18 +40,18 @@ Public Class AdjustmentForm
     Private Async Function RefreshForm() As Task
         If _adjustmentType = AdjustmentType.Deduction Then
 
-            _adjustments = Await _productRepository.GetDeductionAdjustmentTypes()
+            _adjustments = Await _productRepository.GetDeductionAdjustmentTypes(z_OrganizationID)
 
             Me.Text = "Deduction Adjustments"
 
         ElseIf _adjustmentType = AdjustmentType.OtherIncome Then
 
-            _adjustments = Await _productRepository.GetAdditionAdjustmentTypes()
+            _adjustments = Await _productRepository.GetAdditionAdjustmentTypes(z_OrganizationID)
 
             Me.Text = "Other Income Adjustments"
         Else
 
-            _adjustments = Await _productRepository.GetAdjustmentTypes()
+            _adjustments = Await _productRepository.GetAdjustmentTypes(z_OrganizationID)
 
         End If
 
@@ -161,7 +162,7 @@ Public Class AdjustmentForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Adjustment",
                 Async Function()
 
-                    Await _productRepository.Delete(adjustmentId.Value)
+                    Await _productRepository.DeleteAsync(adjustmentId.Value)
 
                     Await RefreshForm()
                     MessageBoxHelper.Information($"Adjustment: '{adjustment.PartNo}' successfully deleted.")
@@ -199,6 +200,8 @@ Public Class AdjustmentForm
                                     If _currentFormType = FormMode.Creating Then
 
                                         Await _productRepository.AddAdjustmentType(
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
                                                         adjustmentName:=adjustmentName,
                                                         comments:=CodeTextBox.Text.Trim,
                                                         adjustmentType:=_adjustmentType)
@@ -209,9 +212,11 @@ Public Class AdjustmentForm
 
                                         Dim currentAdjustmentId = _currentAdjustment.RowID.Value
 
-                                        Await _productRepository.UpdateAdjustmentType(currentAdjustmentId,
-                                                        adjustmentName:=adjustmentName,
-                                                        code:=CodeTextBox.Text.Trim)
+                                        Await _productRepository.UpdateAdjustmentType(
+                                                                    id:=currentAdjustmentId,
+                                                                    userID:=z_User,
+                                                                    adjustmentName:=adjustmentName,
+                                                                    code:=CodeTextBox.Text.Trim)
 
                                         successMessage = $"Adjustment: '{adjustmentName}' successfully updated."
                                     End If

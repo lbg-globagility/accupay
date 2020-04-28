@@ -1,13 +1,13 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
-Imports AccuPay.Views.Payroll
+Imports AccuPay.Data.Services
 
 Public Class ReportsList
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
-    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
 
     Private Const ActualDescription As String = "(Actual)"
 
@@ -38,7 +38,7 @@ Public Class ReportsList
         }
         'New PayrollLedgerReportProvider(),
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             providers = GetBenchmarkReports()
         End If
 
@@ -64,7 +64,7 @@ Public Class ReportsList
             End If
         Next
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
@@ -137,7 +137,7 @@ Public Class ReportsList
             Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
 
             Try
-                If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark AndAlso
+                If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
                     TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
 
                     Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)

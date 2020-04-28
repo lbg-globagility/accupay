@@ -1,8 +1,6 @@
 Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Entity
-Imports AccuPay.JobLevels
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
@@ -21,14 +19,6 @@ Public Class PayrollContext
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
 
-    Public Overridable Property Categories As DbSet(Of Category)
-
-    Public Overridable Property JobCategories As DbSet(Of JobCategory)
-
-    Public Overridable Property JobLevels As DbSet(Of JobLevel)
-
-    Public Overridable Property LoanSchedules As DbSet(Of LoanSchedule)
-
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
@@ -45,8 +35,6 @@ Public Class PayrollContext
 
     Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
 
-    Public Overridable Property Positions As DbSet(Of Position)
-
     Public Overridable Property Products As DbSet(Of Product)
 
     Public Overridable Property Salaries As DbSet(Of Salary)
@@ -59,23 +47,9 @@ Public Class PayrollContext
 
     Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
 
-    Public Overridable Property Employees As DbSet(Of Employee)
-
     Public Overridable Property Shifts As DbSet(Of Shift)
 
-    Public Overridable Property ListOfValues As DbSet(Of ListOfValue)
-
-    Public Overridable Property Calendars As DbSet(Of PayCalendar)
-
-    Public Overridable Property CalendarDays As DbSet(Of CalendarDay)
-
-    Public Overridable Property DayTypes As DbSet(Of DayType)
-
-    Public Overridable Property PayRates As DbSet(Of PayRate)
-
     Public Overridable Property Organizations As DbSet(Of Organization)
-
-    Public Overridable Property Divisions As DbSet(Of Division)
 
     Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
 
@@ -93,10 +67,6 @@ Public Class PayrollContext
 
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
 
-    Public Overridable Property Leaves As DbSet(Of Leave)
-
-    Public Overridable Property OfficialBusinesses As DbSet(Of OfficialBusiness)
-
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
 
     Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
@@ -104,8 +74,6 @@ Public Class PayrollContext
     Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
 
     Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
-
-    Public Overridable Property BreakTimeBrackets As DbSet(Of BreakTimeBracket)
 
     Public Overridable Property Users As DbSet(Of User)
 

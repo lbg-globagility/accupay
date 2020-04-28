@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -12,9 +13,11 @@ Public Class AddBranchForm
 
     Private _branchRepository As BranchRepository
 
+    Private _calendarRepository As CalendarRepository
+
     Private _branches As IEnumerable(Of Branch)
 
-    Private _calendars As IEnumerable(Of Entity.PayCalendar)
+    Private _calendars As IEnumerable(Of PayCalendar)
 
     Private _currentBranch As Branch
 
@@ -35,26 +38,24 @@ Public Class AddBranchForm
 
         _branchRepository = New BranchRepository()
 
+        _calendarRepository = New CalendarRepository()
+
         Await RefreshForm()
 
     End Sub
 
     Private Sub ShowCalendar()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+        _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                             PayRateCalculationBasis.Organization)
 
-            If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
+        If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
-                CalendarPanel.Visible = False
+            CalendarPanel.Visible = False
 
-            End If
-
-        End Using
+        End If
 
     End Sub
 
@@ -62,11 +63,7 @@ Public Class AddBranchForm
 
         _branches = Await _branchRepository.GetAllAsync()
 
-        Using context As New PayrollContext
-
-            _calendars = Await context.Calendars.ToListAsync()
-
-        End Using
+        _calendars = Await _calendarRepository.GetAllAsync()
 
         NameTextBox.Clear()
         DetailsGroupBox.Enabled = False
@@ -221,7 +218,7 @@ Public Class AddBranchForm
                                 Async Function()
 
                                     Dim branchName = NameTextBox.Text.Trim
-                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, Entity.PayCalendar)
+                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
 
                                     Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
                                     Dim successMesage = ""
@@ -249,7 +246,7 @@ Public Class AddBranchForm
 
     End Sub
 
-    Private Async Function SaveBranch(branchName As String, calendar As Entity.PayCalendar) As Task(Of Integer?)
+    Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then

@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
@@ -22,7 +23,9 @@ Public Class ImportedShiftSchedulesForm
 
     Private _shiftScheduleRowRecords As IList(Of ShiftScheduleRowRecord)
 
-    Private _employees As IList(Of Employee)
+    Private _employeeRepository As EmployeeRepository
+
+    Private _employees As IList(Of IEmployee)
 
     Public IsSaved As Boolean
 
@@ -36,6 +39,8 @@ Public Class ImportedShiftSchedulesForm
 
         _dataSourceFailed = New List(Of ShiftScheduleModel)
 
+        _employeeRepository = New EmployeeRepository
+
     End Sub
 
 #End Region
@@ -43,11 +48,15 @@ Public Class ImportedShiftSchedulesForm
 #Region "Methods"
 
     Private Async Sub GetEmployeesAsync(listOfShiftScheduleRowRecord As IList(Of ShiftScheduleRowRecord))
+
+        Dim employeeNumberList As String() = listOfShiftScheduleRowRecord.
+                                                    Select(Function(s) s.EmployeeNo).
+                                                    ToArray
+
+        _employees = New List(Of IEmployee)((Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
+                                                employeeNumberList,
+                                                z_OrganizationID)))
         Using context = New PayrollContext
-            _employees = Await context.Employees.
-                Where(Function(e) listOfShiftScheduleRowRecord.Any(Function(ee) ee.EmployeeNo = e.EmployeeNo)).
-                Where(Function(e) Equals(e.OrganizationID, z_OrganizationID)).
-                ToListAsync()
 
             For Each shiftSched In _shiftScheduleRowRecords
 
@@ -107,7 +116,9 @@ Public Class ImportedShiftSchedulesForm
         Next
     End Sub
 
-    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord, dates As IEnumerable(Of Date), employee As Employee)
+    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord,
+                                               dates As IEnumerable(Of Date),
+                                               employee As IEmployee)
         For Each d In dates
             _dataSource.Add(New ShiftScheduleModel(employee) With {
                         .DateValue = d,
@@ -162,7 +173,7 @@ Public Class ImportedShiftSchedulesForm
 
         End Sub
 
-        Public Sub New(employee As Employee)
+        Public Sub New(employee As IEmployee)
             AssignEmployee(employee)
 
         End Sub
@@ -196,7 +207,7 @@ Public Class ImportedShiftSchedulesForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As Employee)
+        Private Sub AssignEmployee(employee As IEmployee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)

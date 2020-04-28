@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
+
 Namespace Global.AccuPay.Payroll
 
     Public Class PhilHealthPolicy

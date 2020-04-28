@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -28,7 +30,7 @@ Public Class ImportAllowanceForm
 
         Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
-        Me._allowanceTypeList = Await _productRepository.GetAllowanceTypes(z_OrganizationID)
+        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypes(z_OrganizationID)).ToList()
 
         AllowancesDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -68,7 +70,8 @@ Public Class ImportAllowanceForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            Dim employee = Await _employeeRepository.
+                                GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
 
             If employee Is Nothing Then
 
@@ -146,8 +149,8 @@ Public Class ImportAllowanceForm
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .AllowanceFrequency = allowanceFrequency,
-                .Amount = record.Amount,
-                .EffectiveStartDate = record.EffectiveStartDate,
+                .Amount = record.Amount.Value,
+                .EffectiveStartDate = record.EffectiveStartDate.Value,
                 .EffectiveEndDate = record.EffectiveEndDate,
                 .ProductID = allowanceType.RowID
             }
@@ -199,26 +202,26 @@ Public Class ImportAllowanceForm
         Dim messageTitle = "Import Allowances"
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
-                                        Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(z_OrganizationID, z_User, _allowances)
+            Async Function()
+                Await _allowanceRepository.SaveManyAsync(_allowances)
 
-                                            Dim importList = New List(Of Data.Entities.UserActivityItem)
-                                            For Each item In _allowances
-                                                importList.Add(New Data.Entities.UserActivityItem() With
-                                                    {
-                                                    .Description = $"Imported a new allowance.",
-                                                    .EntityId = item.RowID
-                                                    })
-                                            Next
+                Dim importList = New List(Of UserActivityItem)
+                For Each item In _allowances
+                    importList.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new allowance.",
+                        .EntityId = item.RowID.Value
+                        })
+                Next
 
-                                            Dim repo = New UserActivityRepository
-                                            repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                                            Me.IsSaved = True
-                                            Me.Cursor = Cursors.Default
-                                            Me.Close()
+                Me.IsSaved = True
+                Me.Cursor = Cursors.Default
+                Me.Close()
 
-                                        End Function)
+            End Function)
 
         Me.Cursor = Cursors.Default
     End Sub

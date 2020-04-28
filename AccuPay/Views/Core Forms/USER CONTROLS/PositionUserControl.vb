@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports AccuPay.JobLevels
+Imports AccuPay.Data.Entities
 
 Public Class PositionUserControl
 
@@ -31,7 +30,6 @@ Public Class PositionUserControl
         JobLevelComboBox.DataSource = _jobLevels
 
         PrepareForm()
-
 
     End Sub
 

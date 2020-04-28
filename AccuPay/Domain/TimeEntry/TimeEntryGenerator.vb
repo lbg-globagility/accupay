@@ -4,7 +4,10 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Tools
 Imports log4net
@@ -22,15 +25,21 @@ Public Class TimeEntryGenerator
     Private _actualTimeEntries As IList(Of ActualTimeEntry)
     Private _timeLogs As IList(Of TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
-    Private _leaves As IList(Of Leave)
-    Private _overtimeRepository As OvertimeRepository
-    Private _officialBusinesses As IList(Of OfficialBusiness)
+    Private _leaves As IList(Of Entities.Leave)
+    Private _officialBusinesses As IList(Of Entities.OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
-    Private _salaries As IList(Of Salary)
+    Private _salaries As IList(Of Entities.Salary)
     Private _shiftSchedules As IList(Of EmployeeDutySchedule)
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
-    Private _breakTimeBrackets As List(Of BreakTimeBracket)
+    Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
+
+    Private _breakTimeBracketRepository As BreakTimeBracketRepository
+    Private _employeeRepository As EmployeeRepository
+    Private _leaveRepository As LeaveRepository
+    Private _officialBusinessRepository As OfficialBusinessRepository
+    Private _overtimeRepository As OvertimeRepository
+    Private _salaryRepository As SalaryRepository
 
     Private _total As Integer
 
@@ -58,26 +67,29 @@ Public Class TimeEntryGenerator
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
 
+        _breakTimeBracketRepository = New BreakTimeBracketRepository()
+        _employeeRepository = New EmployeeRepository()
+        _leaveRepository = New LeaveRepository()
+        _officialBusinessRepository = New OfficialBusinessRepository
         _overtimeRepository = New OvertimeRepository()
+        _salaryRepository = New SalaryRepository()
+
     End Sub
 
     Public Sub Start()
-        Dim employees As IList(Of Employee) = Nothing
+        Dim employees As IList(Of Entities.Employee) = Nothing
         Dim organization As Organization = Nothing
-        Dim settings As ListOfValueCollection = Nothing
         Dim agencies As IList(Of Agency) = Nothing
         Dim calendarCollection As CalendarCollection
 
-        Dim timeEntryPolicy As TimeEntryPolicy
+        Dim settings As ListOfValueCollection = ListOfValueCollection.Create()
+        Dim timeEntryPolicy As New TimeEntryPolicy(settings)
+
+        Dim cuttOffPeriod As New TimePeriod(_cutoffStart, _cutoffEnd)
+
         Using context = New PayrollContext()
 
-            settings = New ListOfValueCollection(context.ListOfValues.ToList())
-            timeEntryPolicy = New TimeEntryPolicy(settings)
-
-            employees = context.Employees.
-                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                Include(Function(e) e.Position).
-                ToList()
+            employees = _employeeRepository.GetAllActiveWithPosition(z_OrganizationID).ToList
 
             agencies = context.Agencies.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -86,13 +98,7 @@ Public Class TimeEntryGenerator
             organization = context.Organizations.
                 SingleOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
 
-            _salaries = context.Salaries.
-                Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= _cutoffStart).
-                OrderByDescending(Function(s) s.EffectiveFrom).
-                GroupBy(Function(s) s.EmployeeID).
-                Select(Function(g) g.FirstOrDefault()).
-                ToList()
+            _salaries = _salaryRepository.GetAllByCutOff(z_OrganizationID, _cutoffStart).ToList()
 
             Dim previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart)
             Dim endOfCutOff As Date = _cutoffEnd
@@ -112,22 +118,15 @@ Public Class TimeEntryGenerator
                 Where(Function(t) _cutoffStart <= t.LogDate AndAlso t.LogDate <= _cutoffEnd).
                 ToList()
 
-            _leaves = context.Leaves.
-                Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
-                Where(Function(l) _cutoffStart <= l.StartDate AndAlso l.StartDate <= _cutoffEnd).
-                Where(Function(l) l.Status = Leave.StatusApproved).
-                ToList()
+            _leaves = _leaveRepository.
+                            GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
-            _overtimes = _overtimeRepository.GetAllApprovedBetweenDate(z_OrganizationID,
-                                                                       startDate:=_cutoffStart,
-                                                                       endDate:=_cutoffEnd).
-                                             ToList()
+            _overtimes = _overtimeRepository.
+                            GetAllByDatePeriod(z_OrganizationID, cuttOffPeriod, OvertimeStatus.Approved).
+                            ToList()
 
-            _officialBusinesses = context.OfficialBusinesses.
-                Where(Function(o) o.OrganizationID.Value = z_OrganizationID).
-                Where(Function(o) o.StartDate.Value <= _cutoffEnd AndAlso _cutoffStart <= o.EndDate.Value).
-                Where(Function(o) o.Status = OfficialBusiness.StatusApproved).
-                ToList()
+            _officialBusinesses = _officialBusinessRepository.
+                            GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
             _agencyFees = context.AgencyFees.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
@@ -151,22 +150,20 @@ Public Class TimeEntryGenerator
                                 Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
                                 ToList()
 
-                _breakTimeBrackets = context.BreakTimeBrackets.
-                                Include(Function(b) b.Division).
-                                Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
-                                ToList()
+                _breakTimeBrackets = _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
             Else
                 _timeAttendanceLogs = New List(Of TimeAttendanceLog)
-                _breakTimeBrackets = New List(Of BreakTimeBracket)
+                _breakTimeBrackets = New List(Of Entities.BreakTimeBracket)
             End If
 
             Dim payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            AccuPay.PayRateCalculationBasis.Organization)
+                                            Data.Enums.PayRateCalculationBasis.Organization)
 
-            calendarCollection = PayrollTools.GetCalendarCollection(previousCutoff,
-                                                                    _cutoffEnd,
-                                                                    context,
-                                                                    payrateCalculationBasis)
+            calendarCollection = Data.Helpers.PayrollTools.
+                                    GetCalendarCollection(previousCutoff,
+                                                        _cutoffEnd,
+                                                        payrateCalculationBasis,
+                                                        z_OrganizationID)
         End Using
 
         Dim progress = New ObservableCollection(Of Integer)
@@ -178,6 +175,7 @@ Public Class TimeEntryGenerator
                 Try
                     CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection)
                 Catch ex As Exception
+                    'can error if employee type is null
                     logger.Error(ex.Message, ex)
                     _errors += 1
                 End Try
@@ -186,7 +184,7 @@ Public Class TimeEntryGenerator
             End Sub)
     End Sub
 
-    Private Sub CalculateEmployeeEntries(employee As Employee,
+    Private Sub CalculateEmployeeEntries(employee As Entities.Employee,
                                          organization As Organization,
                                          settings As ListOfValueCollection,
                                          agencies As IList(Of Agency),
@@ -215,11 +213,11 @@ Public Class TimeEntryGenerator
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim officialBusinesses As IList(Of OfficialBusiness) = _officialBusinesses.
+        Dim officialBusinesses As IList(Of Entities.OfficialBusiness) = _officialBusinesses.
             Where(Function(o) Nullable.Equals(o.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim leavesInCutoff As IList(Of Leave) = _leaves.
+        Dim leavesInCutoff As IList(Of Entities.Leave) = _leaves.
             Where(Function(l) Nullable.Equals(l.EmployeeID, employee.RowID)).
             Where(Function(l) l.LeaveType <> "Leave w/o Pay").
             ToList()
@@ -236,7 +234,7 @@ Public Class TimeEntryGenerator
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim breakTimeBrackets As IList(Of BreakTimeBracket) = _breakTimeBrackets.
+        Dim breakTimeBrackets As IList(Of Data.Entities.BreakTimeBracket) = _breakTimeBrackets.
             Where(Function(b) Nullable.Equals(b.DivisionID, employee.Position?.DivisionID)).
             ToList()
 
@@ -324,7 +322,7 @@ Public Class TimeEntryGenerator
         End Using
     End Sub
 
-    Private Sub PostLegalHolidayCheck(employee As Employee,
+    Private Sub PostLegalHolidayCheck(employee As Entities.Employee,
                                       timeEntries As List(Of TimeEntry),
                                       timeEntryPolicy As TimeEntryPolicy,
                                       regularHolidaysList As List(Of Date),

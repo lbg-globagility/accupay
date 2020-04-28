@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -8,7 +10,7 @@ Namespace Global.AccuPay.Payroll
 
     Public Class ThirteenthMonthPayCalculator
 
-        Public Sub Calculate(employee As Employee,
+        Public Sub Calculate(employee As Entities.Employee,
                            paystub As Paystub,
                            timeEntries As ICollection(Of TimeEntry),
                            actualtimeentries As ICollection(Of ActualTimeEntry),
@@ -37,7 +39,7 @@ Namespace Global.AccuPay.Payroll
             paystub.ThirteenthMonthPay.Paystub = paystub
         End Sub
 
-        Private Shared Function GetThirteenMonthAmount(paystub As Paystub, thirteenMonthPolicy As ThirteenthMonthCalculationBasis, employee As Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
+        Private Shared Function GetThirteenMonthAmount(paystub As Paystub, thirteenMonthPolicy As ThirteenthMonthCalculationBasis, employee As Entities.Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
 
             Select Case thirteenMonthPolicy
                 Case ThirteenthMonthCalculationBasis.RegularPayAndAllowance
@@ -48,7 +50,7 @@ Namespace Global.AccuPay.Payroll
 
                     Dim hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave
 
-                    If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
+                    If (New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso employee.IsPremiumInclusive Then
 
                         hoursWorked = paystub.RegularHoursAndTotalRestDay
                     End If
@@ -67,7 +69,7 @@ Namespace Global.AccuPay.Payroll
 
         End Function
 
-        Private Shared Function ComputeRegularPayAndAllowance(_employee As Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
+        Private Shared Function ComputeRegularPayAndAllowance(_employee As Entities.Employee, timeEntries As ICollection(Of TimeEntry), actualtimeentries As ICollection(Of ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
             Dim contractualEmployementStatuses = New String() {"Contractual", "SERVICE CONTRACT"}
 
             Dim thirteenthMonthAmount = 0D

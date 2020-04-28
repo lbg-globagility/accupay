@@ -1,12 +1,18 @@
-﻿Imports System.ComponentModel
-Imports AccuPay.JobLevels
-Imports Microsoft.EntityFrameworkCore
+﻿Option Strict On
 
+Imports System.ComponentModel
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+
+'Refactor this form to not be tightly coupled to payroll context
+'other functions may have stopped working after the recent changes
 Public Class JobLevelForm
 
-    Private _context As PayrollContext
-
     Private _category As JobCategory
+
+    Private _jobLevelRepository As JobLevelRepository
+
+    Private _jobCategoryRepository As JobCategoryRepository
 
     Private WithEvents _jobLevelsSource As BindingSource
 
@@ -16,6 +22,7 @@ Public Class JobLevelForm
     End Sub
 
     Private Sub InitializeComponents()
+        _jobLevelRepository = New JobLevelRepository()
         _jobLevelsSource = New BindingSource()
         JobLevelsDataGridView.DataSource = _jobLevelsSource
         JobCategoriesDataGridView.AutoGenerateColumns = False
@@ -24,7 +31,7 @@ Public Class JobLevelForm
 
     Private Sub LoadJobCategories()
         Using context = New PayrollContext()
-            Dim jobCategories = context.JobCategories.ToList()
+            Dim jobCategories = _jobCategoryRepository.GetAll()
             RemoveHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
             JobCategoriesDataGridView.DataSource = jobCategories
             SelectJobCategory(_category)
@@ -56,16 +63,13 @@ Public Class JobLevelForm
             .CreatedBy = z_User
         }
 
-        _context?.Dispose()
-        _context = New PayrollContext()
-        _context.JobCategories.Add(category)
         LoadJobCategory(category)
     End Sub
 
     Private Sub SaveCategoryButton_Click(sender As Object, e As EventArgs) Handles SaveCategoryButton.Click
         JobLevelsDataGridView.EndEdit()
         _category.Name = CategoryNameTextBox.Text
-        _context.SaveChanges()
+        '_context.SaveChanges()
         JobLevelsDataGridView.Refresh()
 
         LoadJobCategories()
@@ -84,10 +88,9 @@ Public Class JobLevelForm
     Private Sub JobCategoriesDataGridView_SelectionChanged(sender As Object, e As EventArgs) 'Handles JobCategoriesDataGridView.SelectionChanged
         Dim jobCategory = DirectCast(JobCategoriesDataGridView.CurrentRow.DataBoundItem, JobCategory)
 
-        _context?.Dispose()
-        _context = New PayrollContext()
+        If jobCategory.RowID.HasValue = False Then Return
 
-        Dim category = _context.JobCategories.Find(jobCategory.RowID)
+        Dim category = _jobCategoryRepository.FindById(jobCategory.RowID.Value)
         LoadJobCategory(category)
     End Sub
 
@@ -105,7 +108,7 @@ Public Class JobLevelForm
         _category.JobLevels.Remove(jobLevel)
 
         If jobLevel?.RowID IsNot Nothing Then
-            _context.Entry(jobLevel).State = EntityState.Deleted
+            _jobLevelRepository.Delete(jobLevel)
         End If
 
         ' Make sure to synchronize the binding list to make sure no error happens.

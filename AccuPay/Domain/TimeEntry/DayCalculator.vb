@@ -1,6 +1,8 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -10,7 +12,7 @@ Public Class DayCalculator
     Private Const DEFAULT_WORK_HOURS As Integer = 8
     Private ReadOnly _settings As ListOfValueCollection
     Private ReadOnly _organization As Organization
-    Private ReadOnly _employee As Employee
+    Private ReadOnly _employee As Entities.Employee
     Private ReadOnly _policy As TimeEntryPolicy
 
     Private ReadOnly _minutesPerHour As Decimal = 60
@@ -19,7 +21,7 @@ Public Class DayCalculator
     Private _overtimeSkipCountRounding As Boolean = False
     Private _overtimeSkipCount As Decimal = 0
 
-    Public Sub New(organization As Organization, settings As ListOfValueCollection, employee As Employee)
+    Public Sub New(organization As Organization, settings As ListOfValueCollection, employee As Entities.Employee)
         _settings = settings
         _organization = organization
         _employee = employee
@@ -38,16 +40,16 @@ Public Class DayCalculator
     End Sub
 
     Public Function Compute(currentDate As DateTime,
-                            salary As Salary,
+                            salary As Entities.Salary,
                             oldTimeEntries As IList(Of TimeEntry),
                             employeeShift As ShiftSchedule,
                             shiftSched As EmployeeDutySchedule,
                             timeLog As TimeLog,
                             overtimes As IList(Of Entities.Overtime),
-                            officialBusiness As OfficialBusiness,
-                            leaves As IList(Of Leave),
+                            officialBusiness As Entities.OfficialBusiness,
+                            leaves As IList(Of Entities.Leave),
                             timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                            breakTimeBrackets As IList(Of BreakTimeBracket),
+                            breakTimeBrackets As IList(Of Entities.BreakTimeBracket),
                             payrate As IPayrate,
                             calendarCollection As CalendarCollection,
                             branchId As Integer?) As TimeEntry
@@ -93,34 +95,15 @@ Public Class DayCalculator
         Return timeEntry
     End Function
 
-    Public Shared Function GetCurrentShift(
-                                currentDate As Date,
-                                employeeShift As ShiftSchedule,
-                                shiftSched As EmployeeDutySchedule,
-                                useShiftSchedule As Boolean,
-                                respectDefaultRestDay As Boolean,
-                                employeeDayOfRest As Integer?) As CurrentShift
-
-        Dim currentShift = If(useShiftSchedule,
-                    New CurrentShift(shiftSched, currentDate),
-                    New CurrentShift(employeeShift, currentDate))
-
-        If respectDefaultRestDay Then
-            currentShift.SetDefaultRestDay(employeeDayOfRest)
-        End If
-
-        Return currentShift
-    End Function
-
     Private Sub ComputeHours(currentDate As Date,
                              timeEntry As TimeEntry,
                              timeLog As TimeLog,
-                             officialBusiness As OfficialBusiness,
-                             leaves As IList(Of Leave),
+                             officialBusiness As Entities.OfficialBusiness,
+                             leaves As IList(Of Entities.Leave),
                              overtimes As IList(Of Entities.Overtime),
                              oldTimeEntries As IList(Of TimeEntry),
                              timeAttendanceLogs As IList(Of TimeAttendanceLog),
-                             breakTimeBrackets As IList(Of BreakTimeBracket),
+                             breakTimeBrackets As IList(Of Entities.BreakTimeBracket),
                              currentShift As CurrentShift,
                              hasWorkedLastDay As Boolean,
                              payrate As IPayrate)
@@ -515,7 +498,7 @@ Public Class DayCalculator
     Private Sub ComputePay(timeEntry As TimeEntry,
                            currentDate As Date,
                            currentShift As CurrentShift,
-                           salary As Salary,
+                           salary As Entities.Salary,
                            payrate As IPayrate,
                            hasWorkedLastDay As Boolean)
         If currentDate < _employee.StartDate Then
@@ -525,8 +508,8 @@ Public Class DayCalculator
             Return
         End If
 
-        Dim dailyRate = PayrollTools.GetDailyRate(salary, _employee)
-        Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+        Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(salary, _employee)
+        Dim hourlyRate = Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
         timeEntry.BasicDayPay = timeEntry.BasicHours * hourlyRate
         timeEntry.RegularPay = timeEntry.RegularHours * hourlyRate
@@ -696,7 +679,7 @@ Public Class DayCalculator
                                    payrate As IPayrate,
                                    hasWorkedLastDay As Boolean,
                                    currentshift As CurrentShift,
-                                   leaves As IList(Of Leave))
+                                   leaves As IList(Of Entities.Leave))
         'Dim isCalculatingRegularHoliday = payrate.IsRegularHoliday And _employee.CalcHoliday
         'Dim isCalculatingSpecialHoliday = payrate.IsSpecialNonWorkingHoliday And _employee.CalcSpecialHoliday
 
@@ -764,7 +747,7 @@ Public Class DayCalculator
     ''' <param name="timeEntry">The timeEntry object that will be updated.</param>
     ''' <param name="payrate">Used to check if current day is a holiday.</param>
     Private Sub ComputeLeaveHours(hasTimeLog As Boolean,
-                                  leaves As IList(Of Leave),
+                                  leaves As IList(Of Entities.Leave),
                                   currentShift As CurrentShift,
                                   timeEntry As TimeEntry,
                                   payrate As IPayrate)
@@ -796,27 +779,10 @@ Public Class DayCalculator
         End If
     End Sub
 
-    Public Shared Function ComputeLeaveHoursWithoutTimelog(
-                        currentShift As CurrentShift,
-                        leave As Leave,
-                        computeBreakTimeLate As Boolean) As Decimal
-
-        Dim leaveHours = 0D
-        If currentShift.HasShift = False AndAlso
-            (leave.StartTime Is Nothing OrElse leave.EndTime Is Nothing) Then
-
-            leaveHours = 8
-        Else
-            Dim leavePeriod = GetLeavePeriod(leave, currentShift)
-            leaveHours = TimeEntryCalculator.
-                ComputeLeaveHours(leavePeriod, currentShift, computeBreakTimeLate)
-        End If
-
-        leaveHours = AccuMath.CommercialRound(leaveHours, 2)
-        Return leaveHours
-    End Function
-
-    Public Function GetLogPeriod(timeLog As TimeLog, officialBusiness As OfficialBusiness, currentShift As CurrentShift, currentDate As Date) As TimePeriod
+    Public Function GetLogPeriod(timeLog As TimeLog,
+                                 officialBusiness As Entities.OfficialBusiness,
+                                 currentShift As CurrentShift,
+                                 currentDate As Date) As TimePeriod
         Dim appliedIn = {timeLog?.TimeIn, officialBusiness?.StartTime}.
             Where(Function(i) i.HasValue).
             Min()
@@ -844,7 +810,14 @@ Public Class DayCalculator
         Return logPeriod
     End Function
 
-    Private Shared Function GetLeavePeriod(leave As Leave, currentShift As CurrentShift) As TimePeriod
+    Public Function GetNightDiffPeriod([date] As DateTime) As TimePeriod
+        Dim nightDiffTimeFrom = _organization.NightDifferentialTimeFrom
+        Dim nightDiffTimeTo = _organization.NightDifferentialTimeTo
+
+        Return TimePeriod.FromTime(nightDiffTimeFrom, nightDiffTimeTo, [date])
+    End Function
+
+    Private Shared Function GetLeavePeriod(leave As Entities.Leave, currentShift As CurrentShift) As TimePeriod
         Dim startTime = If(leave.StartTime, currentShift.StartTime.Value)
         Dim endTime = If(leave.EndTime, currentShift.EndTime.Value)
 
@@ -862,11 +835,43 @@ Public Class DayCalculator
         Return leavePeriod
     End Function
 
-    Public Function GetNightDiffPeriod([date] As DateTime) As TimePeriod
-        Dim nightDiffTimeFrom = _organization.NightDifferentialTimeFrom
-        Dim nightDiffTimeTo = _organization.NightDifferentialTimeTo
+    Public Shared Function GetCurrentShift(
+                                currentDate As Date,
+                                employeeShift As ShiftSchedule,
+                                shiftSched As EmployeeDutySchedule,
+                                useShiftSchedule As Boolean,
+                                respectDefaultRestDay As Boolean,
+                                employeeDayOfRest As Integer?) As CurrentShift
 
-        Return TimePeriod.FromTime(nightDiffTimeFrom, nightDiffTimeTo, [date])
+        Dim currentShift = If(useShiftSchedule,
+                    New CurrentShift(shiftSched, currentDate),
+                    New CurrentShift(employeeShift, currentDate))
+
+        If respectDefaultRestDay Then
+            currentShift.SetDefaultRestDay(employeeDayOfRest)
+        End If
+
+        Return currentShift
+    End Function
+
+    Public Shared Function ComputeLeaveHoursWithoutTimelog(
+                        currentShift As CurrentShift,
+                        leave As Entities.Leave,
+                        computeBreakTimeLate As Boolean) As Decimal
+
+        Dim leaveHours = 0D
+        If currentShift.HasShift = False AndAlso
+            (leave.StartTime Is Nothing OrElse leave.EndTime Is Nothing) Then
+
+            leaveHours = 8
+        Else
+            Dim leavePeriod = GetLeavePeriod(leave, currentShift)
+            leaveHours = TimeEntryCalculator.
+                ComputeLeaveHours(leavePeriod, currentShift, computeBreakTimeLate)
+        End If
+
+        leaveHours = AccuMath.CommercialRound(leaveHours, 2)
+        Return leaveHours
     End Function
 
 End Class

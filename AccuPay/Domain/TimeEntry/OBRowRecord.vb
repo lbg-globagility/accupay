@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities
 
 Public Class OBRowRecord
@@ -12,17 +13,11 @@ Public Class OBRowRecord
     <ColumnName("Employee ID")>
     Public Property EmployeeID As String
 
-    <ColumnName("Type (Official business)")>
-    Public Property Type As String
-
     <ColumnName("Start Date")>
     Public Property StartDate As Date?
 
     <ColumnName("Start Time")>
     Public Property StartTime As TimeSpan?
-
-    <ColumnName("End Date")>
-    Public Property EndDate As Date?
 
     <ColumnName("End Time")>
     Public Property EndTime As TimeSpan?
@@ -35,6 +30,20 @@ Public Class OBRowRecord
 
     <Ignore>
     Public Property Status As String
+
+    Public ReadOnly Property EndDate As Date?
+        Get
+            If StartDate.HasValue = False Then
+                Return Nothing
+            ElseIf StartTime.HasValue = False OrElse EndTime.HasValue = False Then
+                Return StartDate
+            ElseIf StartTime.HasValue = False AndAlso EndTime.HasValue = False Then
+                Return StartDate
+            Else
+                Return If(EndTime < StartTime, StartDate.Value.AddDays(1), StartDate)
+            End If
+        End Get
+    End Property
 
     Friend Function ToOfficialBusiness() As OfficialBusiness
 

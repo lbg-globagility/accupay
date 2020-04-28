@@ -1,7 +1,8 @@
 ﻿Imports System.IO
-Imports Accupay.Data
-Imports Accupay.Data.Repositories
-Imports Accupay.DB
+Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.DB
 Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
 Imports PdfSharp.Pdf
@@ -12,7 +13,7 @@ Public Class PayslipCreator
 
     Const customDateFormat As String = "M/d/yyyy"
 
-    Private sys_ownr As New SystemOwnerService
+    Private sys_ownr As New SystemOwnerService()
 
     Private _currentPayPeriod As IPayPeriod
 
@@ -68,9 +69,9 @@ Public Class PayslipCreator
 
         Dim organizationName = organization.Name
 
-        Static current_system_owner As String = sys_ownr.CurrentSystemOwner
+        Static current_system_owner As String = sys_ownr.GetCurrentSystemOwner()
 
-        If Reference.BaseSystemOwner.Goldwings = current_system_owner Then
+        If SystemOwnerService.Goldwings = current_system_owner Then
 
             Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
             _payslipDatatable = query.ResultTable
@@ -78,7 +79,7 @@ Public Class PayslipCreator
             rptdoc = New OfficialPaySlipFormat
 
             With rptdoc.ReportDefinition.Sections(2)
-                Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = .ReportObjects("txtOrganizName")
+                Dim objText As TextObject = .ReportObjects("txtOrganizName")
                 objText.Text = organizationName.ToUpper
 
                 objText = .ReportObjects("txtPayPeriod")
@@ -101,7 +102,7 @@ Public Class PayslipCreator
             '    objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("txtorgname")
             '    objText.Text = organizationName.ToUpper
 
-        ElseIf Reference.BaseSystemOwner.Cinema2000 = current_system_owner Then
+        ElseIf SystemOwnerService.Cinema2000 = current_system_owner Then
 
             Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & orgztnID & "," & _payPeriodId & ", TRUE, NULL);")
             _payslipDatatable = query.ResultTable
@@ -116,7 +117,7 @@ Public Class PayslipCreator
 
             rptdoc = New TwoEmpIn1PaySlip
 
-            Dim objText As CrystalDecisions.CrystalReports.Engine.TextObject = Nothing
+            Dim objText As TextObject = Nothing
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
 

@@ -1,13 +1,15 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports AccuPay.Repository
+﻿Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 
 Public Class AddLoanScheduleForm
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -43,7 +45,7 @@ Public Class AddLoanScheduleForm
 
         Me.NewLoanTypes = New List(Of Product)
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
     End Sub
 
@@ -64,8 +66,10 @@ Public Class AddLoanScheduleForm
     Private Sub ResetForm()
         Me._newLoanSchedule = New LoanSchedule
         Me._newLoanSchedule.EmployeeID = _currentEmployee.RowID
-        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
+        Me._newLoanSchedule.OrganizationID = z_OrganizationID
+        Me._newLoanSchedule.CreatedBy = z_User
 
+        Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
         Me._newLoanSchedule.Status = LoanScheduleRepository.STATUS_IN_PROGRESS
 
         Dim firstLoanType = Me._loanTypeList.FirstOrDefault()
@@ -180,8 +184,8 @@ Public Class AddLoanScheduleForm
             Async Function()
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
-                Dim repo As New Data.Repositories.UserActivityRepository
-                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID, z_OrganizationID)
+                Dim repo As New UserActivityRepository
+                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -303,9 +307,9 @@ Public Class AddLoanScheduleForm
 
         If if_sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes())
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID))
         Else
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes())
+            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypes(z_OrganizationID))
 
         End If
 
@@ -322,7 +326,7 @@ Public Class AddLoanScheduleForm
     Private Async Function LoadDeductionSchedules() As Task
 
         Me._deductionSchedulesList = _listOfValueRepository.
-            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         cmbDeductionSchedule.DataSource = Me._deductionSchedulesList
 

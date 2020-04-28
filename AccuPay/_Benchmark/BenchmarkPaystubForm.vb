@@ -2,14 +2,14 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
-Imports AccuPay.Data
-Imports AccuPay.Entity
-Imports AccuPay.ModelData
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
+Imports AccuPay.Data
+Imports AccuPay.Data.ValueObjects
 
 Public Class BenchmarkPaystubForm
 
@@ -61,7 +61,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
-        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes()
+        Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes(z_OrganizationID)
 
         _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
         _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
@@ -98,7 +98,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Function LoadPayrollDetails() As Task
         _salaries = Await _salaryRepository.
-                                        GetAllByCutOff(_currentPayPeriod.PayFromDate)
+                                        GetAllByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)
 
         Await ShowEmployees()
 
@@ -134,8 +134,9 @@ Public Class BenchmarkPaystubForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = Await _employeeRepository.
-                                GetAllWithPayrollAsync(_currentPayPeriod.RowID.Value)
+            _employees = (Await _employeeRepository.
+                                GetAllWithPayrollAsync(payPeriodId:=_currentPayPeriod.RowID.Value,
+                                                       organizationId:=z_OrganizationID)).ToList
         Else
             _employees = New List(Of Employee)
         End If
@@ -167,8 +168,8 @@ Public Class BenchmarkPaystubForm
         EmployeeNameLabel.Text = "EMPLOYEE NAME"
 
         OvertimeGridView.DataSource = New List(Of OvertimeInput)
-        DeductionsGridView.DataSource = New List(Of Adjustment)
-        OtherIncomeGridView.DataSource = New List(Of Adjustment)
+        DeductionsGridView.DataSource = New List(Of Entity.Adjustment)
+        OtherIncomeGridView.DataSource = New List(Of Entity.Adjustment)
 
         RegularDaysTextBox.ResetText()
         UndeclaredPerDayTextBox.ResetText()
@@ -220,7 +221,7 @@ Public Class BenchmarkPaystubForm
             Using context As New PayrollContext
 
                 'paystub
-                Dim payStub As Paystub = Await GetPayStub(employeeId, context)
+                Dim payStub As Entity.Paystub = Await GetPayStub(employeeId, context)
                 Dim payStubId = payStub?.RowID
 
                 If payStubId Is Nothing Then
@@ -248,7 +249,10 @@ Public Class BenchmarkPaystubForm
 
     End Function
 
-    Private Async Function ShowSummaryData(employee As Employee, employeeId As Integer, context As PayrollContext, payStub As Paystub) As Task
+    Private Async Function ShowSummaryData(employee As Employee,
+                                           employeeId As Integer,
+                                           context As PayrollContext,
+                                           payStub As Entity.Paystub) As Task
         'loans
         Dim loanAmounts = Await GetGovernmentLoanAmounts(context, employeeId)
         Dim pagIbigLoan = loanAmounts.Item1
@@ -267,7 +271,7 @@ Public Class BenchmarkPaystubForm
 
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID))).ToString
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value))).ToString
 
         GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
@@ -280,7 +284,7 @@ Public Class BenchmarkPaystubForm
         NetPayTextBox.Text = payStub.NetPay.RoundToString()
     End Function
 
-    Private Sub ShowUndeclaredSalaryBreakdown(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
+    Private Sub ShowUndeclaredSalaryBreakdown(payStub As Entity.Paystub, employeeRate As BenchmarkPaystubRate)
         Dim rawUndeclaredRate = employeeRate.ActualDailyRate - employeeRate.DailyRate
         Dim regularDays = BenchmarkPayrollHelper.ConvertHoursToDays(payStub.RegularHours)
         Dim holidayAndLeaveDays = BenchmarkPayrollHelper.ConvertHoursToDays((payStub.TotalWorkedHoursWithoutOvertimeAndLeave - payStub.RegularHours) + payStub.LeaveHours)
@@ -296,7 +300,7 @@ Public Class BenchmarkPaystubForm
         TotalUnderclaredTextBox.Text = (undeclaredRegularPay + undeclaredHolidayAndLeavePay).RoundToString
     End Sub
 
-    Private Function ComputeHolidayAndLeavePays(payStub As Paystub, rawUndeclaredRate As Decimal) As Decimal
+    Private Function ComputeHolidayAndLeavePays(payStub As Entity.Paystub, rawUndeclaredRate As Decimal) As Decimal
 
         If rawUndeclaredRate = 0 Then Return 0
 
@@ -312,31 +316,31 @@ Public Class BenchmarkPaystubForm
 
         If payStub.RestDayHours <> 0 Then
 
-            total += payStub.RestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RestDay.Rate)
+            total += payStub.RestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RestDay.CurrentRate)
 
         End If
 
         If payStub.SpecialHolidayHours <> 0 Then
 
-            total += payStub.SpecialHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHoliday.Rate)
+            total += payStub.SpecialHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHoliday.CurrentRate)
 
         End If
 
         If payStub.SpecialHolidayRestDayHours <> 0 Then
 
-            total += payStub.SpecialHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHolidayRestDay.Rate)
+            total += payStub.SpecialHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.SpecialHolidayRestDay.CurrentRate)
 
         End If
 
         If payStub.RegularHolidayHours <> 0 Then
 
-            total += payStub.RegularHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHoliday.Rate)
+            total += payStub.RegularHolidayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHoliday.CurrentRate)
 
         End If
 
         If payStub.RegularHolidayRestDayHours <> 0 Then
 
-            total += payStub.RegularHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHolidayRestDay.Rate)
+            total += payStub.RegularHolidayRestDayHours * (rawUndeclaredRatePerHour * _overtimeRate.RegularHolidayRestDay.CurrentRate)
 
         End If
 
@@ -353,7 +357,7 @@ Public Class BenchmarkPaystubForm
         OtherIncomeGridView.DataSource = otherIncomes
     End Function
 
-    Private Sub PopulateOvertimeGridView(payStub As Paystub, employeeRate As BenchmarkPaystubRate)
+    Private Sub PopulateOvertimeGridView(payStub As Entity.Paystub, employeeRate As BenchmarkPaystubRate)
         Dim overtimeInputs = GetOvertimeInputs(payStub, employeeRate)
         If overtimeInputs Is Nothing Then Return
         OvertimeGridView.DataSource = overtimeInputs
@@ -362,8 +366,8 @@ Public Class BenchmarkPaystubForm
     Private Function GetEmployeeRate(employee As Employee) As BenchmarkPaystubRate
 
         Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
-                            FirstOrDefault
+                        Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+                        FirstOrDefault
 
         If salary Is Nothing Then
 
@@ -383,7 +387,7 @@ Public Class BenchmarkPaystubForm
 
     End Function
 
-    Private Function GetOvertimeInputs(paystub As Paystub, employeeRate As BenchmarkPaystubRate) As List(Of OvertimeInput)
+    Private Function GetOvertimeInputs(paystub As Entity.Paystub, employeeRate As BenchmarkPaystubRate) As List(Of OvertimeInput)
 
         Dim overtimeInputs As New List(Of OvertimeInput)
 
@@ -663,13 +667,14 @@ Public Class BenchmarkPaystubForm
                                                         ToListAsync
     End Function
 
-    Private Async Function GetPayStub(employeeId As Integer, context As PayrollContext) As Task(Of Paystub)
+    Private Async Function GetPayStub(employeeId As Integer, context As PayrollContext) As Task(Of Entity.Paystub)
         Return Await context.Paystubs.
                                 Include(Function(p) p.ThirteenthMonthPay).
                                 Include(Function(a) a.Adjustments).
                                 Include(Function(a) a.ActualAdjustments).
                                 Include(Function(a) a.AllowanceItems).
-                                FirstOrDefaultAsync(Function(p) p.EmployeeID.Value = employeeId AndAlso p.PayPeriodID.Value = _currentPayPeriod.RowID.Value)
+                                FirstOrDefaultAsync(Function(p) p.EmployeeID.Value = employeeId AndAlso
+                                                    p.PayPeriodID.Value = _currentPayPeriod.RowID.Value)
     End Function
 
     Private Function CheckIfGridViewHasValue(gridView As DataGridView) As Boolean
@@ -747,7 +752,9 @@ Public Class BenchmarkPaystubForm
         'Reset Leave Balance
         Dim leaveRepository As New LeaveRepository
         Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employee.RowID.Value,
-                                                                AccuPay.LeaveType.LeaveType.Vacation,
+                                                                z_OrganizationID,
+                                                                z_User,
+                                                                Data.Enums.LeaveType.Vacation,
                                                                 employee.VacationLeaveAllowance)
     End Function
 

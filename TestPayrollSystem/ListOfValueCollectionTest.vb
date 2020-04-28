@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
-Imports System.Data.Common
-Imports AccuPay.Entity
-Imports AccuPay
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class ListOfValueCollectionTest
@@ -45,7 +44,7 @@ Public Class ListOfValueCollectionTest
     End Sub
 
     Private Function CreateListOfValue(value As String) As ListOfValueCollection
-        Return New ListOfValueCollection(New List(Of ListOfValue) From {
+        Return ListOfValueCollection.Create(New List(Of ListOfValue) From {
             New ListOfValue() With {
                 .Type = "sampletype",
                 .LIC = "samplelic",

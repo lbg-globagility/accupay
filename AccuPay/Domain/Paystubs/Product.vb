@@ -3,6 +3,7 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data
 
 Namespace Global.AccuPay.Entity
 
@@ -39,7 +40,7 @@ Namespace Global.AccuPay.Entity
         Public Overridable Property Category As String
 
         <ForeignKey("CategoryID")>
-        Public Overridable Property CategoryEntity As Category
+        Public Overridable Property CategoryEntity As Entities.Category
 
         Public Overridable Property CategoryID As Integer?
 

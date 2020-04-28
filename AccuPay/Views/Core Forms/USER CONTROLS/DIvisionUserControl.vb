@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities.Extensions
 
 Public Class DivisionUserControl
@@ -25,7 +25,7 @@ Public Class DivisionUserControl
                 parentDivisions As List(Of Division),
                 positions As List(Of Position),
                 divisionTypes As List(Of String),
-                payFrequencies As List(Of Data.Entities.PayFrequency),
+                payFrequencies As List(Of PayFrequency),
                 deductionSchedules As List(Of String))
 
         _division = division

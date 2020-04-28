@@ -25,8 +25,8 @@ Partial Class OfficialBusinessForm
         Me.components = New System.ComponentModel.Container()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(OfficialBusinessForm))
+        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
@@ -85,6 +85,7 @@ Partial Class OfficialBusinessForm
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.OfficialBusinessListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -96,7 +97,6 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch.SuspendLayout()
         CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
@@ -737,7 +737,14 @@ Partial Class OfficialBusinessForm
         Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
         Me.ImportToolStripButton.Text = "Import"
         Me.ImportToolStripButton.ToolTipText = "Import loans"
-        Me.ImportToolStripButton.Visible = False
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'OfficialBusinessListBindingSource
         '
@@ -827,14 +834,6 @@ Partial Class OfficialBusinessForm
         Me.DataGridViewTextBoxColumn10.DataPropertyName = "Comments"
         Me.DataGridViewTextBoxColumn10.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        '
-        'UserActivityToolStripButton
-        '
-        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
-        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
-        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'OfficialBusinessForm
         '

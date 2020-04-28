@@ -1,10 +1,13 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
 Imports Microsoft.Extensions.Logging.Console
@@ -26,7 +29,9 @@ Public Class PayrollResources
 
     Private _payDateTo As Date
 
-    Private _employees As ICollection(Of Employee)
+    Private _payPeriodSpan As TimePeriod
+
+    Private _employees As ICollection(Of Entities.Employee)
 
     Private _salaries As ICollection(Of Salary)
 
@@ -36,7 +41,7 @@ Public Class PayrollResources
 
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
-    Private _loanSchedules As ICollection(Of LoanSchedule)
+    Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
     Private _loanTransactions As ICollection(Of LoanTransaction)
 
@@ -48,8 +53,6 @@ Public Class PayrollResources
 
     Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
 
-    Private _listOfValues As ICollection(Of ListOfValue)
-
     Private _paystubs As ICollection(Of Paystub)
 
     Private _previousPaystubs As ICollection(Of Paystub)
@@ -58,19 +61,29 @@ Public Class PayrollResources
 
     Private _payPeriod As PayPeriod
 
-    Private _allowances As ICollection(Of Data.Entities.Allowance)
+    Private _allowances As ICollection(Of Entities.Allowance)
 
     Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
 
     Private _filingStatuses As DataTable
 
-    Private _systemOwner As SystemOwner
+    Private _systemOwner As SystemOwnerService
 
-    Private _bpiInsuranceProduct As Product
+    Private _bpiInsuranceProduct As Entities.Product
 
     Private _calendarCollection As CalendarCollection
 
-    Public ReadOnly Property Employees As ICollection(Of Employee)
+    Private _listOfValueCollection As ListOfValueCollection
+
+    Private _leaves As IReadOnlyCollection(Of Entities.Leave)
+
+    Public ReadOnly Property ListOfValueCollection As ListOfValueCollection
+        Get
+            Return _listOfValueCollection
+        End Get
+    End Property
+
+    Public ReadOnly Property Employees As ICollection(Of Entities.Employee)
         Get
             Return _employees
         End Get
@@ -88,7 +101,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property LoanSchedules As ICollection(Of LoanSchedule)
+    Public ReadOnly Property LoanSchedules As ICollection(Of Entities.LoanSchedule)
         Get
             Return _loanSchedules
         End Get
@@ -142,12 +155,6 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property ListOfValues As ICollection(Of ListOfValue)
-        Get
-            Return _listOfValues
-        End Get
-    End Property
-
     Public ReadOnly Property PayPeriod As PayPeriod
         Get
             Return _payPeriod
@@ -166,6 +173,12 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property Leaves As IReadOnlyCollection(Of Data.Entities.Leave)
+        Get
+            Return _leaves
+        End Get
+    End Property
+
     Public ReadOnly Property FilingStatuses As DataTable
         Get
             Return _filingStatuses
@@ -178,7 +191,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property SystemOwner As SystemOwner
+    Public ReadOnly Property SystemOwner As SystemOwnerService
         Get
             Return _systemOwner
         End Get
@@ -190,7 +203,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property BpiInsuranceProduct As Product
+    Public ReadOnly Property BpiInsuranceProduct As Entities.Product
         Get
             Return _bpiInsuranceProduct
         End Get
@@ -200,13 +213,17 @@ Public Class PayrollResources
         _payPeriodID = payPeriodID
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
+
+        _payPeriodSpan = New TimePeriod(_payDateFrom, _payDateTo)
     End Sub
 
     Public Async Function Load() As Task
 
         'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-
         Await LoadPayPeriod()
+
+        'LoadSettings() should be executed before LoadCalendarCollection()
+        Await LoadListOfValueCollection()
 
         Await Task.WhenAll({
             LoadSystemOwner(),
@@ -220,7 +237,6 @@ Public Class PayrollResources
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
             LoadWithholdingTaxBrackets(),
-            LoadSettings(),
             LoadAllowances(),
             LoadTimeEntries(),
             LoadActualTimeEntries(),
@@ -228,26 +244,36 @@ Public Class PayrollResources
             LoadDivisionMinimumWages(),
             LoadEmployeeDutySchedules(),
             LoadCalendarCollection(),
-            LoadBpiInsuranceProduct()
+            LoadBpiInsuranceProduct(),
+            LoadLeaves()
         })
     End Function
 
+    Public Async Function LoadListOfValueCollection() As Task
+        Try
+
+            _listOfValueCollection = Await ListOfValueCollection.CreateAsync()
+        Catch ex As Exception
+            Throw New ResourceLoadingException("ListOfValueCollection", ex)
+
+        End Try
+    End Function
+
     Public Async Function LoadSystemOwner() As Task
-        Await Task.Run(Sub()
-                           _systemOwner = New SystemOwner
-                       End Sub)
+        Try
+            Await Task.Run(Sub()
+                               _systemOwner = New SystemOwnerService
+                           End Sub)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("SystemOwner", ex)
+
+        End Try
     End Function
 
     Public Async Function LoadEmployees() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = context.Employees.
-                    Include(Function(e) e.Position.Division).
-                    Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(e) e.IsActive)
-
-                _employees = Await query.ToListAsync()
-            End Using
+            _employees = (Await New Repositories.EmployeeRepository().
+                                    GetAllActiveWithDivisionAndPositionAsync(z_OrganizationID)).ToList
         Catch ex As Exception
             Throw New ResourceLoadingException("Employees", ex)
         End Try
@@ -292,20 +318,18 @@ Public Class PayrollResources
         Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
-            Using context = New PayrollContext(logger)
+            Await Task.Run(
+                Sub()
+                    Dim calculationBasis = _listOfValueCollection.GetEnum("Pay rate.CalculationBasis",
+                                                              Data.Enums.PayRateCalculationBasis.Organization)
 
-                Dim listOfValues = Await context.ListOfValues.ToListAsync()
+                    _calendarCollection = Data.Helpers.PayrollTools.
+                                               GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
+                                                                   _payDateTo,
+                                                                   calculationBasis,
+                                                                   z_OrganizationID)
 
-                Dim settings = New ListOfValueCollection(listOfValues)
-                Dim calculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                                         PayRateCalculationBasis.Organization)
-
-                _calendarCollection = PayrollTools.GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
-                                                                         _payDateTo,
-                                                                         context,
-                                                                         calculationBasis)
-
-            End Using
+                End Sub)
         Catch ex As Exception
             Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
         End Try
@@ -329,15 +353,9 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanSchedules() As Task
         Try
-            Using context = New PayrollContext(logger)
-                Dim query = From l In context.LoanSchedules
-                            Select l
-                            Where l.OrganizationID.Value = z_OrganizationID AndAlso
-                                l.DedEffectiveDateFrom <= _payDateTo AndAlso
-                                l.Status = "In Progress" AndAlso
-                                l.BonusID Is Nothing
-                _loanSchedules = Await query.ToListAsync()
-            End Using
+            _loanSchedules = (Await New LoanScheduleRepository().
+                                GetCurrentPayrollLoansAsync(z_OrganizationID, _payDateTo)).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("LoanSchedules", ex)
         End Try
@@ -469,18 +487,6 @@ Public Class PayrollResources
         End Try
     End Function
 
-    Private Async Function LoadSettings() As Task
-        Try
-            Using context = New PayrollContext()
-                Dim query = From s In context.ListOfValues
-
-                _listOfValues = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("ListOfValues", ex)
-        End Try
-    End Function
-
     Private Async Function LoadPayPeriod() As Task
         Try
             Using context = New PayrollContext(logger)
@@ -496,9 +502,11 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Try
-            Dim allowanceRepo = New Data.Repositories.AllowanceRepository()
+            Dim allowanceRepo = New Repositories.AllowanceRepository()
 
-            _allowances = Await (allowanceRepo.GetByPayPeriodWithProduct(organizationID:=z_OrganizationID, payDateFrom:=_payDateFrom, payDateTo:=_payDateTo))
+            _allowances = Await (allowanceRepo.
+                            GetByPayPeriodWithProduct(organizationId:=z_OrganizationID,
+                                                      timePeriod:=_payPeriodSpan))
         Catch ex As Exception
             Throw New ResourceLoadingException("Allowances", ex)
         End Try
@@ -533,9 +541,23 @@ Public Class PayrollResources
         Try
 
             _bpiInsuranceProduct = Await New ProductRepository().
-                                        GetOrCreateAdjustmentType(ProductConstant.BPI_INSURANCE_ADJUSTMENT)
+                                        GetOrCreateAdjustmentType(
+                                            ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                                            organizationId:=z_OrganizationID,
+                                            userId:=z_User)
         Catch ex As Exception
             Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadLeaves() As Task
+        Try
+            _leaves = (Await New Repositories.LeaveRepository().
+                                GetAllByTimePeriodAsync(organizationId:=z_OrganizationID,
+                                                        timePeriod:=_payPeriodSpan)).
+                      ToList()
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Allowances", ex)
         End Try
     End Function
 

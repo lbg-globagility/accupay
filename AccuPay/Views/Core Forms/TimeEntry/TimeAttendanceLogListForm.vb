@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Entity
+﻿Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Entity
 
 Public Class TimeAttendanceLogListForm
 
@@ -47,14 +48,11 @@ Public Class TimeAttendanceLogListForm
         Me.Text = $"Time Attendance Log List ({_currentDate.ToString(dateFormat)})"
         ColumnTimeStamp.DefaultCellStyle.Format = dateFormat & " " & timeFormat
 
-
         If _currentShift IsNot Nothing Then
 
             lblBreakTime.Text = $"Break Time (Hours): {_breakTimeDuration}"
 
-
             lblShift.Text = $"Shift: {_currentShift.Start.ToString(timeFormat)} - {_currentShift.End.ToString(timeFormat)}"
-
         Else
 
             lblBreakTime.Text = ""
@@ -69,7 +67,6 @@ Public Class TimeAttendanceLogListForm
         Dim currentLog As TimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
-
 
         Dim currentColumn As DataGridViewColumn = TimeAttendanceLogDataGrid.Columns(e.ColumnIndex)
 

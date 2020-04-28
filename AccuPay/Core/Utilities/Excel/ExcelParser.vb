@@ -7,6 +7,7 @@ Imports AccuPay
 Imports AccuPay.Attributes
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
+Imports AccuPay.Utilities.Extensions
 Imports OfficeOpenXml
 
 Namespace Global.Globagility.AccuPay
@@ -130,14 +131,14 @@ Namespace Global.Globagility.AccuPay
 
                         Dim attr = CType(t.GetCustomAttributes(GetType(ColumnNameAttribute), False), ColumnNameAttribute())
 
-                        Return StringUtils.ToPascal(attr(0).Value) = StringUtils.ToPascal(column.Name)
+                        Return attr(0).Value.ToPascal() = column.Name.ToPascal()
                     End Function)
 
                 If prop Is Nothing Then
                     'Check by Property Name
                     prop = tprops.FirstOrDefault(
                         Function(t)
-                            Return StringUtils.ToPascal(t.Name) = StringUtils.ToPascal(column.Name)
+                            Return t.Name.ToPascal() = column.Name.ToPascal()
                         End Function)
                 End If
 

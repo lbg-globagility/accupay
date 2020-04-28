@@ -2,9 +2,9 @@
 
 Imports AccuPay
 Imports AccuPay.Benchmark
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
-Imports PayrollSys
 
 <TestFixture>
 Public Class BenchmarkPaystubRateTest

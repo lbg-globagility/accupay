@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
@@ -58,7 +59,7 @@ Public Class PayrollTools
         Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
     End Function
 
-    Public Shared Function GetDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
         Dim dailyRate = 0D
 
         If salary Is Nothing Then
@@ -85,7 +86,7 @@ Public Class PayrollTools
         Return dailyRate / WorkHoursPerDay
     End Function
 
-    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As Employee, Optional isActual As Boolean = False) As Decimal
+    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
 
         Return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay
     End Function
@@ -192,7 +193,7 @@ Public Class PayrollTools
                                   'replace this with a policy
                                   'fourlinq can use this feature also
                                   'for clients that has the same attendance and payroll period
-                                  Dim isBenchmarkOwner = ((New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark)
+                                  Dim isBenchmarkOwner = ((New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark)
 
                                   Dim currentDay = Date.Today.ToMinimumHourValue
 
@@ -218,51 +219,6 @@ Public Class PayrollTools
                                   End Using
 
                               End Function)
-
-    End Function
-
-    Friend Shared Async Function GetOrCreateEmployeeEcola(
-                            employeeId As Integer,
-                            payDateFrom As Date,
-                            payDateTo As Date,
-                            Optional allowanceFrequency As String = Allowance.FREQUENCY_SEMI_MONTHLY,
-                            Optional amount As Decimal = 0,
-                            Optional effectiveEndDateShouldBeNull As Boolean = False) _
-        As Task(Of Entities.Allowance)
-
-        Dim allowanceRepository As New AllowanceRepository
-        Dim productRepository As New Data.Repositories.ProductRepository
-
-        Dim ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
-
-        If ecolaAllowance Is Nothing Then
-
-            Dim ecolaProductId = (Await productRepository.GetOrCreateAllowanceType(ProductConstant.ECOLA, z_OrganizationID, z_User))?.RowID
-
-            Dim effectiveEndDate As Date?
-
-            If effectiveEndDateShouldBeNull Then
-
-                effectiveEndDate = Nothing
-            Else
-                effectiveEndDate = Nothing
-
-            End If
-
-            ecolaAllowance = New Data.Entities.Allowance
-            ecolaAllowance.EmployeeID = employeeId
-            ecolaAllowance.ProductID = ecolaProductId
-            ecolaAllowance.AllowanceFrequency = allowanceFrequency
-            ecolaAllowance.EffectiveStartDate = payDateFrom
-            ecolaAllowance.EffectiveEndDate = effectiveEndDate
-            ecolaAllowance.Amount = amount
-
-            Await allowanceRepository.SaveAsync(organizationID:=z_OrganizationID, userID:=z_User, allowance:=ecolaAllowance)
-
-            ecolaAllowance = Await allowanceRepository.GetEmployeeEcola(employeeId, z_OrganizationID, payDateFrom, payDateTo)
-        End If
-
-        Return ecolaAllowance
 
     End Function
 
@@ -305,17 +261,9 @@ Public Class PayrollTools
 
     Public Shared Function CheckIfUsingUserLevel() As Boolean
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            If settings.GetBoolean("User Policy.UseUserLevel", False) Then
-                Return True
-            End If
-
-        End Using
-
-        Return False
+        Return settings.GetBoolean("User Policy.UseUserLevel", False)
 
     End Function
 
@@ -340,9 +288,9 @@ Public Class PayrollTools
 
     Public Shared Async Function ValidatePayPeriodAction(payPeriodId As Integer?) As Task(Of Boolean)
 
-        Dim sys_ownr As New SystemOwner
+        Dim sys_ownr As New SystemOwnerService()
 
-        If sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark Then
+        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             'Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
             Return True
@@ -427,33 +375,6 @@ Public Class PayrollTools
 
         Return Convert.ToString(New SQL(str_quer_address).GetFoundRow)
 
-    End Function
-
-    Public Shared Function GetCalendarCollection(threeDaysBeforeCutoff As Date,
-                                                    payDateTo As Date,
-                                                    context As PayrollContext,
-                                                    calculationBasis As PayRateCalculationBasis) _
-                                                    As CalendarCollection
-        Dim payrates = context.PayRates.
-                                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                Where(Function(p) threeDaysBeforeCutoff <= p.Date AndAlso
-                                                    p.Date <= payDateTo).
-                                ToList()
-        If calculationBasis = PayRateCalculationBasis.Branch Then
-            Dim branchRepository As New BranchRepository()
-            Dim branches = branchRepository.GetAll()
-
-            Dim calendarDays = context.CalendarDays.
-                         Include(Function(t) t.DayType).
-                         Where(Function(t) threeDaysBeforeCutoff <= t.Date AndAlso t.Date <= payDateTo).
-                         ToList()
-
-            Return New CalendarCollection(payrates,
-                                          DirectCast(branches, ICollection(Of Data.Entities.Branch)),
-                                          calendarDays)
-        Else
-            Return New CalendarCollection(payrates)
-        End If
     End Function
 
     Public Shared Function GetPreviousCutoffDateForCheckingLastWorkingDay(currentCutOffStart As Date) As Date

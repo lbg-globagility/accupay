@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
@@ -10,7 +12,7 @@ Public Class TimeAttendanceHelper
 
     Private _importedTimeAttendanceLogs As New List(Of ImportTimeAttendanceLog)
 
-    Private _employees As New List(Of Employee)
+    Private _employees As New List(Of Entities.Employee)
 
     Private _employeeShifts As New List(Of ShiftSchedule)
 
@@ -20,7 +22,7 @@ Public Class TimeAttendanceHelper
 
     Sub New(
            importedTimeLogs As List(Of ImportTimeAttendanceLog),
-           employees As List(Of Employee),
+           employees As List(Of Entities.Employee),
            employeeShifts As List(Of ShiftSchedule))
 
         _importedTimeAttendanceLogs = importedTimeLogs

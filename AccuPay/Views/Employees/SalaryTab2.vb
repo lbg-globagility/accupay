@@ -9,7 +9,7 @@ Public Class SalaryTab2
 
     Public Event Init()
 
-    Public Event SelectEmployee(employee As Employee)
+    Public Event SelectEmployee(employee As Data.Entities.Employee)
 
     Public Event NewSalary()
 
@@ -117,7 +117,7 @@ Public Class SalaryTab2
         RaiseEvent Init()
     End Sub
 
-    Public Sub SetEmployee(employee As Employee)
+    Public Sub SetEmployee(employee As Data.Entities.Employee)
         If _mode = Mode.Creating Then
             EnableSalarySelection()
         End If
@@ -125,7 +125,7 @@ Public Class SalaryTab2
         RaiseEvent SelectEmployee(employee)
     End Sub
 
-    Public Sub ShowEmployee(employee As Employee)
+    Public Sub ShowEmployee(employee As Data.Entities.Employee)
         txtPayFrequency.Text = employee.PayFrequency?.Type
         txtSalaryType.Text = employee.EmployeeType
         txtFullname.Text = $"{employee.FirstName} {employee.LastName}"

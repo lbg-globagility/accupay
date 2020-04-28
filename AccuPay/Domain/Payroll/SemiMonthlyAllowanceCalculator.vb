@@ -1,10 +1,12 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 
 Public Class SemiMonthlyAllowanceCalculator
 
-    Private ReadOnly _employee As Employee
+    Private ReadOnly _employee As Entities.Employee
 
     Private ReadOnly _paystub As Paystub
 
@@ -16,7 +18,7 @@ Public Class SemiMonthlyAllowanceCalculator
 
     Private ReadOnly _allowancePolicy As AllowancePolicy
 
-    Public Sub New(allowancePolicy As AllowancePolicy, employee As Employee, paystub As Paystub, payperiod As PayPeriod, calendarCollection As CalendarCollection, timeEntries As ICollection(Of TimeEntry))
+    Public Sub New(allowancePolicy As AllowancePolicy, employee As Entities.Employee, paystub As Paystub, payperiod As PayPeriod, calendarCollection As CalendarCollection, timeEntries As ICollection(Of TimeEntry))
         _employee = employee
         _paystub = paystub
         _payperiod = payperiod

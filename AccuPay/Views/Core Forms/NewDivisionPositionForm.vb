@@ -2,11 +2,9 @@
 
 Imports System.ComponentModel
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.JobLevels
-Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
@@ -18,7 +16,7 @@ Public Class NewDivisionPositionForm
 
     Private _jobLevels As New List(Of JobLevel)
 
-    Private _payFrequencies As New List(Of Data.Entities.PayFrequency)
+    Private _payFrequencies As New List(Of PayFrequency)
 
     Private _divisionTypes As List(Of String)
 
@@ -37,6 +35,8 @@ Public Class NewDivisionPositionForm
     Private _payFrequencyRepository As New PayFrequencyRepository
 
     Private _listOfValueRepository As New ListOfValueRepository
+
+    Private _employeeRepository As New EmployeeRepository
 
     Public Property _currentTreeNodes As TreeNode()
 
@@ -207,7 +207,7 @@ Public Class NewDivisionPositionForm
     Private Async Sub DeleteDivisionToolStripButton_Click(sender As Object, e As EventArgs) _
         Handles DeleteDivisionToolStripButton.Click
 
-        If Me._currentDivision Is Nothing Then
+        If Me._currentDivision?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No division selected!")
 
             Return
@@ -508,7 +508,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadJobLevels() As Task
 
-        Dim jobLevels = Await _jobLevelRepository.GetAllAsync()
+        Dim jobLevels = Await _jobLevelRepository.GetAllAsync(z_OrganizationID)
 
         _jobLevels = jobLevels.OrderBy(Function(j) j.Name).ToList
 
@@ -516,7 +516,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadDivisions() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllAsync()
+        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -524,7 +524,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync()
+        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -549,7 +549,7 @@ Public Class NewDivisionPositionForm
     Private Async Function GetDeductionSchedules() As Task
 
         _deductionSchedules = _listOfValueRepository.
-                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
     End Function
 
@@ -579,9 +579,12 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub ShowPositionForm(selectedPosition As Position)
 
+        If selectedPosition.RowID Is Nothing Then Return
+
         SetPosition(selectedPosition)
 
-        EmployeeDataGrid.DataSource = Await _positionRepository.GetEmployeesAsync(selectedPosition.RowID)
+        EmployeeDataGrid.DataSource = Await _employeeRepository.
+                                                GetByPositionAsync(selectedPosition.RowID.Value)
 
         FormsTabControl.SelectedTab = PositionTabPage
 
@@ -739,7 +742,10 @@ Public Class NewDivisionPositionForm
 
     Private Async Function SavePosition(messageTitle As String) As Task
 
-        Await _positionRepository.SaveAsync(Me._currentPosition)
+        Me._currentPosition.LastUpdBy = z_User
+        Await _positionRepository.SaveAsync(Me._currentPosition,
+                                            organizationId:=z_OrganizationID,
+                                            divisionId:=Me._currentPosition.DivisionID.Value)
 
         RecordUpdatePosition()
 
@@ -794,7 +800,21 @@ Public Class NewDivisionPositionForm
 
         Dim positionName = Me._currentPosition.Name
 
-        Await _positionRepository.DeleteAsync(Me._currentPosition.RowID)
+        If Me._currentPosition.RowID.HasValue = False Then
+
+            MessageBoxHelper.ErrorMessage("No selected position.")
+            Return
+        End If
+
+        Dim hasEmployee = (Await _employeeRepository.
+                                        GetByPositionAsync(Me._currentPosition.RowID.Value))?.Any()
+
+        If hasEmployee Is Nothing OrElse hasEmployee Then
+            MessageBoxHelper.ErrorMessage("Position already has at least one assigned employee therefore cannot be deleted.")
+            Return
+        End If
+
+        Await _positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
 
         Dim repo As New UserActivityRepository
         repo.RecordDelete(z_User, "Position", CInt(Me._currentPosition.RowID), z_OrganizationID)
@@ -809,7 +829,7 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID)
+        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
 
         If Me._currentDivision.IsRoot Then
 
@@ -1140,7 +1160,8 @@ Public Class NewDivisionPositionForm
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
 
-        Await _divisionRepository.SaveAsync(division)
+        division.LastUpdBy = z_User
+        Await _divisionRepository.SaveAsync(division, z_OrganizationID)
 
         If isRoot Then
             RecordUpdateDivisionLocation()

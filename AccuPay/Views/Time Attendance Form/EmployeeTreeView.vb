@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeTreeView
 
@@ -16,8 +17,11 @@ Public Class EmployeeTreeView
 
     Public Event TickedEmployee(s As Object, e As EventArgs)
 
-    Private tickedEmployees As IList(Of Employee)
+    Private tickedEmployees As IList(Of IEmployee)
+
     Private tickedEmployeeIDs As IList(Of Integer)
+
+    Private _employeeRepository As EmployeeRepository
 
     Private _organizationID As Integer
 
@@ -43,8 +47,9 @@ Public Class EmployeeTreeView
         ' Add any initialization after the InitializeComponent() call.
 
         _presenter = New EmployeeTreeViewPresenter(Me)
-        tickedEmployees = New List(Of Employee)
+        tickedEmployees = New List(Of IEmployee)
         tickedEmployeeIDs = New List(Of Integer)
+        _employeeRepository = New EmployeeRepository()
     End Sub
 
 #End Region
@@ -184,7 +189,7 @@ Public Class EmployeeTreeView
 
 #Region "Functions"
 
-    Public Function GetTickedEmployees() As IList(Of Employee)
+    Public Function GetTickedEmployees() As IList(Of IEmployee)
         Return tickedEmployees
     End Function
 
@@ -257,22 +262,23 @@ Public Class EmployeeTreeView
         End Sub
 
         Private Function LoadDivisions() As IList(Of Division)
-            Using context = New PayrollContext()
-                Return context.Divisions.
-                    Where(Function(d) Nullable.Equals(d.OrganizationID, _organizationId)).
-                    OrderBy(Function(d) d.Name).
-                    ToList()
-            End Using
+
+            Return New DivisionRepository().GetAll(z_OrganizationID).
+                                OrderBy(Function(d) d.Name).
+                                ToList()
         End Function
 
         Private Function LoadEmployees() As IList(Of Employee)
-            Using context = New PayrollContext()
-                Return context.Employees.Include(Function(e) e.Position.Division).
-                    Where(Function(e) Nullable.Equals(e.OrganizationID, _organizationId)).
-                    OrderBy(Function(e) e.LastName).
-                    ThenBy(Function(e) e.FirstName).
-                    ToList()
-            End Using
+
+            Dim employees = New EmployeeRepository().
+                                    GetAllWithDivisionAndPosition(z_OrganizationID).
+                                    ToList
+
+            Return employees.
+                        OrderBy(Function(e) e.LastName).
+                        ThenBy(Function(e) e.FirstName).
+                        ToList()
+
         End Function
 
         Public Async Sub FilterEmployees(needle As String, isActiveOnly As Boolean)
@@ -304,25 +310,25 @@ Public Class EmployeeTreeView
             _view.ShowEmployees(_divisions, employees)
         End Sub
 
-        Public Function GetActiveEmployees() As IList(Of Employee)
-            Dim list = New List(Of Employee)
+        Public Function GetActiveEmployees() As IList(Of IEmployee)
+            Dim list = New List(Of IEmployee)
             For Each node As TreeNode In _view.AccuPayEmployeeTreeView.Nodes
                 TraverseNodes(node, list)
             Next
             Return list
         End Function
 
-        Public Sub TraverseNodes(node As TreeNode, list As IList(Of Employee))
-            Dim isEmployee = TypeOf node.Tag Is Employee
+        Public Sub TraverseNodes(node As TreeNode, list As IList(Of IEmployee))
+            Dim isEmployee = TypeOf node.Tag Is IEmployee
             Dim isSatisfy = isEmployee And node.Checked
 
             If isSatisfy Then
-                EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+                EmployeeListRemover(DirectCast(node.Tag, IEmployee), list)
 
                 list.Add(DirectCast(node.Tag, Employee))
             Else
                 If isEmployee Then
-                    EmployeeListRemover(DirectCast(node.Tag, Employee), list)
+                    EmployeeListRemover(DirectCast(node.Tag, IEmployee), list)
                 End If
             End If
 
@@ -333,7 +339,7 @@ Public Class EmployeeTreeView
             End If
         End Sub
 
-        Private Sub EmployeeListRemover(employee As Employee, list As IList(Of Employee))
+        Private Sub EmployeeListRemover(employee As IEmployee, list As IList(Of IEmployee))
             Dim isExists = list.Any(Function(e) Nullable.Equals(e.RowID, employee.RowID))
             If isExists Then
                 list.Remove(employee)

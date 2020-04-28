@@ -8,13 +8,11 @@ Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
-Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
 Public Class EmployeeForm
@@ -23,9 +21,11 @@ Public Class EmployeeForm
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService
 
     Private if_sysowner_is_benchmark As Boolean
+
+    Private if_sysowner_is_laglobal As Boolean
 
     Private threadArrayList As New List(Of Thread)
 
@@ -36,6 +36,30 @@ Public Class EmployeeForm
     Private _policy As PolicyHelper
 
     Private _branchRepository As BranchRepository
+
+    Private _leaveRepository As LeaveRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _positionRepository As PositionRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        'repositories should be initialized on the constructor
+        'since form events can trigger without the form being loaded by VB
+        'Still, VB can bypass the constructor on the order of call
+        'since it allows calling its form methods by outside code statically
+        _policy = New PolicyHelper
+        _branchRepository = New BranchRepository()
+        _leaveRepository = New LeaveRepository()
+        _listOfValueRepository = New ListOfValueRepository()
+        _positionRepository = New PositionRepository()
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         SplitContainer2.SplitterWidth = 7
@@ -675,8 +699,7 @@ Public Class EmployeeForm
         End If
     End Sub
 
-    Public Sub Print201(sender As Object, e As EventArgs) Handles ToolStripButton22.Click
-
+    Private Sub Print201Report()
         Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
 
         If employeeID Is Nothing Then Return
@@ -807,7 +830,7 @@ Public Class EmployeeForm
         Try
             Dim employee_restday = If(null_index.Contains(cboDayOfRest.SelectedIndex), DBNull.Value, cboDayOfRest.SelectedIndex)
 
-            Dim agensi_rowid = If(cboAgency.SelectedValue = Nothing, DBNull.Value, cboAgency.SelectedValue)
+            Dim agensi_rowid = If(String.IsNullOrWhiteSpace(cboAgency.SelectedValue), DBNull.Value, cboAgency.SelectedValue)
             positID = cboPosit.SelectedValue
 
             Dim regularizationDate = If(dtpRegularizationDate.Checked, dtpRegularizationDate.Value, DBNull.Value)
@@ -890,10 +913,13 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim leaveRepository As New LeaveRepository
-                Dim newleaveBalance = Await leaveRepository.ForceUpdateLeaveAllowance(employeeId,
-                                                                AccuPay.LeaveType.LeaveType.Vacation,
-                                                                LeaveAllowanceTextBox.Text.ToDecimal)
+                Dim newleaveBalance = Await _leaveRepository.
+                                            ForceUpdateLeaveAllowance(
+                                                        employeeId:=employeeId,
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
+                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
+                                                        newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
             End If
@@ -1053,13 +1079,13 @@ Public Class EmployeeForm
 
         If employee_RowID.HasValue = False Then Return Nothing
 
-        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
             Return employeeBuilder.
                     IncludePayFrequency().
                     IncludePosition().
                     IncludeBranch().
-                    FirstOrDefault(employee_RowID)
+                    GetById(employee_RowID.Value)
 
         End Using
 
@@ -1243,7 +1269,7 @@ Public Class EmployeeForm
                         })
             End If
         End If
-        If oldEmployee.AtmNo = Nothing And txtATM.Text <> "" Then 'change to deposit
+        If oldEmployee.AtmNo Is Nothing And txtATM.Text <> "" Then 'change to deposit
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
@@ -1260,7 +1286,7 @@ Public Class EmployeeForm
                         .Description = $"Update employee bank name from '' to '{cbobank.Text}'"
                         })
 
-        ElseIf oldEmployee.AtmNo <> Nothing And txtATM.Text = Nothing Then ' change to cash / check
+        ElseIf oldEmployee.AtmNo <> Nothing And txtATM.Text Is Nothing Then ' change to cash / check
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
@@ -1872,10 +1898,8 @@ Public Class EmployeeForm
 
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
-
-        _policy = New PolicyHelper
-        _branchRepository = New BranchRepository
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_laglobal = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
 
         If if_sysowner_is_benchmark Then
 
@@ -1913,6 +1937,8 @@ Public Class EmployeeForm
         employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
 
         PrepareFormForUserLevelAuthorizations()
+
+        InitializeLaGlobalReportList()
 
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
     End Sub
@@ -2000,15 +2026,10 @@ Public Class EmployeeForm
             Dim positionId = cboPosit.SelectedValue
             Dim divisionName = String.Empty
 
-            Using context = New PayrollContext
-                Dim position = Await context.Positions.
-                    Include(Function(pos) pos.Division).
-                    Where(Function(pos) Equals(pos.RowID, positionId)).FirstOrDefaultAsync
-
-                If position IsNot Nothing Then
-                    divisionName = position.Division.Name
-                End If
-            End Using
+            Dim position = Await _positionRepository.GetByIdWithDivisionAsync(positionId)
+            If position IsNot Nothing Then
+                divisionName = position.Division.Name
+            End If
             txtDivisionName.Text = divisionName
         End If
     End Sub
@@ -2074,7 +2095,7 @@ Public Class EmployeeForm
 
                     Dim addtlWord = Nothing
 
-                    If IsDBNull(.Cells("Column3").Value) OrElse .Cells("Column3").Value = Nothing OrElse .Cells("Column3").Value Is Nothing Then
+                    If IsDBNull(.Cells("Column3").Value) OrElse .Cells("Column3").Value Is Nothing OrElse .Cells("Column3").Value Is Nothing Then
                     Else
 
                         Dim midNameTwoWords = Split(If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value).ToString, " ")
@@ -2092,13 +2113,13 @@ Public Class EmployeeForm
                                                                            VbStrConv.ProperCase))
                     '
                     LastFirstMidName = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value) & ", " & If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value) &
-                        If(Trim(addtlWord) = Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
+                        If(Trim(addtlWord) Is Nothing, "", If(Trim(addtlWord) = ".", "", ", " & addtlWord))
 
                     subdetails = "ID# " & .Cells("Column1").Value &
-                                If(.Cells("Column8").Value = Nothing,
+                                If(.Cells("Column8").Value Is Nothing,
                                                                    "",
                                                                    ", " & .Cells("Column8").Value) &
-                                If(.Cells("Column34").Value = Nothing,
+                                If(.Cells("Column34").Value Is Nothing,
                                                                    "",
                                                                    ", " & .Cells("Column34").Value & " salary")
 
@@ -2118,10 +2139,10 @@ Public Class EmployeeForm
 
                 ElseIf selectedTab Is tbpEmployee Then 'Employee
 
-                    txtNName.Text = .Cells("Column5").Value
+                    txtNName.Text = If(IsDBNull(.Cells("Column5").Value), "", .Cells("Column5").Value)
                     txtDivisionName.Text = .Cells("Column7").Value
 
-                    If .Cells("Column6").Value = Nothing Then
+                    If .Cells("Column6").Value Is Nothing Then
                         dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
                     Else
                         dtpempbdate.Value = Format(CDate(.Cells("Column6").Value), machineShortDateFormat)
@@ -2252,7 +2273,7 @@ Public Class EmployeeForm
                     txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
                     txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
                     txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                    If IsDBNull(.Cells("ATMNo").Value) OrElse .Cells("ATMNo").Value = Nothing OrElse .Cells("ATMNo").Value Is Nothing Then
+                    If String.IsNullOrWhiteSpace(txtATM.Text) Then
                         rdbCash.Checked = True
                         rdbDirectDepo.Checked = False
                     Else
@@ -2485,18 +2506,15 @@ Public Class EmployeeForm
     End Sub
 
     Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
-        Dim employee As Employee = Nothing
 
-        Using employeeBuilder = New Data.Repositories.EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
 
             Return employeeBuilder.
                     IncludePayFrequency().
                     IncludePosition().
-                    FirstOrDefault(employeeID)
+                    GetById(employeeID)
 
         End Using
-
-        Return employee
     End Function
 
     Dim currDepenCount As Integer
@@ -2583,12 +2601,12 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub LinkLabel2_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel2.LinkClicked
-
-        HRISForm.PositionToolStripMenuItem_Click(HRISForm.PositionToolStripMenuItem, New EventArgs)
+        'Removed the old position form
+        'When this button is visible again, add code to show the new add position form
     End Sub
 
     Private Sub cboEmpStat_TextChanged(sender As Object, e As EventArgs) 'Handles cboEmpStat.TextChanged
-        If publicEmpRowID = Nothing Then
+        If publicEmpRowID Is Nothing Then
         Else
             If tsbtnNewEmp.Enabled Then
                 If (cboEmpStat.Text.Contains("Terminat") Or cboEmpStat.Text.Contains("Resign")) Then
@@ -2928,7 +2946,7 @@ Public Class EmployeeForm
 
     Private Sub dgvDepen_CurrentCellChanged(sender As Object, e As EventArgs) Handles dgvDepen.CurrentCellChanged
 
-        If r_Editing = Nothing And c_Editing = Nothing Then
+        If c_Editing Is Nothing Then
         Else
             If noCurrCellChange = 1 Then
                 If c_Editing = "Colmn12" Or c_Editing = "Colmn20" Then
@@ -3322,7 +3340,7 @@ Public Class EmployeeForm
                 Next
             End If
 
-            If r.Cells("Colmn0").Value = Nothing And dgvEmp.RowCount <> 0 Then
+            If r.Cells("Colmn0").Value Is Nothing And dgvEmp.RowCount <> 0 Then
 
                 Dim bdate = Format(Date.Parse(r.Cells("Colmn21").Value), "yyyy-MM-dd").Replace("/", "-")
                 Dim depenRowID = INS_employeedepen(r.Cells("Colmn2").Value, r.Cells("Colmn3").Value,
@@ -3621,11 +3639,11 @@ Public Class EmployeeForm
 
                 For Each drow As DataRow In employeepix.Rows
                     If drow("RowID").ToString = dgvEmp.CurrentRow.Cells("RowID").Value Then
-                        drow("Image") = If(empPic = Nothing,
+                        drow("Image") = If(empPic Is Nothing,
                                            Nothing,
                                            convertFileToByte(empPic))
 
-                        If empPic = Nothing Then
+                        If empPic Is Nothing Then
                         Else
                             makefileGetPath(drow("Image"))
                         End If
@@ -3810,7 +3828,7 @@ Public Class EmployeeForm
 
             End With
 
-            If dbnow = Nothing Then
+            If dbnow Is Nothing Then
                 dbnow = EXECQUER(CURDATE_MDY)
             End If
 
@@ -3887,7 +3905,7 @@ Public Class EmployeeForm
             AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
             Panel1.Visible =
-                (Panel1.AccessibleDescription = sys_ownr.CurrentSystemOwner)
+                (Panel1.AccessibleDescription = sys_ownr.GetCurrentSystemOwner())
 
         End If
 
@@ -4350,9 +4368,9 @@ Public Class EmployeeForm
                     param(4, 1) = dbnow 'Created
                     param(5, 1) = z_User 'LastUpdBy
                     param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("eawar_Type").Value = Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
-                    param(8, 1) = If(r.Cells("eawar_Description").Value = Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
-                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value = Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
+                    param(7, 1) = If(r.Cells("eawar_Type").Value Is Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
+                    param(8, 1) = If(r.Cells("eawar_Description").Value Is Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
+                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value Is Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
 
                     r.Cells("eawar_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeawards", "eawa_int")
                 End If
@@ -4375,9 +4393,9 @@ Public Class EmployeeForm
                     param(4, 1) = dbnow 'Created
                     param(5, 1) = z_User 'LastUpdBy
                     param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("eawar_Type").Value = Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
-                    param(8, 1) = If(r.Cells("eawar_Description").Value = Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
-                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value = Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
+                    param(7, 1) = If(r.Cells("eawar_Type").Value Is Nothing, DBNull.Value, r.Cells("eawar_Type").Value)
+                    param(8, 1) = If(r.Cells("eawar_Description").Value Is Nothing, DBNull.Value, r.Cells("eawar_Description").Value)
+                    param(9, 1) = If(r.Cells("eawar_DateAwarded").Value Is Nothing, DBNull.Value, r.Cells("eawar_DateAwarded").Value)
 
                     EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeeawards", "eawa_int")
                 End If
@@ -4570,12 +4588,12 @@ Public Class EmployeeForm
                     param(4, 1) = DBNull.Value
                     param(5, 1) = z_User
                     param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("ecert_Type").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
-                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
-                    param(9, 1) = If(r.Cells("ecert_CertNum").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
-                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
-                    param(11, 1) = If(r.Cells("ecert_Expiration").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
-                    param(12, 1) = If(r.Cells("ecert_Comments").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
+                    param(7, 1) = If(r.Cells("ecert_Type").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
+                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
+                    param(9, 1) = If(r.Cells("ecert_CertNum").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
+                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
+                    param(11, 1) = If(r.Cells("ecert_Expiration").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
+                    param(12, 1) = If(r.Cells("ecert_Comments").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
 
                     r.Cells("ecert_RowID").Value = EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeecertification", "ecer_int")
                 End If
@@ -4589,12 +4607,12 @@ Public Class EmployeeForm
                     param(4, 1) = DBNull.Value
                     param(5, 1) = z_User
                     param(6, 1) = dgvEmp.CurrentRow.Cells("RowID").Value
-                    param(7, 1) = If(r.Cells("ecert_Type").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
-                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
-                    param(9, 1) = If(r.Cells("ecert_CertNum").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
-                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
-                    param(11, 1) = If(r.Cells("ecert_Expiration").Value = Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
-                    param(12, 1) = If(r.Cells("ecert_Comments").Value = Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
+                    param(7, 1) = If(r.Cells("ecert_Type").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Type").Value))
+                    param(8, 1) = If(r.Cells("ecert_IssuingAuth").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_IssuingAuth").Value))
+                    param(9, 1) = If(r.Cells("ecert_CertNum").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_CertNum").Value))
+                    param(10, 1) = If(r.Cells("ecert_DateIssued").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_DateIssued").Value), "yyyy-MM-dd"))
+                    param(11, 1) = If(r.Cells("ecert_Expiration").Value Is Nothing, DBNull.Value, Format(CDate(r.Cells("ecert_Expiration").Value), "yyyy-MM-dd"))
+                    param(12, 1) = If(r.Cells("ecert_Comments").Value Is Nothing, DBNull.Value, Trim(r.Cells("ecert_Comments").Value))
 
                     EXEC_INSUPD_PROCEDURE(param, "INSUPD_employeecertification", "ecer_int")
                 End If
@@ -4695,10 +4713,10 @@ Public Class EmployeeForm
         param(3, 0) = "emedrecord_ProductID"
         param(4, 0) = "emedrecord_OrganizationID"
 
-        param(0, 1) = If(emedrecord_EmployeeID = Nothing, DBNull.Value, CInt(emedrecord_EmployeeID))
-        param(1, 1) = If(emedrecord_DateFrom = Nothing, DBNull.Value, Format(CDate(emedrecord_DateFrom), "yyyy-MM-dd"))
-        param(2, 1) = If(emedrecord_DateTo = Nothing, DBNull.Value, Format(CDate(emedrecord_DateTo), "yyyy-MM-dd"))
-        param(3, 1) = If(emedrecord_ProductID = Nothing, DBNull.Value, CInt(emedrecord_ProductID))
+        param(0, 1) = If(emedrecord_EmployeeID Is Nothing, DBNull.Value, CInt(emedrecord_EmployeeID))
+        param(1, 1) = If(emedrecord_DateFrom Is Nothing, DBNull.Value, Format(CDate(emedrecord_DateFrom), "yyyy-MM-dd"))
+        param(2, 1) = If(emedrecord_DateTo Is Nothing, DBNull.Value, Format(CDate(emedrecord_DateTo), "yyyy-MM-dd"))
+        param(3, 1) = If(emedrecord_ProductID Is Nothing, DBNull.Value, CInt(emedrecord_ProductID))
         param(4, 1) = orgztnID
 
         Dim returnval = EXEC_INSUPD_PROCEDURE(param,
@@ -4734,16 +4752,16 @@ Public Class EmployeeForm
 
                 .Parameters.Add("emedrecID", MySqlDbType.Int32)
 
-                .Parameters.AddWithValue("emedrec_RowID", If(emedrec_RowID = Nothing, DBNull.Value, emedrec_RowID))
+                .Parameters.AddWithValue("emedrec_RowID", If(emedrec_RowID Is Nothing, DBNull.Value, emedrec_RowID))
                 .Parameters.AddWithValue("emedrec_OrganizationID", orgztnID) 'orgztnID
                 .Parameters.AddWithValue("emedrec_Created", _naw)
                 .Parameters.AddWithValue("emedrec_LastUpd", _naw)
                 .Parameters.AddWithValue("emedrec_CreatedBy", z_User)
                 .Parameters.AddWithValue("emedrec_LastUpdBy", z_User)
-                .Parameters.AddWithValue("emedrec_EmployeeID", If(emedrec_EmployeeID = Nothing, DBNull.Value, emedrec_EmployeeID))
-                .Parameters.AddWithValue("emedrec_DateFrom", If(emedrec_DateFrom = Nothing, DBNull.Value, Format(CDate(emedrec_DateFrom), "yyyy-MM-dd")))
-                .Parameters.AddWithValue("emedrec_DateTo", If(emedrec_DateTo = Nothing, DBNull.Value, Format(CDate(emedrec_DateTo), "yyyy-MM-dd")))
-                .Parameters.AddWithValue("emedrec_ProductID", If(emedrec_ProductID = Nothing, DBNull.Value, emedrec_ProductID))
+                .Parameters.AddWithValue("emedrec_EmployeeID", If(emedrec_EmployeeID Is Nothing, DBNull.Value, emedrec_EmployeeID))
+                .Parameters.AddWithValue("emedrec_DateFrom", If(emedrec_DateFrom Is Nothing, DBNull.Value, Format(CDate(emedrec_DateFrom), "yyyy-MM-dd")))
+                .Parameters.AddWithValue("emedrec_DateTo", If(emedrec_DateTo Is Nothing, DBNull.Value, Format(CDate(emedrec_DateTo), "yyyy-MM-dd")))
+                .Parameters.AddWithValue("emedrec_ProductID", If(emedrec_ProductID Is Nothing, DBNull.Value, emedrec_ProductID))
                 .Parameters.AddWithValue("emedrec_Finding", emedrec_Finding)
 
                 .Parameters("emedrecID").Direction = ParameterDirection.ReturnValue
@@ -5129,7 +5147,7 @@ Public Class EmployeeForm
             If dgvDisciplinaryList.RowCount <> 0 Then
                 Dim fID As String = getStringItem("Select RowID From product where PartNo = '" & cmbFinding.Text & "' And organizationID = '" & z_OrganizationID & "'")
                 Dim getfID As Integer = Val(fID)
-                Dim penaltyUpd = If(discipenalty = Nothing, Nothing, ",Penalty='" & discipenalty & "'")
+                Dim penaltyUpd = If(discipenalty Is Nothing, Nothing, ",Penalty='" & discipenalty & "'")
 
                 DirectCommand("UPDATE employeedisciplinaryaction SET Action = '" & cboAction.Text & "', DateFrom = '" & dtpFrom.Value.ToString("yyyy-MM-dd") & "' " &
                               ", DateTo = '" & dtpTo.Value.ToString("yyyy-MM-dd") & "', FindingDescription = '" & txtDesc.Text & "', Comments = '" & txtdiscipcomment.Text & "', " &
@@ -5544,8 +5562,8 @@ Public Class EmployeeForm
         If btnNewPrevEmp.Enabled = False Then 'IsNewPrevEmp = 1
             Z_ErrorProvider.Dispose()
 
-            If txtCompanyName.Text = Nothing Or txtContactName.Text = Nothing Or txtMainPhone.Text = Nothing _
-                Or txtCompAddr.Text = Nothing Or txtEmailAdd.Text = Nothing Then
+            If txtCompanyName.Text Is Nothing Or txtContactName.Text Is Nothing Or txtMainPhone.Text Is Nothing _
+                Or txtCompAddr.Text Is Nothing Or txtEmailAdd.Text Is Nothing Then
                 If Not SetWarningIfEmpty(txtCompanyName) And SetWarningIfEmpty(txtContactName) _
                     And SetWarningIfEmpty(txtCompAddr) And SetWarningIfEmpty(txtEmailAdd) _
                      And SetWarningIfEmpty(txtMainPhone) Then
@@ -5570,8 +5588,8 @@ Public Class EmployeeForm
                 Exit Sub
             End If
             Z_ErrorProvider.Dispose()
-            If txtCompanyName.Text = Nothing Or txtContactName.Text = Nothing Or txtMainPhone.Text = Nothing _
-                Or txtCompAddr.Text = Nothing Or txtEmailAdd.Text = Nothing Then
+            If txtCompanyName.Text Is Nothing Or txtContactName.Text Is Nothing Or txtMainPhone.Text Is Nothing _
+                Or txtCompAddr.Text Is Nothing Or txtEmailAdd.Text Is Nothing Then
                 If Not SetWarningIfEmpty(txtCompanyName) And SetWarningIfEmpty(txtContactName) _
                     And SetWarningIfEmpty(txtCompAddr) And SetWarningIfEmpty(txtEmailAdd) _
                      And SetWarningIfEmpty(txtMainPhone) Then
@@ -6774,9 +6792,9 @@ Public Class EmployeeForm
                                              dgvempatta.CurrentRow.Cells("eatt_FileName").Value &
                                              dgvempatta.CurrentRow.Cells("eatt_FileType").Value
 
-                    If Trim(dgvempatta.CurrentRow.Cells("eatt_FileType").Value) = Nothing Then
+                    If Trim(dgvempatta.CurrentRow.Cells("eatt_FileType").Value) Is Nothing Then
                     Else
-                        If Trim(dgvempatta.CurrentRow.Cells("eatt_FileName").Value) = Nothing Then
+                        If Trim(dgvempatta.CurrentRow.Cells("eatt_FileName").Value) Is Nothing Then
                             dgvempatta.CurrentRow.Cells("eatt_FileName").Selected = 1
                             dgvempatta.BeginEdit(1)
                             InfoBalloon("Please input a file name.", "Attachment has no file name", Label235, 0, -69)
@@ -6865,7 +6883,7 @@ Public Class EmployeeForm
         params(6, 0) = "eatta_FileType"
         params(7, 0) = "eatta_AttachedFile"
 
-        params(0, 1) = If(eatta_RowID = Nothing, DBNull.Value, eatta_RowID)
+        params(0, 1) = If(eatta_RowID Is Nothing, DBNull.Value, eatta_RowID)
         params(1, 1) = eatta_EmployeeID
         params(2, 1) = z_User
         params(3, 1) = z_User
@@ -7081,10 +7099,10 @@ Public Class EmployeeForm
                     Dim filenameLength = If(Trim(.Cells("eatt_FileName").Value).Length >= 200, 200, Trim(.Cells("eatt_FileName").Value).Length)
                     Dim fileextnsnLength = If(Trim(.Cells("eatt_FileType").Value).Length >= 200, 200, Trim(.Cells("eatt_FileType").Value).Length)
 
-                    If .Cells("eatt_RowID").Value = Nothing And
+                    If .Cells("eatt_RowID").Value Is Nothing And
                         tsbtnNewAtta.Visible = True Then
 
-                        If .Cells("Column38").Value = Nothing Then
+                        If .Cells("Column38").Value Is Nothing Then
 
                             WarnBalloon("The file '" & .Cells("eatt_FileName").Value & .Cells("eatt_FileType").Value & "' has no Attachment type." & vbNewLine &
                                         "Please supply it's attachment type.",
@@ -7285,21 +7303,21 @@ Public Class EmployeeForm
         e.Control.ContextMenu = New ContextMenu
     End Sub
 
-    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles ToolStripButton35.Click
+    Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
         Using importForm = New ImportEmployeeForm()
             If Not importForm.ShowDialog() = DialogResult.OK Then
                 Return
             End If
 
-            Try
-                Await importForm.SaveAsync()
+            Await FunctionUtils.TryCatchFunctionAsync("Import Employee",
+                Async Function()
 
-                SearchEmployee_Click(Button4, New EventArgs)
-                InfoBalloon("Imported successfully.", "Done Importing Employee Profiles", lblforballoon, 0, -69)
-            Catch ex As Exception
-                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                MessageBox.Show(errMsg, "Import Failed", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
+                    Await importForm.SaveAsync()
+
+                    SearchEmployee_Click(Button4, New EventArgs)
+                    InfoBalloon("Imported successfully.", "Done Importing Employee Profiles", lblforballoon, 0, -69)
+
+                End Function)
         End Using
     End Sub
 
@@ -7488,6 +7506,10 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub Print201ReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Print201ReportToolStripMenuItem.Click
+        Print201Report()
+    End Sub
+
     Private Sub tabctrlemp_Selecting(sender As Object, e As TabControlCancelEventArgs) Handles tabctrlemp.Selecting
 
         Dim view_name As String = String.Empty
@@ -7537,43 +7559,42 @@ Public Class EmployeeForm
     Private Async Sub LoadSalutation(gender As Gender)
         Dim genderList = {"Neutral", indentifyGender(gender)}
 
-        Using context = New PayrollContext
-            Dim salutationList = Await context.ListOfValues.
-                Where(Function(l) l.Type = "Salutation").
-                Where(Function(l) genderList.Contains(l.ParentLIC)).
-                OrderBy(Function(l) l.DisplayValue).
-                ToListAsync()
+        If _listOfValueRepository Is Nothing Then Return
 
-            Dim salutations = salutationList.
+        Dim salutationList = Await _listOfValueRepository.
+                            GetFilteredListOfValues(Function(l) l.Type = "Salutation" AndAlso
+                                                                genderList.Contains(l.ParentLIC))
+
+        salutationList = salutationList.OrderBy(Function(l) l.DisplayValue).ToList()
+
+        Dim salutations = salutationList.
                 GroupBy(Function(l) l.DisplayValue).
                 Select(Function(l) l.FirstOrDefault.DisplayValue).
                 ToArray()
 
-            cboSalut.Text = String.Empty
-            cboSalut.Items.Clear()
-            cboSalut.Items.Add(String.Empty)
-            cboSalut.Items.AddRange(salutations)
+        cboSalut.Text = String.Empty
+        cboSalut.Items.Clear()
+        cboSalut.Items.Add(String.Empty)
+        cboSalut.Items.AddRange(salutations)
 
-            Dim currentRow = dgvEmp.CurrentRow
-            If currentRow IsNot Nothing Then
-                With currentRow
-                    If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
+        Dim currentRow = dgvEmp.CurrentRow
+        If currentRow IsNot Nothing Then
+            With currentRow
+                If Not String.IsNullOrWhiteSpace(.Cells(Column9.Name).Value) Then
 
-                        cboSalut.Text = CStr(.Cells(Column9.Name).Value)
-                    End If
+                    cboSalut.Text = CStr(.Cells(Column9.Name).Value)
+                End If
 
-                    If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
-                        cboSalut.SelectedIndex = 0
-                        cboSalut.Text = String.Empty
-                    End If
-                End With
-            End If
+                If CStr(.Cells(Column19.Name).Value) <> gender.ToString() Then
+                    cboSalut.SelectedIndex = 0
+                    cboSalut.Text = String.Empty
+                End If
+            End With
+        End If
 
-            Colmn2.Items.Clear()
-            Colmn2.Items.Add(String.Empty)
-            Colmn2.Items.AddRange(salutations)
-
-        End Using
+        Colmn2.Items.Clear()
+        Colmn2.Items.Add(String.Empty)
+        Colmn2.Items.AddRange(salutations)
 
     End Sub
 
@@ -7581,5 +7602,57 @@ Public Class EmployeeForm
         Male
         Female
     End Enum
+
+    Private _laGlobalEmployeeReports As New Dictionary(Of String, LaGlobalEmployeeReportName)
+
+    Private Async Sub LaGlobalEmployeeReportMenu_Click(sender As ToolStripMenuItem, e As EventArgs) Handles ActiveEmployeeChecklistReportToolStripMenuItem.Click,
+        BPIInsuranceAmountReportToolStripMenuItem.Click,
+        EmploymentContractToolStripMenuItem.Click,
+        EndOfContractReportToolStripMenuItem.Click,
+        MonthlyBirthdayReportToolStripMenuItem.Click,
+        DeploymentEndorsementToolStripMenuItem.Click,
+        WorkOrderToolStripMenuItem.Click
+
+        Dim employeeRow = dgvEmp.CurrentRow
+        If employeeRow Is Nothing Then Return
+
+        Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
+
+        Dim employee As Employee
+        Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+
+            employee = Await builder.IncludePosition().
+                                        IncludeBranch().
+                                        ByEmployeeNumber(employeeNumber).
+                                        FirstOrDefaultAsync()
+        End Using
+
+        Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
+
+        Dim report = New LaGlobalEmployeeReports(employee)
+        report.Print(selectedReport)
+    End Sub
+
+    Private Sub InitializeLaGlobalReportList()
+
+        If if_sysowner_is_laglobal = False Then
+            ActiveEmployeeChecklistReportToolStripMenuItem.Visible = False
+            BPIInsuranceAmountReportToolStripMenuItem.Visible = False
+            EmploymentContractToolStripMenuItem.Visible = False
+            EndOfContractReportToolStripMenuItem.Visible = False
+            MonthlyBirthdayReportToolStripMenuItem.Visible = False
+            DeploymentEndorsementToolStripMenuItem.Visible = False
+            WorkOrderToolStripMenuItem.Visible = False
+        End If
+
+        _laGlobalEmployeeReports = New Dictionary(Of String, LaGlobalEmployeeReportName) From {
+            {ActiveEmployeeChecklistReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.ActiveEmployeeChecklistReport},
+            {BPIInsuranceAmountReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.BpiInsurancePaymentReport},
+            {EmploymentContractToolStripMenuItem.Name, LaGlobalEmployeeReportName.EmploymentContractPage},
+            {EndOfContractReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyEndofContractReport},
+            {MonthlyBirthdayReportToolStripMenuItem.Name, LaGlobalEmployeeReportName.MonthlyBirthdayReport},
+            {DeploymentEndorsementToolStripMenuItem.Name, LaGlobalEmployeeReportName.SmDeploymentEndorsement},
+            {WorkOrderToolStripMenuItem.Name, LaGlobalEmployeeReportName.WorkOrder}}
+    End Sub
 
 End Class

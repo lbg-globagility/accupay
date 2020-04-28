@@ -1,13 +1,14 @@
-﻿Imports AccuPay.Enums
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As New SystemOwnerService()
 
-    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -17,7 +18,7 @@ Public Class HRISForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         PrepareFormForBenchmark()
     End Sub
@@ -116,22 +117,6 @@ Public Class HRISForm
                 pb.Enabled = False
             Next
         End Try
-    End Sub
-
-    Sub PositionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PositionToolStripMenuItem.Click
-
-        Dim n_UserAccessRights As New UserAccessRights(EmpPosition.ViewIdentification)
-
-        'If n_UserAccessRights.ResultValue(AccessRightName.HasReadOnly) Then
-
-        ChangeForm(EmpPosition, "Position")
-        previousForm = EmpPosition
-
-        'End If
-
-        'ChangeForm(Positn)
-        'previousForm = Positn
-
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DivisionToolStripMenuItem.Click
@@ -282,7 +267,7 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If sys_ownr.CurrentSystemOwner <> SystemOwner.Hyundai Then
+        If sys_ownr.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False
@@ -307,7 +292,7 @@ Public Class HRISForm
                 MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
             End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            Dim settings = ListOfValueCollection.Create()
 
             If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -379,7 +364,7 @@ Public Class HRISForm
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OffSetToolStripMenuItem.Visible =
-            (curr_sys_owner_name = SystemOwner.Cinema2000)
+            (curr_sys_owner_name = SystemOwnerService.Cinema2000)
 
         MyBase.OnLoad(e)
 

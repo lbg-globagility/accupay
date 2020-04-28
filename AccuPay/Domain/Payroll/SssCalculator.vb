@@ -1,5 +1,7 @@
 Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports PayrollSys
 
@@ -14,7 +16,7 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Employee, payperiod As PayPeriod)
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Entities.Employee, payperiod As PayPeriod)
         ' Reset SSS values to zero
         paystub.SssEmployeeShare = 0
         paystub.SssEmployerShare = 0
@@ -63,7 +65,7 @@ Public Class SssCalculator
     Private Function GetSocialSecurityAmount(paystub As Paystub,
                                              previousPaystub As Paystub,
                                              salary As Salary,
-                                             employee As Employee) As Decimal
+                                             employee As Entities.Employee) As Decimal
 
         Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
 
@@ -90,7 +92,7 @@ Public Class SssCalculator
 
                 Dim totalHours = If(previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave, 0) + paystub.TotalWorkedHoursWithoutOvertimeAndLeave
 
-                If (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark AndAlso employee.IsPremiumInclusive Then
+                If (New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso employee.IsPremiumInclusive Then
 
                     totalHours = If(previousPaystub?.RegularHoursAndTotalRestDay, 0) + paystub.RegularHoursAndTotalRestDay
                 End If

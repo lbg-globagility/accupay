@@ -1,5 +1,7 @@
 ﻿Option Strict On
+
 Imports AccuPay
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 
 <TestFixture>

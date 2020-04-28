@@ -134,6 +134,7 @@ Public Class EmployeeAllowanceForm
 
         For Each allowance In Me._currentAllowances
             If CheckIfAllowanceIsChanged(allowance) Then
+                allowance.LastUpdBy = z_User
                 changedAllowances.Add(allowance)
             End If
         Next
@@ -151,7 +152,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, currentAllowances:=changedAllowances)
+                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
 
                                             For Each item In changedAllowances
                                                 RecordUpdate(item)
@@ -274,14 +275,13 @@ Public Class EmployeeAllowanceForm
 
         Const messageTitle As String = "Delete Allowance"
 
-        If Me._currentAllowance Is Nothing OrElse
-            Me._currentAllowance.RowID Is Nothing Then
+        If Me._currentAllowance?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No allowance selected!")
 
             Return
         End If
 
-        Dim currentAllowance = Await _allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID)
+        Dim currentAllowance = Await _allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID.Value)
 
         If currentAllowance Is Nothing Then
 
@@ -296,7 +296,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceIsAlreadyUsed = Await _allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID)
+        Dim allowanceIsAlreadyUsed = Await _allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID.Value)
 
         If allowanceIsAlreadyUsed Then
 
@@ -317,7 +317,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID)
+                                                Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
                                                 repo.RecordDelete(z_User, "Allowance", CInt(Me._currentAllowance.RowID), z_OrganizationID)
@@ -390,9 +390,9 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim allowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID)).
+        Dim allowances = (Await _allowanceRepository.GetByEmployeeIncludesProductAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.EffectiveEndDate).
                                 ToList
 

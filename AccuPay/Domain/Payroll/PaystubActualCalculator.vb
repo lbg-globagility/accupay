@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
@@ -8,14 +10,14 @@ Namespace Global.AccuPay.Payroll
 
     Public Class PaystubActualCalculator
 
-        Public Sub Compute(employee As Employee,
+        Public Sub Compute(employee As Entities.Employee,
                            salary As Salary,
                            settings As ListOfValueCollection,
                            payperiod As PayPeriod,
                            paystub As Paystub)
             Dim totalEarnings As Decimal
 
-            If employee.IsDaily OrElse (New SystemOwner).CurrentSystemOwner = SystemOwner.Benchmark Then
+            If employee.IsDaily OrElse (New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
                 totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
 

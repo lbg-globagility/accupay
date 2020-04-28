@@ -1,13 +1,17 @@
-﻿Option Strict On
-
-Imports AccuPay.Data.Repositories
+﻿Imports AccuPay.Data.Repositories
 Imports AccuPay
 Imports AccuPay.Utilities
-Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
+Imports AccuPay.Data
 
 <TestFixture>
 Public Class EntityTest
+
+    ''' <summary>
+    ''' Mostly used as a sandbox in testing queries of entities.
+    ''' </summary>
 
     <Test>
     Public Sub Test1()
@@ -48,43 +52,46 @@ Public Class EntityTest
     End Sub
 
     <Test>
-    Public Sub TestEntity2()
+    Public Sub CheckVBNullableId()
 
-        'Using context = New PayrollContext()
+        'Change the PayrollContext to public to use this
+        'Using context = New Data.PayrollContext()
 
-        '    Dim paystubCount = context.Paystubs.ToList.Count
+        '    Dim organization = context.Organizations.
+        '                FirstOrDefault(Function(o) o.LastUpdBy IsNot Nothing)
 
-        '    Assert.IsTrue(context.Paystubs.ToList.Count > 0)
+        '    CompareQueries(context, organization)
 
-        'End Using
+        '    'Dim organizationNull = context.Organizations.
+        '    '            FirstOrDefault(Function(o) o.LastUpdBy Is Nothing)
 
-        '' Code below needs to succeed for the OB Import
-        'Dim officialbusType As New ListOfValue
+        '    'CompareQueries(context, organizationNull)
 
-        'Using context = New PayrollContext
-
-        '    Dim listOfVal As New ListOfValue
-        '    listOfVal.DisplayValue = "FIELDWORK DUTY"
-        '    listOfVal.Type = "Official Business Type"
-        '    listOfVal.Active = "Yes"
-
-        '    listOfVal.Created = Date.Now
-        '    listOfVal.CreatedBy = 1
-        '    listOfVal.LastUpd = Date.Now
-        '    listOfVal.LastUpdBy = 1
-        '    context.ListOfValues.Add(listOfVal)
-
-        '    Await context.SaveChangesAsync()
-
-        '    officialbusType = Await context.ListOfValues.
-        '                    FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
-
-        '    Assert.IsTrue(officialbusType IsNot Nothing)
+        '    Assert.IsTrue(True)
 
         'End Using
+    End Sub
 
-        Assert.True(True)
+    Private Shared Sub CompareQueries(context As Data.PayrollContext, organization As Organization)
+        Dim organization2 = context.Organizations.
+                                        FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy)
 
+        Dim organization3 = context.Organizations.
+                        FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy)
+
+        'Has problem when LastUpdBy is null (not because of DB)
+        Dim organization4 = context.Organizations.
+                        FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy.Value)
+
+        'Has problem when LastUpdBy is null (not because of DB)
+        Dim organization5 = context.Organizations.
+                        FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy.Value)
+
+        Dim organization6 = context.Organizations.
+                        FirstOrDefault(Function(o) CBool(o.LastUpdBy = organization.LastUpdBy))
+
+        Dim organization7 = context.Organizations.
+                        FirstOrDefault(Function(o) Nullable.Equals(o.LastUpdBy, organization.LastUpdBy))
     End Sub
 
 End Class

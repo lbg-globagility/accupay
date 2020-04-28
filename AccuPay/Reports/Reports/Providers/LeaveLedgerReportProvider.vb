@@ -1,6 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Helpers
 Imports AccuPay.Repository
@@ -71,7 +74,7 @@ Public Class LeaveLedgerReportProvider
         Dim endDate = dateTo.Value.ToMaximumHourValue
         Dim dayBeforeReport = startDate.AddDays(-1).ToMaximumHourValue
 
-        Dim employees = Await _employeeRepository.GetAllActiveAsync()
+        Dim employees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
         Dim employeeIds = employees.Select(Function(e) e.RowID).ToArray()
 
         Using context As New PayrollContext
@@ -122,7 +125,7 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee) As _
+                                employee As Entities.Employee) As _
                                 LeaveLedgerReportModel
 
         Dim currentEmployeeLeaveTransactions = currentLeaveTransactions.
@@ -140,7 +143,7 @@ Public Class LeaveLedgerReportProvider
                                     Where(Function(t) t.VacationLeaveHours > 0).
                                     ToList
 
-        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.LeaveType.Vacation)
+        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.Vacation)
 
     End Function
 
@@ -148,7 +151,7 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee) As _
+                                employee As Entities.Employee) As _
                                 LeaveLedgerReportModel
 
         Dim currentEmployeeLeaveTransactions = currentLeaveTransactions.
@@ -166,7 +169,7 @@ Public Class LeaveLedgerReportProvider
                                     Where(Function(t) t.SickLeaveHours > 0).
                                     ToList
 
-        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.LeaveType.Sick)
+        Return GetLeave(oldEmployeeLeaveTransactions, currentEmployeeLeaveTransactions, employeeTimeEntries, employee, LeaveType.Sick)
 
     End Function
 
@@ -174,8 +177,8 @@ Public Class LeaveLedgerReportProvider
                                 oldLeaveTransactions As List(Of LeaveTransaction),
                                 currentLeaveTransactions As List(Of LeaveTransaction),
                                 timeEntries As List(Of TimeEntry),
-                                employee As Employee,
-                                leaveType As LeaveType.LeaveType) As _
+                                employee As Entities.Employee,
+                                leaveType As LeaveType) As _
                                 LeaveLedgerReportModel
 
         Dim leaveBeginningTransaction As New LeaveTransaction
@@ -202,11 +205,11 @@ Public Class LeaveLedgerReportProvider
         'get total availed leave
         Dim totalAvailedLeave As Decimal = 0
 
-        If leaveType = AccuPay.LeaveType.LeaveType.Vacation Then
+        If leaveType = LeaveType.Vacation Then
 
             totalAvailedLeave = timeEntries.Sum(Function(t) t.VacationLeaveHours)
 
-        ElseIf leaveType = AccuPay.LeaveType.LeaveType.Sick Then
+        ElseIf leaveType = LeaveType.Sick Then
 
             totalAvailedLeave = timeEntries.Sum(Function(t) t.SickLeaveHours)
 

@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Utilities
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Utilities
 
 Public Class LeaveLedgerReportModel
 
@@ -6,11 +7,11 @@ Public Class LeaveLedgerReportModel
 
     Public Property FullName As String
 
-    Public Property LeaveType As LeaveType.LeaveType
+    Public Property LeaveType As LeaveType
 
     Sub New(employeeNumber As String,
             fullName As String,
-            leaveType As LeaveType.LeaveType,
+            leaveType As LeaveType,
             beginningBalance As Decimal,
             availedLeave As Decimal)
 
@@ -24,9 +25,9 @@ Public Class LeaveLedgerReportModel
     Public ReadOnly Property LeaveTypeDescription As String
         Get
             Select Case LeaveType
-                Case AccuPay.LeaveType.LeaveType.Sick
+                Case LeaveType.Sick
                     Return "SL"
-                Case AccuPay.LeaveType.LeaveType.Vacation
+                Case LeaveType.Vacation
                     Return "VL"
                 Case Else
                     Return ""

@@ -1,0 +1,76 @@
+﻿using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace AccuPay.Data.Entities
+{
+    [Table("employeetimeentryactual")]
+    public class ActualTimeEntry : IActualTimeEntry
+    {
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int? RowID { get; set; }
+
+        public int? OrganizationID { get; set; }
+
+        public int? EmployeeID { get; set; }
+
+        public int? EmployeeShiftID { get; set; }
+
+        public int? EmployeeSalaryID { get; set; }
+
+        public int? PayRateID { get; set; }
+
+        [Column("Date")]
+        public DateTime Date { get; set; }
+
+        [Column("RegularHoursAmount")]
+        public decimal RegularPay { get; set; }
+
+        [Column("OvertimeHoursAmount")]
+        public decimal OvertimePay { get; set; }
+
+        [Column("NightDiffHoursAmount")]
+        public decimal NightDiffPay { get; set; }
+
+        [Column("NightDiffOTHoursAmount")]
+        public decimal NightDiffOTPay { get; set; }
+
+        [Column("RestDayAmount")]
+        public decimal RestDayPay { get; set; }
+
+        public decimal RestDayOTPay { get; set; }
+
+        [Column("Leavepayment")]
+        public decimal LeavePay { get; set; }
+
+        public decimal SpecialHolidayPay { get; set; }
+
+        public decimal SpecialHolidayOTPay { get; set; }
+
+        public decimal RegularHolidayPay { get; set; }
+
+        public decimal RegularHolidayOTPay { get; set; }
+
+        [Column("HolidayPayAmount")]
+        public decimal HolidayPay { get; set; }
+
+        [Column("HoursLateAmount")]
+        public decimal LateDeduction { get; set; }
+
+        [Column("UndertimeHoursAmount")]
+        public decimal UndertimeDeduction { get; set; }
+
+        [Column("Absent")]
+        public decimal AbsentDeduction { get; set; }
+
+        [Column("BasicDayPay")]
+        public decimal BasicDayPay { get; set; }
+
+        [Column("TotalDayPay")]
+        public decimal TotalDayPay { get; set; }
+
+        //[ForeignKey("EmployeeShiftID")]
+        //public virtual ShiftSchedule ShiftSchedule { get; set; }
+    }
+}

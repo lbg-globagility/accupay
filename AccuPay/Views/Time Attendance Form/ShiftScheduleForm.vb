@@ -1,8 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -492,7 +494,7 @@ Public Class ShiftScheduleForm
 
         End Sub
 
-        Public Sub New(employee As Employee)
+        Public Sub New(employee As IEmployee)
             AssignEmployee(employee)
 
         End Sub
@@ -532,7 +534,7 @@ Public Class ShiftScheduleForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As Employee)
+        Private Sub AssignEmployee(employee As IEmployee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)
@@ -583,7 +585,7 @@ Public Class ShiftScheduleForm
             Dim shiftStart = Calendar.ToTimespan(_timeFrom)
             Dim shiftEnd = Calendar.ToTimespan(_timeTo)
 
-            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
+            Dim isValidForCompute = shiftEnd.HasValue And shiftStart.HasValue
 
             If isValidForCompute Then
                 Dim sdfsd = shiftEnd - shiftStart
@@ -715,9 +717,9 @@ Public Class ShiftScheduleForm
         Private Const DEFAULT_SHIFT_HOUR As Integer = 9
         Private Const DEFAULT_BREAK_HOUR As Integer = 1
 
-        Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
+        Private _dutyShiftPolicy As IEnumerable(Of Entities.ListOfValue)
 
-        Private _listOfValueRepository As New ListOfValueRepository
+        Private _listOfValueRepository As New Repositories.ListOfValueRepository
 
         Private settings As ListOfValueCollection = Nothing
 
@@ -734,9 +736,9 @@ Public Class ShiftScheduleForm
         End Function
 
         Private Async Function Load() As Task
-            _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPolicies()
+            _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
 
-            settings = New ListOfValueCollection(_dutyShiftPolicy.ToList)
+            settings = ListOfValueCollection.Create(_dutyShiftPolicy.ToList)
 
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)

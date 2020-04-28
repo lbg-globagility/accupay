@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
+
 Public Class AllowancePolicy
 
     Private ReadOnly _settings As ListOfValueCollection

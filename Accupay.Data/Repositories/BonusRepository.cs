@@ -53,6 +53,5 @@ namespace AccuPay.Data.Repositories
                 await context.SaveChangesAsync();
             }
         }
-
     }
 }

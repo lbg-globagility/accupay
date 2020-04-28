@@ -2,10 +2,9 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports log4net
@@ -21,6 +20,8 @@ Public Class ImportLeaveForm
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
     Private _leaveRepository As New LeaveRepository()
+    Private _employeeRepo As New EmployeeRepository()
+    Private _categoryRepo As New CategoryRepository()
 
 #Region "Properties"
 
@@ -39,18 +40,6 @@ Public Class ImportLeaveForm
 
 #Region "Methods"
 
-    'Private Sub ExcelParserPreparation(filePath As String, Optional worksheetName As String = Nothing)
-
-    '    _filePath = filePath
-
-    '    If Not String.IsNullOrWhiteSpace(worksheetName) Then
-    '        _worksheetName = worksheetName
-    '        _ep = New ExcelParser(Of LeaveModel)(_worksheetName)
-    '    End If
-
-    '    _ep = New ExcelParser(Of LeaveModel)
-    'End Sub
-
     Private Async Sub FilePathChangedAsync()
         Dim models As New List(Of LeaveModel)
 
@@ -65,11 +54,12 @@ Public Class ImportLeaveForm
 
         Dim dataSource As New List(Of LeaveModel)
 
+        Dim employeeFromRepo = Await _employeeRepo.GetAllAsync(z_OrganizationID)
+        Dim employees = employeeFromRepo.
+            Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
+            ToList()
+
         Using context = New PayrollContext
-            Dim employees = Await context.Employees.
-                Where(Function(e) e.OrganizationID.Value = z_OrganizationID).
-                Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
-                ToListAsync()
 
             For Each model In models
 
@@ -137,7 +127,7 @@ Public Class ImportLeaveForm
 
         Dim messageTitle = "Import Employee Leave"
 
-        Dim leaves As List(Of Leave) = Await GetLeaves()
+        Dim leaves As List(Of Leave) = Await GetOkLeaves()
 
         If leaves.Any = False Then
 
@@ -150,19 +140,20 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                         Async Function() As Task(Of Boolean)
 
-                            Await _leaveRepository.SaveManyAsync(leaves)
+                            Await _leaveRepository.SaveManyAsync(leaves,
+                                                                organizationId:=z_OrganizationID)
 
-                            Dim importList = New List(Of Data.Entities.UserActivityItem)
+                            Dim importList = New List(Of UserActivityItem)
                             For Each item In leaves
 
                                 If item.IsNew Then
-                                    importList.Add(New Data.Entities.UserActivityItem() With
+                                    importList.Add(New UserActivityItem() With
                                     {
                                     .Description = $"Imported a new leave.",
                                     .EntityId = item.RowID.Value
                                     })
                                 Else
-                                    importList.Add(New Data.Entities.UserActivityItem() With
+                                    importList.Add(New UserActivityItem() With
                                     {
                                     .Description = $"Updated a leave on import.",
                                     .EntityId = item.RowID.Value
@@ -181,52 +172,53 @@ Public Class ImportLeaveForm
 
     End Function
 
-    Private Async Function GetLeaves() As Task(Of List(Of Leave))
+    Private Async Function GetOkLeaves() As Task(Of List(Of Leave))
 
         Dim leaves As New List(Of Leave)
 
-        Using context = New PayrollContext
-            Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
-            Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
+        Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
+        Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
 
-            Dim currentLeaves = Await context.Leaves.
-                Where(Function(lv) lv.OrganizationID.Value = z_OrganizationID).
-                Where(Function(lv) employeeIDs.Contains(lv.EmployeeID.Value)).
-                Where(Function(lv) lv.StartDate >= minDate).
-                ToListAsync()
+        Dim currentLeaves = Await _leaveRepository.
+                    GetFilteredAllAsync(Function(lv) lv.OrganizationID.Value = z_OrganizationID AndAlso
+                                        employeeIDs.Contains(lv.EmployeeID.Value) AndAlso
+                                        lv.StartDate >= minDate)
 
-            If currentLeaves.Any() Then
-                For Each model In _okModels
-                    Dim leave = currentLeaves.
-                        Where(Function(lv) lv.EmployeeID.Value = model.EmployeeID).
-                        Where(Function(lv) lv.StartDate = model.StartDate.Value.Date).
-                        FirstOrDefault
+        If currentLeaves.Any() Then
+            For Each model In _okModels
+                Dim leave = currentLeaves.
+                    Where(Function(lv) lv.EmployeeID.Value = model.EmployeeID).
+                    Where(Function(lv) lv.StartDate = model.StartDate.Value.Date).
+                    FirstOrDefault
 
-                    If leave IsNot Nothing Then
-                        With leave
-                            .Reason = model.Reason
-                            .Comments = model.Comment
-                            .StartTime = model.StartTime
-                            .StartDate = model.StartDate.Value
-                            .EndDate = model.EndDate
-                            .EndTime = model.EndTime
-                            .LastUpd = Now
-                            .LastUpdBy = z_User
-                            .IsNew = False
-                        End With
+                If leave IsNot Nothing Then
+                    With leave
+                        .Reason = model.Reason
+                        .Comments = model.Comment
+                        .StartTime = model.StartTime
+                        .StartDate = model.StartDate.Value
+                        .EndDate = model.EndDate
+                        .EndTime = model.EndTime
+                        .LastUpd = Now
+                        .LastUpdBy = z_User
+                        .IsNew = False
+                    End With
 
-                        leaves.Add(leave)
-                    Else
-                        leaves.Add(model.ToLeave())
-                    End If
-                Next
-            Else
-                For Each model In _okModels
-                    leaves.Add(model.ToLeave())
-                Next
+                    leaves.Add(leave)
+                Else
+                    Dim newLeave = model.ToLeave()
+                    newLeave.CreatedBy = z_User
+                    leaves.Add(newLeave)
+                End If
+            Next
+        Else
+            For Each model In _okModels
+                Dim newLeave = model.ToLeave()
+                newLeave.CreatedBy = z_User
+                leaves.Add(model.ToLeave())
+            Next
 
-            End If
-        End Using
+        End If
 
         Return leaves
     End Function
@@ -235,11 +227,11 @@ Public Class ImportLeaveForm
 
     Private Class LeaveModel
         Implements IExcelRowRecord
-        Private Const PENDING_STATUS As String = AccuPay.Entity.Leave.StatusPending
+        Private Const PENDING_STATUS As String = Data.Entities.Leave.StatusPending
         Private Const ADDITIONAL_VACATION_LEAVETYPE As String = "Additional VL"
         Private Const REASON_LENGTH As Integer = 500
         Private Const COMMENT_LENGTH As Integer = 2000
-        Private VALID_STATUS As String() = {AccuPay.Entity.Leave.StatusApproved.ToLower, AccuPay.Entity.Leave.StatusPending.ToLower} '{"approved", "pending"}
+        Private VALID_STATUS As String() = {Data.Entities.Leave.StatusApproved.ToLower, Data.Entities.Leave.StatusPending.ToLower} '{"approved", "pending"}
         Private _employee As Employee
         Private _noEmployeeNo As Boolean
         Private _noLeaveType As Boolean
@@ -479,20 +471,17 @@ Public Class ImportLeaveForm
             Using package As New ExcelPackage(fileInfo)
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
-                Dim leaveTypes As List(Of String)
-                Using context As New PayrollContext
-                    Dim categleavID = Await context.Categories.
-                                        Where(Function(c) Nullable.Equals(c.OrganizationID, z_OrganizationID)).
-                                        Where(Function(c) Nullable.Equals(c.CategoryName, "Leave Type")).
-                                        Select(Function(c) c.RowID).
-                                        FirstOrDefaultAsync()
+                Dim leaveTypes As New List(Of String)
+                Dim leaveCateogry = Await _categoryRepo.GetByName(z_OrganizationID, "Leave Type")
+                Dim categleavID = leaveCateogry.RowID
 
+                Using context As New PayrollContext
                     leaveTypes = Await context.Products.
-                                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                                    Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
-                                    Select(Function(p) p.PartNo).
-                                    OrderBy(Function(p) p).
-                                    ToListAsync()
+                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+                        Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
+                        Select(Function(p) p.PartNo).
+                        OrderBy(Function(p) p).
+                        ToListAsync()
                 End Using
 
                 For index = 0 To leaveTypes.Count - 1

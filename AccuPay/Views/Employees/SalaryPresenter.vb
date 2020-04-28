@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports Microsoft.EntityFrameworkCore
@@ -13,7 +15,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private WithEvents _view As SalaryTab2
 
-        Private _employee As Employee
+        Private _employee As Data.Entities.Employee
 
         Private _philHealthPolicy As PhilHealthPolicy
 
@@ -33,7 +35,7 @@ Namespace Global.AccuPay.Views.Employees
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
 
-        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
+        Private Sub OnSelectedEmployee(employee As Data.Entities.Employee) Handles _view.SelectEmployee
             _employee = employee
             _view.ShowEmployee(employee)
             LoadSalaries()
@@ -144,12 +146,10 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub LoadPhilHealthBrackets()
-            Using context = New PayrollContext()
-                Dim listOfValues = context.ListOfValues.
-                    Where(Function(l) l.Type = "PhilHealth").
-                    ToList()
 
-                Dim values = New ListOfValueCollection(listOfValues)
+            Dim values = ListOfValueCollection.Create("PhilHealth")
+
+            Using context = New PayrollContext()
 
                 _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),
