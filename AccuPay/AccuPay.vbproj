@@ -357,7 +357,6 @@
     <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
-    <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Domain\Employees\TardinessRecord.vb" />
@@ -958,10 +957,8 @@
     </Compile>
     <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
     <Compile Include="Domain\Employees\Employee.vb" />
-    <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
     <Compile Include="Domain\Shifts\Shift.vb" />
     <Compile Include="Domain\TimeEntry\CurrentShift.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEmployeeNo.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
@@ -985,9 +982,6 @@
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
     <Compile Include="Domain\TimeLogs\TimeLog.vb" />
     <Compile Include="Domain\Payroll\PayrollResources.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />
-    <Compile Include="Domain\TimeEntry\TimeLogsTempIn.vb" />
-    <Compile Include="Domain\TimeEntry\TimeLogsTempOut.vb" />
     <Compile Include="Domain\TimeLogs\TimeLogsReader.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
@@ -1066,7 +1060,6 @@
       <DependentUpon>PayrollSumma.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Domain\Commons\SeparateLineTimeParser.vb" />
     <Compile Include="Views\General Forms\ImproperLogOut.Designer.vb">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
     </Compile>
