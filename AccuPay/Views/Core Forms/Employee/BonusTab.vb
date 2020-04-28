@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
@@ -10,7 +11,7 @@ Public Class BonusTab
 
     Private _employee As Employee
 
-    Private _bonuses As List(Of Bonus)
+    Private _bonuses As IEnumerable(Of Bonus)
 
     Private _products As IEnumerable(Of Product)
 
@@ -31,7 +32,7 @@ Public Class BonusTab
         dtpbonenddate.Enabled = False
     End Sub
 
-    Public Sub SetEmployee(employee As Employee)
+    Public Async Function SetEmployee(employee As Employee) As Task
         Me.cbobontype.Focus()
         _employee = employee
 
@@ -40,20 +41,20 @@ Public Class BonusTab
         pbEmpPicBon.Image = ConvByteToImage(_employee.Image)
 
         ChangeMode(FormMode.Empty)
-        LoadBonuses()
-    End Sub
+        Await LoadBonuses()
+    End Function
 
-    Private Async Sub LoadBonuses()
+    Private Async Function LoadBonuses() As Task
         If _employee Is Nothing OrElse _employee.RowID Is Nothing Then
             Return
         End If
 
         Dim bonusRepo = New BonusRepository
-        _bonuses = bonusRepo.GetByEmployee(_employee.RowID.Value).ToList
+        _bonuses = Await bonusRepo.GetAllByEmployeeAsync(_employee.RowID.Value)
         _frequencies = bonusRepo.GetFrequencyList
 
         Dim productRepo = New ProductRepository
-        _products = Await productRepo.GetBonusTypes(z_OrganizationID)
+        _products = Await productRepo.GetBonusTypesAsync(z_OrganizationID)
 
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         BindDataSource()
@@ -68,7 +69,7 @@ Public Class BonusTab
         End If
 
         AddHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
-    End Sub
+    End Function
 
     Private Sub BindDataSource()
 
@@ -134,24 +135,28 @@ Public Class BonusTab
         txtbonamt.Text = ""
     End Sub
 
-    Private Sub tsbtnDelBon_Click(sender As Object, e As EventArgs) Handles tsbtnDelBon.Click
+    Private Async Sub tsbtnDelBon_Click(sender As Object, e As EventArgs) Handles tsbtnDelBon.Click
         If _bonuses.Count > 0 Then
             Dim result = MsgBox("Are you sure you want to delete this Bonus?", MsgBoxStyle.YesNo, "Delete Bonus")
 
             If result = MsgBoxResult.Yes Then
-                Dim repo = New BonusRepository
-                repo.Delete(_currentBonus)
+                Await FunctionUtils.TryCatchFunctionAsync("Delete Bonus",
+                Async Function()
+                    Dim repo = New BonusRepository
+                    Await repo.DeleteAsync(_currentBonus)
 
-                Dim userActivityRepo = New UserActivityRepository
-                userActivityRepo.RecordDelete(z_User, "Bonus", CInt(_currentBonus.RowID), z_OrganizationID)
+                    Dim userActivityRepo = New UserActivityRepository
+                    userActivityRepo.RecordDelete(z_User, "Bonus", CInt(_currentBonus.RowID), z_OrganizationID)
 
-                LoadBonuses()
+                    LoadBonuses()
+                End Function)
             End If
         End If
     End Sub
 
-    Private Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSaveBon.Click
-        If SaveBonus() Then
+    Private Async Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSaveBon.Click
+        pbEmpPicBon.Focus()
+        If Await SaveBonus() Then
             LoadBonuses()
         End If
     End Sub
@@ -176,7 +181,7 @@ Public Class BonusTab
         End If
     End Sub
 
-    Private Function SaveBonus() As Boolean
+    Private Async Function SaveBonus() As Task(Of Boolean)
 
         Dim messageTitle = ""
         Dim succeed As Boolean = True
@@ -201,45 +206,42 @@ Public Class BonusTab
 
         Dim product = _products.Where(Function(x) x.Name = cbobontype.Text).
                                  FirstOrDefault
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync("Save Bonus",
+            Async Function()
+                If IsChanged(product) Then
+                    Dim oldBonus = _currentBonus.CloneJson()
 
-            If IsChanged(product) Then
-                Dim oldBonus = _currentBonus.CloneJson()
+                    With _currentBonus
+                        .ProductID = product.RowID
+                        .Product = product
+                        .AllowanceFrequency = cbobonfreq.SelectedItem.ToString
+                        .EffectiveStartDate = dtpbonstartdate.Value
+                        .EffectiveEndDate = dtpbonenddate.Value
+                        .BonusAmount = CType(txtbonamt.Text, Decimal?)
+                        .EmployeeID = _employee.RowID
+                        .OrganizationID = z_OrganizationID
+                        .TaxableFlag = product.Status
+                    End With
 
-                With _currentBonus
-                    .ProductID = product.RowID
-                    .Product = product
-                    .AllowanceFrequency = cbobonfreq.SelectedItem.ToString
-                    .EffectiveStartDate = dtpbonstartdate.Value
-                    .EffectiveEndDate = dtpbonenddate.Value
-                    .BonusAmount = CType(txtbonamt.Text, Decimal?)
-                    .EmployeeID = _employee.RowID
-                    .OrganizationID = z_OrganizationID
-                    .TaxableFlag = product.Status
-                End With
+                    Dim repo = New BonusRepository
 
-                Dim repo = New BonusRepository
+                    _currentBonus.LastUpdBy = z_User
+                    Await repo.UpdateAsync(_currentBonus)
 
-                _currentBonus.LastUpdBy = z_User
-                repo.Update(_currentBonus)
+                    RecordUpdateBonus(oldBonus)
 
-                RecordUpdateBonus(oldBonus)
+                    messageTitle = "Update Bonus"
+                    succeed = True
+                Else
+                    MessageBoxHelper.Warning("No value changed")
+                End If
+            End Function)
 
-                messageTitle = "Update Bonus"
-                succeed = True
-            Else
-                MessageBoxHelper.Warning("No value changed")
-                Return False
-            End If
-        Catch ex As Exception
-            MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
-        End Try
-
-        If Not succeed Then
-            Return False
+        If succeed Then
+            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            Return True
         End If
-        ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
-        Return True
+        Return False
 
     End Function
 

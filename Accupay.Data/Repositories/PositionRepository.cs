@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,15 +10,62 @@ namespace AccuPay.Data.Repositories
 {
     public class PositionRepository
     {
-        public async Task<List<Position>> GetAllAsync(int organizationId)
+        #region CRUD
+
+        public async Task DeleteAsync(int positionId)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (var context = new PayrollContext())
             {
-                return await context.Positions.
-                    Where(p => p.OrganizationID == organizationId).
-                    ToListAsync();
+                var position = await GetByIdAsync(positionId);
+
+                context.Remove(position);
+
+                await context.SaveChangesAsync();
             }
         }
+
+        public async Task<Position> SaveAsync(Position position, int organizationId, int divisionId)
+        {
+            // divisionId is passed as an additional check to have a divisionId that is not null
+            position.Name = position.Name.ToTrimmedLowerCase();
+            position.DivisionID = divisionId;
+
+            using (PayrollContext context = new PayrollContext())
+            {
+                Position existingPosition = await GetByNameAsync(organizationId, position.Name);
+
+                if (position.RowID == null)
+                {
+                    if (existingPosition != null)
+                        throw new ArgumentException("Position name already exists!");
+
+                    context.Positions.Add(position);
+                }
+                else
+                {
+                    if (existingPosition != null && position.RowID != existingPosition.RowID)
+                        throw new ArgumentException("Position name already exists!");
+
+                    context.Entry(position).State = EntityState.Modified;
+                }
+
+                await context.SaveChangesAsync();
+
+                var newPosition = await context.Positions.
+                                        FirstOrDefaultAsync(p => p.RowID == position.RowID);
+
+                if (newPosition == null)
+                    throw new ArgumentException("There was a problem inserting the new position. Please try again.");
+
+                return newPosition;
+            }
+        }
+
+        #endregion CRUD
+
+        #region Queries
+
+        #region Single entity
 
         public async Task<Position> GetByIdAsync(int positionId)
         {
@@ -46,7 +94,7 @@ namespace AccuPay.Data.Repositories
             {
                 return await context.Positions.
                     Where(p => p.OrganizationID == organizationId).
-                    Where(p => p.Name.ToLower().Trim() == positionName.ToLower().Trim()).
+                    Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase()).
                     FirstOrDefaultAsync();
             }
         }
@@ -60,76 +108,29 @@ namespace AccuPay.Data.Repositories
             var position = new Position()
             {
                 Name = positionName,
-                OrganizationID = organizationId
+                OrganizationID = organizationId,
+                CreatedBy = userId
             };
 
-            return await SaveAsync(position, organizationId, userId, divisionId);
+            return await SaveAsync(position: position, organizationId: organizationId, divisionId: divisionId);
         }
 
-        public async Task<Position> SaveAsync(Position position, int organizationId, int userId, int divisionId)
-        {
-            // divisionId is passed as an additional check to have a divisionId that is not null
-            position.Name = position.Name.Trim().ToLower();
-            position.DivisionID = divisionId;
+        #endregion Single entity
 
+        #region List of entities
+
+        public async Task<List<Position>> GetAllAsync(int organizationId)
+        {
             using (PayrollContext context = new PayrollContext())
             {
-                Position existingPosition = await GetByNameAsync(organizationId, position.Name);
-
-                if (position.RowID == null)
-                    Insert(position, existingPosition, context, userId);
-                else
-                    Update(position, existingPosition, context, userId);
-
-                await context.SaveChangesAsync();
-
-                var newPosition = await context.Positions.
-                                        FirstOrDefaultAsync(p => p.RowID == position.RowID);
-
-                if (newPosition == null)
-                    throw new ArgumentException("There was a problem inserting the new position. Please try again.");
-
-                return newPosition;
+                return await context.Positions.
+                    Where(p => p.OrganizationID == organizationId).
+                    ToListAsync();
             }
         }
 
-        public async Task DeleteAsync(int positionId)
-        {
-            using (var context = new PayrollContext())
-            {
-                var position = await GetByIdAsync(positionId);
+        #endregion List of entities
 
-                context.Remove(position);
-
-                await context.SaveChangesAsync();
-            }
-        }
-
-        //private async Task<int?> GetCategoryId(string categoryName)
-        //{
-        //    var category = await _categoryRepository.GetByName(z_OrganizationID, categoryName);
-        //    return category.RowID;
-        //}
-
-        private void Insert(Position position, Position existingPosition, PayrollContext context, int userId)
-        {
-            if (existingPosition != null)
-                throw new ArgumentException("Position name already exists!");
-
-            position.CreatedBy = userId;
-
-            context.Positions.Add(position);
-        }
-
-        private void Update(Position position, Position existingPosition, PayrollContext context, int userId)
-        {
-            if (existingPosition != null && position.RowID != existingPosition.RowID)
-                throw new ArgumentException("Position name already exists!");
-
-            position.LastUpdBy = userId;
-
-            context.Positions.Attach(position);
-            context.Entry(position).State = EntityState.Modified;
-        }
+        #endregion Queries
     }
 }

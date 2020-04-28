@@ -28,66 +28,6 @@ namespace AccuPay.Data.Repositories
             ProductConstant.VACATION_LEAVE
         };
 
-        public List<string> GetStatusList()
-        {
-            return new List<string>()
-            {
-                Leave.StatusPending,
-                Leave.StatusApproved
-            };
-        }
-
-        public async Task<Leave> GetByIdAsync(int id)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Leaves.FirstOrDefaultAsync(l => l.RowID.Value == id);
-            }
-        }
-
-        public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int employeeId)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Leaves.
-                                    Where(l => l.EmployeeID.Value == employeeId).
-                                    ToListAsync();
-            }
-        }
-
-        public IEnumerable<Leave> GetAllApprovedBetweenDates(int organizationId, TimePeriod timePeriod)
-        {
-            using (var context = new PayrollContext())
-            {
-                return context.Leaves.
-                                Where(l => l.OrganizationID == organizationId).
-                                Where(l => l.LeaveType == Leave.StatusApproved).
-                                Where(l => timePeriod.Start >= l.StartDate).
-                                Where(l => timePeriod.End <= l.EndDate).
-                                ToList();
-            }
-        }
-
-        public async Task<IEnumerable<Leave>> GetAllByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Leaves.
-                                    Where(l => l.OrganizationID == organizationId).
-                                    Where(l => timePeriod.Start >= l.StartDate).
-                                    Where(l => timePeriod.End <= l.EndDate).
-                                    ToListAsync();
-            }
-        }
-
-        public async Task<IEnumerable<Leave>> GetFilteredAllAsync(Expression<Func<Leave, bool>> filter)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Leaves.Where(filter).ToListAsync();
-            }
-        }
-
         #region CRUD
 
         public async Task DeleteAsync(int id)
@@ -102,7 +42,8 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task SaveManyAsync(List<Leave> leaves, int organizationId, int userId)
+        // TODO: maybe move this to a service will all the validations
+        public async Task SaveManyAsync(List<Leave> leaves, int organizationId)
         {
             if (leaves.Any() == false) return;
 
@@ -132,7 +73,7 @@ namespace AccuPay.Data.Repositories
 
                 foreach (var leave in leaves)
                 {
-                    await this.IntenalSaveAsync(leave, organizationId, userId, context);
+                    await SaveWithContextAsync(leave, context);
 
                     if (policy.ValidateLeaveBalance)
                     {
@@ -184,6 +125,73 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task SaveAsync(Leave leave)
+        {
+            await SaveWithContextAsync(leave);
+        }
+
+        private async Task SaveWithContextAsync(Leave leave, PayrollContext passedContext = null)
+        {
+            if (leave.StartTime.HasValue)
+                leave.StartTime = leave.StartTime.Value.StripSeconds();
+            if (leave.EndTime.HasValue)
+                leave.EndTime = leave.EndTime.Value.StripSeconds();
+
+            if (passedContext == null)
+            {
+                using (var newContext = new PayrollContext())
+                {
+                    await SaveAsyncFunction(leave, newContext);
+                    await newContext.SaveChangesAsync();
+                }
+            }
+            else
+            {
+                await SaveAsyncFunction(leave, passedContext);
+            }
+        }
+
+        private async Task SaveAsyncFunction(Leave leave, PayrollContext context)
+        {
+            if (await context.Leaves.Where(l => leave.RowID == null ? true : leave.RowID != l.RowID).
+                                Where(l => l.EmployeeID == leave.EmployeeID).
+                                Where(l => (leave.StartDate.Date >= l.StartDate.Date && leave.StartDate.Date <= l.EndDate.Value.Date) ||
+                                        (leave.EndDate.Value.Date >= l.StartDate.Date && leave.EndDate.Value.Date <= l.EndDate.Value.Date)).
+                                AnyAsync())
+                throw new ArgumentException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
+
+            if (leave.RowID == null)
+            {
+                context.Leaves.Add(leave);
+            }
+            else
+            {
+                // since we used LoadAsync() above, we can't just simply attach the leave
+                // TODO: refactor the validate leave above to not load the whole database
+                // better if we use transactions then check afterwards if there are invariants
+                // just like in metrotiles
+                await UpdateAsync(leave, context);
+            }
+        }
+
+        private async Task UpdateAsync(Leave leave, PayrollContext context)
+        {
+            var currentLeave = await context.Leaves.
+                                FirstOrDefaultAsync(l => l.RowID == leave.RowID);
+
+            if (currentLeave == null) return;
+
+            currentLeave.StartTime = leave.StartTime;
+            currentLeave.EndTime = leave.EndTime;
+            currentLeave.LeaveType = leave.LeaveType;
+            currentLeave.StartDate = leave.StartDate;
+            currentLeave.EndDate = leave.EndDate;
+            currentLeave.Reason = leave.Reason;
+            currentLeave.Comments = leave.Comments;
+            currentLeave.Status = leave.Status;
+            currentLeave.LastUpdBy = leave.LastUpdBy;
+        }
+
         public async Task<decimal> ForceUpdateLeaveAllowance(int employeeId,
                                                             int organizationId,
                                                             int userId,
@@ -212,7 +220,7 @@ namespace AccuPay.Data.Repositories
 
                 var leaveLedgerQuery = context.LeaveLedgers.
                                                 Include(l => l.Product).
-                                                Where(l => l.EmployeeID.Value == employeeId);
+                                                Where(l => l.EmployeeID == employeeId);
 
                 // #1
                 UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(selectedLeaveType,
@@ -229,9 +237,9 @@ namespace AccuPay.Data.Repositories
                 Console.WriteLine($"Leave ledger ID: {leaveLedgerId}");
 
                 var leaveTransactions = await context.LeaveTransactions.
-                                                    Where(l => l.EmployeeID.Value == employeeId).
+                                                    Where(l => l.EmployeeID == employeeId).
                                                     Where(l => l.TransactionDate >= firstDayOfTheWorkingYear.Value).
-                                                    Where(l => l.LeaveLedgerID.Value == leaveLedgerId.Value).
+                                                    Where(l => l.LeaveLedgerID == leaveLedgerId).
                                                     OrderBy(l => l.TransactionDate).
                                                     ToListAsync();
 
@@ -289,7 +297,7 @@ namespace AccuPay.Data.Repositories
                 // #2.5
                 await ProcessIfEmployeeHasNotTakenAleaveThisYear(firstPayPeriodOfTheYear,
                                                                 context,
-                                                                leaveLedgerId,
+                                                                leaveLedgerId.Value,
                                                                 userId);
             }
 
@@ -298,11 +306,11 @@ namespace AccuPay.Data.Repositories
 
         private static async Task ProcessIfEmployeeHasNotTakenAleaveThisYear(PayPeriod firstPayPeriodOfTheYear,
                                                                             PayrollContext context,
-                                                                            int? leaveLedgerId,
+                                                                            int leaveLedgerId,
                                                                             int userId)
         {
             var updatedLeaveLedger = await context.LeaveLedgers.
-                                            FirstOrDefaultAsync(l => l.RowID.Value == leaveLedgerId.Value);
+                                            FirstOrDefaultAsync(l => l.RowID == leaveLedgerId);
 
             if (updatedLeaveLedger == null)
                 throw new ArgumentException("Cannot find leave ledger.");
@@ -311,8 +319,8 @@ namespace AccuPay.Data.Repositories
                 // get the beginning balance transaction geting it from the first payperiod of the year
                 // that we added earlier [using GUID as rowids would have made this easier]
                 var updatedBeginningTransaction = await context.LeaveTransactions.
-                                Where(t => t.PayPeriodID.Value == firstPayPeriodOfTheYear.RowID.Value).
-                                Where(t => t.LeaveLedgerID.Value == updatedLeaveLedger.RowID.Value).
+                                Where(t => t.PayPeriodID == firstPayPeriodOfTheYear.RowID).
+                                Where(t => t.LeaveLedgerID == updatedLeaveLedger.RowID).
                                 Where(t => t.IsCredit).OrderByDescending(t => t.Amount).
                                 FirstOrDefaultAsync();
 
@@ -325,39 +333,79 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        private static void UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(LeaveType selectedLeaveType,
-                                                                                    decimal newAllowance,
-                                                                                    Employee employee,
-                                                                                    IQueryable<LeaveLedger> leaveLedgerQuery)
+        #endregion CRUD
+
+        #region Queries
+
+        #region Single entity
+
+        public async Task<Leave> GetByIdAsync(int id)
         {
-            switch (selectedLeaveType)
+            using (var context = new PayrollContext())
             {
-                case LeaveType.Sick:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsSickLeave);
-                    employee.SickLeaveAllowance = newAllowance;
-                    break;
-
-                case LeaveType.Vacation:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsVacationLeave);
-                    employee.VacationLeaveAllowance = newAllowance;
-                    break;
-
-                case LeaveType.Others:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsOthersLeave);
-                    employee.OtherLeaveAllowance = newAllowance;
-                    break;
-
-                case LeaveType.Maternity:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsMaternityLeave);
-                    employee.MaternityLeaveAllowance = newAllowance;
-                    break;
-
-                case LeaveType.Parental:
-                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsParentalLeave);
-                    // THIS DOES NOT HAVE AN ALLOWANCE COLUMN
-                    throw new Exception("No column for Parental Leave Allowance on employee table.");
+                return await context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
             }
         }
+
+        #endregion Single entity
+
+        #region List of entities
+
+        public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int employeeId)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Leaves.
+                                    Where(l => l.EmployeeID == employeeId).
+                                    ToListAsync();
+            }
+        }
+
+        public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
+        {
+            using (var context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            {
+                return CreateBaseQueryByTimePeriod(organizationId, timePeriod, context).
+                                Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase()).
+                                ToList();
+            }
+        }
+
+        public async Task<IEnumerable<Leave>> GetAllByTimePeriodAsync(int organizationId, TimePeriod timePeriod)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await CreateBaseQueryByTimePeriod(organizationId, timePeriod, context).
+                                ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Leave>> GetFilteredAllAsync(Expression<Func<Leave, bool>> filter)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Leaves.Where(filter).ToListAsync();
+            }
+        }
+
+        #endregion List of entities
+
+        #region Others
+
+        public List<string> GetStatusList()
+        {
+            return new List<string>()
+            {
+                Leave.StatusPending,
+                Leave.StatusApproved
+            };
+        }
+
+        #endregion Others
+
+        #endregion Queries
+
+        #region Private helper methods
 
         private async Task ValidateLeaveBalance(PolicyHelper policy,
                                                 List<ShiftSchedule> employeeShifts,
@@ -366,7 +414,10 @@ namespace AccuPay.Data.Repositories
                                                 Employee employee,
                                                 Leave leave)
         {
-            if (leave.Status.Trim().ToLower() == Leave.StatusApproved.ToLower() &&
+            if (employee.RowID == null)
+                throw new ArgumentException("Employee does not exists.");
+
+            if (leave.Status.ToTrimmedLowerCase() == Leave.StatusApproved.ToTrimmedLowerCase() &&
                 policy.ValidateLeaveBalance && VALIDATABLE_TYPES.Contains(leave.LeaveType))
             {
                 var totalLeaveHours = ComputeTotalLeaveHours(unusedApprovedLeaves,
@@ -405,7 +456,7 @@ namespace AccuPay.Data.Repositories
                                                                                 PayrollContext context)
         {
             return await context.EmployeeDutySchedules.
-                                    Where(es => es.OrganizationID.Value == organizationId).
+                                    Where(es => es.OrganizationID == organizationId).
                                     Where(es => firstLeave <= es.DateSched).
                                     Where(es => es.DateSched <= lastLeave).
                                     Where(es => employeeIds.Contains(es.EmployeeID)).
@@ -464,6 +515,40 @@ namespace AccuPay.Data.Repositories
             return totalHours;
         }
 
+        private void UpdateEmployeeLeaveAllowanceAndUpdateLeaveLedgerQuery(LeaveType selectedLeaveType,
+                                                                            decimal newAllowance,
+                                                                            Employee employee,
+                                                                            IQueryable<LeaveLedger> leaveLedgerQuery)
+        {
+            switch (selectedLeaveType)
+            {
+                case LeaveType.Sick:
+                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsSickLeave);
+                    employee.SickLeaveAllowance = newAllowance;
+                    break;
+
+                case LeaveType.Vacation:
+                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsVacationLeave);
+                    employee.VacationLeaveAllowance = newAllowance;
+                    break;
+
+                case LeaveType.Others:
+                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsOthersLeave);
+                    employee.OtherLeaveAllowance = newAllowance;
+                    break;
+
+                case LeaveType.Maternity:
+                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsMaternityLeave);
+                    employee.MaternityLeaveAllowance = newAllowance;
+                    break;
+
+                case LeaveType.Parental:
+                    leaveLedgerQuery = leaveLedgerQuery.Where(l => l.Product.IsParentalLeave);
+                    // THIS DOES NOT HAVE AN ALLOWANCE COLUMN
+                    throw new Exception("No column for Parental Leave Allowance on employee table.");
+            }
+        }
+
         private static async Task<List<Leave>> GetUnusedApprovedLeavesByType(PayrollContext context, int? employeeId, Leave leave, int organizationId)
         {
             var currentPayPeriod = context.PayPeriods.
@@ -500,73 +585,16 @@ namespace AccuPay.Data.Repositories
                            ToList();
         }
 
-        public async Task SaveAsync(Leave leave, int organizationId, int userId)
+        private static IQueryable<Leave> CreateBaseQueryByTimePeriod(int organizationId,
+                                                                    TimePeriod timePeriod,
+                                                                    PayrollContext context)
         {
-            await IntenalSaveAsync(leave, organizationId, userId);
+            return context.Leaves.
+                        Where(l => l.OrganizationID == organizationId).
+                        Where(l => timePeriod.Start <= l.StartDate).
+                        Where(l => l.EndDate <= timePeriod.End);
         }
 
-        internal async Task IntenalSaveAsync(Leave leave,
-                                    int organizationId,
-                                    int userId,
-                                    PayrollContext context = null/* TODO Change to default(_) if this is not a reference type */)
-        {
-            leave.OrganizationID = organizationId;
-            if (leave.StartTime.HasValue)
-                leave.StartTime = leave.StartTime.Value.StripSeconds();
-            if (leave.EndTime.HasValue)
-                leave.EndTime = leave.EndTime.Value.StripSeconds();
-
-            if (context == null)
-            {
-                context = new PayrollContext();
-
-                using (context)
-                {
-                    await SaveAsyncFunction(leave, context, userId);
-
-                    await context.SaveChangesAsync();
-                }
-            }
-            else
-                await SaveAsyncFunction(leave, context, userId);
-        }
-
-        private async Task SaveAsyncFunction(Leave leave, PayrollContext context, int userId)
-        {
-            if (context.Leaves.Where(l => leave.RowID == null ? true : leave.RowID != l.RowID).
-                                Where(l => l.EmployeeID.Value == leave.EmployeeID.Value).
-                                Where(l => (leave.StartDate.Date >= l.StartDate.Date && leave.StartDate.Date <= l.EndDate.Value.Date) ||
-                                        (leave.EndDate.Value.Date >= l.StartDate.Date && leave.EndDate.Value.Date <= l.EndDate.Value.Date)).
-                                Any())
-                throw new ArgumentException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
-
-            if (leave.RowID == null)
-            {
-                leave.CreatedBy = userId;
-                context.Leaves.Add(leave);
-            }
-            else
-                await UpdateAsync(leave, context, userId);
-        }
-
-        private async Task UpdateAsync(Leave leave, PayrollContext context, int userId)
-        {
-            var currentLeave = await context.Leaves.
-                                FirstOrDefaultAsync(l => l.RowID == leave.RowID);
-
-            if (currentLeave == null) return;
-
-            currentLeave.LastUpdBy = userId;
-            currentLeave.StartTime = leave.StartTime;
-            currentLeave.EndTime = leave.EndTime;
-            currentLeave.LeaveType = leave.LeaveType;
-            currentLeave.StartDate = leave.StartDate;
-            currentLeave.EndDate = leave.EndDate;
-            currentLeave.Reason = leave.Reason;
-            currentLeave.Comments = leave.Comments;
-            currentLeave.Status = leave.Status;
-        }
+        #endregion Private helper methods
     }
-
-    #endregion CRUD
 }

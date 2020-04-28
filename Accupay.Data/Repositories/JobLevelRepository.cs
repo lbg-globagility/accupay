@@ -32,7 +32,7 @@ namespace AccuPay.Data.Repositories
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Entry(jobLevel).State = EntityState.Deleted;
+                context.JobLevels.Remove(jobLevel);
                 context.SaveChanges();
             }
         }

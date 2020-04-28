@@ -66,6 +66,7 @@ Public Class AddPositionForm
 
         Me._newPosition = New Position
         Me._newPosition.OrganizationID = z_OrganizationID
+        Me._newPosition.CreatedBy = z_User
 
         Dim allChildDivisions = _divisions.Where(Function(d) d.IsRoot = False).ToList
 
@@ -122,7 +123,6 @@ Public Class AddPositionForm
 
         Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition,
                                                                    organizationId:=z_OrganizationID,
-                                                                   userId:=z_User,
                                                                     divisionId:=Me._newPosition.DivisionID.Value)
 
         Dim repo As New UserActivityRepository

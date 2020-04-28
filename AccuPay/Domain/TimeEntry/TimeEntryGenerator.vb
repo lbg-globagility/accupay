@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
@@ -28,7 +29,7 @@ Public Class TimeEntryGenerator
     Private _officialBusinesses As IList(Of Entities.OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
     Private _employeeShifts As IList(Of ShiftSchedule)
-    Private _salaries As IList(Of Salary)
+    Private _salaries As IList(Of Entities.Salary)
     Private _shiftSchedules As IList(Of EmployeeDutySchedule)
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
@@ -38,6 +39,7 @@ Public Class TimeEntryGenerator
     Private _leaveRepository As LeaveRepository
     Private _officialBusinessRepository As OfficialBusinessRepository
     Private _overtimeRepository As OvertimeRepository
+    Private _salaryRepository As SalaryRepository
 
     Private _total As Integer
 
@@ -70,6 +72,8 @@ Public Class TimeEntryGenerator
         _leaveRepository = New LeaveRepository()
         _officialBusinessRepository = New OfficialBusinessRepository
         _overtimeRepository = New OvertimeRepository()
+        _salaryRepository = New SalaryRepository()
+
     End Sub
 
     Public Sub Start()
@@ -94,13 +98,7 @@ Public Class TimeEntryGenerator
             organization = context.Organizations.
                 SingleOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
 
-            _salaries = context.Salaries.
-                Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= _cutoffStart).
-                OrderByDescending(Function(s) s.EffectiveFrom).
-                GroupBy(Function(s) s.EmployeeID).
-                Select(Function(g) g.FirstOrDefault()).
-                ToList()
+            _salaries = _salaryRepository.GetAllByCutOff(z_OrganizationID, _cutoffStart).ToList()
 
             Dim previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart)
             Dim endOfCutOff As Date = _cutoffEnd
@@ -121,13 +119,14 @@ Public Class TimeEntryGenerator
                 ToList()
 
             _leaves = _leaveRepository.
-                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
+                            GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
             _overtimes = _overtimeRepository.
-                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
+                            GetAllByDatePeriod(z_OrganizationID, cuttOffPeriod, OvertimeStatus.Approved).
+                            ToList()
 
             _officialBusinesses = _officialBusinessRepository.
-                            GetAllApprovedBetweenDates(z_OrganizationID, cuttOffPeriod).ToList()
+                            GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
             _agencyFees = context.AgencyFees.
                 Where(Function(a) a.OrganizationID.Value = z_OrganizationID).

@@ -18,7 +18,7 @@ namespace AccuPay.Data.Services
             if (_payrates.ContainsKey(date))
                 return _payrates[date];
 
-            return null/* TODO Change to default(_) if this is not a reference type */;
+            return null;
         }
 
         public IList<IPayrate> LegalHolidays()

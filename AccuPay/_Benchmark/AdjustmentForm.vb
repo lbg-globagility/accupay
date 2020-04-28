@@ -162,7 +162,7 @@ Public Class AdjustmentForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Adjustment",
                 Async Function()
 
-                    Await _productRepository.Delete(adjustmentId.Value)
+                    Await _productRepository.DeleteAsync(adjustmentId.Value)
 
                     Await RefreshForm()
                     MessageBoxHelper.Information($"Adjustment: '{adjustment.PartNo}' successfully deleted.")
@@ -200,8 +200,8 @@ Public Class AdjustmentForm
                                     If _currentFormType = FormMode.Creating Then
 
                                         Await _productRepository.AddAdjustmentType(
-                                                        organizationID:=z_OrganizationID,
-                                                        userID:=z_User,
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
                                                         adjustmentName:=adjustmentName,
                                                         comments:=CodeTextBox.Text.Trim,
                                                         adjustmentType:=_adjustmentType)

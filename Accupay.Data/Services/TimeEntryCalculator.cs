@@ -193,7 +193,7 @@ namespace AccuPay.Data.Services
             var nextDay = overtime.OTStartDate.AddDays(1);
 
             if (otEndTime == otStartTime)
-                return null/* TODO Change to default(_) if this is not a reference type */;
+                return null;
 
             var overtimeEnd = otEndTime > otStartTime ? overtime.OTStartDate.Add(otEndTime) : nextDay.Add(otEndTime);
 

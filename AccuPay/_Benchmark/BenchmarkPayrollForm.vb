@@ -64,8 +64,10 @@ Public Class BenchmarkPayrollForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New Repositories.EmployeeRepository
-        _salaryRepository = New Repositories.SalaryRepository
+        _employeeRepository = New EmployeeRepository()
+        _loanScheduleRepository = New LoanScheduleRepository()
+        _salaryRepository = New SalaryRepository()
+        
         _salaries = New List(Of Entities.Salary)
         _employees = New List(Of Entities.Employee)
 
@@ -74,7 +76,6 @@ Public Class BenchmarkPayrollForm
         _selectedDeductions = New List(Of AdjustmentInput)
         _selectedIncomes = New List(Of AdjustmentInput)
 
-        _loanScheduleRepository = New LoanScheduleRepository
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -120,7 +121,7 @@ Public Class BenchmarkPayrollForm
         Await LoadPayrollResourcesAsync()
 
         _salaries = (Await _salaryRepository.
-                            GetAllByCutOff(z_OrganizationID, _currentPayPeriod.PayFromDate)).
+                            GetAllByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)).
                     ToList()
 
         Await ShowEmployees()

@@ -543,8 +543,8 @@ Public Class PayrollResources
             _bpiInsuranceProduct = Await New ProductRepository().
                                         GetOrCreateAdjustmentType(
                                             ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                            organizationID:=z_OrganizationID,
-                                            userID:=z_User)
+                                            organizationId:=z_OrganizationID,
+                                            userId:=z_User)
         Catch ex As Exception
             Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
         End Try

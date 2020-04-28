@@ -461,7 +461,7 @@ Public Class TimeLogsForm2
                     Await GetEmployeeDutyShifts(firstDate, lastDate)
 
             Dim employeeOvertimes As List(Of Entities.Overtime) =
-                    Await GetEmployeeOvertime(firstDate, lastDate)
+                    Await GetEmployeeOvertime(New TimePeriod(firstDate, lastDate))
 
             timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
         Else
@@ -502,9 +502,9 @@ Public Class TimeLogsForm2
 
     End Function
 
-    Private Async Function GetEmployeeOvertime(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of Entities.Overtime))
+    Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Entities.Overtime))
 
-        Dim overtimes = Await _overtimeRepository.GetAllBetweenDateAsync(z_OrganizationID, startDate:=firstDate, endDate:=lastDate)
+        Dim overtimes = Await _overtimeRepository.GetAllBetweenDatePeriodAsync(z_OrganizationID, timePeriod)
 
         Return overtimes.ToList()
     End Function

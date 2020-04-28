@@ -134,6 +134,7 @@ Public Class EmployeeAllowanceForm
 
         For Each allowance In Me._currentAllowances
             If CheckIfAllowanceIsChanged(allowance) Then
+                allowance.LastUpdBy = z_User
                 changedAllowances.Add(allowance)
             End If
         Next
@@ -151,7 +152,7 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(organizationID:=z_OrganizationID, userID:=z_User, currentAllowances:=changedAllowances)
+                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
 
                                             For Each item In changedAllowances
                                                 RecordUpdate(item)

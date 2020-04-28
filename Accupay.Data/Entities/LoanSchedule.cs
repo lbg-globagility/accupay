@@ -67,26 +67,6 @@ namespace AccuPay.Data.Entities
 
         public string EmployeeNumber => Employee?.EmployeeNo;
 
-        public virtual void Credit(int? payPeriodID, int organizationId)
-        {
-            var currentDeductionAmount = DeductionAmount > TotalBalanceLeft ? TotalBalanceLeft : DeductionAmount;
-            var newBalance = LastEntry()?.TotalBalance ?? TotalBalanceLeft - currentDeductionAmount;
-
-            var transaction = new LoanTransaction()
-            {
-                Created = DateTime.Now,
-                LastUpd = DateTime.Now,
-                OrganizationID = organizationId,
-                EmployeeID = EmployeeID,
-                PayPeriodID = payPeriodID,
-                LoanPayPeriodLeft = LoanPayPeriodLeft == null ? 0 : Convert.ToInt32(LoanPayPeriodLeft) - 1,
-                TotalBalance = newBalance,
-                Amount = currentDeductionAmount
-            };
-
-            LoanTransactions.Add(transaction);
-        }
-
         public virtual LoanTransaction LastEntry() => LoanTransactions.LastOrDefault();
 
         public virtual void Rollback() => LoanTransactions.Remove(LastEntry());

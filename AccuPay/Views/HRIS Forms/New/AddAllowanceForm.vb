@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -62,6 +64,8 @@ Public Class AddAllowanceForm
         Me._newAllowance.EmployeeID = _currentEmployee.RowID
         Me._newAllowance.EffectiveStartDate = Date.Now
         Me._newAllowance.EffectiveEndDate = Date.Now
+        Me._newAllowance.CreatedBy = z_User
+        Me._newAllowance.OrganizationID = z_OrganizationID
 
         Dim firstAllowanceType = Me._allowanceTypeList.FirstOrDefault()
 
@@ -70,7 +74,7 @@ Public Class AddAllowanceForm
             Me._newAllowance.Product = firstAllowanceType
         End If
 
-        Me._newAllowance.AllowanceFrequency = cboallowfreq.SelectedItem
+        Me._newAllowance.AllowanceFrequency = cboallowfreq.SelectedItem.ToString()
 
         CreateDataBindings()
     End Sub
@@ -140,12 +144,10 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveAsync(organizationID:=z_OrganizationID,
-                                                     userID:=z_User,
-                                                     allowance:=Me._newAllowance)
+                Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID, z_OrganizationID)
+                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

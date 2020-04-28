@@ -127,7 +127,7 @@ Public Class ImportLeaveForm
 
         Dim messageTitle = "Import Employee Leave"
 
-        Dim leaves As List(Of Leave) = Await GetLeaves()
+        Dim leaves As List(Of Leave) = Await GetOkLeaves()
 
         If leaves.Any = False Then
 
@@ -141,8 +141,7 @@ Public Class ImportLeaveForm
                         Async Function() As Task(Of Boolean)
 
                             Await _leaveRepository.SaveManyAsync(leaves,
-                                                                organizationId:=z_OrganizationID,
-                                                                userId:=z_User)
+                                                                organizationId:=z_OrganizationID)
 
                             Dim importList = New List(Of UserActivityItem)
                             For Each item In leaves
@@ -173,7 +172,7 @@ Public Class ImportLeaveForm
 
     End Function
 
-    Private Async Function GetLeaves() As Task(Of List(Of Leave))
+    Private Async Function GetOkLeaves() As Task(Of List(Of Leave))
 
         Dim leaves As New List(Of Leave)
 
@@ -207,11 +206,15 @@ Public Class ImportLeaveForm
 
                     leaves.Add(leave)
                 Else
-                    leaves.Add(model.ToLeave())
+                    Dim newLeave = model.ToLeave()
+                    newLeave.CreatedBy = z_User
+                    leaves.Add(newLeave)
                 End If
             Next
         Else
             For Each model In _okModels
+                Dim newLeave = model.ToLeave()
+                newLeave.CreatedBy = z_User
                 leaves.Add(model.ToLeave())
             Next
 

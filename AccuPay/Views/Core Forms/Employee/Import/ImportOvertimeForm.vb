@@ -57,6 +57,7 @@ Public Class ImportOvertimeForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
+            'TODO: this is an N+1 query problem. Refactor this
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
 
             If employee Is Nothing Then
@@ -181,7 +182,7 @@ Public Class ImportOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
+                Await overtimeRepository.SaveManyAsync(_overtimes)
 
                 Dim importlist = New List(Of UserActivityItem)
 

@@ -525,6 +525,12 @@
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAwardForm.Designer.vb">
+      <DependentUpon>AddAwardForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAwardForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
     </Compile>
@@ -536,6 +542,12 @@
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddBonusForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AwardTab.Designer.vb">
+      <DependentUpon>AwardTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AwardTab.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
@@ -1987,11 +1999,17 @@
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
+      <DependentUpon>AddAwardForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddBonusForm.resx">
       <DependentUpon>AddBonusForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AwardTab.resx">
+      <DependentUpon>AwardTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>

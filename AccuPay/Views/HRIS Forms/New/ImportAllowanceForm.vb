@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -28,7 +30,7 @@ Public Class ImportAllowanceForm
 
         Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
 
-        Me._allowanceTypeList = Await _productRepository.GetAllowanceTypes(z_OrganizationID)
+        Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypes(z_OrganizationID)).ToList()
 
         AllowancesDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -147,8 +149,8 @@ Public Class ImportAllowanceForm
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
                 .AllowanceFrequency = allowanceFrequency,
-                .Amount = record.Amount,
-                .EffectiveStartDate = record.EffectiveStartDate,
+                .Amount = record.Amount.Value,
+                .EffectiveStartDate = record.EffectiveStartDate.Value,
                 .EffectiveEndDate = record.EffectiveEndDate,
                 .ProductID = allowanceType.RowID
             }
@@ -201,14 +203,14 @@ Public Class ImportAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveManyAsync(z_OrganizationID, z_User, _allowances)
+                Await _allowanceRepository.SaveManyAsync(_allowances)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _allowances
                     importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new allowance.",
-                        .EntityId = item.RowID
+                        .EntityId = item.RowID.Value
                         })
                 Next
 

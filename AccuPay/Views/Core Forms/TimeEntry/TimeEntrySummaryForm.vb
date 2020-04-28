@@ -1572,7 +1572,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeIn IsNot Nothing Then
 
-                    actualTimeIn = dateTimeIn.
+                    actualTimeIn = dateTimeIn.Value.
                                     ToMinimumHourValue.
                                     Add(timeIn.Value.TimeOfDay)
                 Else
@@ -1596,7 +1596,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeOut IsNot Nothing Then
 
-                    actualTimeOut = dateTimeOut.
+                    actualTimeOut = dateTimeOut.Value.
                                     ToMinimumHourValue.
                                     Add(timeOut.Value.TimeOfDay)
                 Else

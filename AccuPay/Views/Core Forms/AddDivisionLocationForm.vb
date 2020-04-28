@@ -14,7 +14,7 @@ Public Class AddDivisionLocationForm
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.NewDivision = Division.CreateEmptyDivision(z_OrganizationID)
+        Me.NewDivision = Division.CreateEmptyDivision(organizationId:=z_OrganizationID, userId:=z_User)
 
         Me.IsSaved = False
 
@@ -37,9 +37,7 @@ Public Class AddDivisionLocationForm
         Try
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
-            Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision,
-                                                                 organizationId:=z_OrganizationID,
-                                                                 userId:=z_User)
+            Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
 
             Dim repo As New UserActivityRepository
             repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID.Value, z_OrganizationID)

@@ -2271,7 +2271,7 @@ Public Class EmployeeForm
                     txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
                     txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
                     txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                    If IsDBNull(.Cells("ATMNo").Value) OrElse .Cells("ATMNo").Value Is Nothing OrElse .Cells("ATMNo").Value Is Nothing Then
+                    If String.IsNullOrWhiteSpace(txtATM.Text) Then
                         rdbCash.Checked = True
                         rdbDirectDepo.Checked = False
                     Else
@@ -2323,13 +2323,11 @@ Public Class EmployeeForm
                     AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
 
                 ElseIf selectedTab Is tbpAwards Then
-                    txtEmpIDAwar.Text = subdetails '"ID# " & .Cells("Column1").Value
 
-                    txtFNameAwar.Text = employeefullname
-                    pbEmpPicAwar.Image = Nothing
-                    pbEmpPicAwar.Image = EmployeeImage
-                    listofEditRowAward.Clear()
-                    VIEW_employeeawards(.Cells("RowID").Value)
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    Await AwardTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpCertifications Then
                     txtFNameCert.Text = employeefullname
                     txtEmpIDCert.Text = subdetails '"ID# " & .Cells("Column1").Value
@@ -2393,7 +2391,7 @@ Public Class EmployeeForm
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    BonusTab.SetEmployee(employee)
+                    Await BonusTab.SetEmployee(employee)
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     txtFNameAtta.Text = employeefullname
                     txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value

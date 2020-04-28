@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
@@ -6,7 +8,7 @@ Imports Globagility.AccuPay
 
 Public Class ImportOBForm
 
-    Private _officialbus As List(Of OfficialBusiness)
+    Private _officialBusinesses As List(Of OfficialBusiness)
 
     Private _employeeRepository As New EmployeeRepository
 
@@ -47,7 +49,7 @@ Public Class ImportOBForm
 
         If parsedSuccessfully = False Then Return
 
-        _officialbus = New List(Of OfficialBusiness)
+        _officialBusinesses = New List(Of OfficialBusiness)
 
         Dim acceptedRecords As New List(Of OBRowRecord)
         Dim rejectedRecords As New List(Of OBRowRecord)
@@ -55,6 +57,7 @@ Public Class ImportOBForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
+            'TODO: this is an N+1 query problem. Refactor this
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
             record.Status = OfficialBusiness.StatusApproved
 
@@ -104,15 +107,15 @@ Public Class ImportOBForm
             }
 
             acceptedRecords.Add(record)
-            _officialbus.Add(officialbus)
+            _officialBusinesses.Add(officialbus)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._officialbus.Count})"
+        ParsedTabControl.Text = $"Ok ({Me._officialBusinesses.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
-        SaveButton.Enabled = _officialbus.Count > 0
+        SaveButton.Enabled = _officialBusinesses.Count > 0
 
         OBDataGrid.DataSource = acceptedRecords
         RejectedRecordsGrid.DataSource = rejectedRecords
@@ -150,9 +153,7 @@ Public Class ImportOBForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Await _officialBusinessRepository.SaveManyAsync(_officialbus,
-                                                            organizationId:=z_OrganizationID,
-                                                            userId:=z_User)
+                Await _officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
                 Me.IsSaved = True
 
                 Me.Close()

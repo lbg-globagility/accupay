@@ -133,7 +133,7 @@ namespace AccuPay.Data.Entities
         {
             get
             {
-                return PayFrequencyID.Value == (int)PayFrequencyType.Weekly;
+                return PayFrequencyID == (int)PayFrequencyType.Weekly;
             }
         }
 

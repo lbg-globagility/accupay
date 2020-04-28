@@ -251,9 +251,7 @@ Public Class ImportEmployeeForm
 
         If importedEmployees.Any Then
 
-            Await employeeRepo.SaveManyAsync(organizationID:=z_OrganizationID,
-                                            userID:=z_User,
-                                            employees:=importedEmployees)
+            Await employeeRepo.SaveManyAsync(importedEmployees)
 
             Dim importList = New List(Of UserActivityItem)
             For Each item In newEmployees

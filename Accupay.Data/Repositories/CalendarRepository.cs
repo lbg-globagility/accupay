@@ -10,16 +10,6 @@ namespace AccuPay.Data.Repositories
 {
     public class CalendarRepository
     {
-        public async Task<PayCalendar> GetById(int calendarID)
-        {
-            using (var context = new PayrollContext())
-            {
-                return await context.Calendars.
-                                    Where(c => c.RowID.Value == calendarID).
-                                    FirstOrDefaultAsync();
-            }
-        }
-
         public async Task<ICollection<PayCalendar>> GetAllAsync()
         {
             using (var context = new PayrollContext())
@@ -31,25 +21,25 @@ namespace AccuPay.Data.Repositories
         /// <summary>
         ///         ''' Gets all days of a calendar that is part of a given year
         ///         ''' </summary>
-        ///         ''' <param name="calendarID"></param>
+        ///         ''' <param name="calendarId"></param>
         ///         ''' <param name="year"></param>
         ///         ''' <returns></returns>
-        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarID, int year)
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId, int year)
         {
             var firstDayOfYear = new DateTime(year, 1, 1);
             var lastDayOfYear = new DateTime(year, 12, 31);
 
-            return await GetCalendarDays(calendarID, firstDayOfYear, lastDayOfYear);
+            return await GetCalendarDays(calendarId, firstDayOfYear, lastDayOfYear);
         }
 
         /// <summary>
         ///         ''' Gets all days of a calendar that is from and to the given date range
         ///         ''' </summary>
-        ///         ''' <param name="calendarID"></param>
+        ///         ''' <param name="calendarId"></param>
         ///         ''' <param name="from"></param>
         ///         ''' <param name="[to]"></param>
         ///         ''' <returns></returns>
-        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarID,
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId,
                                                                     DateTime from,
                                                                     DateTime to)
         {
@@ -58,7 +48,7 @@ namespace AccuPay.Data.Repositories
                 return await context.CalendarDays.
                                     Include(t => t.DayType).
                                     Where(t => from <= t.Date && t.Date <= to).
-                                    Where(t => t.CalendarID.Value == calendarID).
+                                    Where(t => t.CalendarID == calendarId).
                                     ToListAsync();
             }
         }
@@ -66,21 +56,24 @@ namespace AccuPay.Data.Repositories
         /// <summary>
         ///         ''' Gets all days of a calendar
         ///         ''' </summary>
-        ///         ''' <param name="calendarID"></param>
+        ///         ''' <param name="calendarId"></param>
         ///         ''' <returns></returns>
-        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarID)
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId)
         {
             using (var context = new PayrollContext())
             {
                 return await context.CalendarDays.
                                 Include(t => t.DayType).
-                                Where(t => t.CalendarID.Value == calendarID).
+                                Where(t => t.CalendarID == calendarId).
                                 ToListAsync();
             }
         }
 
         public async Task Create(PayCalendar calendar, PayCalendar copiedCalendar)
         {
+            if (copiedCalendar.RowID == null)
+                throw new Exception("Copied calendar does not exists");
+
             using (var context = new PayrollContext())
             {
                 var transaction = await context.Database.BeginTransactionAsync();

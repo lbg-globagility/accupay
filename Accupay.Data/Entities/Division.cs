@@ -147,11 +147,12 @@ namespace AccuPay.Data.Entities
             return ParentDivisionID == division.RowID;
         }
 
-        public static Division CreateEmptyDivision(int organizationId)
+        public static Division CreateEmptyDivision(int organizationId, int userId)
         {
             return new Division()
             {
                 OrganizationID = organizationId,
+                CreatedBy = userId,
                 GracePeriod = 0,
                 WorkDaysPerYear = 313,
                 PhilHealthDeductionSchedule = ContributionSchedule.END_OF_THE_MONTH,

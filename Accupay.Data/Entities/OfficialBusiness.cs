@@ -85,7 +85,7 @@ namespace AccuPay.Data.Entities
             set => StartDate = value;
         }
 
-        // End Date that is not nullable since it should not be nullable
+        // End Date that is not usinesnullable since it should not be nullable
         [NotMapped]
         public DateTime ProperEndDate
         {

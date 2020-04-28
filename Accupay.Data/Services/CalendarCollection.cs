@@ -43,7 +43,7 @@ namespace AccuPay.Data.Services
             if (branchId == null)
                 return _organizationCalendar;
 
-            var branch = _branches.FirstOrDefault(t => t.RowID.Value == branchId.Value);
+            var branch = _branches.FirstOrDefault(t => t.RowID == branchId.Value);
 
             if (branch.CalendarID == null || !_calendars.ContainsKey(branch.CalendarID))
                 return _organizationCalendar;

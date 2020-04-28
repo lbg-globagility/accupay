@@ -19,6 +19,7 @@ namespace AccuPay.Data
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
+        public virtual DbSet<Award> Awards { get; set; }
         public virtual DbSet<Bonus> Bonuses { get; set; }
         public virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
         public virtual DbSet<Branch> Branches { get; set; }
