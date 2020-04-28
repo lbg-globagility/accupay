@@ -43,6 +43,8 @@ Public Class EmployeeForm
 
     Private _positionRepository As PositionRepository
 
+    Private _userRepository As UserRepository
+
     Sub New()
 
         ' This call is required by the designer.
@@ -59,6 +61,7 @@ Public Class EmployeeForm
         _leaveRepository = New LeaveRepository()
         _listOfValueRepository = New ListOfValueRepository()
         _positionRepository = New PositionRepository()
+        _userRepository = New UserRepository()
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -1943,40 +1946,35 @@ Public Class EmployeeForm
         AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
 
-        Using context As New PayrollContext
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            'Use user repository
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If _policy.UseUserLevel = False Then
 
-            If _policy.UseUserLevel = False Then
+            Return
 
-                Return
+        End If
 
-            End If
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+            tabctrlemp.TabPages.Remove(tbpempchklist)
+            tabctrlemp.TabPages.Remove(tbpAwards)
+            tabctrlemp.TabPages.Remove(tbpCertifications)
+            tabctrlemp.TabPages.Remove(tbpEducBG)
+            tabctrlemp.TabPages.Remove(tbpPrevEmp)
+            tabctrlemp.TabPages.Remove(tbpPromotion)
+            tabctrlemp.TabPages.Remove(tbpDiscipAct)
+            tabctrlemp.TabPages.Remove(tbpNewSalary)
+            tabctrlemp.TabPages.Remove(tbpBonus)
+            tabctrlemp.TabPages.Remove(tbpAttachment)
 
-                tabctrlemp.TabPages.Remove(tbpempchklist)
-                tabctrlemp.TabPages.Remove(tbpAwards)
-                tabctrlemp.TabPages.Remove(tbpCertifications)
-                tabctrlemp.TabPages.Remove(tbpEducBG)
-                tabctrlemp.TabPages.Remove(tbpPrevEmp)
-                tabctrlemp.TabPages.Remove(tbpPromotion)
-                tabctrlemp.TabPages.Remove(tbpDiscipAct)
-                tabctrlemp.TabPages.Remove(tbpNewSalary)
-                tabctrlemp.TabPages.Remove(tbpBonus)
-                tabctrlemp.TabPages.Remove(tbpAttachment)
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 

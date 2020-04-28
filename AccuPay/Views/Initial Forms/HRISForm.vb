@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
@@ -12,6 +13,8 @@ Public Class HRISForm
 
     Private if_sysowner_is_benchmark As Boolean
 
+    Private _userRepository As UserRepository
+
     Sub New()
 
         ' This call is required by the designer.
@@ -19,6 +22,8 @@ Public Class HRISForm
 
         ' Add any initialization after the InitializeComponent() call.
         if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
+        _userRepository = New UserRepository()
 
         PrepareFormForBenchmark()
     End Sub
@@ -281,44 +286,39 @@ Public Class HRISForm
 
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-        Using context As New PayrollContext
+        If user Is Nothing Then
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-            If user Is Nothing Then
+        Dim settings = ListOfValueCollection.Create()
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
-            Dim settings = ListOfValueCollection.Create()
+            Return
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        End If
 
-                Return
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            End If
+            DivisionToolStripMenuItem.Visible = False
 
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+            CheckListToolStripMenuItem.Visible = False
+            AwardsToolStripMenuItem.Visible = False
+            CertificatesToolStripMenuItem.Visible = False
+            EducBGToolStripMenuItem.Visible = False
+            PrevEmplyrToolStripMenuItem.Visible = False
+            PromotionToolStripMenuItem.Visible = False
+            DisciplinaryActionToolStripMenuItem.Visible = False
+            EmpSalToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            AttachmentToolStripMenuItem.Visible = False
+            OffSetToolStripMenuItem.Visible = False
 
-                DivisionToolStripMenuItem.Visible = False
-
-                CheckListToolStripMenuItem.Visible = False
-                AwardsToolStripMenuItem.Visible = False
-                CertificatesToolStripMenuItem.Visible = False
-                EducBGToolStripMenuItem.Visible = False
-                PrevEmplyrToolStripMenuItem.Visible = False
-                PromotionToolStripMenuItem.Visible = False
-                DisciplinaryActionToolStripMenuItem.Visible = False
-                EmpSalToolStripMenuItem.Visible = False
-                BonusToolStripMenuItem.Visible = False
-                AttachmentToolStripMenuItem.Visible = False
-                OffSetToolStripMenuItem.Visible = False
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 

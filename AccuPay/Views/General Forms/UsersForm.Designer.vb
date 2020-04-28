@@ -42,10 +42,13 @@ Partial Class UsersForm
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.dgvPrivilege = New System.Windows.Forms.DataGridView()
+        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Addg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Modifyg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Readg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.grpDetails = New System.Windows.Forms.GroupBox()
+        Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
+        Me.UserLevelLabel = New System.Windows.Forms.Label()
         Me.cboxposition = New System.Windows.Forms.ComboBox()
         Me.lblAddPosition = New System.Windows.Forms.LinkLabel()
         Me.Label17 = New System.Windows.Forms.Label()
@@ -76,8 +79,6 @@ Partial Class UsersForm
         Me.dgvUserList = New System.Windows.Forms.DataGridView()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.UserPrivilegeLabel = New System.Windows.Forms.Label()
-        Me.UserLevelLabel = New System.Windows.Forms.Label()
-        Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -88,7 +89,6 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -273,6 +273,13 @@ Partial Class UsersForm
         Me.dgvPrivilege.Size = New System.Drawing.Size(420, 304)
         Me.dgvPrivilege.TabIndex = 1
         '
+        'Modules
+        '
+        Me.Modules.HeaderText = "Module Name"
+        Me.Modules.Name = "Modules"
+        Me.Modules.ReadOnly = True
+        Me.Modules.Width = 150
+        '
         'Addg
         '
         Me.Addg.HeaderText = "Add"
@@ -338,6 +345,24 @@ Partial Class UsersForm
         Me.grpDetails.TabIndex = 61
         Me.grpDetails.TabStop = False
         Me.grpDetails.Text = "Users Details"
+        '
+        'UserLevelComboBox
+        '
+        Me.UserLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.UserLevelComboBox.FormattingEnabled = True
+        Me.UserLevelComboBox.Location = New System.Drawing.Point(256, 125)
+        Me.UserLevelComboBox.Name = "UserLevelComboBox"
+        Me.UserLevelComboBox.Size = New System.Drawing.Size(210, 21)
+        Me.UserLevelComboBox.TabIndex = 44
+        '
+        'UserLevelLabel
+        '
+        Me.UserLevelLabel.AutoSize = True
+        Me.UserLevelLabel.Location = New System.Drawing.Point(256, 109)
+        Me.UserLevelLabel.Name = "UserLevelLabel"
+        Me.UserLevelLabel.Size = New System.Drawing.Size(58, 13)
+        Me.UserLevelLabel.TabIndex = 43
+        Me.UserLevelLabel.Text = "User Level"
         '
         'cboxposition
         '
@@ -615,24 +640,6 @@ Partial Class UsersForm
         Me.UserPrivilegeLabel.TabIndex = 66
         Me.UserPrivilegeLabel.Text = "USER PRIVILEGE"
         '
-        'UserLevelLabel
-        '
-        Me.UserLevelLabel.AutoSize = True
-        Me.UserLevelLabel.Location = New System.Drawing.Point(256, 109)
-        Me.UserLevelLabel.Name = "UserLevelLabel"
-        Me.UserLevelLabel.Size = New System.Drawing.Size(58, 13)
-        Me.UserLevelLabel.TabIndex = 43
-        Me.UserLevelLabel.Text = "User Level"
-        '
-        'UserLevelComboBox
-        '
-        Me.UserLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.UserLevelComboBox.FormattingEnabled = True
-        Me.UserLevelComboBox.Location = New System.Drawing.Point(256, 125)
-        Me.UserLevelComboBox.Name = "UserLevelComboBox"
-        Me.UserLevelComboBox.Size = New System.Drawing.Size(210, 21)
-        Me.UserLevelComboBox.TabIndex = 44
-        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.HeaderText = "User ID"
@@ -703,39 +710,37 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 150
         '
-        'Modules
-        '
-        Me.Modules.HeaderText = "Module Name"
-        Me.Modules.Name = "Modules"
-        Me.Modules.ReadOnly = True
-        Me.Modules.Width = 150
-        '
         'c_userid
         '
+        Me.c_userid.DataPropertyName = "UserID"
         Me.c_userid.HeaderText = "Username"
         Me.c_userid.Name = "c_userid"
         Me.c_userid.ReadOnly = True
         '
         'c_Position
         '
+        Me.c_Position.DataPropertyName = "PositionName"
         Me.c_Position.HeaderText = "Position"
         Me.c_Position.Name = "c_Position"
         Me.c_Position.ReadOnly = True
         '
         'c_lname
         '
+        Me.c_lname.DataPropertyName = "LastName"
         Me.c_lname.HeaderText = "Last Name"
         Me.c_lname.Name = "c_lname"
         Me.c_lname.ReadOnly = True
         '
         'c_fname
         '
+        Me.c_fname.DataPropertyName = "FirstName"
         Me.c_fname.HeaderText = "First Name"
         Me.c_fname.Name = "c_fname"
         Me.c_fname.ReadOnly = True
         '
         'c_Mname
         '
+        Me.c_Mname.DataPropertyName = "MiddleName"
         Me.c_Mname.HeaderText = "Middle Name"
         Me.c_Mname.Name = "c_Mname"
         Me.c_Mname.ReadOnly = True
@@ -749,18 +754,21 @@ Partial Class UsersForm
         '
         'c_emailadd
         '
+        Me.c_emailadd.DataPropertyName = "EmailAddress"
         Me.c_emailadd.HeaderText = "Email Address"
         Me.c_emailadd.Name = "c_emailadd"
         Me.c_emailadd.ReadOnly = True
         '
         'UserLevelDescriptionColumn
         '
+        Me.UserLevelDescriptionColumn.DataPropertyName = "UserLevelIndex"
         Me.UserLevelDescriptionColumn.HeaderText = "User Level"
         Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
         Me.UserLevelDescriptionColumn.ReadOnly = True
         '
         'UserLevelColumn
         '
+        Me.UserLevelColumn.DataPropertyName = "UserLevel"
         Me.UserLevelColumn.HeaderText = "User Level (Index)"
         Me.UserLevelColumn.Name = "UserLevelColumn"
         Me.UserLevelColumn.ReadOnly = True
@@ -860,6 +868,7 @@ Partial Class UsersForm
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents c_userid As DataGridViewTextBoxColumn
     Friend WithEvents c_Position As DataGridViewTextBoxColumn
     Friend WithEvents c_lname As DataGridViewTextBoxColumn
@@ -869,5 +878,4 @@ Partial Class UsersForm
     Friend WithEvents c_emailadd As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelDescriptionColumn As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelColumn As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
 End Class

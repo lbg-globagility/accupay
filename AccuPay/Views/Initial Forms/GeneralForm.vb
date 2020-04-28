@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Data.Services
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
@@ -8,6 +9,8 @@ Public Class GeneralForm
     Dim sys_ownr As New SystemOwnerService()
 
     Private _payRateCalculationBasis As PayRateCalculationBasis
+
+    Private _userRepository As UserRepository
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -94,48 +97,46 @@ Public Class GeneralForm
 
     End Sub
 
-    Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        _userRepository = New UserRepository()
 
-        Using context As New PayrollContext
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            If user Is Nothing Then
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-            Dim settings = ListOfValueCollection.Create()
+        Dim settings = ListOfValueCollection.Create()
 
-            If settings.GetEnum("Pay rate.CalculationBasis",
+        If settings.GetEnum("Pay rate.CalculationBasis",
                    PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
 
-                CalendarsToolStripMenuItem.Visible = True
-                PayRateToolStripMenuItem.Visible = False
-            Else
+            CalendarsToolStripMenuItem.Visible = True
+            PayRateToolStripMenuItem.Visible = False
+        Else
 
-                CalendarsToolStripMenuItem.Visible = False
-                PayRateToolStripMenuItem.Visible = True
+            CalendarsToolStripMenuItem.Visible = False
+            PayRateToolStripMenuItem.Visible = True
 
-            End If
+        End If
 
-            If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
-                BranchToolStripMenuItem.Visible = False
-            End If
+        If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
+            BranchToolStripMenuItem.Visible = False
+        End If
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-                Return
-            Else
-                UserPrivilegeToolStripMenuItem.Visible = False
-            End If
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            Return
+        Else
+            UserPrivilegeToolStripMenuItem.Visible = False
+        End If
 
-            If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
+        If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
 
-                UserToolStripMenuItem.Visible = False
-                OrganizationToolStripMenuItem.Visible = False
-                ListOfValueToolStripMenuItem.Visible = False
+            UserToolStripMenuItem.Visible = False
+            OrganizationToolStripMenuItem.Visible = False
+            ListOfValueToolStripMenuItem.Visible = False
 
-            End If
-
-        End Using
+        End If
 
     End Sub
 
