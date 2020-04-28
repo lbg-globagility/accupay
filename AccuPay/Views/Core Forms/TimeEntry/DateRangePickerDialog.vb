@@ -1,8 +1,9 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
 Imports AccuPay.Data
+Imports AccuPay.Data.Services
+Imports AccuPay.Entity
 Imports Microsoft.EntityFrameworkCore
 
 Public Class DateRangePickerDialog
@@ -112,7 +113,7 @@ Public Class DateRangePickerDialog
                 ToListAsync()
         End Using
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
 
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 

@@ -1,5 +1,6 @@
 Imports AccuPay.Data
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 
 Public Class selectPayPeriod
@@ -165,7 +166,8 @@ Public Class selectPayPeriod
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(PayFreqType)
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.
+                                            GetPeriodsWithPaystubCount(z_OrganizationID, PayFreqType)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0
@@ -201,7 +203,10 @@ Public Class selectPayPeriod
 
     End Sub
 
-    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod), index As Integer, drow As DataRow) As PayPeriodStatusData
+    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
+                                         index As Integer,
+                                         drow As DataRow) _
+                                         As PayPeriodStatusData
         Dim payPeriodData As New PayPeriodStatusData
 
         payPeriodData.Index = index

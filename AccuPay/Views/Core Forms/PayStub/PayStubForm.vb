@@ -217,7 +217,7 @@ Public Class PayStubForm
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL VIEW_payperiodofyear('" & orgztnID & "'," & date_param & ",'0');")
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         dgvpayper.Rows.Clear()
@@ -239,7 +239,11 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod), index As Integer, drow As DataRow) As PayPeriodStatusData
+    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of Data.Entities.PayPeriod),
+                                         index As Integer,
+                                         drow As DataRow) _
+                                         As PayPeriodStatusData
+
         Dim payPeriodData As New PayPeriodStatusData
 
         payPeriodData.Index = index

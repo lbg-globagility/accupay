@@ -335,7 +335,6 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
-    <Compile Include="Core\PayPeriodStatusData.vb" />
     <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
