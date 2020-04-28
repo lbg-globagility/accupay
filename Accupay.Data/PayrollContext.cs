@@ -55,6 +55,8 @@ namespace AccuPay.Data
         public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
+        internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
+        internal virtual DbSet<TimeLog> TimeLogs { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
 

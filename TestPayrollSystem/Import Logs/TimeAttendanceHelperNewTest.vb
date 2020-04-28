@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class TimeAttendanceHelperNewTest
@@ -16,11 +15,14 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules()
-        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -45,11 +47,14 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As New List(Of EmployeeDutySchedule)
-        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -71,11 +76,14 @@ Public Class TimeAttendanceHelperNewTest
         Dim logs = New List(Of ImportTimeAttendanceLog)(GetParsedTimeLogs())
 
         Dim employeeShifts As List(Of EmployeeDutySchedule) = GetSampleEmployeeDutySchedules_WithNextShiftScheduleWithoutShift()
-        Dim employees As List(Of Data.Entities.Employee) = GetSampleEmployees()
+        Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim employeeOvertimes As List(Of Data.Entities.Overtime) = GetSampleEmployeeOvertimes()
+        Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 

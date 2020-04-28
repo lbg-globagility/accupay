@@ -123,8 +123,8 @@ namespace AccuPay.Data.Repositories
             {
                 return context.OfficialBusinesses.
                                 Where(l => l.OrganizationID == organizationId).
-                                Where(l => timePeriod.Start >= l.StartDate).
-                                Where(l => timePeriod.End <= l.EndDate).
+                                Where(l => timePeriod.Start <= l.StartDate).
+                                Where(l => l.EndDate <= timePeriod.End).
                                 Where(l => l.Status == OfficialBusiness.StatusApproved).
                                 ToList();
             }

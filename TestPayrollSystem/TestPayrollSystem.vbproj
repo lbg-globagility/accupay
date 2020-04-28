@@ -191,7 +191,6 @@
     <Compile Include="ObjectUtilsTest.vb" />
     <Compile Include="OvertimeHoursTest.vb" />
     <Compile Include="Import Logs\TimeAnalyzer.vb" />
-    <Compile Include="Import Logs\TimeAttendanceAnalyzerTest.vb" />
     <Compile Include="Import Logs\TimeAttendanceHelperNewTest.vb" />
     <Compile Include="Import Logs\TimeAttendanceHelperTest.vb" />
     <Compile Include="RegexTimelogParserTest.vb" />

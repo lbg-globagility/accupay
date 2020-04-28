@@ -1,10 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeAttendanceAnalyzer
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class TimeImporter
@@ -97,4 +94,3 @@ Public Class TimeImporter
     End Sub
 
 End Class
-

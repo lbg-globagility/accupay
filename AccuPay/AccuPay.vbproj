@@ -370,8 +370,6 @@
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
-    <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
     <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Domain\User.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
@@ -747,9 +745,7 @@
     <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
     <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -982,7 +978,6 @@
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
     <Compile Include="Domain\TimeLogs\TimeLog.vb" />
     <Compile Include="Domain\Payroll\PayrollResources.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLogsReader.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </Compile>
@@ -1717,7 +1712,6 @@
     <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
-    <Compile Include="Domain\TimeLogs\TimeInTimeOutParser.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Domain\Commons\UserAccessRights.vb" />
     <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">

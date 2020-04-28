@@ -7,7 +7,6 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -33,9 +32,15 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
+    Private _employeeDutyScheduleRepository As New EmployeeDutyScheduleRepository()
+
+    Private _employeeRepository As New EmployeeRepository()
+
     Private _overtimeRepository As New OvertimeRepository()
 
-    Private _employeeRepo As New EmployeeRepository
+    Private _shiftScheduleRepository As New ShiftScheduleRepository()
+
+    Private _timeLogsRepository As New TimeLogRepository()
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -78,7 +83,7 @@ Public Class TimeLogsForm2
 
         Dim employeeIDs = EmployeeTreeView1.GetTickedEmployees.Select(Function(emp) emp.RowID).ToList()
 
-        Dim employees = (Await _employeeRepo.GetByMultipleIdAsync(employeeIDs)).ToList()
+        Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIDs)).ToList()
 
         Using context = New PayrollContext
             Dim shiftSchedules = Await context.EmployeeDutySchedules.
@@ -303,47 +308,19 @@ Public Class TimeLogsForm2
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-            Using context = New PayrollContext()
+            Await _timeLogsRepository.SaveImport(timeLogs, timeAttendanceLogs)
 
-                Dim importId As String = GenerateImportId(context)
+            Dim importList = New List(Of Entities.UserActivityItem)
+            For Each log In timeLogs
+                importList.Add(New Entities.UserActivityItem() With
+                    {
+                    .Description = $"Imported a new time log.",
+                    .EntityId = CInt(log.RowID)
+                    })
+            Next
 
-                For Each timeLog In timeLogs
-
-                    timeLog.TimeentrylogsImportID = importId
-
-                    context.TimeLogs.Add(timeLog)
-
-                    Dim minimumDate = timeLog.LogDate.ToMinimumHourValue
-                    Dim maximumDate = timeLog.LogDate.ToMaximumHourValue
-
-                    context.TimeAttendanceLogs.
-                                RemoveRange(context.TimeAttendanceLogs.
-                                                Where(Function(t) t.TimeStamp >= minimumDate).
-                                                Where(Function(t) t.TimeStamp <= maximumDate))
-                Next
-
-                For Each timeAttendanceLog In timeAttendanceLogs
-
-                    timeAttendanceLog.ImportNumber = importId
-
-                    context.TimeAttendanceLogs.Add(timeAttendanceLog)
-                Next
-
-                Await context.SaveChangesAsync()
-
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
-                For Each log In timeLogs
-                    importList.Add(New Data.Entities.UserActivityItem() With
-                        {
-                        .Description = $"Imported a new time log.",
-                        .EntityId = CInt(log.RowID)
-                        })
-                Next
-
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
-
-            End Using
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
         Catch ex As Exception
 
             logger.Error("NewTimeEntryAlternateLineImport", ex)
@@ -455,58 +432,58 @@ Public Class TimeLogsForm2
 
         Dim timeAttendanceHelper As ITimeAttendanceHelper
 
+        Dim datePeriod As New TimePeriod(firstDate, lastDate)
+
         If _useShiftSchedulePolicy Then
 
-            Dim employeeShifts As List(Of EmployeeDutySchedule) =
-                    Await GetEmployeeDutyShifts(firstDate, lastDate)
+            Dim employeeShifts As List(Of Entities.EmployeeDutySchedule) =
+                    Await GetEmployeeDutyShifts(datePeriod)
 
             Dim employeeOvertimes As List(Of Entities.Overtime) =
-                    Await GetEmployeeOvertime(New TimePeriod(firstDate, lastDate))
+                    Await GetEmployeeOvertime(datePeriod)
 
-            timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+            timeAttendanceHelper = New TimeAttendanceHelperNew(logs,
+                                                               employees,
+                                                               employeeShifts,
+                                                               employeeOvertimes,
+                                                               organizationId:=z_OrganizationID,
+                                                               userId:=z_User)
         Else
 
-            Dim employeeShifts As List(Of ShiftSchedule) =
-                    Await GetEmployeeShifts(firstDate, lastDate)
+            Dim employeeShifts As List(Of Entities.ShiftSchedule) =
+                    Await GetEmployeeShifts(datePeriod)
 
-            timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+            timeAttendanceHelper = New TimeAttendanceHelper(logs,
+                                                            employees,
+                                                            employeeShifts,
+                                                            organizationId:=z_OrganizationID,
+                                                            userId:=z_User)
 
         End If
 
         Return timeAttendanceHelper
     End Function
 
-    Private Async Function GetEmployeeShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of ShiftSchedule))
+    Private Async Function GetEmployeeShifts(timePeriod As TimePeriod) As Task(Of List(Of Entities.ShiftSchedule))
 
-        Using context = New PayrollContext()
-            Return Await context.ShiftSchedules.
-                           Include(Function(s) s.Shift).
-                           Where(Function(s) s.OrganizationID = z_OrganizationID).
-                           Where(Function(s) s.EffectiveFrom >= firstDate).
-                           Where(Function(s) s.EffectiveTo <= lastDate).
-                           ToListAsync()
-        End Using
-
+        Return (Await _shiftScheduleRepository.
+                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
+                ).ToList()
     End Function
 
     'new shift table
-    Private Async Function GetEmployeeDutyShifts(firstDate As Date, lastDate As Date) As Threading.Tasks.Task(Of List(Of EmployeeDutySchedule))
+    Private Async Function GetEmployeeDutyShifts(timePeriod As TimePeriod) As Task(Of List(Of Entities.EmployeeDutySchedule))
 
-        Using context = New PayrollContext()
-            Return Await context.EmployeeDutySchedules.
-                           Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                           Where(Function(s) s.DateSched >= firstDate).
-                           Where(Function(s) s.DateSched <= lastDate).
-                           ToListAsync()
-        End Using
-
+        Return (Await _employeeDutyScheduleRepository.
+                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
+                        ).ToList()
     End Function
 
     Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Entities.Overtime))
 
-        Dim overtimes = Await _overtimeRepository.GetByDatePeriodAsync(z_OrganizationID, timePeriod)
-
-        Return overtimes.ToList()
+        Return (Await _overtimeRepository.
+                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
+                ).ToList()
     End Function
 
     Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Entities.Employee))
@@ -522,7 +499,7 @@ Public Class TimeLogsForm2
                 employeeNumbersArray(index) = logsGroupedByEmployee(index).Key
             Next
 
-            Dim employees = Await _employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNumbersArray, z_OrganizationID)
+            Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNumbersArray, z_OrganizationID)
 
             Return employees.ToList()
         End Using
@@ -1188,16 +1165,16 @@ Public Class TimeLogsForm2
             ToList()
 
         Dim employeeNos = timeLogsByEmployee.Select(Function(emp) emp.Key).ToArray()
-        Dim employeess = Await _employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
+        Dim employeess = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
         Using context = New PayrollContext()
             Dim dateCreated = Date.Now
 
             Dim importId As String = GenerateImportId(context)
 
-            For Each timelogs In timeLogsByEmployee
+            For Each timeLogList In timeLogsByEmployee
                 Dim employee = employeess.
-                    Where(Function(et) et.EmployeeNo = timelogs.Key).
+                    Where(Function(et) et.EmployeeNo = timeLogList.Key).
                     Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
                     FirstOrDefault()
 
@@ -1205,7 +1182,7 @@ Public Class TimeLogsForm2
                     Continue For
                 End If
 
-                For Each timeLog In timelogs
+                For Each timeLog In timeLogList
                     Dim t = New TimeLog() With {
                         .OrganizationID = z_OrganizationID,
                         .EmployeeID = employee.RowID,

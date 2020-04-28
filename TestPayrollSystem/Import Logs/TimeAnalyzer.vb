@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 Imports AccuPay.Tools
 
 Public Class TimeAnalyzer
@@ -30,12 +30,12 @@ Public Class TimeAnalyzer
         Return logs
     End Function
 
-    Protected Function GetSampleEmployees() As List(Of AccuPay.Data.Entities.Employee)
-        Dim employees = New List(Of AccuPay.Data.Entities.Employee)
+    Protected Function GetSampleEmployees() As List(Of Employee)
+        Dim employees = New List(Of Employee)
 
         Dim employeeId As Integer? = 1
 
-        Dim employee As New AccuPay.Data.Entities.Employee With {
+        Dim employee As New Employee With {
             .RowID = employeeId,
             .EmployeeNo = "10123"
         }
