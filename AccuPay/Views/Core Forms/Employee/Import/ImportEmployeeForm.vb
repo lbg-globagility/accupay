@@ -247,7 +247,7 @@ Public Class ImportEmployeeForm
                                                  existingEmployees As List(Of Employee),
                                                  newEmployees As List(Of Employee)) As Task
 
-        Dim importedEmployees = existingEmployees
+        Dim importedEmployees = existingEmployees.CloneListJson()
         importedEmployees.AddRange(newEmployees)
 
         If importedEmployees.Any Then
