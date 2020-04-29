@@ -2517,6 +2517,7 @@ Public Class EmployeeForm
         File.Delete(Path.GetTempPath & "tmpfileEmployeeImage.jpg")
 
         LeaveBalanceTextBox.Text = 0
+        txtNumDepen.Text = 0
         txtvlbal.Text = 0
         txtslbal.Text = 0
         txtmlbal.Text = 0
