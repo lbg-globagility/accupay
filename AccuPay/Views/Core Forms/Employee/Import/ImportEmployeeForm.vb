@@ -283,51 +283,51 @@ Public Class ImportEmployeeForm
 
     Private Sub AssignChanges(em As EmployeeModel, e As Employee)
         With e
-            If Not String.IsNullOrWhiteSpace(em.Address) Then .HomeAddress = em.Address
+            If Not String.IsNullOrWhiteSpace(em.Address) Then .HomeAddress = em.Address?.Trim()
 
             If em.BirthDate.HasValue Then .BirthDate = em.BirthDate.Value.Date
 
-            If Not String.IsNullOrWhiteSpace(em.ContactNo) Then .MobilePhone = em.ContactNo
+            If Not String.IsNullOrWhiteSpace(em.ContactNo) Then .MobilePhone = em.ContactNo?.Trim()
 
             If em.DateEmployed.HasValue Then .StartDate = em.DateEmployed.Value.Date
 
-            If Not String.IsNullOrWhiteSpace(em.EmployeeNo) Then .EmployeeNo = em.EmployeeNo
+            If Not String.IsNullOrWhiteSpace(em.EmployeeNo) Then .EmployeeNo = em.EmployeeNo?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.EmployeeType) Then .EmployeeType = em.EmployeeType
+            If Not String.IsNullOrWhiteSpace(em.EmployeeType) Then .EmployeeType = em.EmployeeType?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.EmploymentStatus) Then .EmploymentStatus = em.EmploymentStatus
+            If Not String.IsNullOrWhiteSpace(em.EmploymentStatus) Then .EmploymentStatus = em.EmploymentStatus?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.FirstName) Then .FirstName = em.FirstName
+            If Not String.IsNullOrWhiteSpace(em.FirstName) Then .FirstName = em.FirstName?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.Gender) Then .Gender = em.Gender
+            If Not String.IsNullOrWhiteSpace(em.Gender) Then .Gender = em.Gender?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo
+            If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo
+            If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo?.Trim()
 
             e.PositionID = em.PositionId
 
-            If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName
+            If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName?.Trim()
 
             If em.LeaveAllowance > 0 Then .VacationLeaveAllowance = em.LeaveAllowance
 
-            If Not String.IsNullOrWhiteSpace(em.MaritalStatus) Then .MaritalStatus = em.MaritalStatus
+            If Not String.IsNullOrWhiteSpace(em.MaritalStatus) Then .MaritalStatus = em.MaritalStatus?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.MiddleName) Then .MiddleName = em.MiddleName
+            If Not String.IsNullOrWhiteSpace(em.MiddleName) Then .MiddleName = em.MiddleName?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.Nickname) Then .Nickname = em.Nickname
+            If Not String.IsNullOrWhiteSpace(em.Nickname) Then .Nickname = em.Nickname?.Trim()
 
             'em.PayFrequency
 
-            If Not String.IsNullOrWhiteSpace(em.PhilHealthNo) Then .PhilHealthNo = em.PhilHealthNo
+            If Not String.IsNullOrWhiteSpace(em.PhilHealthNo) Then .PhilHealthNo = em.PhilHealthNo?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.Salutation) Then .Salutation = em.Salutation
+            If Not String.IsNullOrWhiteSpace(em.Salutation) Then .Salutation = em.Salutation?.Trim()
 
-            If Not String.IsNullOrWhiteSpace(em.SSSNo) Then .SssNo = em.SSSNo
+            If Not String.IsNullOrWhiteSpace(em.SSSNo) Then .SssNo = em.SSSNo?.Trim()
 
             'em.Surname
 
-            If Not String.IsNullOrWhiteSpace(em.TIN) Then .TinNo = em.TIN
+            If Not String.IsNullOrWhiteSpace(em.TIN) Then .TinNo = em.TIN?.Trim()
 
             If em.WorkDaysPerYear > 0 Then .WorkDaysPerYear = em.WorkDaysPerYear
 
