@@ -1292,7 +1292,8 @@ Public Class TimeLogsForm2
                     Next
 
                     excelPackage.Save()
-                    MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
+                    Process.Start(fileName)
+                    'MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
                 End Using
             End If
         Catch ex As IOException
