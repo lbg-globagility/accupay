@@ -2,7 +2,6 @@ Option Strict On
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports Acupay
 
 Namespace Global.AccuPay.Entity
 

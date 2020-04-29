@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
@@ -6,6 +7,8 @@ Imports AccuPay.Utils
 Public Class AddAwardForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
+
+    Private Const FormEntityName As String = "Award"
 
     Private _employee As Employee
 
@@ -50,7 +53,7 @@ Public Class AddAwardForm
                 Await awardRepo.CreateAsync(_newAward)
 
                 Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Award", CInt(_newAward.RowID), z_OrganizationID)
+                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -73,6 +76,7 @@ Public Class AddAwardForm
         txtDescription.Text = ""
         dtpAwardDate.Value = Today
     End Sub
+
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
@@ -80,4 +84,5 @@ Public Class AddAwardForm
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Me.Close()
     End Sub
+
 End Class

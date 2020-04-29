@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -7,6 +8,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class CertificationTab
+    Private Const FormEntityName As String = "Certification"
     Private _employee As Employee
 
     Private _certifications As IEnumerable(Of Certification)
@@ -129,7 +131,7 @@ Public Class CertificationTab
                     Await repo.DeleteAsync(_currentCertification)
 
                     Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Certification", CInt(_currentCertification.RowID), z_OrganizationID)
+                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
 
                     Await LoadCertifications()
                 End Function)
@@ -228,51 +230,53 @@ Public Class CertificationTab
     Private Sub RecordUpdateCertification(oldCertification As Certification)
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If _currentCertification.CertificationType <> oldCertification.CertificationType Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification type from '{oldCertification.CertificationType}' to '{_currentCertification.CertificationType}'"
+                        .Description = $"Updated {entityName} type from '{oldCertification.CertificationType}' to '{_currentCertification.CertificationType}'."
                         })
         End If
         If _currentCertification.IssuingAuthority <> oldCertification.IssuingAuthority Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification issuing authority from '{oldCertification.IssuingAuthority}' to '{_currentCertification.IssuingAuthority}'"
+                        .Description = $"Updated {entityName} issuing authority from '{oldCertification.IssuingAuthority}' to '{_currentCertification.IssuingAuthority}'."
                         })
         End If
         If _currentCertification.CertificationNo <> oldCertification.CertificationNo Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification number from '{oldCertification.CertificationNo}' to '{_currentCertification.CertificationNo}'"
+                        .Description = $"Updated {entityName} number from '{oldCertification.CertificationNo}' to '{_currentCertification.CertificationNo}'."
                         })
         End If
         If _currentCertification.IssueDate <> oldCertification.IssueDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification issued date from '{oldCertification.IssueDate.ToShortDateString}' to '{_currentCertification.IssueDate.ToShortDateString}'"
+                        .Description = $"Updated {entityName} issued date from '{oldCertification.IssueDate.ToShortDateString}' to '{_currentCertification.IssueDate.ToShortDateString}'."
                         })
         End If
         If _currentCertification.ExpirationDate?.ToShortDateString <> oldCertification.ExpirationDate?.ToShortDateString Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification expiration date from '{oldCertification.ExpirationDate?.ToShortDateString}' to '{_currentCertification.ExpirationDate?.ToShortDateString}'"
+                        .Description = $"Updated {entityName} expiration date from '{oldCertification.ExpirationDate?.ToShortDateString}' to '{_currentCertification.ExpirationDate?.ToShortDateString}'."
                         })
         End If
         If _currentCertification.Comments <> oldCertification.Comments Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldCertification.RowID),
-                        .Description = $"Update certification comments from '{oldCertification.Comments}' to '{_currentCertification.Comments}'"
+                        .Description = $"Updated {entityName} comments from '{oldCertification.Comments}' to '{_currentCertification.Comments}'."
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Certification", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
     Private Function isChanged() As Boolean
@@ -288,7 +292,6 @@ Public Class CertificationTab
             Return True
             'ElseIf (_currentCertification.ExpirationDate.HasValue AndAlso dtpExpirationDate.Checked) And
             '    (_currentCertification.ExpirationDate.Value <> dtpExpirationDate.Value) Then
-
 
         End If
         Return False
@@ -313,7 +316,8 @@ Public Class CertificationTab
     End Sub
 
     Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm("Certification")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
+
 End Class

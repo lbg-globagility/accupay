@@ -6,7 +6,9 @@ Imports AccuPay.Utils
 
 Public Class AddDivisionLocationForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private Const FormEntityName As String = "Division Location"
+
+    Private _divisionRepository As New DivisionRepository()
 
     Public Property NewDivision As Division
 
@@ -40,7 +42,7 @@ Public Class AddDivisionLocationForm
             Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
 
             Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, "Division Location", Me.NewDivision.RowID.Value, z_OrganizationID)
+            repo.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
 
             Me.IsSaved = True
 

@@ -9,19 +9,21 @@ Imports AccuPay.Utils
 
 Public Class AddLoanScheduleForm
 
+    Private Const FormEntityName As String = "Loan"
+
     Dim sys_ownr As New SystemOwnerService()
 
     Private if_sysowner_is_benchmark As Boolean
 
     Private _currentEmployee As Employee
 
-    Private _newLoanSchedule As New LoanSchedule
+    Private _newLoanSchedule As New LoanSchedule()
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New ProductRepository()
 
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _listOfValueRepository As New ListOfValueRepository()
 
-    Private _loanScheduleRepository As New LoanScheduleRepository
+    Private _loanScheduleRepository As New LoanScheduleRepository()
 
     Private _loanTypeList As List(Of Product)
 
@@ -185,7 +187,7 @@ Public Class AddLoanScheduleForm
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Loan", Me._newLoanSchedule.RowID.Value, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

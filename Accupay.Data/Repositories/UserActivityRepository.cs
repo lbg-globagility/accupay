@@ -65,7 +65,7 @@ namespace AccuPay.Data.Repositories
                     new UserActivityItem()
                     {
                         EntityId = entityId,
-                        Description = $"{simpleDescription} {entityName}."
+                        Description = $"{simpleDescription} {entityName?.ToLower()}."
                     }
                 };
 

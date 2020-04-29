@@ -8,11 +8,13 @@ Imports AccuPay.Utils
 
 Public Class AddDivisionForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private Const FormEntityName As String = "Division"
 
-    Private _positionRepository As New PositionRepository
+    Private _divisionRepository As New DivisionRepository()
 
-    Private _payFrequencyRepository As New PayFrequencyRepository
+    Private _positionRepository As New PositionRepository()
+
+    Private _payFrequencyRepository As New PayFrequencyRepository()
 
     Private _parentDivisions As List(Of Division)
 
@@ -145,7 +147,7 @@ Public Class AddDivisionForm
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
 
         Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID.Value, z_OrganizationID)
+        repo.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

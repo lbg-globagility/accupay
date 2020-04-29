@@ -37,6 +37,8 @@ Public Class EmployeeLoansForm
 
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
 
+    Private Const FormEntityName As String = "Loan"
+
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
         sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
@@ -466,7 +468,7 @@ Public Class EmployeeLoansForm
             Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID.Value)
 
             Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, "Loan", CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
+            repo.RecordDelete(z_User, FormEntityName, CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
 
             Await LoadLoanSchedules(currentEmployee)
 
@@ -872,72 +874,74 @@ Public Class EmployeeLoansForm
 
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If newLoanSchedule.LoanName <> oldLoanSchedule.LoanName Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}'"
+                        .Description = $"Updated {entityName} type from '{oldLoanSchedule.LoanName}' to '{newLoanSchedule.LoanName}'."
                         })
         End If
         If newLoanSchedule.LoanNumber <> oldLoanSchedule.LoanNumber Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}'"
+                        .Description = $"Updated {entityName} number from '{oldLoanSchedule.LoanNumber}' to '{newLoanSchedule.LoanNumber}'."
                         })
         End If
         If newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan total amount from '{oldLoanSchedule.TotalLoanAmount.ToString}' to '{newLoanSchedule.TotalLoanAmount.ToString}'"
+                        .Description = $"Updated {entityName} total amount from '{oldLoanSchedule.TotalLoanAmount.ToString}' to '{newLoanSchedule.TotalLoanAmount.ToString}'."
                         })
         End If
         If newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString}'"
+                        .Description = $"Updated {entityName} date from '{oldLoanSchedule.DedEffectiveDateFrom.ToShortDateString}' to '{newLoanSchedule.DedEffectiveDateFrom.ToShortDateString}'."
                         })
         End If
         If newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan deduction amount from '{oldLoanSchedule.DeductionAmount.ToString}' to '{newLoanSchedule.DeductionAmount.ToString}'"
+                        .Description = $"Updated {entityName} deduction amount from '{oldLoanSchedule.DeductionAmount.ToString}' to '{newLoanSchedule.DeductionAmount.ToString}'."
                         })
         End If
         If newLoanSchedule.Status <> oldLoanSchedule.Status Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}'"
+                        .Description = $"Updated {entityName} status from '{oldLoanSchedule.Status}' to '{newLoanSchedule.Status}'."
                         })
         End If
         If newLoanSchedule.DeductionPercentage <> oldLoanSchedule.DeductionPercentage Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan interest percentage from '{oldLoanSchedule.DeductionPercentage.ToString}' to '{newLoanSchedule.DeductionPercentage.ToString}'"
+                        .Description = $"Updated {entityName} interest percentage from '{oldLoanSchedule.DeductionPercentage.ToString}' to '{newLoanSchedule.DeductionPercentage.ToString}'."
                         })
         End If
         If newLoanSchedule.DeductionSchedule <> oldLoanSchedule.DeductionSchedule Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}'"
+                        .Description = $"Updated {entityName} deduction schedule from '{oldLoanSchedule.DeductionSchedule}' to '{newLoanSchedule.DeductionSchedule}'."
                         })
         End If
         If newLoanSchedule.Comments <> oldLoanSchedule.Comments Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldLoanSchedule.RowID),
-                        .Description = $"Update loan comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'"
+                        .Description = $"Updated {entityName} comments from '{oldLoanSchedule.Comments}' to '{newLoanSchedule.Comments}'."
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Loan", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -965,7 +969,7 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Loan")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

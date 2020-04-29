@@ -7,11 +7,13 @@ Imports AccuPay.Utils
 
 Public Class AddPositionForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private Const FormEntityName As String = "Position"
 
-    Private _positionRepository As New PositionRepository
+    Private _divisionRepository As New DivisionRepository()
 
-    Private _jobLevelRepository As New JobLevelRepository
+    Private _positionRepository As New PositionRepository()
+
+    Private _jobLevelRepository As New JobLevelRepository()
 
     Private _divisions As List(Of Division)
 
@@ -126,7 +128,7 @@ Public Class AddPositionForm
                                                                     divisionId:=Me._newPosition.DivisionID.Value)
 
         Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, "Position", Me._newPosition.RowID.Value, z_OrganizationID)
+        repo.RecordAdd(z_User, FormEntityName, Me._newPosition.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

@@ -13,6 +13,7 @@ Public Class ImportEmployeeForm
 
 #Region "VariableDeclarations"
 
+    Private Const FormEntityName As String = "Employee"
     Private _ep As New ExcelParser(Of EmployeeModel)
     Private _filePath As String
     Private _okModels As List(Of EmployeeModel)
@@ -254,11 +255,13 @@ Public Class ImportEmployeeForm
             Await employeeRepo.SaveManyAsync(importedEmployees)
 
             Dim importList = New List(Of UserActivityItem)
+            Dim entityName = FormEntityName.ToLower()
+
             For Each item In newEmployees
 
                 importList.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new employee.",
+                        .Description = $"Imported a new {entityName}.",
                         .EntityId = item.RowID.Value
                         })
             Next
@@ -266,13 +269,13 @@ Public Class ImportEmployeeForm
             For Each model In existingEmployees
                 importList.Add(New UserActivityItem() With
                     {
-                    .Description = $"Updated an employee",
+                    .Description = $"Updated an {entityName} on import.",
                     .EntityId = model.RowID.Value
                     })
             Next
 
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Employee", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
         End If
     End Function

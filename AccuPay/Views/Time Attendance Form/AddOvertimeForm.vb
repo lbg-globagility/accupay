@@ -8,11 +8,13 @@ Public Class AddOvertimeForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _overtimeRepository As New OvertimeRepository
+    Private Const FormEntityName As String = "Overtime"
+
+    Private _overtimeRepository As New OvertimeRepository()
 
     Private _currentEmployee As Employee
 
-    Private _newOvertime As New Overtime
+    Private _newOvertime As New Overtime()
 
     Sub New(employee As Employee)
 
@@ -151,7 +153,7 @@ Public Class AddOvertimeForm
                 Await _overtimeRepository.SaveAsync(Me._newOvertime)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID.Value, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

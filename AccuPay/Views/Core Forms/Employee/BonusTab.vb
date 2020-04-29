@@ -9,6 +9,8 @@ Imports AccuPay.Utils
 
 Public Class BonusTab
 
+    Private Const FormEntityName As String = "Bonus"
+
     Private _employee As Employee
 
     Private _bonuses As IEnumerable(Of Bonus)
@@ -84,12 +86,12 @@ Public Class BonusTab
         EmployeeForm.Close()
     End Sub
 
-    Private Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancelBon.Click
+    Private Async Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancelBon.Click
         If _mode = FormMode.Creating Then
             SelectBonus(Nothing)
             EnableBonusGrid()
         ElseIf _mode = FormMode.Editing Then
-            LoadBonuses()
+            Await LoadBonuses()
         End If
 
         If _currentBonus Is Nothing Then
@@ -146,9 +148,9 @@ Public Class BonusTab
                     Await repo.DeleteAsync(_currentBonus)
 
                     Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Bonus", CInt(_currentBonus.RowID), z_OrganizationID)
+                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
 
-                    LoadBonuses()
+                    Await LoadBonuses()
                 End Function)
             End If
         End If
@@ -157,11 +159,11 @@ Public Class BonusTab
     Private Async Sub tsbtnSaveBon_Click(sender As Object, e As EventArgs) Handles tsbtnSaveBon.Click
         pbEmpPicBon.Focus()
         If Await SaveBonus() Then
-            LoadBonuses()
+            Await LoadBonuses()
         End If
     End Sub
 
-    Private Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
+    Private Async Sub tsbtnNewBon_Click(sender As Object, e As EventArgs) Handles tsbtnNewBon.Click
 
         If _employee Is Nothing Then
             MessageBoxHelper.ErrorMessage("Please select an employee first.")
@@ -172,7 +174,7 @@ Public Class BonusTab
         form.ShowDialog()
 
         If form.isSaved Then
-            LoadBonuses()
+            Await LoadBonuses()
 
             If form.showBalloon Then
                 ShowBalloonInfo("Bonus successfuly added.", "Saved")
@@ -291,11 +293,11 @@ Public Class BonusTab
         End Select
     End Sub
 
-    Private Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
+    Private Async Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
         With newProdBonus
             .ShowDialog()
         End With
-        LoadBonuses()
+        Await LoadBonuses()
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
@@ -331,44 +333,46 @@ Public Class BonusTab
     Private Sub RecordUpdateBonus(oldBonus As Bonus)
         Dim changes As New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If _currentBonus.ProductID <> oldBonus.ProductID Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Update bonus type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}'"
+                        .Description = $"Updated {entityName} type from '{oldBonus.Product.Name}' to '{_currentBonus.Product.Name}'."
                         })
         End If
         If _currentBonus.AllowanceFrequency <> oldBonus.AllowanceFrequency Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Update bonus frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}'"
+                        .Description = $"Updated {entityName} frequency from '{oldBonus.AllowanceFrequency}' to '{_currentBonus.AllowanceFrequency}'."
                         })
         End If
         If _currentBonus.EffectiveStartDate <> oldBonus.EffectiveStartDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Update bonus start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}'"
+                        .Description = $"Updated {entityName} start date from '{oldBonus.EffectiveStartDate.ToShortDateString}' to '{_currentBonus.EffectiveStartDate.ToShortDateString}'."
                         })
         End If
         If _currentBonus.EffectiveEndDate <> oldBonus.EffectiveEndDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Update bonus end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}'"
+                        .Description = $"Updated {entityName} end date from '{oldBonus.EffectiveEndDate.ToShortDateString}' to '{_currentBonus.EffectiveEndDate.ToShortDateString}'."
                         })
         End If
         If _currentBonus.BonusAmount <> oldBonus.BonusAmount Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldBonus.RowID),
-                        .Description = $"Update bonus amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}'"
+                        .Description = $"Updated {entityName} amount from '{oldBonus.BonusAmount}' to '{_currentBonus.BonusAmount}'."
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Bonus", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 
@@ -379,7 +383,7 @@ Public Class BonusTab
     End Sub
 
     Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm("Bonus")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

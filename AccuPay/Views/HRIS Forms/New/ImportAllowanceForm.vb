@@ -10,6 +10,8 @@ Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
 
+    Private Const FormEntityName As String = "Allowance"
+
     Private _allowances As List(Of Allowance)
 
     Private _employeeRepository As New EmployeeRepository
@@ -209,13 +211,13 @@ Public Class ImportAllowanceForm
                 For Each item In _allowances
                     importList.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new allowance.",
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = item.RowID.Value
                         })
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
                 Me.Cursor = Cursors.Default

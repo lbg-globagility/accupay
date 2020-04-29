@@ -1,11 +1,15 @@
 ﻿Option Strict On
+
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddCertificationForm
 
+    Private Const FormEntityName As String = "Certification"
+
     Private _employee As Employee
+
     Private _newCertification As Certification
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
@@ -31,7 +35,6 @@ Public Class AddCertificationForm
             Return
         End If
 
-
         Await FunctionUtils.TryCatchFunctionAsync("New Certification",
             Async Function()
                 _newCertification = New Certification
@@ -55,7 +58,7 @@ Public Class AddCertificationForm
                 Await awardRepo.CreateAsync(_newCertification)
 
                 Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Certification", CInt(_newCertification.RowID), z_OrganizationID)
+                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -99,4 +102,5 @@ Public Class AddCertificationForm
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
         Me.Close()
     End Sub
+
 End Class

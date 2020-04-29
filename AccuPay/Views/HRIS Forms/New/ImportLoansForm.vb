@@ -11,6 +11,8 @@ Imports OfficeOpenXml
 
 Public Class ImportLoansForm
 
+    Private Const FormEntityName As String = "Loan"
+
     Private _loans As List(Of LoanSchedule)
 
     Private _employeeRepository As New EmployeeRepository
@@ -248,13 +250,13 @@ Public Class ImportLoansForm
                 For Each item In loansWithOutEmployeeObject
                     importList.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new loan.",
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = item.RowID.Value
                         })
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Loan", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

@@ -8,13 +8,12 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports log4net
 Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
-    Private Shared logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
 
+    Private Const FormEntityName As String = "Leave"
     Private _filePath As String
     Private _worksheetName As String
     Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
@@ -145,18 +144,20 @@ Public Class ImportLeaveForm
                                                                 organizationId:=z_OrganizationID)
 
                             Dim importList = New List(Of UserActivityItem)
+                            Dim entityName = FormEntityName.ToLower()
+
                             For Each item In leaves
 
                                 If item.IsNew Then
                                     importList.Add(New UserActivityItem() With
                                     {
-                                    .Description = $"Imported a new leave.",
+                                    .Description = $"Imported a new {entityName}.",
                                     .EntityId = item.RowID.Value
                                     })
                                 Else
                                     importList.Add(New UserActivityItem() With
                                     {
-                                    .Description = $"Updated a leave on import.",
+                                    .Description = $"Updated a {entityName} on import.",
                                     .EntityId = item.RowID.Value
                                     })
                                 End If
@@ -164,7 +165,7 @@ Public Class ImportLeaveForm
                             Next
 
                             Dim repo = New UserActivityRepository
-                            repo.CreateRecord(z_User, "Leave", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                             Return True
                         End Function)
@@ -398,14 +399,6 @@ Public Class ImportLeaveForm
 
         <Ignore>
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
-
-        Private Function ShortTimeSpan(ts As TimeSpan?) As String
-            If ts.HasValue Then
-                Return ts.Value.ToString("hh\:mm")
-            Else
-                Return Nothing
-            End If
-        End Function
 
         Public Function ToLeave(Optional isNew As Boolean = True) As Leave
 

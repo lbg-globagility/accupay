@@ -9,11 +9,13 @@ Imports AccuPay.Data.Helpers
 
 Public Class EmployeeAllowanceForm
 
-    Private _employeeRepository As New EmployeeRepository
+    Private Const FormEntityName As String = "Allowance"
 
-    Private _productRepository As New ProductRepository
+    Private _employeeRepository As New EmployeeRepository()
 
-    Private _allowanceRepository As New AllowanceRepository
+    Private _productRepository As New ProductRepository()
+
+    Private _allowanceRepository As New AllowanceRepository()
 
     Private _allowanceTypeList As List(Of Product)
 
@@ -320,7 +322,7 @@ Public Class EmployeeAllowanceForm
                                                 Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Allowance", CInt(Me._currentAllowance.RowID), z_OrganizationID)
+                                                repo.RecordDelete(z_User, FormEntityName, CInt(Me._currentAllowance.RowID), z_OrganizationID)
 
                                                 Await LoadAllowances(currentEmployee)
 
@@ -527,55 +529,50 @@ Public Class EmployeeAllowanceForm
 
         If oldAllowance Is Nothing Then Return False
 
-        Dim changes = New List(Of Data.Entities.UserActivityItem)
+        Dim changes = New List(Of UserActivityItem)
+
+        Dim entityName = FormEntityName.ToLower()
 
         If newAllowance.Type <> oldAllowance.Type Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Update allowance type from '{oldAllowance.Type}' to '{newAllowance.Type}'"
+                        .Description = $"Updated {entityName} type from '{oldAllowance.Type}' to '{newAllowance.Type}'."
                         })
         End If
         If newAllowance.AllowanceFrequency <> oldAllowance.AllowanceFrequency Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Update allowance frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'"
+                        .Description = $"Updated {entityName} frequency from '{oldAllowance.AllowanceFrequency}' to '{newAllowance.AllowanceFrequency}'."
                         })
         End If
         If newAllowance.EffectiveStartDate <> oldAllowance.EffectiveStartDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Update allowance start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'"
+                        .Description = $"Updated {entityName} start date from '{oldAllowance.EffectiveStartDate.ToShortDateString}' to '{newAllowance.EffectiveStartDate.ToShortDateString}'."
                         })
         End If
         If newAllowance.EffectiveEndDate.ToString <> oldAllowance.EffectiveEndDate.ToString Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Update allowance end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'"
+                        .Description = $"Updated {entityName} end date from '{oldAllowance.EffectiveEndDate?.ToShortDateString}' to '{newAllowance.EffectiveEndDate?.ToShortDateString}'."
                         })
         End If
         If newAllowance.Amount <> oldAllowance.Amount Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldAllowance.RowID),
-                        .Description = $"Update allowance amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'"
+                        .Description = $"Updated {entityName} amount from '{oldAllowance.Amount.ToString}' to '{newAllowance.Amount.ToString}'."
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Allowance", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
-    End Function
-
-    Private Function CheckIfBothNullorBothHaveValue(object1 As Object, object2 As Object) As Boolean
-
-        Return (object1 Is Nothing AndAlso object2 Is Nothing) OrElse
-            (object1 IsNot Nothing AndAlso object2 IsNot Nothing)
-
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -601,7 +598,7 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Allowance")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

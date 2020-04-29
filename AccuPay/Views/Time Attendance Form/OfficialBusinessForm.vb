@@ -8,6 +8,8 @@ Imports AccuPay.Utils
 
 Public Class OfficialBusinessForm
 
+    Private Const FormEntityName As String = "Official Business"
+
     Private _employees As New List(Of Employee)
 
     Private _allEmployees As New List(Of Employee)
@@ -235,58 +237,60 @@ Public Class OfficialBusinessForm
 
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If newOfficialBusiness.StartDate <> oldOfficialBusiness.StartDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'"
+                        .Description = $"Updated {entityName} start date from '{oldOfficialBusiness.StartDate?.ToShortDateString}' to '{newOfficialBusiness.StartDate?.ToShortDateString}'."
                         })
         End If
         If newOfficialBusiness.EndDate <> oldOfficialBusiness.EndDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'"
+                        .Description = $"Updated {entityName} end date from '{oldOfficialBusiness.EndDate?.ToShortDateString}' to '{newOfficialBusiness.EndDate?.ToShortDateString}'."
                         })
         End If
         If newOfficialBusiness.StartTime <> oldOfficialBusiness.StartTime Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'"
+                        .Description = $"Updated {entityName} start time from '{oldOfficialBusiness.StartTime?.StripSeconds.ToString}' to '{newOfficialBusiness.StartTime?.StripSeconds.ToString}'."
                         })
         End If
         If newOfficialBusiness.EndTime <> oldOfficialBusiness.EndTime Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'"
+                        .Description = $"Updated {entityName} end time from '{oldOfficialBusiness.EndTime?.StripSeconds.ToString}' to '{newOfficialBusiness.EndTime?.StripSeconds.ToString}'."
                         })
         End If
         If newOfficialBusiness.Reason <> oldOfficialBusiness.Reason Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'"
+                        .Description = $"Updated {entityName} reason from '{oldOfficialBusiness.Reason}' to '{newOfficialBusiness.Reason}'."
                         })
         End If
         If newOfficialBusiness.Comments <> oldOfficialBusiness.Comments Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'"
+                        .Description = $"Updated {entityName} comments from '{oldOfficialBusiness.Comments}' to '{newOfficialBusiness.Comments}'."
                         })
         End If
         If newOfficialBusiness.Status <> oldOfficialBusiness.Status Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldOfficialBusiness.RowID.Value,
-                        .Description = $"Update official business status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'"
+                        .Description = $"Updated {entityName} status from '{oldOfficialBusiness.Status}' to '{newOfficialBusiness.Status}'."
                         })
         End If
 
         Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Official Business", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -348,7 +352,7 @@ Public Class OfficialBusinessForm
                                                     DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Official Business", Me._currentOfficialBusiness.RowID.Value, z_OrganizationID)
+                                                repo.RecordDelete(z_User, FormEntityName, Me._currentOfficialBusiness.RowID.Value, z_OrganizationID)
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -561,7 +565,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Official Business")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

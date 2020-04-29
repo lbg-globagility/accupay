@@ -7,13 +7,16 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddAllowanceForm
+
+    Private Const FormEntityName As String = "Allowance"
+
     Private _currentEmployee As Employee
 
-    Private _newAllowance As New Allowance
+    Private _newAllowance As New Allowance()
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New ProductRepository()
 
-    Private _allowanceRepository As New AllowanceRepository
+    Private _allowanceRepository As New AllowanceRepository()
 
     Private _allowanceTypeList As List(Of Product)
 
@@ -147,7 +150,7 @@ Public Class AddAllowanceForm
                 Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID.Value, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
