@@ -358,6 +358,7 @@ Public Class EmployeeAllowanceForm
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         PayrollForm.listPayrollForm.Remove(Me.Name)
+        myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
 

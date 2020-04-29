@@ -14,10 +14,13 @@ Public Class EmployeeLoansForm
 
     Private sysowner_is_benchmark As Boolean
 
-    Private _employeeRepository As New EmployeeRepository
-    Private _productRepository As New ProductRepository
-    Private _listOfValueRepository As New ListOfValueRepository
-    Private _loanScheduleRepository As New LoanScheduleRepository
+    Private _employeeRepository As New EmployeeRepository()
+
+    Private _productRepository As New ProductRepository()
+
+    Private _listOfValueRepository As New ListOfValueRepository()
+
+    Private _loanScheduleRepository As New LoanScheduleRepository()
 
     Private _loanTypeList As List(Of Product)
 
@@ -508,6 +511,7 @@ Public Class EmployeeLoansForm
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         PayrollForm.listPayrollForm.Remove(Me.Name)
+        myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
 

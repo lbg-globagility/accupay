@@ -1250,4 +1250,8 @@ Public Class NewDivisionPositionForm
         userActivity.ShowDialog()
     End Sub
 
+    Private Sub NewDivisionPositionForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
+        myBalloon(, , lblFormTitle, , , 1)
+    End Sub
+
 End Class

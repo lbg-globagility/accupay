@@ -51,7 +51,7 @@ Public Class EmployeeOvertimeForm
 
     Private Sub EmployeeOvertimeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-        InfoBalloon(, , FormTitleLabel, , , 1)
+        myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click

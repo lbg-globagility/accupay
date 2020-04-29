@@ -20,11 +20,9 @@ Public Class OfficialBusinessForm
 
     Private _changedOfficialBusinesses As New List(Of OfficialBusiness)
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository
+    Private _officialBusinessRepository As New OfficialBusinessRepository()
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
+    Private _employeeRepository As New EmployeeRepository()
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
@@ -52,7 +50,7 @@ Public Class OfficialBusinessForm
 
     Private Sub OfficialBusinessForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-        InfoBalloon(, , FormTitleLabel, , , 1)
+        myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
