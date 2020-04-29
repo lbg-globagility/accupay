@@ -39,7 +39,7 @@ namespace AccuPay.Utilities.Extensions
             // Best practice is to use this on the variables since lambda does not allow a
             // null propagating operator.
             // Using Trim() and ToUpper() to null variable will crash the system
-            return text?.Trim()?.ToUpper();
+            return text?.Trim()?.ToLower();
         }
 
         public static string ToPascal(this string text)
