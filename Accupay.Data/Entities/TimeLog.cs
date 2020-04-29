@@ -63,6 +63,6 @@ namespace AccuPay.Data.Entities
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
-        public bool HasLogs => TimeIn.HasValue & TimeOut.HasValue;
+        public bool HasLogs => TimeIn.HasValue && TimeOut.HasValue;
     }
 }

@@ -232,7 +232,9 @@ namespace AccuPay.Data.Services
 
         private ShiftSchedule GetShift(List<ShiftSchedule> currentEmployeeShifts, DateTime currentDate)
         {
-            return currentEmployeeShifts.Where(s => s.EffectiveFrom <= currentDate & currentDate <= s.EffectiveTo).FirstOrDefault();
+            return currentEmployeeShifts.
+                    Where(s => s.EffectiveFrom <= currentDate && currentDate <= s.EffectiveTo).
+                    FirstOrDefault();
         }
 
         private List<ImportTimeAttendanceLog> GetTimeLogsFromBounds(TimePeriod shiftBounds, List<ImportTimeAttendanceLog> timeAttendanceLogs

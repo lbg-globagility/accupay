@@ -304,7 +304,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
-            using (var builder = new EmployeeBuilder(organizationId, PayrollContext.DbCommandConsoleLoggerFactory))
+            using (var builder = new EmployeeBuilder(organizationId))
             {
                 return await builder.ByEmployeeNumber(employeeNumber).
                                     FirstOrDefaultAsync();

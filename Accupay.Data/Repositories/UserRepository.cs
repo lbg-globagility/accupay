@@ -33,7 +33,7 @@ namespace AccuPay.Data.Repositories
 
             public UserBuilder ById(int rowId)
             {
-                _query = _query.Where(u => u.RowID.Value == rowId);
+                _query = _query.Where(u => u.RowID == rowId);
                 return this;
             }
 

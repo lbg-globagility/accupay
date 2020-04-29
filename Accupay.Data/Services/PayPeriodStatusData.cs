@@ -34,11 +34,11 @@ namespace AccuPay.Data.Services
                 var payFrequencyId = payFreqType == "WEEKLY" ? PayFrequencyType.Weekly : PayFrequencyType.SemiMonthly;
 
                 return context.PayPeriods.
-                        Where(p => p.OrganizationID.Value == organizationId).
+                        Where(p => p.OrganizationID == organizationId).
                         Where(p => p.PayFrequencyID == (int)payFrequencyId).
                         Where(p => !p.IsClosed).
                         Where(p => context.Paystubs.
-                                    Where(s => s.PayPeriodID.Value == p.RowID.Value).
+                                    Where(s => s.PayPeriodID == p.RowID.Value).
                                     Any()).
                         ToList();
             }
