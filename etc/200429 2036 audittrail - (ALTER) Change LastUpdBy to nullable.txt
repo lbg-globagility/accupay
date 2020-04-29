@@ -1,0 +1,3 @@
+/* Why is CreatedBy nullable while LastUpdBy is not nullable??? */
+ALTER TABLE `audittrail`
+	CHANGE COLUMN `LastUpdBy` `LastUpdBy` INT(10) NULL DEFAULT NULL AFTER `LastUpd`;
