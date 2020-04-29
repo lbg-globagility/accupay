@@ -33,6 +33,12 @@ Public Class EntityTest
     <Test>
     Public Sub TestEntity()
 
+        Dim date1 = New Date(2020, 5, 31)
+        Dim date2 = New Date(2020, 5, 30)
+
+        Dim date3 = date1.AddMonths(1)
+        Dim date4 = date2.AddMonths(1)
+
         Dim repo1 As New UserActivityRepository()
 
         Dim count1 = repo1.GetAll(2, "EMPLOYEE")
