@@ -1,5 +1,5 @@
 ﻿Imports AccuPay.Data.Enums
-﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
@@ -257,7 +257,7 @@ Public Class MetroLogin
 
         End If
 
-        Dim organization = _organizationRepository.FindById(z_OrganizationID)
+        Dim organization = _organizationRepository.GetById(z_OrganizationID)
 
         If organization Is Nothing Then
 
