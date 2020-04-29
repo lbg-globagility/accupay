@@ -347,7 +347,7 @@ Public Class UsersForm
 
     Private Sub ApplyChanges(ByRef u As User)
         With u
-            .UserID = EncryptData(txtUserName.Text)
+            .Username = EncryptData(txtUserName.Text)
             .Password = EncryptData(txtPassword.Text)
             .LastName = txtLastName.Text
             .FirstName = txtFirstName.Text
@@ -588,7 +588,7 @@ Public Class UsersForm
     Private Class UserBoundItem
 
         Public Sub New(u As User)
-            Dim userName As String = u.UserID
+            Dim userName As String = u.Username
             _UserID = Convert.ToString(DecryptData(userName))
 
             _PositionName = u.Position.Name

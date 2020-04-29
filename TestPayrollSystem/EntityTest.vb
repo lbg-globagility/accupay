@@ -15,6 +15,8 @@ Public Class EntityTest
 
     <Test>
     Public Sub Test1()
+        Dim repo As New UserActivityRepository
+        Dim userActivities = repo.List(11, "Employee")
 
         Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
 
@@ -72,26 +74,26 @@ Public Class EntityTest
         'End Using
     End Sub
 
-    Private Shared Sub CompareQueries(context As Data.PayrollContext, organization As Organization)
-        Dim organization2 = context.Organizations.
-                                        FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy)
+    'Private Shared Sub CompareQueries(context As Data.PayrollContext, organization As Organization)
+    '    Dim organization2 = context.Organizations.
+    '                                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy)
 
-        Dim organization3 = context.Organizations.
-                        FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy)
+    '    Dim organization3 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy)
 
-        'Has problem when LastUpdBy is null (not because of DB)
-        Dim organization4 = context.Organizations.
-                        FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy.Value)
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization4 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy.Value)
 
-        'Has problem when LastUpdBy is null (not because of DB)
-        Dim organization5 = context.Organizations.
-                        FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy.Value)
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization5 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy.Value)
 
-        Dim organization6 = context.Organizations.
-                        FirstOrDefault(Function(o) CBool(o.LastUpdBy = organization.LastUpdBy))
+    '    Dim organization6 = context.Organizations.
+    '                    FirstOrDefault(Function(o) CBool(o.LastUpdBy = organization.LastUpdBy))
 
-        Dim organization7 = context.Organizations.
-                        FirstOrDefault(Function(o) Nullable.Equals(o.LastUpdBy, organization.LastUpdBy))
-    End Sub
+    '    Dim organization7 = context.Organizations.
+    '                    FirstOrDefault(Function(o) Nullable.Equals(o.LastUpdBy, organization.LastUpdBy))
+    'End Sub
 
 End Class
