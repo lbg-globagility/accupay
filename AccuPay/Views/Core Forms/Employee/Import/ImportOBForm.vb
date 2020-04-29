@@ -8,11 +8,13 @@ Imports Globagility.AccuPay
 
 Public Class ImportOBForm
 
+    Private Const FormEntityName As String = "Official Business"
+
     Private _officialBusinesses As List(Of OfficialBusiness)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository()
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository
+    Private _officialBusinessRepository As New OfficialBusinessRepository()
 
     Public IsSaved As Boolean
 
@@ -154,6 +156,20 @@ Public Class ImportOBForm
             Async Function()
 
                 Await _officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
+
+                Dim importlist = New List(Of UserActivityItem)
+
+                For Each officialBusiness In Me._officialBusinesses
+                    importlist.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
+                        .EntityId = officialBusiness.RowID.Value
+                        })
+                Next
+
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+
                 Me.IsSaved = True
 
                 Me.Close()
