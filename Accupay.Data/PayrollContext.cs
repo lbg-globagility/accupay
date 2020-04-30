@@ -29,6 +29,7 @@ namespace AccuPay.Data
         public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<DayType> DayTypes { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
+        public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
         public virtual DbSet<JobCategory> JobCategories { get; set; }
@@ -50,6 +51,7 @@ namespace AccuPay.Data
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
+        public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
