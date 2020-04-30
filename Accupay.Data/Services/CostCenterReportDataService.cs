@@ -679,13 +679,11 @@ namespace AccuPay.Data.Services
             {
                 get
                 {
-                    int daysPerCutoff = 13; // this should probably be retrieved from employee.WorkDaysPerYear / 12 / 2
-
                     var vacationLeavePerYearInDays = Employee.VacationLeaveAllowance / PayrollTools.WorkHoursPerDay;
+                    var daysPerMonths = Employee.WorkDaysPerYear / PayrollTools.MonthsPerYear;
+                    var daysPerCutoff = daysPerMonths / PayrollTools.SemiMonthlyPayPeriodsPerMonth;
 
-                    var basicRate = DailyRate * daysPerCutoff; // this should probably be retrieved from PayrollTools.GetEmployeeMonthlyRate / 2
-
-                    return AccuMath.CommercialRound(basicRate * vacationLeavePerYearInDays / PayrollTools.MonthsPerYear / daysPerCutoff);
+                    return AccuMath.CommercialRound(this.RegularPay * vacationLeavePerYearInDays / PayrollTools.MonthsPerYear / daysPerMonths);
                 }
             }
 
