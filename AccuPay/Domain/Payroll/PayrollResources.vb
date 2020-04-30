@@ -161,7 +161,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Allowances As ICollection(Of Data.Entities.Allowance)
+    Public ReadOnly Property Allowances As ICollection(Of Entities.Allowance)
         Get
             Return _allowances
         End Get
@@ -173,7 +173,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Leaves As IReadOnlyCollection(Of Data.Entities.Leave)
+    Public ReadOnly Property Leaves As IReadOnlyCollection(Of Entities.Leave)
         Get
             Return _leaves
         End Get
@@ -272,7 +272,7 @@ Public Class PayrollResources
 
     Public Async Function LoadEmployees() As Task
         Try
-            _employees = (Await New Repositories.EmployeeRepository().
+            _employees = (Await New EmployeeRepository().
                                     GetAllActiveWithDivisionAndPositionAsync(z_OrganizationID)).ToList
         Catch ex As Exception
             Throw New ResourceLoadingException("Employees", ex)
@@ -323,9 +323,10 @@ Public Class PayrollResources
                     Dim calculationBasis = _listOfValueCollection.GetEnum("Pay rate.CalculationBasis",
                                                               Data.Enums.PayRateCalculationBasis.Organization)
 
+                    Dim payPeriod = New TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo)
+
                     _calendarCollection = Data.Helpers.PayrollTools.
-                                               GetCalendarCollection(previousCutoffDateForCheckingLastWorkingDay,
-                                                                   _payDateTo,
+                                               GetCalendarCollection(payPeriod,
                                                                    calculationBasis,
                                                                    z_OrganizationID)
 
@@ -502,7 +503,7 @@ Public Class PayrollResources
 
     Private Async Function LoadAllowances() As Task
         Try
-            Dim allowanceRepo = New Repositories.AllowanceRepository()
+            Dim allowanceRepo = New AllowanceRepository()
 
             _allowances = Await (allowanceRepo.
                             GetByPayPeriodWithProductAsync(organizationId:=z_OrganizationID,
@@ -552,7 +553,7 @@ Public Class PayrollResources
 
     Private Async Function LoadLeaves() As Task
         Try
-            _leaves = (Await New Repositories.LeaveRepository().
+            _leaves = (Await New LeaveRepository().
                                 GetByTimePeriodAsync(organizationId:=z_OrganizationID,
                                                         timePeriod:=_payPeriodSpan)).
                       ToList()

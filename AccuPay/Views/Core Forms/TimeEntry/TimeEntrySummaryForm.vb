@@ -139,8 +139,7 @@ Public Class TimeEntrySummaryForm
         If payPeriod Is Nothing Then Return Nothing
 
         Return Data.Helpers.PayrollTools.
-                                    GetCalendarCollection(payPeriod.PayFromDate,
-                                                        payPeriod.PayToDate,
+                                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
                                                         _policy.PayRateCalculationBasis,
                                                         z_OrganizationID)
     End Function

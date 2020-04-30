@@ -18,7 +18,7 @@ Public Class DailyAllowanceCalculator
         _previousTimeEntries = previousTimeEntries
     End Sub
 
-    Public Function Compute(payperiod As PayPeriod, allowance As Data.Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
+    Public Function Compute(payperiod As PayPeriod, allowance As Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
@@ -57,13 +57,16 @@ Public Class DailyAllowanceCalculator
             ElseIf payrate.IsRegularHoliday Then
                 allowanceAmount = (timeEntry.RegularHours + timeEntry.RegularHolidayHours) * hourlyRate
 
+                Dim givePremium = _settings.GetBoolean("AllowancePolicy.NoPremium") = False
                 Dim exemption = _settings.GetBoolean("AllowancePolicy.HolidayAllowanceForMonthly")
 
-                Dim giveAllowance =
-                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date, _previousTimeEntries, _calendarCollection) Or
-                    ((employee.IsFixed Or employee.IsMonthly) And exemption)
+                Dim giveAdditionalHolidayPay = givePremium AndAlso
+                                                (((employee.IsFixed Or employee.IsMonthly) And exemption) OrElse
+                                                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date,
+                                                                                         _previousTimeEntries,
+                                                                                         _calendarCollection))
 
-                If giveAllowance Then
+                If giveAdditionalHolidayPay Then
                     Dim basicHolidayPay As Decimal
 
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then

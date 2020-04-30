@@ -94,7 +94,7 @@ namespace AccuPay.Data.Helpers
         }
 
         public static bool HasWorkedLastWorkingDay(DateTime currentDate,
-                                                    ICollection<ITimeEntry> currentTimeEntries,
+                                                    ICollection<TimeEntry> currentTimeEntries,
                                                     CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay);
@@ -389,8 +389,7 @@ namespace AccuPay.Data.Helpers
         //    return Convert.ToString(new SQL(str_quer_address).GetFoundRow);
         //}
 
-        public static CalendarCollection GetCalendarCollection(DateTime threeDaysBeforeCutoff,
-                                                                DateTime payDateTo,
+        public static CalendarCollection GetCalendarCollection(TimePeriod timePeriod,
                                                                 PayRateCalculationBasis calculationBasis,
                                                                 int organizationId)
         {
@@ -398,7 +397,8 @@ namespace AccuPay.Data.Helpers
             {
                 var payrates = context.PayRates.
                                     Where(p => p.OrganizationID == organizationId).
-                                    Where(p => threeDaysBeforeCutoff <= p.Date && p.Date <= payDateTo).
+                                    Where(p => timePeriod.Start <= p.Date).
+                                    Where(p => p.Date <= timePeriod.End).
                                     ToList();
                 if (calculationBasis == PayRateCalculationBasis.Branch)
                 {
@@ -407,14 +407,14 @@ namespace AccuPay.Data.Helpers
 
                     var calendarDays = context.CalendarDays.
                                                 Include(t => t.DayType).
-                                                Where(t => threeDaysBeforeCutoff <= t.Date &&
-                                                                t.Date <= payDateTo).
+                                                Where(t => timePeriod.Start <= t.Date).
+                                                Where(t => t.Date <= timePeriod.End).
                                                 ToList();
 
-                    return new CalendarCollection(payrates, (ICollection<Branch>)branches, calendarDays);
+                    return new CalendarCollection(payrates, (ICollection<Branch>)branches, calendarDays, organizationId);
                 }
                 else
-                    return new CalendarCollection(payrates);
+                    return new CalendarCollection(payrates, organizationId);
             }
         }
 

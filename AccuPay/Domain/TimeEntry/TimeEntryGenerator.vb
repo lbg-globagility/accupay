@@ -160,8 +160,7 @@ Public Class TimeEntryGenerator
                                             Data.Enums.PayRateCalculationBasis.Organization)
 
             calendarCollection = Data.Helpers.PayrollTools.
-                                    GetCalendarCollection(previousCutoff,
-                                                        _cutoffEnd,
+                                    GetCalendarCollection(New TimePeriod(previousCutoff, _cutoffEnd),
                                                         payrateCalculationBasis,
                                                         z_OrganizationID)
         End Using
