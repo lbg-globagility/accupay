@@ -2057,7 +2057,6 @@ Public Class EmployeeForm
         End If
 
         IsNewDiscip = 0 'Disciplinary Action
-        IsNewPrevEmp = 0 'Previous Employer
         IsNewPromot = 0 'Promotion
         publicEmpRowID = String.Empty
 
@@ -2345,12 +2344,11 @@ Public Class EmployeeForm
                     Await EducationalBackgroundTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpPrevEmp Then
-                    txtFNamePrevEmp.Text = employeefullname
-                    txtEmpIDPrevEmp.Text = subdetails
-                    pbEmpPicPrevEmp.Image = Nothing
-                    pbEmpPicPrevEmp.Image = EmployeeImage
-                    cleartextboxPrevEmp()
-                    fillemployerlist()
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    Await PreviousEmployerTab.SetEmployee(employee)
+
                 ElseIf selectedTab Is tbpPromotion Then 'Promotion
                     'controlfalsePromot()
                     fillpromotions()
@@ -2437,10 +2435,6 @@ Public Class EmployeeForm
                     txtEmpIDDiscip.Text = ""
                     txtFNameDiscip.Text = ""
                     pbEmpPicDiscip.Image = Nothing
-
-                Case GetPreviousEmployerTabPageIndex() 'Previous Employer
-                    cleartextboxPrevEmp()
-                    dgvListCompany.Rows.Clear()
 
                 Case GetPromotionTabPageIndex() 'Promotion
                     cmbfrom.SelectedIndex = -1
@@ -4795,10 +4789,6 @@ Public Class EmployeeForm
 
 #Region "Previous Employer"
 
-    Dim IsNewPrevEmp As Integer = 0
-
-    Dim view_IDPrevEmp As Integer
-
     Sub tbpPrevEmp_Enter(sender As Object, e As EventArgs) Handles tbpPrevEmp.Enter
 
         UpdateTabPageText()
@@ -4806,299 +4796,8 @@ Public Class EmployeeForm
         tbpPrevEmp.Text = "PREVIOUS EMPLOYER               "
         Label25.Text = "PREVIOUS EMPLOYER"
 
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once = 1
-            view_IDPrevEmp = VIEW_privilege("Employee Previous Employer", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDPrevEmp)
-
-            If formuserprivilege.Count = 0 Then
-
-                btnNewPrevEmp.Visible = 0
-                btnSavePrevEmp.Visible = 0
-                btnDelPrevEmp.Visible = 0
-
-                dontUpdatePrevEmp = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        btnNewPrevEmp.Visible = 0
-                        btnSavePrevEmp.Visible = 0
-                        btnDelPrevEmp.Visible = 0
-
-                        dontUpdatePrevEmp = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            btnNewPrevEmp.Visible = 0
-                        Else
-                            btnNewPrevEmp.Visible = 1
-                        End If
-
-                        If drow("Deleting").ToString = "N" Then
-                            btnDelPrevEmp.Visible = 0
-                        Else
-                            btnDelPrevEmp.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdatePrevEmp = 1
-                        Else
-                            dontUpdatePrevEmp = 0
-                        End If
-                    End If
-                Next
-            End If
-        End If
-
-        tabIndx = GetPreviousEmployerTabPageIndex()
         dgvEmp_SelectionChanged(sender, e)
 
-    End Sub
-
-    Private Sub TabPage10_Leave(sender As Object, e As EventArgs) 'Handles tbpPrevEmp.Leave
-        tbpPrevEmp.Text = "PREV EMP"
-    End Sub
-
-    Private Sub btnNewPrevEmp_Click(sender As Object, e As EventArgs) Handles btnNewPrevEmp.Click
-        txtCompanyName.Focus()
-        IsNewPrevEmp = 1
-        cleartextboxPrevEmp()
-        btnSavePrevEmp.Enabled = True
-        btnNewPrevEmp.Enabled = False
-        grpDetails.Enabled = True
-        dgvListCompany.Enabled = False
-        dgvEmp.Enabled = False
-
-        IsNewPrevEmp = 1
-    End Sub
-
-    Dim dontUpdatePrevEmp As SByte = 0
-
-    Private Sub btnSavePrevEmp_Click(sender As Object, e As EventArgs) Handles btnSavePrevEmp.Click
-
-        If dgvEmp.RowCount = 0 Then
-            btnNewPrevEmp.Enabled = True
-            IsNewPrevEmp = 0
-            Exit Sub
-        End If
-
-        Dim dateExpTo = Format(CDate(dtpExpto.Value), "yyyy-MM-dd")
-
-        If btnNewPrevEmp.Enabled = False Then 'IsNewPrevEmp = 1
-            Z_ErrorProvider.Dispose()
-
-            If txtCompanyName.Text Is Nothing Or txtContactName.Text Is Nothing Or txtMainPhone.Text Is Nothing _
-                Or txtCompAddr.Text Is Nothing Or txtEmailAdd.Text Is Nothing Then
-                If Not SetWarningIfEmpty(txtCompanyName) And SetWarningIfEmpty(txtContactName) _
-                    And SetWarningIfEmpty(txtCompAddr) And SetWarningIfEmpty(txtEmailAdd) _
-                     And SetWarningIfEmpty(txtMainPhone) Then
-
-                End If
-            Else
-
-                SP_employeepreviousemployer(txtCompanyName.Text, txtTradeName.Text, z_OrganizationID, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text,
-                                       Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text,
-                                      txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, z_datetime, z_User, z_datetime, z_User, txtOrganizationType.Text,
-                                      dgvEmp.CurrentRow.Cells("RowID").Value)
-                fillemployerlist()
-
-                myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
-                dgvListCompany.Enabled = True
-                btnNewPrevEmp.Enabled = True
-                dgvEmp.Enabled = True
-                IsNewPrevEmp = 0
-            End If
-        Else
-            If dontUpdatePrevEmp = 1 Then
-                Exit Sub
-            End If
-            Z_ErrorProvider.Dispose()
-            If txtCompanyName.Text Is Nothing Or txtContactName.Text Is Nothing Or txtMainPhone.Text Is Nothing _
-                Or txtCompAddr.Text Is Nothing Or txtEmailAdd.Text Is Nothing Then
-                If Not SetWarningIfEmpty(txtCompanyName) And SetWarningIfEmpty(txtContactName) _
-                    And SetWarningIfEmpty(txtCompAddr) And SetWarningIfEmpty(txtEmailAdd) _
-                     And SetWarningIfEmpty(txtMainPhone) Then
-
-                End If
-            Else
-                'dtpExpto
-                SP_EmployeePreviousEmployerUpdate(txtCompanyName.Text, txtTradeName.Text, txtMainPhone.Text, txtFaxNo.Text, txtJobTitle.Text,
-                                Format(CDate(dtpExfromto.Value), "yyyy-MM-dd") & "@" & Trim(dateExpTo), txtCompAddr.Text, txtContactName.Text, txtEmailAdd.Text, txtAltEmailAdd.Text, txtAltPhone.Text,
-                               txtUrl.Text, Trim(txtTinNo.Text), txtJobFunction.Text, txtOrganizationType.Text,
-                               dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value)
-                fillemployerlist()
-                btnNewPrevEmp.Enabled = True
-                dgvEmp.Enabled = True
-                myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
-            End If
-
-        End If
-
-        SetWarningIfEmpty(txtCompanyName, "Hide this error provider")
-        SetWarningIfEmpty(txtContactName, "Hide this error provider")
-
-        SetWarningIfEmpty(txtCompAddr, "Hide this error provider")
-        SetWarningIfEmpty(txtEmailAdd, "Hide this error provider")
-
-    End Sub
-
-    Private Sub btnDelPrevEmp_Click(sender As Object, e As EventArgs) Handles btnDelPrevEmp.Click
-        If MsgBox("Are you sure you want to remove this employer " & txtCompanyName.Text & "?", MsgBoxStyle.YesNo, "Removing...") = MsgBoxResult.Yes Then
-            DirectCommand("Delete From employeepreviousemployer where RowID = '" & dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value & "'")
-            'fillemployerlist()
-            btnDelPrevEmp.Enabled = False
-            btnNewPrevEmp.Enabled = True
-            dgvEmp.Enabled = True
-        End If
-    End Sub
-
-    Private Sub btnCancelPrevEmp_Click(sender As Object, e As EventArgs) Handles btnCancelPrevEmp.Click
-        cleartextboxPrevEmp()
-
-        btnDelPrevEmp.Enabled = False
-        dgvListCompany.Enabled = True
-        btnNewPrevEmp.Enabled = True
-        dgvEmp.Enabled = True
-        dgvEmp.Focus()
-        IsNewPrevEmp = 0
-    End Sub
-
-    Sub cleartextboxPrevEmp()
-        txtAltEmailAdd.Clear()
-        txtAltPhone.Clear()
-        txtCompAddr.Clear()
-        txtCompanyName.Clear()
-        txtContactName.Clear()
-        txtEmailAdd.Clear()
-        txtFaxNo.Clear()
-        txtJobFunction.Clear()
-        txtJobTitle.Clear()
-        txtMainPhone.Clear()
-        txtOrganizationType.Clear()
-        txtTinNo.Clear()
-        txtTradeName.Clear()
-        txtUrl.Clear()
-        txtExfromto.Clear()
-
-    End Sub
-
-    Private Sub dgvListCompany_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvListCompany.CellClick
-        fillemployerOneByone()
-        btnSave.Enabled = True
-        btnDelete.Enabled = True
-    End Sub
-
-    Private Sub dgvEmplist_CellClick1(sender As Object, e As DataGridViewCellEventArgs) ' Handles dgvEmp.CellClick
-        fillemployerOneByone()
-    End Sub
-
-    Private Sub fillemployerlist()
-
-        If dgvEmp.Rows.Count = 0 Then
-            dgvListCompany.Rows.Clear()
-            cleartextboxPrevEmp()
-        Else
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * From employeepreviousemployer where EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' " &
-                                    "And OrganizationID = '" & z_OrganizationID & "' ")
-
-            dgvListCompany.Rows.Clear()
-            cleartextboxPrevEmp()
-
-            For Each drow As DataRow In dt.Rows
-                Dim n As Integer = dgvListCompany.Rows.Add()
-
-                With drow
-
-                    dgvListCompany.Item(c_compname.Index, n).Value = .Item("Name").ToString
-                    dgvListCompany.Item(c_trade.Index, n).Value = .Item("TradeName").ToString
-                    dgvListCompany.Item(c_contname.Index, n).Value = .Item("ContactName").ToString
-                    dgvListCompany.Item(c_mainphone.Index, n).Value = .Item("MainPHone").ToString
-                    dgvListCompany.Item(c_altphone.Index, n).Value = .Item("AltPhone").ToString
-                    dgvListCompany.Item(c_faxno.Index, n).Value = .Item("FaxNumber").ToString
-                    dgvListCompany.Item(c_emailaddr.Index, n).Value = .Item("EmailAddress").ToString
-                    dgvListCompany.Item(c_altemailaddr.Index, n).Value = .Item("AltEmailAddress").ToString
-                    dgvListCompany.Item(c_url.Index, n).Value = .Item("URL").ToString
-                    dgvListCompany.Item(c_tinno.Index, n).Value = .Item("TINNo").ToString
-                    dgvListCompany.Item(c_jobtitle.Index, n).Value = .Item("JobTitle").ToString
-                    dgvListCompany.Item(c_jobfunction.Index, n).Value = .Item("JobFunction").ToString
-                    dgvListCompany.Item(c_orgtype.Index, n).Value = .Item("OrganizationType").ToString
-
-                    If IsDBNull(.Item("ExperienceFromTo")) Then
-                        dgvListCompany.Item(c_experience.Index, n).Value = Nothing
-                    Else
-                        If Trim(.Item("ExperienceFromTo").ToString) <> "" Then
-                            Dim date_From = EXECQUER("SELECT SUBSTRING_INDEX('" & .Item("ExperienceFromTo").ToString & "', '@', 1);")
-
-                            Dim date_To = EXECQUER("SELECT SUBSTRING_INDEX('" & .Item("ExperienceFromTo").ToString & "', '@', -1);")
-
-                            dgvListCompany.Item(c_experience.Index, n).Value = Format(CDate(date_From), machineShortDateFormat) '.Item("ExperienceFromTo")
-                            dgvListCompany.Item(c_expdateto.Index, n).Value = Format(CDate(date_To), machineShortDateFormat)
-
-                        End If
-
-                    End If
-
-                    dgvListCompany.Item(c_compaddr.Index, n).Value = .Item("BusinessAddress").ToString
-                    dgvListCompany.Item(c_rowidPrevEmp.Index, n).Value = .Item("RowID").ToString
-
-                End With
-            Next
-        End If
-    End Sub
-
-    Private Sub fillemployerOneByone()
-        If dgvListCompany.Rows.Count = 0 Then
-            dtpExfromto.Value = Format(CDate(dbnow), machineShortDateFormat)
-        Else
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * From employeepreviousemployer where RowID = '" & dgvListCompany.CurrentRow.Cells(c_rowidPrevEmp.Index).Value & "' " &
-                                    "And OrganizationID = '" & z_OrganizationID & "'")
-            If dt.Rows.Count > 0 Then
-                cleartextboxPrevEmp()
-                For Each drow As DataRow In dt.Rows
-                    With drow
-
-                        txtCompanyName.Text = .Item("Name").ToString
-                        txtTradeName.Text = .Item("TradeName").ToString
-                        txtContactName.Text = .Item("ContactName").ToString
-                        txtMainPhone.Text = .Item("MainPhone").ToString
-                        txtAltPhone.Text = .Item("AltPhone").ToString
-                        txtFaxNo.Text = .Item("FaxNumber").ToString
-                        txtEmailAdd.Text = .Item("EmailAddress").ToString
-                        txtAltEmailAdd.Text = .Item("AltEmailAddress").ToString
-                        txtUrl.Text = .Item("URL").ToString
-                        txtTinNo.Text = .Item("TINNo").ToString
-                        txtJobTitle.Text = .Item("JobTitle").ToString
-                        txtJobFunction.Text = .Item("JobFunction").ToString
-                        txtOrganizationType.Text = .Item("OrganizationType").ToString
-                        txtCompAddr.Text = .Item("BusinessAddress").ToString
-
-                        If .Item("ExperienceFromTo").ToString = "" Then
-                            dtpExfromto.Value = Format(CDate(dbnow), machineShortDateFormat)
-                        Else
-                            Dim date_From = EXECQUER("SELECT SUBSTRING_INDEX('" & .Item("ExperienceFromTo").ToString & "', '@', 1);")
-
-                            dtpExfromto.Value = Format(CDate(date_From), machineShortDateFormat)
-                        End If
-
-                        If .Item("ExperienceFromTo").ToString = "" Then
-                            dtpExpto.Value = Format(CDate(dbnow), machineShortDateFormat)
-                        Else
-                            Dim date_To = EXECQUER("SELECT SUBSTRING_INDEX('" & .Item("ExperienceFromTo").ToString & "', '@', -1);")
-
-                            dtpExpto.Value = Format(CDate(date_To), machineShortDateFormat) '.Item("ExperienceFromTo")
-                        End If
-
-                    End With
-                Next
-            Else
-                cleartextboxPrevEmp()
-            End If
-        End If
     End Sub
 
 #End Region 'Previous Employer

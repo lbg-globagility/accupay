@@ -1,0 +1,5 @@
+ALTER TABLE `employeepreviousemployer`
+	ALTER `ExperienceFromTo` DROP DEFAULT;
+ALTER TABLE `employeepreviousemployer`
+	CHANGE COLUMN `ExperienceFromTo` `ExperienceFromTo` DATE NOT NULL AFTER `JobTitle`,
+	ADD COLUMN `ExperienceTo` DATE NOT NULL AFTER `ExperienceFrom`;

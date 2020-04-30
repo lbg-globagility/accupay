@@ -250,56 +250,56 @@ Public Class EducationalBackgroundTab
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update education type from '{oldEducBg.Type}' to '{_currentEducBg.Type}'"
+                        .Description = $"Updated education type from '{oldEducBg.Type}' to '{_currentEducBg.Type}'."
                         })
         End If
         If _currentEducBg.School <> oldEducBg.School Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update educational background school from '{oldEducBg.School}' to '{_currentEducBg.School}'"
+                        .Description = $"Updated educational background school from '{oldEducBg.School}' to '{_currentEducBg.School}'."
                         })
         End If
         If _currentEducBg.Degree <> oldEducBg.Degree Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update educational background degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}'"
+                        .Description = $"Updated educational background degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}'."
                         })
         End If
         If _currentEducBg.Course <> oldEducBg.Course Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update educational background course from '{oldEducBg.Course}' to '{_currentEducBg.Course}'"
+                        .Description = $"Updated educational background course from '{oldEducBg.Course}' to '{_currentEducBg.Course}'."
                         })
         End If
         If _currentEducBg.Major <> oldEducBg.Major Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update educational background major from '{oldEducBg.Major}' to '{_currentEducBg.Major}'"
+                        .Description = $"Updated educational background major from '{oldEducBg.Major}' to '{_currentEducBg.Major}'."
                         })
         End If
         If _currentEducBg.DateFrom <> oldEducBg.DateFrom Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update education start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}'"
+                        .Description = $"Updated education start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}'."
                         })
         End If
         If _currentEducBg.DateTo <> oldEducBg.DateTo Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update education end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}'"
+                        .Description = $"Updated education end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}'."
                         })
         End If
         If _currentEducBg.Remarks <> oldEducBg.Remarks Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Update educational background remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}'"
+                        .Description = $"Updated educational background remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}'."
                         })
         End If
 
