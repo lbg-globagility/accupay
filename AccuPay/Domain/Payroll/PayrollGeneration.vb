@@ -488,7 +488,7 @@ Public Class PayrollGeneration
                                 paystub As Paystub,
                                 payperiodId As Integer?,
                                 allowanceId As Integer?,
-                                product As Data.Entities.Product) As AllowanceItem
+                                product As Entities.Product) As AllowanceItem
 
         Return New AllowanceItem() With {
                 .OrganizationID = z_OrganizationID,

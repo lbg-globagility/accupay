@@ -15,13 +15,17 @@ namespace AccuPay.Data.Services
 
         private PayratesCalendar _organizationCalendar;
 
-        public CalendarCollection(ICollection<PayRate> payrates)
+        // for identifying the _organizationCalendar
+        public int OrganizationId { get; }
+
+        public CalendarCollection(ICollection<PayRate> payrates, int organizationId)
         {
             _organizationCalendar = new PayratesCalendar(payrates);
+            OrganizationId = organizationId;
             _isUsingCalendars = false;
         }
 
-        public CalendarCollection(ICollection<PayRate> payrates, ICollection<Branch> branches, ICollection<CalendarDay> calendarDays) : this(payrates)
+        public CalendarCollection(ICollection<PayRate> payrates, ICollection<Branch> branches, ICollection<CalendarDay> calendarDays, int organizationId) : this(payrates, organizationId)
         {
             _branches = branches;
             _calendars = calendarDays.GroupBy(t => t.CalendarID).ToDictionary(t => t.Key, t => new PayratesCalendar(t));

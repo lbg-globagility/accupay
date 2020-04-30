@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.IO
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
@@ -43,6 +44,7 @@ Public Class CostCenterReportProvider
     Private Const RegularHolidayPayKey As String = "RegularHolidayPay"
     Private Const RegularHolidayOTHoursKey As String = "RegularHolidayOTHours"
     Private Const RegularHolidayOTPayKey As String = "RegularHolidayOTPay"
+    Private Const TotalAllowanceKey As String = "TotalAllowanceKey"
     Private Const GrossPayKey As String = "GrossPay"
     Private Const SSSAmountKey As String = "SSSAmount"
     Private Const ECAmountKey As String = "ECAmount"
@@ -76,6 +78,7 @@ Public Class CostCenterReportProvider
                 New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey),
                 New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey),
                 New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey),
+                New ExcelReportColumn("ALLOWANCE", TotalAllowanceKey),
                 New ExcelReportColumn("TOTAL GROSS PAY", GrossPayKey),
                 New ExcelReportColumn("SSS", SSSAmountKey),
                 New ExcelReportColumn("EREC", ECAmountKey),
@@ -115,7 +118,6 @@ Public Class CostCenterReportProvider
 
             Dim dataService As New CostCenterReportDataService(selectedMonth,
                                                                 selectedBranch,
-                                                                organizationId:=z_OrganizationID,
                                                                 userId:=z_User)
 
             Dim payPeriodModels = dataService.GetData()
@@ -247,15 +249,15 @@ Public Class CostCenterReportProvider
         SetDefaultPrinterSettings(worksheet.PrinterSettings)
     End Sub
 
-    Private Function GetPayPeriodDescription(payPeriod As Data.Entities.PayPeriod) As String
+    Private Function GetPayPeriodDescription(payPeriod As TimePeriod) As String
 
         If payPeriod Is Nothing Then Return String.Empty
 
-        If payPeriod.PayFromDate.Month = payPeriod.PayToDate.Month Then
+        If payPeriod.Start.Month = payPeriod.End.Month Then
 
-            Return $"{payPeriod.PayFromDate.ToString("MMMM").ToUpper} {payPeriod.PayFromDate.Day} - {payPeriod.PayToDate.Day}"
+            Return $"{payPeriod.Start.ToString("MMMM").ToUpper} {payPeriod.Start.Day} - {payPeriod.End.Day}"
         Else
-            Return $"{payPeriod.PayFromDate.ToString("MMMM").ToUpper} {payPeriod.PayFromDate.Day} - {payPeriod.PayToDate.ToString("MMMM").ToUpper} {payPeriod.PayToDate.Day}"
+            Return $"{payPeriod.Start.ToString("MMMM").ToUpper} {payPeriod.Start.Day} - {payPeriod.End.ToString("MMMM").ToUpper} {payPeriod.End.Day}"
 
         End If
 

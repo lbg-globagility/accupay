@@ -62,5 +62,26 @@ namespace AccuPay.Data.Entities
 
             this.Amount += perDay.Amount;
         }
+
+        public static AllowanceItem Create(
+                                Paystub paystub,
+                                Product product,
+                                int payperiodId,
+                                int allowanceId,
+                                int organizationId,
+                                int userId)
+        {
+            return new AllowanceItem()
+            {
+                OrganizationID = organizationId,
+                CreatedBy = userId,
+                LastUpdBy = userId,
+                Paystub = paystub,
+                PayPeriodID = payperiodId,
+                AllowanceID = allowanceId,
+                IsTaxable = product.IsTaxable,
+                IsThirteenthMonthPay = product.IsThirteenthMonthPay
+            };
+        }
     }
 }

@@ -139,6 +139,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
+                                                                TimePeriod timePeriod)
+        {
+            using (var context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            {
+                return CreateBaseQueryByTimePeriod(organizationId,
+                                                            context,
+                                                            timePeriod).
+                                                            ToList();
+            }
+        }
+
         public async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId,
                                                                                 TimePeriod timePeriod)
         {
