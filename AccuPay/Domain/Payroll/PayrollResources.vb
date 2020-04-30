@@ -47,11 +47,11 @@ Public Class PayrollResources
 
     Private _products As ICollection(Of Product)
 
-    Private _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
+    Private _socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
 
-    Private _philHealthBrackets As ICollection(Of PhilHealthBracket)
+    Private _philHealthBrackets As ICollection(Of Entities.PhilHealthBracket)
 
-    Private _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
+    Private _withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
 
     Private _paystubs As ICollection(Of Paystub)
 
@@ -63,7 +63,7 @@ Public Class PayrollResources
 
     Private _allowances As ICollection(Of Entities.Allowance)
 
-    Private _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
+    Private _divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
 
     Private _filingStatuses As DataTable
 
@@ -137,19 +137,19 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property SocialSecurityBrackets As ICollection(Of SocialSecurityBracket)
+    Public ReadOnly Property SocialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
         Get
             Return _socialSecurityBrackets
         End Get
     End Property
 
-    Public ReadOnly Property PhilHealthBrackets As ICollection(Of PhilHealthBracket)
+    Public ReadOnly Property PhilHealthBrackets As ICollection(Of Entities.PhilHealthBracket)
         Get
             Return _philHealthBrackets
         End Get
     End Property
 
-    Public ReadOnly Property WithholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
+    Public ReadOnly Property WithholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
         Get
             Return _withholdingTaxBrackets
         End Get
@@ -185,7 +185,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property DivisionMinimumWages As ICollection(Of DivisionMinimumWage)
+    Public ReadOnly Property DivisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
         Get
             Return _divisionMinimumWages
         End Get
@@ -450,13 +450,8 @@ Public Class PayrollResources
             'LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
             Dim taxEffectivityDate = New Date(_payPeriod.Year, _payPeriod.Month, 1)
 
-            Using context = New PayrollContext()
-                Dim query = context.SocialSecurityBrackets.
-                            Where(Function(s) taxEffectivityDate >= s.EffectiveDateFrom).
-                            Where(Function(s) taxEffectivityDate <= s.EffectiveDateTo)
-
-                _socialSecurityBrackets = Await query.ToListAsync()
-            End Using
+            _socialSecurityBrackets = (Await New SocialSecurityBracketRepository().
+                                              GetByTimePeriodAsync(taxEffectivityDate)).ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("SocialSecurityBrackets", ex)
         End Try
@@ -464,12 +459,8 @@ Public Class PayrollResources
 
     Private Async Function LoadPhilHealthBrackets() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = From p In context.PhilHealthBrackets
-                            Select p
 
-                _philHealthBrackets = Await query.ToListAsync()
-            End Using
+            _philHealthBrackets = (Await New PhilHealthBracketRepository().GetAllAsync()).ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("PhilHealthBrackets", ex)
         End Try
@@ -477,12 +468,7 @@ Public Class PayrollResources
 
     Private Async Function LoadWithholdingTaxBrackets() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = From w In context.WithholdingTaxBrackets
-                            Select w
-
-                _withholdingTaxBrackets = Await query.ToListAsync()
-            End Using
+            _withholdingTaxBrackets = (Await New WithholdingTaxBracketRepository().GetAllAsync).ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("WithholdingTaxBrackets", ex)
         End Try
@@ -527,12 +513,8 @@ Public Class PayrollResources
 
     Private Async Function LoadDivisionMinimumWages() As Task
         Try
-            Using context = New PayrollContext()
-                _divisionMinimumWages = Await context.DivisionMinimumWages.
-                    Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(t) t.EffectiveDateFrom <= _payDateTo AndAlso _payDateTo <= t.EffectiveDateTo).
-                    ToListAsync()
-            End Using
+            _divisionMinimumWages = (Await New DivisionMinimumWageRepository().
+                                                GetByDateAsync(z_OrganizationID, _payDateTo)).ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("DivisionMinimumWage", ex)
         End Try

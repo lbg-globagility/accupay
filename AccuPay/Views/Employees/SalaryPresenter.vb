@@ -2,7 +2,6 @@
 
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports Microsoft.EntityFrameworkCore
 Imports PayrollSys
@@ -21,12 +20,20 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
+        Private _philHealthBracketRepository As PhilHealthBracketRepository
+
+        Private _socialSecurityBracketRepository As SocialSecurityBracketRepository
+
         Private _salaries As IList(Of Salary)
 
         Private _currentSalary As Salary
 
         Public Sub New(view As SalaryTab2)
             _view = view
+
+            _philHealthBracketRepository = New PhilHealthBracketRepository()
+
+            _socialSecurityBracketRepository = New SocialSecurityBracketRepository()
         End Sub
 
         Private Sub OnLoad() Handles _view.Init
@@ -149,15 +156,12 @@ Namespace Global.AccuPay.Views.Employees
 
             Dim values = ListOfValueCollection.Create("PhilHealth")
 
-            Using context = New PayrollContext()
-
-                _philHealthPolicy = New PhilHealthPolicy(
+            _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),
                     values.GetDecimal("Rate"),
                     values.GetDecimal("MinimumContribution"),
                     values.GetDecimal("MaximumContribution"),
-                    context.PhilHealthBrackets.ToList())
-            End Using
+                    _philHealthBracketRepository.GetAll().ToList())
         End Sub
 
         Private Sub LoadSalaries()
@@ -188,11 +192,9 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub LoadSocialSecurityBrackets()
-            Using context = New PayrollContext()
-                Dim socialSecurityBrackets = context.SocialSecurityBrackets.ToList()
+            Dim socialSecurityBrackets = _socialSecurityBracketRepository.GetAll().ToList()
 
-                _socialSecurityPolicy = New SocialSecurityPolicy(socialSecurityBrackets)
-            End Using
+            _socialSecurityPolicy = New SocialSecurityPolicy(socialSecurityBrackets)
         End Sub
 
         Private Sub UpdateSss(monthlyRate As Decimal)
@@ -217,13 +219,13 @@ Namespace Global.AccuPay.Views.Employees
 
             Private Property _maximumContribution As Decimal
 
-            Private Property _brackets As IList(Of PhilHealthBracket)
+            Private Property _brackets As IList(Of Data.Entities.PhilHealthBracket)
 
             Public Sub New(deductionType As String,
                            contributionRate As Decimal,
                            minimumContribution As Decimal,
                            maximumContribution As Decimal,
-                           brackets As IList(Of PhilHealthBracket))
+                           brackets As IList(Of Data.Entities.PhilHealthBracket))
                 _deductionType = deductionType
                 _contributionRate = contributionRate
                 _minimumContribution = minimumContribution
@@ -255,13 +257,13 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Class SocialSecurityPolicy
 
-            Public _socialSecurityBrackets As IList(Of SocialSecurityBracket)
+            Public _socialSecurityBrackets As IList(Of Data.Entities.SocialSecurityBracket)
 
-            Public Sub New(socialSecurityBrackets As IList(Of SocialSecurityBracket))
+            Public Sub New(socialSecurityBrackets As IList(Of Data.Entities.SocialSecurityBracket))
                 _socialSecurityBrackets = socialSecurityBrackets
             End Sub
 
-            Public Function GetBracket(monthlyRate As Decimal) As SocialSecurityBracket
+            Public Function GetBracket(monthlyRate As Decimal) As Data.Entities.SocialSecurityBracket
                 Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
                         Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
 

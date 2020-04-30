@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
@@ -15,6 +16,8 @@ Public Class PaystubPresenter
     Private _paystubs As IList(Of Paystub)
 
     Private _isActual As Boolean
+
+    Private _paystubActualRepository As PaystubActualRepository
 
     Private WithEvents _view As PaystubView
 
@@ -59,14 +62,14 @@ Public Class PaystubPresenter
         _currentPaystub = paystub
 
         Dim salary As Salary = Nothing
-        Dim paystubActual As PaystubActual = Nothing
+        Dim paystubActual As Data.Entities.PaystubActual = Nothing
         Dim adjustments As ICollection(Of Adjustment) = Nothing
         Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
         Dim loanTransactions As ICollection(Of LoanTransaction) = Nothing
 
         Using repository = New Repository()
             salary = Await repository.GetSalary(_currentPaystub)
-            paystubActual = Await repository.GetPaystubActual(_currentPaystub)
+            paystubActual = Await _paystubActualRepository.GetByIdAsync(_currentPaystub.RowID.Value)
             adjustments = Await repository.GetAdjustments(_currentPaystub)
             allowanceItems = Await repository.GetAllowanceItems(_currentPaystub.RowID)
             loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.PayPeriodID, _currentPaystub.EmployeeID)
@@ -119,13 +122,6 @@ Public Class PaystubPresenter
                 Where(Function(s) Nullable.Equals(s.EmployeeID, paystub.EmployeeID)).
                 Where(Function(s) s.EffectiveFrom <= paystub.PayFromdate).
                 Where(Function(s) paystub.PayFromdate <= If(s.EffectiveTo, paystub.PayFromdate))
-
-            Return Await query.FirstOrDefaultAsync()
-        End Function
-
-        Public Async Function GetPaystubActual(paystub As Paystub) As Task(Of PaystubActual)
-            Dim query = _context.PaystubActuals.
-                Where(Function(t) t.RowID.Value = paystub.RowID.Value)
 
             Return Await query.FirstOrDefaultAsync()
         End Function

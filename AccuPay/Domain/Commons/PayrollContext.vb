@@ -15,7 +15,13 @@ Public Class PayrollContext
     Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
-    Public Overridable Property Agencies As DbSet(Of Agency)
+    Public Overridable Property TimeLogs As DbSet(Of TimeLog)
+
+    Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
+
+    Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
+
+    Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
 
@@ -23,35 +29,13 @@ Public Class PayrollContext
 
     Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
 
-    Public Overridable Property PaystubActuals As DbSet(Of PaystubActual)
-
-    Public Overridable Property PaystubEmailHistories As DbSet(Of PaystubEmailHistory)
-
-    Public Overridable Property PaystubEmails As DbSet(Of PaystubEmail)
-
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property Paystubs As DbSet(Of Paystub)
 
-    Public Overridable Property PhilHealthBrackets As DbSet(Of PhilHealthBracket)
-
     Public Overridable Property Products As DbSet(Of Product)
 
     Public Overridable Property Salaries As DbSet(Of Salary)
-
-    Public Overridable Property SocialSecurityBrackets As DbSet(Of SocialSecurityBracket)
-
-    Public Overridable Property ThirteenthMonthPays As DbSet(Of ThirteenthMonthPay)
-
-    Public Overridable Property TimeLogs As DbSet(Of TimeLog)
-
-    Public Overridable Property WithholdingTaxBrackets As DbSet(Of WithholdingTaxBracket)
-
-    Public Overridable Property Shifts As DbSet(Of Shift)
-
-    Public Overridable Property Organizations As DbSet(Of Organization)
-
-    Public Overridable Property ShiftSchedules As DbSet(Of ShiftSchedule)
 
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
@@ -68,12 +52,6 @@ Public Class PayrollContext
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
 
     Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
-
-    Public Overridable Property DivisionMinimumWages As DbSet(Of DivisionMinimumWage)
-
-    Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
-
-    Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
 
     Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
 

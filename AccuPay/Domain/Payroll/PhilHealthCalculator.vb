@@ -1,10 +1,9 @@
 Option Strict On
 
-Imports AccuPay.Data
+Imports AccuPay.Entity
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Utilities
 Imports PayrollSys
 
@@ -13,14 +12,20 @@ Namespace Global.AccuPay.Payroll
     Public Class PhilHealthCalculator
 
         Private ReadOnly _policy As PhilHealthPolicy
-        Private ReadOnly _philHealthBrackets As ICollection(Of PhilHealthBracket)
+        Private ReadOnly _philHealthBrackets As ICollection(Of Data.Entities.PhilHealthBracket)
 
-        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of PhilHealthBracket))
+        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of Data.Entities.PhilHealthBracket))
             _policy = policy
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(salary As Salary, paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, allowances As ICollection(Of Data.Entities.Allowance))
+        Public Sub Calculate(salary As Salary,
+                             paystub As Paystub,
+                             previousPaystub As Paystub,
+                             employee As Data.Entities.Employee,
+                             payperiod As PayPeriod,
+                             allowances As ICollection(Of Data.Entities.Allowance))
+
             ' Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0
             paystub.PhilHealthEmployerShare = 0
@@ -84,7 +89,7 @@ Namespace Global.AccuPay.Payroll
         Private Function GetTotalContribution(salary As Salary,
                                               paystub As Paystub,
                                               previousPaystub As Paystub,
-                                              employee As Entities.Employee,
+                                              employee As Data.Entities.Employee,
                                               allowances As ICollection(Of Data.Entities.Allowance)) As Decimal
 
             Dim calculationBasis = _policy.CalculationBasis
@@ -160,7 +165,7 @@ Namespace Global.AccuPay.Payroll
         End Function
 
         <Obsolete>
-        Private Function FindMatchingBracket(amount As Decimal) As PhilHealthBracket
+        Private Function FindMatchingBracket(amount As Decimal) As Data.Entities.PhilHealthBracket
             Return _philHealthBrackets.FirstOrDefault(
                 Function(p) p.SalaryRangeFrom <= amount And p.SalaryRangeTo >= amount)
         End Function

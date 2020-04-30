@@ -16,6 +16,7 @@ namespace AccuPay.Data
         });
 
         public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
@@ -29,6 +30,7 @@ namespace AccuPay.Data
         public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<DayType> DayTypes { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
+        public virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
         public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
@@ -48,12 +50,15 @@ namespace AccuPay.Data
         public virtual DbSet<PayPeriod> PayPeriods { get; set; }
         public virtual DbSet<PayRate> PayRates { get; set; }
         public virtual DbSet<Paystub> Paystubs { get; set; }
+        public virtual DbSet<PaystubActual> PaystubActuals { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        public virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
+        public virtual DbSet<Shift> Shifts { get; set; }
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
         public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
@@ -63,6 +68,7 @@ namespace AccuPay.Data
         internal virtual DbSet<User> Users { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
+        internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
         public PayrollContext()
         {

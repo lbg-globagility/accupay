@@ -1,25 +1,26 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class PayPeriodRepository
+    public class PhilHealthBracketRepository
     {
-        public PayPeriod GetById(int id)
+        public IEnumerable<PhilHealthBracket> GetAll()
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return context.PayPeriods.FirstOrDefault(x => x.RowID == id);
+                return context.PhilHealthBrackets.ToList();
             }
         }
 
-        public async Task<PayPeriod> GetByIdAsync(int id)
+        public async Task<IEnumerable<PhilHealthBracket>> GetAllAsync()
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return await context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == id);
+                return await context.PhilHealthBrackets.ToListAsync();
             }
         }
     }

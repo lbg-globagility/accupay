@@ -30,6 +30,7 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PaystubID")]
         public virtual Paystub Paystub { get; set; }
 
+        // TODO: codes using PayrollContext should be in a repository or a service
         public void SetStatusToFailed(string errorLogMessage)
         {
             using (var context = new PayrollContext())
@@ -46,6 +47,7 @@ namespace AccuPay.Data.Entities
             }
         }
 
+        // TODO: codes using PayrollContext should be in a repository or a service
         public void SetStatusToProcessing()
         {
             using (var context = new PayrollContext())
@@ -62,6 +64,7 @@ namespace AccuPay.Data.Entities
             }
         }
 
+        // TODO: codes using PayrollContext should be in a repository or a service
         public void Finish(string fileName, string emailAddress)
         {
             using (var context = new PayrollContext())

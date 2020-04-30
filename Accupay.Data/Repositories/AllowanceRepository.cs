@@ -142,7 +142,7 @@ namespace AccuPay.Data.Repositories
         public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            using (var context = new PayrollContext())
             {
                 return CreateBaseQueryByTimePeriod(organizationId,
                                                             context,

@@ -10,9 +10,9 @@ Public Class SssCalculator
 
     Private ReadOnly _settings As ListOfValueCollection
 
-    Private ReadOnly _socialSecurityBrackets As ICollection(Of SocialSecurityBracket)
+    Private ReadOnly _socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
 
-    Public Sub New(settings As ListOfValueCollection, socialSecurityBrackets As ICollection(Of SocialSecurityBracket))
+    Public Sub New(settings As ListOfValueCollection, socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket))
         _settings = settings
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
@@ -59,7 +59,7 @@ Public Class SssCalculator
         End If
     End Sub
 
-    Private Function FindMatchingBracket(amount As Decimal) As SocialSecurityBracket
+    Private Function FindMatchingBracket(amount As Decimal) As Entities.SocialSecurityBracket
         Return _socialSecurityBrackets.FirstOrDefault(Function(s) s.RangeFromAmount <= amount And s.RangeToAmount >= amount)
     End Function
 

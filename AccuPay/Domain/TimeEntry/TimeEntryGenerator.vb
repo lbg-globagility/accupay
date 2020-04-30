@@ -34,10 +34,12 @@ Public Class TimeEntryGenerator
     Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
+    Private _agencyRepository As AgencyRepository
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
     Private _employeeRepository As EmployeeRepository
     Private _leaveRepository As LeaveRepository
     Private _officialBusinessRepository As OfficialBusinessRepository
+    Private _organizationRepository As OrganizationRepository
     Private _overtimeRepository As OvertimeRepository
     Private _salaryRepository As SalaryRepository
 
@@ -67,10 +69,12 @@ Public Class TimeEntryGenerator
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
 
+        _agencyRepository = New AgencyRepository()
         _breakTimeBracketRepository = New BreakTimeBracketRepository()
         _employeeRepository = New EmployeeRepository()
         _leaveRepository = New LeaveRepository()
-        _officialBusinessRepository = New OfficialBusinessRepository
+        _officialBusinessRepository = New OfficialBusinessRepository()
+        _organizationRepository = New OrganizationRepository()
         _overtimeRepository = New OvertimeRepository()
         _salaryRepository = New SalaryRepository()
 
@@ -78,8 +82,8 @@ Public Class TimeEntryGenerator
 
     Public Sub Start()
         Dim employees As IList(Of Entities.Employee) = Nothing
-        Dim organization As Organization = Nothing
-        Dim agencies As IList(Of Agency) = Nothing
+        Dim organization As Entities.Organization = Nothing
+        Dim agencies As IList(Of Entities.Agency) = Nothing
         Dim calendarCollection As CalendarCollection
 
         Dim settings As ListOfValueCollection = ListOfValueCollection.Create()
@@ -91,12 +95,9 @@ Public Class TimeEntryGenerator
 
             employees = _employeeRepository.GetAllActiveWithPosition(z_OrganizationID).ToList
 
-            agencies = context.Agencies.
-                Where(Function(a) a.OrganizationID.Value = z_OrganizationID).
-                ToList()
+            agencies = _agencyRepository.GetAll(z_OrganizationID).ToList
 
-            organization = context.Organizations.
-                SingleOrDefault(Function(o) o.RowID.Value = z_OrganizationID)
+            organization = _organizationRepository.GetById(z_OrganizationID)
 
             _salaries = _salaryRepository.GetByCutOff(z_OrganizationID, _cutoffStart).ToList()
 
@@ -184,9 +185,9 @@ Public Class TimeEntryGenerator
     End Sub
 
     Private Sub CalculateEmployeeEntries(employee As Entities.Employee,
-                                         organization As Organization,
+                                         organization As Entities.Organization,
                                          settings As ListOfValueCollection,
-                                         agencies As IList(Of Agency),
+                                         agencies As IList(Of Entities.Agency),
                                          timeEntryPolicy As TimeEntryPolicy,
                                          calendarCollection As CalendarCollection)
         Dim previousTimeEntries As IList(Of TimeEntry) = _timeEntries.

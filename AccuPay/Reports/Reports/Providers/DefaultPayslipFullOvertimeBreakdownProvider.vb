@@ -24,7 +24,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
 
         Dim paystubModels = Await GeneratePaystubModels(payPeriod)
 
-        Dim report As New AccuPay.Payslip.DefaulltPayslipFullOvertimeBreakdown
+        Dim report As New Payslip.DefaulltPayslipFullOvertimeBreakdown
         report.SetDataSource(paystubModels)
 
         Dim detailsSection = report.ReportDefinition.Sections(1)

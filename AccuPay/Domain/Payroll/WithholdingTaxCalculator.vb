@@ -13,13 +13,13 @@ Namespace Global.AccuPay.Payroll
 
         Private ReadOnly _filingStatuses As DataTable
 
-        Private ReadOnly _withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket)
+        Private ReadOnly _withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
 
-        Private ReadOnly _divisionMinimumWages As ICollection(Of DivisionMinimumWage)
+        Private ReadOnly _divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
 
         Private ReadOnly _settings As ListOfValueCollection
 
-        Public Sub New(settings As ListOfValueCollection, filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of WithholdingTaxBracket), divisionMinimumWages As ICollection(Of DivisionMinimumWage))
+        Public Sub New(settings As ListOfValueCollection, filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket), divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage))
             _filingStatuses = filingStatuses
             _withholdingTaxBrackets = withholdingTaxBrackets
             _divisionMinimumWages = divisionMinimumWages
@@ -113,7 +113,7 @@ Namespace Global.AccuPay.Payroll
             Return minimumWage
         End Function
 
-        Private Function GetTaxWithheld(bracket As WithholdingTaxBracket, taxableIncome As Decimal) As Decimal
+        Private Function GetTaxWithheld(bracket As Entities.WithholdingTaxBracket, taxableIncome As Decimal) As Decimal
             If bracket Is Nothing Then
                 Return 0
             End If
@@ -141,7 +141,7 @@ Namespace Global.AccuPay.Payroll
             Return filingStatusID
         End Function
 
-        Private Function GetTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As WithholdingTaxBracket
+        Private Function GetTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As Entities.WithholdingTaxBracket
             Dim taxEffectivityDate = New Date(_payperiod.Year, _payperiod.Month, 1)
 
             Dim possibleBrackets = _withholdingTaxBrackets.

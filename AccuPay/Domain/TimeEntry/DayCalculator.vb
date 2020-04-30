@@ -11,7 +11,7 @@ Public Class DayCalculator
 
     Private Const DEFAULT_WORK_HOURS As Integer = 8
     Private ReadOnly _settings As ListOfValueCollection
-    Private ReadOnly _organization As Organization
+    Private ReadOnly _organization As Entities.Organization
     Private ReadOnly _employee As Entities.Employee
     Private ReadOnly _policy As TimeEntryPolicy
 
@@ -21,7 +21,7 @@ Public Class DayCalculator
     Private _overtimeSkipCountRounding As Boolean = False
     Private _overtimeSkipCount As Decimal = 0
 
-    Public Sub New(organization As Organization, settings As ListOfValueCollection, employee As Entities.Employee)
+    Public Sub New(organization As Entities.Organization, settings As ListOfValueCollection, employee As Entities.Employee)
         _settings = settings
         _organization = organization
         _employee = employee

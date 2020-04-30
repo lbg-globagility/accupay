@@ -9,10 +9,10 @@ Public Class AgencyFeeCalculator
     Private Const HoursPerDay As Decimal = 8
 
     Private ReadOnly _employee As Entities.Employee
-    Private ReadOnly _agency As Agency
+    Private ReadOnly _agency As Entities.Agency
     Private ReadOnly _agencyFees As IList(Of AgencyFee)
 
-    Public Sub New(employee As Entities.Employee, agency As Agency, agencyFees As IList(Of AgencyFee))
+    Public Sub New(employee As Entities.Employee, agency As Entities.Agency, agencyFees As IList(Of AgencyFee))
         _employee = employee
         _agency = agency
         _agencyFees = agencyFees

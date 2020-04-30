@@ -75,7 +75,7 @@ Public Class PaystubView
         dgvTimeEntries.DataSource = timeEntries
     End Sub
 
-    Public Sub ShowPaystub(declared As Paystub, actual As PaystubActual, isActual As Boolean)
+    Public Sub ShowPaystub(declared As Paystub, actual As Data.Entities.PaystubActual, isActual As Boolean)
         txtBasicHours.Text = Format(declared.BasicHours)
         txtBasicPay.Text = Format(declared.BasicPay)
 
