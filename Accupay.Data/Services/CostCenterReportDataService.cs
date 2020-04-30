@@ -564,7 +564,6 @@ namespace AccuPay.Data.Services
 
             private static PaystubModel ComputeGovernmentDeductions(LoanTransaction hmoLoan, MonthlyDeduction monthlyDeduction, PaystubModel paystubModel, decimal workedPercentage)
             {
-                // Test hmoLoan
                 paystubModel.HMOAmount = MonthlyDeductionAmount.ComputeBranchPercentage(hmoLoan?.Amount ?? 0, workedPercentage);
 
                 paystubModel.SSSAmount = monthlyDeduction.SSSAmount.GetBranchPercentage(workedPercentage);
@@ -575,6 +574,7 @@ namespace AccuPay.Data.Services
 
                 paystubModel.PhilHealthAmount = monthlyDeduction.PhilHealthAmount.GetBranchPercentage(workedPercentage);
 
+                // TODO: 13th month should be computed every cutoff. 13th month needs to be calculated every cutoff.
                 paystubModel.ThirteenthMonthPay = monthlyDeduction.ThirteenthMonthPay.GetBranchPercentage(workedPercentage);
 
                 return paystubModel;

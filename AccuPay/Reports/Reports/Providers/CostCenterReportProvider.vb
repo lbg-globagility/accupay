@@ -13,6 +13,11 @@ Imports AccuPay.Utils
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
+''' <summary>
+''' This report will print all the employees from the selected branch and any employee
+''' that has at least 1 time logs on the selected branch. This report only supports daily employees
+''' as requested by the client and supporting monthly employees would require modification on the code.
+''' </summary>
 Public Class CostCenterReportProvider
     Inherits ExcelFormatReport
     Implements IReportProvider
@@ -64,21 +69,21 @@ Public Class CostCenterReportProvider
                 New ExcelReportColumn("RATE", DailyRateKey),
                 New ExcelReportColumn("HOURLY", HoulyRateKey),
                 New ExcelReportColumn("GROSS PAY", BasicPayKey),
-                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursKey),
-                New ExcelReportColumn("OT PAY", OvertimePayKey),
-                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursKey),
-                New ExcelReportColumn("ND PAY", NightDiffPayKey),
-                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey),
-                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey),
-                New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey),
-                New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey),
-                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey),
-                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayKey),
-                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursKey),
-                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey),
-                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey),
-                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey),
-                New ExcelReportColumn("ALLOWANCE", TotalAllowanceKey),
+                New ExcelReportColumn("NO. OF OT HOURS", OvertimeHoursKey, [optional]:=True),
+                New ExcelReportColumn("OT PAY", OvertimePayKey, [optional]:=True),
+                New ExcelReportColumn("NO. OF ND HOURS", NightDiffHoursKey, [optional]:=True),
+                New ExcelReportColumn("ND PAY", NightDiffPayKey, [optional]:=True),
+                New ExcelReportColumn("NO. OF NDOT HOURS", NightDiffOvertimeHoursKey, [optional]:=True),
+                New ExcelReportColumn("NDOT PAY", NightDiffOvertimePayKey, [optional]:=True),
+                New ExcelReportColumn("SP HOLIDAY HOURS", SpecialHolidayHoursKey, [optional]:=True),
+                New ExcelReportColumn("SP HOLIDAY PAY", SpecialHolidayPayKey, [optional]:=True),
+                New ExcelReportColumn("SP HOLIDAY OT HOURS", SpecialHolidayOTHoursKey, [optional]:=True),
+                New ExcelReportColumn("SP HOLIDAY OT PAY", SpecialHolidayOTPayKey, [optional]:=True),
+                New ExcelReportColumn("LEGAL HOLIDAY HOURS", RegularHolidayHoursKey, [optional]:=True),
+                New ExcelReportColumn("LH HOLIDAY PAY", RegularHolidayPayKey, [optional]:=True),
+                New ExcelReportColumn("LEGAL HOLIDAY OT HOURS", RegularHolidayOTHoursKey, [optional]:=True),
+                New ExcelReportColumn("LH HOLIDAY OT PAY", RegularHolidayOTPayKey, [optional]:=True),
+                New ExcelReportColumn("ALLOWANCE", TotalAllowanceKey, [optional]:=True),
                 New ExcelReportColumn("TOTAL GROSS PAY", GrossPayKey),
                 New ExcelReportColumn("SSS", SSSAmountKey),
                 New ExcelReportColumn("EREC", ECAmountKey),
@@ -175,11 +180,45 @@ Public Class CostCenterReportProvider
 
             Dim worksheet = excel.Workbook.Worksheets.Add("Sheet1")
 
-            RenderWorksheet(worksheet, payPeriodModels, _reportColumns, selectedBranch)
+            Dim viewableReportColumns = GetViewableReportColumns(payPeriodModels)
+
+            RenderWorksheet(worksheet, payPeriodModels, viewableReportColumns, selectedBranch)
 
             excel.Save()
         End Using
     End Sub
+
+    Private Function GetViewableReportColumns(payPeriodModels As List(Of PayPeriodModel)) As IReadOnlyCollection(Of ExcelReportColumn)
+
+        Dim viewableReportColumns As New List(Of ExcelReportColumn)
+
+        For Each column In _reportColumns
+            If column.Optional = False Then
+
+                viewableReportColumns.Add(column)
+                Continue For
+            End If
+
+            Dim totalValue As Decimal = 0
+
+            payPeriodModels.ForEach(
+                Sub(m)
+                    m.Paystubs.ForEach(
+                    Sub(p)
+                        totalValue += Convert.ToDecimal(p.LookUp(column.Source))
+                    End Sub)
+                End Sub)
+
+            If totalValue <> 0 Then
+
+                viewableReportColumns.Add(column)
+
+            End If
+
+        Next
+
+        Return viewableReportColumns
+    End Function
 
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 payPeriods As ICollection(Of PayPeriodModel),
@@ -207,11 +246,11 @@ Public Class CostCenterReportProvider
 
         For Each payPeriodModel In payPeriods
             Dim branchNameCell = worksheet.Cells(rowIndex, 1)
-            branchNameCell.Value = selectedBranch.Name.ToUpper()
+            branchNameCell.Value = GetPayPeriodDescription(payPeriodModel.PayPeriod)
             branchNameCell.Style.Font.Bold = True
             rowIndex += 1
             Dim payPeriodDateCell = worksheet.Cells(rowIndex, 1)
-            payPeriodDateCell.Value = GetPayPeriodDescription(payPeriodModel.PayPeriod)
+            payPeriodDateCell.Value = selectedBranch.Name.ToUpper()
             payPeriodDateCell.Style.Font.Bold = True
             rowIndex += 1
 
