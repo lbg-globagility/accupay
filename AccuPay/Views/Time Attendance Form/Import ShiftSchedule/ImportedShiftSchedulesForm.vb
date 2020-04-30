@@ -15,6 +15,8 @@ Public Class ImportedShiftSchedulesForm
 
 #Region "VariableDeclarations"
 
+    Private Const FormEntityName As String = "Shift Schedule"
+
     Private _dataSource As IList(Of ShiftScheduleModel)
 
     Private _dataSourceOk As IList(Of ShiftScheduleModel)
@@ -465,25 +467,26 @@ Public Class ImportedShiftSchedulesForm
             Try
                 Dim i = Await context.SaveChangesAsync
 
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                Dim importList = New List(Of Entities.UserActivityItem)
+                Dim entityName = FormEntityName.ToLower()
 
                 For Each schedule In newShiftScheduleList
-                    importList.Add(New Data.Entities.UserActivityItem() With
+                    importList.Add(New Entities.UserActivityItem() With
                         {
-                        .Description = $"Imported a new shift schedule.",
+                        .Description = $"Imported a new {entityName}.",
                         .EntityId = schedule.RowID
                         })
                 Next
                 For Each schedule In existingShiftScheduleList
-                    importList.Add(New Data.Entities.UserActivityItem() With
+                    importList.Add(New Entities.UserActivityItem() With
                         {
-                        .Description = $"Updated a shift schedule.",
+                        .Description = $"Updated a {entityName} on import.",
                         .EntityId = schedule.RowID
                         })
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Shift Schedule", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 succeed = True
             Catch ex As Exception

@@ -1,10 +1,4 @@
 ﻿Imports AccuPay.Data.Repositories
-Imports AccuPay
-Imports AccuPay.Utilities
-Imports Microsoft.EntityFrameworkCore
-Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
-Imports AccuPay.Data
 
 <TestFixture>
 Public Class EntityTest
@@ -38,17 +32,33 @@ Public Class EntityTest
 
     <Test>
     Public Sub TestEntity()
+
+        Dim date1 = New Date(2020, 5, 31)
+        Dim date2 = New Date(2020, 5, 30)
+
+        Dim date3 = date1.AddMonths(1)
+        Dim date4 = date2.AddMonths(1)
+
+        Dim repo1 As New UserActivityRepository()
+
+        Dim count1 = repo1.GetAll(2, "EMPLOYEE")
+        Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
+
         'for checking if we can access the accupay.data repository without error
         Dim repo As New PaystubRepository()
 
         Dim count = repo.List.Count
 
+        Dim repo4 As New EmployeeRepository()
+
+        Dim count4 = repo4.GetAllAsync(2)
+
         Assert.IsTrue(count > 0)
         Dim branchRepo As New BranchRepository()
 
-        Dim count1 = branchRepo.GetAll().Count
+        Dim count2 = branchRepo.GetAll().Count
 
-        Assert.IsTrue(count1 > 0)
+        Assert.IsTrue(count2 > 0)
     End Sub
 
     <Test>

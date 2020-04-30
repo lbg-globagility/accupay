@@ -8,11 +8,13 @@ Public Class AddOfficialBusinessForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository
+    Private Const FormEntityName As String = "Official Business"
+
+    Private _officialBusinessRepository As New OfficialBusinessRepository()
 
     Private _currentEmployee As Employee
 
-    Private _newOfficialBusiness As New OfficialBusiness
+    Private _newOfficialBusiness As New OfficialBusiness()
 
     Sub New(employee As Employee)
 
@@ -153,7 +155,7 @@ Public Class AddOfficialBusinessForm
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Official Business", Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

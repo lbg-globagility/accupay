@@ -354,7 +354,7 @@ Public Class OrganizationForm
             If txtfilename.Text = Nothing Then
                 SP_Organization(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                           txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text, z_datetime,
-                          z_User, z_datetime, z_User, txttinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text,
+                          z_User, z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text,
                           Val(txtvlallow.Text),
                           Val(txtslallow.Text),
                           Val(txtmlallow.Text),
@@ -392,7 +392,7 @@ Public Class OrganizationForm
 
                 SP_OrganizationWithImage(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                       txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text, z_datetime,
-                      z_User, z_datetime, z_User, txttinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData,
+                      z_User, z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData,
                           Val(txtvlallow.Text),
                           Val(txtslallow.Text),
                           Val(txtmlallow.Text),
@@ -453,7 +453,7 @@ Public Class OrganizationForm
             If txtfilename.Text = Nothing Then
                 SP_OrganizationUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                           txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text,
-                           z_datetime, z_User, txttinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
+                           z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
                           Val(txtvlallow.Text),
                           Val(txtslallow.Text),
                           Val(txtmlallow.Text),
@@ -490,7 +490,7 @@ Public Class OrganizationForm
 
                 SP_OrganizationWithImageUpdate(txtcompanyName.Text, getaddrid, Trim(contID), txtcompMainPhoneTxt.Text, txtcompFaxNumTxt.Text,
                       txtcompEmailTxt.Text, txtcompAltEmailTxt.Text, txtcompAltPhoneTxt.Text, txtcompUrl.Text,
-                       z_datetime, z_User, txttinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
+                       z_datetime, z_User, txtorgTinNumTxt.Text, txttradeName.Text, cmborganizationTypeCB.Text, ImageData, dgvCompanyList.CurrentRow.Cells(c_rowID.Index).Value,
                           Val(txtvlallow.Text),
                           Val(txtslallow.Text),
                           Val(txtmlallow.Text),

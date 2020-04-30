@@ -27,7 +27,6 @@ namespace AccuPay.Data.Repositories
         public async Task<Position> SaveAsync(Position position, int organizationId, int divisionId)
         {
             // divisionId is passed as an additional check to have a divisionId that is not null
-            position.Name = position.Name.ToTrimmedLowerCase();
             position.DivisionID = divisionId;
 
             using (PayrollContext context = new PayrollContext())

@@ -255,8 +255,47 @@ Public Class UsersForm
 
     End Sub
 
+    Private Function ValidateRequiredFields() As Boolean
+        Dim requiredControls = grpDetails.Controls.OfType(Of Control).
+            Where(Function(e) TypeOf e Is TextBox Or TypeOf e Is ComboBox).
+            Where(Function(e) Convert.ToString(e.Tag) = "Required").
+            OrderBy(Function(e) e.TabIndex).
+            ToList()
+
+        Dim somethingToWorry = False
+
+        Const warnMessage As String = "This field is required"
+
+        For Each c In requiredControls
+            Dim seemsEmpty = SetWarningIfEmpty(c, warnMessage) = False
+            somethingToWorry = seemsEmpty
+
+            If seemsEmpty Then
+                SetWarning(c, warnMessage)
+                Exit For
+            Else
+                SetWarningIfEmpty(c, String.Empty)
+            End If
+        Next
+
+        Return somethingToWorry
+    End Function
+
     Private Async Sub SaveUser_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        btnSave.Enabled = False
+        Dim enableSaveButton = Sub()
+                                   btnSave.Enabled = True
+                               End Sub
+        Dim disableSaveButton = Sub()
+                                    btnSave.Enabled = False
+                                End Sub
+
+        disableSaveButton()
+
+        Dim hasWorry = ValidateRequiredFields()
+        If hasWorry Then
+            enableSaveButton()
+            Return
+        End If
 
         Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
         Dim username = EncryptData(txtUserName.Text)
@@ -264,6 +303,7 @@ Public Class UsersForm
 
         If Not passwordConfirmed Then
             SetWarning(txtConfirmPassword, "Password does not match.")
+            enableSaveButton()
             Return
         End If
 
@@ -271,6 +311,7 @@ Public Class UsersForm
             Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
                 SetWarning(txtUserName, "User ID Already exist.")
+                enableSaveButton()
                 Return
             End If
 
@@ -297,7 +338,7 @@ Public Class UsersForm
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
         End If
 
-        btnSave.Enabled = True
+        enableSaveButton()
     End Sub
 
     Private Function GetUserBoundItem() As UserBoundItem
@@ -308,7 +349,7 @@ Public Class UsersForm
 
     Private Sub ApplyChanges(ByRef u As User)
         With u
-            .UserID = EncryptData(txtUserName.Text)
+            .Username = EncryptData(txtUserName.Text)
             .Password = EncryptData(txtPassword.Text)
             .LastName = txtLastName.Text
             .FirstName = txtFirstName.Text
@@ -342,7 +383,7 @@ Public Class UsersForm
 
     Private Sub SetWarning(textbox As Control, errorMessage As String)
 
-        MessageBoxHelper.ErrorMessage(errorMessage)
+        'MessageBoxHelper.ErrorMessage(errorMessage)
         textbox.Focus()
 
     End Sub
@@ -549,7 +590,7 @@ Public Class UsersForm
     Private Class UserBoundItem
 
         Public Sub New(u As User)
-            Dim userName As String = u.UserID
+            Dim userName As String = u.Username
             _UserID = Convert.ToString(DecryptData(userName))
 
             _PositionName = u.Position.Name

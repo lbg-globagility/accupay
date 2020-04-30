@@ -18,7 +18,8 @@ namespace AccuPay.Data.Entities
 
         public string MiddleName { get; set; }
 
-        public string UserID { get; set; }
+        [Column("UserID")]
+        public string Username { get; set; }
 
         public string Password { get; set; }
 

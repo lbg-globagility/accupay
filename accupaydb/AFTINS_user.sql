@@ -6,10 +6,15 @@
 
 DROP TRIGGER IF EXISTS `AFTINS_user`;
 
+/*
+Comment out or delete this trigger after recreating the action above in code.
+*/
 /**********TO DO******************************************************
 
 MAKE SURE THE NEWLY REGISTERED USER
 HAS ALSO THE position_view COMMON TO ACROSS ORGANIZATIONS
+
+*********************************************************************/
 
 INSERT INTO position_view
 (
@@ -57,8 +62,6 @@ DUPLICATE
 KEY
 UPDATE
     LastUpd=CURRENT_TIMESTAMP();
-*********************************************************************/
-
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

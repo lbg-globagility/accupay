@@ -496,7 +496,7 @@ namespace AccuPay.Data.Services
                 // if there is no next shift, disregard the next day overtime
                 // scenario: should be next shift is (6am-3pm), OT is (3pm-4pm)
                 // if no shift, the nextDayStartDateTime would be 3pm which would be wrong
-                earliestOvertimeNextDay = null/* TODO Change to default(_) if this is not a reference type */;
+                earliestOvertimeNextDay = null;
 
             DateTime? nextDayStartDateTime = GetStartDateTime(nextShift, earliestOvertimeNextDay);
 

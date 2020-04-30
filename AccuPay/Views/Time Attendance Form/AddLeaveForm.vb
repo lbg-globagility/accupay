@@ -9,9 +9,11 @@ Public Class AddLeaveForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _leaveRepository As New LeaveRepository
+    Private Const FormEntityName As String = "Leave"
 
-    Private _productRepository As New ProductRepository
+    Private _leaveRepository As New LeaveRepository()
+
+    Private _productRepository As New ProductRepository()
 
     Private _currentEmployee As Employee
 
@@ -187,7 +189,7 @@ Public Class AddLeaveForm
                 Await _leaveRepository.SaveAsync(Me._newLeave)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Leave", Me._newLeave.RowID.Value, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

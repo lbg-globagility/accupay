@@ -11,6 +11,8 @@ Imports PayrollSys
 
 Public Class ImportSalaryForm
 
+    Private Const FormEntityName As String = "Salary"
+
     Private _salaries As IList(Of Salary)
 
     Public Property IsSaved As Boolean
@@ -189,17 +191,17 @@ Public Class ImportSalaryForm
 
                 Await context.SaveChangesAsync()
 
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                Dim importList = New List(Of Entities.UserActivityItem)
                 For Each item In _salaries
-                    importList.Add(New Data.Entities.UserActivityItem() With
+                    importList.Add(New Entities.UserActivityItem() With
                         {
-                        .Description = $"Imported a new salary.",
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(item.RowID)
                         })
                 Next
 
                 Dim repo = New Repositories.UserActivityRepository
-                repo.CreateRecord(z_User, "Salary", z_OrganizationID, Repositories.UserActivityRepository.RecordTypeImport, importList)
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, Repositories.UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

@@ -1,5 +1,5 @@
 ﻿Imports AccuPay.Data.Enums
-﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
@@ -9,9 +9,7 @@ Public Class TimeAttendForm
 
     Public listTimeAttendForm As New List(Of String)
 
-    Private sys_ownr As New SystemOwnerService
-
-    Private lRepo As Data.Repositories.ListOfValueRepository
+    Private lRepo As ListOfValueRepository
 
     Private _userRepository As UserRepository
 

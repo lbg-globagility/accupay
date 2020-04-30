@@ -20,10 +20,5 @@ namespace AccuPay.Data.Services
 
             return null;
         }
-
-        public IList<IPayrate> LegalHolidays()
-        {
-            return _payrates.Where(p => p.Value.IsRegularHoliday).Select(p => p.Value).ToList();
-        }
     }
 }

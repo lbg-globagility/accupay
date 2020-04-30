@@ -363,7 +363,7 @@ namespace AccuPay.Data.Repositories
 
         public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            using (var context = new PayrollContext())
             {
                 return CreateBaseQueryByTimePeriod(organizationId, timePeriod, context).
                                 Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase()).

@@ -23,6 +23,8 @@ Public Class TimeLogsForm2
 
     Private Const SUNDAY_SHORT_NAME As String = "Sun"
 
+    Private Const FormEntityName As String = "Time Log"
+
     Private currRowIndex As Integer = -1
     Private currColIndex As Integer = -1
 
@@ -314,13 +316,13 @@ Public Class TimeLogsForm2
             For Each log In timeLogs
                 importList.Add(New Entities.UserActivityItem() With
                     {
-                    .Description = $"Imported a new time log.",
+                    .Description = $"Imported a new {FormEntityName.ToLower()}.",
                     .EntityId = CInt(log.RowID)
                     })
             Next
 
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Time Log", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
         Catch ex As Exception
 
             logger.Error("NewTimeEntryAlternateLineImport", ex)
@@ -1290,7 +1292,8 @@ Public Class TimeLogsForm2
                     Next
 
                     excelPackage.Save()
-                    MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
+                    Process.Start(fileName)
+                    'MsgBox("Time entry logs has been exported.", MsgBoxStyle.OkOnly, "Exported time entry logs")
                 End Using
             End If
         Catch ex As IOException

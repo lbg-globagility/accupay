@@ -8,6 +8,8 @@ Imports Globagility.AccuPay
 
 Public Class ImportOvertimeForm
 
+    Private Const FormEntityName As String = "Overtime"
+
     Private _overtimes As List(Of Overtime)
 
     Private _employeeRepository As New EmployeeRepository
@@ -189,13 +191,13 @@ Public Class ImportOvertimeForm
                 For Each overtime In _overtimes
                     importlist.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new Overtime.",
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(overtime.RowID)
                         })
                 Next
 
                 Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

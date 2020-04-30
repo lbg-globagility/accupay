@@ -10,13 +10,15 @@ Public Class AddBonusForm
 
     Public Property showBalloon As Boolean
 
+    Private Const FormEntityName As String = "Bonus"
+
     Private _products As IEnumerable(Of Product)
 
     Private _frequencies As New List(Of String)
 
     Private _employee As Employee
 
-    Private _newBonus As New Bonus
+    Private _newBonus As New Bonus()
 
     Public Sub New(employee As Employee)
         InitializeComponent()
@@ -112,7 +114,7 @@ Public Class AddBonusForm
             Await bonusRepo.CreateAsync(_newBonus)
 
             Dim userActivityRepo = New UserActivityRepository
-            userActivityRepo.RecordAdd(z_User, "Bonus", CInt(_newBonus.RowID), z_OrganizationID)
+            userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
             succeed = True
         End Function)
 

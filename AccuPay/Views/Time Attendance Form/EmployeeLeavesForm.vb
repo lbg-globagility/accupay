@@ -9,6 +9,8 @@ Imports AccuPay.Utils
 
 Public Class EmployeeLeavesForm
 
+    Private Const FormEntityName As String = "Leave"
+
     Private _employees As New List(Of Employee)
 
     Private _allEmployees As New List(Of Employee)
@@ -52,7 +54,7 @@ Public Class EmployeeLeavesForm
 
     Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-        InfoBalloon(, , FormTitleLabel, , , 1)
+        myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
@@ -317,66 +319,68 @@ Public Class EmployeeLeavesForm
 
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If newLeave.StartDate <> oldLeave.StartDate Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldLeave.RowID.Value,
-                        .Description = $"Update leave start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'"
+                        .Description = $"Updated {entityName} start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'."
                         })
         End If
         If newLeave.EndDate <> oldLeave.EndDate Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'"
+                       .Description = $"Updated {entityName} end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'."
                        })
         End If
         If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'"
+                       .Description = $"Updated {entityName} start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'."
                        })
         End If
         If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'"
+                       .Description = $"Updated {entityName} end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'."
                        })
         End If
         If newLeave.Reason <> oldLeave.Reason Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave reason from '{oldLeave.Reason}' to '{newLeave.Reason}'"
+                       .Description = $"Updated {entityName} reason from '{oldLeave.Reason}' to '{newLeave.Reason}'."
                        })
         End If
         If newLeave.Comments <> oldLeave.Comments Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave comments from '{oldLeave.Comments}' to '{newLeave.Comments}'"
+                       .Description = $"Updated {entityName} comments from '{oldLeave.Comments}' to '{newLeave.Comments}'."
                        })
         End If
         If newLeave.LeaveType <> oldLeave.LeaveType Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'"
+                       .Description = $"Updated {entityName} type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'."
                        })
         End If
         If newLeave.Status <> oldLeave.Status Then
             changes.Add(New UserActivityItem() With
                        {
                        .EntityId = oldLeave.RowID.Value,
-                       .Description = $"Update leave status from '{oldLeave.Status}' to '{newLeave.Status}'"
+                       .Description = $"Updated {entityName} status from '{oldLeave.Status}' to '{newLeave.Status}'."
                        })
         End If
 
         If changes.Count > 0 Then
             Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Leave", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 
@@ -390,7 +394,7 @@ Public Class EmployeeLeavesForm
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
 
                                                 Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID.Value, z_OrganizationID)
+                                                repo.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 
@@ -604,7 +608,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Leave")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
