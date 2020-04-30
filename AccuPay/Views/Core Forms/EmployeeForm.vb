@@ -2056,7 +2056,6 @@ Public Class EmployeeForm
             tsbtnNewEmp.Enabled = 1
         End If
 
-        is_NewEducBG = 0 'Educational Background
         IsNewDiscip = 0 'Disciplinary Action
         IsNewPrevEmp = 0 'Previous Employer
         IsNewPromot = 0 'Promotion
@@ -2319,17 +2318,17 @@ Public Class EmployeeForm
                     AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
 
                 ElseIf selectedTab Is tbpAwards Then
-
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await AwardTab.SetEmployee(employee)
-                ElseIf selectedTab Is tbpCertifications Then
 
+                ElseIf selectedTab Is tbpCertifications Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await CertificationTab.SetEmployee(employee)
+
                 ElseIf selectedTab Is tbpDiscipAct Then
                     controlclear()
                     controlfalseDiscipAct()
@@ -2340,13 +2339,11 @@ Public Class EmployeeForm
                     pbEmpPicDiscip.Image = Nothing
                     pbEmpPicDiscip.Image = EmployeeImage
                 ElseIf selectedTab Is tbpEducBG Then
-                    fillselectRowID()
-                    fillselecteducback()
-                    txtFNameEduc.Text = employeefullname
-                    txtEmpIDEduc.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    pbEmpPicEduc.Image = Nothing
-                    pbEmpPicEduc.Image = EmployeeImage
+                    Await EducationalBackgroundTab.SetEmployee(employee)
+
                 ElseIf selectedTab Is tbpPrevEmp Then
                     txtFNamePrevEmp.Text = employeefullname
                     txtEmpIDPrevEmp.Text = subdetails
@@ -2381,11 +2378,11 @@ Public Class EmployeeForm
                     Label142.Text = "Current salary"
 
                 ElseIf selectedTab Is tbpBonus Then 'Bonus
-
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await BonusTab.SetEmployee(employee)
+
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     txtFNameAtta.Text = employeefullname
                     txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
@@ -2440,13 +2437,6 @@ Public Class EmployeeForm
                     txtEmpIDDiscip.Text = ""
                     txtFNameDiscip.Text = ""
                     pbEmpPicDiscip.Image = Nothing
-
-                Case GetEducationalBackgroundTabPageIndex() 'Educational Background
-                    dgvEducback.Rows.Clear()
-                    fillselecteducback()
-                    txtEmpIDEduc.Text = ""
-                    txtFNameEduc.Text = ""
-                    pbEmpPicEduc.Image = Nothing
 
                 Case GetPreviousEmployerTabPageIndex() 'Previous Employer
                     cleartextboxPrevEmp()
@@ -4792,236 +4782,13 @@ Public Class EmployeeForm
 
 #Region "Educational Background"
 
-    Dim is_New As Integer = 0
-    Dim view_IDEduc As Integer
-
     Sub tbpEducBG_Enter(sender As Object, e As EventArgs) Handles tbpEducBG.Enter
         UpdateTabPageText()
 
         tbpEducBG.Text = "EDUCATIONAL BACKGROUND               "
-
         Label25.Text = "EDUCATIONAL BACKGROUND"
-        Static once As SByte = 0
-        If once = 0 Then
-            once = 1
-            cmbEducType.Text = "College"
-
-            DateTimePicker2.Value = Format(CDate(dbnow), machineShortDateFormat)
-            DateTimePicker1.Value = Format(CDate(dbnow), machineShortDateFormat)
-
-            view_IDEduc = VIEW_privilege("Employee Educational Background", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDEduc)
-
-            If formuserprivilege.Count = 0 Then
-
-                btnNewEduc.Visible = 0
-                btnSaveEduc.Visible = 0
-                btnDeleteEduc.Visible = 0
-
-                dontUpdateEduc = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-                        btnNewEduc.Visible = 0
-                        btnSaveEduc.Visible = 0
-                        btnDeleteEduc.Visible = 0
-
-                        dontUpdateEduc = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            btnNewEduc.Visible = 0
-                        Else
-                            btnNewEduc.Visible = 1
-                        End If
-
-                        If drow("Deleting").ToString = "N" Then
-                            btnDeleteEduc.Visible = 0
-                        Else
-                            btnDeleteEduc.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateEduc = 1
-                        Else
-                            dontUpdateEduc = 0
-                        End If
-                    End If
-                Next
-            End If
-        End If
-
-        tabIndx = GetEducationalBackgroundTabPageIndex()
 
         dgvEmp_SelectionChanged(sender, e)
-    End Sub
-
-    Private Sub TabPage9_Leave(sender As Object, e As EventArgs) 'Handles tbpEducBG.Leave
-        tbpEducBG.Text = "EDUC"
-    End Sub
-
-    Private Sub filleducback()
-        If dgvEmp.Rows.Count = 0 Then
-        Else
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
-                                    "where ee.OrganizationID = '" & z_OrganizationID & "' and ee.EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "'")
-
-            dgvEducback.Rows.Clear()
-            For Each drow As DataRow In dt.Rows
-                Dim n As Integer = dgvEducback.Rows.Add()
-                With drow
-                    dgvEducback.Rows.Item(n).Cells(c_EmplyeeID.Index).Value = .Item("EmployeeID").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_name.Index).Value = .Item("Name").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_school.Index).Value = .Item("School").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_degree.Index).Value = .Item("Degree").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_course.Index).Value = .Item("Course").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_minor.Index).Value = .Item("Minor").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_EducationalType.Index).Value = .Item("EducationType").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_datefrom.Index).Value = CDate(.Item("DateFrom")).ToString(machineShortDateFormat)
-                    dgvEducback.Rows.Item(n).Cells(c_dateto.Index).Value = CDate(.Item("DateTo")).ToString(machineShortDateFormat)
-                    dgvEducback.Rows.Item(n).Cells(c_Remarks.Index).Value = .Item("Remarks").ToString
-                    dgvEducback.Rows.Item(n).Cells(c_RowID1.Index).Value = .Item("RowID").ToString
-                End With
-            Next
-        End If
-    End Sub
-
-    Private Sub cleartextbox()
-        txtCourse.Clear()
-        txtDegree.Clear()
-        cmbEducType.SelectedIndex = -1
-
-        txtMinor.Clear()
-
-        txtRemarks.Clear()
-        txtSchool.Clear()
-
-    End Sub
-
-    Dim is_NewEducBG As SByte = 1
-
-    Private Sub btnNewEduc_Click(sender As Object, e As EventArgs) Handles btnNewEduc.Click
-        btnNewEduc.Enabled = False
-        cleartextbox()
-        btnDelete.Enabled = False
-        dgvEducback.Enabled = False
-
-        is_NewEducBG = 1
-        cmbEducType.Focus()
-    End Sub
-
-    Dim dontUpdateEduc As SByte = 0
-
-    Private Sub btnSaveEduc_Click(sender As Object, e As EventArgs) Handles btnSaveEduc.Click
-        If dgvEmp.RowCount <> 0 Then
-
-            If is_NewEducBG = 1 Then
-            Else
-
-            End If
-            If btnNewEduc.Enabled = False Then
-
-                SP_EducBackGround(z_datetime, z_User, z_datetime, z_User, z_OrganizationID, dgvEmp.CurrentRow.Cells("RowID").Value,
-                                  dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat),
-                                  txtCourse.Text, txtSchool.Text, txtDegree.Text, txtMinor.Text, cmbEducType.Text, txtRemarks.Text)
-
-                myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
-                filleducback()
-
-                is_NewEducBG = 0
-                btnNewEduc.Enabled = True
-                dgvEducback.Enabled = True
-            Else
-                If dontUpdateEduc = 1 Then
-                    Exit Sub
-                End If
-                If dgvEducback.RowCount <> 0 Then
-                    SP_employeeeducationUpdate(dtpFrom.Value.ToString(machineShortDateFormat), dtpTo.Value.ToString(machineShortDateFormat),
-                                  txtCourse.Text, txtSchool.Text, txtDegree.Text, txtMinor.Text, cmbEducType.Text, txtRemarks.Text,
-                                  dgvEducback.CurrentRow.Cells(c_RowID1.Index).Value)
-
-                    myBalloon("Successfully Save", "Saved", lblforballoon, , -100)
-                    filleducback()
-                End If
-
-                btnNewEduc.Enabled = True
-                dgvEducback.Enabled = True
-                is_NewEducBG = 0
-            End If
-
-            is_NewEducBG = 0
-            fillselectRowID()
-            'fillselecteducback()
-        End If
-    End Sub
-
-    Private Sub btnCancelEduc_Click(sender As Object, e As EventArgs) Handles btnCancelEduc.Click
-        btnNewEduc.Enabled = True
-        dgvEducback.Enabled = True
-        is_NewEducBG = 0
-    End Sub
-
-    Private Sub dgvEducback_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvEducback.CellClick
-        btnSaveEduc.Enabled = True
-        btnDeleteEduc.Enabled = True
-        fillselecteducback()
-    End Sub
-
-    Private Sub fillselectRowID()
-
-        Dim dt As New DataTable
-        dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
-                                "where ee.OrganizationID = '" & z_OrganizationID & "' And ee.RowID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "'")
-
-        dgvEducback.Rows.Clear()
-        For Each drow As DataRow In dt.Rows
-            Dim n As Integer = dgvEducback.Rows.Add()
-            With drow
-                dgvEducback.Rows.Item(n).Cells(c_EmplyeeID.Index).Value = .Item("EmployeeID").ToString
-                dgvEducback.Rows.Item(n).Cells(c_name.Index).Value = .Item("Name").ToString
-                dgvEducback.Rows.Item(n).Cells(c_school.Index).Value = .Item("School").ToString
-                dgvEducback.Rows.Item(n).Cells(c_degree.Index).Value = .Item("Degree").ToString
-                dgvEducback.Rows.Item(n).Cells(c_course.Index).Value = .Item("Course").ToString
-                dgvEducback.Rows.Item(n).Cells(c_minor.Index).Value = .Item("Minor").ToString
-                dgvEducback.Rows.Item(n).Cells(c_EducationalType.Index).Value = .Item("EducationType").ToString
-                dgvEducback.Rows.Item(n).Cells(DataGridViewTextBoxColumn108.Index).Value = CDate(.Item("DateFrom")).ToString(machineShortDateFormat)
-                dgvEducback.Rows.Item(n).Cells(DataGridViewTextBoxColumn109.Index).Value = CDate(.Item("DateTo")).ToString(machineShortDateFormat)
-                dgvEducback.Rows.Item(n).Cells(c_Remarks.Index).Value = .Item("Remarks").ToString
-                dgvEducback.Rows.Item(n).Cells(c_RowID1.Index).Value = .Item("RowID").ToString
-            End With
-        Next
-    End Sub
-
-    Private Sub fillselecteducback()
-        If dgvEducback.Rows.Count = 0 Then
-            cleartextbox()
-        Else
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select * from employeeeducation ed inner join employee ee on ed.EmployeeID = ee.RowID " &
-                                    "where ee.OrganizationID = '" & z_OrganizationID & "' And ed.RowID = '" & dgvEducback.CurrentRow.Cells(c_RowID1.Index).Value & "'")
-            cleartextbox()
-            For Each drow As DataRow In dt.Rows
-                With drow
-
-                    txtSchool.Text = .Item("School").ToString
-                    txtDegree.Text = .Item("Degree").ToString
-                    txtCourse.Text = .Item("Course").ToString
-                    txtMinor.Text = .Item("Minor").ToString
-                    cmbEducType.Text = .Item("EducationType").ToString
-                    dtpFrom.Value = CDate(.Item("DateFrom")).ToString(machineShortDateFormat)
-                    dtpTo.Value = CDate(.Item("DateTo")).ToString(machineShortDateFormat)
-                    txtRemarks.Text = .Item("Remarks").ToString
-
-                End With
-            Next
-        End If
-    End Sub
-
-    Private Sub cmbEducType_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cmbEducType.SelectedIndexChanged
-        lblSchool.Text = cmbEducType.Text
     End Sub
 
 #End Region 'Educational Background

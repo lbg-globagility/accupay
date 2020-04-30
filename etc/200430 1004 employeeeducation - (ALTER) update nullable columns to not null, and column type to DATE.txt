@@ -1,0 +1,7 @@
+ALTER TABLE `employeeeducation`
+	ALTER `DateFrom` DROP DEFAULT,
+	ALTER `DateTo` DROP DEFAULT;
+ALTER TABLE `employeeeducation`
+	CHANGE COLUMN `DateFrom` `DateFrom` DATE NOT NULL AFTER `Name`,
+	CHANGE COLUMN `DateTo` `DateTo` DATE NOT NULL AFTER `EmployeeID`,
+	CHANGE COLUMN `Created` `Created` DATETIME NOT NULL DEFAULT current_timestamp() AFTER `Remarks`;

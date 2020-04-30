@@ -524,6 +524,12 @@
     <Compile Include="Views\Core Forms\Employee\AddAwardForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.Designer.vb">
+      <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
     </Compile>
@@ -552,6 +558,12 @@
       <DependentUpon>CertificationTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\CertificationTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\EducationalBackgroundTab.Designer.vb">
+      <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\EducationalBackgroundTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
@@ -1998,6 +2010,9 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.resx">
+      <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
     </EmbeddedResource>
@@ -2012,6 +2027,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\CertificationTab.resx">
       <DependentUpon>CertificationTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\EducationalBackgroundTab.resx">
+      <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
@@ -2124,6 +2142,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\BonusTab.resx">
       <DependentUpon>BonusTab.vb</DependentUpon>

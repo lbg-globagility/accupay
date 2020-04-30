@@ -286,10 +286,6 @@ Public Class CertificationTab
                 (_currentCertification.ExpirationDate.Value <> dtpExpirationDate.Value)) OrElse             'then check if changed.
             _currentCertification.Comments <> txtComments.Text Then
             Return True
-            'ElseIf (_currentCertification.ExpirationDate.HasValue AndAlso dtpExpirationDate.Checked) And
-            '    (_currentCertification.ExpirationDate.Value <> dtpExpirationDate.Value) Then
-
-
         End If
         Return False
     End Function
