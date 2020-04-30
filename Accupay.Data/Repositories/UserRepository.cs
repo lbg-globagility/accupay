@@ -140,6 +140,17 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<User> GetByUsernameWithPositionAsync(string username)
+        {
+            using (var builder = new UserBuilder())
+            {
+                return await builder.
+                    IncludePosition().
+                    ByUsername(username).
+                    FirstOrDefaultAsync();
+            }
+        }
+
         #endregion By User
 
         #region CRUD
