@@ -43,7 +43,7 @@ Public Class PaystubView
         dgvPaystubs.DataSource = paystubModels
     End Sub
 
-    Public Sub ShowSalary(employee As Employee, salary As Salary, isActual As Boolean)
+    Public Sub ShowSalary(employee As Employee, salary As Data.Entities.Salary, isActual As Boolean)
         If salary Is Nothing Then
             Return
         End If

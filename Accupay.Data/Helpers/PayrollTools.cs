@@ -30,8 +30,8 @@ namespace AccuPay.Data.Helpers
 
         private const int PotentialLastWorkDay = 7;
 
-        public static decimal GetEmployeeMonthlyRate(IEmployee employee,
-                                                    ISalary salary,
+        public static decimal GetEmployeeMonthlyRate(Employee employee,
+                                                    Salary salary,
                                                     bool isActual = false)
         {
             var basicSalary = isActual ? salary.BasicSalary + salary.AllowanceSalary : salary.BasicSalary;
@@ -54,7 +54,7 @@ namespace AccuPay.Data.Helpers
             return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear);
         }
 
-        public static decimal GetDailyRate(ISalary salary, IEmployee employee, bool isActual = false)
+        public static decimal GetDailyRate(Salary salary, Employee employee, bool isActual = false)
         {
             var dailyRate = 0M;
 
@@ -86,8 +86,8 @@ namespace AccuPay.Data.Helpers
             return dailyRate / WorkHoursPerDay;
         }
 
-        public static decimal GetHourlyRateByDailyRate(ISalary salary,
-                                                        IEmployee employee,
+        public static decimal GetHourlyRateByDailyRate(Salary salary,
+                                                        Employee employee,
                                                         bool isActual = false)
         {
             return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay;

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employeesalary")]
-    public class Salary : ISalary
+    public class Salary
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

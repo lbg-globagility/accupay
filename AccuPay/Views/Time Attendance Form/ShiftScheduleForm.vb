@@ -500,7 +500,7 @@ Public Class ShiftScheduleForm
 
         End Sub
 
-        Public Sub New(employee As IEmployee)
+        Public Sub New(employee As Employee)
             AssignEmployee(employee)
 
         End Sub
@@ -540,7 +540,7 @@ Public Class ShiftScheduleForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As IEmployee)
+        Private Sub AssignEmployee(employee As Employee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)

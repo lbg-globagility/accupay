@@ -15,8 +15,6 @@ Public Class PayrollContext
     Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
-    Public Overridable Property Salaries As DbSet(Of Salary)
-
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
     Public Overridable Property PayPeriods As DbSet(Of PayPeriod)

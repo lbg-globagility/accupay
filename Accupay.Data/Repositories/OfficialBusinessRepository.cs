@@ -25,11 +25,11 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task SaveManyAsync(List<OfficialBusiness> currentOfficialBusinesses)
+        public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                foreach (var officialBusiness in currentOfficialBusinesses)
+                foreach (var officialBusiness in officialBusinesses)
                 {
                     await this.SaveWithContextAsync(officialBusiness, context);
 

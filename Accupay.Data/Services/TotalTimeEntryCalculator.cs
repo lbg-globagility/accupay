@@ -9,16 +9,16 @@ namespace AccuPay.Data.Services
     public class TotalTimeEntryCalculator
     {
         public static TotalTimeEntryCalculator Calculate(IEnumerable<TimeEntry> timeEntries,
-                                                        ISalary salary,
-                                                        IEmployee employee,
+                                                        Salary salary,
+                                                        Employee employee,
                                                         IEnumerable<ActualTimeEntry> actualtimeentries)
         {
             return new TotalTimeEntryCalculator(timeEntries, salary, employee, actualtimeentries);
         }
 
         private TotalTimeEntryCalculator(IEnumerable<TimeEntry> timeEntries,
-                                        ISalary salary,
-                                        IEmployee employee,
+                                        Salary salary,
+                                        Employee employee,
                                         IEnumerable<ActualTimeEntry> actualtimeentries)
         {
             HourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee);

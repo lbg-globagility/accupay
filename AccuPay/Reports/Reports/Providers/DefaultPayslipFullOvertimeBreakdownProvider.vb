@@ -1,5 +1,6 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports CrystalDecisions.CrystalReports.Engine
@@ -11,6 +12,12 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Public Property Name As String = "Payslip" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
+
+    Private _salaryRepository As SalaryRepository
+
+    Sub New()
+        _salaryRepository = New SalaryRepository()
+    End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
 
@@ -77,11 +84,9 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
                                         Where(Function(a) a.Paystub.PayPeriodID = payPeriod.RowID.Value).
                                         ToListAsync
 
-            Dim employeeSalaries = Await context.Salaries.
-                                        Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                                        Where(Function(s) s.EffectiveFrom <= payPeriod.PayToDate).
-                                        Where(Function(s) payPeriod.PayFromDate <= If(s.EffectiveTo, payPeriod.PayFromDate)).
-                                        ToListAsync
+            Dim employeeSalaries = (Await _salaryRepository.
+                                        GetByCutOffAsync(z_OrganizationID, payPeriod.PayFromDate)).
+                                        ToList()
 
             Dim ecolas = Await context.AllowanceItems.
                                         Include(Function(p) p.Allowance).

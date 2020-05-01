@@ -23,6 +23,9 @@ Public Class PaystubPresenter
 
     Public Sub New(view As PaystubView)
         _view = view
+
+        _paystubActualRepository = New PaystubActualRepository()
+
     End Sub
 
     Private Async Sub OnInit() Handles _view.Init
@@ -61,7 +64,7 @@ Public Class PaystubPresenter
     Private Async Sub OnPaystubSelected(paystub As Paystub) Handles _view.SelectPaystub
         _currentPaystub = paystub
 
-        Dim salary As Salary = Nothing
+        Dim salary As Data.Entities.Salary = Nothing
         Dim paystubActual As Data.Entities.PaystubActual = Nothing
         Dim adjustments As ICollection(Of Adjustment) = Nothing
         Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
@@ -117,13 +120,20 @@ Public Class PaystubPresenter
     Private Class Repository
         Inherits DbRepository
 
-        Public Async Function GetSalary(paystub As Paystub) As Task(Of Salary)
-            Dim query = _context.Salaries.
-                Where(Function(s) Nullable.Equals(s.EmployeeID, paystub.EmployeeID)).
-                Where(Function(s) s.EffectiveFrom <= paystub.PayFromdate).
-                Where(Function(s) paystub.PayFromdate <= If(s.EffectiveTo, paystub.PayFromdate))
+        Private _employeeRepository As EmployeeRepository
 
-            Return Await query.FirstOrDefaultAsync()
+        Sub New()
+            _employeeRepository = New EmployeeRepository()
+        End Sub
+
+        Public Async Function GetSalary(paystub As Paystub) As Task(Of Data.Entities.Salary)
+
+            If paystub.EmployeeID.HasValue = False Then
+                Return Nothing
+            End If
+
+            Return Await _employeeRepository.GetCurrentSalaryAsync(paystub.EmployeeID.Value,
+                                                                   paystub.PayFromdate)
         End Function
 
         Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of TimeEntry))

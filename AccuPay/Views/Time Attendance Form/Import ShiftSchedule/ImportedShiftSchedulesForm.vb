@@ -29,7 +29,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
-    Private _employees As IList(Of IEmployee)
+    Private _employees As IList(Of Employee)
 
     Public IsSaved As Boolean
 
@@ -59,9 +59,9 @@ Public Class ImportedShiftSchedulesForm
                                                     Select(Function(s) s.EmployeeNo).
                                                     ToArray
 
-        _employees = New List(Of IEmployee)((Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
+        _employees = (Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
                                                 employeeNumberList,
-                                                z_OrganizationID)))
+                                                z_OrganizationID)).ToList()
 
         For Each shiftSched In _shiftScheduleRowRecords
 
@@ -122,7 +122,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord,
                                                dates As IEnumerable(Of Date),
-                                               employee As IEmployee)
+                                               employee As Employee)
         For Each d In dates
             _dataSource.Add(New ShiftScheduleModel(employee) With {
                         .DateValue = d,
@@ -177,7 +177,7 @@ Public Class ImportedShiftSchedulesForm
 
         End Sub
 
-        Public Sub New(employee As IEmployee)
+        Public Sub New(employee As Employee)
             AssignEmployee(employee)
 
         End Sub
@@ -211,7 +211,7 @@ Public Class ImportedShiftSchedulesForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As IEmployee)
+        Private Sub AssignEmployee(employee As Employee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)

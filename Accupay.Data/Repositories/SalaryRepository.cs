@@ -23,6 +23,19 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task SaveManyAsync(List<Salary> salaries)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                foreach (var salary in salaries)
+                {
+                    await SaveWithContextAsync(salary, context);
+
+                    await context.SaveChangesAsync();
+                }
+            }
+        }
+
         public async Task SaveAsync(Salary salary)
         {
             await SaveWithContextAsync(salary);

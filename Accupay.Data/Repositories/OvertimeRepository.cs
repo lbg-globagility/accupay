@@ -26,11 +26,11 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task SaveManyAsync(List<Overtime> currentOvertimes)
+        public async Task SaveManyAsync(List<Overtime> overtimes)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                foreach (var overtime in currentOvertimes)
+                foreach (var overtime in overtimes)
                 {
                     await SaveWithContextAsync(overtime, context);
 
