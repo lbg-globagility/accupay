@@ -60,13 +60,13 @@ Public Class LeaveLedgerReportModel
 
     Public ReadOnly Property BeginningBalanceInDays As Decimal
         Get
-            Return BeginningBalance / PayrollTools.WorkHoursPerDay
+            Return BeginningBalance / Data.Helpers.PayrollTools.WorkHoursPerDay
         End Get
     End Property
 
     Public ReadOnly Property AvailedLeaveInDays As Decimal
         Get
-            Return AvailedLeave / PayrollTools.WorkHoursPerDay
+            Return AvailedLeave / Data.Helpers.PayrollTools.WorkHoursPerDay
         End Get
     End Property
 

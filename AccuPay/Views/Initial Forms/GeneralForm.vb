@@ -7,9 +7,24 @@ Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwnerService()
+    Dim sys_ownr As SystemOwnerService
+
+    Private _policyHelper As PolicyHelper
 
     Private _userRepository As UserRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _policyHelper = New PolicyHelper()
+
+        sys_ownr = New SystemOwnerService()
+
+        _userRepository = New UserRepository()
+    End Sub
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -19,7 +34,7 @@ Public Class GeneralForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -97,7 +112,6 @@ Public Class GeneralForm
     End Sub
 
     Private Async Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _userRepository = New UserRepository()
 
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
@@ -105,10 +119,7 @@ Public Class GeneralForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
-
-        If settings.GetEnum("Pay rate.CalculationBasis",
-                   PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
+        If _policyHelper.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
 
             CalendarsToolStripMenuItem.Visible = True
             PayRateToolStripMenuItem.Visible = False
@@ -119,11 +130,11 @@ Public Class GeneralForm
 
         End If
 
-        If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
+        If _policyHelper.ShowBranch = False Then
             BranchToolStripMenuItem.Visible = False
         End If
 
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        If _policyHelper.UseUserLevel = False Then
             Return
         Else
             UserPrivilegeToolStripMenuItem.Visible = False

@@ -33,7 +33,7 @@ Public Class DailyAllowanceCalculator
                 Continue For
             End If
 
-            Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+            Dim hourlyRate = Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
             Dim allowanceAmount = 0D
             Dim payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID)
@@ -71,7 +71,7 @@ Public Class DailyAllowanceCalculator
                     Dim basicHolidayPay As Decimal
 
                     If _settings.GetString("AllowancePolicy.CalculationType") = "Hourly" Then
-                        Dim workHours = If(timeEntry.HasShift, timeEntry.WorkHours, PayrollTools.WorkHoursPerDay)
+                        Dim workHours = If(timeEntry.HasShift, timeEntry.WorkHours, Data.Helpers.PayrollTools.WorkHoursPerDay)
 
                         basicHolidayPay = {workHours * hourlyRate, dailyRate}.Max()
                     Else

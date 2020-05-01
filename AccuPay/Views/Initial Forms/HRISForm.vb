@@ -7,11 +7,13 @@ Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwnerService()
-
     Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
 
     Private if_sysowner_is_benchmark As Boolean
+
+    Private _policyHelper As PolicyHelper
+
+    Dim sys_ownr As SystemOwnerService
 
     Private _userRepository As UserRepository
 
@@ -21,7 +23,12 @@ Public Class HRISForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+
+        sys_ownr = New SystemOwnerService()
+
         if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
+        _policyHelper = New PolicyHelper()
 
         _userRepository = New UserRepository()
 
@@ -58,7 +65,7 @@ Public Class HRISForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -294,13 +301,7 @@ Public Class HRISForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-
-            Return
-
-        End If
+        If _policyHelper.UseUserLevel = False Then Return
 
         If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 

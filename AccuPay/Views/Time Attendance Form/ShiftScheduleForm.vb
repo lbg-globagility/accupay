@@ -931,7 +931,8 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
-        Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

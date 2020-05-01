@@ -9,7 +9,6 @@ Imports AccuPay.Payroll
 Imports AccuPay.Utilities
 Imports log4net
 Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
 
 Public Class PayrollGeneration
 

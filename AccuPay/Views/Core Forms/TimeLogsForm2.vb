@@ -776,7 +776,8 @@ Public Class TimeLogsForm2
 
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
-        Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

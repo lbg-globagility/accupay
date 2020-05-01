@@ -85,7 +85,7 @@ Public Class ImportSalaryForm
                 End If
 
                 If record.EffectiveFrom IsNot Nothing AndAlso
-                    record.EffectiveFrom.Value < PayrollTools.MinimumMicrosoftDate Then
+                    record.EffectiveFrom.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
                     record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
                     rejectedRecords.Add(record)
                     Continue For

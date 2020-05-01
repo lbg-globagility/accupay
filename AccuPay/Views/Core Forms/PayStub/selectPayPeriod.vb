@@ -24,7 +24,8 @@ Public Class selectPayPeriod
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         Dim payfrqncy As New AutoCompleteStringCollection
 

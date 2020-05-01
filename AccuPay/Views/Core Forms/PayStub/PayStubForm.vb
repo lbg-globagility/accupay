@@ -1991,7 +1991,8 @@ Public Class PayStubForm
 
         Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
 
-        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+        Dim nextPayPeriod = Data.Helpers.PayrollTools.
+                                GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
 
         Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
 

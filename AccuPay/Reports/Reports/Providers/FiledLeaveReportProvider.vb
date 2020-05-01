@@ -112,7 +112,7 @@ Public Class FiledLeaveReportProvider
                 newRow("DatCol12") = transaction.TransactionDate.ToString("MM/dd/yyyy")
                 newRow("DatCol13") = transaction.LeaveLedger.Product.PartNo
                 newRow("DatCol14") = transaction.Amount
-                newRow("DatCol15") = transaction.Amount / PayrollTools.WorkHoursPerDay
+                newRow("DatCol15") = transaction.Amount / Data.Helpers.PayrollTools.WorkHoursPerDay
                 newRow("DatCol16") = transaction.Leave?.Reason
 
                 datatable.Rows.Add(newRow)

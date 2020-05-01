@@ -11,7 +11,23 @@ Public Class TimeAttendForm
 
     Private lRepo As ListOfValueRepository
 
+    Private _policyHelper As PolicyHelper
+
     Private _userRepository As UserRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        lRepo = New ListOfValueRepository()
+
+        _policyHelper = New PolicyHelper()
+
+        _userRepository = New UserRepository()
+
+    End Sub
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -21,7 +37,7 @@ Public Class TimeAttendForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -104,8 +120,6 @@ Public Class TimeAttendForm
     End Sub
 
     Private Sub TimeAttendForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _userRepository = New UserRepository()
-
         Dim checker = FeatureListChecker.Instance
         MassOvertimeToolStripMenuItem.Visible = checker.HasAccess(Feature.MassOvertime)
 
@@ -115,7 +129,6 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
-        lRepo = New Data.Repositories.ListOfValueRepository
         Dim shiftPolicies = Await lRepo.GetShiftPoliciesAsync()
 
         If Not shiftPolicies.Any() Then

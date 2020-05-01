@@ -267,8 +267,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             attendancePeriodCell.Value = $"Attendance Period: {short_dates(0)} to {short_dates(1)}"
 
-            Dim payFromNextCutOff = PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID)
-            Dim payToNextCutOff = PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID)
+            Dim payFromNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
+            Dim payToNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
 
             Dim payrollPeriodCell = worksheet.Cells(3, 1)
             Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payToNextCutOff?.PayToDate Is Nothing, "", payToNextCutOff.PayToDate.ToShortDateString)}"

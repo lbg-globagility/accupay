@@ -5,7 +5,6 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
-Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll
 
@@ -56,7 +55,7 @@ Namespace Global.AccuPay.Payroll
                         hoursWorked = paystub.RegularHoursAndTotalRestDay
                     End If
 
-                    Dim daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay
+                    Dim daysWorked = hoursWorked / Data.Helpers.PayrollTools.WorkHoursPerDay
 
                     Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(salary, employee)
 

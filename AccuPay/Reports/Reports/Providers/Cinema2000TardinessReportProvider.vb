@@ -361,16 +361,4 @@ Public Class Cinema2000TardinessReportProvider
 
     End Class
 
-    Private Class OffensePerMonth
-
-        Public Property EmployeeId As Integer
-
-        Public Property Days As Integer
-
-        Public Property Hours As Decimal
-
-        Public Property Month As Integer
-
-    End Class
-
 End Class

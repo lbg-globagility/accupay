@@ -254,7 +254,7 @@ Public Class SelectPayslipEmployeesForm
 
         Dim payslipCreator As New PayslipCreator(_currentPayPeriod, Convert.ToSByte(isActual))
 
-        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
+        Dim nextPayPeriod = Data.Helpers.PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
 
         Dim employeeIds = _employeeModels.
                             Where(Function(m) m.IsSelected).

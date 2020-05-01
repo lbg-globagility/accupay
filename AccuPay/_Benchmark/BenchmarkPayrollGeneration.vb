@@ -179,10 +179,10 @@ Namespace Benchmark
 
             If employee.IsPremiumInclusive Then
 
-                Dim workDaysThisCutOff = PayrollTools.
-                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / PayrollTools.SemiMonthlyPayPeriodsPerMonth
+                Dim workDaysThisCutOff = Data.Helpers.PayrollTools.
+                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / Data.Helpers.PayrollTools.SemiMonthlyPayPeriodsPerMonth
 
-                paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
+                paystub.BasicHours = workDaysThisCutOff * Data.Helpers.PayrollTools.WorkHoursPerDay
             Else
 
                 paystub.BasicHours = paystub.RegularHours + paystub.UndertimeHours + paystub.LateHours + paystub.AbsentHours

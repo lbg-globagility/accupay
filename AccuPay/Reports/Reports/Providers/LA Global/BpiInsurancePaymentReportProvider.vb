@@ -52,7 +52,7 @@ Public Class BpiInsurancePaymentReportProvider
             Dim periods = context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
                 Where(Function(p) p.Year = _selectedDate.Year).
                 Where(Function(p) p.Month = _selectedDate.Month).
-                Where(Function(p) p.PayFrequencyID.Value = PayrollTools.PayFrequencySemiMonthlyId).
+                Where(Function(p) p.PayFrequencyID.Value = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId).
                 ToList
 
             Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()

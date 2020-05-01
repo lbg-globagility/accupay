@@ -1,80 +1,13 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
 
 Public Class PayrollTools
-
-    Public Const MonthsPerYear As Integer = 12
-
-    Public Const WorkHoursPerDay As Integer = 8
-
-    Public Const DivisorToDailyRate As Integer = 8
-
-    Public Const SemiMonthlyPayPeriodsPerMonth As Integer = 2
-
-    Public Const PayFrequencySemiMonthlyId As Integer = 1
-
-    Public Const PayFrequencyWeeklyId As Integer = 4
-
-    Public Shared ReadOnly MinimumMicrosoftDate As New Date(1753, 1, 1)
-
-    Private Const PotentialLastWorkDay As Integer = 7
-
-    Public Shared Function GetWorkDaysPerMonth(workDaysPerYear As Decimal) As Decimal
-        Return workDaysPerYear / MonthsPerYear
-    End Function
-
-    Public Shared Function GetHourlyRateByMonthlyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
-        Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear) / WorkHoursPerDay
-    End Function
-
-    Public Shared Function GetHourlyRateByDailyRate(dailyRate As Decimal) As Decimal
-        Return dailyRate / WorkHoursPerDay
-    End Function
-
-    Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(
-                                    Optional payperiods As IEnumerable(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
-
-        Return Await Task.Run(Function()
-
-                                  'replace this with a policy
-                                  'fourlinq can use this feature also
-                                  'for clients that has the same attendance and payroll period
-                                  Dim isBenchmarkOwner = ((New SystemOwnerService()).GetCurrentSystemOwner() = SystemOwnerService.Benchmark)
-
-                                  Dim currentDay = Date.Today.ToMinimumHourValue
-
-                                  Using context = New PayrollContext()
-
-                                      If payperiods Is Nothing OrElse payperiods.Count = 0 Then
-                                          payperiods = context.PayPeriods.
-                                     Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                                     Where(Function(p) p.IsSemiMonthly)
-                                      End If
-
-                                      If isBenchmarkOwner Then
-
-                                          Return payperiods.
-                                     Where(Function(p) currentDay >= p.PayFromDate AndAlso currentDay <= p.PayToDate).
-                                     LastOrDefault
-                                      Else
-
-                                          Return payperiods.
-                                     Where(Function(p) p.PayToDate < currentDay).
-                                     LastOrDefault
-                                      End If
-                                  End Using
-
-                              End Function)
-
-    End Function
 
     Public Shared Sub UpdateLoanSchedule(paypRowID As Integer)
 
@@ -86,14 +19,6 @@ Public Class PayrollTools
         Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
         n_ExecSQLProcedure.ExecuteQuery()
     End Sub
-
-    Public Shared Function CheckIfUsingUserLevel() As Boolean
-
-        Dim settings = ListOfValueCollection.Create()
-
-        Return settings.GetBoolean("User Policy.UseUserLevel", False)
-
-    End Function
 
     Public Shared Sub DeletePaystub(employeeId As Integer, payPeriodId As Integer)
 
@@ -132,8 +57,7 @@ Public Class PayrollTools
                 Return False
             End If
 
-            Dim payPeriod = Await context.PayPeriods.
-                                FirstOrDefaultAsync(Function(p) p.RowID.Value = payPeriodId.Value)
+            Dim payPeriod = Await New PayPeriodRepository().GetByIdAsync(payPeriodId.Value)
 
             If payPeriod Is Nothing Then
                 MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
@@ -164,28 +88,6 @@ Public Class PayrollTools
 
     End Function
 
-    Public Shared Function GetNextPayPeriod(payPeriodId As Integer?) As PayPeriod
-
-        If payPeriodId Is Nothing Then Return Nothing
-
-        Using context As New PayrollContext
-
-            Dim currentPayPeriod = context.PayPeriods.
-                        FirstOrDefault(Function(p) p.RowID.Value = payPeriodId.Value)
-
-            If currentPayPeriod Is Nothing Then Return Nothing
-
-            Return context.PayPeriods.
-                                Where(Function(p) p.OrganizationID.Value = currentPayPeriod.OrganizationID.Value).
-                                Where(Function(p) p.PayFrequencyID.Value = currentPayPeriod.PayFrequencyID.Value).
-                                Where(Function(p) p.PayFromDate > currentPayPeriod.PayFromDate).
-                                OrderBy(Function(p) p.PayFromDate).
-                                FirstOrDefault
-
-        End Using
-
-    End Function
-
     Public Shared Function GetOrganizationAddress() As String
 
         Dim str_quer_address As String =
@@ -203,23 +105,6 @@ Public Class PayrollTools
 
         Return Convert.ToString(New SQL(str_quer_address).GetFoundRow)
 
-    End Function
-
-    Public Shared Function GetPreviousCutoffDateForCheckingLastWorkingDay(currentCutOffStart As Date) As Date
-        'Used to be 3 days since the starting cut off can be a Monday
-        'so to check the last working day you have to check up to last Friday
-        'and that is 3 days since starting cut off
-
-        'But sometimes, last Friday can be a holiday.
-        'Or more specifically, the last days of the previous cut off are holidays
-        'for example January 1, 2020. December 30 & 31 are holidays, December 28 & 29
-        'are weekends. So last working days is December 27, 5 days since the starting cutoff
-        'so the original 3 days value will not be enough.
-
-        'I chose 7 days but this can be modified if there are scenarios that needs
-        'more than 7 days to check the last working day.
-
-        Return currentCutOffStart.AddDays(-PotentialLastWorkDay)
     End Function
 
 End Class

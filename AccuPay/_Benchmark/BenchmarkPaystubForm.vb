@@ -118,8 +118,8 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await PayrollTools.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentPayPeriod = Await Data.Helpers.PayrollTools.
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function

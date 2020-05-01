@@ -2,10 +2,10 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
 
 Public Class PaystubPresenter
 
@@ -122,8 +122,12 @@ Public Class PaystubPresenter
 
         Private _employeeRepository As EmployeeRepository
 
+        Private _timeEntryRepository As TimeEntryRepository
+
         Sub New()
             _employeeRepository = New EmployeeRepository()
+
+            _timeEntryRepository = New TimeEntryRepository()
         End Sub
 
         Public Async Function GetSalary(paystub As Paystub) As Task(Of Data.Entities.Salary)
@@ -136,12 +140,14 @@ Public Class PaystubPresenter
                                                                    paystub.PayFromdate)
         End Function
 
-        Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of TimeEntry))
-            Dim query = _context.TimeEntries.
-                Where(Function(t) dateFrom <= t.Date And t.Date <= dateTo).
-                Where(Function(t) Nullable.Equals(t.EmployeeID, employeeID))
+        Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of Data.Entities.TimeEntry))
 
-            Return Await query.ToListAsync()
+            Return (Await _timeEntryRepository.
+                            GetByEmployeeAndDatePeriodAsync(z_OrganizationID,
+                                                            employeeID.Value,
+                                                            New TimePeriod(dateFrom, dateTo))).
+            ToList()
+
         End Function
 
         Public Async Function GetAllowanceItems(paystubID As Integer?) As Task(Of ICollection(Of AllowanceItem))

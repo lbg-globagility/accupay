@@ -1,11 +1,10 @@
 Option Strict On
 
-Imports AccuPay.Entity
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
+Imports AccuPay.Entity
 Imports AccuPay.Utilities
-Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll
 

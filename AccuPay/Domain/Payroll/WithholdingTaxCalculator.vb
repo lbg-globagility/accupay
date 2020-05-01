@@ -5,7 +5,6 @@ Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Utilities
-Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll
 

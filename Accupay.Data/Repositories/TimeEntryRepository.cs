@@ -27,6 +27,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<TimeEntry>> GetByEmployeeAndDatePeriodAsync(int organizationId,
+                                                                                int employeeId,
+                                                                                TimePeriod timePeriod)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await CreateBaseQueryByDatePeriod(organizationId, timePeriod, context).
+                            Where(x => x.EmployeeID == employeeId).
+                            ToListAsync();
+            }
+        }
+
         private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId,
                                                                     TimePeriod timePeriod,
                                                                     PayrollContext context)

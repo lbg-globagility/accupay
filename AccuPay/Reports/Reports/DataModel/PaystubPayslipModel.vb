@@ -138,7 +138,7 @@ Public Class PaystubPayslipModel
 
             ElseIf Employee.PayFrequencyID.Value = PayFrequencyType.SemiMonthly Then
 
-                Return salary / PayrollTools.SemiMonthlyPayPeriodsPerMonth
+                Return salary / Data.Helpers.PayrollTools.SemiMonthlyPayPeriodsPerMonth
             Else
 
                 Throw New Exception("GetBasicPay is implemented on monthly and semimonthly only")
@@ -147,7 +147,7 @@ Public Class PaystubPayslipModel
 
         ElseIf Employee.IsDaily Then
 
-            Return workHours * (salary / PayrollTools.WorkHoursPerDay)
+            Return workHours * (salary / Data.Helpers.PayrollTools.WorkHoursPerDay)
 
         End If
 

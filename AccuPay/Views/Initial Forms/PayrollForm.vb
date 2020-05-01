@@ -4,9 +4,22 @@ Public Class PayrollForm
 
     Public listPayrollForm As New List(Of String)
 
-    Private sys_ownr As New SystemOwnerService()
-
     Private if_sysowner_is_benchmark As Boolean
+
+    Dim sys_ownr As SystemOwnerService
+
+    Private _policyHelper As PolicyHelper
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _policyHelper = New PolicyHelper()
+
+        sys_ownr = New SystemOwnerService()
+    End Sub
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -16,7 +29,7 @@ Public Class PayrollForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then

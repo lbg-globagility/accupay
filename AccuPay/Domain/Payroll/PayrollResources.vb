@@ -11,7 +11,6 @@ Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
 Imports Microsoft.Extensions.Logging.Console
-Imports PayrollSys
 
 ''' <summary>
 ''' Takes care of loading all the information needed to produce the payroll for a given pay period.
@@ -269,7 +268,8 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadTimeEntries() As Task
-        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
+        Dim previousCutoffDateForCheckingLastWorkingDay = Data.Helpers.PayrollTools.
+                                        GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
 
@@ -283,7 +283,8 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadCalendarCollection() As Task
-        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
+        Dim previousCutoffDateForCheckingLastWorkingDay = Data.Helpers.PayrollTools.
+                            GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
             Await Task.Run(

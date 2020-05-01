@@ -4,7 +4,6 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports PayrollSys
 
 Public Class SssCalculator
 
