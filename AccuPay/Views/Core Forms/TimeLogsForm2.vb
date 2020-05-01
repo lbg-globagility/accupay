@@ -107,6 +107,11 @@ Public Class TimeLogsForm2
         Dim shiftSchedules = Await _employeeDutyScheduleRepository.
                 GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIDs, datePeriod)
 
+        shiftSchedules = shiftSchedules.
+                                Where(Function(s) s.StartTime.HasValue).
+                                Where(Function(s) s.EndTime.HasValue).
+                                ToList()
+
         Dim dataSource As New List(Of TimeLogModel)
 
         Dim models = CreatedResults(employees, startDate, endDate)
@@ -864,7 +869,9 @@ Public Class TimeLogsForm2
         Next
 
         Try
-            Await _timeLogRepository.ChangeManyAsync(addedTimeLogs, updatedTimeLogs, deletedTimeLogs)
+            Await _timeLogRepository.ChangeManyAsync(addedTimeLogs:=addedTimeLogs,
+                                                     updatedTimeLogs:=updatedTimeLogs,
+                                                     deletedTimeLogs:=deletedTimeLogs)
 
             If addedTimeLogs.Any() Then
                 Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToArray()

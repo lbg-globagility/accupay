@@ -2,14 +2,14 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports log4net
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ShiftScheduleForm
 
@@ -19,8 +19,6 @@ Public Class ShiftScheduleForm
     Private Const DISABLED_TEXT As String = "Disabled"
 
     Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
-
-    Const defaultWorkHours As Integer = 8
 
     Private organizationId As Integer
 
@@ -36,9 +34,19 @@ Public Class ShiftScheduleForm
 
     Private _originalDates As TimePeriod
 
-    Private Property ChangesCount As Integer
-        Get
-        End Get
+    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+    End Sub
+
+    Private WriteOnly Property ChangesCount As Integer
         Set(value As Integer)
             If value > 0 Then
                 labelChangesCount.ForeColor = Color.Red
@@ -403,45 +411,43 @@ Public Class ShiftScheduleForm
         Return _models
     End Function
 
-    Private Async Function RangeApply(beginDate As Date, endDate As Date, _models As List(Of ShiftScheduleModel)) As Task(Of List(Of ShiftScheduleModel))
+    Private Async Function RangeApply(datePeriod As TimePeriod, models As List(Of ShiftScheduleModel)) As Task(Of List(Of ShiftScheduleModel))
+
         Dim employees = EmployeeTreeView1.GetTickedEmployees
-        Dim eIDs = employees.Select(Function(e) e.RowID.Value).ToList
-        Using context = New PayrollContext
-            Dim _empShiftScheds = Await context.EmployeeDutySchedules.
-                Include(Function(e) e.Employee).
-                Where(Function(e) eIDs.Any(Function(eID) e.EmployeeID.Value = eID)).
-                Where(Function(e) e.DateSched >= beginDate AndAlso e.DateSched <= endDate).
-                ToListAsync
+        Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
-            If _empShiftScheds.Any Then
-                Dim notExists = Function(shSched As ShiftScheduleModel)
-                                    Dim seekResult = _empShiftScheds.
-                                    Where(Function(ess) Nullable.Equals(ess.EmployeeID, shSched.EmployeeId)).
-                                    Where(Function(ess) Nullable.Equals(ess.DateSched.Date, shSched.DateValue.Date))
+        Dim empShiftScheds = Await _employeeDutyScheduleRepository.
+                GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(z_OrganizationID,
+                                                                    employeeIds,
+                                                                    datePeriod)
 
-                                    Return Not seekResult.Any
-                                End Function
-                Dim notInDb = _models.Where(Function(ssm) notExists(ssm)).ToList
+        If empShiftScheds.Any Then
+            Dim notExists = Function(shSched As ShiftScheduleModel)
+                                Dim seekResult = empShiftScheds.
+                                Where(Function(ess) Nullable.Equals(ess.EmployeeID, shSched.EmployeeId)).
+                                Where(Function(ess) Nullable.Equals(ess.DateSched.Date, shSched.DateValue.Date))
 
-                _models.Clear()
-                For Each ess In _empShiftScheds
-                    _models.Add(New ShiftScheduleModel(ess))
-                Next
+                                Return Not seekResult.Any
+                            End Function
+            Dim notInDb = models.Where(Function(ssm) notExists(ssm)).ToList
 
-                For Each ssm In notInDb
-                    _models.Add(ssm)
-                Next
+            models.Clear()
+            For Each ess In empShiftScheds
+                models.Add(New ShiftScheduleModel(ess))
+            Next
 
-                Dim _dataSource = _models.
-                    OrderBy(Function(ssm) ssm.FullName.ToLower).
-                    ThenBy(Function(ssm) ssm.DateValue.Date).
-                    ToList
-                _models = _dataSource
-            End If
+            For Each ssm In notInDb
+                models.Add(ssm)
+            Next
 
-        End Using
+            Dim dataSource = models.
+                OrderBy(Function(ssm) ssm.FullName.ToLower).
+                ThenBy(Function(ssm) ssm.DateValue.Date).
+                ToList
+            models = dataSource
+        End If
 
-        Return _models
+        Return models
     End Function
 
     Private Function ConvertGridRowsToShiftScheduleModels(dataGrid As DataGridView) As List(Of ShiftScheduleModel)
@@ -717,9 +723,9 @@ Public Class ShiftScheduleForm
         Private Const DEFAULT_SHIFT_HOUR As Integer = 9
         Private Const DEFAULT_BREAK_HOUR As Integer = 1
 
-        Private _dutyShiftPolicy As IEnumerable(Of Entities.ListOfValue)
+        Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As New Repositories.ListOfValueRepository
+        Private _listOfValueRepository As New ListOfValueRepository
 
         Private settings As ListOfValueCollection = Nothing
 
@@ -849,47 +855,49 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
-        Dim _saveList = ConvertGridRowsToShiftScheduleModels(grid)
+        Dim saveList = ConvertGridRowsToShiftScheduleModels(grid)
 
-        Dim _toSaveList = _saveList.Where(Function(ssm) ssm.HasChanged)
-        If Not _toSaveList.Any Then Return
+        Dim toSaveList = saveList.Where(Function(ssm) ssm.HasChanged)
+        If Not toSaveList.Any Then Return
 
-        Using context = New PayrollContext
+        Dim addedShiftSchedules As New List(Of EmployeeDutySchedule)
+        Dim updatedShiftSchedules As New List(Of EmployeeDutySchedule)
+        Dim deletedShiftSchedules As New List(Of EmployeeDutySchedule)
 
-            For Each ssm In _toSaveList
-                ssm.ComputeShiftHours()
-                ssm.ComputeWorkHours()
+        For Each ssm In toSaveList
+            ssm.ComputeShiftHours()
+            ssm.ComputeWorkHours()
 
-                If ssm.IsNew Then
-                    context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
-                ElseIf ssm.IsUpdate Then
-                    context.Entry(ssm.ToEmployeeDutySchedule).State = EntityState.Modified
-                ElseIf ssm.ConsideredDelete Then
-                    context.EmployeeDutySchedules.Remove(ssm.ToEmployeeDutySchedule)
-                    ssm.RemoveShift()
-                End If
+            If ssm.IsNew Then
+                addedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+            ElseIf ssm.IsUpdate Then
+                updatedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+            ElseIf ssm.ConsideredDelete Then
+                deletedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
+                ssm.RemoveShift()
+            End If
 
-                ssm.CommitChanges()
+            ssm.CommitChanges()
+        Next
+
+        Try
+            Await _employeeDutyScheduleRepository.ChangeManyAsync(addedShifts:=addedShiftSchedules,
+                                                                updatedShifts:=updatedShiftSchedules,
+                                                                deletedShifts:=deletedShiftSchedules)
+            ShowSuccessBalloon()
+
+            For Each row As DataGridViewRow In grid.Rows
+                row.DefaultCellStyle = Nothing
             Next
 
-            Try
-                Dim i = Await context.SaveChangesAsync
+            ZebraliseEmployeeRows()
 
-                ShowSuccessBalloon()
-
-                For Each row As DataGridViewRow In grid.Rows
-                    row.DefaultCellStyle = Nothing
-                Next
-
-                ZebraliseEmployeeRows()
-
-                NoAffectedRows()
-            Catch ex As Exception
-                logger.Error("ShiftScheduleSaving", ex)
-                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            End Try
-        End Using
+            NoAffectedRows()
+        Catch ex As Exception
+            logger.Error("ShiftScheduleSaving", ex)
+            Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
+            MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
+        End Try
     End Sub
 
     Private Async Sub EmployeeTreeView1_TickedEmployee(sender As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
@@ -1131,7 +1139,7 @@ Public Class ShiftScheduleForm
             _currColIndex = _currCell.ColumnIndex
         End If
 
-        _originDataSource = Await RangeApply(start, finish, CreatedResult(True))
+        _originDataSource = Await RangeApply(New TimePeriod(start, finish), CreatedResult(True))
         RefreshDataSource(grid, _originDataSource)
 
         NoAffectedRows()

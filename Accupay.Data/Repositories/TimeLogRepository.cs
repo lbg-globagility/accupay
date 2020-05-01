@@ -19,30 +19,30 @@ namespace AccuPay.Data.Repositories
         {
             using (var context = new PayrollContext())
             {
-                // insert
-                addedTimeLogs.ForEach(timeLog =>
+                if (addedTimeLogs != null)
                 {
-                    context.Entry(timeLog).State = EntityState.Added;
-                });
+                    addedTimeLogs.ForEach(timeLog =>
+                    {
+                        context.Entry(timeLog).State = EntityState.Added;
+                    });
+                }
 
-                // update
-                updatedTimeLogs.ForEach(timeLog =>
+                if (updatedTimeLogs != null)
                 {
-                    context.Entry(timeLog).State = EntityState.Modified;
-                });
+                    updatedTimeLogs.ForEach(timeLog =>
+                    {
+                        context.Entry(timeLog).State = EntityState.Modified;
+                    });
+                }
 
-                // delete
-                deletedTimeLogs = deletedTimeLogs.
+                if (deletedTimeLogs != null)
+                {
+                    deletedTimeLogs = deletedTimeLogs.
                                     GroupBy(x => x.RowID).
                                     Select(x => x.FirstOrDefault()).
                                     ToList();
-
-                //deletedTimeLogs.ForEach(timeLog =>
-                //{
-                //    context.Entry(timeLog).State = EntityState.Deleted;
-                //});
-
-                context.TimeLogs.RemoveRange(deletedTimeLogs);
+                    context.TimeLogs.RemoveRange(deletedTimeLogs);
+                }
 
                 await context.SaveChangesAsync();
             }
