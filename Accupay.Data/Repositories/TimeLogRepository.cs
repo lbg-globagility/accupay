@@ -9,7 +9,7 @@ namespace AccuPay.Data.Repositories
 {
     public class TimeLogRepository
     {
-        public async Task SaveImport(List<TimeLog> timeLogs, List<TimeAttendanceLog> timeAttendanceLogs)
+        public async Task SaveImportAsync(List<TimeLog> timeLogs, List<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             using (var context = new PayrollContext())
             {
@@ -30,18 +30,21 @@ namespace AccuPay.Data.Repositories
                                                         Where(t => t.TimeStamp <= maximumDate));
                 }
 
-                foreach (var timeAttendanceLog in timeAttendanceLogs)
+                if (timeAttendanceLogs != null)
                 {
-                    timeAttendanceLog.ImportNumber = importId;
+                    foreach (var timeAttendanceLog in timeAttendanceLogs)
+                    {
+                        timeAttendanceLog.ImportNumber = importId;
 
-                    context.TimeAttendanceLogs.Add(timeAttendanceLog);
+                        context.TimeAttendanceLogs.Add(timeAttendanceLog);
+                    }
                 }
 
                 await context.SaveChangesAsync();
             }
         }
 
-        private static string GenerateImportId(PayrollContext context)
+        private string GenerateImportId(PayrollContext context)
         {
             var importId = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
             var originalImportId = importId;

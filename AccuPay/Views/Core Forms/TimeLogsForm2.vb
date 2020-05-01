@@ -294,6 +294,9 @@ Public Class TimeLogsForm2
 
             ShowSuccessImportBalloon()
 
+            'This codes work even if it is not awaited.
+            'Using async and await does not update the UI.
+            'Tried using ConfigureAwait(False) and .Wait() but it did not work
             ReloadAsync()
 
         End If
@@ -310,7 +313,7 @@ Public Class TimeLogsForm2
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-            Await _timeLogsRepository.SaveImport(timeLogs, timeAttendanceLogs)
+            Await _timeLogsRepository.SaveImportAsync(timeLogs, timeAttendanceLogs)
 
             Dim importList = New List(Of Entities.UserActivityItem)
             For Each log In timeLogs
@@ -333,23 +336,6 @@ Public Class TimeLogsForm2
         End Try
 
     End Sub
-
-    Private Shared Function GenerateImportId(context As PayrollContext) As String
-        Dim importId = Date.Now.ToString("yyyy-MM-dd HH:mm:ss")
-        Dim originalImportId = importId
-
-        Dim counter As Integer = 0
-
-        While context.TimeLogs.FirstOrDefault(Function(t) t.TimeentrylogsImportID = importId) IsNot Nothing OrElse
-                context.TimeAttendanceLogs.FirstOrDefault(Function(t) t.ImportNumber = importId) IsNot Nothing
-            counter += 1
-
-            importId = originalImportId & "_" & counter
-
-        End While
-
-        Return importId
-    End Function
 
     Private Sub ResetGridRowsDefaultCellStyle()
         For Each row As DataGridViewRow In grid.Rows
@@ -1155,60 +1141,55 @@ Public Class TimeLogsForm2
     Private Async Sub bgworkImport_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles bgworkImport.DoWork
 
         Dim parser = New TimeInTimeOutParser()
-        Dim timeEntries = parser.Parse(thefilepath)
+        Dim parsedTimeLogs = parser.Parse(thefilepath)
 
-        If timeEntries.Count = 0 Then
+        If parsedTimeLogs.Count = 0 Then
             MessageBox.Show("No logs were parsed. Please make sure the log files follows the right format.")
             Return
         End If
 
-        Dim timeLogsByEmployee = timeEntries.
+        Dim parsedTimeLogsGroupedByEmployee = parsedTimeLogs.
             GroupBy(Function(t) t.EmployeeNo).
             ToList()
 
-        Dim employeeNos = timeLogsByEmployee.Select(Function(emp) emp.Key).ToArray()
-        Dim employeess = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
+        Dim employeeNos = parsedTimeLogsGroupedByEmployee.Select(Function(emp) emp.Key).ToArray()
+        Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
-        Using context = New PayrollContext()
-            Dim dateCreated = Date.Now
+        Dim dateCreated = Date.Now
 
-            Dim importId As String = GenerateImportId(context)
+        Dim timeLogs As New List(Of Entities.TimeLog)
+        For Each timeLogList In parsedTimeLogsGroupedByEmployee
+            Dim employee = employees.
+                Where(Function(et) et.EmployeeNo = timeLogList.Key).
+                Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
+                FirstOrDefault()
 
-            For Each timeLogList In timeLogsByEmployee
-                Dim employee = employeess.
-                    Where(Function(et) et.EmployeeNo = timeLogList.Key).
-                    Where(Function(et) Nullable.Equals(et.OrganizationID, z_OrganizationID)).
-                    FirstOrDefault()
+            If employee Is Nothing Then
+                Continue For
+            End If
 
-                If employee Is Nothing Then
-                    Continue For
+            For Each timeLog In timeLogList
+                Dim t = New Entities.TimeLog() With {
+                    .OrganizationID = z_OrganizationID,
+                    .EmployeeID = employee.RowID,
+                    .Created = dateCreated,
+                    .CreatedBy = z_User,
+                    .LogDate = timeLog.DateOccurred
+                }
+
+                If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
+                    t.TimeIn = TimeSpan.Parse(timeLog.TimeIn)
                 End If
 
-                For Each timeLog In timeLogList
-                    Dim t = New TimeLog() With {
-                        .OrganizationID = z_OrganizationID,
-                        .EmployeeID = employee.RowID,
-                        .Created = dateCreated,
-                        .CreatedBy = z_User,
-                        .LogDate = timeLog.DateOccurred,
-                        .TimeentrylogsImportID = importId
-                    }
+                If Not String.IsNullOrWhiteSpace(timeLog.TimeOut) Then
+                    t.TimeOut = TimeSpan.Parse(timeLog.TimeOut)
+                End If
 
-                    If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
-                        t.TimeIn = TimeSpan.Parse(timeLog.TimeIn)
-                    End If
-
-                    If Not String.IsNullOrWhiteSpace(timeLog.TimeOut) Then
-                        t.TimeOut = TimeSpan.Parse(timeLog.TimeOut)
-                    End If
-
-                    context.TimeLogs.Add(t)
-                Next
+                timeLogs.Add(t)
             Next
+        Next
 
-            context.SaveChanges()
-
-        End Using
+        Await _timeLogsRepository.SaveImportAsync(timeLogs)
 
         Return
 
