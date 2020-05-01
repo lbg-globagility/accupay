@@ -185,8 +185,8 @@ namespace AccuPay.Data.Services
                     if (leavePeriod != null)
                     {
                         var coveredLeavePeriod = new TimePeriod(
-                                    new DateTime[] { currentShift.Start, leavePeriod.Start }.Min(),
-                                    new DateTime[] { currentShift.End, leavePeriod.End }.Max());
+                                    new DateTime[] { currentShift.Start, leavePeriod.Start }.Max(),
+                                    new DateTime[] { currentShift.End, leavePeriod.End }.Min());
 
                         timeEntry.RegularHours -= calculator.ComputeRegularHours(coveredLeavePeriod, currentShift, _policy.ComputeBreakTimeLate);
                     }

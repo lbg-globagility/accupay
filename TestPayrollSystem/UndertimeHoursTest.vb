@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 
 <TestFixture>
 Public Class UndertimeHoursTest
