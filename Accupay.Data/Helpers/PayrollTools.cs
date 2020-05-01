@@ -138,7 +138,7 @@ namespace AccuPay.Data.Helpers
 
         public static bool HasWorkAfterLegalHoliday(DateTime legalHolidayDate,
                                                     DateTime endOfCutOff,
-                                                    IList<ITimeEntry> currentTimeEntries,
+                                                    IList<TimeEntry> currentTimeEntries,
                                                     CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay);

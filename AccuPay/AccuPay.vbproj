@@ -766,8 +766,6 @@
     <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
     <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
@@ -969,10 +967,7 @@
     <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
     <Compile Include="Domain\Employees\Employee.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </Compile>

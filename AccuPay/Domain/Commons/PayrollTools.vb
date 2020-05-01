@@ -83,11 +83,6 @@ Public Class PayrollTools
         Return dailyRate / WorkHoursPerDay
     End Function
 
-    Public Shared Function GetHourlyRateByDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
-
-        Return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay
-    End Function
-
     Public Shared Function HasWorkedLastWorkingDay(
                             currentDate As Date,
                             currentTimeEntries As ICollection(Of TimeEntry),
@@ -133,55 +128,6 @@ Public Class PayrollTools
         Return False
     End Function
 
-    Public Shared Function HasWorkAfterLegalHoliday(
-                            legalHolidayDate As Date,
-                            endOfCutOff As Date,
-                            currentTimeEntries As IList(Of TimeEntry),
-                            calendarCollection As CalendarCollection) As Boolean
-
-        Dim lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay)
-
-        Dim postTimeEntries = currentTimeEntries.
-            Where(Function(t) legalHolidayDate.Date < t.Date And t.Date <= lastPotentialEntry).
-            OrderBy(Function(t) t.Date).
-            ToList()
-
-        For Each timeEntry In postTimeEntries
-            If timeEntry.HasShift = False Then
-                Continue For
-            End If
-
-            Dim totalDayPay = timeEntry.GetTotalDayPay()
-
-            If timeEntry.IsRestDay Then
-
-                If totalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Dim payrateCalendar = calendarCollection.GetCalendar(timeEntry.BranchID)
-            Dim payrate = payrateCalendar.Find(timeEntry.Date)
-            If payrate.IsHoliday Then
-                If totalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Return timeEntry.RegularHours > 0 Or timeEntry.TotalLeaveHours > 0
-        Next
-
-        'If holiday exactly falls in ending date of cut-off, and no attendance 3days after it
-        'will treat it that employee was present
-        If Not postTimeEntries.Any() And endOfCutOff = legalHolidayDate Then Return True
-
-        Return False
-    End Function
-
     Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(
                                     Optional payperiods As IEnumerable(Of IPayPeriod) = Nothing) As Task(Of IPayPeriod)
 
@@ -216,32 +162,6 @@ Public Class PayrollTools
                                   End Using
 
                               End Function)
-
-    End Function
-
-    Friend Shared Async Function GetFirstPayPeriodOfTheYear(context As PayrollContext, currentPayPeriod As PayPeriod) As Task(Of PayPeriod)
-
-        Dim currentPayPeriodYear = currentPayPeriod?.Year
-
-        If currentPayPeriodYear Is Nothing Then Return Nothing
-
-        If context Is Nothing Then
-            context = New PayrollContext
-        End If
-
-        Return Await context.PayPeriods.
-                        Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                        Where(Function(p) p.IsSemiMonthly).
-                        Where(Function(p) p.Year = currentPayPeriodYear.Value).
-                        Where(Function(p) p.IsFirstPayPeriodOfTheYear).
-                        FirstOrDefaultAsync
-    End Function
-
-    Friend Shared Async Function GetFirstDayOfTheYear(context As PayrollContext, currentPayPeriod As PayPeriod) As Task(Of Date?)
-
-        Dim firstPayPeriodOfTheYear = Await GetFirstPayPeriodOfTheYear(context, currentPayPeriod)
-
-        Return firstPayPeriodOfTheYear?.PayFromDate
 
     End Function
 
