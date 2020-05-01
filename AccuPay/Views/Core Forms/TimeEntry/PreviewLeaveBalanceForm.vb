@@ -96,7 +96,7 @@ Public Class PreviewLeaveBalanceForm
 
             Dim leaveTypeIds = leaveTypes.Select(Function(p) p.RowID).ToList()
 
-            Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToList()
+            Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToArray()
 
             Dim leaveLedgers =
                 Await context.LeaveLedgers.
@@ -135,7 +135,7 @@ Public Class PreviewLeaveBalanceForm
 
             Next
 
-            Dim empProfiles = Await _employeeRepo.GetByMultipleIdAsync(New List(Of Integer?)(employeeIds))
+            Dim empProfiles = Await _employeeRepo.GetByMultipleIdAsync(employeeIds)
 
             For Each employee In empProfiles
                 Dim eId = employee.RowID

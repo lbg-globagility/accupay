@@ -37,8 +37,6 @@ Public Class PayrollResources
 
     Private _timeEntries As ICollection(Of TimeEntry)
 
-    Private _employeeDutySchedules As ICollection(Of EmployeeDutySchedule)
-
     Private _actualtimeentries As ICollection(Of ActualTimeEntry)
 
     Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
@@ -92,12 +90,6 @@ Public Class PayrollResources
     Public ReadOnly Property TimeEntries As ICollection(Of TimeEntry)
         Get
             Return _timeEntries
-        End Get
-    End Property
-
-    Public ReadOnly Property EmployeeDutySchedule As ICollection(Of EmployeeDutySchedule)
-        Get
-            Return _employeeDutySchedules
         End Get
     End Property
 
@@ -242,7 +234,6 @@ Public Class PayrollResources
             LoadActualTimeEntries(),
             LoadFilingStatuses(),
             LoadDivisionMinimumWages(),
-            LoadEmployeeDutySchedules(),
             LoadCalendarCollection(),
             LoadBpiInsuranceProduct(),
             LoadLeaves()
@@ -297,23 +288,6 @@ Public Class PayrollResources
         End Try
     End Function
 
-    Private Async Function LoadEmployeeDutySchedules() As Task
-        Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
-
-        Try
-            Using context = New PayrollContext(logger)
-                Dim query = From e In context.EmployeeDutySchedules
-                            Where e.OrganizationID.Value = z_OrganizationID AndAlso
-                                e.DateSched >= previousCutoffDateForCheckingLastWorkingDay AndAlso
-                                e.DateSched <= _payDateTo
-
-                _employeeDutySchedules = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("EmployeeDutySchedules", ex)
-        End Try
-    End Function
-
     Private Async Function LoadCalendarCollection() As Task
         Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
@@ -339,7 +313,7 @@ Public Class PayrollResources
     Private Async Function LoadActualTimeEntries() As Task
         Try
             Using context = New PayrollContext()
-                Dim query = From t In context.ActualTimeEntries.Include(Function(t) t.ShiftSchedule.Shift)
+                Dim query = From t In context.ActualTimeEntries
                             Where t.OrganizationID.Value = z_OrganizationID AndAlso
                                 _payDateFrom <= t.Date AndAlso
                                 t.Date <= _payDateTo

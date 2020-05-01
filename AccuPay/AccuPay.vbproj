@@ -314,12 +314,6 @@
     <Compile Include="Auditing\AuditContext.vb" />
     <Compile Include="Auditing\Entity\AuditTrail.vb" />
     <Compile Include="Auditing\Entity\View.vb" />
-    <Compile Include="Auditing\Forms\TimeLogForm.Designer.vb">
-      <DependentUpon>TimeLogForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Auditing\Forms\TimeLogForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core\DB\DataBaseConnection.vb" />
     <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
     <Compile Include="Core\DB\ExecSQLProcedure.vb" />
@@ -890,7 +884,6 @@
     <Compile Include="Views\Core Forms\PayStub\PaystubView.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\Shifts\ShiftSchedule.vb" />
     <Compile Include="Reports\Reports\AttendanceSheet2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -979,8 +972,6 @@
     </Compile>
     <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
     <Compile Include="Domain\Employees\Employee.vb" />
-    <Compile Include="Domain\Shifts\Shift.vb" />
-    <Compile Include="Domain\TimeEntry\CurrentShift.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
     <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
@@ -1002,7 +993,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLog.vb" />
     <Compile Include="Domain\Payroll\PayrollResources.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
@@ -2127,9 +2117,6 @@
     <None Include="Resources\AccuPayLogo.ico" />
     <None Include="Resources\loading-icon.gif" />
     <None Include="Resources\ajax-loader.gif" />
-    <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
-      <DependentUpon>TimeLogForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\EmployeeProfile.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmployeeProfile.vb</LastGenOutput>

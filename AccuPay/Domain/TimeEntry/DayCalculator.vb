@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
@@ -42,9 +43,9 @@ Public Class DayCalculator
     Public Function Compute(currentDate As DateTime,
                             salary As Entities.Salary,
                             oldTimeEntries As IList(Of TimeEntry),
-                            employeeShift As ShiftSchedule,
-                            shiftSched As EmployeeDutySchedule,
-                            timeLog As TimeLog,
+                            employeeShift As Entities.ShiftSchedule,
+                            shiftSched As Entities.EmployeeDutySchedule,
+                            timeLog As Entities.TimeLog,
                             overtimes As IList(Of Entities.Overtime),
                             officialBusiness As Entities.OfficialBusiness,
                             leaves As IList(Of Entities.Leave),
@@ -97,7 +98,7 @@ Public Class DayCalculator
 
     Private Sub ComputeHours(currentDate As Date,
                              timeEntry As TimeEntry,
-                             timeLog As TimeLog,
+                             timeLog As Entities.TimeLog,
                              officialBusiness As Entities.OfficialBusiness,
                              leaves As IList(Of Entities.Leave),
                              overtimes As IList(Of Entities.Overtime),
@@ -779,7 +780,7 @@ Public Class DayCalculator
         End If
     End Sub
 
-    Public Function GetLogPeriod(timeLog As TimeLog,
+    Public Function GetLogPeriod(timeLog As Entities.TimeLog,
                                  officialBusiness As Entities.OfficialBusiness,
                                  currentShift As CurrentShift,
                                  currentDate As Date) As TimePeriod
@@ -837,8 +838,8 @@ Public Class DayCalculator
 
     Public Shared Function GetCurrentShift(
                                 currentDate As Date,
-                                employeeShift As ShiftSchedule,
-                                shiftSched As EmployeeDutySchedule,
+                                employeeShift As Entities.ShiftSchedule,
+                                shiftSched As Entities.EmployeeDutySchedule,
                                 useShiftSchedule As Boolean,
                                 respectDefaultRestDay As Boolean,
                                 employeeDayOfRest As Integer?) As CurrentShift

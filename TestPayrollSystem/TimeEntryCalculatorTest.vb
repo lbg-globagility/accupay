@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
-Imports System.Text
 Imports AccuPay
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
 
 <TestFixture>
 Public Class TimeEntryCalculatorTest

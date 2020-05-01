@@ -73,9 +73,6 @@ Namespace Global.AccuPay.Entity
         <Column("TotalDayPay")>
         Public Property TotalDayPay As Decimal Implements IActualTimeEntry.TotalDayPay
 
-        <ForeignKey("EmployeeShiftID")>
-        Public Overridable Property ShiftSchedule As ShiftSchedule
-
     End Class
 
 End Namespace

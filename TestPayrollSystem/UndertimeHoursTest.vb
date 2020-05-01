@@ -2,7 +2,8 @@
 
 Imports AccuPay
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 
 <TestFixture>
 Public Class UndertimeHoursTest

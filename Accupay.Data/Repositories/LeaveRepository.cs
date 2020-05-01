@@ -62,11 +62,12 @@ namespace AccuPay.Data.Repositories
             {
                 if (policy.ValidateLeaveBalance)
                 {
-                    var employeeIds = leaves.Select(l => l.EmployeeID).Distinct();
+                    var employeeIds = leaves.Select(l => l.EmployeeID).Distinct().ToArray();
+                    var notNullEmployeeIds = employeeIds.Where(x => x != null).Select(x => x.Value).ToArray();
 
                     employeeShifts = await GetEmployeeShifts(employeeIds, organizationId, firstLeave, lastLeave, context);
                     shiftSchedules = await GetShiftSchedules(employeeIds, organizationId, firstLeave, lastLeave, context);
-                    employees = await GetEmployees(employeeIds);
+                    employees = await GetEmployees(notNullEmployeeIds);
                 }
 
                 await context.Leaves.LoadAsync();
@@ -443,13 +444,12 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        private async Task<List<Employee>> GetEmployees(IEnumerable<int?> employeeIds)
+        private async Task<List<Employee>> GetEmployees(int[] employeeIds)
         {
-            var ids = employeeIds.Select(id => id).ToList();
-            return (await _employeeRepository.GetByMultipleIdAsync(ids)).ToList();
+            return (await _employeeRepository.GetByMultipleIdAsync(employeeIds)).ToList();
         }
 
-        private static async Task<List<EmployeeDutySchedule>> GetShiftSchedules(IEnumerable<int?> employeeIds,
+        private static async Task<List<EmployeeDutySchedule>> GetShiftSchedules(int?[] employeeIds,
                                                                                 int organizationId,
                                                                                 DateTime firstLeave,
                                                                                 DateTime lastLeave,
@@ -463,7 +463,7 @@ namespace AccuPay.Data.Repositories
                                     ToListAsync();
         }
 
-        private static async Task<List<ShiftSchedule>> GetEmployeeShifts(IEnumerable<int?> employeeIds,
+        private static async Task<List<ShiftSchedule>> GetEmployeeShifts(int?[] employeeIds,
                                                                         int organizationId,
                                                                         DateTime firstLeave,
                                                                         DateTime lastLeave,

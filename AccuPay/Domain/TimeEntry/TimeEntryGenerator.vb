@@ -23,25 +23,28 @@ Public Class TimeEntryGenerator
     Private ReadOnly _threeDays As Integer = 3
     Private _timeEntries As IList(Of TimeEntry)
     Private _actualTimeEntries As IList(Of ActualTimeEntry)
-    Private _timeLogs As IList(Of TimeLog)
+    Private _timeLogs As IList(Of Entities.TimeLog)
     Private _overtimes As IList(Of Entities.Overtime)
     Private _leaves As IList(Of Entities.Leave)
     Private _officialBusinesses As IList(Of Entities.OfficialBusiness)
     Private _agencyFees As IList(Of AgencyFee)
-    Private _employeeShifts As IList(Of ShiftSchedule)
+    Private _employeeShifts As IList(Of Entities.ShiftSchedule)
     Private _salaries As IList(Of Entities.Salary)
-    Private _shiftSchedules As IList(Of EmployeeDutySchedule)
+    Private _shiftSchedules As IList(Of Entities.EmployeeDutySchedule)
     Private _timeAttendanceLogs As List(Of Entities.TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
     Private _agencyRepository As AgencyRepository
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
     Private _employeeRepository As EmployeeRepository
+    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
     Private _leaveRepository As LeaveRepository
     Private _officialBusinessRepository As OfficialBusinessRepository
     Private _organizationRepository As OrganizationRepository
     Private _overtimeRepository As OvertimeRepository
     Private _salaryRepository As SalaryRepository
+    Private _shiftScheduleRepository As ShiftScheduleRepository
+    Private _timeLogRepository As TimeLogRepository
     Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
     Private _total As Integer
@@ -73,11 +76,15 @@ Public Class TimeEntryGenerator
         _agencyRepository = New AgencyRepository()
         _breakTimeBracketRepository = New BreakTimeBracketRepository()
         _employeeRepository = New EmployeeRepository()
+        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
         _leaveRepository = New LeaveRepository()
         _officialBusinessRepository = New OfficialBusinessRepository()
         _organizationRepository = New OrganizationRepository()
         _overtimeRepository = New OvertimeRepository()
         _salaryRepository = New SalaryRepository()
+        _shiftScheduleRepository = New ShiftScheduleRepository()
+        _timeAttendanceLogRepository = New TimeAttendanceLogRepository()
+        _timeLogRepository = New TimeLogRepository()
 
     End Sub
 
@@ -115,10 +122,7 @@ Public Class TimeEntryGenerator
                 Where(Function(a) _cutoffStart <= a.Date AndAlso a.Date <= _cutoffEnd).
                 ToList()
 
-            _timeLogs = context.TimeLogs.
-                Where(Function(t) t.OrganizationID.Value = z_OrganizationID).
-                Where(Function(t) _cutoffStart <= t.LogDate AndAlso t.LogDate <= _cutoffEnd).
-                ToList()
+            _timeLogs = _timeLogRepository.GetByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
             _leaves = _leaveRepository.
                             GetAllApprovedByDatePeriod(z_OrganizationID, cuttOffPeriod).ToList()
@@ -135,16 +139,13 @@ Public Class TimeEntryGenerator
                 Where(Function(a) _cutoffStart <= a.Date AndAlso a.Date <= _cutoffEnd).
                 ToList()
 
-            _employeeShifts = context.ShiftSchedules.
-                Include(Function(s) s.Shift).
-                Where(Function(s) s.OrganizationID = z_OrganizationID).
-                Where(Function(s) s.EffectiveFrom <= _cutoffEnd AndAlso _cutoffStart <= s.EffectiveTo).
-                ToList()
+            _employeeShifts = _shiftScheduleRepository.
+                                GetByDatePeriod(z_OrganizationID, cuttOffPeriod).
+                                ToList()
 
-            _shiftSchedules = context.EmployeeDutySchedules.
-                Where(Function(es) es.OrganizationID.Value = z_OrganizationID).
-                Where(Function(es) _cutoffStart <= es.DateSched AndAlso es.DateSched <= _cutoffEnd).
-                ToList()
+            _shiftSchedules = _employeeDutyScheduleRepository.
+                                                GetByDatePeriod(z_OrganizationID, cuttOffPeriod).
+                                                ToList()
 
             If timeEntryPolicy.ComputeBreakTimeLate Then
 
@@ -201,11 +202,11 @@ Public Class TimeEntryGenerator
         Dim salary = _salaries.
             FirstOrDefault(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID))
 
-        Dim timeLogs As IList(Of TimeLog) = _timeLogs.
+        Dim timeLogs As IList(Of Entities.TimeLog) = _timeLogs.
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim shiftSchedules As IList(Of ShiftSchedule) = _employeeShifts.
+        Dim shiftSchedules As IList(Of Entities.ShiftSchedule) = _employeeShifts.
             Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID)).
             ToList()
 

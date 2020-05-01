@@ -260,12 +260,12 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(List<int?> employeeIdList)
+        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
         {
             using (var builder = new EmployeeBuilder())
             {
                 return await builder.
-                    Filter(x => employeeIdList.Contains(x.RowID)).
+                    Filter(x => employeeIdList.Contains(x.RowID.Value)).
                     ToListAsync();
             }
         }
