@@ -52,7 +52,7 @@ Public Class TimeEntryCalculator
     Public Function ComputeBreakTimeLateHours(
                         workPeriod As TimePeriod,
                         currentShift As CurrentShift,
-                        timeAttendanceLogs As IList(Of TimeAttendanceLog),
+                        timeAttendanceLogs As IList(Of Entities.TimeAttendanceLog),
                         breakTimeBrackets As IList(Of Entities.BreakTimeBracket)) As Decimal
 
         Dim shiftPeriod = currentShift.ShiftPeriod
@@ -247,7 +247,7 @@ Public Class TimeEntryCalculator
         Return leavePeriod.TotalHours
     End Function
 
-    Private Function GetTotalBreakTimeLateHours(logs As List(Of TimeAttendanceLog)) As Decimal
+    Private Function GetTotalBreakTimeLateHours(logs As List(Of Entities.TimeAttendanceLog)) As Decimal
         'get the late periods
         Dim latePeriods As New List(Of TimePeriod)
 

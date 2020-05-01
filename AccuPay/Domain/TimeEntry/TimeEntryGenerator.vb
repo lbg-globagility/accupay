@@ -31,7 +31,7 @@ Public Class TimeEntryGenerator
     Private _employeeShifts As IList(Of ShiftSchedule)
     Private _salaries As IList(Of Entities.Salary)
     Private _shiftSchedules As IList(Of EmployeeDutySchedule)
-    Private _timeAttendanceLogs As List(Of TimeAttendanceLog)
+    Private _timeAttendanceLogs As List(Of Entities.TimeAttendanceLog)
     Private _breakTimeBrackets As List(Of Entities.BreakTimeBracket)
 
     Private _agencyRepository As AgencyRepository
@@ -42,6 +42,7 @@ Public Class TimeEntryGenerator
     Private _organizationRepository As OrganizationRepository
     Private _overtimeRepository As OvertimeRepository
     Private _salaryRepository As SalaryRepository
+    Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
     Private _total As Integer
 
@@ -146,14 +147,13 @@ Public Class TimeEntryGenerator
                 ToList()
 
             If timeEntryPolicy.ComputeBreakTimeLate Then
-                _timeAttendanceLogs = context.TimeAttendanceLogs.
-                                Where(Function(t) Nullable.Equals(t.OrganizationID, z_OrganizationID)).
-                                Where(Function(t) _cutoffStart <= t.WorkDay AndAlso t.WorkDay <= _cutoffEnd).
-                                ToList()
+
+                _timeAttendanceLogs = _timeAttendanceLogRepository.
+                                            GetByTimePeriod(z_OrganizationID, cuttOffPeriod).ToList()
 
                 _breakTimeBrackets = _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
             Else
-                _timeAttendanceLogs = New List(Of TimeAttendanceLog)
+                _timeAttendanceLogs = New List(Of Entities.TimeAttendanceLog)
                 _breakTimeBrackets = New List(Of Entities.BreakTimeBracket)
             End If
 
@@ -230,7 +230,7 @@ Public Class TimeEntryGenerator
             Where(Function(es) Nullable.Equals(es.EmployeeID, employee.RowID)).
             ToList()
 
-        Dim timeAttendanceLogs As IList(Of TimeAttendanceLog) = _timeAttendanceLogs.
+        Dim timeAttendanceLogs As IList(Of Entities.TimeAttendanceLog) = _timeAttendanceLogs.
             Where(Function(t) Nullable.Equals(t.EmployeeID, employee.RowID)).
             ToList()
 

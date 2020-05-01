@@ -21,8 +21,6 @@ Public Class PayrollContext
 
     Public Overridable Property EmployeeDutySchedules As DbSet(Of EmployeeDutySchedule)
 
-    Public Overridable Property TimeAttendanceLogs As DbSet(Of TimeAttendanceLog)
-
     Public Overridable Property AgencyFees As DbSet(Of AgencyFee)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)

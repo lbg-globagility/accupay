@@ -367,7 +367,6 @@
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
       <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
     </Compile>
