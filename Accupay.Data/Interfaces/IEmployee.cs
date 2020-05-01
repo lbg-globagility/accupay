@@ -1,5 +1,4 @@
-﻿using AccuPay.Data.Entities;
-using System;
+﻿using System;
 
 namespace AccuPay.Data
 {

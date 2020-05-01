@@ -1,5 +1,4 @@
-﻿using AccuPay.Data;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -7,7 +6,7 @@ using System.Linq;
 namespace AccuPay.Data.Entities
 {
     [Table("paystubemail")]
-    public class PaystubEmail : IPaystubEmail
+    public class PaystubEmail
     {
         public const string StatusWaiting = "WAITING";
         public const string StatusProcessing = "PROCESSING";

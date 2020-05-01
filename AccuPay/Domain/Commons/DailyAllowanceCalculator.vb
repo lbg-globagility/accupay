@@ -8,17 +8,17 @@ Public Class DailyAllowanceCalculator
 
     Private _settings As ListOfValueCollection
 
-    Private _previousTimeEntries As ICollection(Of TimeEntry)
+    Private _previousTimeEntries As ICollection(Of Entities.TimeEntry)
 
     Private ReadOnly _calendarCollection As CalendarCollection
 
-    Public Sub New(settings As ListOfValueCollection, calendarCollection As CalendarCollection, previousTimeEntries As ICollection(Of TimeEntry))
+    Public Sub New(settings As ListOfValueCollection, calendarCollection As CalendarCollection, previousTimeEntries As ICollection(Of Entities.TimeEntry))
         _settings = settings
         _calendarCollection = calendarCollection
         _previousTimeEntries = previousTimeEntries
     End Sub
 
-    Public Function Compute(payperiod As PayPeriod, allowance As Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of TimeEntry)) As AllowanceItem
+    Public Function Compute(payperiod As PayPeriod, allowance As Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of Entities.TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
@@ -62,9 +62,10 @@ Public Class DailyAllowanceCalculator
 
                 Dim giveAdditionalHolidayPay = givePremium AndAlso
                                                 (((employee.IsFixed Or employee.IsMonthly) And exemption) OrElse
-                                                    PayrollTools.HasWorkedLastWorkingDay(timeEntry.Date,
-                                                                                         _previousTimeEntries,
-                                                                                         _calendarCollection))
+                                                    Data.Helpers.PayrollTools.
+                                                                    HasWorkedLastWorkingDay(timeEntry.Date,
+                                                                                             _previousTimeEntries,
+                                                                                             _calendarCollection))
 
                 If giveAdditionalHolidayPay Then
                     Dim basicHolidayPay As Decimal

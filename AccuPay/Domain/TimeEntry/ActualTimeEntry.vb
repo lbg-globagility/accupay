@@ -2,76 +2,74 @@
 
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
-Imports AccuPay.Data
 
 Namespace Global.AccuPay.Entity
 
     <Table("employeetimeentryactual")>
     Public Class ActualTimeEntry
-        Implements IActualTimeEntry
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer? Implements IActualTimeEntry.RowID
+        Public Property RowID As Integer?
 
-        Public Property OrganizationID As Integer? Implements IActualTimeEntry.OrganizationID
+        Public Property OrganizationID As Integer?
 
-        Public Property EmployeeID As Integer? Implements IActualTimeEntry.EmployeeID
+        Public Property EmployeeID As Integer?
 
-        Public Property EmployeeShiftID As Integer? Implements IActualTimeEntry.EmployeeShiftID
+        Public Property EmployeeShiftID As Integer?
 
-        Public Property EmployeeSalaryID As Integer? Implements IActualTimeEntry.EmployeeSalaryID
+        Public Property EmployeeSalaryID As Integer?
 
-        Public Property PayRateID As Integer? Implements IActualTimeEntry.PayRateID
+        Public Property PayRateID As Integer?
 
         <Column("Date")>
-        Public Property [Date] As Date Implements IActualTimeEntry.Date
+        Public Property [Date] As Date
 
         <Column("RegularHoursAmount")>
-        Public Property RegularPay As Decimal Implements IActualTimeEntry.RegularPay
+        Public Property RegularPay As Decimal
 
         <Column("OvertimeHoursAmount")>
-        Public Property OvertimePay As Decimal Implements IActualTimeEntry.OvertimePay
+        Public Property OvertimePay As Decimal
 
         <Column("NightDiffHoursAmount")>
-        Public Property NightDiffPay As Decimal Implements IActualTimeEntry.NightDiffPay
+        Public Property NightDiffPay As Decimal
 
         <Column("NightDiffOTHoursAmount")>
-        Public Property NightDiffOTPay As Decimal Implements IActualTimeEntry.NightDiffOTPay
+        Public Property NightDiffOTPay As Decimal
 
         <Column("RestDayAmount")>
-        Public Property RestDayPay As Decimal Implements IActualTimeEntry.RestDayPay
+        Public Property RestDayPay As Decimal
 
-        Public Property RestDayOTPay As Decimal Implements IActualTimeEntry.RestDayOTPay
+        Public Property RestDayOTPay As Decimal
 
         <Column("Leavepayment")>
-        Public Property LeavePay As Decimal Implements IActualTimeEntry.LeavePay
+        Public Property LeavePay As Decimal
 
-        Public Property SpecialHolidayPay As Decimal Implements IActualTimeEntry.SpecialHolidayPay
+        Public Property SpecialHolidayPay As Decimal
 
-        Public Property SpecialHolidayOTPay As Decimal Implements IActualTimeEntry.SpecialHolidayOTPay
+        Public Property SpecialHolidayOTPay As Decimal
 
-        Public Property RegularHolidayPay As Decimal Implements IActualTimeEntry.RegularHolidayPay
+        Public Property RegularHolidayPay As Decimal
 
-        Public Property RegularHolidayOTPay As Decimal Implements IActualTimeEntry.RegularHolidayOTPay
+        Public Property RegularHolidayOTPay As Decimal
 
         <Column("HolidayPayAmount")>
-        Public Property HolidayPay As Decimal Implements IActualTimeEntry.HolidayPay
+        Public Property HolidayPay As Decimal
 
         <Column("HoursLateAmount")>
-        Public Property LateDeduction As Decimal Implements IActualTimeEntry.LateDeduction
+        Public Property LateDeduction As Decimal
 
         <Column("UndertimeHoursAmount")>
-        Public Property UndertimeDeduction As Decimal Implements IActualTimeEntry.UndertimeDeduction
+        Public Property UndertimeDeduction As Decimal
 
         <Column("Absent")>
-        Public Property AbsentDeduction As Decimal Implements IActualTimeEntry.AbsentDeduction
+        Public Property AbsentDeduction As Decimal
 
         <Column("BasicDayPay")>
-        Public Property BasicDayPay As Decimal Implements IActualTimeEntry.BasicDayPay
+        Public Property BasicDayPay As Decimal
 
         <Column("TotalDayPay")>
-        Public Property TotalDayPay As Decimal Implements IActualTimeEntry.TotalDayPay
+        Public Property TotalDayPay As Decimal
 
     End Class
 

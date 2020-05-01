@@ -29,7 +29,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
 
-    Private ReadOnly _previousTimeEntries As ICollection(Of TimeEntry)
+    Private ReadOnly _previousTimeEntries As ICollection(Of Entities.TimeEntry)
 
     Private ReadOnly _formCaller As Form
 
@@ -39,13 +39,13 @@ Public Class PayrollGeneration
 
     Private ReadOnly _settings As ListOfValueCollection
 
-    Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
+    Private ReadOnly _timeEntries As ICollection(Of Entities.TimeEntry)
 
     Private ReadOnly _allowances As ICollection(Of Entities.Allowance)
 
     Private ReadOnly _allowanceItems As ICollection(Of AllowanceItem) = New List(Of AllowanceItem)
 
-    Private ReadOnly _actualtimeentries As ICollection(Of ActualTimeEntry)
+    Private ReadOnly _actualtimeentries As ICollection(Of Entities.ActualTimeEntry)
 
     Private ReadOnly _leaves As IReadOnlyCollection(Of Entities.Leave)
 
@@ -837,10 +837,10 @@ Public Class PayrollGeneration
         Public Property AbsenceDeduction As Decimal Implements IPaystubRate.AbsenceDeduction
         Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
-        Public Sub Compute(timeEntries As ICollection(Of TimeEntry),
+        Public Sub Compute(timeEntries As ICollection(Of Entities.TimeEntry),
                            salary As Salary,
                            employee As Entities.Employee,
-                           actualtimeentries As ICollection(Of ActualTimeEntry))
+                           actualtimeentries As ICollection(Of Entities.ActualTimeEntry))
 
             Dim totalTimeEntries = TotalTimeEntryCalculator.Calculate(timeEntries,
                                                                       salary,

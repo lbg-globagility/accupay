@@ -341,7 +341,6 @@
     <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
-    <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
@@ -855,7 +854,6 @@
     <Compile Include="Domain\Leaves\Leave.vb" />
     <Compile Include="Domain\Leaves\LeaveLedger.vb" />
     <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
-    <Compile Include="Domain\Paystubs\Organization.vb" />
     <Compile Include="Domain\Paystubs\PayPeriod.vb" />
     <Compile Include="Domain\Paystubs\PayRate.vb" />
     <Compile Include="Domain\Paystubs\Paystub.vb" />

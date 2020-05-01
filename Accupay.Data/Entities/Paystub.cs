@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("paystub")]
-    public class Paystub : IPaystub
+    public class Paystub
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

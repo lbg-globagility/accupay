@@ -3,7 +3,6 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using log4net;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -35,18 +34,21 @@ namespace AccuPay.Data.Services
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
 
-        private AgencyRepository _agencyRepository;
-        private BreakTimeBracketRepository _breakTimeBracketRepository;
-        private EmployeeRepository _employeeRepository;
-        private EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
-        private LeaveRepository _leaveRepository;
-        private OfficialBusinessRepository _officialBusinessRepository;
-        private OrganizationRepository _organizationRepository;
-        private OvertimeRepository _overtimeRepository;
-        private SalaryRepository _salaryRepository;
-        private ShiftScheduleRepository _shiftScheduleRepository;
-        private TimeLogRepository _timeLogRepository;
-        private TimeAttendanceLogRepository _timeAttendanceLogRepository;
+        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
+        private readonly AgencyRepository _agencyRepository;
+        private readonly AgencyFeeRepository _agencyFeeRepository;
+        private readonly BreakTimeBracketRepository _breakTimeBracketRepository;
+        private readonly EmployeeRepository _employeeRepository;
+        private readonly EmployeeDutyScheduleRepository _employeeDutyScheduleRepository;
+        private readonly LeaveRepository _leaveRepository;
+        private readonly OfficialBusinessRepository _officialBusinessRepository;
+        private readonly OrganizationRepository _organizationRepository;
+        private readonly OvertimeRepository _overtimeRepository;
+        private readonly SalaryRepository _salaryRepository;
+        private readonly ShiftScheduleRepository _shiftScheduleRepository;
+        private readonly TimeAttendanceLogRepository _timeAttendanceLogRepository;
+        private readonly TimeEntryRepository _timeEntryRepository;
+        private readonly TimeLogRepository _timeLogRepository;
 
         private int _total;
 
@@ -73,7 +75,9 @@ namespace AccuPay.Data.Services
             _cutoffStart = cutoffStart;
             _cutoffEnd = cutoffEnd;
 
+            _actualTimeEntryRepository = new ActualTimeEntryRepository();
             _agencyRepository = new AgencyRepository();
+            _agencyFeeRepository = new AgencyFeeRepository();
             _breakTimeBracketRepository = new BreakTimeBracketRepository();
             _employeeRepository = new EmployeeRepository();
             _employeeDutyScheduleRepository = new EmployeeDutyScheduleRepository();
@@ -84,6 +88,7 @@ namespace AccuPay.Data.Services
             _salaryRepository = new SalaryRepository();
             _shiftScheduleRepository = new ShiftScheduleRepository();
             _timeAttendanceLogRepository = new TimeAttendanceLogRepository();
+            _timeEntryRepository = new TimeEntryRepository();
             _timeLogRepository = new TimeLogRepository();
         }
 
@@ -99,89 +104,87 @@ namespace AccuPay.Data.Services
 
             TimePeriod cuttOffPeriod = new TimePeriod(_cutoffStart, _cutoffEnd);
 
-            using (var context = new PayrollContext())
+            employees = _employeeRepository.
+                            GetAllActiveWithPosition(_organizationId).
+                            ToList();
+
+            agencies = _agencyRepository.
+                            GetAll(_organizationId).
+
+                            ToList();
+            organization = _organizationRepository.
+                            GetById(_organizationId);
+
+            _salaries = _salaryRepository.
+                            GetByCutOff(_organizationId, _cutoffStart).
+                            ToList();
+
+            var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);
+
+            DateTime afterCutOff = _cutoffEnd;
+            if (timeEntryPolicy.PostLegalHolidayCheck)
             {
-                employees = _employeeRepository.GetAllActiveWithPosition(_organizationId).ToList();
-
-                agencies = _agencyRepository.GetAll(_organizationId).ToList();
-
-                organization = _organizationRepository.GetById(_organizationId);
-
-                _salaries = _salaryRepository.GetByCutOff(_organizationId, _cutoffStart).ToList();
-
-                var previousCutoff = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_cutoffStart);
-
-                DateTime endOfCutOff = _cutoffEnd;
-                if (timeEntryPolicy.PostLegalHolidayCheck)
-                {
-                    endOfCutOff = _cutoffEnd.AddDays(_threeDays);
-                }
-
-                // TODO: move this to a repository
-                _timeEntries = context.TimeEntries.
-                                    Where(t => t.OrganizationID.Value == _organizationId).
-                                    Where(t => previousCutoff <= t.Date && t.Date <= endOfCutOff).
-                                    ToList();
-
-                // TODO: move this to a repository
-                _actualTimeEntries = context.ActualTimeEntries.
-                                    Where(a => a.OrganizationID.Value == _organizationId).
-                                    Where(a => _cutoffStart <= a.Date && a.Date <= _cutoffEnd).
-                                    ToList();
-
-                _timeLogs = _timeLogRepository.
-                                GetByDatePeriod(_organizationId, cuttOffPeriod).
-                                ToList();
-
-                _leaves = _leaveRepository.
-                                GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
-                                ToList();
-
-                _overtimes = _overtimeRepository.
-                                GetByDatePeriod(_organizationId, cuttOffPeriod, OvertimeStatus.Approved).
-                                ToList();
-
-                _officialBusinesses = _officialBusinessRepository.
-                                GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
-                                ToList();
-
-                // TODO: move this to a repository
-                _agencyFees = context.AgencyFees.
-                                Where(a => a.OrganizationID.Value == _organizationId).
-                                Where(a => _cutoffStart <= a.Date && a.Date <= _cutoffEnd).
-                                ToList();
-
-                _employeeShifts = _shiftScheduleRepository.
-                                GetByDatePeriod(_organizationId, cuttOffPeriod).
-                                ToList();
-
-                _shiftSchedules = _employeeDutyScheduleRepository.
-                                GetByDatePeriod(_organizationId, cuttOffPeriod).
-                                ToList();
-
-                if (timeEntryPolicy.ComputeBreakTimeLate)
-                {
-                    _timeAttendanceLogs = _timeAttendanceLogRepository.
-                                            GetByTimePeriod(_organizationId, cuttOffPeriod).
-                                            ToList();
-
-                    _breakTimeBrackets = _breakTimeBracketRepository.
-                                            GetAll(_organizationId).
-                                            ToList();
-                }
-                else
-                {
-                    _timeAttendanceLogs = new List<TimeAttendanceLog>();
-                    _breakTimeBrackets = new List<BreakTimeBracket>();
-                }
-
-                var payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
-
-                calendarCollection = PayrollTools.GetCalendarCollection(
-                                                        new TimePeriod(previousCutoff, _cutoffEnd),
-                                                        payrateCalculationBasis,
-                                                        _organizationId);
+                afterCutOff = _cutoffEnd.AddDays(_threeDays);
             }
+
+            _timeEntries = _timeEntryRepository.
+                            GetByDatePeriod(_organizationId, new TimePeriod(previousCutoff, afterCutOff)).
+                            ToList();
+
+            _actualTimeEntries = _actualTimeEntryRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _timeLogs = _timeLogRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _leaves = _leaveRepository.
+                            GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _overtimes = _overtimeRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod, OvertimeStatus.Approved).
+                            ToList();
+
+            _officialBusinesses = _officialBusinessRepository.
+                            GetAllApprovedByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _agencyFees = _agencyFeeRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _employeeShifts = _shiftScheduleRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            _shiftSchedules = _employeeDutyScheduleRepository.
+                            GetByDatePeriod(_organizationId, cuttOffPeriod).
+                            ToList();
+
+            if (timeEntryPolicy.ComputeBreakTimeLate)
+            {
+                _timeAttendanceLogs = _timeAttendanceLogRepository.
+                                        GetByTimePeriod(_organizationId, cuttOffPeriod).
+                                        ToList();
+
+                _breakTimeBrackets = _breakTimeBracketRepository.
+                                        GetAll(_organizationId).
+                                        ToList();
+            }
+            else
+            {
+                _timeAttendanceLogs = new List<TimeAttendanceLog>();
+                _breakTimeBrackets = new List<BreakTimeBracket>();
+            }
+
+            var payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
+
+            calendarCollection = PayrollTools.GetCalendarCollection(
+                                                    new TimePeriod(previousCutoff, _cutoffEnd),
+                                                    payrateCalculationBasis,
+                                                    _organizationId);
 
             var progress = new ObservableCollection<int>();
 

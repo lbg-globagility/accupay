@@ -7,7 +7,7 @@ namespace AccuPay.Data.Entities
 
 {
     [Table("employeetimeentry")]
-    public class TimeEntry : ITimeEntry
+    public class TimeEntry
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

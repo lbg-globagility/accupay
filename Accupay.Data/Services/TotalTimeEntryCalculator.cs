@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Helpers;
+﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,18 +8,18 @@ namespace AccuPay.Data.Services
 {
     public class TotalTimeEntryCalculator
     {
-        public static TotalTimeEntryCalculator Calculate(IEnumerable<ITimeEntry> timeEntries,
+        public static TotalTimeEntryCalculator Calculate(IEnumerable<TimeEntry> timeEntries,
                                                         ISalary salary,
                                                         IEmployee employee,
-                                                        IEnumerable<IActualTimeEntry> actualtimeentries)
+                                                        IEnumerable<ActualTimeEntry> actualtimeentries)
         {
             return new TotalTimeEntryCalculator(timeEntries, salary, employee, actualtimeentries);
         }
 
-        private TotalTimeEntryCalculator(IEnumerable<ITimeEntry> timeEntries,
+        private TotalTimeEntryCalculator(IEnumerable<TimeEntry> timeEntries,
                                         ISalary salary,
                                         IEmployee employee,
-                                        IEnumerable<IActualTimeEntry> actualtimeentries)
+                                        IEnumerable<ActualTimeEntry> actualtimeentries)
         {
             HourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee);
             ActualHourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee, isActual: true);

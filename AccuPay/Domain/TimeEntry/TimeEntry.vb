@@ -3,140 +3,138 @@
 Imports System.ComponentModel.DataAnnotations
 Imports System.ComponentModel.DataAnnotations.Schema
 Imports AccuPay.Data.Helpers
-Imports AccuPay.Data
 
 Namespace Global.AccuPay.Entity
 
     <Table("employeetimeentry")>
     Public Class TimeEntry
-        Implements ITimeEntry
 
         <Key>
         <DatabaseGenerated(DatabaseGeneratedOption.Identity)>
-        Public Property RowID As Integer? Implements ITimeEntry.RowID
+        Public Property RowID As Integer?
 
-        Public Property OrganizationID As Integer? Implements ITimeEntry.OrganizationID
+        Public Property OrganizationID As Integer?
 
-        Public Property EmployeeID As Integer? Implements ITimeEntry.EmployeeID
+        Public Property EmployeeID As Integer?
 
-        Public Property BranchID As Integer? Implements ITimeEntry.BranchID
+        Public Property BranchID As Integer?
 
-        Public Property EmployeeShiftID As Integer? Implements ITimeEntry.EmployeeShiftID
+        Public Property EmployeeShiftID As Integer?
 
-        Public Property EmployeeSalaryID As Integer? Implements ITimeEntry.EmployeeSalaryID
+        Public Property EmployeeSalaryID As Integer?
 
-        Public Property PayRateID As Integer? Implements ITimeEntry.PayRateID
+        Public Property PayRateID As Integer?
 
         <Column("Date")>
-        Public Property [Date] As Date Implements ITimeEntry.Date
+        Public Property [Date] As Date
 
         <Column("RegularHoursWorked")>
-        Public Property RegularHours As Decimal Implements ITimeEntry.RegularHours
+        Public Property RegularHours As Decimal
 
         <Column("RegularHoursAmount")>
-        Public Property RegularPay As Decimal Implements ITimeEntry.RegularPay
+        Public Property RegularPay As Decimal
 
         <Column("OvertimeHoursWorked")>
-        Public Property OvertimeHours As Decimal Implements ITimeEntry.OvertimeHours
+        Public Property OvertimeHours As Decimal
 
         <Column("OvertimeHoursAmount")>
-        Public Property OvertimePay As Decimal Implements ITimeEntry.OvertimePay
+        Public Property OvertimePay As Decimal
 
         <Column("NightDifferentialHours")>
-        Public Property NightDiffHours As Decimal Implements ITimeEntry.NightDiffHours
+        Public Property NightDiffHours As Decimal
 
         <Column("NightDiffHoursAmount")>
-        Public Property NightDiffPay As Decimal Implements ITimeEntry.NightDiffPay
+        Public Property NightDiffPay As Decimal
 
         <Column("NightDifferentialOTHours")>
-        Public Property NightDiffOTHours As Decimal Implements ITimeEntry.NightDiffOTHours
+        Public Property NightDiffOTHours As Decimal
 
         <Column("NightDiffOTHoursAmount")>
-        Public Property NightDiffOTPay As Decimal Implements ITimeEntry.NightDiffOTPay
+        Public Property NightDiffOTPay As Decimal
 
-        Public Property RestDayHours As Decimal Implements ITimeEntry.RestDayHours
+        Public Property RestDayHours As Decimal
 
         <Column("RestDayAmount")>
-        Public Property RestDayPay As Decimal Implements ITimeEntry.RestDayPay
+        Public Property RestDayPay As Decimal
 
-        Public Property RestDayOTHours As Decimal Implements ITimeEntry.RestDayOTHours
+        Public Property RestDayOTHours As Decimal
 
-        Public Property RestDayOTPay As Decimal Implements ITimeEntry.RestDayOTPay
+        Public Property RestDayOTPay As Decimal
 
-        Public Property VacationLeaveHours As Decimal Implements ITimeEntry.VacationLeaveHours
+        Public Property VacationLeaveHours As Decimal
 
-        Public Property SickLeaveHours As Decimal Implements ITimeEntry.SickLeaveHours
+        Public Property SickLeaveHours As Decimal
 
-        Public Property MaternityLeaveHours As Decimal Implements ITimeEntry.MaternityLeaveHours
+        Public Property MaternityLeaveHours As Decimal
 
-        Public Property OtherLeaveHours As Decimal Implements ITimeEntry.OtherLeaveHours
+        Public Property OtherLeaveHours As Decimal
 
         <Column("Leavepayment")>
-        Public Property LeavePay As Decimal Implements ITimeEntry.LeavePay
+        Public Property LeavePay As Decimal
 
-        Public Property SpecialHolidayHours As Decimal Implements ITimeEntry.SpecialHolidayHours
+        Public Property SpecialHolidayHours As Decimal
 
-        Public Property SpecialHolidayPay As Decimal Implements ITimeEntry.SpecialHolidayPay
+        Public Property SpecialHolidayPay As Decimal
 
-        Public Property SpecialHolidayOTHours As Decimal Implements ITimeEntry.SpecialHolidayOTHours
+        Public Property SpecialHolidayOTHours As Decimal
 
-        Public Property SpecialHolidayOTPay As Decimal Implements ITimeEntry.SpecialHolidayOTPay
+        Public Property SpecialHolidayOTPay As Decimal
 
-        Public Property RegularHolidayHours As Decimal Implements ITimeEntry.RegularHolidayHours
+        Public Property RegularHolidayHours As Decimal
 
-        Public Property RegularHolidayPay As Decimal Implements ITimeEntry.RegularHolidayPay
+        Public Property RegularHolidayPay As Decimal
 
         <NotMapped>
-        Public Property BasicRegularHolidayPay As Decimal Implements ITimeEntry.BasicRegularHolidayPay
+        Public Property BasicRegularHolidayPay As Decimal
 
-        Public Property RegularHolidayOTHours As Decimal Implements ITimeEntry.RegularHolidayOTHours
+        Public Property RegularHolidayOTHours As Decimal
 
-        Public Property RegularHolidayOTPay As Decimal Implements ITimeEntry.RegularHolidayOTPay
+        Public Property RegularHolidayOTPay As Decimal
 
         <Column("HolidayPayAmount")>
-        Public Property HolidayPay As Decimal Implements ITimeEntry.HolidayPay
+        Public Property HolidayPay As Decimal
 
         <Column("HoursLate")>
-        Public Property LateHours As Decimal Implements ITimeEntry.LateHours
+        Public Property LateHours As Decimal
 
         <Column("HoursLateAmount")>
-        Public Property LateDeduction As Decimal Implements ITimeEntry.LateDeduction
+        Public Property LateDeduction As Decimal
 
-        Public Property UndertimeHours As Decimal Implements ITimeEntry.UndertimeHours
+        Public Property UndertimeHours As Decimal
 
         <Column("UndertimeHoursAmount")>
-        Public Property UndertimeDeduction As Decimal Implements ITimeEntry.UndertimeDeduction
+        Public Property UndertimeDeduction As Decimal
 
-        Public Property AbsentHours As Decimal Implements ITimeEntry.AbsentHours
+        Public Property AbsentHours As Decimal
 
         <Column("Absent")>
-        Public Property AbsentDeduction As Decimal Implements ITimeEntry.AbsentDeduction
+        Public Property AbsentDeduction As Decimal
 
         <NotMapped>
-        Public Property BasicHours As Decimal Implements ITimeEntry.BasicHours
+        Public Property BasicHours As Decimal
 
         <Column("BasicDayPay")>
-        Public Property BasicDayPay As Decimal Implements ITimeEntry.BasicDayPay
+        Public Property BasicDayPay As Decimal
 
         <Column("TotalHoursWorked")>
-        Public Property TotalHours As Decimal Implements ITimeEntry.TotalHours
+        Public Property TotalHours As Decimal
 
         <Column("TotalDayPay")>
-        Public Property TotalDayPay As Decimal Implements ITimeEntry.TotalDayPay
+        Public Property TotalDayPay As Decimal
 
         <NotMapped>
-        Public Property DutyStart As Date Implements ITimeEntry.DutyStart
+        Public Property DutyStart As Date
 
         <NotMapped>
-        Public Property DutyEnd As Date Implements ITimeEntry.DutyEnd
+        Public Property DutyEnd As Date
 
-        Public Property WorkHours As Decimal Implements ITimeEntry.WorkHours
+        Public Property WorkHours As Decimal
 
-        Public Property ShiftHours As Decimal Implements ITimeEntry.ShiftHours
+        Public Property ShiftHours As Decimal
 
-        Public Property IsRestDay As Boolean Implements ITimeEntry.IsRestDay
+        Public Property IsRestDay As Boolean
 
-        Public Property HasShift As Boolean Implements ITimeEntry.HasShift
+        Public Property HasShift As Boolean
 
         <ForeignKey("EmployeeID")>
         Public Overridable Property Employee As Employee
@@ -144,7 +142,7 @@ Namespace Global.AccuPay.Entity
         Public Sub New()
         End Sub
 
-        Public Sub SetLeaveHours(type As String, leaveHours As Decimal) Implements ITimeEntry.SetLeaveHours
+        Public Sub SetLeaveHours(type As String, leaveHours As Decimal)
             Select Case type
                 Case ProductConstant.SICK_LEAVE
                     SickLeaveHours = leaveHours
@@ -157,13 +155,13 @@ Namespace Global.AccuPay.Entity
             End Select
         End Sub
 
-        Public ReadOnly Property TotalLeaveHours As Decimal Implements ITimeEntry.TotalLeaveHours
+        Public ReadOnly Property TotalLeaveHours As Decimal
             Get
                 Return VacationLeaveHours + SickLeaveHours + MaternityLeaveHours + OtherLeaveHours
             End Get
         End Property
 
-        Public Sub ComputeTotalHours() Implements ITimeEntry.ComputeTotalHours
+        Public Sub ComputeTotalHours()
             TotalHours =
                 RegularHours +
                 OvertimeHours +
@@ -175,11 +173,11 @@ Namespace Global.AccuPay.Entity
                 RegularHolidayOTHours
         End Sub
 
-        Public Sub ComputeTotalPay() Implements ITimeEntry.ComputeTotalPay
+        Public Sub ComputeTotalPay()
             TotalDayPay = GetTotalDayPay()
         End Sub
 
-        Public Function GetTotalDayPay() As Decimal Implements ITimeEntry.GetTotalDayPay
+        Public Function GetTotalDayPay() As Decimal
             Return RegularPay +
                     OvertimePay +
                     NightDiffPay +
@@ -193,7 +191,7 @@ Namespace Global.AccuPay.Entity
                     LeavePay
         End Function
 
-        Public Sub Reset() Implements ITimeEntry.Reset
+        Public Sub Reset()
 
             IsRestDay = False
             HasShift = False

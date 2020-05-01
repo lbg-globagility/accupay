@@ -35,9 +35,9 @@ Public Class PayrollResources
 
     Private _salaries As ICollection(Of Salary)
 
-    Private _timeEntries As ICollection(Of TimeEntry)
+    Private _timeEntries As ICollection(Of Entities.TimeEntry)
 
-    Private _actualtimeentries As ICollection(Of ActualTimeEntry)
+    Private _actualtimeentries As ICollection(Of Entities.ActualTimeEntry)
 
     Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
@@ -54,8 +54,6 @@ Public Class PayrollResources
     Private _paystubs As ICollection(Of Paystub)
 
     Private _previousPaystubs As ICollection(Of Paystub)
-
-    Private _isEndOfMonth As Boolean
 
     Private _payPeriod As PayPeriod
 
@@ -87,7 +85,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property TimeEntries As ICollection(Of TimeEntry)
+    Public ReadOnly Property TimeEntries As ICollection(Of Entities.TimeEntry)
         Get
             Return _timeEntries
         End Get
@@ -159,7 +157,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property ActualTimeEntries As ICollection(Of ActualTimeEntry)
+    Public ReadOnly Property ActualTimeEntries As ICollection(Of Entities.ActualTimeEntry)
         Get
             Return _actualtimeentries
         End Get
@@ -274,15 +272,11 @@ Public Class PayrollResources
         Dim previousCutoffDateForCheckingLastWorkingDay = PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom)
 
         Try
-            Using context = New PayrollContext()
-                Dim query = From t In context.TimeEntries
-                            Where t.OrganizationID.Value = z_OrganizationID AndAlso
-                                previousCutoffDateForCheckingLastWorkingDay <= t.Date AndAlso
-                                t.Date <= _payDateTo
-                            Select t
 
-                _timeEntries = Await query.ToListAsync()
-            End Using
+            Dim datePeriod = New TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo)
+            _timeEntries = (Await New TimeEntryRepository().
+                                GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("TimeEntries", ex)
         End Try
@@ -312,15 +306,10 @@ Public Class PayrollResources
 
     Private Async Function LoadActualTimeEntries() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = From t In context.ActualTimeEntries
-                            Where t.OrganizationID.Value = z_OrganizationID AndAlso
-                                _payDateFrom <= t.Date AndAlso
-                                t.Date <= _payDateTo
-                            Select t
-
-                _actualtimeentries = Await query.ToListAsync()
-            End Using
+            Dim datePeriod = New TimePeriod(_payDateFrom, _payDateTo)
+            _actualtimeentries = (Await New ActualTimeEntryRepository().
+                                GetByDatePeriodAsync(z_OrganizationID, datePeriod)).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("ActualTimeEntries", ex)
         End Try

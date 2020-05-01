@@ -14,11 +14,11 @@ Public Class SemiMonthlyAllowanceCalculator
 
     Private ReadOnly _calendarCollection As CalendarCollection
 
-    Private ReadOnly _timeEntries As ICollection(Of TimeEntry)
+    Private ReadOnly _timeEntries As ICollection(Of Entities.TimeEntry)
 
     Private ReadOnly _allowancePolicy As AllowancePolicy
 
-    Public Sub New(allowancePolicy As AllowancePolicy, employee As Entities.Employee, paystub As Paystub, payperiod As PayPeriod, calendarCollection As CalendarCollection, timeEntries As ICollection(Of TimeEntry))
+    Public Sub New(allowancePolicy As AllowancePolicy, employee As Entities.Employee, paystub As Paystub, payperiod As PayPeriod, calendarCollection As CalendarCollection, timeEntries As ICollection(Of Entities.TimeEntry))
         _employee = employee
         _paystub = paystub
         _payperiod = payperiod
