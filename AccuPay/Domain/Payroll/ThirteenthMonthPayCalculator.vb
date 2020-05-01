@@ -15,7 +15,7 @@ Namespace Global.AccuPay.Payroll
                            paystub As Paystub,
                            timeEntries As ICollection(Of Entities.TimeEntry),
                            actualtimeentries As ICollection(Of Entities.ActualTimeEntry),
-                           salary As Salary,
+                           salary As Entities.Salary,
                            settings As ListOfValueCollection,
                            allowanceItems As ICollection(Of AllowanceItem))
 
@@ -40,7 +40,7 @@ Namespace Global.AccuPay.Payroll
             paystub.ThirteenthMonthPay.Paystub = paystub
         End Sub
 
-        Private Shared Function GetThirteenMonthAmount(paystub As Paystub, thirteenMonthPolicy As ThirteenthMonthCalculationBasis, employee As Entities.Employee, timeEntries As ICollection(Of Entities.TimeEntry), actualtimeentries As ICollection(Of Entities.ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
+        Private Shared Function GetThirteenMonthAmount(paystub As Paystub, thirteenMonthPolicy As ThirteenthMonthCalculationBasis, employee As Entities.Employee, timeEntries As ICollection(Of Entities.TimeEntry), actualtimeentries As ICollection(Of Entities.ActualTimeEntry), salary As Entities.Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
 
             Select Case thirteenMonthPolicy
                 Case ThirteenthMonthCalculationBasis.RegularPayAndAllowance
@@ -58,7 +58,7 @@ Namespace Global.AccuPay.Payroll
 
                     Dim daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay
 
-                    Dim dailyRate = PayrollTools.GetDailyRate(salary, employee)
+                    Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(salary, employee)
 
                     Return AccuMath.CommercialRound(daysWorked * dailyRate)
 
@@ -70,7 +70,7 @@ Namespace Global.AccuPay.Payroll
 
         End Function
 
-        Private Shared Function ComputeRegularPayAndAllowance(_employee As Entities.Employee, timeEntries As ICollection(Of Entities.TimeEntry), actualtimeentries As ICollection(Of Entities.ActualTimeEntry), salary As Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
+        Private Shared Function ComputeRegularPayAndAllowance(_employee As Entities.Employee, timeEntries As ICollection(Of Entities.TimeEntry), actualtimeentries As ICollection(Of Entities.ActualTimeEntry), salary As Entities.Salary, settings As ListOfValueCollection, allowanceItems As ICollection(Of AllowanceItem)) As Decimal
             Dim contractualEmployementStatuses = New String() {"Contractual", "SERVICE CONTRACT"}
 
             Dim thirteenthMonthAmount = 0D

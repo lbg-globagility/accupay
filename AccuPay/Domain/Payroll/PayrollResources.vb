@@ -33,7 +33,7 @@ Public Class PayrollResources
 
     Private _employees As ICollection(Of Entities.Employee)
 
-    Private _salaries As ICollection(Of Salary)
+    Private _salaries As ICollection(Of Entities.Salary)
 
     Private _timeEntries As ICollection(Of Entities.TimeEntry)
 
@@ -103,7 +103,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property Salaries As ICollection(Of Salary)
+    Public ReadOnly Property Salaries As ICollection(Of Entities.Salary)
         Get
             Return _salaries
         End Get
@@ -340,19 +340,10 @@ Public Class PayrollResources
     End Function
 
     Private Async Function LoadSalaries() As Task
-        Dim today = DateTime.Today
-
         Try
-            Using context = New PayrollContext(logger)
-                Dim query = context.Salaries.
-                    Where(Function(s) s.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(s) s.EffectiveFrom <= _payDateFrom).
-                    OrderByDescending(Function(s) s.EffectiveFrom).
-                    GroupBy(Function(s) s.EmployeeID).
-                    Select(Function(g) g.FirstOrDefault())
-
-                _salaries = Await query.ToListAsync()
-            End Using
+            _salaries = (Await New SalaryRepository().
+                    GetByCutOffAsync(z_OrganizationID, _payDateFrom)).
+                    ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("Salaries", ex)
         End Try

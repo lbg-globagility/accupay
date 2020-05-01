@@ -26,7 +26,7 @@ Namespace Global.AccuPay.Payroll
             _settings = settings
         End Sub
 
-        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, salary As Salary)
+        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, salary As Entities.Salary)
             ' Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0
             paystub.TaxableIncome = 0

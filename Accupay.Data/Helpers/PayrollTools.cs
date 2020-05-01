@@ -184,7 +184,7 @@ namespace AccuPay.Data.Helpers
             return false;
         }
 
-        internal static async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYear(int organizationId, IEnumerable<IPayPeriod> payperiods = null)
+        public static async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYear(int organizationId, IEnumerable<IPayPeriod> payperiods = null)
         {
             return await Task.Run(() =>
             {

@@ -11,7 +11,7 @@ Namespace Global.AccuPay.Payroll
     Public Class PaystubActualCalculator
 
         Public Sub Compute(employee As Entities.Employee,
-                           salary As Salary,
+                           salary As Entities.Salary,
                            settings As ListOfValueCollection,
                            payperiod As PayPeriod,
                            paystub As Paystub)
@@ -23,7 +23,7 @@ Namespace Global.AccuPay.Payroll
 
             ElseIf employee.IsFixed Then
 
-                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual:=True)
+                Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual:=True)
                 Dim basicPay = monthlyRate / 2
 
                 totalEarnings = basicPay + paystub.Actual.AdditionalPay
@@ -41,7 +41,7 @@ Namespace Global.AccuPay.Payroll
                     totalEarnings = paystub.Actual.RegularPay + paystub.Actual.LeavePay + paystub.Actual.AdditionalPay
                 Else
 
-                    Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual:=True)
+                    Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary, isActual:=True)
                     Dim basicPay = monthlyRate / 2
 
                     paystub.Actual.RegularPay = basicPay - paystub.Actual.LeavePay

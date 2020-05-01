@@ -27,52 +27,8 @@ Public Class PayrollTools
 
     Private Const PotentialLastWorkDay As Integer = 7
 
-    Public Shared Function GetEmployeeMonthlyRate(
-                            employee As IEmployee,
-                            salary As Salary,
-                            Optional isActual As Boolean = False) As Decimal
-
-        Dim basicSalary = If(isActual, salary.BasicSalary + salary.AllowanceSalary, salary.BasicSalary)
-
-        If employee.IsMonthly OrElse employee.IsFixed Then
-
-            Return basicSalary
-
-        ElseIf employee.IsDaily Then
-
-            Return basicSalary * GetWorkDaysPerMonth(employee.WorkDaysPerYear)
-
-        End If
-
-        Return 0
-
-    End Function
-
     Public Shared Function GetWorkDaysPerMonth(workDaysPerYear As Decimal) As Decimal
         Return workDaysPerYear / MonthsPerYear
-    End Function
-
-    Public Shared Function GetDailyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
-        Return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear)
-    End Function
-
-    Public Shared Function GetDailyRate(salary As Salary, employee As IEmployee, Optional isActual As Boolean = False) As Decimal
-        Dim dailyRate = 0D
-
-        If salary Is Nothing Then
-            Return 0
-        End If
-
-        Dim basicSalary = If(isActual, salary.BasicSalary + salary.AllowanceSalary, salary.BasicSalary)
-
-        If employee.IsDaily Then
-            dailyRate = basicSalary
-        ElseIf employee.IsMonthly OrElse employee.IsFixed Then
-            If employee.WorkDaysPerYear = 0 Then Return 0
-            dailyRate = basicSalary / (employee.WorkDaysPerYear / 12)
-        End If
-
-        Return dailyRate
     End Function
 
     Public Shared Function GetHourlyRateByMonthlyRate(monthlyRate As Decimal, workDaysPerYear As Decimal) As Decimal
@@ -81,51 +37,6 @@ Public Class PayrollTools
 
     Public Shared Function GetHourlyRateByDailyRate(dailyRate As Decimal) As Decimal
         Return dailyRate / WorkHoursPerDay
-    End Function
-
-    Public Shared Function HasWorkedLastWorkingDay(
-                            currentDate As Date,
-                            currentTimeEntries As ICollection(Of TimeEntry),
-                            calendarCollection As CalendarCollection) As Boolean
-
-        Dim lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay)
-
-        Dim lastTimeEntries = currentTimeEntries.
-            Where(Function(t) lastPotentialEntry <= t.Date And t.Date <= currentDate.Date).
-            OrderByDescending(Function(t) t.Date).
-            ToList()
-
-        For Each lastTimeEntry In lastTimeEntries
-            ' If employee has no shift set for the day, it's not a working day.
-            If lastTimeEntry.HasShift = False Then
-                Continue For
-            End If
-
-            Dim totalDayPay = lastTimeEntry.GetTotalDayPay()
-
-            If lastTimeEntry.IsRestDay Then
-
-                If totalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Dim payrateCalendar = calendarCollection.GetCalendar(lastTimeEntry.BranchID)
-            Dim payrate = payrateCalendar.Find(lastTimeEntry.Date)
-            If payrate.IsHoliday Then
-                If totalDayPay > 0 Then
-                    Return True
-                End If
-
-                Continue For
-            End If
-
-            Return lastTimeEntry.RegularHours > 0 Or lastTimeEntry.TotalLeaveHours > 0
-        Next
-
-        Return False
     End Function
 
     Friend Shared Async Function GetCurrentlyWorkedOnPayPeriodByCurrentYear(

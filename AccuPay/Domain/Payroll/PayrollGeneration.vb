@@ -23,7 +23,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _resources As PayrollResources
 
-    Private ReadOnly _salary As Salary
+    Private ReadOnly _salary As Entities.Salary
 
     Private ReadOnly _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
@@ -838,7 +838,7 @@ Public Class PayrollGeneration
         Public Property ActualAbsenceDeduction As Decimal Implements IPaystubRate.ActualAbsenceDeduction
 
         Public Sub Compute(timeEntries As ICollection(Of Entities.TimeEntry),
-                           salary As Salary,
+                           salary As Entities.Salary,
                            employee As Entities.Employee,
                            actualtimeentries As ICollection(Of Entities.ActualTimeEntry))
 

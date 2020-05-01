@@ -19,7 +19,7 @@ Namespace Global.AccuPay.Payroll
             _philHealthBrackets = philHealthBrackets
         End Sub
 
-        Public Sub Calculate(salary As Salary,
+        Public Sub Calculate(salary As Data.Entities.Salary,
                              paystub As Paystub,
                              previousPaystub As Paystub,
                              employee As Data.Entities.Employee,
@@ -86,7 +86,7 @@ Namespace Global.AccuPay.Payroll
             End If
         End Sub
 
-        Private Function GetTotalContribution(salary As Salary,
+        Private Function GetTotalContribution(salary As Data.Entities.Salary,
                                               paystub As Paystub,
                                               previousPaystub As Paystub,
                                               employee As Data.Entities.Employee,
@@ -99,11 +99,11 @@ Namespace Global.AccuPay.Payroll
             ' If philHealth calculation is based on the basic salary, get it from the salary record
             If calculationBasis = PhilHealthCalculationBasis.BasicSalary Then
 
-                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                basisPay = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
             ElseIf calculationBasis = PhilHealthCalculationBasis.BasicAndEcola Then
 
-                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
                 Dim ecolas = allowances.
                     Where(Function(ea) ea.Product.PartNo.ToLower() = ProductConstant.ECOLA)
@@ -138,9 +138,9 @@ Namespace Global.AccuPay.Payroll
                     totalHours = If(previousPaystub?.RegularHoursAndTotalRestDay, 0) + paystub.RegularHoursAndTotalRestDay
                 End If
 
-                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
-                Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
-                Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+                Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
+                Dim hourlyRate = Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
                 basisPay = totalHours * hourlyRate
 

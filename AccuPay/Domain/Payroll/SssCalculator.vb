@@ -17,7 +17,7 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Salary, employee As Entities.Employee, payperiod As PayPeriod)
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Entities.Salary, employee As Entities.Employee, payperiod As PayPeriod)
         ' Reset SSS values to zero
         paystub.SssEmployeeShare = 0
         paystub.SssEmployerShare = 0
@@ -65,7 +65,7 @@ Public Class SssCalculator
 
     Private Function GetSocialSecurityAmount(paystub As Paystub,
                                              previousPaystub As Paystub,
-                                             salary As Salary,
+                                             salary As Entities.Salary,
                                              employee As Entities.Employee) As Decimal
 
         Dim policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", False)
@@ -75,7 +75,7 @@ Public Class SssCalculator
         Select Case calculationBasis
             Case SssCalculationBasis.BasicSalary
 
-                Return PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Return Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary)
 
             Case SssCalculationBasis.Earnings
 
@@ -98,9 +98,9 @@ Public Class SssCalculator
                     totalHours = If(previousPaystub?.RegularHoursAndTotalRestDay, 0) + paystub.RegularHoursAndTotalRestDay
                 End If
 
-                Dim monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary)
-                Dim dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
-                Dim hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate)
+                Dim monthlyRate = Data.Helpers.PayrollTools.GetEmployeeMonthlyRate(employee, salary)
+                Dim dailyRate = Data.Helpers.PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear)
+                Dim hourlyRate = Data.Helpers.PayrollTools.GetHourlyRateByDailyRate(dailyRate)
 
                 Return totalHours * hourlyRate
 

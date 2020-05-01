@@ -845,7 +845,6 @@
     <Compile Include="Domain\Loans\LoanSchedule.vb" />
     <Compile Include="Domain\Loans\LoanTransaction.vb" />
     <Compile Include="Domain\Paystubs\ActualAdjustment.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntry.vb" />
     <Compile Include="Domain\Paystubs\Adjustment.vb" />
     <Compile Include="Domain\Paystubs\Allowance.vb" />
     <Compile Include="Domain\Paystubs\AllowanceItem.vb" />

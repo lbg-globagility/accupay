@@ -15,35 +15,32 @@ Public Class PayrollContext
     Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
-    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
-
-    Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
-
-    Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
-
-    Public Overridable Property Paystubs As DbSet(Of Paystub)
-
-    Public Overridable Property Products As DbSet(Of Product)
-
     Public Overridable Property Salaries As DbSet(Of Salary)
 
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
-    Public Overridable Property Allowances As DbSet(Of Allowance)
-
-    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+    Public Overridable Property PayPeriods As DbSet(Of PayPeriod)
 
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
     Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
 
+    Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
+
+    Public Overridable Property Products As DbSet(Of Product)
+
+    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
+
+    Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
+
+    Public Overridable Property Paystubs As DbSet(Of Paystub)
+    Public Overridable Property Allowances As DbSet(Of Allowance)
+
+    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+
     Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
 
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
-
-    Public Overridable Property ActualTimeEntries As DbSet(Of ActualTimeEntry)
-
-    Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
 
     Public Sub New()
     End Sub
