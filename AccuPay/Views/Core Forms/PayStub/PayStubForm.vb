@@ -460,7 +460,7 @@ Public Class PayStubForm
         DeletePayrollToolStripMenuItem.Visible = enable
         ReopenPayrollToolStripMenuItem.Visible = enable
         ClosePayrollToolStripMenuItem.Visible = enable
-        OthersToolStripMenuItem.Visible = enable
+        'OthersToolStripMenuItem.Visible = enable
     End Sub
 
     Private Sub EnableAdjustmentsInput(Optional enable As Boolean = True)

@@ -761,7 +761,6 @@
     <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Domain\Payroll\PayrollException.vb" />
     <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
-    <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Domain\Payroll\SssCalculator.vb" />
     <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
