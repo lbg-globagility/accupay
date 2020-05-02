@@ -16,13 +16,13 @@ Public Class PayrollContext
 
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
-    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
-
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
 
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
+
+    Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property Products As DbSet(Of Product)
 
