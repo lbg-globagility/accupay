@@ -37,6 +37,7 @@ namespace AccuPay.Data
         public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
+        internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
         public virtual DbSet<JobCategory> JobCategories { get; set; }
         public virtual DbSet<JobLevel> JobLevels { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
@@ -45,7 +46,6 @@ namespace AccuPay.Data
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
         public virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
-
         public virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }

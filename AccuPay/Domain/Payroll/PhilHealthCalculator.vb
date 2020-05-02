@@ -11,16 +11,16 @@ Namespace Global.AccuPay.Payroll
     Public Class PhilHealthCalculator
 
         Private ReadOnly _policy As PhilHealthPolicy
-        Private ReadOnly _philHealthBrackets As ICollection(Of Data.Entities.PhilHealthBracket)
+        Private ReadOnly _philHealthBrackets As IReadOnlyCollection(Of Data.Entities.PhilHealthBracket)
 
-        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As ICollection(Of Data.Entities.PhilHealthBracket))
+        Public Sub New(policy As PhilHealthPolicy, philHealthBrackets As IReadOnlyCollection(Of Data.Entities.PhilHealthBracket))
             _policy = policy
             _philHealthBrackets = philHealthBrackets
         End Sub
 
         Public Sub Calculate(salary As Data.Entities.Salary,
                              paystub As Paystub,
-                             previousPaystub As Paystub,
+                             previousPaystub As Data.Entities.Paystub,
                              employee As Data.Entities.Employee,
                              payperiod As Data.Entities.PayPeriod,
                              allowances As ICollection(Of Data.Entities.Allowance))
@@ -87,7 +87,7 @@ Namespace Global.AccuPay.Payroll
 
         Private Function GetTotalContribution(salary As Data.Entities.Salary,
                                               paystub As Paystub,
-                                              previousPaystub As Paystub,
+                                              previousPaystub As Data.Entities.Paystub,
                                               employee As Data.Entities.Employee,
                                               allowances As ICollection(Of Data.Entities.Allowance)) As Decimal
 

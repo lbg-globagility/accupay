@@ -9,14 +9,14 @@ Public Class SssCalculator
 
     Private ReadOnly _settings As ListOfValueCollection
 
-    Private ReadOnly _socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
+    Private ReadOnly _socialSecurityBrackets As IReadOnlyCollection(Of Entities.SocialSecurityBracket)
 
-    Public Sub New(settings As ListOfValueCollection, socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket))
+    Public Sub New(settings As ListOfValueCollection, socialSecurityBrackets As IReadOnlyCollection(Of Entities.SocialSecurityBracket))
         _settings = settings
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Entities.Salary, employee As Entities.Employee, payperiod As Entities.PayPeriod)
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Entities.Paystub, salary As Entities.Salary, employee As Entities.Employee, payperiod As Entities.PayPeriod)
         ' Reset SSS values to zero
         paystub.SssEmployeeShare = 0
         paystub.SssEmployerShare = 0
@@ -63,7 +63,7 @@ Public Class SssCalculator
     End Function
 
     Private Function GetSocialSecurityAmount(paystub As Paystub,
-                                             previousPaystub As Paystub,
+                                             previousPaystub As Entities.Paystub,
                                              salary As Entities.Salary,
                                              employee As Entities.Employee) As Decimal
 

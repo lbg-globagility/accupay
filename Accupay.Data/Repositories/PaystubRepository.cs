@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +9,21 @@ namespace AccuPay.Data.Repositories
 {
     public class PaystubRepository
     {
+        public async Task<IEnumerable<Paystub>> GetPreviousCutOffPaystubs(
+                                            DateTime currentCuttOffStart,
+                                            int organizationId)
+        {
+            var previousCutoffEnd = currentCuttOffStart.AddDays(-1);
+
+            using (var context = new PayrollContext())
+            {
+                return await context.Paystubs.
+                                Where(x => x.PayToDate == previousCutoffEnd).
+                                Where(x => x.OrganizationID == organizationId).
+                                ToListAsync();
+            }
+        }
+
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
             using (var context = new PayrollContext())

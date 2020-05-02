@@ -7,10 +7,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
-Imports Microsoft.Extensions.Logging
-Imports Microsoft.Extensions.Logging.Console
 
 ''' <summary>
 ''' Takes care of loading all the information needed to produce the payroll for a given pay period.
@@ -35,25 +32,25 @@ Public Class PayrollResources
 
     Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
-    Private _loanTransactions As ICollection(Of LoanTransaction)
+    Private _loanTransactions As ICollection(Of Entities.LoanTransaction)
 
-    Private _socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
+    Private _socialSecurityBrackets As IReadOnlyCollection(Of Entities.SocialSecurityBracket)
 
-    Private _philHealthBrackets As ICollection(Of Entities.PhilHealthBracket)
+    Private _philHealthBrackets As IReadOnlyCollection(Of Entities.PhilHealthBracket)
 
-    Private _withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
+    Private _withholdingTaxBrackets As IReadOnlyCollection(Of Entities.WithholdingTaxBracket)
 
     Private _paystubs As ICollection(Of Paystub)
 
-    Private _previousPaystubs As ICollection(Of Paystub)
+    Private _previousPaystubs As ICollection(Of Entities.Paystub)
 
     Private _payPeriod As Entities.PayPeriod
 
     Private _allowances As ICollection(Of Entities.Allowance)
 
-    Private _divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
+    Private _divisionMinimumWages As IReadOnlyCollection(Of Entities.DivisionMinimumWage)
 
-    Private _filingStatuses As DataTable
+    Private _filingStatuses As IReadOnlyCollection(Of Entities.FilingStatusType)
 
     Private _systemOwner As SystemOwnerService
 
@@ -93,7 +90,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property LoanTransactions As ICollection(Of LoanTransaction)
+    Public ReadOnly Property LoanTransactions As ICollection(Of Entities.LoanTransaction)
         Get
             Return _loanTransactions
         End Get
@@ -111,25 +108,25 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property PreviousPaystubs As ICollection(Of Paystub)
+    Public ReadOnly Property PreviousPaystubs As ICollection(Of Entities.Paystub)
         Get
             Return _previousPaystubs
         End Get
     End Property
 
-    Public ReadOnly Property SocialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
+    Public ReadOnly Property SocialSecurityBrackets As IReadOnlyCollection(Of Entities.SocialSecurityBracket)
         Get
             Return _socialSecurityBrackets
         End Get
     End Property
 
-    Public ReadOnly Property PhilHealthBrackets As ICollection(Of Entities.PhilHealthBracket)
+    Public ReadOnly Property PhilHealthBrackets As IReadOnlyCollection(Of Entities.PhilHealthBracket)
         Get
             Return _philHealthBrackets
         End Get
     End Property
 
-    Public ReadOnly Property WithholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
+    Public ReadOnly Property WithholdingTaxBrackets As IReadOnlyCollection(Of Entities.WithholdingTaxBracket)
         Get
             Return _withholdingTaxBrackets
         End Get
@@ -159,13 +156,13 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property FilingStatuses As DataTable
+    Public ReadOnly Property FilingStatuses As IReadOnlyCollection(Of Entities.FilingStatusType)
         Get
             Return _filingStatuses
         End Get
     End Property
 
-    Public ReadOnly Property DivisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
+    Public ReadOnly Property DivisionMinimumWages As IReadOnlyCollection(Of Entities.DivisionMinimumWage)
         Get
             Return _divisionMinimumWages
         End Get
@@ -239,6 +236,31 @@ Public Class PayrollResources
             LoadVacationLeaveProduct(),
             LoadLeaves()
         })
+    End Function
+
+    ''' <summary>
+    ''' This is the current paystubs that will be updated when the payroll is generated.
+    ''' On the first generation or when payroll is deleted, this list will be empty.
+    ''' </summary>
+    ''' <returns></returns>
+    Private Async Function LoadPaystubs() As Task
+        Try
+            Using context = New PayrollContext()
+                Dim query = context.Paystubs.
+                    Include(Function(p) p.Adjustments).
+                    ThenInclude(Function(a) a.Product).
+                    Include(Function(p) p.ThirteenthMonthPay).
+                    Include(Function(p) p.ActualAdjustments).
+                    Include(Function(p) p.Actual).
+                    Where(Function(p) p.PayFromdate = _payDateFrom).
+                    Where(Function(p) p.PayToDate = _payDateTo).
+                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID)
+
+                _paystubs = Await query.ToListAsync()
+            End Using
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Paystubs", ex)
+        End Try
     End Function
 
     Public Async Function LoadListOfValueCollection() As Task
@@ -332,13 +354,12 @@ Public Class PayrollResources
 
     Private Async Function LoadLoanTransactions() As Task
         Try
-            Using context = New PayrollContext()
-                Dim query = context.LoanTransactions.
-                    Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(l) CBool(l.PayPeriodID = _payPeriodId))
 
-                _loanTransactions = Await query.ToListAsync()
-            End Using
+            If _payPeriodId.HasValue = False Then Return
+
+            _loanTransactions = (Await New LoanTransactionRepository().
+                            GetByPayPeriodWithEmployeeAsync(_payPeriodId.Value)).
+                            ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("LoanTransactions", ex)
         End Try
@@ -354,37 +375,11 @@ Public Class PayrollResources
         End Try
     End Function
 
-    Private Async Function LoadPaystubs() As Task
-        Try
-            Using context = New PayrollContext()
-                Dim query = context.Paystubs.
-                    Include(Function(p) p.Adjustments).
-                    ThenInclude(Function(a) a.Product).
-                    Include(Function(p) p.ThirteenthMonthPay).
-                    Include(Function(p) p.ActualAdjustments).
-                    Include(Function(p) p.Actual).
-                    Where(Function(p) p.PayFromdate = _payDateFrom).
-                    Where(Function(p) p.PayToDate = _payDateTo).
-                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID)
-
-                _paystubs = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("Paystubs", ex)
-        End Try
-    End Function
-
     Private Async Function LoadPreviousPaystubs() As Task
-        Dim previousCutoffEnd = _payDateFrom.AddDays(-1)
-
         Try
-            Using context = New PayrollContext()
-                Dim query = context.Paystubs.
-                    Where(Function(p) p.PayToDate = previousCutoffEnd).
-                    Where(Function(p) p.OrganizationID.Value = z_OrganizationID)
-
-                _previousPaystubs = Await query.ToListAsync()
-            End Using
+            _previousPaystubs = (Await New PaystubRepository().
+                                GetPreviousCutOffPaystubs(_payDateFrom, z_OrganizationID)).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("PreviousPaystubs", ex)
         End Try
@@ -444,11 +439,8 @@ Public Class PayrollResources
 
     Private Async Function LoadFilingStatuses() As Task
         Try
-            Using context = New PayrollContext()
-                _filingStatuses = Await (
-                    New SqlToDataTable("SELECT * FROM filingstatus;").
-                        ReadAsync())
-            End Using
+            _filingStatuses = (Await New FilingStatusTypeRepository().GetAllAsync()).
+                                ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("Filing Statuses", ex)
         End Try
@@ -480,7 +472,7 @@ Public Class PayrollResources
         Try
 
             _sickLeaveProduct = Await New ProductRepository().
-                                        GetOrCreateLoanTypeAsync(
+                                        GetOrCreateLeaveTypeAsync(
                                             ProductConstant.SICK_LEAVE,
                                             organizationId:=z_OrganizationID,
                                             userId:=z_User)
@@ -493,7 +485,7 @@ Public Class PayrollResources
         Try
 
             _vacationLeaveProduct = Await New ProductRepository().
-                                        GetOrCreateLoanTypeAsync(
+                                        GetOrCreateLeaveTypeAsync(
                                             ProductConstant.VACATION_LEAVE,
                                             organizationId:=z_OrganizationID,
                                             userId:=z_User)

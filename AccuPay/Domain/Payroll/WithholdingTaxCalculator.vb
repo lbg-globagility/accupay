@@ -10,22 +10,22 @@ Namespace Global.AccuPay.Payroll
 
     Public Class WithholdingTaxCalculator
 
-        Private ReadOnly _filingStatuses As DataTable
+        Private ReadOnly _filingStatuses As IReadOnlyCollection(Of Entities.FilingStatusType)
 
-        Private ReadOnly _withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket)
+        Private ReadOnly _withholdingTaxBrackets As IReadOnlyCollection(Of Entities.WithholdingTaxBracket)
 
-        Private ReadOnly _divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage)
+        Private ReadOnly _divisionMinimumWages As IReadOnlyCollection(Of Entities.DivisionMinimumWage)
 
         Private ReadOnly _settings As ListOfValueCollection
 
-        Public Sub New(settings As ListOfValueCollection, filingStatuses As DataTable, withholdingTaxBrackets As ICollection(Of Entities.WithholdingTaxBracket), divisionMinimumWages As ICollection(Of Entities.DivisionMinimumWage))
+        Public Sub New(settings As ListOfValueCollection, filingStatuses As IReadOnlyCollection(Of Entities.FilingStatusType), withholdingTaxBrackets As IReadOnlyCollection(Of Entities.WithholdingTaxBracket), divisionMinimumWages As IReadOnlyCollection(Of Entities.DivisionMinimumWage))
             _filingStatuses = filingStatuses
             _withholdingTaxBrackets = withholdingTaxBrackets
             _divisionMinimumWages = divisionMinimumWages
             _settings = settings
         End Sub
 
-        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As Entities.PayPeriod, salary As Entities.Salary)
+        Public Sub Calculate(paystub As Paystub, previousPaystub As Entities.Paystub, employee As Entities.Employee, payperiod As Entities.PayPeriod, salary As Entities.Salary)
             ' Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0
             paystub.TaxableIncome = 0
@@ -125,16 +125,14 @@ Namespace Global.AccuPay.Payroll
 
         Private Function GetFilingStatusID(maritalStatus As String, noOfDependents As Integer?) As Integer
             Dim filingStatus = _filingStatuses.
-                Select($"
-                    MaritalStatus = '{maritalStatus}' AND
-                    Dependent <= '{noOfDependents}'
-                ").
-                OrderByDescending(Function(f) CInt(f("Dependent"))).
-                FirstOrDefault()
+                                Where(Function(x) x.MaritalStatus = maritalStatus).
+                                Where(Function(x) x.Dependents <= If(noOfDependents, 0)).
+                                OrderByDescending(Function(x) x.Dependents).
+                                FirstOrDefault()
 
             Dim filingStatusID = 1
             If filingStatus IsNot Nothing Then
-                filingStatusID = CInt(filingStatus("RowID"))
+                filingStatusID = filingStatus.RowID
             End If
 
             Return filingStatusID

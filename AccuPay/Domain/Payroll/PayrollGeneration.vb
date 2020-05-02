@@ -26,7 +26,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
-    Private ReadOnly _loanTransactions As ICollection(Of LoanTransaction)
+    Private ReadOnly _loanTransactions As ICollection(Of Entities.LoanTransaction)
 
     Private ReadOnly _previousTimeEntries As ICollection(Of Entities.TimeEntry)
 
@@ -46,7 +46,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _leaves As IReadOnlyCollection(Of Entities.Leave)
 
-    Private ReadOnly _previousPaystub As Paystub
+    Private ReadOnly _previousPaystub As Entities.Paystub
 
     Private ReadOnly _bpiInsuranceProduct As Entities.Product
 
