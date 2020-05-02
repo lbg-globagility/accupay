@@ -186,6 +186,18 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<bool> CheckIfAlreadyUsed(string allowanceName)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.AllowanceItems.
+                                    Include(x => x.Allowance).
+                                    Include(x => x.Allowance.Product).
+                                    Where(x => x.Allowance.Product.PartNo == allowanceName).
+                                    AnyAsync();
+            }
+        }
+
         #endregion Others
 
         #endregion Queries

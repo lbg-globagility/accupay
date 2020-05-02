@@ -420,6 +420,10 @@ Public Class EmployeeAllowanceForm
 
         Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID))
 
+        ' TODO: decide on either deleting the allowance type on delete on ProductControlForm,
+        'or if we stil use ActiveData to soft delete the allowance, what should happen on the form
+        'if the selected allowance has a soft deleted allowance type.
+
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
                                                 ToList

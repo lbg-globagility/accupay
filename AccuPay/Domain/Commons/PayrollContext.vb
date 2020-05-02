@@ -16,8 +16,6 @@ Public Class PayrollContext
 
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
-    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
-
     Public Overridable Property Products As DbSet(Of Product)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
