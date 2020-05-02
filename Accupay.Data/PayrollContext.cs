@@ -63,6 +63,7 @@ namespace AccuPay.Data
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
         public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
+        internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
@@ -85,6 +86,14 @@ namespace AccuPay.Data
             optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
                             UseLoggerFactory(_loggerFactory).
                             EnableSensitiveDataLogging();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<TardinessRecord>().
+                HasKey(t => new { t.EmployeeId, t.Year });
         }
     }
 }

@@ -26,8 +26,6 @@ Public Class PayrollContext
 
     Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
 
-    Public Overridable Property TardinessRecords As DbSet(Of TardinessRecord)
-
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
@@ -61,9 +59,6 @@ Public Class PayrollContext
         modelBuilder.Entity(Of Paystub).
             HasMany(Function(p) p.AllowanceItems).
             WithOne(Function(a) a.Paystub)
-
-        modelBuilder.Entity(Of TardinessRecord)().
-            HasKey(Function(t) New With {t.EmployeeId, t.Year})
     End Sub
 
 End Class

@@ -28,29 +28,6 @@ namespace AccuPay.Data.Services
                 throw new Exception("Branch does not exists.");
         }
 
-        private List<TimePeriod> GetPayPeriod(PayrollContext context)
-        {
-            // get a random organizationId just to get a random payperiodId
-            var organizationId = context.Organizations.Select(x => x.RowID).FirstOrDefault();
-            if (organizationId == null) return null;
-            // get a random payperiod just to get the first day and last day of the payroll month
-            var payPeriods = context.PayPeriods.
-                                        Where(p => p.OrganizationID == organizationId).
-                                        Where(p => p.IsSemiMonthly).
-                                        Where(p => p.Year == _selectedMonth.Year).
-                                        Where(p => p.Month == _selectedMonth.Month).
-                                        ToList();
-
-            if (payPeriods.Count != 2)
-                throw new Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)");
-
-            return new List<TimePeriod>()
-            {
-                new TimePeriod(payPeriods[0].PayFromDate, payPeriods[0].PayToDate),
-                new TimePeriod(payPeriods[1].PayFromDate, payPeriods[1].PayToDate)
-            };
-        }
-
         public List<PayPeriodModel> GetData()
         {
             List<PayPeriodModel> payPeriodModels = new List<PayPeriodModel>();
@@ -146,6 +123,29 @@ namespace AccuPay.Data.Services
             }
 
             return payPeriodModels;
+        }
+
+        private List<TimePeriod> GetPayPeriod(PayrollContext context)
+        {
+            // get a random organizationId just to get a random payperiodId
+            var organizationId = context.Organizations.Select(x => x.RowID).FirstOrDefault();
+            if (organizationId == null) return null;
+            // get a random payperiod just to get the first day and last day of the payroll month
+            var payPeriods = context.PayPeriods.
+                                        Where(p => p.OrganizationID == organizationId).
+                                        Where(p => p.IsSemiMonthly).
+                                        Where(p => p.Year == _selectedMonth.Year).
+                                        Where(p => p.Month == _selectedMonth.Month).
+                                        ToList();
+
+            if (payPeriods.Count != 2)
+                throw new Exception($"Pay periods on the selected month was {payPeriods.Count} instead of 2 (First half, End of the month)");
+
+            return new List<TimePeriod>()
+            {
+                new TimePeriod(payPeriods[0].PayFromDate, payPeriods[0].PayToDate),
+                new TimePeriod(payPeriods[1].PayFromDate, payPeriods[1].PayToDate)
+            };
         }
 
         private List<CalendarCollection> GetCalendarCollections(int[] organizationids,

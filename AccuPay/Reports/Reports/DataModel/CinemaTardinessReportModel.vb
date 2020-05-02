@@ -1,14 +1,17 @@
-﻿Public Class CinemaTardinessReportModel
+﻿Imports AccuPay.Data
+
+Public Class CinemaTardinessReportModel
+    Implements ICinemaTardinessReportModel
 
     Public Const DaysLateLimit As Integer = 8
 
-    Public Property EmployeeId As Integer
-    Public Property EmployeeName As String
-    Public Property Days As Decimal
-    Public Property Hours As Decimal
-    Public Property NumberOfOffense As Integer
+    Public Property EmployeeId As Integer Implements ICinemaTardinessReportModel.EmployeeId
+    Public Property EmployeeName As String Implements ICinemaTardinessReportModel.EmployeeName
+    Public Property Days As Decimal Implements ICinemaTardinessReportModel.Days
+    Public Property Hours As Decimal Implements ICinemaTardinessReportModel.Hours
+    Public Property NumberOfOffense As Integer Implements ICinemaTardinessReportModel.NumberOfOffense
 
-    Public ReadOnly Property NumberOfOffenseOrdinal As String
+    Public ReadOnly Property NumberOfOffenseOrdinal As String Implements ICinemaTardinessReportModel.NumberOfOffenseOrdinal
         Get
 
             If NumberOfOffense < 1 Then Return "-"
@@ -32,7 +35,7 @@
         End Get
     End Property
 
-    Public ReadOnly Property Sanction As String
+    Public ReadOnly Property Sanction As String Implements ICinemaTardinessReportModel.Sanction
         Get
             If NumberOfOffense < 1 Then
 
