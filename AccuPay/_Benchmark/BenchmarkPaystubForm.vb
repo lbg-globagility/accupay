@@ -2,22 +2,18 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Services
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.EntityFrameworkCore
-Imports AccuPay.Data
-Imports AccuPay.Data.ValueObjects
 
 Public Class BenchmarkPaystubForm
 
     Private _currentPayPeriod As IPayPeriod
-
-    Private _employeeRepository As EmployeeRepository
-
-    Private _salaryRepository As SalaryRepository
 
     Private _salaries As List(Of Salary)
 
@@ -25,7 +21,13 @@ Public Class BenchmarkPaystubForm
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
+    Private _adjustmentRepository As AdjustmentRepository
+
+    Private _employeeRepository As EmployeeRepository
+
     Private _productRepository As ProductRepository
+
+    Private _salaryRepository As SalaryRepository
 
     Private _pagibigLoanId As Integer?
 
@@ -39,9 +41,10 @@ Public Class BenchmarkPaystubForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New EmployeeRepository
-        _salaryRepository = New SalaryRepository
-        _productRepository = New ProductRepository
+        _adjustmentRepository = New AdjustmentRepository()
+        _employeeRepository = New EmployeeRepository()
+        _salaryRepository = New SalaryRepository()
+        _productRepository = New ProductRepository()
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -236,7 +239,7 @@ Public Class BenchmarkPaystubForm
                 If employeeRate Is Nothing Then Return
 
                 PopulateOvertimeGridView(payStub, employeeRate)
-                Await PopulateAdjustmentsGridView(context, payStubId)
+                Await PopulateAdjustmentsGridView(payStubId.Value)
                 ShowUndeclaredSalaryBreakdown(payStub, employeeRate)
 
                 'Show summary
@@ -349,8 +352,8 @@ Public Class BenchmarkPaystubForm
 
     End Function
 
-    Private Async Function PopulateAdjustmentsGridView(context As PayrollContext, payStubId As Integer?) As Task
-        Dim payStubAdjustments = Await GetAdjustments(context, payStubId)
+    Private Async Function PopulateAdjustmentsGridView(payStubId As Integer) As Task
+        Dim payStubAdjustments = Await GetAdjustments(payStubId)
         Dim otherIncomes = payStubAdjustments.Where(Function(p) p.Amount > 0).ToList
         Dim deductions = GetAdjustmentDeductions(payStubAdjustments)
 
@@ -656,16 +659,15 @@ Public Class BenchmarkPaystubForm
         Return deductions
     End Function
 
-    Private Shared Async Function GetAdjustments(context As PayrollContext, payStubId As Integer?) As Task(Of List(Of Adjustments))
-        Return Await context.Adjustments.
-                                Include(Function(a) a.Product).
-                                Where(Function(a) a.PaystubID.Value = payStubId.Value).
-                                Select(Function(p) New Adjustments With {
-                                    .Amount = p.Amount,
-                                    .Code = p.Product.Comments,
-                                    .Description = p.Product.PartNo
-                                    }).
-                                ToListAsync
+    Private Async Function GetAdjustments(payStubId As Integer) As Task(Of List(Of Adjustments))
+
+        Return (Await _adjustmentRepository.GetByPaystubAsync(payStubId)).
+                                            Select(Function(p) New Adjustments With {
+                                                .Amount = p.Amount,
+                                                .Code = p.Product.Comments,
+                                                .Description = p.Product.PartNo
+                                                }).
+                                            ToList()
     End Function
 
     Private Async Function GetPayStub(employeeId As Integer, context As PayrollContext) As Task(Of Entity.Paystub)

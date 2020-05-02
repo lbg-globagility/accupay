@@ -66,7 +66,7 @@ Public Class PaystubPresenter
 
         Dim salary As Data.Entities.Salary = Nothing
         Dim paystubActual As Data.Entities.PaystubActual = Nothing
-        Dim adjustments As ICollection(Of Adjustment) = Nothing
+        Dim adjustments As ICollection(Of Data.Entities.Adjustment) = Nothing
         Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
         Dim loanTransactions As ICollection(Of LoanTransaction) = Nothing
 
@@ -120,6 +120,8 @@ Public Class PaystubPresenter
     Private Class Repository
         Inherits DbRepository
 
+        Private _adjustmentRepository As AdjustmentRepository
+
         Private _employeeRepository As EmployeeRepository
 
         Private _payPeriodRepository As PayPeriodRepository
@@ -127,6 +129,9 @@ Public Class PaystubPresenter
         Private _timeEntryRepository As TimeEntryRepository
 
         Sub New()
+
+            _adjustmentRepository = New AdjustmentRepository()
+
             _employeeRepository = New EmployeeRepository()
 
             _payPeriodRepository = New PayPeriodRepository()
@@ -176,12 +181,11 @@ Public Class PaystubPresenter
             Return Await query.ToListAsync()
         End Function
 
-        Public Async Function GetAdjustments(paystub As Paystub) As Task(Of IList(Of Adjustment))
-            Dim query = _context.Adjustments.
-                Include(Function(a) a.Product).
-                Where(Function(t) Nullable.Equals(t.PaystubID, paystub.RowID))
+        Public Async Function GetAdjustments(paystub As Paystub) As Task(Of IList(Of Data.Entities.Adjustment))
 
-            Return Await query.ToListAsync()
+            If paystub?.RowID Is Nothing Then Return Nothing
+
+            Return (Await _adjustmentRepository.GetByPaystubAsync(paystub.RowID.Value)).ToList()
         End Function
 
         Public Async Function GetAdjustmentTypes() As Task(Of IList(Of Product))

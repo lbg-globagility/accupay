@@ -161,7 +161,7 @@ Public Class PaystubView
         dgvLoanTransactions.DataSource = loanTransactionModels
     End Sub
 
-    Public Sub ShowAdjustments(adjustments As ICollection(Of Adjustment))
+    Public Sub ShowAdjustments(adjustments As ICollection(Of Data.Entities.Adjustment))
         Dim adjustmentModels = adjustments.
             Select(Function(a) New AdjustmentModel() With {
                 .Name = a.Product.Name,
