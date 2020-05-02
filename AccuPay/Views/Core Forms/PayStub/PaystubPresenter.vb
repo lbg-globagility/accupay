@@ -1,15 +1,13 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports Microsoft.EntityFrameworkCore
 
 Public Class PaystubPresenter
 
-    Private _currentPayperiod As Data.Entities.PayPeriod
+    Private _currentPayperiod As PayPeriod
 
     Private _currentPaystub As Paystub
 
@@ -17,14 +15,10 @@ Public Class PaystubPresenter
 
     Private _isActual As Boolean
 
-    Private _paystubActualRepository As PaystubActualRepository
-
     Private WithEvents _view As PaystubView
 
     Public Sub New(view As PaystubView)
         _view = view
-
-        _paystubActualRepository = New PaystubActualRepository()
 
     End Sub
 
@@ -34,7 +28,7 @@ Public Class PaystubPresenter
     End Sub
 
     Private Async Function LoadPayperiods() As Task
-        Dim payperiods As IList(Of Data.Entities.PayPeriod) = Nothing
+        Dim payperiods As IList(Of PayPeriod) = Nothing
 
         Using repository = New Repository()
             payperiods = Await repository.GetPayperiods()
@@ -51,7 +45,7 @@ Public Class PaystubPresenter
         End Using
     End Function
 
-    Private Async Sub OnPayperiodSelected(payperiod As Data.Entities.PayPeriod) Handles _view.SelectPayperiod
+    Private Async Sub OnPayperiodSelected(payperiod As PayPeriod) Handles _view.SelectPayperiod
         _currentPayperiod = payperiod
 
         Using repository = New Repository()
@@ -64,18 +58,18 @@ Public Class PaystubPresenter
     Private Async Sub OnPaystubSelected(paystub As Paystub) Handles _view.SelectPaystub
         _currentPaystub = paystub
 
-        Dim salary As Data.Entities.Salary = Nothing
-        Dim paystubActual As Data.Entities.PaystubActual = Nothing
-        Dim adjustments As ICollection(Of Data.Entities.Adjustment) = Nothing
+        Dim salary As Salary = Nothing
+        Dim paystubActual As PaystubActual = Nothing
+        Dim adjustments As ICollection(Of Adjustment) = Nothing
         Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
         Dim loanTransactions As ICollection(Of LoanTransaction) = Nothing
 
         Using repository = New Repository()
             salary = Await repository.GetSalary(_currentPaystub)
-            paystubActual = Await _paystubActualRepository.GetByIdAsync(_currentPaystub.RowID.Value)
-            adjustments = Await repository.GetAdjustments(_currentPaystub)
+            paystubActual = Await repository.GetPaystubActual(_currentPaystub.RowID)
+            adjustments = Await repository.GetAdjustments(_currentPaystub.RowID)
             allowanceItems = Await repository.GetAllowanceItems(_currentPaystub.RowID)
-            loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.PayPeriodID, _currentPaystub.EmployeeID)
+            loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.RowID)
         End Using
 
         _view.ShowSalary(_currentPaystub.Employee, salary, _isActual)
@@ -126,6 +120,12 @@ Public Class PaystubPresenter
 
         Private _payPeriodRepository As PayPeriodRepository
 
+        Private _paystubRepository As PaystubRepository
+
+        Private _paystubActualRepository As PaystubActualRepository
+
+        Private _productRepository As ProductRepository
+
         Private _timeEntryRepository As TimeEntryRepository
 
         Sub New()
@@ -136,10 +136,16 @@ Public Class PaystubPresenter
 
             _payPeriodRepository = New PayPeriodRepository()
 
+            _paystubRepository = New PaystubRepository()
+
+            _paystubActualRepository = New PaystubActualRepository()
+
+            _productRepository = New ProductRepository()
+
             _timeEntryRepository = New TimeEntryRepository()
         End Sub
 
-        Public Async Function GetSalary(paystub As Paystub) As Task(Of Data.Entities.Salary)
+        Public Async Function GetSalary(paystub As Paystub) As Task(Of Salary)
 
             If paystub.EmployeeID.HasValue = False Then
                 Return Nothing
@@ -149,7 +155,7 @@ Public Class PaystubPresenter
                                                                    paystub.PayFromdate)
         End Function
 
-        Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of Data.Entities.TimeEntry))
+        Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of TimeEntry))
 
             Return (Await _timeEntryRepository.
                             GetByEmployeeAndDatePeriodAsync(z_OrganizationID,
@@ -159,61 +165,53 @@ Public Class PaystubPresenter
 
         End Function
 
-        Public Async Function GetAllowanceItems(paystubID As Integer?) As Task(Of ICollection(Of AllowanceItem))
-            Dim query = _context.Paystubs.
-                Include(Function(p) p.AllowanceItems).
-                    ThenInclude(Function(a) a.Allowance).
-                        ThenInclude(Function(p) p.Product).
-                Where(Function(p) Nullable.Equals(p.RowID, paystubID))
+        Public Async Function GetAllowanceItems(paystubId As Integer?) As Task(Of ICollection(Of AllowanceItem))
 
-            Dim paystub = Await query.SingleOrDefaultAsync()
+            If paystubId Is Nothing Then Return Nothing
 
-            Return paystub.AllowanceItems
+            Return (Await _paystubRepository.GetAllowanceItems(paystubId.Value)).ToList()
+
         End Function
 
-        Public Async Function GetLoanTransactions(payperiodID As Integer?, employeeID As Integer?) As Task(Of IList(Of LoanTransaction))
-            Dim query = _context.LoanTransactions.
-                Include(Function(l) l.LoanSchedule).
-                    ThenInclude(Function(s) s.LoanType).
-                Where(Function(l) Nullable.Equals(l.PayPeriodID, payperiodID)).
-                Where(Function(l) Nullable.Equals(l.EmployeeID, employeeID))
+        Public Async Function GetLoanTransactions(paystubId As Integer?) As Task(Of IList(Of LoanTransaction))
+            If paystubId Is Nothing Then Return Nothing
 
-            Return Await query.ToListAsync()
+            Return (Await _paystubRepository.GetLoanTransanctions(paystubId.Value)).ToList()
         End Function
 
-        Public Async Function GetAdjustments(paystub As Paystub) As Task(Of IList(Of Data.Entities.Adjustment))
+        Public Async Function GetAdjustments(paystubId As Integer?) As Task(Of IList(Of Adjustment))
 
-            If paystub?.RowID Is Nothing Then Return Nothing
+            If paystubId Is Nothing Then Return Nothing
 
-            Return (Await _adjustmentRepository.GetByPaystubAsync(paystub.RowID.Value)).ToList()
+            Return (Await _adjustmentRepository.GetByPaystubWithProductAsync(paystubId.Value)).ToList()
         End Function
 
         Public Async Function GetAdjustmentTypes() As Task(Of IList(Of Product))
-            Dim query = _context.Products.
-                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                Where(Function(p) p.Category = "Adjustment Type")
 
-            Return Await query.ToListAsync()
+            Return (Await _productRepository.GetAdjustmentTypesAsync(z_OrganizationID)).ToList()
         End Function
 
-        Public Async Function GetPayperiods() As Task(Of IList(Of Data.Entities.PayPeriod))
+        Public Async Function GetPayperiods() As Task(Of IList(Of PayPeriod))
 
             Return (Await _payPeriodRepository.
                             GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)).
                     ToList()
         End Function
 
-        Public Async Function GetPaystubs(payperiod As Data.Entities.PayPeriod) As Task(Of IList(Of Paystub))
-            Dim paystubs As IList(Of Paystub) = Nothing
+        Public Async Function GetPaystubs(payPeriod As PayPeriod) As Task(Of IList(Of Paystub))
 
-            Dim query = _context.Paystubs.Include(Function(p) p.Employee).
-                 Where(Function(p) p.PayFromdate = payperiod.PayFromDate).
-                 Where(Function(p) p.PayToDate = payperiod.PayToDate).
-                 Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                 OrderBy(Function(p) p.Employee.LastName).
-                 ThenBy(Function(p) p.Employee.FirstName)
+            If payPeriod?.RowID Is Nothing Then Return Nothing
 
-            Return Await query.ToListAsync()
+            Return (Await _paystubRepository.
+                            GetByPayPeriodWithEmployeeAsync(payPeriod.RowID.Value)).
+                            OrderBy(Function(p) p.Employee.LastName).
+                            ThenBy(Function(p) p.Employee.FirstName).
+                            ToList()
+        End Function
+
+        Friend Function GetPaystubActual(paystubId As Integer?) As Task(Of PaystubActual)
+            If paystubId Is Nothing Then Return Nothing
+            Return _paystubActualRepository.GetByIdAsync(paystubId.Value)
         End Function
 
     End Class

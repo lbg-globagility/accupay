@@ -166,6 +166,8 @@ namespace AccuPay.Data.Entities
 
         public virtual ICollection<AllowanceItem> AllowanceItems { get; set; }
 
+        public virtual ICollection<LoanTransaction> LoanTransactions { get; set; }
+
         public virtual ThirteenthMonthPay ThirteenthMonthPay { get; set; }
 
         public virtual PaystubActual Actual { get; set; }

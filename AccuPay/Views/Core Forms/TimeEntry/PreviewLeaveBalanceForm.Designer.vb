@@ -169,6 +169,7 @@ Partial Class PreviewLeaveBalanceForm
         Me.btnReset.TabIndex = 0
         Me.btnReset.Text = "Select effectivity date and &Reset"
         Me.btnReset.UseVisualStyleBackColor = True
+        Me.btnReset.Visible = False
         '
         'ToolStrip1
         '

@@ -661,7 +661,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Function GetAdjustments(payStubId As Integer) As Task(Of List(Of Adjustments))
 
-        Return (Await _adjustmentRepository.GetByPaystubAsync(payStubId)).
+        Return (Await _adjustmentRepository.GetByPaystubWithProductAsync(payStubId)).
                                             Select(Function(p) New Adjustments With {
                                                 .Amount = p.Amount,
                                                 .Code = p.Product.Comments,

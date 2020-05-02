@@ -1,9 +1,9 @@
-﻿Imports AccuPay.Data
-Imports AccuPay.Data.Helpers
+﻿Option Strict On
+
+Imports AccuPay.Data
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class PreviewLeaveBalanceForm
 
@@ -39,6 +39,10 @@ Public Class PreviewLeaveBalanceForm
     End Sub
 
     Private Async Sub btnReset_ClickAsync(sender As Object, e As EventArgs) Handles btnReset.Click
+        'RenewLeaveBalance does not update when the payperiod chosen is not the start of the year.
+        'Remove the Return statement when that is fixed.
+        Return
+
         Dim result As DialogResult
         Dim isOk As Boolean = False
 
@@ -59,7 +63,7 @@ Public Class PreviewLeaveBalanceForm
 
                 If policy.LeaveAllowanceAmount = RenewLeaveBalancePolicy.LeaveAllowanceAmountBasis.Default Then
 
-                    Await RenewLeaveBalances()
+                    'Await RenewLeaveBalances()
 
                     MessageBoxHelper.Information($"Leave balances of the employees of {orgNam} were successfully reset.")
                 End If
@@ -72,168 +76,175 @@ Public Class PreviewLeaveBalanceForm
 
     End Sub
 
-    Private Async Function RenewLeaveBalances() As Threading.Tasks.Task
-        RemovePreviousLeaveCreditsAsync()
+#Region "RenewLeaveBalances"
 
-        Dim categoryRepo = New Repositories.CategoryRepository
-        Dim leaveCategory = Await categoryRepo.GetByNameAsync(z_OrganizationID,
-                                                              ProductConstant.LEAVE_TYPE_CATEGORY)
+    'This code does not update when the payperiod chosen is not the start of the year
+    'Uncomment this when this is fixed
+    'Private Async Function RenewLeaveBalances() As Threading.Tasks.Task
 
-        Using context = New PayrollContext()
-            Dim leaveCategoryId = leaveCategory.RowID
+    'RemovePreviousLeaveCreditsAsync()
 
-            Dim leaveTypeList = New String() {ProductConstant.VACATION_LEAVE, ProductConstant.SICK_LEAVE}
-            Dim vacationLeaveType = leaveTypeList(0)
-            Dim sickLeaveType = leaveTypeList(1)
+    'Dim categoryRepo = New Repositories.CategoryRepository
+    'Dim leaveCategory = Await categoryRepo.GetByNameAsync(z_OrganizationID,
+    '                                                      ProductConstant.LEAVE_TYPE_CATEGORY)
 
-            Dim leaveTypes =
-                Await context.Products.
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                Where(Function(p) Nullable.Equals(p.CategoryID, leaveCategoryId)).
-                Where(Function(p) leaveTypeList.Any(Function(type) Equals(type, p.PartNo))).
-                Select(Function(p) New LeaveTypeModel(p)).
-                ToListAsync()
+    'Using context = New PayrollContext()
+    '    Dim leaveCategoryId = leaveCategory.RowID
 
-            Dim leaveTypeIds = leaveTypes.Select(Function(p) p.RowID).ToList()
+    '    Dim leaveTypeList = New String() {ProductConstant.VACATION_LEAVE, ProductConstant.SICK_LEAVE}
+    '    Dim vacationLeaveType = leaveTypeList(0)
+    '    Dim sickLeaveType = leaveTypeList(1)
 
-            Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToArray()
+    '    Dim leaveTypes =
+    '        Await context.Products.
+    '        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
+    '        Where(Function(p) Nullable.Equals(p.CategoryID, leaveCategoryId)).
+    '        Where(Function(p) leaveTypeList.Any(Function(type) Equals(type, p.PartNo))).
+    '        Select(Function(p) New LeaveTypeModel(p)).
+    '        ToListAsync()
 
-            Dim leaveLedgers =
-                Await context.LeaveLedgers.
-                Where(Function(ll) Nullable.Equals(ll.OrganizationID, z_OrganizationID)).
-                Where(Function(ll) leaveTypeIds.Any(Function(leaveId) Nullable.Equals(leaveId, ll.ProductID))).
-                Where(Function(ll) employeeIds.Any(Function(id) Nullable.Equals(id, ll.EmployeeID))).
-                ToListAsync()
+    '    Dim leaveTypeIds = leaveTypes.Select(Function(p) p.RowID).ToList()
 
-            Dim vacationLeaveTypeId = leaveTypes.Where(Function(l) l.PartNo = vacationLeaveType).FirstOrDefault.RowID
-            Dim sickLeaveTypeId = leaveTypes.Where(Function(l) l.PartNo = sickLeaveType).FirstOrDefault.RowID
+    '    Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToArray()
 
-            Dim vacationLeaveTransactions = New List(Of LeaveTransaction)
-            Dim sickLeaveTransactions = New List(Of LeaveTransaction)
+    '    Dim leaveLedgers =
+    '        Await context.LeaveLedgers.
+    '        Where(Function(ll) Nullable.Equals(ll.OrganizationID, z_OrganizationID)).
+    '        Where(Function(ll) leaveTypeIds.Any(Function(leaveId) Nullable.Equals(leaveId, ll.ProductID))).
+    '        Where(Function(ll) employeeIds.Any(Function(id) Nullable.Equals(id, ll.EmployeeID))).
+    '        ToListAsync()
 
-            For Each employee In _employeeModels
-                Dim employeeId = employee.RowID
+    '    Dim vacationLeaveTypeId = leaveTypes.Where(Function(l) l.PartNo = vacationLeaveType).FirstOrDefault.RowID
+    '    Dim sickLeaveTypeId = leaveTypes.Where(Function(l) l.PartNo = sickLeaveType).FirstOrDefault.RowID
 
-                Dim leaveLedgerId As Integer
-                Dim ll As LeaveLedger
+    '    Dim vacationLeaveTransactions = New List(Of LeaveTransaction)
+    '    Dim sickLeaveTransactions = New List(Of LeaveTransaction)
 
-                'Vacation Leave
-                ll = GetLeaveLedger(leaveLedgers, vacationLeaveTypeId, employeeId)
-                leaveLedgerId = ll.RowID
+    '    For Each employee In _employeeModels
+    '        Dim employeeId = employee.RowID
 
-                ll.LastTransaction = CreateCreditLeaveTransaction(context, employee, employeeId, leaveLedgerId, LeaveType.VacationLeave)
-                ll.LastUpd = Date.Now
-                vacationLeaveTransactions.Add(ll.LastTransaction)
+    '        Dim leaveLedgerId As Integer
+    '        Dim ll As LeaveLedger
 
-                'Sick Leave
-                ll = GetLeaveLedger(leaveLedgers, sickLeaveTypeId, employeeId)
-                leaveLedgerId = ll.RowID
+    '        'Vacation Leave
+    '        ll = GetLeaveLedger(leaveLedgers, vacationLeaveTypeId, employeeId)
+    '        leaveLedgerId = ll.RowID
 
-                ll.LastTransaction = CreateCreditLeaveTransaction(context, employee, employeeId, leaveLedgerId, LeaveType.SickLeave)
-                ll.LastUpd = Date.Now
-                sickLeaveTransactions.Add(ll.LastTransaction)
+    '        ll.LastTransaction = CreateCreditLeaveTransaction(context, employee, employeeId, leaveLedgerId, LeaveType.VacationLeave)
+    '        ll.LastUpd = Date.Now
+    '        vacationLeaveTransactions.Add(ll.LastTransaction)
 
-            Next
+    '        'Sick Leave
+    '        ll = GetLeaveLedger(leaveLedgers, sickLeaveTypeId, employeeId)
+    '        leaveLedgerId = ll.RowID
 
-            Dim empProfiles = Await _employeeRepo.GetByMultipleIdAsync(employeeIds)
+    '        ll.LastTransaction = CreateCreditLeaveTransaction(context, employee, employeeId, leaveLedgerId, LeaveType.SickLeave)
+    '        ll.LastUpd = Date.Now
+    '        sickLeaveTransactions.Add(ll.LastTransaction)
 
-            For Each employee In empProfiles
-                Dim eId = employee.RowID
+    '    Next
 
-                Dim lt = vacationLeaveTransactions.Where(Function(l) Nullable.Equals(l.EmployeeID, eId)).FirstOrDefault
-                If lt IsNot Nothing Then
-                    employee.LeaveBalance = lt.Balance
-                End If
+    '    Dim empProfiles = Await _employeeRepo.GetByMultipleIdAsync(employeeIds)
 
-                lt = sickLeaveTransactions.Where(Function(l) Nullable.Equals(l.EmployeeID, eId)).FirstOrDefault
-                If lt IsNot Nothing Then
-                    employee.SickLeaveBalance = lt.Balance
-                End If
+    '    For Each employee In empProfiles
+    '        Dim eId = employee.RowID
 
-            Next
+    '        Dim lt = vacationLeaveTransactions.Where(Function(l) Nullable.Equals(l.EmployeeID, eId)).FirstOrDefault
+    '        If lt IsNot Nothing Then
+    '            employee.LeaveBalance = lt.Balance
+    '        End If
 
-            Await context.SaveChangesAsync()
+    '        lt = sickLeaveTransactions.Where(Function(l) Nullable.Equals(l.EmployeeID, eId)).FirstOrDefault
+    '        If lt IsNot Nothing Then
+    '            employee.SickLeaveBalance = lt.Balance
+    '        End If
 
-        End Using
+    '    Next
 
-    End Function
+    '    Await context.SaveChangesAsync()
 
-    Private Async Sub RemovePreviousLeaveCreditsAsync()
-        Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToList()
+    'End Using
 
-        Using context = New PayrollContext()
-            Dim prevLeaveTrans = Await context.LeaveTransactions.
-                Where(Function(lt) Nullable.Equals(lt.OrganizationID, z_OrganizationID)).
-                Where(Function(lt) Nullable.Equals(lt.PayPeriodID, payPeriodId)).
-                Where(Function(lt) employeeIds.Any(Function(id) Nullable.Equals(lt.EmployeeID, id))).
-                Where(Function(lt) Equals(lt.Type, "Credit")).
-                ToListAsync()
+    'End Function
 
-            context.LeaveTransactions.RemoveRange(prevLeaveTrans.ToArray())
+    'Private Async Sub RemovePreviousLeaveCreditsAsync()
+    '    Dim employeeIds = _employeeModels.Select(Function(e) e.RowID).ToList()
 
-            Await context.SaveChangesAsync()
-        End Using
-    End Sub
+    '    Using context = New PayrollContext()
+    '        Dim prevLeaveTrans = Await context.LeaveTransactions.
+    '            Where(Function(lt) Nullable.Equals(lt.OrganizationID, z_OrganizationID)).
+    '            Where(Function(lt) Nullable.Equals(lt.PayPeriodID, payPeriodId)).
+    '            Where(Function(lt) employeeIds.Any(Function(id) Nullable.Equals(lt.EmployeeID, id))).
+    '            Where(Function(lt) Equals(lt.Type, "Credit")).
+    '            ToListAsync()
 
-    Private Function CreateCreditLeaveTransaction(context As PayrollContext, employee As EmployeeModel, employeeId As Integer, leaveLedgerId As Integer, leaveType As LeaveType) As LeaveTransaction
-        Dim lt As New LeaveTransaction With {
-        .OrganizationID = z_OrganizationID,
-        .Created = Date.Now,
-        .CreatedBy = z_User,
-        .LastUpd = Date.Now,
-        .LastUpdBy = z_User,
-        .EmployeeID = employeeId,
-        .LeaveLedgerID = leaveLedgerId,
-        .PayPeriodID = payPeriodId,
-        .ReferenceID = Nothing,
-        .TransactionDate = periodDateFrom,
-        .Type = "Credit"
-        }
+    '        context.LeaveTransactions.RemoveRange(prevLeaveTrans.ToArray())
 
-        Dim _amount As Decimal
-        If leaveType = LeaveType.VacationLeave Then
-            _amount = employee.VacationLeaveAllowance
-        ElseIf leaveType = LeaveType.SickLeave Then
-            _amount = employee.SickLeaveAllowance
-        End If
+    '        Await context.SaveChangesAsync()
+    '    End Using
+    'End Sub
 
-        lt.Balance = _amount
-        lt.Amount = _amount
+    'Private Function CreateCreditLeaveTransaction(context As PayrollContext, employee As EmployeeModel, employeeId As Integer, leaveLedgerId As Integer, leaveType As LeaveType) As LeaveTransaction
+    '    Dim lt As New LeaveTransaction With {
+    '    .OrganizationID = z_OrganizationID,
+    '    .Created = Date.Now,
+    '    .CreatedBy = z_User,
+    '    .LastUpd = Date.Now,
+    '    .LastUpdBy = z_User,
+    '    .EmployeeID = employeeId,
+    '    .LeaveLedgerID = leaveLedgerId,
+    '    .PayPeriodID = payPeriodId,
+    '    .ReferenceID = Nothing,
+    '    .TransactionDate = periodDateFrom,
+    '    .Type = "Credit"
+    '    }
 
-        context.LeaveTransactions.Add(lt)
+    '    Dim _amount As Decimal
+    '    If leaveType = LeaveType.VacationLeave Then
+    '        _amount = employee.VacationLeaveAllowance
+    '    ElseIf leaveType = LeaveType.SickLeave Then
+    '        _amount = employee.SickLeaveAllowance
+    '    End If
 
-        Return lt
-    End Function
+    '    lt.Balance = _amount
+    '    lt.Amount = _amount
 
-    Private Function GetLeaveLedger(leaveLedgers As List(Of LeaveLedger), leaveTypeId As Integer, employeeId As Integer) As LeaveLedger
-        Dim leaveLedger = leaveLedgers.
-                            Where(Function(ll) Nullable.Equals(ll.EmployeeID, employeeId)).
-                            Where(Function(ll) Nullable.Equals(ll.ProductID, leaveTypeId)).FirstOrDefault
+    '    context.LeaveTransactions.Add(lt)
 
-        If leaveLedger Is Nothing Then
-            Using context = New PayrollContext()
-                Dim lLedger As New LeaveLedger With {
-                    .Created = Date.Now,
-                    .CreatedBy = z_User,
-                    .EmployeeID = employeeId,
-                    .LastUpd = Date.Now,
-                    .LastUpdBy = z_User,
-                    .OrganizationID = z_OrganizationID,
-                    .ProductID = leaveTypeId
-                }
+    '    Return lt
+    'End Function
 
-                context.LeaveLedgers.Add(lLedger)
+    'Private Function GetLeaveLedger(leaveLedgers As List(Of LeaveLedger), leaveTypeId As Integer, employeeId As Integer) As LeaveLedger
+    '    Dim leaveLedger = leaveLedgers.
+    '                        Where(Function(ll) Nullable.Equals(ll.EmployeeID, employeeId)).
+    '                        Where(Function(ll) Nullable.Equals(ll.ProductID, leaveTypeId)).FirstOrDefault
 
-                context.SaveChanges()
+    '    If leaveLedger Is Nothing Then
+    '        Using context = New PayrollContext()
+    '            Dim lLedger As New LeaveLedger With {
+    '                .Created = Date.Now,
+    '                .CreatedBy = z_User,
+    '                .EmployeeID = employeeId,
+    '                .LastUpd = Date.Now,
+    '                .LastUpdBy = z_User,
+    '                .OrganizationID = z_OrganizationID,
+    '                .ProductID = leaveTypeId
+    '            }
 
-                leaveLedger = lLedger
-            End Using
+    '            context.LeaveLedgers.Add(lLedger)
 
-            Return leaveLedger
-        End If
+    '            context.SaveChanges()
 
-        Return leaveLedger
-    End Function
+    '            leaveLedger = lLedger
+    '        End Using
+
+    '        Return leaveLedger
+    '    End If
+
+    '    Return leaveLedger
+    'End Function
+
+#End Region
 
     Private Async Function LoadEmployees() As Threading.Tasks.Task
         Dim unemployedStatuses = New String() {"Resigned", "Terminated"}

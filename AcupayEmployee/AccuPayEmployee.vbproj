@@ -218,7 +218,6 @@
     <Compile Include="Core Forms\Commons\CalendarConstants.vb" />
     <Compile Include="Core Forms\Commons\DebugUtility.vb" />
     <Compile Include="Core Forms\Commons\PayrollContext.vb" />
-    <Compile Include="Core Forms\Commons\ReleaseThirteenthMonthPay.vb" />
     <Compile Include="Core Forms\Commons\TimeUtility.vb" />
     <Compile Include="Core Forms\Government\PhilHealthBracket.vb" />
     <Compile Include="Core Forms\Government\SocialSecurityBracket.vb" />

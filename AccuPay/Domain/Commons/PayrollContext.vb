@@ -16,17 +16,17 @@ Public Class PayrollContext
 
     Public Overridable Property Adjustments As DbSet(Of Adjustment)
 
-    Public Overridable Property Products As DbSet(Of Product)
-
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
-
-    Public Overridable Property Paystubs As DbSet(Of Paystub)
 
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
 
     Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
 
     Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
+
+    Public Overridable Property Products As DbSet(Of Product)
+
+    Public Overridable Property Paystubs As DbSet(Of Paystub)
 
     Public Sub New()
     End Sub
@@ -45,14 +45,14 @@ Public Class PayrollContext
     Protected Overrides Sub OnModelCreating(modelBuilder As ModelBuilder)
         MyBase.OnModelCreating(modelBuilder)
 
-        modelBuilder.Entity(Of Paystub).
-            HasOne(Function(p) p.ThirteenthMonthPay).
-            WithOne(Function(t) t.Paystub).
-            HasForeignKey(Of ThirteenthMonthPay)(Function(t) t.PaystubID)
+        'modelBuilder.Entity(Of Paystub).
+        '    HasOne(Function(p) p.ThirteenthMonthPay).
+        '    WithOne(Function(t) t.Paystub).
+        '    HasForeignKey(Of ThirteenthMonthPay)(Function(t) t.PaystubID)
 
-        modelBuilder.Entity(Of Paystub).
-            HasMany(Function(p) p.AllowanceItems).
-            WithOne(Function(a) a.Paystub)
+        'modelBuilder.Entity(Of Paystub).
+        '    HasMany(Function(p) p.AllowanceItems).
+        '    WithOne(Function(a) a.Paystub)
     End Sub
 
 End Class

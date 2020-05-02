@@ -8,6 +8,9 @@ using System.Linq;
 
 namespace AccuPay.Data.Services
 {
+    /// <summary>
+    /// Not working yet
+    /// </summary>
     public class ReleaseThirteenthMonthPay
     {
         private readonly int _organizationId;

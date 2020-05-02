@@ -1,8 +1,7 @@
 Option Strict On
 
 Imports System.ComponentModel
-Imports AccuPay.Entity
-Imports AccuPay.Loans
+Imports AccuPay.Data.Entities
 
 Public Class PaystubView
 
@@ -12,7 +11,7 @@ Public Class PaystubView
 
     Public Event SelectPaystub(paystub As Paystub)
 
-    Public Event SelectPayperiod(payperiod As Data.Entities.PayPeriod)
+    Public Event SelectPayperiod(payperiod As PayPeriod)
 
     Public Event ToggleActual()
 
@@ -42,7 +41,7 @@ Public Class PaystubView
         dgvPaystubs.DataSource = paystubModels
     End Sub
 
-    Public Sub ShowSalary(employee As Employee, salary As Data.Entities.Salary, isActual As Boolean)
+    Public Sub ShowSalary(employee As Employee, salary As Salary, isActual As Boolean)
         If salary Is Nothing Then
             Return
         End If
@@ -63,7 +62,7 @@ Public Class PaystubView
         txtHourlyRate.Text = Format(hourlyRate)
     End Sub
 
-    Public Sub ShowPayperiods(payperiods As IList(Of Data.Entities.PayPeriod))
+    Public Sub ShowPayperiods(payperiods As IList(Of PayPeriod))
         cboPayPeriods.DataSource = payperiods.
             Select(Function(t) New PayPeriodModel(t)).
             OrderByDescending(Function(t) t.Item.PayFromDate).
@@ -74,7 +73,7 @@ Public Class PaystubView
         dgvTimeEntries.DataSource = timeEntries
     End Sub
 
-    Public Sub ShowPaystub(declared As Paystub, actual As Data.Entities.PaystubActual, isActual As Boolean)
+    Public Sub ShowPaystub(declared As Paystub, actual As PaystubActual, isActual As Boolean)
         txtBasicHours.Text = Format(declared.BasicHours)
         txtBasicPay.Text = Format(declared.BasicPay)
 
@@ -161,14 +160,20 @@ Public Class PaystubView
         dgvLoanTransactions.DataSource = loanTransactionModels
     End Sub
 
-    Public Sub ShowAdjustments(adjustments As ICollection(Of Data.Entities.Adjustment))
-        Dim adjustmentModels = adjustments.
-            Select(Function(a) New AdjustmentModel() With {
-                .Name = a.Product.Name,
-                .Amount = a.Amount,
-                .Remarks = a.Comment
-            }).
-            ToList()
+    Public Sub ShowAdjustments(adjustments As ICollection(Of Adjustment))
+        Dim adjustmentModels As New List(Of AdjustmentModel)
+
+        If adjustments.Any() Then
+
+            adjustmentModels = adjustments.
+                                Select(Function(a) New AdjustmentModel() With {
+                                    .Name = a.Product.Name,
+                                    .Amount = a.Amount,
+                                    .Remarks = a.Comment
+                                }).
+                                ToList()
+
+        End If
 
         _adjustmentSource.DataSource = adjustmentModels
     End Sub
@@ -352,9 +357,9 @@ Public Class PaystubView
 
         Public Property Display As String
 
-        Public Property Item As Data.Entities.PayPeriod
+        Public Property Item As PayPeriod
 
-        Public Sub New(payPeriod As Data.Entities.PayPeriod)
+        Public Sub New(payPeriod As PayPeriod)
             Item = payPeriod
             Display = $"{GetPeriod()} - {payPeriod.PayFromDate.ToString("MM/dd/yyyy")} to {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
         End Sub

@@ -94,6 +94,19 @@ namespace AccuPay.Data
         {
             base.OnModelCreating(modelBuilder);
 
+            modelBuilder.Entity<Paystub>().
+            HasOne(x => x.ThirteenthMonthPay).
+            WithOne(x => x.Paystub).
+            HasForeignKey<ThirteenthMonthPay>(x => x.PaystubID);
+
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.AllowanceItems).
+                WithOne(x => x.Paystub);
+
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.LoanTransactions).
+                WithOne(x => x.Paystub);
+
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });
         }

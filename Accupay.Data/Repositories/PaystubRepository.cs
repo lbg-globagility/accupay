@@ -1,35 +1,51 @@
 ﻿using AccuPay.Data.Entities;
+using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
     public class PaystubRepository
     {
-        public IEnumerable<Paystub> List
+        public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
-            get
+            using (var context = new PayrollContext())
             {
-                using (PayrollContext context = new PayrollContext())
-                {
-                    return context.Paystubs.ToList();
-                }
+                return await context.Paystubs.
+                                Include(x => x.Employee).
+                                Where(x => x.PayPeriodID == payPeriodId).
+                                ToListAsync();
             }
         }
 
-        public Paystub First()
+        public async Task<IEnumerable<AllowanceItem>> GetAllowanceItems(int paystubId)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (var context = new PayrollContext())
             {
-                return context.Paystubs.FirstOrDefault();
+                var paystub = await context.Paystubs.
+                                Include(x => x.AllowanceItems).
+                                    ThenInclude(x => x.Allowance).
+                                        ThenInclude(x => x.Product).
+                                Where(x => x.RowID == paystubId).
+                                FirstOrDefaultAsync();
+
+                return paystub.AllowanceItems;
             }
         }
 
-        public Paystub FindById(int id)
+        public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctions(int paystubId)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (var context = new PayrollContext())
             {
-                return context.Paystubs.FirstOrDefault(x => x.RowID == id);
+                var paystub = await context.Paystubs.
+                                Include(x => x.LoanTransactions).
+                                    ThenInclude(x => x.LoanSchedule).
+                                        ThenInclude(x => x.LoanType).
+                                Where(x => x.RowID == paystubId).
+                                FirstOrDefaultAsync();
+
+                return paystub.LoanTransactions;
             }
         }
     }
