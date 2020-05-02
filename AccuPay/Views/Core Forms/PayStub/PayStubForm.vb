@@ -1911,7 +1911,8 @@ Public Class PayStubForm
         Dim dateFrom = payPeriodSelector.DateFrom
         Dim dateTo = payPeriodSelector.DateTo
 
-        Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
+        ' Not tested
+        'Dim realse = New ReleaseThirteenthMonthPay(dateFrom, dateTo, paypRowID)
     End Sub
 
     Private Sub CashOutUnusedLeavesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CashOutUnusedLeavesToolStripMenuItem.Click
@@ -1929,8 +1930,9 @@ Public Class PayStubForm
         Dim dateFromId = payPeriodSelector.PayPeriodFromID
         Dim dateToId = payPeriodSelector.PayPeriodToID
 
-        Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID)
-        cashOut.Execute()
+        ' Code not tested
+        'Dim cashOut = New CashOutUnusedLeave(dateFromId, dateToId, paypRowID, z_OrganizationID, z_User)
+        'cashOut.Execute()
     End Sub
 
     Private Sub RegenerateToolStripButton_Click(sender As Object, e As EventArgs) Handles RegeneratePayrollToolStripMenuItem.Click

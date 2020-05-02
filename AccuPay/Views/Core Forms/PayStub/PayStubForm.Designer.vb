@@ -3097,14 +3097,14 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
@@ -3145,18 +3145,21 @@ Partial Class PayStubForm
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.OthersToolStripMenuItem.Text = "Others"
+        Me.OthersToolStripMenuItem.Visible = False
         '
         'Include13thMonthPayToolStripMenuItem
         '
         Me.Include13thMonthPayToolStripMenuItem.Name = "Include13thMonthPayToolStripMenuItem"
         Me.Include13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.Include13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
+        Me.Include13thMonthPayToolStripMenuItem.Visible = False
         '
         'CashOutUnusedLeavesToolStripMenuItem
         '
         Me.CashOutUnusedLeavesToolStripMenuItem.Name = "CashOutUnusedLeavesToolStripMenuItem"
         Me.CashOutUnusedLeavesToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.CashOutUnusedLeavesToolStripMenuItem.Text = "Cash Out Unused Leaves"
+        Me.CashOutUnusedLeavesToolStripMenuItem.Visible = False
         '
         'RegeneratePayrollToolStripMenuItem
         '

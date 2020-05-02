@@ -756,7 +756,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
-    <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
     <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
