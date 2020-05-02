@@ -23,7 +23,7 @@ namespace AccuPay.Data.Entities
 
         public int? LastUpdBy { get; set; }
 
-        [Column("PayStubID")]
+        //[Column("PayStubID")]
         public int? PaystubID { get; set; }
 
         public int? ProductID { get; set; }

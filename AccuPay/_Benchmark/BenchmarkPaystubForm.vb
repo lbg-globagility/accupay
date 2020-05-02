@@ -658,14 +658,14 @@ Public Class BenchmarkPaystubForm
 
     Private Shared Async Function GetAdjustments(context As PayrollContext, payStubId As Integer?) As Task(Of List(Of Adjustments))
         Return Await context.Adjustments.
-                                                        Include(Function(a) a.Product).
-                                                        Where(Function(a) a.PaystubID.Value = payStubId.Value).
-                                                        Select(Function(p) New Adjustments With {
-                                                            .Amount = p.Amount,
-                                                            .Code = p.Product.Comments,
-                                                            .Description = p.Product.PartNo
-                                                            }).
-                                                        ToListAsync
+                                Include(Function(a) a.Product).
+                                Where(Function(a) a.PaystubID.Value = payStubId.Value).
+                                Select(Function(p) New Adjustments With {
+                                    .Amount = p.Amount,
+                                    .Code = p.Product.Comments,
+                                    .Description = p.Product.PartNo
+                                    }).
+                                ToListAsync
     End Function
 
     Private Async Function GetPayStub(employeeId As Integer, context As PayrollContext) As Task(Of Entity.Paystub)

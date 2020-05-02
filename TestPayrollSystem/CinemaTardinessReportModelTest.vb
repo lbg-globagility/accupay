@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay
+Imports AccuPay.Data.ReportModels
 
 <TestFixture>
 Public Class CinemaTardinessReportModelTest

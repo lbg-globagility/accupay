@@ -1,4 +1,6 @@
 ﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 
 <TestFixture>
 Public Class EntityTest
@@ -32,6 +34,10 @@ Public Class EntityTest
 
     <Test>
     Public Sub TestEntity()
+
+        'Dim adjustment = New AdjustmentService().
+        '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
+        '                ToList()
 
         Dim date1 = New Date(2020, 5, 31)
         Dim date2 = New Date(2020, 5, 30)
