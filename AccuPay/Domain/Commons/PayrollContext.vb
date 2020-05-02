@@ -18,17 +18,15 @@ Public Class PayrollContext
 
     Public Overridable Property ActualAdjustments As DbSet(Of ActualAdjustment)
 
+    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
+
     Public Overridable Property Products As DbSet(Of Product)
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property Paystubs As DbSet(Of Paystub)
 
-    Public Overridable Property TimeEntries As DbSet(Of TimeEntry)
-
     Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
-
-    Public Overridable Property AllowanceItems As DbSet(Of AllowanceItem)
 
     Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
 

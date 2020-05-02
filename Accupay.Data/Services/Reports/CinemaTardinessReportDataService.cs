@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace AccuPay.Data.Services.Reports
+namespace AccuPay.Data.Services
 {
     public class CinemaTardinessReportDataService
     {

@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Services.Reports
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
 

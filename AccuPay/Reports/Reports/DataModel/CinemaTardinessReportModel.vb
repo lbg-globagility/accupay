@@ -1,15 +1,20 @@
-﻿Imports AccuPay.Data
+﻿Option Strict On
 
+Imports AccuPay.Data
+
+''' <summary>
+''' Anemic implementation of ICinemaTardinessReportModel just for Crystal Report data source
+''' </summary>
 Public Class CinemaTardinessReportModel
     Implements ICinemaTardinessReportModel
 
     Public Const DaysLateLimit As Integer = 8
 
-    Public Property EmployeeId As Integer Implements ICinemaTardinessReportModel.EmployeeId
-    Public Property EmployeeName As String Implements ICinemaTardinessReportModel.EmployeeName
-    Public Property Days As Decimal Implements ICinemaTardinessReportModel.Days
-    Public Property Hours As Decimal Implements ICinemaTardinessReportModel.Hours
-    Public Property NumberOfOffense As Integer Implements ICinemaTardinessReportModel.NumberOfOffense
+    Public ReadOnly Property EmployeeId As Integer Implements ICinemaTardinessReportModel.EmployeeId
+    Public ReadOnly Property EmployeeName As String Implements ICinemaTardinessReportModel.EmployeeName
+    Public ReadOnly Property Days As Decimal Implements ICinemaTardinessReportModel.Days
+    Public ReadOnly Property Hours As Decimal Implements ICinemaTardinessReportModel.Hours
+    Public ReadOnly Property NumberOfOffense As Integer Implements ICinemaTardinessReportModel.NumberOfOffense
 
     Public ReadOnly Property NumberOfOffenseOrdinal As String Implements ICinemaTardinessReportModel.NumberOfOffenseOrdinal
         Get
@@ -69,13 +74,5 @@ Public Class CinemaTardinessReportModel
             End If
         End Get
     End Property
-
-    Public Class PerMonth
-        Public Property EmployeeId As Integer
-        Public Property Month As Integer
-        Public Property Days As Integer
-        Public Property Hours As Integer
-
-    End Class
 
 End Class

@@ -15,8 +15,10 @@ namespace AccuPay.Data
                                                     level == LogLevel.Information, true)
         });
 
+        public virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
         public virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Adjustment> Adjustments { get; set; }
         public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }

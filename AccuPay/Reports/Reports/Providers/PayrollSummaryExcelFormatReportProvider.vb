@@ -598,7 +598,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
 
-            payPeriodFrom = Await _payPeriodRepository.
+            payPeriodTo = Await _payPeriodRepository.
                                 GetByIdAsync(payrollSummaDateSelection.PayPeriodToID.Value)
         End If
 

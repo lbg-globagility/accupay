@@ -2,11 +2,11 @@
 {
     public interface ICinemaTardinessReportModel
     {
-        decimal Days { get; set; }
-        int EmployeeId { get; set; }
-        string EmployeeName { get; set; }
-        decimal Hours { get; set; }
-        int NumberOfOffense { get; set; }
+        decimal Days { get; }
+        int EmployeeId { get; }
+        string EmployeeName { get; }
+        decimal Hours { get; }
+        int NumberOfOffense { get; }
         string NumberOfOffenseOrdinal { get; }
         string Sanction { get; }
     }
