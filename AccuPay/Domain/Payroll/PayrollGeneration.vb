@@ -32,7 +32,7 @@ Public Class PayrollGeneration
 
     Private ReadOnly _formCaller As Form
 
-    Private ReadOnly _payPeriod As PayPeriod
+    Private ReadOnly _payPeriod As Entities.PayPeriod
 
     Private ReadOnly _products As IEnumerable(Of Product)
 

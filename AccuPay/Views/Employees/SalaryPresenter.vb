@@ -13,7 +13,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private WithEvents _view As SalaryTab2
 
-        Private _employee As Data.Entities.Employee
+        Private _employee As Employee
 
         Private _philHealthPolicy As PhilHealthPolicy
 
@@ -33,6 +33,8 @@ Namespace Global.AccuPay.Views.Employees
             _view = view
 
             _philHealthBracketRepository = New PhilHealthBracketRepository()
+
+            _salaryRepository = New SalaryRepository()
 
             _socialSecurityBracketRepository = New SocialSecurityBracketRepository()
         End Sub

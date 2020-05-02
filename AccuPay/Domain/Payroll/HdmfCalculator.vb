@@ -5,7 +5,6 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
-Imports PayrollSys
 
 Namespace Global.AccuPay.Payroll
 
@@ -15,7 +14,7 @@ Namespace Global.AccuPay.Payroll
 
         Private Const StandardEmployerContribution As Decimal = 100
 
-        Public Sub Calculate(salary As Entities.Salary, paystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, settings As ListOfValueCollection)
+        Public Sub Calculate(salary As Entities.Salary, paystub As Paystub, employee As Entities.Employee, payperiod As Entities.PayPeriod, settings As ListOfValueCollection)
             ' Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0
             paystub.HdmfEmployerShare = 0
@@ -76,11 +75,11 @@ Namespace Global.AccuPay.Payroll
 
         End Sub
 
-        Private Function IsHdmfPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsHdmfPaidOnFirstHalf(deductionSchedule As String, payperiod As Entities.PayPeriod) As Boolean
             Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
         End Function
 
-        Private Function IsHdmfPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsHdmfPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As Entities.PayPeriod) As Boolean
             Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
         End Function
 

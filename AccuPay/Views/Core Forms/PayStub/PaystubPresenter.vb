@@ -9,7 +9,7 @@ Imports Microsoft.EntityFrameworkCore
 
 Public Class PaystubPresenter
 
-    Private _currentPayperiod As PayPeriod
+    Private _currentPayperiod As Data.Entities.PayPeriod
 
     Private _currentPaystub As Paystub
 
@@ -34,7 +34,7 @@ Public Class PaystubPresenter
     End Sub
 
     Private Async Function LoadPayperiods() As Task
-        Dim payperiods As IList(Of PayPeriod) = Nothing
+        Dim payperiods As IList(Of Data.Entities.PayPeriod) = Nothing
 
         Using repository = New Repository()
             payperiods = Await repository.GetPayperiods()
@@ -51,7 +51,7 @@ Public Class PaystubPresenter
         End Using
     End Function
 
-    Private Async Sub OnPayperiodSelected(payperiod As PayPeriod) Handles _view.SelectPayperiod
+    Private Async Sub OnPayperiodSelected(payperiod As Data.Entities.PayPeriod) Handles _view.SelectPayperiod
         _currentPayperiod = payperiod
 
         Using repository = New Repository()
@@ -122,10 +122,14 @@ Public Class PaystubPresenter
 
         Private _employeeRepository As EmployeeRepository
 
+        Private _payPeriodRepository As PayPeriodRepository
+
         Private _timeEntryRepository As TimeEntryRepository
 
         Sub New()
             _employeeRepository = New EmployeeRepository()
+
+            _payPeriodRepository = New PayPeriodRepository()
 
             _timeEntryRepository = New TimeEntryRepository()
         End Sub
@@ -188,20 +192,14 @@ Public Class PaystubPresenter
             Return Await query.ToListAsync()
         End Function
 
-        Public Async Function GetPayperiods() As Task(Of IList(Of PayPeriod))
-            Dim payPeriods As IList(Of PayPeriod) = Nothing
+        Public Async Function GetPayperiods() As Task(Of IList(Of Data.Entities.PayPeriod))
 
-            Dim query =
-                (From p In _context.PayPeriods
-                 Join ps In _context.Paystubs On p.RowID Equals ps.PayPeriodID
-                 Where p.OrganizationID = z_OrganizationID
-                 Group By p.RowID Into x = Group
-                 Select x.Distinct().FirstOrDefault().p)
-
-            Return Await query.ToListAsync()
+            Return (Await _payPeriodRepository.
+                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)).
+                    ToList()
         End Function
 
-        Public Async Function GetPaystubs(payperiod As PayPeriod) As Task(Of IList(Of Paystub))
+        Public Async Function GetPaystubs(payperiod As Data.Entities.PayPeriod) As Task(Of IList(Of Paystub))
             Dim paystubs As IList(Of Paystub) = Nothing
 
             Dim query = _context.Paystubs.Include(Function(p) p.Employee).

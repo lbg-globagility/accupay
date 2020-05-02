@@ -22,7 +22,7 @@ Public Class PayrollResources
             New ConsoleLoggerProvider(Function(__, logLevel) logLevel = LogLevel.Information, True)
         })
 
-    Private _payPeriodID As Integer?
+    Private _payPeriodId As Integer?
 
     Private _payDateFrom As Date
 
@@ -54,7 +54,7 @@ Public Class PayrollResources
 
     Private _previousPaystubs As ICollection(Of Paystub)
 
-    Private _payPeriod As PayPeriod
+    Private _payPeriod As Entities.PayPeriod
 
     Private _allowances As ICollection(Of Entities.Allowance)
 
@@ -144,7 +144,7 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public ReadOnly Property PayPeriod As PayPeriod
+    Public ReadOnly Property PayPeriod As Entities.PayPeriod
         Get
             Return _payPeriod
         End Get
@@ -198,8 +198,8 @@ Public Class PayrollResources
         End Get
     End Property
 
-    Public Sub New(payPeriodID As Integer, payDateFrom As Date, payDateTo As Date)
-        _payPeriodID = payPeriodID
+    Public Sub New(payPeriodId As Integer, payDateFrom As Date, payDateTo As Date)
+        _payPeriodId = payPeriodId
         _payDateFrom = payDateFrom
         _payDateTo = payDateTo
 
@@ -331,7 +331,7 @@ Public Class PayrollResources
             Using context = New PayrollContext()
                 Dim query = context.LoanTransactions.
                     Where(Function(l) l.OrganizationID.Value = z_OrganizationID).
-                    Where(Function(l) CBool(l.PayPeriodID = _payPeriodID))
+                    Where(Function(l) CBool(l.PayPeriodID = _payPeriodId))
 
                 _loanTransactions = Await query.ToListAsync()
             End Using
@@ -431,12 +431,9 @@ Public Class PayrollResources
 
     Private Async Function LoadPayPeriod() As Task
         Try
-            Using context = New PayrollContext(logger)
-                Dim query = From p In context.PayPeriods
-                            Where Nullable.Equals(p.RowID, _payPeriodID)
+            If _payPeriodId.HasValue = False Then Return
 
-                _payPeriod = Await query.FirstOrDefaultAsync()
-            End Using
+            _payPeriod = (Await New PayPeriodRepository().GetByIdAsync(_payPeriodId.Value))
         Catch ex As Exception
             Throw New ResourceLoadingException("PayPeriod", ex)
         End Try

@@ -2,6 +2,7 @@ Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.Payslip
@@ -46,22 +47,41 @@ Public Class PayStubForm
 
     Dim IsUserPressEnterToSearch As Boolean = False
 
-    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim quer_empPayFreq = ""
 
     Dim dtJosh As DataTable
     Dim da As New MySqlDataAdapter()
 
-    Private sys_ownr As New SystemOwnerService()
+    Private sys_ownr As SystemOwnerService
 
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
     Private _policy As PolicyHelper
+
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _results = New BlockingCollection(Of PayrollGeneration.Result)()
+
+        _payPeriodDataList = New List(Of PayPeriodStatusData)
+
+        _policy = New PolicyHelper()
+
+        _payPeriodRepository = New PayPeriodRepository()
+
+        sys_ownr = New SystemOwnerService()
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -77,8 +97,6 @@ Public Class PayStubForm
             dgvcol.Width = mincolwidth
             dgvcol.SortMode = DataGridViewColumnSortMode.NotSortable
         Next
-
-        _policy = New PolicyHelper
 
         setProperInterfaceBaseOnCurrentSystemOwner()
 
@@ -1727,19 +1745,6 @@ Public Class PayStubForm
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
     End Sub
 
-    Private Function GetCurrentPayPeriod() As PayPeriod
-        Dim payPeriod As PayPeriod = Nothing
-
-        Using context As New PayrollContext
-
-            payPeriod = context.PayPeriods.
-                FirstOrDefault(Function(p) p.RowID.Value = ValNoComma(paypRowID))
-
-        End Using
-
-        Return payPeriod
-    End Function
-
     Sub ProgressCounter(result As PayrollGeneration.Result)
         If result.Status = PayrollGeneration.ResultStatus.Success Then
             Interlocked.Increment(_successfulPaystubs)
@@ -1831,16 +1836,15 @@ Public Class PayStubForm
             Return False
         End If
 
+        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(payPeriodId)
+
+        If payPeriod Is Nothing Then
+
+            MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+            Return False
+        End If
+
         Using context As New PayrollContext
-
-            Dim payPeriod = Await context.PayPeriods.FirstOrDefaultAsync(Function(p) p.RowID.Value = payPeriodId)
-
-            If payPeriod Is Nothing Then
-
-                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
-                Return False
-            End If
-
             'if the action is to reopen, check if this payperiod already has paystubs
             'and if there is an existing OPEN payperiod that also has paystubs (PROCESSING pay pay period)
             'Multiple OPEN or CLOSE pay periods are allowed
@@ -1971,23 +1975,23 @@ Public Class PayStubForm
         DeletePayrollToolStripMenuItem.Enabled = True
     End Sub
 
-    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
+    Private Async Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
 
         If _policy.ShowActual = False Then
 
-            PrintPayslip(isActual:=0)
+            Await PrintPayslip(isActual:=0)
 
         End If
     End Sub
 
-    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
+    Private Async Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
-        PrintPayslip(IsActualFlag)
+        Await PrintPayslip(IsActualFlag)
     End Sub
 
-    Private Sub PrintPayslip(isActual As SByte)
-        Dim payPeriod As PayPeriod = GetCurrentPayPeriod()
+    Private Async Function PrintPayslip(isActual As SByte) As Task
+        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(ValNoComma(paypRowID))
 
         Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
 
@@ -1999,7 +2003,7 @@ Public Class PayStubForm
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
         crvwr.Show()
-    End Sub
+    End Function
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
 

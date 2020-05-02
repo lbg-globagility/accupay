@@ -12,7 +12,7 @@ Namespace Global.AccuPay.Payroll
         Public Sub Compute(employee As Entities.Employee,
                            salary As Entities.Salary,
                            settings As ListOfValueCollection,
-                           payperiod As PayPeriod,
+                           payperiod As Entities.PayPeriod,
                            paystub As Paystub)
             Dim totalEarnings As Decimal
 

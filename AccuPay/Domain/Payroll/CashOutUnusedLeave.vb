@@ -35,13 +35,17 @@ Public Class CashOutUnusedLeave
 
     Private _listOfValRepository As ListOfValueRepository
 
+    Private _payPeriodRepository As PayPeriodRepository
+
     Public Sub New(PayPeriodFromId As Integer,
                    PayPeriodToId As Integer,
                    CurrentPeriodID As Integer)
 
-        _categoryRepository = New CategoryRepository
+        _categoryRepository = New CategoryRepository()
 
-        _employeeRepository = New EmployeeRepository
+        _employeeRepository = New EmployeeRepository()
+
+        _payPeriodRepository = New PayPeriodRepository()
 
         _organizationId = Convert.ToInt32(z_OrganizationID)
 
@@ -195,19 +199,19 @@ Public Class CashOutUnusedLeave
     Public Sub Execute()
         _leaveLedger = GetLatestLeaveLedger()
 
-        Dim payperiod As New PayPeriod
+        Dim payperiod As New Data.Entities.PayPeriod
 
         If _isVLOnly And _asAdjustment Then
 
             Dim success As Boolean = False
+
+            payperiod = _payPeriodRepository.GetById(_currentPeriodId)
 
             Using context = New PayrollContext()
                 Dim paystubs =
                     (From p In context.Paystubs.Include(Function(p) p.ActualAdjustments)
                      Where p.PayPeriodID.Value = _currentPeriodId And p.OrganizationID = _organizationId).
                      ToList()
-
-                payperiod = context.PayPeriods.Where(Function(pp) Equals(pp.RowID.Value, _currentPeriodId)).FirstOrDefault
 
                 For Each row As DataRow In _leaveLedger.Rows
                     Dim employeePrimKey = Convert.ToInt32(row("EmployeeID"))
@@ -262,7 +266,7 @@ Public Class CashOutUnusedLeave
                 Dim strCutOff As String
                 Using context = New PayrollContext()
                     If payperiod Is Nothing Then
-                        payperiod = context.PayPeriods.Where(Function(pp) Equals(pp.RowID.Value, _currentPeriodId)).FirstOrDefault
+                        payperiod = _payPeriodRepository.GetById(_currentPeriodId)
                     End If
 
                     strCutOff = String.Join(" to ", payperiod.PayFromDate.ToShortDateString, payperiod.PayToDate.ToShortDateString)
@@ -289,7 +293,7 @@ Public Class CashOutUnusedLeave
 
     End Sub
 
-    Private Function CreateLeaveTransaction(context As PayrollContext, leaveTransactionType As LeaveTransactionType, leaveLedger As LeaveLedger, payPeriod As PayPeriod, unusedLeaveHours As Decimal) As LeaveTransaction
+    Private Function CreateLeaveTransaction(context As PayrollContext, leaveTransactionType As LeaveTransactionType, leaveLedger As LeaveLedger, payPeriod As Data.Entities.PayPeriod, unusedLeaveHours As Decimal) As LeaveTransaction
         Dim employeeRowId = leaveLedger.EmployeeID
 
         Dim lt = context.LeaveTransactions.

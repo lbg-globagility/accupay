@@ -25,7 +25,7 @@ Namespace Global.AccuPay.Payroll
             _settings = settings
         End Sub
 
-        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As PayPeriod, salary As Entities.Salary)
+        Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, employee As Entities.Employee, payperiod As Entities.PayPeriod, salary As Entities.Salary)
             ' Reset the tax value before starting
             paystub.DeferredTaxableIncome = 0
             paystub.TaxableIncome = 0
@@ -140,7 +140,7 @@ Namespace Global.AccuPay.Payroll
             Return filingStatusID
         End Function
 
-        Private Function GetTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As PayPeriod) As Entities.WithholdingTaxBracket
+        Private Function GetTaxBracket(payFrequencyID As Integer?, filingStatusID As Integer?, _paystub As Paystub, _payperiod As Entities.PayPeriod) As Entities.WithholdingTaxBracket
             Dim taxEffectivityDate = New Date(_payperiod.Year, _payperiod.Month, 1)
 
             Dim possibleBrackets = _withholdingTaxBrackets.
@@ -162,11 +162,11 @@ Namespace Global.AccuPay.Payroll
             Return Nothing
         End Function
 
-        Private Function IsWithholdingTaxPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsWithholdingTaxPaidOnFirstHalf(deductionSchedule As String, payperiod As Entities.PayPeriod) As Boolean
             Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
         End Function
 
-        Private Function IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As Entities.PayPeriod) As Boolean
             Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
         End Function
 
@@ -174,7 +174,7 @@ Namespace Global.AccuPay.Payroll
             Return deductionSchedule = ContributionSchedule.PER_PAY_PERIOD
         End Function
 
-        Private Function IsScheduledForTaxation(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsScheduledForTaxation(deductionSchedule As String, payperiod As Entities.PayPeriod) As Boolean
             Return (payperiod.IsFirstHalf And IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod)) Or
                 (payperiod.IsEndOfTheMonth And IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod)) Or
                 IsWithholdingTaxPaidPerPayPeriod(deductionSchedule)

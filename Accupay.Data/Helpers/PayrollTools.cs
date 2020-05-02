@@ -199,7 +199,7 @@ namespace AccuPay.Data.Helpers
             {
                 if (payperiods == null || payperiods.Count() == 0)
                 {
-                    payperiods = await new PayPeriodRepository().GetAllSemiMonthly(organizationId);
+                    payperiods = await new PayPeriodRepository().GetAllSemiMonthlyAsync(organizationId);
                 }
 
                 if (isBenchmarkOwner)

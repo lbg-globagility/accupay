@@ -22,7 +22,7 @@ Namespace Global.AccuPay.Payroll
                              paystub As Paystub,
                              previousPaystub As Paystub,
                              employee As Data.Entities.Employee,
-                             payperiod As PayPeriod,
+                             payperiod As Data.Entities.PayPeriod,
                              allowances As ICollection(Of Data.Entities.Allowance))
 
             ' Reset the PhilHealth to zero
@@ -169,11 +169,11 @@ Namespace Global.AccuPay.Payroll
                 Function(p) p.SalaryRangeFrom <= amount And p.SalaryRangeTo >= amount)
         End Function
 
-        Private Function IsPhilHealthPaidOnFirstHalf(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsPhilHealthPaidOnFirstHalf(deductionSchedule As String, payperiod As Data.Entities.PayPeriod) As Boolean
             Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
         End Function
 
-        Private Function IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As PayPeriod) As Boolean
+        Private Function IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule As String, payperiod As Data.Entities.PayPeriod) As Boolean
             Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
         End Function
 

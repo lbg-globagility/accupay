@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Entity
 Imports AccuPay.ExcelReportColumn
@@ -31,7 +32,15 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private _settings As ListOfValueCollection
 
+    Private _payPeriodRepository As PayPeriodRepository
+
     Public Property IsActual As Boolean
+
+    Sub New()
+        _payPeriodRepository = New PayPeriodRepository()
+
+        _settings = ListOfValueCollection.Create()
+    End Sub
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
@@ -137,8 +146,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim payrollSelector = GetPayrollSelector()
         If payrollSelector Is Nothing Then Return
-
-        _settings = ListOfValueCollection.Create()
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
@@ -580,30 +587,28 @@ Public Class PayrollSummaryExcelFormatReportProvider
                             Optional allEmployees As ICollection(Of DataRow) = Nothing) _
                             As Task(Of List(Of IAdjustment))
 
+        Dim payPeriodFrom As Data.Entities.PayPeriod = Nothing
+        Dim payPeriodTo As Data.Entities.PayPeriod = Nothing
+
+        If payrollSummaDateSelection.PayPeriodFromID IsNot Nothing Then
+
+            payPeriodFrom = Await _payPeriodRepository.
+                                GetByIdAsync(payrollSummaDateSelection.PayPeriodFromID.Value)
+        End If
+
+        If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
+
+            payPeriodFrom = Await _payPeriodRepository.
+                                GetByIdAsync(payrollSummaDateSelection.PayPeriodToID.Value)
+        End If
+
+        If payPeriodFrom?.PayFromDate Is Nothing OrElse payPeriodTo?.PayToDate Is Nothing Then
+
+            Throw New ArgumentException("Cannot fetch pay period data.")
+
+        End If
+
         Using context As New PayrollContext
-
-            Dim payPeriodFrom As New PayPeriod
-            Dim payPeriodTo As New PayPeriod
-
-            If payrollSummaDateSelection.PayPeriodFromID IsNot Nothing Then
-
-                payPeriodFrom = Await context.PayPeriods.
-                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodFromID.Value).
-                                FirstOrDefaultAsync
-            End If
-
-            If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
-
-                payPeriodTo = Await context.PayPeriods.
-                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodToID.Value).
-                                FirstOrDefaultAsync
-            End If
-
-            If payPeriodFrom?.PayFromDate Is Nothing OrElse payPeriodTo?.PayToDate Is Nothing Then
-
-                Throw New ArgumentException("Cannot fetch pay period data.")
-
-            End If
 
             Dim employeeIds = GetEmployeeIds(allEmployees)
 

@@ -2,9 +2,9 @@ Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
 
 Public Class DateRangePickerDialog
 
@@ -25,7 +25,10 @@ Public Class DateRangePickerDialog
     Private _rowId As Integer
 
     Private _passedPayPeriod As IPayPeriod
+
     Private ReadOnly _removePayPeriodValidation As Boolean
+
+    Private _payPeriodRepository As PayPeriodRepository
 
     Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
@@ -34,7 +37,10 @@ Public Class DateRangePickerDialog
 
         ' Add any initialization after the InitializeComponent() call.
         _passedPayPeriod = passedPayPeriod
+
         _removePayPeriodValidation = removePayPeriodValidation
+
+        _payPeriodRepository = New PayPeriodRepository()
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -107,13 +113,11 @@ Public Class DateRangePickerDialog
     End Function
 
     Private Async Function LoadPayPeriods() As Task
-        Using context = New PayrollContext()
-            _payperiods = Await context.PayPeriods.
-                Where(Function(p) p.Year = Year).
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                Where(Function(p) Nullable.Equals(p.PayFrequencyID, _payFrequencyId)).
-                ToListAsync()
-        End Using
+
+        _payperiods = (Await _payPeriodRepository.
+                        GetByPayFrequencyAsync(organizationId:=z_OrganizationID,
+                                               payFrequencyId:=_payFrequencyId)).
+                    ToList()
 
         Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
 

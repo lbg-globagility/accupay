@@ -16,7 +16,7 @@ Public Class SssCalculator
         _socialSecurityBrackets = socialSecurityBrackets
     End Sub
 
-    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Entities.Salary, employee As Entities.Employee, payperiod As PayPeriod)
+    Public Sub Calculate(paystub As Paystub, previousPaystub As Paystub, salary As Entities.Salary, employee As Entities.Employee, payperiod As Entities.PayPeriod)
         ' Reset SSS values to zero
         paystub.SssEmployeeShare = 0
         paystub.SssEmployerShare = 0
@@ -109,11 +109,11 @@ Public Class SssCalculator
         End Select
     End Function
 
-    Private Function IsSssPaidOnFirstHalf(payperiod As PayPeriod, deductionSchedule As String) As Boolean
+    Private Function IsSssPaidOnFirstHalf(payperiod As Entities.PayPeriod, deductionSchedule As String) As Boolean
         Return payperiod.IsFirstHalf And (deductionSchedule = ContributionSchedule.FIRST_HALF)
     End Function
 
-    Private Function IsSssPaidOnEndOfTheMonth(payperiod As PayPeriod, deductionSchedule As String) As Boolean
+    Private Function IsSssPaidOnEndOfTheMonth(payperiod As Entities.PayPeriod, deductionSchedule As String) As Boolean
         Return payperiod.IsEndOfTheMonth And (deductionSchedule = ContributionSchedule.END_OF_THE_MONTH)
     End Function
 

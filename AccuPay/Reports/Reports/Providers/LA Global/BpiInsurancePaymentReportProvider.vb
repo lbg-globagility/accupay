@@ -1,7 +1,5 @@
 ﻿Option Strict On
 
-Imports System.Threading
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
@@ -10,12 +8,19 @@ Imports Microsoft.EntityFrameworkCore
 
 Public Class BpiInsurancePaymentReportProvider
     Implements ILaGlobalEmployeeReport
-    Private _logger As ILog = LogManager.GetLogger("EmployeeFormAppender")
-
-    Private _reportDocument As BpiInsuranceAmountReport
 
     Private _selectedDate As Date
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
+
+    Private _reportDocument As BpiInsuranceAmountReport
+
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Sub New()
+        _reportDocument = New BpiInsuranceAmountReport()
+
+        _payPeriodRepository = New PayPeriodRepository()
+    End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim monthSelector = New selectMonth()
@@ -26,7 +31,6 @@ Public Class BpiInsurancePaymentReportProvider
         _selectedDate = CDate(monthSelector.MonthFirstDate)
 
         Try
-            _reportDocument = New BpiInsuranceAmountReport
 
             SetDataSource()
 
@@ -48,12 +52,14 @@ Public Class BpiInsurancePaymentReportProvider
             Throw New Exception("Cannot get BPI Insurance data.")
         End If
 
+        Dim periods = (Await _payPeriodRepository.GetByMonthYearAndPayPrequencyAsync(
+                                    z_OrganizationID,
+                                    month:=_selectedDate.Month,
+                                    year:=_selectedDate.Year,
+                                    payFrequencyId:=Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId)).
+                            ToList()
+
         Using context = New PayrollContext
-            Dim periods = context.PayPeriods.Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                Where(Function(p) p.Year = _selectedDate.Year).
-                Where(Function(p) p.Month = _selectedDate.Month).
-                Where(Function(p) p.PayFrequencyID.Value = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId).
-                ToList
 
             Dim periodIDs = periods.Select(Function(p) p.RowID.Value).ToArray()
 

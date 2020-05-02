@@ -3,7 +3,6 @@ Option Strict On
 Imports System.ComponentModel
 Imports AccuPay.Entity
 Imports AccuPay.Loans
-Imports PayrollSys
 
 Public Class PaystubView
 
@@ -13,7 +12,7 @@ Public Class PaystubView
 
     Public Event SelectPaystub(paystub As Paystub)
 
-    Public Event SelectPayperiod(payperiod As PayPeriod)
+    Public Event SelectPayperiod(payperiod As Data.Entities.PayPeriod)
 
     Public Event ToggleActual()
 
@@ -64,7 +63,7 @@ Public Class PaystubView
         txtHourlyRate.Text = Format(hourlyRate)
     End Sub
 
-    Public Sub ShowPayperiods(payperiods As IList(Of PayPeriod))
+    Public Sub ShowPayperiods(payperiods As IList(Of Data.Entities.PayPeriod))
         cboPayPeriods.DataSource = payperiods.
             Select(Function(t) New PayPeriodModel(t)).
             OrderByDescending(Function(t) t.Item.PayFromDate).
@@ -353,9 +352,9 @@ Public Class PaystubView
 
         Public Property Display As String
 
-        Public Property Item As PayPeriod
+        Public Property Item As Data.Entities.PayPeriod
 
-        Public Sub New(payPeriod As PayPeriod)
+        Public Sub New(payPeriod As Data.Entities.PayPeriod)
             Item = payPeriod
             Display = $"{GetPeriod()} - {payPeriod.PayFromDate.ToString("MM/dd/yyyy")} to {payPeriod.PayToDate.ToString("MM/dd/yyyy")}"
         End Sub

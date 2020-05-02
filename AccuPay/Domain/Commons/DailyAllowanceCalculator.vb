@@ -18,7 +18,7 @@ Public Class DailyAllowanceCalculator
         _previousTimeEntries = previousTimeEntries
     End Sub
 
-    Public Function Compute(payperiod As PayPeriod, allowance As Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of Entities.TimeEntry)) As AllowanceItem
+    Public Function Compute(payperiod As Entities.PayPeriod, allowance As Entities.Allowance, employee As Entities.Employee, paystub As Paystub, timeEntries As ICollection(Of Entities.TimeEntry)) As AllowanceItem
         Dim dailyRate = allowance.Amount
 
         Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(

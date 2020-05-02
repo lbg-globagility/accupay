@@ -7,7 +7,7 @@ Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
-    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
+    Private curr_sys_owner_name As String = ""
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -25,6 +25,8 @@ Public Class HRISForm
         ' Add any initialization after the InitializeComponent() call.
 
         sys_ownr = New SystemOwnerService()
+
+        curr_sys_owner_name = sys_ownr.GetCurrentSystemOwner()
 
         if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
