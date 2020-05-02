@@ -24,8 +24,6 @@ Public Class PayrollContext
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
-    Public Overridable Property Products As DbSet(Of Product)
-
     Public Overridable Property Paystubs As DbSet(Of Paystub)
 
     Public Sub New()

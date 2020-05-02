@@ -19,9 +19,22 @@ Public Class ImportLeaveForm
     Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-    Private _leaveRepository As New LeaveRepository()
-    Private _employeeRepo As New EmployeeRepository()
-    Private _categoryRepo As New CategoryRepository()
+    Private _categoryRepository As CategoryRepository
+    Private _employeeRepository As EmployeeRepository
+    Private _leaveRepository As LeaveRepository
+    Private _productRepository As ProductRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _categoryRepository = New CategoryRepository()
+        _employeeRepository = New EmployeeRepository()
+        _leaveRepository = New LeaveRepository()
+        _productRepository = New ProductRepository()
+    End Sub
 
 #Region "Properties"
 
@@ -54,25 +67,22 @@ Public Class ImportLeaveForm
 
         Dim dataSource As New List(Of LeaveModel)
 
-        Dim employeeFromRepo = Await _employeeRepo.GetAllAsync(z_OrganizationID)
+        Dim employeeFromRepo = Await _employeeRepository.GetAllAsync(z_OrganizationID)
         Dim employees = employeeFromRepo.
             Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
             ToList()
 
-        Using context = New PayrollContext
+        For Each model In models
 
-            For Each model In models
+            Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
 
-                Dim employee = employees.Where(Function(e) e.EmployeeNo = model.EmployeeNo).FirstOrDefault
+            dataSource.Add(CreateLeaveModel(model, employee))
+        Next
 
-                dataSource.Add(CreateLeaveModel(model, employee))
-            Next
-
-            _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
-            _failModels = dataSource.Where(Function(ee) ee.ConsideredFailed).ToList()
-            DataGridView1.DataSource = _okModels
-            DataGridView2.DataSource = _failModels
-        End Using
+        _okModels = dataSource.Where(Function(ee) Not ee.ConsideredFailed).ToList()
+        _failModels = dataSource.Where(Function(ee) ee.ConsideredFailed).ToList()
+        DataGridView1.DataSource = _okModels
+        DataGridView2.DataSource = _failModels
 
         SaveButton.Enabled = _okModels.Count > 0
 
@@ -465,19 +475,10 @@ Public Class ImportLeaveForm
             Using package As New ExcelPackage(fileInfo)
                 Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
 
-                Dim leaveTypes As New List(Of String)
-                Dim leaveCateogry = Await _categoryRepo.GetByNameAsync(z_OrganizationID,
-                                                                       ProductConstant.LEAVE_TYPE_CATEGORY)
-                Dim categleavID = leaveCateogry.RowID
-
-                Using context As New PayrollContext
-                    leaveTypes = Await context.Products.
-                        Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                        Where(Function(p) Nullable.Equals(p.CategoryID, categleavID)).
-                        Select(Function(p) p.PartNo).
-                        OrderBy(Function(p) p).
-                        ToListAsync()
-                End Using
+                Dim leaveTypes = (Await _productRepository.GetLeaveTypesAsync(z_OrganizationID)).
+                            Select(Function(p) p.PartNo).
+                            OrderBy(Function(p) p).
+                            ToList()
 
                 For index = 0 To leaveTypes.Count - 1
                     worksheet.Cells(index + 2, 2).Value = leaveTypes(index)

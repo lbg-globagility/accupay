@@ -17,11 +17,6 @@ Imports Microsoft.Extensions.Logging.Console
 ''' </summary>
 Public Class PayrollResources
 
-    Dim logger As LoggerFactory = New LoggerFactory(
-        {
-            New ConsoleLoggerProvider(Function(__, logLevel) logLevel = LogLevel.Information, True)
-        })
-
     Private _payPeriodId As Integer?
 
     Private _payDateFrom As Date
@@ -41,8 +36,6 @@ Public Class PayrollResources
     Private _loanSchedules As ICollection(Of Entities.LoanSchedule)
 
     Private _loanTransactions As ICollection(Of LoanTransaction)
-
-    Private _products As ICollection(Of Product)
 
     Private _socialSecurityBrackets As ICollection(Of Entities.SocialSecurityBracket)
 
@@ -65,6 +58,10 @@ Public Class PayrollResources
     Private _systemOwner As SystemOwnerService
 
     Private _bpiInsuranceProduct As Entities.Product
+
+    Private _sickLeaveProduct As Entities.Product
+
+    Private _vacationLeaveProduct As Entities.Product
 
     Private _calendarCollection As CalendarCollection
 
@@ -105,12 +102,6 @@ Public Class PayrollResources
     Public ReadOnly Property Salaries As ICollection(Of Entities.Salary)
         Get
             Return _salaries
-        End Get
-    End Property
-
-    Public ReadOnly Property Products As ICollection(Of Product)
-        Get
-            Return _products
         End Get
     End Property
 
@@ -198,6 +189,18 @@ Public Class PayrollResources
         End Get
     End Property
 
+    Public ReadOnly Property SickLeaveProduct As Entities.Product
+        Get
+            Return _sickLeaveProduct
+        End Get
+    End Property
+
+    Public ReadOnly Property VacationLeaveProduct As Entities.Product
+        Get
+            Return _vacationLeaveProduct
+        End Get
+    End Property
+
     Public Sub New(payPeriodId As Integer, payDateFrom As Date, payDateTo As Date)
         _payPeriodId = payPeriodId
         _payDateFrom = payDateFrom
@@ -221,7 +224,6 @@ Public Class PayrollResources
             LoadLoanTransactions(),
             LoadSalaries(),
             LoadPaystubs(),
-            LoadProducts(),
             LoadPreviousPaystubs(),
             LoadSocialSecurityBrackets(),
             LoadPhilHealthBrackets(),
@@ -233,6 +235,8 @@ Public Class PayrollResources
             LoadDivisionMinimumWages(),
             LoadCalendarCollection(),
             LoadBpiInsuranceProduct(),
+            LoadSickLeaveProduct(),
+            LoadVacationLeaveProduct(),
             LoadLeaves()
         })
     End Function
@@ -347,19 +351,6 @@ Public Class PayrollResources
                     ToList()
         Catch ex As Exception
             Throw New ResourceLoadingException("Salaries", ex)
-        End Try
-    End Function
-
-    Private Async Function LoadProducts() As Task
-        Try
-            Using context = New PayrollContext()
-                Dim query = From p In context.Products
-                            Where p.OrganizationID.Value = z_OrganizationID
-
-                _products = Await query.ToListAsync()
-            End Using
-        Catch ex As Exception
-            Throw New ResourceLoadingException("Products", ex)
         End Try
     End Function
 
@@ -481,7 +472,33 @@ Public Class PayrollResources
                                             organizationId:=z_OrganizationID,
                                             userId:=z_User)
         Catch ex As Exception
-            Throw New ResourceLoadingException("BPI Insurance Adjustment Product ID", ex)
+            Throw New ResourceLoadingException("BPI Insurance Adjustment Product", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadSickLeaveProduct() As Task
+        Try
+
+            _sickLeaveProduct = Await New ProductRepository().
+                                        GetOrCreateLoanTypeAsync(
+                                            ProductConstant.SICK_LEAVE,
+                                            organizationId:=z_OrganizationID,
+                                            userId:=z_User)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Sick Leave Product", ex)
+        End Try
+    End Function
+
+    Private Async Function LoadVacationLeaveProduct() As Task
+        Try
+
+            _vacationLeaveProduct = Await New ProductRepository().
+                                        GetOrCreateLoanTypeAsync(
+                                            ProductConstant.VACATION_LEAVE,
+                                            organizationId:=z_OrganizationID,
+                                            userId:=z_User)
+        Catch ex As Exception
+            Throw New ResourceLoadingException("Vacation Leave Product", ex)
         End Try
     End Function
 

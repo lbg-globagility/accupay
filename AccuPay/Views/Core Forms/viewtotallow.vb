@@ -1,5 +1,4 @@
-﻿Imports AccuPay.Data.Helpers
-Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Data.Repositories
 
 Public Class viewtotallow
     Dim categallowID As Object = Nothing
@@ -8,6 +7,17 @@ Public Class viewtotallow
     Private employeeId As Object
     Private periodDateFrom As Object
     Private periodDateTo As Object
+
+    Private _productRepository As ProductRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _productRepository = New ProductRepository()
+    End Sub
 
     Private Sub viewtotallow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -97,18 +107,12 @@ Public Class viewtotallow
         ComboBox1.Items.Clear()
         Dim orgId = Convert.ToInt32(orgztnID)
 
-        Using context = New PayrollContext
-            Dim allowanceTypes = Await context.Products.
-                Where(Function(p) Nullable.Equals(p.OrganizationID, orgId)).
-                Where(Function(p) p.PartNo.Trim().Length > 0).
-                Where(Function(p) Nullable.Equals(p.Category, ProductConstant.ALLOWANCE_TYPE_CATEGORY)).
-                Where(Function(p) p.ActiveData).
-                Select(Function(p) p.PartNo).
-                OrderBy(Function(p) p.Trim()).
-                ToListAsync
+        Dim allowanceTypes = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).
+                            Select(Function(p) p.PartNo).
+                            OrderBy(Function(p) p.Trim()).
+                            ToArray()
 
-            ComboBox1.Items.AddRange(allowanceTypes.ToList.ToArray)
-        End Using
+        ComboBox1.Items.AddRange(allowanceTypes)
     End Sub
 
     Private Sub ComboBox1_DropDown(sender As Object, e As EventArgs)

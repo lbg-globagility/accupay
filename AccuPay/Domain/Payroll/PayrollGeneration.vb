@@ -34,8 +34,6 @@ Public Class PayrollGeneration
 
     Private ReadOnly _payPeriod As Entities.PayPeriod
 
-    Private ReadOnly _products As IEnumerable(Of Product)
-
     Private ReadOnly _settings As ListOfValueCollection
 
     Private ReadOnly _timeEntries As ICollection(Of Entities.TimeEntry)
@@ -51,6 +49,10 @@ Public Class PayrollGeneration
     Private ReadOnly _previousPaystub As Paystub
 
     Private ReadOnly _bpiInsuranceProduct As Entities.Product
+
+    Private ReadOnly _sickLeaveProduct As Entities.Product
+
+    Private ReadOnly _vacationLeaveProduct As Entities.Product
 
     Private ReadOnly _calendarCollection As CalendarCollection
 
@@ -80,8 +82,6 @@ Public Class PayrollGeneration
 
         _salary = resources.Salaries.
             FirstOrDefault(Function(s) CBool(s.EmployeeID = _employee.RowID))
-
-        _products = resources.Products
 
         _paystub = resources.Paystubs.FirstOrDefault(
             Function(p) Nullable.Equals(p.EmployeeID, _employee.RowID))
@@ -115,6 +115,10 @@ Public Class PayrollGeneration
             ToList()
 
         _bpiInsuranceProduct = resources.BpiInsuranceProduct
+
+        _sickLeaveProduct = resources.SickLeaveProduct
+
+        _vacationLeaveProduct = resources.VacationLeaveProduct
 
         _calendarCollection = resources.CalendarCollection
     End Sub
@@ -703,9 +707,6 @@ Public Class PayrollGeneration
     End Function
 
     Private Sub UpdatePaystubItems(context As PayrollContext)
-        Dim vacationLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.VACATION_LEAVE).FirstOrDefault()
-        Dim sickLeaveProduct = _products.Where(Function(p) p.PartNo = ProductConstant.SICK_LEAVE).FirstOrDefault()
-
         context.Entry(_paystub).Collection(Function(p) p.PaystubItems).Load()
         context.Set(Of PaystubItem).RemoveRange(_paystub.PaystubItems)
 
@@ -721,7 +722,7 @@ Public Class PayrollGeneration
             .OrganizationID = z_OrganizationID,
             .Created = Date.Now,
             .CreatedBy = z_User,
-            .ProductID = vacationLeaveProduct.RowID,
+            .ProductID = _vacationLeaveProduct.RowID,
             .PayAmount = newBalance,
             .Paystub = _paystub
         }
@@ -738,7 +739,7 @@ Public Class PayrollGeneration
 
         sickLeaveBalance = New PaystubItem() With {
             .OrganizationID = z_OrganizationID,
-            .ProductID = sickLeaveProduct.RowID,
+            .ProductID = _sickLeaveProduct.RowID,
             .PayAmount = newBalance2,
             .Paystub = _paystub
         }
