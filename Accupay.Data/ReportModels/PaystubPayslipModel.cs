@@ -99,9 +99,9 @@ namespace AccuPay.Data.ReportModels
         {
             if (Employee.IsMonthly || Employee.IsFixed)
             {
-                if (Employee.PayFrequencyID.Value == (int)PayFrequencyType.Monthly)
+                if (Employee.PayFrequencyID == (int)PayFrequencyType.Monthly)
                     return salary;
-                else if (Employee.PayFrequencyID.Value == (int)PayFrequencyType.SemiMonthly)
+                else if (Employee.PayFrequencyID == (int)PayFrequencyType.SemiMonthly)
                     return salary / PayrollTools.SemiMonthlyPayPeriodsPerMonth;
                 else
                     throw new Exception("GetBasicPay is implemented on monthly and semimonthly only");

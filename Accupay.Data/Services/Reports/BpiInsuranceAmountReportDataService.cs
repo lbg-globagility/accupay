@@ -54,7 +54,7 @@ namespace AccuPay.Data.Services
                 var adjustments = context.Adjustments.
                                             Include(a => a.Paystub.Employee).
                                             Where(a => periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
-                                            Where(a => bpiInsuranceProductID.Value == a.ProductID.Value).
+                                            Where(a => bpiInsuranceProductID == a.ProductID).
                                             ToList();
 
                 if (!adjustments.Any())

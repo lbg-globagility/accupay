@@ -149,9 +149,13 @@ namespace AccuPay.Data.Services
 
             decimal? overtimeHours;
             if (breaktime != null)
+            {
                 overtimeHours = overtimeWorked?.Difference(breaktime).Sum(o => o.TotalHours);
+            }
             else
+            {
                 overtimeHours = overtimeWorked?.TotalHours;
+            }
 
             return overtimeHours ?? 0;
         }
@@ -177,9 +181,13 @@ namespace AccuPay.Data.Services
 
             decimal? nightDiffOTHours;
             if (breaktime != null)
+            {
                 nightDiffOTHours = nightOvertimeWorked?.Difference(breaktime).Sum(o => o.TotalHours);
+            }
             else
+            {
                 nightDiffOTHours = nightOvertimeWorked?.TotalHours;
+            }
 
             return nightDiffOTHours ?? 0;
         }

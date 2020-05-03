@@ -62,7 +62,7 @@ namespace AccuPay.Data.Services
                                         Include(t => t.Employee).
                                         Where(t => t.Date >= firstDayOfTheMonth).
                                         Where(t => t.Date <= lastDayOfTheMonth).
-                                        Where(t => t.OrganizationID.Value == _organizationId).
+                                        Where(t => t.OrganizationID == _organizationId).
                                         Where(t => t.LateHours > 0).
                                         GroupBy(t => t.Employee).
                                         Select(gt => new CinemaTardinessReportModel()

@@ -65,6 +65,7 @@ namespace AccuPay.Data.Services
                 if (_finished == 0)
                     return 0;
 
+                //using decimal does not update the progress threading
                 return Convert.ToInt32(Math.Floor(_finished / (double)_total * 100));
             }
         }
@@ -283,8 +284,8 @@ namespace AccuPay.Data.Services
                 try
                 {
                     var timelog = timeLogs.OrderByDescending(t => t.LastUpd).FirstOrDefault(t => t.LogDate == currentDate);
-                    var employeeShift = shiftSchedules.FirstOrDefault(s => s.EffectiveFrom <= currentDate & currentDate <= s.EffectiveTo);
-                    var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate & currentDate <= o.OTEndDate).ToList();
+                    var employeeShift = shiftSchedules.FirstOrDefault(s => s.EffectiveFrom <= currentDate && currentDate <= s.EffectiveTo);
+                    var overtimes = overtimesInCutoff.Where(o => o.OTStartDate <= currentDate && currentDate <= o.OTEndDate).ToList();
                     var leaves = leavesInCutoff.Where(l => l.StartDate == currentDate).ToList();
                     var officialBusiness = officialBusinesses.FirstOrDefault(o => o.StartDate.Value == currentDate);
                     var dutyShiftSched = dutyShiftSchedules.FirstOrDefault(es => es.DateSched == currentDate);

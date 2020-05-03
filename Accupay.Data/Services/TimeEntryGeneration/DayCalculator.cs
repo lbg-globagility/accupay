@@ -111,18 +111,22 @@ namespace AccuPay.Data.Services
 
             timeEntry.EmployeeShiftID = currentShift.ShiftSchedule?.RowID;
 
-            var hasTimeLog = (timeLog?.TimeIn != null & timeLog?.TimeOut != null) ||
+            var hasTimeLog = (timeLog?.TimeIn != null && timeLog?.TimeOut != null) ||
                                 officialBusiness != null;
 
             TimePeriod logPeriod = null;
             if (hasTimeLog)
+            {
                 logPeriod = GetLogPeriod(timeLog, officialBusiness, currentShift, currentDate);
+            }
 
             if (_policy.PaidAsLongAsPresent)
             {
                 var atLeastHasTimeLogs = timeLog?.TimeIn != null || timeLog?.TimeOut != null;
                 if (atLeastHasTimeLogs)
+                {
                     timeEntry.RegularHours = DEFAULT_WORK_HOURS;
+                }
             }
 
             if (logPeriod != null)
@@ -132,7 +136,9 @@ namespace AccuPay.Data.Services
                 var shiftPeriod = currentShift.ShiftPeriod;
 
                 if (shiftPeriod != null)
+                {
                     dutyPeriod = shiftPeriod.Overlap(logPeriod);
+                }
 
                 if (dutyPeriod != null)
                 {
@@ -171,9 +177,9 @@ namespace AccuPay.Data.Services
                     {
                         var lateHours = timeEntry.LateHours;
 
-                        if (lateHours > 0.5M & lateHours <= 1)
+                        if (lateHours > 0.5M && lateHours <= 1)
                             timeEntry.LateHours = 1;
-                        else if (lateHours >= 2 & lateHours <= 4)
+                        else if (lateHours >= 2 && lateHours <= 4)
                             timeEntry.LateHours = 4;
                     }
 
@@ -480,7 +486,7 @@ namespace AccuPay.Data.Services
                 var hasNoGracePeriod = empGracePeriod == 0;
                 var hasGracePeriod = !hasNoGracePeriod;
 
-                if (hasGracePeriod & overtimeMinutes > empGracePeriod)
+                if (hasGracePeriod && overtimeMinutes > empGracePeriod)
                 {
                     var properValue = Math.Ceiling(overtimeMinutes / empGracePeriod);
                     var lessOne = properValue - 1;
@@ -488,9 +494,10 @@ namespace AccuPay.Data.Services
 
                     timeEntry.OvertimeHours = properLateHours / _minutesPerHour;
                 }
-                else if (hasGracePeriod
-                                & overtimeMinutes <= empGracePeriod)
+                else if (hasGracePeriod && overtimeMinutes <= empGracePeriod)
+                {
                     timeEntry.OvertimeHours = 0;
+                }
             }
 
             return timeEntry;
@@ -506,7 +513,7 @@ namespace AccuPay.Data.Services
                                             IList<Overtime> overtimes,
                                             TimePeriod nightBreaktime)
         {
-            if (_employee.CalcNightDiff & currentShift.IsNightShift)
+            if (_employee.CalcNightDiff && currentShift.IsNightShift)
             {
                 var nightDiffPeriod = GetNightDiffPeriod(currentDate);
                 var dawnDiffPeriod = GetNightDiffPeriod(previousDay);

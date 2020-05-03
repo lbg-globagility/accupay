@@ -63,14 +63,18 @@ namespace AccuPay.Data.Services
                 return;
             }
 
-            if (IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) | IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod))
-                paystub.TaxableIncome += previousPaystub?.DeferredTaxableIncome ?? 0;
+            if (IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) ||
+                IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod))
+            {
+                paystub.TaxableIncome += (previousPaystub?.DeferredTaxableIncome ?? 0);
+            }
             else if (IsWithholdingTaxPaidPerPayPeriod(deductionSchedule))
             {
+                // Nothing to do here for now
             }
 
             var dailyRate = employee.IsDaily ? salary.BasicSalary :
-                                            salary.BasicSalary / (employee.WorkDaysPerYear / 12);
+                                        salary.BasicSalary / (employee.WorkDaysPerYear / 12);
 
             // Round the daily rate to two decimal places since amounts in the 3rd decimal place
             // isn't significant enough to warrant the employee to be taxable.
@@ -86,10 +90,15 @@ namespace AccuPay.Data.Services
                 return;
 
             int? payFrequencyId = null;
-            if (IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) | IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod))
+            if (IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod) ||
+                IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod))
+            {
                 payFrequencyId = PayFrequency.Monthly;
+            }
             else if (IsWithholdingTaxPaidPerPayPeriod(deductionSchedule))
+            {
                 payFrequencyId = PayFrequency.SemiMonthly;
+            }
 
             var filingStatusId = GetFilingStatusID(employee.MaritalStatus, employee.NoOfDependents);
             var taxBracket = GetTaxBracket(payFrequencyId, filingStatusId, paystub, payperiod);
@@ -99,7 +108,8 @@ namespace AccuPay.Data.Services
 
         private decimal GetCurrentMinimumWage(Employee employee)
         {
-            var divisionMinimumWage = _divisionMinimumWages?.FirstOrDefault(t => Nullable.Equals(t.DivisionID, employee.Position?.DivisionID));
+            var divisionMinimumWage = _divisionMinimumWages?.
+                                        FirstOrDefault(t => t.DivisionID == employee.Position?.DivisionID);
             var minimumWage = divisionMinimumWage?.Amount ?? 0;
 
             return minimumWage;
@@ -135,26 +145,36 @@ namespace AccuPay.Data.Services
         {
             var taxEffectivityDate = new DateTime(_payperiod.Year, _payperiod.Month, 1);
 
-            var possibleBrackets = _withholdingTaxBrackets.Where(w => w.PayFrequencyID.Value == payFrequencyID.Value).Where(w => w.EffectiveDateFrom <= taxEffectivityDate & taxEffectivityDate <= w.EffectiveDateTo).Where(w => w.TaxableIncomeFromAmount < _paystub.TaxableIncome & _paystub.TaxableIncome <= w.TaxableIncomeToAmount).ToList();
+            var possibleBrackets = _withholdingTaxBrackets.
+                                        Where(w => w.PayFrequencyID == payFrequencyID).
+                                        Where(w => w.EffectiveDateFrom <= taxEffectivityDate).
+                                        Where(w => taxEffectivityDate <= w.EffectiveDateTo).
+                                        Where(w => w.TaxableIncomeFromAmount < _paystub.TaxableIncome).
+                                        Where(w => _paystub.TaxableIncome <= w.TaxableIncomeToAmount).
+                                        ToList();
 
             // If there are more than one tax brackets that matches the previous list, filter by
             // the tax filing status.
             if (possibleBrackets.Count > 1)
-                return possibleBrackets.Where(b => Nullable.Equals(b.FilingStatusID, filingStatusID)).FirstOrDefault();
+            {
+                return possibleBrackets.
+                        Where(b => b.FilingStatusID == filingStatusID).
+                        FirstOrDefault();
+            }
             else if (possibleBrackets.Count == 1)
                 return possibleBrackets.First();
 
-            return null/* TODO Change to default(_) if this is not a reference type */;
+            return null;
         }
 
         private bool IsWithholdingTaxPaidOnFirstHalf(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsFirstHalf & (deductionSchedule == ContributionSchedule.FIRST_HALF);
+            return payperiod.IsFirstHalf && deductionSchedule == ContributionSchedule.FIRST_HALF;
         }
 
         private bool IsWithholdingTaxPaidOnEndOfTheMonth(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsEndOfTheMonth & (deductionSchedule == ContributionSchedule.END_OF_THE_MONTH);
+            return payperiod.IsEndOfTheMonth && deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
         }
 
         private bool IsWithholdingTaxPaidPerPayPeriod(string deductionSchedule)
@@ -164,7 +184,11 @@ namespace AccuPay.Data.Services
 
         private bool IsScheduledForTaxation(string deductionSchedule, PayPeriod payperiod)
         {
-            return (payperiod.IsFirstHalf & IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod)) | (payperiod.IsEndOfTheMonth & IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod)) | IsWithholdingTaxPaidPerPayPeriod(deductionSchedule);
+            return (payperiod.IsFirstHalf &&
+                        IsWithholdingTaxPaidOnFirstHalf(deductionSchedule, payperiod)) ||
+                    (payperiod.IsEndOfTheMonth &&
+                        IsWithholdingTaxPaidOnEndOfTheMonth(deductionSchedule, payperiod)) ||
+                    IsWithholdingTaxPaidPerPayPeriod(deductionSchedule);
         }
 
         private class PayFrequency

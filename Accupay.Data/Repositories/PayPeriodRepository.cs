@@ -89,6 +89,20 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<PayPeriod>> GetByPayFrequencyAndYearAsync(int organizationId,
+                                                                                int payFrequencyId,
+                                                                                int year)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                return await CreateBaseQueryByPayPrequency(organizationId: organizationId,
+                                                payFrequencyId: payFrequencyId,
+                                                context: context).
+                                Where(x => x.Year == year).
+                                ToListAsync();
+            }
+        }
+
         public async Task<IEnumerable<PayPeriod>> GetByYearAndPayPrequencyAsync(int organizationId,
                                                                                int year,
                                                                                int payFrequencyId)

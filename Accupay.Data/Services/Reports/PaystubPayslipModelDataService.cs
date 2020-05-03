@@ -33,10 +33,11 @@ namespace AccuPay.Data.Services
             // TODO Create PaystubPayslipModel from database THEN check if equal to new payslip
             using (PayrollContext context = new PayrollContext())
             {
+                // use paystub repository GetFullPaystub
                 var paystubs = await context.Paystubs.
                                         Include(p => p.Employee).Include(p => p.Actual).
-                                        Where(p => p.PayPeriodID.Value == _payPeriod.RowID.Value).
-                                        Where(p => p.OrganizationID.Value == _organizationId).
+                                        Where(p => p.PayPeriodID == _payPeriod.RowID).
+                                        Where(p => p.OrganizationID == _organizationId).
                                         ToListAsync();
 
                 paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
@@ -45,19 +46,19 @@ namespace AccuPay.Data.Services
                                         Include(l => l.LoanSchedule).
                                         Include(l => l.LoanSchedule.LoanType).
                                         Include(l => l.Paystub).
-                                        Where(l => l.Paystub.PayPeriodID == _payPeriod.RowID.Value).
+                                        Where(l => l.Paystub.PayPeriodID == _payPeriod.RowID).
                                         ToListAsync();
 
                 var adjustments = await context.Adjustments.
                                         Include(a => a.Product).
                                         Include(a => a.Paystub).
-                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID.Value).
+                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID).
                                         ToListAsync();
 
                 var actualAdjustments = await context.ActualAdjustments.
                                         Include(a => a.Product).
                                         Include(a => a.Paystub).
-                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID.Value).
+                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID).
                                         ToListAsync();
 
                 var employeeSalaries = (await _salaryRepository.GetByCutOffAsync(_organizationId,
@@ -74,10 +75,10 @@ namespace AccuPay.Data.Services
                 {
                     var employeeId = paystub.EmployeeID.Value;
 
-                    var employeeSalary = employeeSalaries.FirstOrDefault(s => s.EmployeeID.Value == employeeId);
+                    var employeeSalary = employeeSalaries.FirstOrDefault(s => s.EmployeeID == employeeId);
 
                     paystub.Ecola = ecolas.
-                                        Where(e => e.PaystubID.Value == paystub.RowID.Value).
+                                        Where(e => e.PaystubID == paystub.RowID).
                                         FirstOrDefault()?.Amount ?? 0;
 
                     var salary = _isActual ? employeeSalary.TotalSalary : employeeSalary.BasicSalary;
@@ -260,7 +261,7 @@ namespace AccuPay.Data.Services
 
         private List<PaystubPayslipModel.Loan> GetEmployeeLoans(List<LoanTransaction> loans, int employeeId)
         {
-            var employeeLoans = loans.Where(l => l.EmployeeID.Value == employeeId).ToList();
+            var employeeLoans = loans.Where(l => l.EmployeeID == employeeId).ToList();
 
             List<PaystubPayslipModel.Loan> loanModels = new List<PaystubPayslipModel.Loan>();
 
@@ -274,7 +275,7 @@ namespace AccuPay.Data.Services
         private List<PaystubPayslipModel.Adjustment> GetEmployeeAdjustments(IEnumerable<IAdjustment> adjustments, int employeeId)
         {
             var employeeAdjustments = adjustments.
-                                        Where(l => l.Paystub?.EmployeeID.Value == employeeId).
+                                        Where(l => l.Paystub?.EmployeeID == employeeId).
                                         ToList();
 
             List<PaystubPayslipModel.Adjustment> adjustmentModels = new List<PaystubPayslipModel.Adjustment>();

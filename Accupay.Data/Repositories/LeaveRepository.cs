@@ -298,8 +298,8 @@ namespace AccuPay.Data.Repositories
                 // #2.5
                 await ProcessIfEmployeeHasNotTakenAleaveThisYear(firstPayPeriodOfTheYear,
                                                                 context,
-                                                                leaveLedgerId.Value,
-                                                                userId);
+                                                                leaveLedgerId: leaveLedgerId.Value,
+                                                                userId: userId);
             }
 
             return newBalance;

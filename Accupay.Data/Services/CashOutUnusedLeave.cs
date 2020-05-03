@@ -191,7 +191,7 @@ namespace AccuPay.Data.Services
 
             PayPeriod payperiod = new PayPeriod();
 
-            if (_isVLOnly & _asAdjustment)
+            if (_isVLOnly && _asAdjustment)
             {
                 bool success = false;
 
@@ -200,7 +200,8 @@ namespace AccuPay.Data.Services
                 using (var context = new PayrollContext())
                 {
                     var paystubs = (from p in context.Paystubs.Include(p => p.ActualAdjustments)
-                                    where p.PayPeriodID.Value == _currentPeriodId & p.OrganizationID == _organizationId
+                                    where p.PayPeriodID.Value == _currentPeriodId &&
+                                            p.OrganizationID == _organizationId
                                     select p).ToList();
 
                     foreach (DataRow row in _leaveLedger.Rows)

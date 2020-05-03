@@ -222,13 +222,15 @@ namespace AccuPay.Data.Repositories
         {
             // update the leaveledgers' last transaction Ids and in turn resets the balance
             var groupedLeaves = toBeDeletedleaveTransactions.GroupBy(x => x.LeaveLedger);
-            var toBeDeletedleaveTransactionIds = toBeDeletedleaveTransactions.Select(x => x.RowID.Value).ToArray();
+            var toBeDeletedleaveTransactionIds = toBeDeletedleaveTransactions.
+                                                    Select(x => x.RowID.Value).
+                                                    ToArray();
 
             var leaveLedgerIds = groupedLeaves.Select(x => x.Key.RowID.Value).ToArray();
             var allLeaveTransactions = context.LeaveTransactions.
-                                            Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value)).
-                                            Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false).
-                                            ToList();
+                                    Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value)).
+                                    Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false).
+                                    ToList();
 
             foreach (var leaveGroup in groupedLeaves)
             {
@@ -250,7 +252,7 @@ namespace AccuPay.Data.Repositories
                     var lastDebitTransaction = lastTransactions.
                                                 Where(x => x.Type.ToTrimmedLowerCase() ==
                                                     LeaveTransactionType.Debit.ToTrimmedLowerCase()).
-                                                OrderByDescending(x => x.Balance).
+                                                OrderBy(x => x.Balance).
                                                 FirstOrDefault();
 
                     var lastCreditTransaction = lastTransactions.
@@ -262,8 +264,8 @@ namespace AccuPay.Data.Repositories
                     // If there is a Credit Transaction on the last transaction date, check if
                     // what transaction was created last: is it the last debit transaction or
                     // the last credit transaction. Since the user could have reset the leave balance
-                    // after the paystub so that reset balance should still be the balance regardless
-                    // if the paystub is deleted.
+                    // after the paystub was deleted so that resetted balance should still be the balance
+                    // regardless if the paystub was deleted.
 
                     int? lastTransactionId = null;
 
@@ -273,21 +275,43 @@ namespace AccuPay.Data.Repositories
                         {
                             lastTransactionId = lastDebitTransaction.RowID;
                         }
+                        else
+                        {
+                            // this else here means both lastCreditTransaction
+                            // and lastDebitTransaction are null.
+                            lastTransactionId = null;
+                        }
                     }
                     else
                     {
-                        if (lastDebitTransaction.RowID == null)
+                        if (lastDebitTransaction?.RowID == null)
                         {
                             lastTransactionId = lastCreditTransaction.RowID;
                         }
                         else
                         {
-                            var lastTransaction = new List<LeaveTransaction>()
-                                                        { lastDebitTransaction, lastCreditTransaction }.
-                                                    OrderByDescending(x => x.Created).
-                                                    First();
+                            // lastCreditTransaction and lastDebitTransaction both have values
 
-                            lastTransactionId = lastTransaction.RowID;
+                            // A use case where the user transacted for that date that resulted to
+                            // 10 balance then reset to 40 then transacted again that resulted to 32 balance
+                            // then another transaction that resulted to 24 balance, the system should choose
+                            // the 24 balance as the latest because it is the lowest balance after the credit.
+
+                            var debitTransactionsAfterCredit = lastTransactions.
+                                                        Where(x => x.Type.ToTrimmedLowerCase() ==
+                                                            LeaveTransactionType.Debit.ToTrimmedLowerCase()).
+                                                        Where(x => x.Created >= lastCreditTransaction.Created).
+                                                        OrderBy(x => x.Balance).
+                                                        FirstOrDefault();
+
+                            if (debitTransactionsAfterCredit != null)
+                            {
+                                lastTransactionId = debitTransactionsAfterCredit.RowID;
+                            }
+                            else
+                            {
+                                lastTransactionId = lastCreditTransaction.RowID;
+                            }
                         }
                     }
 

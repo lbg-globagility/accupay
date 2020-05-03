@@ -69,15 +69,18 @@ namespace AccuPay.Data.Services
             {
                 var deductionSchedule = employee.PhilHealthSchedule;
 
-                if (IsPhilHealthPaidOnFirstHalf(deductionSchedule, payperiod) | IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule, payperiod))
+                if (IsPhilHealthPaidOnFirstHalf(deductionSchedule, payperiod) ||
+                    IsPhilHealthPaidOnEndOfTheMonth(deductionSchedule, payperiod))
                 {
                     paystub.PhilHealthEmployeeShare = employeeShare;
                     paystub.PhilHealthEmployerShare = employerShare;
                 }
                 else if (IsPhilHealthPaidPerPayPeriod(deductionSchedule))
                 {
-                    paystub.PhilHealthEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
-                    paystub.PhilHealthEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.PhilHealthEmployeeShare = employeeShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.PhilHealthEmployerShare = employerShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }
@@ -108,17 +111,26 @@ namespace AccuPay.Data.Services
                 basisPay = monthlyRate + ecolaPerMonth;
             }
             else if (calculationBasis == PhilHealthCalculationBasis.Earnings)
-                basisPay = previousPaystub?.TotalEarnings ?? 0 + paystub.TotalEarnings;
+            {
+                basisPay = (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
+            }
             else if (calculationBasis == PhilHealthCalculationBasis.GrossPay)
-                basisPay = previousPaystub?.GrossPay ?? 0 + paystub.GrossPay;
+            {
+                basisPay = (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
+            }
             else if (calculationBasis == PhilHealthCalculationBasis.BasicMinusDeductions)
-                basisPay = previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0 + paystub.TotalDaysPayWithOutOvertimeAndLeave;
+            {
+                basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
+                    paystub.TotalDaysPayWithOutOvertimeAndLeave;
+            }
             else if (calculationBasis == PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium)
             {
-                var totalHours = previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0 + paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
+                                paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
                 if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
-                    totalHours = previousPaystub?.RegularHoursAndTotalRestDay ?? 0 + paystub.RegularHoursAndTotalRestDay;
+                    totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
+                                    paystub.RegularHoursAndTotalRestDay;
 
                 var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
                 var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
@@ -152,17 +164,20 @@ namespace AccuPay.Data.Services
         [Obsolete]
         private PhilHealthBracket FindMatchingBracket(decimal amount)
         {
-            return _philHealthBrackets.FirstOrDefault(p => p.SalaryRangeFrom <= amount & p.SalaryRangeTo >= amount);
+            return _philHealthBrackets.FirstOrDefault(p => p.SalaryRangeFrom <= amount &&
+                                                            p.SalaryRangeTo >= amount);
         }
 
         private bool IsPhilHealthPaidOnFirstHalf(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsFirstHalf & (deductionSchedule == ContributionSchedule.FIRST_HALF);
+            return payperiod.IsFirstHalf &&
+                    deductionSchedule == ContributionSchedule.FIRST_HALF;
         }
 
         private bool IsPhilHealthPaidOnEndOfTheMonth(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsEndOfTheMonth & (deductionSchedule == ContributionSchedule.END_OF_THE_MONTH);
+            return payperiod.IsEndOfTheMonth &&
+                    deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
         }
 
         private bool IsPhilHealthPaidPerPayPeriod(string deductionSchedule)

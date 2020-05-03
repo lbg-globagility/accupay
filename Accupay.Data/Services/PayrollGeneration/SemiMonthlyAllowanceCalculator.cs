@@ -71,14 +71,22 @@ namespace AccuPay.Data.Services
 
                 if (_allowancePolicy.IsSpecialHolidayPaid)
                 {
-                    if ((payrate.IsSpecialNonWorkingHoliday & _employee.CalcSpecialHoliday))
-                        additionalAmount = timeEntry.SpecialHolidayHours * hourlyRate * (payrate.RegularRate - 1M);
+                    if ((payrate.IsSpecialNonWorkingHoliday && _employee.CalcSpecialHoliday))
+                    {
+                        additionalAmount = timeEntry.SpecialHolidayHours *
+                                            hourlyRate *
+                                            (payrate.RegularRate - 1M);
+                    }
                 }
 
                 if (_allowancePolicy.IsRegularHolidayPaid)
                 {
-                    if ((payrate.IsRegularHoliday & _employee.CalcHoliday))
-                        additionalAmount = timeEntry.RegularHolidayHours * hourlyRate * (payrate.RegularRate - 1M);
+                    if ((payrate.IsRegularHoliday && _employee.CalcHoliday))
+                    {
+                        additionalAmount = timeEntry.RegularHolidayHours *
+                                            hourlyRate *
+                                            (payrate.RegularRate - 1M);
+                    }
                 }
 
                 allowanceItem.AddPerDay(timeEntry.Date, deductionAmount + additionalAmount);

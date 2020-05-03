@@ -53,22 +53,26 @@ namespace AccuPay.Data.Services
             {
                 var deductionSchedule = employee.SssSchedule;
 
-                if (IsSssPaidOnFirstHalf(payperiod, deductionSchedule) | IsSssPaidOnEndOfTheMonth(payperiod, deductionSchedule))
+                if (IsSssPaidOnFirstHalf(payperiod, deductionSchedule) ||
+                    IsSssPaidOnEndOfTheMonth(payperiod, deductionSchedule))
                 {
                     paystub.SssEmployeeShare = employeeShare;
                     paystub.SssEmployerShare = employerShare;
                 }
                 else if (IsSssPaidPerPayPeriod(deductionSchedule))
                 {
-                    paystub.SssEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
-                    paystub.SssEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.SssEmployeeShare = employeeShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.SssEmployerShare = employerShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
         }
 
         private SocialSecurityBracket FindMatchingBracket(decimal amount)
         {
-            return _socialSecurityBrackets.FirstOrDefault(s => s.RangeFromAmount <= amount & s.RangeToAmount >= amount);
+            return _socialSecurityBrackets.FirstOrDefault(s => s.RangeFromAmount <= amount &&
+                                                                s.RangeToAmount >= amount);
         }
 
         private decimal GetSocialSecurityAmount(Paystub paystub, Paystub previousPaystub, Salary salary, Employee employee)
@@ -83,19 +87,22 @@ namespace AccuPay.Data.Services
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
 
                 case SssCalculationBasis.Earnings:
-                    return previousPaystub?.TotalEarnings ?? 0 + paystub.TotalEarnings;
+                    return (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
 
                 case SssCalculationBasis.GrossPay:
-                    return previousPaystub?.GrossPay ?? 0 + paystub.GrossPay;
+                    return (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
 
                 case SssCalculationBasis.BasicMinusDeductions:
-                    return previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0 + paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                    return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
+                            paystub.TotalDaysPayWithOutOvertimeAndLeave;
 
                 case SssCalculationBasis.BasicMinusDeductionsWithoutPremium:
-                    var totalHours = previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0 + paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                    var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
+                                        paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
                     if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
-                        totalHours = previousPaystub?.RegularHoursAndTotalRestDay ?? 0 + paystub.RegularHoursAndTotalRestDay;
+                        totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
+                                        paystub.RegularHoursAndTotalRestDay;
 
                     var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
                     var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
@@ -110,12 +117,12 @@ namespace AccuPay.Data.Services
 
         private bool IsSssPaidOnFirstHalf(PayPeriod payperiod, string deductionSchedule)
         {
-            return payperiod.IsFirstHalf & (deductionSchedule == ContributionSchedule.FIRST_HALF);
+            return payperiod.IsFirstHalf && deductionSchedule == ContributionSchedule.FIRST_HALF;
         }
 
         private bool IsSssPaidOnEndOfTheMonth(PayPeriod payperiod, string deductionSchedule)
         {
-            return payperiod.IsEndOfTheMonth & (deductionSchedule == ContributionSchedule.END_OF_THE_MONTH);
+            return payperiod.IsEndOfTheMonth && deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
         }
 
         private bool IsSssPaidPerPayPeriod(string deductionSchedule)

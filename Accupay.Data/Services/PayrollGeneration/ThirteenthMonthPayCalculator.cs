@@ -86,8 +86,6 @@ namespace AccuPay.Data.Services
                                                 Sum(t => t.BasicDayPay + t.LeavePay);
                 else
                 {
-                    decimal thirteenthMonthAmountRunningTotal = 0;
-
                     foreach (var actualTimeEntry in actualtimeentries)
                     {
                         var timeEntry = timeEntries.
@@ -101,7 +99,7 @@ namespace AccuPay.Data.Services
                     }
                 }
             }
-            else if (_employee.IsMonthly | _employee.IsFixed)
+            else if (_employee.IsMonthly || _employee.IsFixed)
             {
                 var trueSalary = salary.TotalSalary;
                 var basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;

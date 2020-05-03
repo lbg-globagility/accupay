@@ -8,9 +8,9 @@ Public Class selectPayPeriod
     Public Property PayPeriod As IPayPeriod
     Public Property GeneratePayroll As Boolean = True
 
-    Private ReadOnly selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Private ReadOnly unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim m_PayFreqType = ""
 
@@ -56,14 +56,14 @@ Public Class selectPayPeriod
             With new_tsbtn
                 .AutoSize = False
                 .BackColor = Color.FromArgb(255, 255, 255)
-                .ImageTransparentColor = System.Drawing.Color.Magenta
-                .Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+                .ImageTransparentColor = Color.Magenta
+                .Margin = New Padding(0, 1, 0, 1)
                 .Name = String.Concat("tsbtn" & strval)
-                .Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-                .Size = New System.Drawing.Size(110, 30)
+                .Overflow = ToolStripItemOverflow.Never
+                .Size = New Size(110, 30)
                 .Text = strval
-                .TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-                .TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+                .TextAlign = ContentAlignment.MiddleLeft
+                .TextImageRelation = TextImageRelation.ImageBeforeText
                 .ToolTipText = strval
             End With
 

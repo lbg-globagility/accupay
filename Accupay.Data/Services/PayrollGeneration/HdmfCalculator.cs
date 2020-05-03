@@ -42,15 +42,18 @@ namespace AccuPay.Data.Services
             {
                 var deductionSchedule = employee.PagIBIGSchedule;
 
-                if (IsHdmfPaidOnFirstHalf(deductionSchedule, payperiod) | IsHdmfPaidOnEndOfTheMonth(deductionSchedule, payperiod))
+                if (IsHdmfPaidOnFirstHalf(deductionSchedule, payperiod) ||
+                    IsHdmfPaidOnEndOfTheMonth(deductionSchedule, payperiod))
                 {
                     paystub.HdmfEmployeeShare = employeeShare;
                     paystub.HdmfEmployerShare = employerShare;
                 }
                 else if (IsHdmfPaidPerPayPeriod(deductionSchedule))
                 {
-                    paystub.HdmfEmployeeShare = employeeShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
-                    paystub.HdmfEmployerShare = employerShare / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.HdmfEmployeeShare = employeeShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
+                    paystub.HdmfEmployerShare = employerShare /
+                                                CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
                 }
             }
 
@@ -70,12 +73,14 @@ namespace AccuPay.Data.Services
 
         private bool IsHdmfPaidOnFirstHalf(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsFirstHalf & (deductionSchedule == ContributionSchedule.FIRST_HALF);
+            return payperiod.IsFirstHalf &&
+                deductionSchedule == ContributionSchedule.FIRST_HALF;
         }
 
         private bool IsHdmfPaidOnEndOfTheMonth(string deductionSchedule, PayPeriod payperiod)
         {
-            return payperiod.IsEndOfTheMonth & (deductionSchedule == ContributionSchedule.END_OF_THE_MONTH);
+            return payperiod.IsEndOfTheMonth &&
+                deductionSchedule == ContributionSchedule.END_OF_THE_MONTH;
         }
 
         private bool IsHdmfPaidPerPayPeriod(string deductionSchedule)

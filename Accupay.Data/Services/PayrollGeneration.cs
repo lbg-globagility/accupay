@@ -150,7 +150,7 @@ namespace AccuPay.Data.Services
                 if (_salary == null)
                     throw new PayrollException("Employee has no salary for this cutoff.");
 
-                if ((!_timeEntries.Any()) & (_employee.IsDaily | _employee.IsMonthly))
+                if ((!_timeEntries.Any()) && (_employee.IsDaily || _employee.IsMonthly))
                     throw new PayrollException("No time entries.");
 
                 if (_employee.Position == null)
@@ -243,7 +243,8 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public List<LoanTransaction> ComputePayroll(Paystub paystub = null/* TODO Change to default(_) if this is not a reference type */, ICollection<AllowanceItem> allowanceItems = null)
+        public List<LoanTransaction> ComputePayroll(Paystub paystub = null,
+                                                    ICollection<AllowanceItem> allowanceItems = null)
         {
             List<LoanTransaction> newLoanTransactions = new List<LoanTransaction>();
 
@@ -313,7 +314,7 @@ namespace AccuPay.Data.Services
         {
             using (PayrollContext context = new PayrollContext())
             {
-                var query = context.Paystubs.Where(p => p.EmployeeID.Value == _employee.RowID.Value);
+                var query = context.Paystubs.Where(p => p.EmployeeID == _employee.RowID);
 
                 var paystubCount = query.Count();
 
@@ -344,7 +345,7 @@ namespace AccuPay.Data.Services
                 var isFirstPay = _payPeriod.PayFromDate <= _employee.StartDate &&
                                     _employee.StartDate <= _payPeriod.PayToDate;
 
-                if (isFirstPay & isFirstPayAsDailyRule)
+                if (isFirstPay && isFirstPayAsDailyRule)
                 {
                     _paystub.TotalEarnings = _paystub.RegularPay +
                                             _paystub.LeavePay +
@@ -370,7 +371,7 @@ namespace AccuPay.Data.Services
 
         private void ComputeBasicHoursAndPay()
         {
-            if (_employee.IsMonthly | _employee.IsFixed)
+            if (_employee.IsMonthly || _employee.IsFixed)
             {
                 if (_employee.WorkDaysPerYear > 0)
                 {
@@ -400,7 +401,11 @@ namespace AccuPay.Data.Services
                 var payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID);
                 var payrate = payrateCalendar.Find(timeEntry.Date);
 
-                if (!(timeEntry.IsRestDay | (timeEntry.TotalLeaveHours > 0) | payrate.IsRegularHoliday | payrate.IsSpecialNonWorkingHoliday))
+                if (!(timeEntry.IsRestDay ||
+                    (timeEntry.TotalLeaveHours > 0) ||
+                    payrate.IsRegularHoliday ||
+                    payrate.IsSpecialNonWorkingHoliday))
+
                     basicHours += timeEntry.WorkHours;
             }
 
@@ -514,18 +519,29 @@ namespace AccuPay.Data.Services
                                                 userId: _userId);
 
                 if (allowance.IsOneTime)
+                {
                     item.Amount = allowance.Amount;
+                }
                 else if (allowance.IsDaily)
+                {
                     item = dailyCalculator.Compute(_payPeriod, allowance, _employee, _paystub, _timeEntries);
+                }
                 else if (allowance.IsSemiMonthly)
+                {
                     item = semiMonthlyCalculator.Calculate(allowance);
+                }
                 else if (allowance.IsMonthly)
                 {
-                    if (allowance.Product.Fixed & _payPeriod.IsEndOfTheMonth)
+                    // TODO: monthly payrolls are only for Fixed allowances only.
+                    if (allowance.Product.Fixed && _payPeriod.IsEndOfTheMonth)
+                    {
                         item.Amount = allowance.Amount;
+                    }
                 }
                 else
-                    item = null/* TODO Change to default(_) if this is not a reference type */;
+                {
+                    item = null;
+                }
 
                 _allowanceItems.Add(item);
             }
@@ -543,7 +559,7 @@ namespace AccuPay.Data.Services
             var vacationLedger = context.LeaveLedgers.
                                         Include(l => l.Product).
                                         Include(l => l.LastTransaction).
-                                        Where(l => l.EmployeeID.Value == _employee.RowID.Value).
+                                        Where(l => l.EmployeeID == _employee.RowID).
                                         Where(l => l.Product.IsVacationLeave).
                                         FirstOrDefault();
 
@@ -664,7 +680,8 @@ namespace AccuPay.Data.Services
                         EmployeeID = _paystub.EmployeeID,
                         PayPeriodID = _payPeriod.RowID,
                         LoanScheduleID = loanSchedule.RowID.Value,
-                        LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft == null ? 0 : Convert.ToInt32(loanSchedule.LoanPayPeriodLeft) - 1
+                        LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft == null ? 0 :
+                                                            (Convert.ToInt32(loanSchedule.LoanPayPeriodLeft) - 1)
                     };
 
                     if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
