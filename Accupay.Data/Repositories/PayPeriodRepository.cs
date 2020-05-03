@@ -9,6 +9,20 @@ namespace AccuPay.Data.Repositories
 {
     public class PayPeriodRepository
     {
+        #region CRUD
+
+        public async Task OpenAsync(int id)
+        {
+            await ToggleCloseAsync(id, isClosed: false);
+        }
+
+        public async Task CloseAsync(int id)
+        {
+            await ToggleCloseAsync(id, isClosed: true);
+        }
+
+        #endregion CRUD
+
         #region Queries
 
         #region Single entity
@@ -26,6 +40,19 @@ namespace AccuPay.Data.Repositories
             using (PayrollContext context = new PayrollContext())
             {
                 return await context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == id);
+            }
+        }
+
+        public async Task<PayPeriod> GetCurrentProcessing(int organizationId)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                return await context.PayPeriods.
+                                Include(x => x.Paystubs).
+                                Where(p => p.IsClosed == false).
+                                Where(p => p.OrganizationID == organizationId).
+                                Where(p => p.Paystubs.Any()).
+                                FirstOrDefaultAsync();
             }
         }
 
@@ -132,6 +159,32 @@ namespace AccuPay.Data.Repositories
                                                 context: context).
                             Where(x => x.Year == year).
                             Where(x => x.Month == month);
+        }
+
+        /// <summary>
+        /// Set the IsClosed property of the pay period to the specified status. We could have just
+        /// created an UpdateAsync and let the user call that but we want to encapsulate how can client
+        /// codes manipulate PayPeriod data. They can easily change the Organization or PayFrequency or
+        /// dates if we let them update anything. Better solution is set the entity properties to readonly
+        /// and add an entity method like PayPeriod.Close() and PayPeriod.Open() to put the encapsulation
+        /// on the domain level as DDD suggests.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <param name="isClosed"></param>
+        /// <returns></returns>
+        private async Task ToggleCloseAsync(int id, bool isClosed)
+        {
+            var payPeriod = await GetByIdAsync(id);
+
+            if (payPeriod == null) return;
+
+            using (PayrollContext context = new PayrollContext())
+            {
+                payPeriod.IsClosed = isClosed;
+
+                context.Entry(payPeriod).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

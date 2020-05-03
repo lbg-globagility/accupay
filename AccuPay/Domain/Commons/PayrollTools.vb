@@ -64,19 +64,17 @@ Public Class PayrollTools
                 Return False
             End If
 
-            Dim otherProcessingPayPeriod = Await context.Paystubs.
-                        Include(Function(p) p.PayPeriod).
-                        Where(Function(p) p.PayPeriod.RowID.Value <> payPeriodId.Value).
-                        Where(Function(p) p.PayPeriod.IsClosed = False).
-                        Where(Function(p) p.PayPeriod.OrganizationID.Value = z_OrganizationID).
-                        FirstOrDefaultAsync()
+            Dim currentProcessingPayPeriod = Await New PayPeriodRepository().
+                                                            GetCurrentProcessing(z_OrganizationID)
+            Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
+                                            currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
 
             If payPeriod.IsClosed Then
 
                 MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
                 Return False
 
-            ElseIf Not payPeriod.IsClosed AndAlso otherProcessingPayPeriod IsNot Nothing Then
+            ElseIf Not payPeriod.IsClosed AndAlso hasOtherProcessingPayPeriod Then
 
                 MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
                 Return False

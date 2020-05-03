@@ -1834,17 +1834,17 @@ Public Class PayStubForm
 
     Private Async Sub ClosePayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ClosePayrollToolStripMenuItem.Click
 
-        Await UpdatePayrollStatus(open:=False)
+        Await UpdatePayrollStatus(close:=True)
 
     End Sub
 
     Private Async Sub ReopenPayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ReopenPayrollToolStripMenuItem.Click
 
-        Await UpdatePayrollStatus(open:=True)
+        Await UpdatePayrollStatus(close:=False)
 
     End Sub
 
-    Private Async Function UpdatePayrollStatus(open As Boolean) As Task(Of Boolean)
+    Private Async Function UpdatePayrollStatus(close As Boolean) As Task(Of Boolean)
 
         Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
 
@@ -1862,41 +1862,38 @@ Public Class PayStubForm
             Return False
         End If
 
-        Using context As New PayrollContext
+        If close Then
+
+            Await _payPeriodRepository.CloseAsync(payPeriod.RowID.Value)
+        Else
+
             'if the action is to reopen, check if this payperiod already has paystubs
             'and if there is an existing OPEN payperiod that also has paystubs (PROCESSING pay pay period)
             'Multiple OPEN or CLOSE pay periods are allowed
             'Multiple PROCESSING pay periods are NOT allowed
-            Dim otherProcessingPayPeriod = Await context.Paystubs.
-                    Include(Function(p) p.PayPeriod).
-                    Where(Function(p) p.PayPeriod.RowID.Value <> payPeriod.RowID.Value).
-                    Where(Function(p) p.PayPeriod.IsClosed = False).
-                    Where(Function(p) p.PayPeriod.OrganizationID.Value = z_OrganizationID).
-                    FirstOrDefaultAsync()
+            Dim currentProcessingPayPeriod = Await _payPeriodRepository.GetCurrentProcessing(z_OrganizationID)
+            Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
+                                            currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
 
-            If open = True AndAlso otherProcessingPayPeriod IsNot Nothing Then
+            If hasOtherProcessingPayPeriod Then
 
                 MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to reopen the selected pay period.")
                 Return False
 
             End If
+            Await _payPeriodRepository.OpenAsync(payPeriod.RowID.Value)
 
-            payPeriod.IsClosed = Not open
-
-            Await context.SaveChangesAsync
-
-        End Using
+        End If
 
         RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
-        If open Then
-
-            MessageBoxHelper.Information("Pay period was reopened successfully.")
-        Else
+        If close Then
 
             MessageBoxHelper.Information("Pay period was closed successfully.")
+        Else
+            MessageBoxHelper.Information("Pay period was reopened successfully.")
 
         End If
 

@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Helpers;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
@@ -53,6 +54,8 @@ namespace AccuPay.Data.Entities
         public bool HDMFWeeklyAgentContribSched { get; set; }
         public bool WTaxWeeklyAgentContribSched { get; set; }
         public bool IsClosed { get; set; }
+
+        public virtual ICollection<Paystub> Paystubs { get; set; }
 
         public PayPeriod NextPayPeriod()
         {
