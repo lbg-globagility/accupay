@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccuPay.Data
+namespace AccuPay.Data.Exceptions
 {
     public class AccuPayRepositoryException : Exception
     {

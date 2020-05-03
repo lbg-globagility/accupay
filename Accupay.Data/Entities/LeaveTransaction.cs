@@ -36,6 +36,8 @@ namespace AccuPay.Data.Entities
 
         public virtual int? PayPeriodID { get; set; }
 
+        public virtual int? PaystubID { get; set; }
+
         public virtual int? ReferenceID { get; set; }
 
         public virtual DateTime TransactionDate { get; set; }
@@ -57,6 +59,9 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("ReferenceID")]
         public virtual Leave Leave { get; set; }
+
+        [ForeignKey("PaystubID")]
+        public virtual Paystub Paystub { get; set; }
 
         public bool IsCredit => Type.Trim().ToUpper() == LeaveTransactionType.Credit.ToUpper();
 

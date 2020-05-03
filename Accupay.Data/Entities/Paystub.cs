@@ -162,11 +162,13 @@ namespace AccuPay.Data.Entities
 
         public virtual ICollection<ActualAdjustment> ActualAdjustments { get; set; }
 
-        public virtual ICollection<PaystubItem> PaystubItems { get; set; }
-
         public virtual ICollection<AllowanceItem> AllowanceItems { get; set; }
 
+        public virtual ICollection<LeaveTransaction> LeaveTransactions { get; set; }
+
         public virtual ICollection<LoanTransaction> LoanTransactions { get; set; }
+
+        public virtual ICollection<PaystubItem> PaystubItems { get; set; }
 
         public virtual ThirteenthMonthPay ThirteenthMonthPay { get; set; }
 

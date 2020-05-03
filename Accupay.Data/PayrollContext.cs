@@ -56,6 +56,7 @@ namespace AccuPay.Data
         public virtual DbSet<PaystubActual> PaystubActuals { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        public virtual DbSet<PaystubItem> PaystubItems { get; set; }
         public virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
@@ -72,6 +73,7 @@ namespace AccuPay.Data
         internal virtual DbSet<User> Users { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
+        internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
         public PayrollContext()
@@ -105,6 +107,12 @@ namespace AccuPay.Data
 
             modelBuilder.Entity<Paystub>().
                 HasMany(x => x.LoanTransactions).
+                WithOne(x => x.Paystub);
+
+            // Leave transaction should be tied to Time Entry Generation not Payroll Generation
+            // thus leave transactions should be processed when we generate time entries.
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.LeaveTransactions).
                 WithOne(x => x.Paystub);
 
             modelBuilder.Entity<TardinessRecord>().

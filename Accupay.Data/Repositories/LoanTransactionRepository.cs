@@ -8,7 +8,7 @@ namespace AccuPay.Data.Repositories
 {
     public class LoanTransactionRepository
     {
-        public async Task<IEnumerable<LoanTransaction>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
+        public async Task<IEnumerable<LoanTransaction>> GetByPayPeriodAsync(int payPeriodId)
         {
             using (var context = new PayrollContext())
             {

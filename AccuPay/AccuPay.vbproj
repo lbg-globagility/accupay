@@ -345,16 +345,11 @@
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
-    <Compile Include="Domain\Commons\CalendarConstants.vb" />
-    <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
-    <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
-    <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
     <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
@@ -756,13 +751,8 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
-    <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
     <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
-    <Compile Include="Domain\Payroll\PayrollException.vb" />
-    <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
-    <Compile Include="Domain\Payroll\SssCalculator.vb" />
-    <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -847,16 +837,11 @@
     <Compile Include="Domain\Paystubs\AllowanceItem.vb" />
     <Compile Include="Domain\Paystubs\AllowancePerDay.vb" />
     <Compile Include="Domain\Paystubs\Item.vb" />
-    <Compile Include="Domain\Leaves\Leave.vb" />
-    <Compile Include="Domain\Leaves\LeaveLedger.vb" />
-    <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
     <Compile Include="Domain\Paystubs\PayPeriod.vb" />
-    <Compile Include="Domain\Paystubs\PayRate.vb" />
     <Compile Include="Domain\Paystubs\Paystub.vb" />
     <Compile Include="Domain\Paystubs\PaystubActual.vb" />
     <Compile Include="Domain\Paystubs\Product.vb" />
     <Compile Include="Domain\Paystubs\ThirteenthMonthPay.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntry.vb" />
     <Compile Include="Views\Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
@@ -980,7 +965,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Domain\Payroll\PayrollResources.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </Compile>
@@ -1714,7 +1698,6 @@
     <Compile Include="Domain\Commons\FileObserver.vb" />
     <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
-    <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Domain\Commons\UserAccessRights.vb" />
     <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">

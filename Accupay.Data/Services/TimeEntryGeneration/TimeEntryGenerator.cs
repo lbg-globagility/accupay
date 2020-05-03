@@ -203,7 +203,7 @@ namespace AccuPay.Data.Services
                     _errors += 1;
                 }
 
-                Interlocked.Increment(ref _finished);
+                //Interlocked.Increment(ref _finished);
             });
         }
 

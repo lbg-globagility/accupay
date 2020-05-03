@@ -745,7 +745,11 @@ Public Class PayStubForm
                     Return Nothing
                 End If
 
-                Dim resources = New PayrollResources(Integer.Parse(paypRowID), CDate(paypFrom), CDate(paypTo))
+                Dim resources = New PayrollResources(payPeriodId:=Integer.Parse(paypRowID),
+                                                     organizationId:=z_OrganizationID,
+                                                     userId:=z_User,
+                                                     payDateFrom:=CDate(paypFrom),
+                                                     payDateTo:=CDate(paypTo))
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
 
@@ -796,10 +800,12 @@ Public Class PayStubForm
                         resources.Employees,
                         Sub(employee)
                             Dim generator = New PayrollGeneration(
-                                employee,
-                                resources,
-                                Me
-                            )
+                                                    organizationId:=z_OrganizationID,
+                                                    userId:=z_User,
+                                                    employee:=employee,
+                                                    resources:=resources
+                                                )
+                            'Me
 
                             generator.DoProcess()
                         End Sub)

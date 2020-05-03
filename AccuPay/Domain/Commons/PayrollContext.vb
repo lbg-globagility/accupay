@@ -14,14 +14,6 @@ Public Class PayrollContext
     Public Shared ReadOnly DbCommandConsoleLoggerFactory As LoggerFactory =
        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
-    Public Overridable Property Adjustments As DbSet(Of Adjustment)
-
-    Public Overridable Property PaystubItems As DbSet(Of PaystubItem)
-
-    Public Overridable Property LeaveLedgers As DbSet(Of LeaveLedger)
-
-    Public Overridable Property LeaveTransactions As DbSet(Of LeaveTransaction)
-
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
 
     Public Overridable Property Paystubs As DbSet(Of Paystub)

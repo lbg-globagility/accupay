@@ -6,7 +6,6 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Enums
-Imports AccuPay.Payroll
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
@@ -312,7 +311,7 @@ Public Class SalaryTab
             .CreatedBy = z_User,
             .EmployeeID = _employee.RowID,
             .PositionID = _employee.PositionID,
-            .HDMFAmount = HdmfCalculator.StandardEmployeeContribution,
+            .HDMFAmount = Data.Services.HdmfCalculator.StandardEmployeeContribution,
             .EffectiveFrom = Date.Today,
             .EffectiveTo = Nothing,
             .AutoComputeHDMFContribution = True,
