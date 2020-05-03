@@ -39,7 +39,7 @@ Public Class PayStubForm
     Private _totalPaystubs As Integer = 0
     Private _finishedPaystubs As Integer = 0
 
-    Dim currentEmployeeID As String = Nothing
+    Dim currentEmployeeNumber As String = Nothing
 
     Public withthirteenthmonthpay As SByte = 0
 
@@ -603,7 +603,7 @@ Public Class PayStubForm
 
                 txtFName.Text = txtFName.Text & " " & .Cells("LastName").Value
 
-                currentEmployeeID = .Cells("EmployeeID").Value
+                currentEmployeeNumber = .Cells("EmployeeID").Value
 
                 txtEmpID.Text = "ID# " & .Cells("EmployeeID").Value &
                             If(IsDBNull(.Cells("Position")),
@@ -673,7 +673,7 @@ Public Class PayStubForm
         Else
             sameEmpID = -1
 
-            currentEmployeeID = Nothing
+            currentEmployeeNumber = Nothing
 
             pbEmpPicChk.Image = Nothing
             txtFName.Text = ""
@@ -1239,7 +1239,7 @@ Public Class PayStubForm
                                                 productRowID,
                                                 ValNoComma(dgvRow.Cells("DataGridViewTextBoxColumn66").Value),
                                                 dgvRow.Cells("DataGridViewTextBoxColumn64").Value,
-                                                Me.currentEmployeeID,
+                                                Me.currentEmployeeNumber,
                                                 paypRowID,
                                                 dgvRow.Cells("psaRowID").Value)
                         If ValNoComma(dgvRow.Cells("psaRowID").Value) = 0 And n_ReadSQLFunction.HasError = False Then
@@ -1286,7 +1286,7 @@ Public Class PayStubForm
                 .Parameters.Clear()
                 .CommandType = CommandType.StoredProcedure
 
-                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeID)
+                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
                 .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
                 .Parameters.AddWithValue("User_RowID", z_User)
                 .Parameters.AddWithValue("Og_RowID", z_OrganizationID)
@@ -1311,7 +1311,7 @@ Public Class PayStubForm
             With cmd
                 .Parameters.Clear()
                 .CommandType = CommandType.StoredProcedure
-                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeID)
+                .Parameters.AddWithValue("pa_EmployeeID", Me.currentEmployeeNumber)
                 If dgvpayper.RowCount > 0 And dgvpayper.SelectedRows.Count > 0 Then
                     .Parameters.AddWithValue("pa_PayPeriodID", dgvpayper.SelectedRows(0).Cells(0).Value)
                 Else
@@ -1752,37 +1752,47 @@ Public Class PayStubForm
 
     Private Async Sub tsbtnDelEmpPayroll_Click(sender As Object, e As EventArgs) Handles DeleteToolStripDropDownButton.Click
 
-        If currentEmployeeID = Nothing Then
-        Else
+        Dim employeeId = ObjectUtils.ToNullableInteger(dgvemployees.Tag)
+        Dim payPeriodId = ObjectUtils.ToNullableInteger(paypRowID)
+        If employeeId Is Nothing OrElse payPeriodId Is Nothing OrElse currentEmployeeNumber = Nothing Then
 
-            Dim toBeDeletedEmployeeID = currentEmployeeID
-            Dim toBeDeletedPaypFrom = paypFrom
-            Dim toBeDeletedPaypTo = paypTo
-
-            DeleteToolStripDropDownButton.Enabled = False
-
-            Dim prompt = MessageBox.Show("Do you want to delete the '" & CDate(toBeDeletedPaypFrom).ToShortDateString &
-                                         "' to '" & CDate(toBeDeletedPaypTo).ToShortDateString &
-                                         "' payroll of employee '" & toBeDeletedEmployeeID & "' ?",
-                                         "Delete employee payroll",
-                                         MessageBoxButtons.YesNoCancel,
-                                         MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
-
-            If prompt = Windows.Forms.DialogResult.Yes Then
-
-                PayrollTools.DeletePaystub(dgvemployees.Tag, paypRowID)
-
-                RefreshForm()
-
-                Await TimeEntrySummaryForm.LoadPayPeriods()
-
-                MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeID} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
-
-            End If
-
-            DeleteToolStripDropDownButton.Enabled = True
+            MessageBoxHelper.Warning("No selected paystub.", "Delete Paystub")
+            Return
 
         End If
+
+        Dim toBeDeletedEmployeeNumber = currentEmployeeNumber
+        Dim toBeDeletedPaypFrom = paypFrom
+        Dim toBeDeletedPaypTo = paypTo
+
+        DeleteToolStripDropDownButton.Enabled = False
+
+        Dim prompt = MessageBox.Show("Are you sure you want to delete the '" & CDate(toBeDeletedPaypFrom).ToShortDateString &
+                                     "' to '" & CDate(toBeDeletedPaypTo).ToShortDateString &
+                                     "' payroll of employee '" & toBeDeletedEmployeeNumber & "' ?",
+                                     "Delete employee payroll",
+                                     MessageBoxButtons.YesNoCancel,
+                                     MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
+
+        If prompt = Windows.Forms.DialogResult.Yes Then
+
+            Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
+                    Async Function()
+                        Await New PaystubRepository().DeleteAsync(New PaystubRepository.CompositeKey(
+                                                                        employeeId:=employeeId.Value,
+                                                                        payPeriodId:=payPeriodId.Value),
+                                                                    z_User)
+
+                        RefreshForm()
+
+                        Await TimeEntrySummaryForm.LoadPayPeriods()
+
+                        MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeNumber} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
+                    End Function)
+
+        End If
+
+        DeleteToolStripDropDownButton.Enabled = True
 
     End Sub
 
@@ -1960,7 +1970,16 @@ Public Class PayStubForm
         Dim toBeDeletedPaypFrom = paypFrom
         Dim toBeDeletedPaypTo = paypTo
 
-        Dim prompt = MessageBox.Show($"Do you want to delete all paystubs of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
+        Dim payperiodId As Integer? = ObjectUtils.ToNullableInteger(paypRowID)
+
+        If payperiodId Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected pay period.", "Delete Payroll")
+            Return
+
+        End If
+
+        Dim prompt = MessageBox.Show($"Are you sure you want to delete ALL paystubs of employees for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}'?",
                                      "Delete all employee payroll",
                                      MessageBoxButtons.YesNoCancel,
                                      MessageBoxIcon.Question, MessageBoxDefaultButton.Button2)
@@ -1968,24 +1987,17 @@ Public Class PayStubForm
         If prompt = Windows.Forms.DialogResult.Yes Then
             RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
-            Dim payperiodId As Integer? = Integer.Parse(paypRowID)
+            Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
+                  Async Function()
+                      Await New PaystubRepository().DeleteByPeriodAsync(payPeriodId:=payperiodId.Value,
+                                                                        userId:=z_User)
 
-            Dim paystubIds As IList(Of Integer?)
-            Using context = New PayrollContext
-                paystubIds = Await context.Paystubs.Where(Function(p) p.PayPeriodID = payperiodId).
-                    Select(Function(p) p.RowID).
-                    ToListAsync()
-            End Using
+                      RefreshForm()
 
-            For Each p In paystubIds
-                Dim query = New ExecuteQuery($"CALL DEL_specificpaystub('{p}');")
-            Next
+                      Await TimeEntrySummaryForm.LoadPayPeriods()
 
-            RefreshForm()
-
-            Await TimeEntrySummaryForm.LoadPayPeriods()
-
-            MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
+                      MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' were successfully deleted.")
+                  End Function)
 
         End If
 

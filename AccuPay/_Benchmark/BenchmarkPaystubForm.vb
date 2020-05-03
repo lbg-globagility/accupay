@@ -736,7 +736,8 @@ Public Class BenchmarkPaystubForm
 
         Await _paystubRepository.DeleteAsync(New PaystubRepository.CompositeKey(
                                                     employeeId:=employeeId.Value,
-                                                    payPeriodId:=_currentPayPeriod.RowID.Value))
+                                                    payPeriodId:=_currentPayPeriod.RowID.Value),
+                                            z_User)
 
         Await RefreshForm(refreshPayPeriod:=False)
 

@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace AccuPay.Data.Helpers
 {
     /// <summary>
-    /// All the functions in here should be moved to an application or domain service
+    /// All the functions in here should be moved to an application or domain service.
     /// </summary>
     public class PayrollTools
     {
@@ -298,19 +298,6 @@ namespace AccuPay.Data.Helpers
 
         //    var n_ExecSQLProcedure = new SQL(strquery_recompute_13monthpay, param_array);
         //    n_ExecSQLProcedure.ExecuteQuery();
-        //}
-
-        // TODO: DeletePaystub
-        //public static void DeletePaystub(int employeeId, int payPeriodId)
-        //{
-        //    ExecuteQuery n_ExecuteQuery = new ExecuteQuery("SELECT RowID" + " FROM paystub" + " WHERE EmployeeID='" + employeeId + "'" + " AND OrganizationID='" + orgztnID + "'" + " AND PayPeriodID='" + payPeriodId + "'" + " LIMIT 1;");
-
-        //    object paystubRowID = null;
-
-        //    paystubRowID = n_ExecuteQuery.Result;
-
-        //    if (paystubRowID != null)
-        //        n_ExecuteQuery = new ExecuteQuery("CALL DEL_specificpaystub('" + paystubRowID.ToString() + "');");
         //}
 
         public static async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)

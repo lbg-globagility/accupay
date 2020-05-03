@@ -174,6 +174,10 @@ Public Class PayrollForm
         Dim showBonusForm As Boolean =
             (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
 
+        ' no AccuPay clients are using bonus and other features are outdated and might be buggy
+        ' just like deleting Paystub should also delete it's bonuses
+        showBonusForm = False
+
         BonusToolStripMenuItem.Visible = showBonusForm
 
         if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark

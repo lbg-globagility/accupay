@@ -303,6 +303,7 @@ namespace AccuPay.Data.Services
 
             if (lt == null)
             {
+                // there should a payperiod id here
                 lt = new LeaveTransaction()
                 {
                     OrganizationID = _organizationId,

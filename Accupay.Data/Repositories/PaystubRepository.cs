@@ -23,7 +23,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(CompositeKey key)
+        public async Task DeleteAsync(CompositeKey key, int userId)
         {
             int? paystubId = null;
 
@@ -42,69 +42,87 @@ namespace AccuPay.Data.Repositories
                 return;
             }
 
-            await DeleteAsync(paystubId.Value);
+            await DeleteAsync(id: paystubId.Value,
+                              userId: userId);
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (var context = new PayrollContext())
             {
-                var paystub = await context.Paystubs.
-                                Include(x => x.LoanTransactions).
-                                    ThenInclude(x => x.LoanSchedule).
-                                Include(x => x.LeaveTransactions).
-                                    ThenInclude(x => x.LeaveLedger).
-                                Include(x => x.PaystubItems).
-                                Include(x => x.Adjustments).
-                                Include(x => x.ActualAdjustments).
-                                Include(x => x.ThirteenthMonthPay).
-                                Include(x => x.Actual).
-                                Where(x => x.RowID == id).
-                                FirstOrDefaultAsync();
+                var payStubIds = await context.Paystubs.
+                                                Where(x => x.PayPeriodID == payPeriodId).
+                                                Select(x => x.RowID.Value).
+                                                ToListAsync();
 
-                // Reset the loan balance before we remove it since we need the to be deleted
-                // paystub loan transactions on recomputing the loan balance before we delete it.
-                ResetLoanBalances(context, paystub);
-                context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+                foreach (int id in payStubIds)
+                {
+                    await DeleteAsyncWithContext(id: id,
+                                                userId: userId,
+                                                context: context);
+                }
 
-                context.LeaveTransactions.RemoveRange(paystub.LeaveTransactions);
-                // Reset the leave ledger last transactions after we remove it since we need the
-                // latest transaction of their leaves not including the deleted paystubs leave transactions.
-                ResetLeaveLedgerTransactions(context, paystub);
-
-                context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
-                context.Adjustments.RemoveRange(paystub.Adjustments);
-                context.ActualAdjustments.RemoveRange(paystub.ActualAdjustments);
-                context.PaystubItems.RemoveRange(paystub.PaystubItems);
-
-                context.ThirteenthMonthPays.Remove(paystub.ThirteenthMonthPay);
-                context.PaystubActuals.Remove(paystub.Actual);
-
-                context.Paystubs.Remove(paystub);
                 await context.SaveChangesAsync();
             }
         }
 
-        public async Task GetFullPaystub(CompositeKey key)
+        public async Task DeleteAsync(int id, int userId)
         {
-            int? paystubId = null;
-
-            using (var context = new PayrollContext())
+            using (PayrollContext context = new PayrollContext())
             {
-                paystubId = context.Paystubs.
-                     Where(x => x.EmployeeID == key.EmployeeId).
-                     Where(x => x.PayPeriodID == key.PayPeriodId).
-                     Select(x => x.RowID).
-                     FirstOrDefault();
-            }
+                await DeleteAsyncWithContext(id: id,
+                                            userId: userId,
+                                            context: context);
 
-            if (paystubId == null)
-            {
-                // maybe throw an error?
-                return;
+                await context.SaveChangesAsync();
             }
+        }
 
-            await DeleteAsync(paystubId.Value);
+        private static async Task DeleteAsyncWithContext(int id, int userId, PayrollContext context)
+        {
+            var paystub = await context.Paystubs.
+                                            Include(x => x.LoanTransactions).
+                                                ThenInclude(x => x.LoanSchedule).
+                                            Include(x => x.LeaveTransactions).
+                                                ThenInclude(x => x.LeaveLedger).
+
+                                            Include(x => x.Adjustments).
+                                            Include(x => x.ActualAdjustments).
+                                            Include(x => x.PaystubItems).
+                                            Include(x => x.PaystubEmails).
+                                            Include(x => x.PaystubEmailHistories).
+
+                                            Include(x => x.ThirteenthMonthPay).
+                                            Include(x => x.Actual).
+                                            Where(x => x.RowID == id).
+                                            FirstOrDefaultAsync();
+
+            // Some of this are already deleted cascadingly if we delete the paystub but the
+            // aggregate rot should handle the delete of of all the entities in its aggregate.
+            // AND some database from other clients have cascade constraint, some have not.
+
+            // Deleting of paystub bonus is not yet supported. Bonus will be disabled since
+            // no AccuPay clients are using it.
+
+            ResetLoanBalances(paystub.LoanTransactions, userId);
+            context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+
+            // RemoveRange does not delete the entities immediately so the order of
+            // resetting the parent entity and deleting that child are not important
+            ResetLeaveLedgerTransactions(context, paystub.LeaveTransactions, userId);
+            context.LeaveTransactions.RemoveRange(paystub.LeaveTransactions);
+
+            context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
+            context.Adjustments.RemoveRange(paystub.Adjustments);
+            context.ActualAdjustments.RemoveRange(paystub.ActualAdjustments);
+            context.PaystubEmails.RemoveRange(paystub.PaystubEmails);
+            context.PaystubEmailHistories.RemoveRange(paystub.PaystubEmailHistories);
+            context.PaystubItems.RemoveRange(paystub.PaystubItems);
+
+            context.ThirteenthMonthPays.Remove(paystub.ThirteenthMonthPay);
+            context.PaystubActuals.Remove(paystub.Actual);
+
+            context.Paystubs.Remove(paystub);
         }
 
         #region Queries
@@ -197,13 +215,19 @@ namespace AccuPay.Data.Repositories
         /// </summary>
         /// <param name="context"></param>
         /// <param name="paystub">Has the leave transactions that will be used to reset the Leave Ledgers' last transactions.</param>
-        private static void ResetLeaveLedgerTransactions(PayrollContext context, Paystub paystub)
+        private static void ResetLeaveLedgerTransactions(
+                                        PayrollContext context,
+                                        ICollection<LeaveTransaction> toBeDeletedleaveTransactions,
+                                        int userId)
         {
             // update the leaveledgers' last transaction Ids and in turn resets the balance
-            var groupedLeaves = paystub.LeaveTransactions.GroupBy(x => x.LeaveLedger);
+            var groupedLeaves = toBeDeletedleaveTransactions.GroupBy(x => x.LeaveLedger);
+            var toBeDeletedleaveTransactionIds = toBeDeletedleaveTransactions.Select(x => x.RowID.Value).ToArray();
+
             var leaveLedgerIds = groupedLeaves.Select(x => x.Key.RowID.Value).ToArray();
             var allLeaveTransactions = context.LeaveTransactions.
                                             Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value)).
+                                            Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false).
                                             ToList();
 
             foreach (var leaveGroup in groupedLeaves)
@@ -227,31 +251,34 @@ namespace AccuPay.Data.Repositories
                                                 Where(x => x.Type.ToTrimmedLowerCase() ==
                                                     LeaveTransactionType.Debit.ToTrimmedLowerCase()).
                                                 OrderByDescending(x => x.Balance).
-                                                First();
+                                                FirstOrDefault();
 
                     var lastCreditTransaction = lastTransactions.
                                                 Where(x => x.Type.ToTrimmedLowerCase() ==
-                                                    LeaveTransactionType.Debit.ToTrimmedLowerCase()).
+                                                    LeaveTransactionType.Credit.ToTrimmedLowerCase()).
                                                 OrderByDescending(x => x.Created).
-                                                First();
+                                                FirstOrDefault();
 
                     // If there is a Credit Transaction on the last transaction date, check if
                     // what transaction was created last: is it the last debit transaction or
                     // the last credit transaction. Since the user could have reset the leave balance
                     // after the paystub so that reset balance should still be the balance regardless
                     // if the paystub is deleted.
+
+                    int? lastTransactionId = null;
+
                     if (lastCreditTransaction == null)
                     {
                         if (lastDebitTransaction.RowID != null)
                         {
-                            leaveLedger.LastTransactionID = lastDebitTransaction.RowID;
+                            lastTransactionId = lastDebitTransaction.RowID;
                         }
                     }
                     else
                     {
                         if (lastDebitTransaction.RowID == null)
                         {
-                            leaveLedger.LastTransactionID = lastCreditTransaction.RowID;
+                            lastTransactionId = lastCreditTransaction.RowID;
                         }
                         else
                         {
@@ -260,8 +287,14 @@ namespace AccuPay.Data.Repositories
                                                     OrderByDescending(x => x.Created).
                                                     First();
 
-                            leaveLedger.LastTransactionID = lastTransaction.RowID;
+                            lastTransactionId = lastTransaction.RowID;
                         }
+                    }
+
+                    if (lastTransactionId != null)
+                    {
+                        leaveLedger.LastTransactionID = lastTransactionId;
+                        leaveLedger.LastUpdBy = userId;
                     }
                 }
             }
@@ -270,22 +303,18 @@ namespace AccuPay.Data.Repositories
         /// <summary>
         /// Returns the deducted amount on the loans based on the passed paystub.
         /// </summary>
-        /// <param name="context"></param>
-        /// <param name="paystub">Has the loan transactions that will be used to reset the loan balance.</param>
-        private static void ResetLoanBalances(PayrollContext context, Paystub paystub)
+        /// <param name="loanTransactions">The loan transactions to be deleted with its LoanSchedule.</param>
+        private static void ResetLoanBalances(ICollection<LoanTransaction> loanTransactions, int userId)
         {
             // update the employeeloanschedules' balance
-            var groupedLoans = paystub.LoanTransactions.GroupBy(x => x.LoanSchedule);
+            var groupedLoans = loanTransactions.GroupBy(x => x.LoanSchedule);
 
             foreach (var loanGroup in groupedLoans)
             {
-                // We could have just find the loan schedule from paystub.LoanTransactions
-                // but this is more accurate. It is also not expensive since we use Find() which
-                // just looks up the entity that is loaded up in the context if the entity is already
-                // loaded which it is since we queried it from the paystub query.
                 var loan = loanGroup.Key;
 
                 loan.TotalBalanceLeft += loanGroup.Sum(x => x.Amount);
+                loan.LastUpdBy = userId;
             }
         }
 

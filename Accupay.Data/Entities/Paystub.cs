@@ -166,6 +166,10 @@ namespace AccuPay.Data.Entities
 
         public virtual ICollection<LoanTransaction> LoanTransactions { get; set; }
 
+        public virtual ICollection<PaystubEmail> PaystubEmails { get; set; }
+
+        public virtual ICollection<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+
         public virtual ICollection<PaystubItem> PaystubItems { get; set; }
 
         public virtual ThirteenthMonthPay ThirteenthMonthPay { get; set; }

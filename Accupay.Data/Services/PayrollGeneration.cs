@@ -227,7 +227,9 @@ namespace AccuPay.Data.Services
                 _paystub.AllowanceItems = _allowanceItems;
 
                 foreach (var newLoanTransaction in newLoanTransactions)
+                {
                     context.LoanTransactions.Add(newLoanTransaction);
+                }
 
                 if (_resources.SystemOwner.GetCurrentSystemOwner() != SystemOwnerService.Benchmark)
                 {
@@ -538,24 +540,31 @@ namespace AccuPay.Data.Services
 
         private void UpdateBenchmarkLeaveLedger(PayrollContext context)
         {
-            var vacationLedger = context.LeaveLedgers.Include(l => l.Product).Include(l => l.LastTransaction).Where(l => l.EmployeeID.Value == _employee.RowID.Value).Where(l => l.Product.IsVacationLeave).FirstOrDefault();
+            var vacationLedger = context.LeaveLedgers.
+                                        Include(l => l.Product).
+                                        Include(l => l.LastTransaction).
+                                        Where(l => l.EmployeeID.Value == _employee.RowID.Value).
+                                        Where(l => l.Product.IsVacationLeave).
+                                        FirstOrDefault();
 
             vacationLedger.LeaveTransactions = new List<LeaveTransaction>();
 
             if (vacationLedger == null)
                 throw new Exception($"Vacation ledger for Employee No.: {_employee.EmployeeNo}");
 
-            // context.RemoveRange(
-            // context.LeaveTransactions.
-            // Where(Function(t) t.LeaveLedgerID.Value = vacationLedger.RowID.Value).
-            // Where(Function(t) t.PayPeriodID.Value = _payPeriod.RowID.Value))
-
-            UpdateLedgerTransaction(employeeId: _employee.RowID, leaveId: null/* TODO Change to default(_) if this is not a reference type */, ledger: vacationLedger, totalLeaveHours: _paystub.LeaveHours, transactionDate: _payPeriod.PayToDate);
+            UpdateLedgerTransaction(employeeId: _employee.RowID.Value,
+                                    leaveId: null, ledger:
+                                    vacationLedger, totalLeaveHours:
+                                    _paystub.LeaveHours,
+                                    transactionDate: _payPeriod.PayToDate);
         }
 
         private void UpdateLeaveLedger(PayrollContext context)
         {
-            var leaves = _leaves.Where(l => l.EmployeeID.Value == _employee.RowID.Value).OrderBy(l => l.StartDate).ToList();
+            var leaves = _leaves.
+                            Where(l => l.EmployeeID == _employee.RowID).
+                            OrderBy(l => l.StartDate).
+                            ToList();
 
             var leaveIds = leaves.Select(l => l.RowID);
 
@@ -564,7 +573,12 @@ namespace AccuPay.Data.Services
                                 select t).ToList();
 
             var employeeId = _employee.RowID;
-            var ledgers = context.LeaveLedgers.Include(x => x.Product).Include(x => x.LeaveTransactions).Include(x => x.LastTransaction).Where(x => Convert.ToBoolean(x.EmployeeID == employeeId)).ToList();
+            var ledgers = context.LeaveLedgers.
+                                Include(x => x.Product).
+                                Include(x => x.LeaveTransactions).
+                                Include(x => x.LastTransaction).
+                                Where(x => x.EmployeeID == employeeId).
+                                ToList();
 
             var newLeaveTransactions = new List<LeaveTransaction>();
             foreach (var leave in leaves)
@@ -577,7 +591,8 @@ namespace AccuPay.Data.Services
                     var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
 
                     // retrieves the time entries within leave date range
-                    var timeEntry = _timeEntries.Where(t => Convert.ToBoolean(t.Date >= leave.StartDate & t.Date <= leave.EndDate));
+                    var timeEntry = _timeEntries.
+                                    Where(t => leave.StartDate == t.Date);
 
                     if (timeEntry == null)
                         continue;
@@ -585,9 +600,12 @@ namespace AccuPay.Data.Services
                     // summate the leave hours
                     var totalLeaveHours = timeEntry.Sum(t => t.TotalLeaveHours);
 
+                    if (totalLeaveHours == 0)
+                        continue;
+
                     var transactionDate = leave.EndDate ?? leave.StartDate;
 
-                    UpdateLedgerTransaction(employeeId: leave.EmployeeID,
+                    UpdateLedgerTransaction(employeeId: leave.EmployeeID.Value,
                                             leaveId: leave.RowID,
                                             ledger: ledger,
                                             totalLeaveHours: totalLeaveHours,
@@ -596,7 +614,11 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void UpdateLedgerTransaction(int? employeeId, int? leaveId, LeaveLedger ledger, decimal totalLeaveHours, DateTime? transactionDate)
+        private void UpdateLedgerTransaction(int employeeId,
+                                            int? leaveId,
+                                            LeaveLedger ledger,
+                                            decimal totalLeaveHours,
+                                            DateTime transactionDate)
         {
             var newTransaction = new LeaveTransaction()
             {
@@ -605,10 +627,11 @@ namespace AccuPay.Data.Services
                 EmployeeID = employeeId,
                 PayPeriodID = _payPeriod.RowID,
                 ReferenceID = leaveId,
-                TransactionDate = transactionDate.Value,
+                TransactionDate = transactionDate,
                 Type = LeaveTransactionType.Debit,
                 Amount = totalLeaveHours,
-                Balance = ledger?.LastTransaction?.Balance ?? 0 - totalLeaveHours
+                Paystub = _paystub,
+                Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
             };
 
             ledger.LeaveTransactions.Add(newTransaction);
