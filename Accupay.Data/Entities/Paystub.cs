@@ -29,8 +29,6 @@ namespace AccuPay.Data.Entities
 
         public int? EmployeeID { get; set; }
 
-        public int? TimeEntryID { get; set; }
-
         public DateTime PayFromdate { get; set; }
 
         public DateTime PayToDate { get; set; }

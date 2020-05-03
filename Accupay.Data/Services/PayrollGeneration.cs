@@ -16,8 +16,6 @@ namespace AccuPay.Data.Services
 
         //private static readonly ILog logger = LogManager.GetLogger("PayrollLogger");
 
-        private readonly NotifyMainWindow _notifyMainWindow;
-
         private readonly Employee _employee;
 
         private readonly PayrollResources _resources;
@@ -33,8 +31,6 @@ namespace AccuPay.Data.Services
         private readonly ICollection<LoanTransaction> _loanTransactions;
 
         private readonly ICollection<TimeEntry> _previousTimeEntries;
-
-        //private readonly Form _formCaller;
 
         private readonly PayPeriod _payPeriod;
 
@@ -65,14 +61,8 @@ namespace AccuPay.Data.Services
         public PayrollGeneration(Employee employee,
                                 PayrollResources resources,
                                 int organizationId,
-                                int userId/*,
-                                PayStubForm paystubForm = null*/)
+                                int userId)
         {
-            //_formCaller = paystubForm;
-
-            //if (paystubForm != null)
-            //    _notifyMainWindow = paystubForm.ProgressCounter;
-
             _employee = employee;
 
             _organizationId = organizationId;
@@ -131,19 +121,25 @@ namespace AccuPay.Data.Services
                                     ToList();
         }
 
-        public void DoProcess()
+        public Result DoProcess()
         {
             try
             {
                 GeneratePayStub();
 
-                //_formCaller.BeginInvoke(_notifyMainWindow, new Result(_employee.EmployeeNo, _employee.FullNameWithMiddleInitialLastNameFirst, ResultStatus.Success, ""));
+                return new Result(_employee.EmployeeNo,
+                            _employee.FullNameWithMiddleInitialLastNameFirst,
+                            ResultStatus.Success,
+                            "");
             }
             catch (Exception ex)
             {
                 //logger.Error("DoProcess", ex);
 
-                //_formCaller.BeginInvoke(_notifyMainWindow, new Result(_employee.EmployeeNo, _employee.FullNameWithMiddleInitialLastNameFirst, ResultStatus.Error, ex.Message));
+                return new Result(_employee.EmployeeNo,
+                                _employee.FullNameWithMiddleInitialLastNameFirst,
+                                ResultStatus.Error,
+                                ex.Message);
             }
         }
 
@@ -190,7 +186,7 @@ namespace AccuPay.Data.Services
 
                 SavePayroll(newLoanTransactions);
             }
-            catch (PayrollException ex)
+            catch (PayrollException)
             {
                 throw;
             }
@@ -226,7 +222,6 @@ namespace AccuPay.Data.Services
                         Amount = -_employee.BPIInsurance
                     });
 
-                context.Entry(_paystub).Collection(p => p.AllowanceItems).Load();
                 context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
 
                 _paystub.AllowanceItems = _allowanceItems;
@@ -454,8 +449,6 @@ namespace AccuPay.Data.Services
             _paystub.RegularHolidayOTHours = paystubRate.RegularHolidayOTHours;
             _paystub.RegularHolidayOTPay = paystubRate.RegularHolidayOTPay;
             _paystub.Actual.RegularHolidayOTPay = paystubRate.ActualRegularHolidayOTPay;
-
-            _paystub.HolidayPay = paystubRate.HolidayPay;
 
             _paystub.LeaveHours = paystubRate.LeaveHours;
             _paystub.LeavePay = paystubRate.LeavePay;

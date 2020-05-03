@@ -331,6 +331,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3476,6 +3477,9 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
         Me.DataGridViewTextBoxColumn28.Visible = False
         '
+        'ProgressTimer
+        '
+        '
         'PayStubForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -3815,4 +3819,5 @@ Partial Class PayStubForm
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CostCenterReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ProgressTimer As Timer
 End Class

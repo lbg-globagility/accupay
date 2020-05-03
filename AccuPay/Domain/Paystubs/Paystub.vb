@@ -28,8 +28,6 @@ Namespace Global.AccuPay.Entity
 
         Public Property EmployeeID As Integer?
 
-        Public Property TimeEntryID As Integer?
-
         Public Property PayFromdate As Date
 
         Public Property PayToDate As Date

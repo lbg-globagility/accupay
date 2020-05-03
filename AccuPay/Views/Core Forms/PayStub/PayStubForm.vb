@@ -38,8 +38,6 @@ Public Class PayStubForm
 
     Private _totalPaystubs As Integer = 0
     Private _finishedPaystubs As Integer = 0
-    Private _successfulPaystubs As Integer = 0
-    Private _failedPaystubs As Integer = 0
 
     Dim currentEmployeeID As String = Nothing
 
@@ -773,9 +771,9 @@ Public Class PayStubForm
         )
     End Sub
 
-    Private Async Function LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources)) As Task
-        Await ThreadingPayrollGeneration(t.Result)
-    End Function
+    Private Sub LoadingPayrollDataOnSuccess(t As Task(Of PayrollResources))
+        ThreadingPayrollGeneration(t.Result)
+    End Sub
 
     Private Sub LoadingPayrollDataOnError(t As Task)
         _logger.Error("Error loading one of the payroll data.", t.Exception)
@@ -783,41 +781,82 @@ Public Class PayStubForm
         Me.Enabled = True
     End Sub
 
-    Private Async Function ThreadingPayrollGeneration(resources As PayrollResources) As Task
-        _finishedPaystubs = 0
+    Private Sub ThreadingPayrollGeneration(resources As PayrollResources)
+        Me.Enabled = False
 
         Try
-            Me.Enabled = False
+            ProgressTimer.Start()
 
+            _finishedPaystubs = 0
             _totalPaystubs = resources.Employees.Count
-            _successfulPaystubs = 0
-            _failedPaystubs = 0
+
             _results = New BlockingCollection(Of PayrollGeneration.Result)()
 
-            Await Task.Run(
+            Dim generationTask = Task.Run(
                 Sub()
                     Parallel.ForEach(
-                        resources.Employees,
-                        Sub(employee)
-                            Dim generator = New PayrollGeneration(
-                                                    organizationId:=z_OrganizationID,
-                                                    userId:=z_User,
-                                                    employee:=employee,
-                                                    resources:=resources
-                                                )
-                            'Me
+                            resources.Employees,
+                            Sub(employee)
+                                Dim generator = New PayrollGeneration(
+                                                        organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
+                                                        employee:=employee,
+                                                        resources:=resources
+                                                    )
 
-                            generator.DoProcess()
-                        End Sub)
-                End Sub)
+                                _results.Add(generator.DoProcess())
 
-            RefreshForm()
+                                Interlocked.Increment(_finishedPaystubs)
+                            End Sub)
+                End Sub
+            )
 
-            Await TimeEntrySummaryForm.LoadPayPeriods()
+            generationTask.ContinueWith(
+                    AddressOf GeneratingPayrollOnSuccess,
+                    CancellationToken.None,
+                    TaskContinuationOptions.OnlyOnRanToCompletion,
+                    TaskScheduler.FromCurrentSynchronizationContext
+            )
+
+            generationTask.ContinueWith(
+                AddressOf GeneratingPayrollOnError,
+                CancellationToken.None,
+                TaskContinuationOptions.OnlyOnFaulted,
+                TaskScheduler.FromCurrentSynchronizationContext
+            )
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
-    End Function
+    End Sub
+
+    Private Sub ProgressTimer_Tick(sender As Object, e As EventArgs) Handles ProgressTimer.Tick
+
+        Dim percentComplete As Integer = (_finishedPaystubs / _totalPaystubs) * 100
+        MDIPrimaryForm.systemprogressbar.Value = percentComplete
+
+    End Sub
+
+    Private Async Sub GeneratingPayrollOnSuccess()
+        Dim dialog = New PayrollResultDialog(_results.ToList()) With {
+                .Owner = Me
+            }
+        dialog.ShowDialog()
+
+        ProgressTimer.Stop()
+
+        RefreshForm()
+
+        Await TimeEntrySummaryForm.LoadPayPeriods()
+
+        Me.Enabled = True
+        dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
+    End Sub
+
+    Private Sub GeneratingPayrollOnError(t As Task)
+        _logger.Error("Error on generating payroll.", t.Exception)
+        MsgBox("Something went wrong while generating the payroll . Please contact Globagility Inc. for assistance.", MsgBoxStyle.OkOnly, "Payroll Generation")
+        Me.Enabled = True
+    End Sub
 
     Private Sub tsbtnClose_Click(sender As Object, e As EventArgs) Handles tsbtnClose.Click
         Me.Close()
@@ -1749,33 +1788,6 @@ Public Class PayStubForm
 
     Private Sub dgvemployees_RowsRemoved(sender As Object, e As DataGridViewRowsRemovedEventArgs) Handles dgvemployees.RowsRemoved
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-    End Sub
-
-    Sub ProgressCounter(result As PayrollGeneration.Result)
-        If result.Status = PayrollGeneration.ResultStatus.Success Then
-            Interlocked.Increment(_successfulPaystubs)
-        Else
-            Interlocked.Increment(_failedPaystubs)
-        End If
-
-        Interlocked.Increment(_finishedPaystubs)
-        _results.Add(result)
-
-        Dim percentComplete As Integer = (_finishedPaystubs / _totalPaystubs) * 100
-        MDIPrimaryForm.systemprogressbar.Value = percentComplete
-
-        If _finishedPaystubs = _totalPaystubs Then
-
-            PayrollTools.UpdateLoanSchedule(paypRowID)
-
-            Dim dialog = New PayrollResultDialog(_results.ToList()) With {
-                .Owner = Me
-            }
-            dialog.ShowDialog()
-
-            Me.Enabled = True
-            dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
-        End If
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
