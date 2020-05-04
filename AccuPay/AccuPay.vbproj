@@ -350,7 +350,6 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
-    <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
@@ -831,17 +830,8 @@
     <Compile Include="Views\Core Forms\JobLevel\JobPointsPresenter.vb" />
     <Compile Include="Domain\Loans\LoanSchedule.vb" />
     <Compile Include="Domain\Loans\LoanTransaction.vb" />
-    <Compile Include="Domain\Paystubs\ActualAdjustment.vb" />
-    <Compile Include="Domain\Paystubs\Adjustment.vb" />
-    <Compile Include="Domain\Paystubs\Allowance.vb" />
-    <Compile Include="Domain\Paystubs\AllowanceItem.vb" />
-    <Compile Include="Domain\Paystubs\AllowancePerDay.vb" />
-    <Compile Include="Domain\Paystubs\Item.vb" />
     <Compile Include="Domain\Paystubs\PayPeriod.vb" />
-    <Compile Include="Domain\Paystubs\Paystub.vb" />
-    <Compile Include="Domain\Paystubs\PaystubActual.vb" />
     <Compile Include="Domain\Paystubs\Product.vb" />
-    <Compile Include="Domain\Paystubs\ThirteenthMonthPay.vb" />
     <Compile Include="Views\Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>

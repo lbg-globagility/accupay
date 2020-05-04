@@ -3,9 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class PayrollTools
 

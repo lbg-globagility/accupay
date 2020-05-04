@@ -28,6 +28,8 @@ Public Class SelectPayslipEmployeesForm
 
     Private _payPeriodRepository As PayPeriodRepository
 
+    Private _paystubRepository As PaystubRepository
+
     Private _paystubEmailRepository As PaystubEmailRepository
 
     Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
@@ -42,6 +44,7 @@ Public Class SelectPayslipEmployeesForm
         _currentPayPeriodId = currentPayPeriodId
 
         _payPeriodRepository = New PayPeriodRepository()
+        _paystubRepository = New PaystubRepository()
         _paystubEmailRepository = New PaystubEmailRepository()
         _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
 
@@ -80,44 +83,38 @@ Public Class SelectPayslipEmployeesForm
 
     Private Async Function ShowEmployees() As Task
 
-        Using context As New PayrollContext
+        Dim employees = Await _paystubRepository.
+                                GetByPayPeriodWithEmployeeDivisionAsync(_currentPayPeriodId)
 
-            Dim employees = Await context.Paystubs.
-                                Include(Function(p) p.Employee.Position.Division).
-                                Where(Function(p) p.PayPeriodID.Value = _currentPayPeriodId).
-                                ToListAsync
+        Dim employeeModels As New List(Of EmployeeModel)
 
-            Dim employeeModels As New List(Of EmployeeModel)
+        For Each paystub In employees
+            employeeModels.Add(New EmployeeModel With {
+                .EmployeeId = paystub.EmployeeID.Value,
+                .EmailAddress = If(String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress),
+                                    Nothing,
+                                    paystub.Employee.EmailAddress),
+                .PaystubId = paystub.RowID.Value,
+                .IsSelected = If(Not _isEmail, True, (Not String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress))),
+                .EmployeeNumber = paystub.Employee.EmployeeNo,
+                .FirstName = paystub.Employee.FirstName,
+                .MiddleName = paystub.Employee.MiddleName,
+                .LastName = paystub.Employee.LastName,
+                .EmployeeType = paystub.Employee.EmployeeType,
+                .PositionName = paystub.Employee.Position?.Name,
+                .DivisionName = paystub.Employee.Position?.Division?.Name,
+                .FullName = paystub.Employee.FullNameWithMiddleInitialLastNameFirst,
+                .EmailStatus = "-"
+            })
+        Next
 
-            For Each paystub In employees
-                employeeModels.Add(New EmployeeModel With {
-                    .EmployeeId = paystub.EmployeeID.Value,
-                    .EmailAddress = If(String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress),
-                                        Nothing,
-                                        paystub.Employee.EmailAddress),
-                    .PaystubId = paystub.RowID.Value,
-                    .IsSelected = If(Not _isEmail, True, (Not String.IsNullOrWhiteSpace(paystub.Employee.EmailAddress))),
-                    .EmployeeNumber = paystub.Employee.EmployeeNo,
-                    .FirstName = paystub.Employee.FirstName,
-                    .MiddleName = paystub.Employee.MiddleName,
-                    .LastName = paystub.Employee.LastName,
-                    .EmployeeType = paystub.Employee.EmployeeType,
-                    .PositionName = paystub.Employee.Position?.Name,
-                    .DivisionName = paystub.Employee.Position?.Division?.Name,
-                    .FullName = paystub.Employee.FullNameWithMiddleInitialLastNameFirst,
-                    .EmailStatus = "-"
-                })
-            Next
+        _employeeModels = employeeModels.OrderBy(Function(e) e.FullName).ToList
 
-            _employeeModels = employeeModels.OrderBy(Function(e) e.FullName).ToList
+        EmployeesDataGrid.DataSource = _employeeModels
 
-            EmployeesDataGrid.DataSource = _employeeModels
+        Await RefreshEmailStatus()
 
-            Await RefreshEmailStatus()
-
-            EnableDisableButtons()
-
-        End Using
+        EnableDisableButtons()
 
     End Function
 

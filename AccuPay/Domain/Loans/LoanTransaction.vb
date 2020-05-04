@@ -43,9 +43,6 @@ Namespace Global.AccuPay.Loans
         <ForeignKey("PayPeriodID")>
         Public Overridable Property PayPeriod As PayPeriod
 
-        <ForeignKey("PaystubID")>
-        Public Overridable Property Paystub As Paystub
-
         Public ReadOnly Property PayPeriodPayToDate() As Date?
             Get
                 Return PayPeriod?.PayToDate

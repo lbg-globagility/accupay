@@ -679,7 +679,7 @@ Public Class BenchmarkPaystubForm
         If _currentPayPeriod?.RowID Is Nothing Then Return Nothing
 
         Return Await _paystubRepository.
-                        GetByCompositeKeyFullPaystubAsync(New PaystubRepository.CompositeKey(
+                        GetByCompositeKeyFullPaystubAsync(New PaystubRepository.EmployeeCompositeKey(
                                                         employeeId:=employeeId,
                                                         payPeriodId:=_currentPayPeriod.RowID.Value
                                                 ))
@@ -734,7 +734,7 @@ Public Class BenchmarkPaystubForm
         If MessageBoxHelper.Confirm(Of Boolean) _
                (confirmMessage, "Delete Paystub", messageBoxIcon:=MessageBoxIcon.Warning) = False Then Return
 
-        Await _paystubRepository.DeleteAsync(New PaystubRepository.CompositeKey(
+        Await _paystubRepository.DeleteAsync(New PaystubRepository.EmployeeCompositeKey(
                                                     employeeId:=employeeId.Value,
                                                     payPeriodId:=_currentPayPeriod.RowID.Value),
                                             z_User)

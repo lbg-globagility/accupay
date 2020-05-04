@@ -4,12 +4,10 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports log4net
-Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
 Public Class PayStubForm
@@ -1778,7 +1776,7 @@ Public Class PayStubForm
 
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                     Async Function()
-                        Await New PaystubRepository().DeleteAsync(New PaystubRepository.CompositeKey(
+                        Await New PaystubRepository().DeleteAsync(New PaystubRepository.EmployeeCompositeKey(
                                                                         employeeId:=employeeId.Value,
                                                                         payPeriodId:=payPeriodId.Value),
                                                                     z_User)

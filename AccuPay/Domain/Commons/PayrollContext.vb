@@ -1,6 +1,5 @@
 Option Strict On
 
-Imports AccuPay.Entity
 Imports AccuPay.Loans
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.Logging
@@ -15,8 +14,6 @@ Public Class PayrollContext
        New LoggerFactory({New ConsoleLoggerProvider(Function(category, level) category = DbLoggerCategory.Database.Command.Name AndAlso level = LogLevel.Information, True)})
 
     Public Overridable Property LoanTransactions As DbSet(Of LoanTransaction)
-
-    Public Overridable Property Paystubs As DbSet(Of Paystub)
 
     Public Sub New()
     End Sub
