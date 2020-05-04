@@ -9,6 +9,8 @@ Public Class EntityTest
 
     <Test>
     Public Sub Test1()
+        Dim repo As New UserActivityRepository
+        Dim userActivities = repo.List(11, "Employee")
 
         Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
 

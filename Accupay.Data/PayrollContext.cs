@@ -50,8 +50,10 @@ namespace AccuPay.Data
         public virtual DbSet<Paystub> Paystubs { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
-        public virtual DbSet<Position> Positions { get; set; }
         public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
+        public virtual DbSet<Position> Positions { get; set; }
+        public virtual DbSet<PositionView> PositionViews { get; set; }
+        public virtual DbSet<Privilege> Privileges { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
