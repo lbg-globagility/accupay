@@ -1068,28 +1068,10 @@
     <Compile Include="Views\General Forms\AddListOfValueForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\Address.designer.vb">
-      <DependentUpon>Address.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\Address.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\AddressForm.Designer.vb">
-      <DependentUpon>AddressForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AddressForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\General Forms\AgencyForm.designer.vb">
       <DependentUpon>AgencyForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\AgencyForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\AuditTrailForm.Designer.vb">
-      <DependentUpon>AuditTrailForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AuditTrailForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\ForgotPasswordForm.designer.vb">
@@ -1108,12 +1090,6 @@
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\DepartmentMinWages.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\LoanScheduleForm.Designer.vb">
-      <DependentUpon>LoanScheduleForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\LoanScheduleForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\FormReports.designer.vb">
@@ -1826,12 +1802,6 @@
     <Compile Include="Views\Time Attendance Form\MassOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.Designer.vb">
-      <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Time Attendance Form\ShiftEntryForm.Designer.vb">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>
     </Compile>
@@ -2227,17 +2197,8 @@
     <EmbeddedResource Include="Views\General Forms\AddListOfValueForm.resx">
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\Address.resx">
-      <DependentUpon>Address.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AddressForm.resx">
-      <DependentUpon>AddressForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AuditTrailForm.resx">
-      <DependentUpon>AuditTrailForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\ForgotPasswordForm.resx">
       <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
@@ -2247,9 +2208,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\DepartmentMinWages.resx">
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
-      <DependentUpon>LoanScheduleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\New\AddLoanScheduleForm.resx">
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
@@ -2630,9 +2588,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\MassOvertimeForm.resx">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\PayrollGenerateForm.resx">
-      <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\ShiftEntryForm.resx">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>

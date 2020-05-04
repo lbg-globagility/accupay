@@ -48,7 +48,7 @@ Namespace Benchmark
                 selectedDeductions As List(Of AdjustmentInput),
                 selectedIncomes As List(Of AdjustmentInput),
                 overtimes As List(Of OvertimeInput),
-                ecola As Data.Entities.Allowance)
+                ecola As Allowance)
 
             _employee = employee
             _payrollResources = payrollResources
@@ -94,7 +94,7 @@ Namespace Benchmark
                                     selectedDeductions As List(Of AdjustmentInput),
                                     selectedIncomes As List(Of AdjustmentInput),
                                     overtimes As List(Of OvertimeInput),
-                                    ecola As Data.Entities.Allowance) As DoProcessOutput
+                                    ecola As Allowance) As DoProcessOutput
 
             Dim generator As New BenchmarkPayrollGeneration(
                                     employee,

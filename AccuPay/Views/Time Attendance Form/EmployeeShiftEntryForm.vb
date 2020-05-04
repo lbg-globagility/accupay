@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports Microsoft.Win32
@@ -1319,15 +1320,15 @@ Public Class EmployeeShiftEntryForm
 
         Private Const TimeFormat = "hh\:mm"
 
-        Private _shift As Data.Entities.Shift
+        Private _shift As Shift
 
-        Public ReadOnly Property Shift As Data.Entities.Shift
+        Public ReadOnly Property Shift As Shift
             Get
                 Return _shift
             End Get
         End Property
 
-        Public Sub New(shift As Data.Entities.Shift)
+        Public Sub New(shift As Shift)
             _shift = shift
         End Sub
 

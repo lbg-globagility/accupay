@@ -181,7 +181,7 @@ Public Class SelectPayslipEmployeesForm
                         checkBoxCell.Style.BackColor = Color.Black
                         checkBoxCell.ReadOnly = True
 
-                    Case Data.Entities.PaystubEmail.StatusFailed
+                    Case PaystubEmail.StatusFailed
                         row.DefaultCellStyle.BackColor = Color.Red
                         row.DefaultCellStyle.ForeColor = Color.White
 

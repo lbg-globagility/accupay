@@ -45,7 +45,7 @@ Namespace Global.AccuPay.Views.Employees
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
 
-        Private Sub OnSelectedEmployee(employee As Data.Entities.Employee) Handles _view.SelectEmployee
+        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
             _employee = employee
             _view.ShowEmployee(employee)
             LoadSalaries()
@@ -214,13 +214,13 @@ Namespace Global.AccuPay.Views.Employees
 
             Private Property _maximumContribution As Decimal
 
-            Private Property _brackets As IList(Of Data.Entities.PhilHealthBracket)
+            Private Property _brackets As IList(Of PhilHealthBracket)
 
             Public Sub New(deductionType As String,
                            contributionRate As Decimal,
                            minimumContribution As Decimal,
                            maximumContribution As Decimal,
-                           brackets As IList(Of Data.Entities.PhilHealthBracket))
+                           brackets As IList(Of PhilHealthBracket))
                 _deductionType = deductionType
                 _contributionRate = contributionRate
                 _minimumContribution = minimumContribution
@@ -252,13 +252,13 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Class SocialSecurityPolicy
 
-            Public _socialSecurityBrackets As IList(Of Data.Entities.SocialSecurityBracket)
+            Public _socialSecurityBrackets As IList(Of SocialSecurityBracket)
 
-            Public Sub New(socialSecurityBrackets As IList(Of Data.Entities.SocialSecurityBracket))
+            Public Sub New(socialSecurityBrackets As IList(Of SocialSecurityBracket))
                 _socialSecurityBrackets = socialSecurityBrackets
             End Sub
 
-            Public Function GetBracket(monthlyRate As Decimal) As Data.Entities.SocialSecurityBracket
+            Public Function GetBracket(monthlyRate As Decimal) As SocialSecurityBracket
                 Dim socialSecurityBracket = _socialSecurityBrackets?.FirstOrDefault(
                         Function(s) s.RangeFromAmount <= monthlyRate And monthlyRate <= s.RangeToAmount)
 

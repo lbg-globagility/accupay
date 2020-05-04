@@ -1,6 +1,7 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -255,7 +256,7 @@ Public Class PayStubForm
         End If
     End Sub
 
-    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of Data.Entities.PayPeriod),
+    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
                                          index As Integer,
                                          drow As DataRow) _
                                          As PayPeriodStatusData
