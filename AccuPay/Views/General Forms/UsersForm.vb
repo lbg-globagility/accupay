@@ -305,16 +305,16 @@ Public Class UsersForm
             Return
         End If
 
-        If isNew Then
-            Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
-            If usernameExists Then
-                Dim userIDErrorMessage = "User ID Already exist."
-                SetWarning(txtUserName, userIDErrorMessage)
-                myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
-                enableSaveButton()
-                Return
-            End If
+        Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
+        If usernameExists Then
+            Dim userIDErrorMessage = "User ID Already exist."
+            SetWarning(txtUserName, userIDErrorMessage)
+            myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
+            enableSaveButton()
+            Return
+        End If
 
+        If isNew Then
             Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
             ApplyChanges(newUser)
