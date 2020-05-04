@@ -311,9 +311,6 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auditing\AuditContext.vb" />
-    <Compile Include="Auditing\Entity\AuditTrail.vb" />
-    <Compile Include="Auditing\Entity\View.vb" />
     <Compile Include="Core\DB\DataBaseConnection.vb" />
     <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
     <Compile Include="Core\DB\ExecSQLProcedure.vb" />
@@ -350,7 +347,6 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
-    <Compile Include="Domain\Paystubs\IAdjustment.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
@@ -751,7 +747,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
-    <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
@@ -829,19 +824,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\JobLevel\JobPointsPresenter.vb" />
-    <Compile Include="Domain\Loans\LoanSchedule.vb" />
-    <Compile Include="Domain\Loans\LoanTransaction.vb" />
-    <Compile Include="Domain\Paystubs\ActualAdjustment.vb" />
-    <Compile Include="Domain\Paystubs\Adjustment.vb" />
-    <Compile Include="Domain\Paystubs\Allowance.vb" />
-    <Compile Include="Domain\Paystubs\AllowanceItem.vb" />
-    <Compile Include="Domain\Paystubs\AllowancePerDay.vb" />
-    <Compile Include="Domain\Paystubs\Item.vb" />
-    <Compile Include="Domain\Paystubs\PayPeriod.vb" />
-    <Compile Include="Domain\Paystubs\Paystub.vb" />
-    <Compile Include="Domain\Paystubs\PaystubActual.vb" />
-    <Compile Include="Domain\Paystubs\Product.vb" />
-    <Compile Include="Domain\Paystubs\ThirteenthMonthPay.vb" />
     <Compile Include="Views\Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
@@ -945,7 +927,6 @@
     <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\Employees\Employee.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </Compile>

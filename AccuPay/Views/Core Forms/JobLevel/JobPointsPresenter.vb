@@ -5,11 +5,17 @@ Imports AccuPay.Data.Repositories
 
 Namespace Global.AccuPay.JobLevels
 
+    ''' <summary>
+    ''' This form is tightly coupled to PayrolContext. PayrollContext is now transferred to another library
+    ''' and encapsulated by repositories so this form will not be able to directly access it.
+    ''' THIS FORM WILL NOT WORK until this is updated to use repositories.
+    ''' This form is created for Hyundai which is not an Active client currently.
+    ''' </summary>
     Public Class JobPointsPresenter
 
         Private WithEvents _view As JobPointsView
 
-        Private _context As PayrollContext
+        'Private _context As PayrollContext
 
         Private _currentEmployee As EmployeeModel
 
@@ -28,8 +34,8 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Async Sub OnLoad() Handles _view.OnLoad
-            _context?.Dispose()
-            _context = New PayrollContext()
+            '_context?.Dispose()
+            '_context = New PayrollContext()
             _jobLevels = GetJobLevels()
 
             Dim models = Await GetEmployeeModels()
@@ -69,7 +75,7 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Sub SaveEmployees() Handles _view.SaveEmployees
-            _context.SaveChanges()
+            '_context.SaveChanges()
             _view.ShowSavedMessage()
         End Sub
 
