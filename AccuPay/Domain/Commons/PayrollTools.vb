@@ -29,37 +29,34 @@ Public Class PayrollTools
 
         End If
 
-        Using context As New PayrollContext
+        If payPeriodId Is Nothing Then
+            MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+            Return False
+        End If
 
-            If payPeriodId Is Nothing Then
-                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
-                Return False
-            End If
+        Dim payPeriod = Await New PayPeriodRepository().GetByIdAsync(payPeriodId.Value)
 
-            Dim payPeriod = Await New PayPeriodRepository().GetByIdAsync(payPeriodId.Value)
+        If payPeriod Is Nothing Then
+            MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
+            Return False
+        End If
 
-            If payPeriod Is Nothing Then
-                MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
-                Return False
-            End If
+        Dim currentProcessingPayPeriod = Await New PayPeriodRepository().
+                                                        GetCurrentProcessing(z_OrganizationID)
+        Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
+                                        currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
 
-            Dim currentProcessingPayPeriod = Await New PayPeriodRepository().
-                                                            GetCurrentProcessing(z_OrganizationID)
-            Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
-                                            currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
+        If payPeriod.IsClosed Then
 
-            If payPeriod.IsClosed Then
+            MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
+            Return False
 
-                MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
-                Return False
+        ElseIf Not payPeriod.IsClosed AndAlso hasOtherProcessingPayPeriod Then
 
-            ElseIf Not payPeriod.IsClosed AndAlso hasOtherProcessingPayPeriod Then
+            MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
+            Return False
 
-                MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
-                Return False
-
-            End If
-        End Using
+        End If
 
         Return True
 

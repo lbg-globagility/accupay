@@ -73,58 +73,56 @@ Public Class ImportSalaryForm
 
         Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
-        Using context = New PayrollContext()
-            For Each record In records
+        For Each record In records
 
-                Dim employee = employees.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
+            Dim employee = employees.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
 
-                If employee Is Nothing Then
-                    record.ErrorMessage = "Employee does not exist!"
-                    rejectedRecords.Add(record)
-                    Continue For
-                End If
+            If employee Is Nothing Then
+                record.ErrorMessage = "Employee does not exist!"
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
-                If record.EffectiveFrom IsNot Nothing AndAlso
-                    record.EffectiveFrom.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
-                    record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
-                    rejectedRecords.Add(record)
-                    Continue For
-                End If
+            If record.EffectiveFrom IsNot Nothing AndAlso
+                record.EffectiveFrom.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+                record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
-                Dim lastSalary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value)
+            Dim lastSalary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value)
 
-                Dim doPaySSSContribution = True
+            Dim doPaySSSContribution = True
 
-                If lastSalary IsNot Nothing Then
-                    doPaySSSContribution = lastSalary.DoPaySSSContribution
-                End If
+            If lastSalary IsNot Nothing Then
+                doPaySSSContribution = lastSalary.DoPaySSSContribution
+            End If
 
-                If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
-                    Continue For
+                Continue For
 
-                End If
+            End If
 
-                Dim salary = New Salary With {
-                    .OrganizationID = z_OrganizationID,
-                    .CreatedBy = z_User,
-                    .EmployeeID = employee.RowID,
-                    .PositionID = employee.PositionID,
-                    .EffectiveFrom = record.EffectiveFrom.Value,
-                    .BasicSalary = record.BasicSalary.Value,
-                    .AllowanceSalary = record.AllowanceSalary,
-                    .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
-                    .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                    .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
-                    .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
-                    .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
-                    .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
-                }
+            Dim salary = New Salary With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .EmployeeID = employee.RowID,
+                .PositionID = employee.PositionID,
+                .EffectiveFrom = record.EffectiveFrom.Value,
+                .BasicSalary = record.BasicSalary.Value,
+                .AllowanceSalary = record.AllowanceSalary,
+                .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
+                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
+                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
+                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
+                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
+            }
 
-                _salaries.Add(salary)
-                salaryViewModels.Add(New SalaryViewModel(salary, employee))
-            Next
-        End Using
+            _salaries.Add(salary)
+            salaryViewModels.Add(New SalaryViewModel(salary, employee))
+        Next
 
         UpdateStatusLabel(rejectedRecords.Count)
 
