@@ -1,6 +1,6 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Data.Helpers
-Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Utils
 Imports MySql.Data.MySqlClient
 
 Public Class ProductControlForm
@@ -8,6 +8,17 @@ Public Class ProductControlForm
     Dim isShowAsDialog As Boolean = False
 
     Public Property IsSaved As Boolean
+
+    Private ReadOnly _allowanceRepository As AllowanceRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _allowanceRepository = New AllowanceRepository()
+    End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult
 
@@ -59,9 +70,9 @@ Public Class ProductControlForm
                          " LIMIT 1);")
 
             If haschangestoDB = 1 Then
-                Me.DialogResult = Windows.Forms.DialogResult.OK
+                Me.DialogResult = DialogResult.OK
             Else
-                Me.DialogResult = Windows.Forms.DialogResult.Cancel
+                Me.DialogResult = DialogResult.Cancel
 
             End If
         Else
@@ -414,13 +425,15 @@ Public Class ProductControlForm
         Dim prompt As DialogResult
 
         If n_categname = ProductConstant.ALLOWANCE_TYPE_CATEGORY AndAlso
-            Await CheckIfAllowanceIsUsedInPayroll(allowanceName) Then
+            Await _allowanceRepository.CheckIfAlreadyUsed(allowanceName) Then
 
-            prompt = MessageBox.Show("This allowance type is already used in generated payrolls. Are you sure you want to delete this item?",
-                                    "Delete item",
-                                    MessageBoxButtons.YesNoCancel,
-                                    MessageBoxIcon.Warning,
-                                    MessageBoxDefaultButton.Button2)
+            MessageBoxHelper.Warning("Cannot delete an allowance item that is already used in a generated payroll.")
+            Return
+            'prompt = MessageBox.Show("This allowance type is already used in generated payrolls. Are you sure you want to delete this item?",
+            '                        "Delete item",
+            '                        MessageBoxButtons.YesNoCancel,
+            '                        MessageBoxIcon.Warning,
+            '                        MessageBoxDefaultButton.Button2)
         Else
 
             prompt = MessageBox.Show("Are you sure do you want to delete this item?",
@@ -450,20 +463,6 @@ Public Class ProductControlForm
         dgvproducts.Enabled = True
 
     End Sub
-
-    Private Async Function CheckIfAllowanceIsUsedInPayroll(allowanceName As String) As Task(Of Boolean)
-
-        Using context As New PayrollContext
-
-            Return Await context.AllowanceItems.
-                    Include(Function(a) a.Allowance).
-                    Include(Function(a) a.Allowance.Product).
-                    Where(Function(a) a.Allowance.Product.PartNo = allowanceName).
-                    AnyAsync
-
-        End Using
-
-    End Function
 
     Private Sub ContextMenuStrip1_Opening(sender As Object, e As System.ComponentModel.CancelEventArgs) Handles ContextMenuStrip1.Opening
 

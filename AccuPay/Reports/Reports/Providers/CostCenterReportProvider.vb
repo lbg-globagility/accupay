@@ -2,6 +2,7 @@
 
 Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
@@ -149,7 +150,7 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Shared Function GetSelectedBranch() As Data.Entities.Branch
+    Private Shared Function GetSelectedBranch() As Branch
 
         Dim selectBranchDialog As New SelectBranchForm
 
@@ -162,7 +163,7 @@ Public Class CostCenterReportProvider
     End Function
 
     Protected Shared Function GetDefaultFileName(reportName As String,
-                                                 selectedBranch As Data.Entities.Branch,
+                                                 selectedBranch As Branch,
                                                  selectedMonth As Date) As String
         Return String.Concat(selectedBranch.Name, " ",
                             reportName, " ",
@@ -173,7 +174,7 @@ Public Class CostCenterReportProvider
 
     Private Sub GenerateExcel(payPeriodModels As List(Of PayPeriodModel),
                               newFile As FileInfo,
-                              selectedBranch As Data.Entities.Branch)
+                              selectedBranch As Branch)
 
         Using excel = New ExcelPackage(newFile)
             Dim subTotalRows = New List(Of Integer)
@@ -223,7 +224,7 @@ Public Class CostCenterReportProvider
     Private Sub RenderWorksheet(worksheet As ExcelWorksheet,
                                 payPeriods As ICollection(Of PayPeriodModel),
                                 viewableReportColumns As IReadOnlyCollection(Of ExcelReportColumn),
-                                selectedBranch As Data.Entities.Branch)
+                                selectedBranch As Branch)
         Dim subTotalRows = New List(Of Integer)
 
         worksheet.Cells.Style.Font.Size = FontSize

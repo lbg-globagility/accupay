@@ -145,12 +145,12 @@ Public Class ImportEmployeeForm
                 _noLastName = String.IsNullOrWhiteSpace(LastName)
                 _noFirstName = String.IsNullOrWhiteSpace(FirstName)
                 _noBirthDate = Not BirthDate.HasValue
-                _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < PayrollTools.MinimumMicrosoftDate
+                _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
                 _noGender = String.IsNullOrWhiteSpace(Gender)
                 _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
                 _noJob = String.IsNullOrWhiteSpace(Position)
                 _noEmploymentDate = Not DateEmployed.HasValue
-                _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < PayrollTools.MinimumMicrosoftDate
+                _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
                 _noPayFrequency = String.IsNullOrWhiteSpace(PayFrequency)
                 _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
 
@@ -230,8 +230,8 @@ Public Class ImportEmployeeForm
                 .Created = Now,
                 .CreatedBy = z_User,
                 .PayFrequencyID = If(model.PayFrequency.ToLower() = "semi-monthly",
-                                                                    PayrollTools.PayFrequencySemiMonthlyId,
-                                                                    PayrollTools.PayFrequencyWeeklyId)
+                                                                    Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId,
+                                                                    Data.Helpers.PayrollTools.PayFrequencyWeeklyId)
             }
 
             AssignChanges(model, employee)

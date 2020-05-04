@@ -128,47 +128,49 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Product> GetOrCreateLoanTypeAsync(string loanTypeName, int organizationId, int userId)
+        public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
         {
-            var categoryId = (await GetOrCreateCategoryByName(ProductConstant.LOAN_TYPE_CATEGORY, organizationId))?.RowID;
-
-            if (categoryId == null)
-                throw new ArgumentException("There was a problem on fetching the data. Please try again.");
-
-            var loanType = await GetProductByNameAndCategory(loanTypeName, categoryId.Value, organizationId);
-
-            if (loanType == null)
-                loanType = await AddLoanTypeAsync(loanTypeName, organizationId: organizationId, userId: userId);
-
-            return loanType;
+            return await GetOrCreateTypeAsync(categoryName: ProductConstant.ADJUSTMENT_TYPE_CATEGORY,
+                                            typeName: adjustmentTypeName,
+                                            organizationId: organizationId,
+                                            userId: userId);
         }
 
         public async Task<Product> GetOrCreateAllowanceTypeAsync(string allowanceTypeName, int organizationId, int userId)
         {
-            var categoryId = (await GetOrCreateCategoryByName(ProductConstant.ALLOWANCE_TYPE_CATEGORY, organizationId))?.RowID;
-
-            if (categoryId == null)
-                throw new ArgumentException("There was a problem on fetching the data. Please try again.");
-
-            var allowanceType = await GetProductByNameAndCategory(allowanceTypeName, categoryId.Value, organizationId);
-
-            if (allowanceType == null)
-                allowanceType = await AddAllowanceTypeAsync(allowanceTypeName, organizationId, userId);
-
-            return allowanceType;
+            return await GetOrCreateTypeAsync(categoryName: ProductConstant.ALLOWANCE_TYPE_CATEGORY,
+                                            typeName: allowanceTypeName,
+                                            organizationId: organizationId,
+                                            userId: userId);
         }
 
-        public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
+        public async Task<Product> GetOrCreateLeaveTypeAsync(string leaveTypeName, int organizationId, int userId)
         {
-            var categoryId = (await GetOrCreateCategoryByName(ProductConstant.ADJUSTMENT_TYPE_CATEGORY, organizationId))?.RowID;
+            return await GetOrCreateTypeAsync(categoryName: ProductConstant.LEAVE_TYPE_CATEGORY,
+                                               typeName: leaveTypeName,
+                                               organizationId: organizationId,
+                                               userId: userId);
+        }
+
+        public async Task<Product> GetOrCreateLoanTypeAsync(string loanTypeName, int organizationId, int userId)
+        {
+            return await GetOrCreateTypeAsync(categoryName: ProductConstant.LOAN_TYPE_CATEGORY,
+                                               typeName: loanTypeName,
+                                               organizationId: organizationId,
+                                               userId: userId);
+        }
+
+        private async Task<Product> GetOrCreateTypeAsync(string categoryName, string typeName, int organizationId, int userId)
+        {
+            var categoryId = (await GetOrCreateCategoryByName(categoryName, organizationId))?.RowID;
 
             if (categoryId == null)
                 throw new ArgumentException("There was a problem on fetching the data. Please try again.");
 
-            var adjustmentType = await GetProductByNameAndCategory(adjustmentTypeName, categoryId.Value, organizationId);
+            var adjustmentType = await GetProductByNameAndCategory(typeName, categoryId.Value, organizationId);
 
             if (adjustmentType == null)
-                adjustmentType = await AddAdjustmentTypeAsync(adjustmentTypeName, organizationId, userId);
+                adjustmentType = await AddAdjustmentTypeAsync(typeName, organizationId, userId);
 
             return adjustmentType;
         }

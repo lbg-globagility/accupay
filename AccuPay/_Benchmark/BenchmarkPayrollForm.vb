@@ -4,12 +4,11 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
-Imports AccuPay.Loans
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -151,7 +150,7 @@ Public Class BenchmarkPayrollForm
 
         'TODO: Add loading bar
 
-        Dim paypRowID = _currentPayPeriod.RowID.Value
+        Dim payPeriodId = _currentPayPeriod.RowID.Value
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
 
@@ -161,7 +160,11 @@ Public Class BenchmarkPayrollForm
                     Return Nothing
                 End If
 
-                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
+                Dim resources = New PayrollResources(payPeriodId:=payPeriodId,
+                                                     organizationId:=z_OrganizationID,
+                                                     userId:=z_User,
+                                                     payDateFrom:=paypFrom,
+                                                     payDateTo:=paypTo)
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
 
@@ -339,8 +342,8 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await PayrollTools.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentPayPeriod = Await Data.Helpers.PayrollTools.
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function
@@ -763,7 +766,7 @@ Public Class BenchmarkPayrollForm
 
         If e.RowIndex >= 0 Then
 
-            Dim adjustmentInput As AdjustmentInput
+            Dim adjustmentInput As AdjustmentInput = Nothing
 
             If sender Is DeductionsGridView Then
 

@@ -1,7 +1,8 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
@@ -38,6 +39,17 @@ Public Class EmployeeShiftEntryForm
     Dim ArrayWeekFormat() As String
 
     Private sys_ownr As New SystemOwnerService()
+
+    Private _shiftRepository As ShiftRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _shiftRepository = New ShiftRepository()
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim n_SQLQueryToDatatable As _
@@ -301,11 +313,10 @@ Public Class EmployeeShiftEntryForm
 
     Private Sub LoadShifts()
         Using context = New PayrollContext()
-            Dim shifts = context.Shifts.
-                Where(Function(s) s.OrganizationID = z_OrganizationID).
-                OrderBy(Function(s) s.TimeFrom).
-                ThenBy(Function(s) s.TimeTo).
-                ToList()
+            Dim shifts = _shiftRepository.GetAll(z_OrganizationID).
+                            OrderBy(Function(s) s.TimeFrom).
+                            ThenBy(Function(s) s.TimeTo).
+                            ToList()
 
             _shiftModels = shifts.
                 Select(Function(s) New ShiftModel(s)).

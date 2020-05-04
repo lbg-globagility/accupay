@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
+Imports AccuPay.Data.Exceptions
 
 Namespace Global.AccuPay.Utils
 

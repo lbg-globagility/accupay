@@ -179,7 +179,8 @@ Public Class PayrollSummaDateSelection
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         DateFromLabel.Text = ""
         DateToLabel.Text = ""

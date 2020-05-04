@@ -33,9 +33,9 @@ Partial Class DateRangePickerDialog
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
+        Me.lblYear = New System.Windows.Forms.Label()
         Me.btnIncrementYear = New System.Windows.Forms.Button()
         Me.btnDecrementYear = New System.Windows.Forms.Button()
-        Me.lblYear = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
         CType(Me.PayperiodsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -141,6 +141,17 @@ Partial Class DateRangePickerDialog
         Me.Panel2.Size = New System.Drawing.Size(440, 32)
         Me.Panel2.TabIndex = 6
         '
+        'lblYear
+        '
+        Me.lblYear.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.lblYear.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblYear.Location = New System.Drawing.Point(147, 0)
+        Me.lblYear.Name = "lblYear"
+        Me.lblYear.Size = New System.Drawing.Size(146, 32)
+        Me.lblYear.TabIndex = 281
+        Me.lblYear.Text = "Label1"
+        Me.lblYear.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'btnIncrementYear
         '
         Me.btnIncrementYear.Dock = System.Windows.Forms.DockStyle.Right
@@ -163,17 +174,6 @@ Partial Class DateRangePickerDialog
         Me.btnDecrementYear.Text = "2018"
         Me.btnDecrementYear.UseVisualStyleBackColor = True
         '
-        'lblYear
-        '
-        Me.lblYear.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.lblYear.Font = New System.Drawing.Font("Segoe UI", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblYear.Location = New System.Drawing.Point(147, 0)
-        Me.lblYear.Name = "lblYear"
-        Me.lblYear.Size = New System.Drawing.Size(146, 32)
-        Me.lblYear.TabIndex = 281
-        Me.lblYear.Text = "Label1"
-        Me.lblYear.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'Panel3
         '
         Me.Panel3.Controls.Add(Me.Button2)
@@ -195,6 +195,7 @@ Partial Class DateRangePickerDialog
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.Name = "DateRangePickerDialog"
+        Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "DateRangePickerDialog"
         CType(Me.PayperiodsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)

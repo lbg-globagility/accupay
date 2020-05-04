@@ -1,6 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
+Imports AccuPay.Data.Repositories
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class TaxReportProvider
@@ -8,6 +8,12 @@ Public Class TaxReportProvider
 
     Public Property Name As String = "Tax Monthly Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
+
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Sub New()
+        _payPeriodRepository = New PayPeriodRepository()
+    End Sub
 
     Public Sub Run() Implements IReportProvider.Run
         Dim n_selectMonth As New selectMonth
@@ -18,14 +24,12 @@ Public Class TaxReportProvider
 
         Dim month = CDate(n_selectMonth.MonthFirstDate)
 
-        Dim payPeriods As List(Of PayPeriod)
-        Using context = New PayrollContext()
-            payPeriods = context.PayPeriods.
-                Where(Function(p) p.Month = month.Month).
-                Where(Function(p) p.Year = month.Year).
-                OrderBy(Function(p) p.PayFromDate).
-                ToList()
-        End Using
+        Dim payPeriods = _payPeriodRepository.GetByMonthYearAndPayPrequency(
+                                z_OrganizationID,
+                                month:=month.Month,
+                                year:=month.Year,
+                                payFrequencyId:=AccuPay.Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId).
+                            ToList()
 
         Dim dateFrom = payPeriods.First().PayFromDate
         Dim dateTo = payPeriods.Last().PayToDate

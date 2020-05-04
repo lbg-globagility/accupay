@@ -1,13 +1,12 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
-Imports AccuPay.Payroll
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Salaries
-Imports PayrollSys
 
 Public Class ImportSalaryForm
 
@@ -17,6 +16,10 @@ Public Class ImportSalaryForm
 
     Public Property IsSaved As Boolean
 
+    Private _employeeRepository As EmployeeRepository
+
+    Private _salaryRepository As SalaryRepository
+
     Sub New()
 
         ' This call is required by the designer.
@@ -25,6 +28,10 @@ Public Class ImportSalaryForm
         ' Add any initialization after the InitializeComponent() call.
 
         Me.IsSaved = False
+
+        _employeeRepository = New EmployeeRepository()
+
+        _salaryRepository = New SalaryRepository()
 
     End Sub
 
@@ -64,13 +71,12 @@ Public Class ImportSalaryForm
 
         Dim employeeNos = records.Select(Function(s) s.EmployeeNo).ToArray()
 
-        Dim employeeRepo = New Repositories.EmployeeRepository
-        Dim employeesss = Await employeeRepo.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
+        Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
         Using context = New PayrollContext()
             For Each record In records
 
-                Dim employee = employeesss.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
+                Dim employee = employees.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
 
                 If employee Is Nothing Then
                     record.ErrorMessage = "Employee does not exist!"
@@ -79,16 +85,13 @@ Public Class ImportSalaryForm
                 End If
 
                 If record.EffectiveFrom IsNot Nothing AndAlso
-                    record.EffectiveFrom.Value < PayrollTools.MinimumMicrosoftDate Then
+                    record.EffectiveFrom.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
                     record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
                     rejectedRecords.Add(record)
                     Continue For
                 End If
 
-                Dim lastSalary = context.Salaries.
-                    Where(Function(s) Nullable.Equals(employee.RowID, s.EmployeeID)).
-                    OrderByDescending(Function(s) s.EffectiveTo).
-                    FirstOrDefault
+                Dim lastSalary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value)
 
                 Dim doPaySSSContribution = True
 
@@ -110,6 +113,7 @@ Public Class ImportSalaryForm
                     .EffectiveFrom = record.EffectiveFrom.Value,
                     .BasicSalary = record.BasicSalary.Value,
                     .AllowanceSalary = record.AllowanceSalary,
+                    .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
                     .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
                     .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
                     .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
@@ -182,30 +186,21 @@ Public Class ImportSalaryForm
 
         Try
 
-            Using context = New PayrollContext()
-                For Each salary In _salaries
-                    salary.TotalSalary = salary.BasicSalary + salary.AllowanceSalary
+            Await _salaryRepository.SaveManyAsync(_salaries.ToList())
 
-                    context.Salaries.Add(salary)
-                Next
-
-                Await context.SaveChangesAsync()
-
-                Dim importList = New List(Of Entities.UserActivityItem)
-                For Each item In _salaries
-                    importList.Add(New Entities.UserActivityItem() With
+            Dim importList = New List(Of UserActivityItem)
+            For Each item In _salaries
+                importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(item.RowID)
                         })
-                Next
+            Next
 
-                Dim repo = New Repositories.UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, Repositories.UserActivityRepository.RecordTypeImport, importList)
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                Me.IsSaved = True
-
-            End Using
+            Me.IsSaved = True
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage("Import Salary", ex)
@@ -225,9 +220,9 @@ Public Class ImportSalaryForm
 
         Private ReadOnly _salary As Salary
 
-        Private ReadOnly _employee As Entities.Employee
+        Private ReadOnly _employee As Employee
 
-        Public Sub New(salary As Salary, employee As Entities.Employee)
+        Public Sub New(salary As Salary, employee As Employee)
             _salary = salary
             _employee = employee
         End Sub

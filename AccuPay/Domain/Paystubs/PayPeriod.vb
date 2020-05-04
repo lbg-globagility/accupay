@@ -57,13 +57,13 @@ Namespace Global.AccuPay.Entity
 
         Public ReadOnly Property IsSemiMonthly As Boolean
             Get
-                Return PayFrequencyID.Value = PayrollTools.PayFrequencySemiMonthlyId
+                Return PayFrequencyID.Value = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId
             End Get
         End Property
 
         Public ReadOnly Property IsWeekly As Boolean
             Get
-                Return PayFrequencyID.Value = PayrollTools.PayFrequencyWeeklyId
+                Return PayFrequencyID.Value = Data.Helpers.PayrollTools.PayFrequencyWeeklyId
             End Get
         End Property
 

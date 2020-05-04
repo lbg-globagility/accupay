@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -25,6 +26,12 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Private _paystubEmailRepository As PaystubEmailRepository
+
+    Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
+
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
         ' This call is required by the designer.
@@ -33,6 +40,10 @@ Public Class SelectPayslipEmployeesForm
         ' Add any initialization after the InitializeComponent() call.
         _isEmail = isEmail
         _currentPayPeriodId = currentPayPeriodId
+
+        _payPeriodRepository = New PayPeriodRepository()
+        _paystubEmailRepository = New PaystubEmailRepository()
+        _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
 
     End Sub
 
@@ -50,7 +61,7 @@ Public Class SelectPayslipEmployeesForm
         EmailStatusColumn.Visible = _isEmail
         ErrorLogMessageColumn.Visible = _isEmail
 
-        _currentPayPeriod = Await GetCurrentPayPeriod()
+        _currentPayPeriod = Await _payPeriodRepository.GetByIdAsync(_currentPayPeriodId)
 
         Await ShowEmployees()
 
@@ -66,15 +77,6 @@ Public Class SelectPayslipEmployeesForm
         End If
 
     End Sub
-
-    Private Async Function GetCurrentPayPeriod() As Task(Of PayPeriod)
-        Using context As New PayrollContext
-
-            Return Await context.PayPeriods.
-                FirstOrDefaultAsync(Function(p) p.RowID.Value = _currentPayPeriodId)
-
-        End Using
-    End Function
 
     Private Async Function ShowEmployees() As Task
 
@@ -125,101 +127,92 @@ Public Class SelectPayslipEmployeesForm
 
         If _employeeModels.Count = 0 Then Return
 
-        Using context As New PayrollContext
+        Dim paystubIds = _employeeModels.Select(Function(e) e.PaystubId).ToArray()
 
-            Dim paystubIds = _employeeModels.Select(Function(e) e.PaystubId).ToArray
+        Dim paystubEmails = Await _paystubEmailRepository.GetByPaystubIdsAsync(paystubIds)
+        Dim paystubEmailHistories = Await _paystubEmailHistoryRepository.GetByPaystubIdsAsync(paystubIds)
 
-            Dim paystubEmails = Await context.PaystubEmails.
-                                    Where(Function(p) paystubIds.Contains(p.PaystubID)).
-                                    ToListAsync
+        Dim index = 0
+        For Each employee In _employeeModels
 
-            Dim paystubEmailHistories = Await context.PaystubEmailHistories.
-                                                Where(Function(p) paystubIds.Contains(p.PaystubID)).
-                                                ToListAsync
+            Dim row = EmployeesDataGrid.Rows(index)
+            Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
 
-            Dim index = 0
-            For Each employee In _employeeModels
+            Dim history = paystubEmailHistories.
+                            FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
-                Dim row = EmployeesDataGrid.Rows(index)
-                Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
+            Dim queue = paystubEmails.
+                            OrderByDescending(Function(h) h.Created).
+                            FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
 
-                Dim history = paystubEmailHistories.
-                                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+            checkBoxCell.Style.BackColor = Color.White
+            checkBoxCell.ReadOnly = False
 
-                Dim queue = paystubEmails.
-                                OrderByDescending(Function(h) h.Created).
-                                FirstOrDefault(Function(h) h.PaystubID = employee.PaystubId)
+            employee.EmailStatus = "-"
+            employee.ErrorLogMessage = Nothing
 
-                checkBoxCell.Style.BackColor = Color.White
-                checkBoxCell.ReadOnly = False
+            If history IsNot Nothing Then
 
-                employee.EmailStatus = "-"
-                employee.ErrorLogMessage = Nothing
+                employee.IsSelected = False
+                employee.EmailStatus = PaystubEmailHistory.StatusSent
+                employee.SentDateTime = history.SentDateTime
+                employee.EmailAddress = history.EmailAddress
 
-                If history IsNot Nothing Then
+                row.DefaultCellStyle.BackColor = Color.Green
+                row.DefaultCellStyle.ForeColor = Color.White
+                checkBoxCell.Style.BackColor = Color.Black
+                checkBoxCell.ReadOnly = True
 
-                    employee.IsSelected = False
-                    employee.EmailStatus = AccuPay.Data.Entities.PaystubEmailHistory.StatusSent
-                    employee.SentDateTime = history.SentDateTime
-                    employee.EmailAddress = history.EmailAddress
+            ElseIf queue IsNot Nothing Then
 
-                    row.DefaultCellStyle.BackColor = Color.Green
-                    row.DefaultCellStyle.ForeColor = Color.White
-                    checkBoxCell.Style.BackColor = Color.Black
-                    checkBoxCell.ReadOnly = True
+                employee.IsSelected = False
+                employee.EmailStatus = queue.Status
 
-                ElseIf queue IsNot Nothing Then
-
-                    employee.IsSelected = False
-                    employee.EmailStatus = queue.Status
-
-                    Select Case employee.EmailStatus
-                        Case AccuPay.Data.Entities.PaystubEmail.StatusWaiting
-                            row.DefaultCellStyle.BackColor = Color.LightGreen
-                            row.DefaultCellStyle.ForeColor = Color.Black
-                            checkBoxCell.Style.BackColor = Color.Black
-                            checkBoxCell.ReadOnly = True
-
-                        Case AccuPay.Data.Entities.PaystubEmail.StatusProcessing
-                            row.DefaultCellStyle.BackColor = Color.YellowGreen
-                            row.DefaultCellStyle.ForeColor = Color.Black
-                            checkBoxCell.Style.BackColor = Color.Black
-                            checkBoxCell.ReadOnly = True
-
-                        Case AccuPay.Data.Entities.PaystubEmail.StatusFailed
-                            row.DefaultCellStyle.BackColor = Color.Red
-                            row.DefaultCellStyle.ForeColor = Color.White
-
-                            employee.ErrorLogMessage = queue.ErrorLogMessage
-
-                            If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
-
-                                employee.IsSelected = False
-                                checkBoxCell.Style.BackColor = Color.Black
-                                checkBoxCell.ReadOnly = True
-
-                            End If
-
-                    End Select
-                Else
-
-                    row.DefaultCellStyle.BackColor = Color.White
-                    row.DefaultCellStyle.ForeColor = Color.Black
-
-                    If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
-
-                        employee.IsSelected = False
+                Select Case employee.EmailStatus
+                    Case PaystubEmail.StatusWaiting
+                        row.DefaultCellStyle.BackColor = Color.LightGreen
+                        row.DefaultCellStyle.ForeColor = Color.Black
                         checkBoxCell.Style.BackColor = Color.Black
                         checkBoxCell.ReadOnly = True
 
-                    End If
+                    Case PaystubEmail.StatusProcessing
+                        row.DefaultCellStyle.BackColor = Color.YellowGreen
+                        row.DefaultCellStyle.ForeColor = Color.Black
+                        checkBoxCell.Style.BackColor = Color.Black
+                        checkBoxCell.ReadOnly = True
+
+                    Case PaystubEmail.StatusFailed
+                        row.DefaultCellStyle.BackColor = Color.Red
+                        row.DefaultCellStyle.ForeColor = Color.White
+
+                        employee.ErrorLogMessage = queue.ErrorLogMessage
+
+                        If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
+
+                            employee.IsSelected = False
+                            checkBoxCell.Style.BackColor = Color.Black
+                            checkBoxCell.ReadOnly = True
+
+                        End If
+
+                End Select
+            Else
+
+                row.DefaultCellStyle.BackColor = Color.White
+                row.DefaultCellStyle.ForeColor = Color.Black
+
+                If String.IsNullOrWhiteSpace(employee.EmailAddress) Then
+
+                    employee.IsSelected = False
+                    checkBoxCell.Style.BackColor = Color.Black
+                    checkBoxCell.ReadOnly = True
+
                 End If
+            End If
 
-                index += 1
+            index += 1
 
-            Next
-
-        End Using
+        Next
 
     End Function
 
@@ -261,7 +254,7 @@ Public Class SelectPayslipEmployeesForm
 
         Dim payslipCreator As New PayslipCreator(_currentPayPeriod, Convert.ToSByte(isActual))
 
-        Dim nextPayPeriod = PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
+        Dim nextPayPeriod = Data.Helpers.PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
 
         Dim employeeIds = _employeeModels.
                             Where(Function(m) m.IsSelected).
@@ -281,19 +274,17 @@ Public Class SelectPayslipEmployeesForm
 
         If employees.Count = 0 Then Return
 
-        Using context As New PayrollContext
+        Dim paystubEmails As New List(Of PaystubEmail)
 
-            For Each employee In employees
-                context.Add(New PaystubEmail() With {
+        For Each employee In employees
+            paystubEmails.Add(New PaystubEmail() With {
                     .CreatedBy = z_User,
                     .PaystubID = employee.PaystubId,
-                    .Status = AccuPay.Data.Entities.PaystubEmail.StatusWaiting
+                    .Status = PaystubEmail.StatusWaiting
                 })
+        Next
 
-                Await context.SaveChangesAsync
-            Next
-
-        End Using
+        Await _paystubEmailRepository.CreateManyAsync(paystubEmails)
 
         Await RefreshEmailStatus()
 

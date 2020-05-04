@@ -23,14 +23,14 @@ Partial Class PayrollForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.AllowanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.LoanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.BonusToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WithholdingTaxToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PaystubExperimentalToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PanelPayroll = New System.Windows.Forms.Panel()
         Me.BenchmarkPaystubToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.AllowanceToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.LoanToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.PanelPayroll = New System.Windows.Forms.Panel()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -44,6 +44,18 @@ Partial Class PayrollForm
         Me.MenuStrip1.TabIndex = 2
         Me.MenuStrip1.Text = "MenuStrip1"
         '
+        'AllowanceToolStripMenuItem
+        '
+        Me.AllowanceToolStripMenuItem.Name = "AllowanceToolStripMenuItem"
+        Me.AllowanceToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
+        Me.AllowanceToolStripMenuItem.Text = "Allowance"
+        '
+        'LoanToolStripMenuItem
+        '
+        Me.LoanToolStripMenuItem.Name = "LoanToolStripMenuItem"
+        Me.LoanToolStripMenuItem.Size = New System.Drawing.Size(50, 20)
+        Me.LoanToolStripMenuItem.Text = "Loans"
+        '
         'PayrollToolStripMenuItem
         '
         Me.PayrollToolStripMenuItem.Name = "PayrollToolStripMenuItem"
@@ -55,6 +67,7 @@ Partial Class PayrollForm
         Me.BonusToolStripMenuItem.Name = "BonusToolStripMenuItem"
         Me.BonusToolStripMenuItem.Size = New System.Drawing.Size(52, 20)
         Me.BonusToolStripMenuItem.Text = "Bonus"
+        Me.BonusToolStripMenuItem.Visible = False
         '
         'WithholdingTaxToolStripMenuItem
         '
@@ -68,6 +81,12 @@ Partial Class PayrollForm
         Me.PaystubExperimentalToolStripMenuItem.Size = New System.Drawing.Size(140, 20)
         Me.PaystubExperimentalToolStripMenuItem.Text = "Paystub (Experimental)"
         '
+        'BenchmarkPaystubToolStripMenuItem
+        '
+        Me.BenchmarkPaystubToolStripMenuItem.Name = "BenchmarkPaystubToolStripMenuItem"
+        Me.BenchmarkPaystubToolStripMenuItem.Size = New System.Drawing.Size(66, 20)
+        Me.BenchmarkPaystubToolStripMenuItem.Text = "Paystubs"
+        '
         'PanelPayroll
         '
         Me.PanelPayroll.Dock = System.Windows.Forms.DockStyle.Fill
@@ -75,24 +94,6 @@ Partial Class PayrollForm
         Me.PanelPayroll.Name = "PanelPayroll"
         Me.PanelPayroll.Size = New System.Drawing.Size(1006, 446)
         Me.PanelPayroll.TabIndex = 3
-        '
-        'AllowanceToolStripMenuItem
-        '
-        Me.AllowanceToolStripMenuItem.Name = "AllowanceToolStripMenuItem"
-        Me.AllowanceToolStripMenuItem.Size = New System.Drawing.Size(74, 20)
-        Me.AllowanceToolStripMenuItem.Text = "Allowance"
-        '
-        'LoanToolStripMenuItem
-        '
-        Me.LoanToolStripMenuItem.Name = "LoanToolStripMenuItem"
-        Me.LoanToolStripMenuItem.Size = New System.Drawing.Size(50, 20)
-        Me.LoanToolStripMenuItem.Text = "Loans"
-        '
-        'BenchmarkPaystubToolStripMenuItem
-        '
-        Me.BenchmarkPaystubToolStripMenuItem.Name = "BenchmarkPaystubToolStripMenuItem"
-        Me.BenchmarkPaystubToolStripMenuItem.Size = New System.Drawing.Size(66, 20)
-        Me.BenchmarkPaystubToolStripMenuItem.Text = "Paystubs"
         '
         'PayrollForm
         '

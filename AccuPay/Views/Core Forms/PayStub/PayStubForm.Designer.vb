@@ -331,6 +331,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3097,14 +3098,14 @@ Partial Class PayStubForm
         'PayrollSummaryDeclaredToolStripMenuItem
         '
         Me.PayrollSummaryDeclaredToolStripMenuItem.Name = "PayrollSummaryDeclaredToolStripMenuItem"
-        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryDeclaredToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryDeclaredToolStripMenuItem.Tag = "0"
         Me.PayrollSummaryDeclaredToolStripMenuItem.Text = "Declared"
         '
         'PayrollSummaryActualToolStripMenuItem
         '
         Me.PayrollSummaryActualToolStripMenuItem.Name = "PayrollSummaryActualToolStripMenuItem"
-        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.PayrollSummaryActualToolStripMenuItem.Size = New System.Drawing.Size(120, 22)
         Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
@@ -3145,18 +3146,21 @@ Partial Class PayStubForm
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.OthersToolStripMenuItem.Text = "Others"
+        Me.OthersToolStripMenuItem.Visible = False
         '
         'Include13thMonthPayToolStripMenuItem
         '
         Me.Include13thMonthPayToolStripMenuItem.Name = "Include13thMonthPayToolStripMenuItem"
         Me.Include13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.Include13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
+        Me.Include13thMonthPayToolStripMenuItem.Visible = False
         '
         'CashOutUnusedLeavesToolStripMenuItem
         '
         Me.CashOutUnusedLeavesToolStripMenuItem.Name = "CashOutUnusedLeavesToolStripMenuItem"
         Me.CashOutUnusedLeavesToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.CashOutUnusedLeavesToolStripMenuItem.Text = "Cash Out Unused Leaves"
+        Me.CashOutUnusedLeavesToolStripMenuItem.Visible = False
         '
         'RegeneratePayrollToolStripMenuItem
         '
@@ -3472,6 +3476,9 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn28.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
         Me.DataGridViewTextBoxColumn28.Visible = False
+        '
+        'ProgressTimer
+        '
         '
         'PayStubForm
         '
@@ -3812,4 +3819,5 @@ Partial Class PayStubForm
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents CostCenterReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ProgressTimer As Timer
 End Class

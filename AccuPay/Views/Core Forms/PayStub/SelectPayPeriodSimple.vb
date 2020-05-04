@@ -1,4 +1,4 @@
-﻿Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Data.Repositories
 
 Public Class SelectPayPeriodSimple
 
@@ -9,6 +9,17 @@ Public Class SelectPayPeriodSimple
     Public Property PayFromDate As Date
 
     Public Property PayToDate As Date
+
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _payPeriodRepository = New PayPeriodRepository()
+    End Sub
 
     Private Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         gridPeriods.AutoGenerateColumns = False
@@ -28,16 +39,16 @@ Public Class SelectPayPeriodSimple
     End Sub
 
     Private Async Sub LoadPeriods()
-        Using context = New PayrollContext
-            Dim periods = Await context.PayPeriods.
-                Where(Function(p) p.OrganizationID.Value = z_OrganizationID).
-                Where(Function(p) p.Year = _currentYear).
-                Where(Function(p) p.PayFrequencyID = 1).
-                ToListAsync()
 
-            Dim ascOrder = periods.OrderBy(Function(p) p.OrdinalValue).ToList()
+        Dim periods = (Await _payPeriodRepository.GetByYearAndPayPrequencyAsync(
+                                organizationId:=z_OrganizationID,
+                                year:=_currentYear,
+                                payFrequencyId:=Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId)).
+                        ToList()
 
-            Dim source = ascOrder.
+        Dim ascOrder = periods.OrderBy(Function(p) p.OrdinalValue).ToList()
+
+        Dim source = ascOrder.
                 Select(Function(p) New PeriodDataSource With {
                 .Month = $"{Format(New Date(p.Year, p.Month, 1), "MMM").ToUpper()} {If(p.IsFirstHalf, "1st half", "2nd half")}",
                 .Period = $"{p.PayFromDate.Date.ToShortDateString()} to {p.PayToDate.Date.ToShortDateString()}",
@@ -46,8 +57,7 @@ Public Class SelectPayPeriodSimple
                 .PayToDate = p.PayToDate.Date}).
                 ToList()
 
-            gridPeriods.DataSource = source
-        End Using
+        gridPeriods.DataSource = source
     End Sub
 
     Private Sub MoveYear(sender As LinkLabel, e As EventArgs) Handles linkPreviousYear.Click, linkNextYear.Click

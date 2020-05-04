@@ -4,8 +4,11 @@ Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
+Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
@@ -31,7 +34,19 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private _settings As ListOfValueCollection
 
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Private _adjustmentService As AdjustmentService
+
     Public Property IsActual As Boolean
+
+    Sub New()
+        _payPeriodRepository = New PayPeriodRepository()
+
+        _adjustmentService = New AdjustmentService()
+
+        _settings = ListOfValueCollection.Create()
+    End Sub
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
@@ -137,8 +152,6 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         Dim payrollSelector = GetPayrollSelector()
         If payrollSelector Is Nothing Then Return
-
-        _settings = ListOfValueCollection.Create()
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
 
@@ -267,8 +280,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             attendancePeriodCell.Value = $"Attendance Period: {short_dates(0)} to {short_dates(1)}"
 
-            Dim payFromNextCutOff = PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID)
-            Dim payToNextCutOff = PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID)
+            Dim payFromNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
+            Dim payToNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
 
             Dim payrollPeriodCell = worksheet.Cells(3, 1)
             Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payToNextCutOff?.PayToDate Is Nothing, "", payToNextCutOff.PayToDate.ToShortDateString)}"
@@ -357,7 +370,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                     Where(Function(a) a.Product.PartNo = productName).
                     Where(Function(a) a.Paystub.EmployeeID.Value = employeeId.Value).
                     Where(Function(a) a.Paystub.RowID.Value = ObjectUtils.ToInteger(employee("PaystubId"))).
-                    Sum(Function(a) a.PayAmount)
+                    Sum(Function(a) a.Amount)
 
             Return adjustment
 
@@ -517,7 +530,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
 #Region "Adjustment Breakdown"
 
-    Private _adjustments As List(Of IAdjustment)
+    Private _adjustments As List(Of Data.IAdjustment)
 
     Private Function GetPayrollSummaryAdjustmentBreakdownPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
         Return _settings.GetEnum("Payroll Summary Policy.AdjustmentBreakdown", PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly)
@@ -578,62 +591,37 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Public Async Function GetCurrentAdjustments(
                             payrollSummaDateSelection As PayrollSummaDateSelection,
                             Optional allEmployees As ICollection(Of DataRow) = Nothing) _
-                            As Task(Of List(Of IAdjustment))
+                            As Task(Of List(Of Data.IAdjustment))
 
-        Using context As New PayrollContext
+        Dim payPeriodFrom As PayPeriod = Nothing
+        Dim payPeriodTo As PayPeriod = Nothing
 
-            Dim payPeriodFrom As New PayPeriod
-            Dim payPeriodTo As New PayPeriod
+        If payrollSummaDateSelection.PayPeriodFromID IsNot Nothing Then
 
-            If payrollSummaDateSelection.PayPeriodFromID IsNot Nothing Then
+            payPeriodFrom = Await _payPeriodRepository.
+                                GetByIdAsync(payrollSummaDateSelection.PayPeriodFromID.Value)
+        End If
 
-                payPeriodFrom = Await context.PayPeriods.
-                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodFromID.Value).
-                                FirstOrDefaultAsync
-            End If
+        If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
 
-            If payrollSummaDateSelection.PayPeriodToID IsNot Nothing Then
+            payPeriodTo = Await _payPeriodRepository.
+                                GetByIdAsync(payrollSummaDateSelection.PayPeriodToID.Value)
+        End If
 
-                payPeriodTo = Await context.PayPeriods.
-                                Where(Function(p) p.RowID.Value = payrollSummaDateSelection.PayPeriodToID.Value).
-                                FirstOrDefaultAsync
-            End If
+        If payPeriodFrom?.PayFromDate Is Nothing OrElse payPeriodTo?.PayToDate Is Nothing Then
 
-            If payPeriodFrom?.PayFromDate Is Nothing OrElse payPeriodTo?.PayToDate Is Nothing Then
+            Throw New ArgumentException("Cannot fetch pay period data.")
 
-                Throw New ArgumentException("Cannot fetch pay period data.")
+        End If
 
-            End If
+        Dim employeeIds = GetEmployeeIds(allEmployees)
+        Dim datePeriod = New TimePeriod(payPeriodFrom.PayFromDate, payPeriodTo.PayToDate)
 
-            Dim employeeIds = GetEmployeeIds(allEmployees)
+        _adjustments = (Await _adjustmentService.
+                        GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIds, datePeriod)).
+                        ToList()
 
-            Dim adjustmentQuery = GetBaseAdjustmentQuery(context.Adjustments.Where(Function(a) a.OrganizationID.Value = z_OrganizationID), payPeriodFrom.PayFromDate, payPeriodTo.PayToDate, employeeIds)
-            Dim actualAdjustmentQuery = GetBaseAdjustmentQuery(context.ActualAdjustments.Where(Function(a) a.OrganizationID.Value = z_OrganizationID), payPeriodFrom.PayFromDate, payPeriodTo.PayToDate, employeeIds)
-
-            If allEmployees Is Nothing Then
-
-                adjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
-                actualAdjustmentQuery.Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
-
-            End If
-
-            _adjustments = New List(Of IAdjustment)(Await adjustmentQuery.ToListAsync)
-            _adjustments.AddRange(New List(Of IAdjustment)(Await actualAdjustmentQuery.ToListAsync))
-
-            Return _adjustments
-
-        End Using
-    End Function
-
-    Private Function GetBaseAdjustmentQuery(query As IQueryable(Of IAdjustment), PayFromDate As Date, PayToDate As Date, employeeIds As Decimal?()) As IQueryable(Of IAdjustment)
-
-        Return query.Include(Function(p) p.Product).
-                                Include(Function(p) p.Paystub).
-                                Include(Function(p) p.Paystub.PayPeriod).
-                                Where(Function(p) p.Paystub.PayPeriod.PayFromDate >= PayFromDate).
-                                Where(Function(p) p.Paystub.PayPeriod.PayToDate <= PayToDate).
-                                Where(Function(p) employeeIds.Contains(p.Paystub.EmployeeID))
-
+        Return _adjustments
     End Function
 
     Private Shared Function GetAdjustmentName(name As String) As String
@@ -650,15 +638,20 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     End Function
 
-    Private Function GetEmployeeIds(allEmployees As ICollection(Of DataRow)) As Decimal?()
+    Private Function GetEmployeeIds(allEmployees As ICollection(Of DataRow)) As Integer()
 
-        Dim employeeIdsArray(allEmployees.Count - 1) As Decimal?
+        Dim employeeIds As New List(Of Integer)
 
-        For index = 0 To employeeIdsArray.Count - 1
-            employeeIdsArray(index) = ObjectUtils.ToNullableDecimal(allEmployees(index)(EmployeeRowIDColumnName))
+        For index = 0 To allEmployees.Count - 1
+
+            Dim employeeId = ObjectUtils.ToNullableInteger(allEmployees(index)(EmployeeRowIDColumnName))
+
+            If employeeId Is Nothing Then Continue For
+
+            employeeIds.Add(employeeId.Value)
         Next
 
-        Return employeeIdsArray
+        Return employeeIds.ToArray()
     End Function
 
 #End Region

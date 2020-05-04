@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
+
 Public Class PayrollResultDialog
 
     Private _results As IList(Of PayrollGeneration.Result)

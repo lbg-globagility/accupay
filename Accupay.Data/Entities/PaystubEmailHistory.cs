@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("paystubemailhistory")]
-    public class PaystubEmailHistory : IPaystubEmailHistory
+    public class PaystubEmailHistory
     {
         public const string StatusSent = "SENT";
 

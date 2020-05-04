@@ -33,11 +33,11 @@ namespace AccuPay.Data.Repositories
         }
 
         // TODO: move this to service, shouldn't pass loanTypes in repository
-        public async Task SaveManyAsync(List<LoanSchedule> currentLoanSchedules, IEnumerable<Product> loanTypes)
+        public async Task SaveManyAsync(List<LoanSchedule> loanSchedules, IEnumerable<Product> loanTypes)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                foreach (var loanSchedule in currentLoanSchedules)
+                foreach (var loanSchedule in loanSchedules)
                 {
                     await SaveWithContextAsync(loanSchedule, loanTypes, context);
 

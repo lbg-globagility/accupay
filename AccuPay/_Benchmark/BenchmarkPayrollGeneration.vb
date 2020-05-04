@@ -1,10 +1,9 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
-Imports AccuPay.Loans
 
 Namespace Benchmark
 
@@ -49,7 +48,7 @@ Namespace Benchmark
                 selectedDeductions As List(Of AdjustmentInput),
                 selectedIncomes As List(Of AdjustmentInput),
                 overtimes As List(Of OvertimeInput),
-                ecola As Data.Entities.Allowance)
+                ecola As Allowance)
 
             _employee = employee
             _payrollResources = payrollResources
@@ -95,7 +94,7 @@ Namespace Benchmark
                                     selectedDeductions As List(Of AdjustmentInput),
                                     selectedIncomes As List(Of AdjustmentInput),
                                     overtimes As List(Of OvertimeInput),
-                                    ecola As Data.Entities.Allowance) As DoProcessOutput
+                                    ecola As Allowance) As DoProcessOutput
 
             Dim generator As New BenchmarkPayrollGeneration(
                                     employee,
@@ -113,8 +112,10 @@ Namespace Benchmark
                                     ecola:=ecola)
 
             Dim payrollGeneration = New PayrollGeneration(
-                                generator._employee,
-                                generator._payrollResources
+                                organizationId:=z_OrganizationID,
+                                userId:=z_User,
+                                employee:=generator._employee,
+                                resources:=generator._payrollResources
                             )
 
             Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
@@ -179,10 +180,10 @@ Namespace Benchmark
 
             If employee.IsPremiumInclusive Then
 
-                Dim workDaysThisCutOff = PayrollTools.
-                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / PayrollTools.SemiMonthlyPayPeriodsPerMonth
+                Dim workDaysThisCutOff = Data.Helpers.PayrollTools.
+                GetWorkDaysPerMonth(employee.WorkDaysPerYear) / Data.Helpers.PayrollTools.SemiMonthlyPayPeriodsPerMonth
 
-                paystub.BasicHours = workDaysThisCutOff * PayrollTools.WorkHoursPerDay
+                paystub.BasicHours = workDaysThisCutOff * Data.Helpers.PayrollTools.WorkHoursPerDay
             Else
 
                 paystub.BasicHours = paystub.RegularHours + paystub.UndertimeHours + paystub.LateHours + paystub.AbsentHours
@@ -386,6 +387,8 @@ Namespace Benchmark
 
         Private Function ComputeEcola(paystub As Paystub) As AllowanceItem
 
+            If _ecola Is Nothing Then Return Nothing
+
             Dim totalHoursWorkedForEcola = paystub.TotalWorkedHoursWithoutOvertimeAndLeave + paystub.LeaveHours
 
             If _employeeRate.Employee.IsPremiumInclusive Then
@@ -398,16 +401,18 @@ Namespace Benchmark
 
             paystub.Ecola = totalDaysWorked * If(_ecola?.Amount, 0)
 
-            Dim allowanceItem = PayrollGeneration.CreateBasicAllowanceItem(
-                                                paystub:=paystub,
-                                                payperiodId:=_currentPayPeriod.RowID,
-                                                allowanceId:=_ecola?.RowID,
-                                                product:=_ecola?.Product
-                                            )
+            Dim newAllowanceItem = AllowanceItem.Create(
+                                                    paystub:=paystub,
+                                                    product:=_ecola.Product,
+                                                    payperiodId:=_currentPayPeriod.RowID.Value,
+                                                    allowanceId:=_ecola.RowID.Value,
+                                                    organizationId:=z_OrganizationID,
+                                                    userId:=z_User
+                                                )
 
-            allowanceItem.Amount = paystub.Ecola
+            newAllowanceItem.Amount = paystub.Ecola
 
-            Return allowanceItem
+            Return newAllowanceItem
 
         End Function
 

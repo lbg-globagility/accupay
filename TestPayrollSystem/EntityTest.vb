@@ -1,4 +1,6 @@
 ﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 
 <TestFixture>
 Public Class EntityTest
@@ -35,6 +37,10 @@ Public Class EntityTest
     <Test>
     Public Sub TestEntity()
 
+        'Dim adjustment = New AdjustmentService().
+        '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
+        '                ToList()
+
         Dim date1 = New Date(2020, 5, 31)
         Dim date2 = New Date(2020, 5, 30)
 
@@ -47,15 +53,10 @@ Public Class EntityTest
         Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
 
         'for checking if we can access the accupay.data repository without error
-        Dim repo As New PaystubRepository()
-
-        Dim count = repo.List.Count
-
         Dim repo4 As New EmployeeRepository()
 
         Dim count4 = repo4.GetAllAsync(2)
 
-        Assert.IsTrue(count > 0)
         Dim branchRepo As New BranchRepository()
 
         Dim count2 = branchRepo.GetAll().Count

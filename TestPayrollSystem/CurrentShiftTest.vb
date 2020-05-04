@@ -1,6 +1,7 @@
 ﻿Option Strict On
-Imports AccuPay
-Imports AccuPay.Entity
+
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 
 <TestFixture>
 Public Class CurrentShiftTest
@@ -56,10 +57,10 @@ Public Class CurrentShiftTest
         Dim currentShift = New CurrentShift(shift, currentDay)
 
         Dim correctStart = DateTime.Parse("2017-01-02 00:00")
-        Assert.AreEqual(correctStart, CurrentShift.BreaktimeStart)
+        Assert.AreEqual(correctStart, currentShift.BreaktimeStart)
 
         Dim correctEnd = DateTime.Parse("2017-01-02 01:00")
-        Assert.AreEqual(correctEnd, CurrentShift.BreaktimeEnd)
+        Assert.AreEqual(correctEnd, currentShift.BreaktimeEnd)
     End Sub
 
 End Class
