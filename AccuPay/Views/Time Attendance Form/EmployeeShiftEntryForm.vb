@@ -312,21 +312,19 @@ Public Class EmployeeShiftEntryForm
     End Sub
 
     Private Sub LoadShifts()
-        Using context = New PayrollContext()
-            Dim shifts = _shiftRepository.GetAll(z_OrganizationID).
-                            OrderBy(Function(s) s.TimeFrom).
-                            ThenBy(Function(s) s.TimeTo).
-                            ToList()
+        Dim shifts = _shiftRepository.GetAll(z_OrganizationID).
+                        OrderBy(Function(s) s.TimeFrom).
+                        ThenBy(Function(s) s.TimeTo).
+                        ToList()
 
-            _shiftModels = shifts.
+        _shiftModels = shifts.
                 Select(Function(s) New ShiftModel(s)).
                 ToList()
 
-            Dim emptyShiftModel = New ShiftModel(Nothing)
-            _shiftModels.Insert(0, emptyShiftModel)
+        Dim emptyShiftModel = New ShiftModel(Nothing)
+        _shiftModels.Insert(0, emptyShiftModel)
 
-            cboshiftlist.DataSource = _shiftModels
-        End Using
+        cboshiftlist.DataSource = _shiftModels
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click

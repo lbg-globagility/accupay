@@ -164,6 +164,8 @@ namespace AccuPay.Data.Repositories
 
             public void Dispose()
             {
+                // TODO: use a standard code from the internet for disposing IDisposable objects
+                // and to other repository with builder pattern like User
                 _context.Dispose();
             }
 

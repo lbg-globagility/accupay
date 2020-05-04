@@ -10,12 +10,12 @@ namespace AccuPay.Data.Repositories
 {
     public class PaystubRepository
     {
-        public class CompositeKey
+        public class EmployeeCompositeKey
         {
             public int EmployeeId { get; set; }
             public int PayPeriodId { get; set; }
 
-            public CompositeKey(int employeeId, int payPeriodId)
+            public EmployeeCompositeKey(int employeeId, int payPeriodId)
             {
                 EmployeeId = employeeId;
 
@@ -23,7 +23,25 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(CompositeKey key, int userId)
+        public class DateCompositeKey
+        {
+            public int OrganizationId { get; set; }
+            public DateTime PayFromDate { get; set; }
+            public DateTime PayToDate { get; set; }
+
+            public DateCompositeKey(int organizationId, DateTime payFromDate, DateTime payToDate)
+            {
+                OrganizationId = organizationId;
+
+                PayFromDate = payFromDate;
+
+                PayToDate = payToDate;
+            }
+        }
+
+        #region CRUD
+
+        public async Task DeleteAsync(EmployeeCompositeKey key, int userId)
         {
             int? paystubId = null;
 
@@ -125,9 +143,11 @@ namespace AccuPay.Data.Repositories
             context.Paystubs.Remove(paystub);
         }
 
+        #endregion CRUD
+
         #region Queries
 
-        public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(CompositeKey key)
+        public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(EmployeeCompositeKey key)
         {
             using (var context = new PayrollContext())
             {
@@ -163,12 +183,40 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<Paystub>> GetAllWithEmployeeAsync(DateCompositeKey key)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Paystubs.
+                                Where(x => x.PayFromdate == key.PayFromDate).
+                                Where(x => x.PayToDate == key.PayToDate).
+                                Where(x => x.OrganizationID == key.OrganizationId).
+                                ToListAsync();
+            }
+        }
+
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
             using (var context = new PayrollContext())
             {
                 return await context.Paystubs.
                                 Include(x => x.Employee).
+                                Where(x => x.PayPeriodID == payPeriodId).
+                                ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Get a list of paystub by pay period ID including employee, position and division details.
+        /// </summary>
+        /// <param name="payPeriodId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAsync(int payPeriodId)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Paystubs.
+                                Include(x => x.Employee.Position.Division).
                                 Where(x => x.PayPeriodID == payPeriodId).
                                 ToListAsync();
             }

@@ -287,12 +287,12 @@ Public Class PaystubView
         RaiseEvent ToggleActual()
     End Sub
 
-    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+    Private Async Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
         Dim dateFrom As Date = New Date(2017, 1, 1)
         Dim dateTo As Date = New Date(2017, 1, 15)
 
         Dim exporter = New ExportBankFile(dateFrom, dateTo)
-        exporter.Extract()
+        Await exporter.Extract()
     End Sub
 
     Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click
