@@ -308,7 +308,9 @@ Public Class UsersForm
         If isNew Then
             Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
-                SetWarning(txtUserName, "User ID Already exist.")
+                Dim userIDErrorMessage = "User ID Already exist."
+                SetWarning(txtUserName, userIDErrorMessage)
+                myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
                 enableSaveButton()
                 Return
             End If
