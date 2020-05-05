@@ -28,6 +28,7 @@ Namespace Global.AccuPay.Entity
 
         Public Property EmployeeID As Integer?
 
+        <NotMapped>
         Public Property TimeEntryID As Integer?
 
         Public Property PayFromdate As Date
