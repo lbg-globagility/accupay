@@ -282,6 +282,16 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<IEnumerable<Employee>> GetByBranchAsync(int branchId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                                Filter(x => x.BranchID == branchId).
+                                ToListAsync();
+            }
+        }
+
         #endregion List of entities
 
         #region Single entity
