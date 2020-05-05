@@ -1,6 +1,6 @@
 
 SELECT
-CONCAT('UPDATE listofval SET ParentLIC=\'', l.ParentLIC, '\' WHERE DisplayValeu=\'', l.DisplayValue, '\' AND `Type`=\'', l.`Type`, '\';') `Result`
+CONCAT('UPDATE listofval SET ParentLIC=\'', l.ParentLIC, '\' WHERE DisplayValue=\'', l.DisplayValue, '\' AND `Type`=\'', l.`Type`, '\';') `Result`
 
 FROM listofval l
 WHERE l.`Type` LIKE '%salut%'

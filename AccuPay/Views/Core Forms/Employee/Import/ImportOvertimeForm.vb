@@ -205,6 +205,8 @@ Public Class ImportOvertimeForm
 
             End Function)
 
+        Me.Cursor = Cursors.Default
+
     End Sub
 
     Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
