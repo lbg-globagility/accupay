@@ -1,5 +1,7 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
+
 Public Class TimeEntryProgressDialog
 
     Private _generator As TimeEntryGenerator

@@ -1,13 +1,19 @@
-﻿Imports AccuPay.Data.Enums
-Imports AccuPay.Utilities
+﻿Option Strict On
 
+Imports AccuPay.Data
+Imports AccuPay.Data.Enums
+
+''' <summary>
+''' Anemic implementation of ILeaveLedgerReportModel just for Crystal Report data source
+''' </summary>
 Public Class LeaveLedgerReportModel
+    Implements ILeaveLedgerReportModel
 
-    Public Property EmployeeNumber As String
+    Public ReadOnly Property EmployeeNumber As String Implements ILeaveLedgerReportModel.EmployeeNumber
 
-    Public Property FullName As String
+    Public ReadOnly Property FullName As String Implements ILeaveLedgerReportModel.FullName
 
-    Public Property LeaveType As LeaveType
+    Public ReadOnly Property LeaveType As LeaveType Implements ILeaveLedgerReportModel.LeaveType
 
     Sub New(employeeNumber As String,
             fullName As String,
@@ -22,7 +28,7 @@ Public Class LeaveLedgerReportModel
         Me.AvailedLeave = availedLeave
     End Sub
 
-    Public ReadOnly Property LeaveTypeDescription As String
+    Public ReadOnly Property LeaveTypeDescription As String Implements ILeaveLedgerReportModel.LeaveTypeDescription
         Get
             Select Case LeaveType
                 Case LeaveType.Sick
@@ -36,47 +42,29 @@ Public Class LeaveLedgerReportModel
 
     End Property
 
-    Private _beginningBalance As Decimal
+    Public ReadOnly Property BeginningBalance() As Decimal Implements ILeaveLedgerReportModel.BeginningBalance
 
-    Public Property BeginningBalance() As Decimal
+    Public ReadOnly Property AvailedLeave() As Decimal Implements ILeaveLedgerReportModel.AvailedLeave
+
+    Public ReadOnly Property BeginningBalanceInDays As Decimal Implements ILeaveLedgerReportModel.BeginningBalanceInDays
         Get
-            Return _beginningBalance
-        End Get
-        Set(ByVal value As Decimal)
-            _beginningBalance = AccuMath.CommercialRound(value)
-        End Set
-    End Property
-
-    Private _availedLeave As Decimal
-
-    Public Property AvailedLeave() As Decimal
-        Get
-            Return _availedLeave
-        End Get
-        Set(ByVal value As Decimal)
-            _availedLeave = AccuMath.CommercialRound(value)
-        End Set
-    End Property
-
-    Public ReadOnly Property BeginningBalanceInDays As Decimal
-        Get
-            Return BeginningBalance / PayrollTools.WorkHoursPerDay
+            Return BeginningBalance / Data.Helpers.PayrollTools.WorkHoursPerDay
         End Get
     End Property
 
-    Public ReadOnly Property AvailedLeaveInDays As Decimal
+    Public ReadOnly Property AvailedLeaveInDays As Decimal Implements ILeaveLedgerReportModel.AvailedLeaveInDays
         Get
-            Return AvailedLeave / PayrollTools.WorkHoursPerDay
+            Return AvailedLeave / Data.Helpers.PayrollTools.WorkHoursPerDay
         End Get
     End Property
 
-    Public ReadOnly Property EndingBalance As Decimal
+    Public ReadOnly Property EndingBalance As Decimal Implements ILeaveLedgerReportModel.EndingBalance
         Get
             Return BeginningBalance - AvailedLeave
         End Get
     End Property
 
-    Public ReadOnly Property EndingBalanceInDays As Decimal
+    Public ReadOnly Property EndingBalanceInDays As Decimal Implements ILeaveLedgerReportModel.EndingBalanceInDays
         Get
             Return EndingBalance / 8
         End Get

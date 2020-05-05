@@ -15,6 +15,8 @@ Public Class AddBranchForm
 
     Private _calendarRepository As CalendarRepository
 
+    Private _employeeRepository As EmployeeRepository
+
     Private _branches As IEnumerable(Of Branch)
 
     Private _calendars As IEnumerable(Of PayCalendar)
@@ -28,6 +30,19 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _branchRepository = New BranchRepository()
+
+        _calendarRepository = New CalendarRepository()
+
+        _employeeRepository = New EmployeeRepository()
+    End Sub
+
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.HasChanges = False
@@ -35,10 +50,6 @@ Public Class AddBranchForm
         Me.LastAddedBranchId = Nothing
 
         ShowCalendar()
-
-        _branchRepository = New BranchRepository()
-
-        _calendarRepository = New CalendarRepository()
 
         Await RefreshForm()
 
@@ -170,6 +181,13 @@ Public Class AddBranchForm
         If branchId Is Nothing Then
 
             MessageBoxHelper.ErrorMessage("No branch selected.")
+            Return
+
+        End If
+
+        If (Await _employeeRepository.GetByBranchAsync(branchId.Value)).Any() Then
+
+            MessageBoxHelper.ErrorMessage("Branch already has employee therefore cannot be deleted.")
             Return
 
         End If

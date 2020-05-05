@@ -1,8 +1,10 @@
-﻿Imports System.Collections.ObjectModel
+﻿Option Strict On
+
+Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Helpers
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 Imports MySql.Data.MySqlClient
 
 Public Class PayrollSummaDateSelection
@@ -12,6 +14,16 @@ Public Class PayrollSummaDateSelection
     Private _showLoanType As Boolean = False
 
     Private _loanTypeId As Integer?
+
+    Dim yearnow As Integer = CDate(dbnow).Year
+
+    Dim numofweekdays As Integer = 0
+
+    Dim numofweekends As Integer = 0
+
+    Dim paypFrom As Object = Nothing
+
+    Dim paypTo As Object = Nothing
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
@@ -157,7 +169,7 @@ Public Class PayrollSummaDateSelection
             products.Insert(0, New Product() With {.RowID = noRowId, .PartNo = "All"})
             While Await reader.ReadAsync()
                 Dim partNo = reader.GetValue(Of String)("PartNo")
-                Dim rowId = reader.GetValue(Of String)("RowID")
+                Dim rowId = reader.GetValue(Of Integer)("RowID")
 
                 Dim product = New Product() With {
                     .PartNo = partNo,
@@ -171,15 +183,13 @@ Public Class PayrollSummaDateSelection
         Return products
     End Function
 
-    '**********************
-    Dim yearnow As Integer = CDate(dbnow).Year
-
     Private Async Sub PayrollSummaDateSelection_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         DateFromLabel.Text = ""
         DateToLabel.Text = ""
@@ -189,9 +199,15 @@ Public Class PayrollSummaDateSelection
     Sub VIEW_payp(Optional param_Date As Object = Nothing,
                   Optional PayFreqType As Object = Nothing)
 
+        If param_Date Is Nothing Then
+            param_Date = DBNull.Value
+        Else
+            param_Date = param_Date.ToString() & "-01-01"
+        End If
+
         Dim params = New Object() {
             orgztnID,
-            If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
+            param_Date,
             "1",
             PayFreqType
         }
@@ -288,14 +304,6 @@ Public Class PayrollSummaDateSelection
         End If
     End Sub
 
-    Dim numofweekdays As Integer = 0
-
-    Dim numofweekends As Integer = 0
-
-    Dim paypFrom As Object = Nothing
-
-    Dim paypTo As Object = Nothing
-
     Private Sub dgvpayperiod_SelectionChanged(sender As Object, e As EventArgs) Handles dgvpayperiod.SelectionChanged
         If dgvpayperiod.RowCount <> 0 Then
             paypFrom = dgvpayperiod.CurrentRow.Cells("Column2").Value
@@ -357,14 +365,14 @@ Public Class PayrollSummaDateSelection
         End If
 
         If dgvpayperiod.RowCount <> 0 Then
-            Me.DialogResult = Windows.Forms.DialogResult.OK
+            Me.DialogResult = DialogResult.OK
         Else
-            Me.DialogResult = Windows.Forms.DialogResult.Cancel
+            Me.DialogResult = DialogResult.Cancel
         End If
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        Me.DialogResult = Windows.Forms.DialogResult.Cancel
+        Me.DialogResult = DialogResult.Cancel
         Me.Close()
     End Sub
 
@@ -386,10 +394,6 @@ Public Class PayrollSummaDateSelection
             cboStringParameter.SelectedIndex = -1
         End If
     End Sub
-
-    Dim DefaultFontStyle As Font = New System.Drawing.Font("Segoe UI Semibold", 15.75!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-
-    Dim faultFontStyle As Font = New System.Drawing.Font("Segoe UI Semilight", 15.75!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Private Sub SemiMonthlyTab_Enter(sender As Object, e As EventArgs) Handles SemiMonthlyTab.Enter
         VIEW_payp(, SemiMonthlyTab.Text.Trim)
@@ -418,7 +422,7 @@ Public Class PayrollSummaDateSelection
     End Class
 
     Private Sub cboxLoanType_SelectedIndexChanged(sender As Object, e As EventArgs)
-        _loanTypeId = cboxLoanType.SelectedValue
+        _loanTypeId = CInt(cboxLoanType.SelectedValue)
     End Sub
 
 End Class

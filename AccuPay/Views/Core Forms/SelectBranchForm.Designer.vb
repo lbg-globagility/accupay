@@ -22,21 +22,21 @@ Partial Class SelectBranchForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.OkButton = New System.Windows.Forms.Button()
         Me.BranchComboBox = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.CancelButton.Location = New System.Drawing.Point(197, 67)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 35)
-        Me.CancelButton.TabIndex = 6
-        Me.CancelButton.Text = "Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CancelDialogButton.Location = New System.Drawing.Point(197, 67)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 35)
+        Me.CancelDialogButton.TabIndex = 6
+        Me.CancelDialogButton.Text = "Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'OkButton
         '
@@ -63,10 +63,9 @@ Partial Class SelectBranchForm
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.CancelButton = Me.CancelButton
         Me.ClientSize = New System.Drawing.Size(284, 113)
         Me.Controls.Add(Me.BranchComboBox)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.OkButton)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
         Me.KeyPreview = True
@@ -79,7 +78,7 @@ Partial Class SelectBranchForm
 
     End Sub
 
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents OkButton As Button
     Friend WithEvents BranchComboBox As ComboBox
 End Class

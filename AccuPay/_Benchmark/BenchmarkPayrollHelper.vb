@@ -74,7 +74,7 @@ Namespace Benchmark
 
         End Function
 
-        Public Shared Function GetTotalOvertimePay(paystub As Entity.Paystub) As Decimal
+        Public Shared Function GetTotalOvertimePay(paystub As Paystub) As Decimal
 
             Return paystub.OvertimePay +
                 paystub.NightDiffPay +

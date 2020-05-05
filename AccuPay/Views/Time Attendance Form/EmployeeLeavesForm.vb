@@ -11,23 +11,52 @@ Public Class EmployeeLeavesForm
 
     Private Const FormEntityName As String = "Leave"
 
-    Private _employees As New List(Of Employee)
-
-    Private _allEmployees As New List(Of Employee)
-
     Private _currentLeave As Leave
 
-    Private _currentLeaves As New List(Of Leave)
+    Private _employees As List(Of Employee)
 
-    Private _changedLeaves As New List(Of Leave)
+    Private _allEmployees As List(Of Employee)
 
-    Private _leaveRepository As New LeaveRepository()
+    Private _currentLeaves As List(Of Leave)
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _changedLeaves As List(Of Leave)
 
-    Private _productRepository As New ProductRepository()
+    Private _leaveRepository As LeaveRepository
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentLeaves = New List(Of Leave)
+
+        _changedLeaves = New List(Of Leave)
+
+        _leaveRepository = New LeaveRepository()
+
+        _employeeRepository = New EmployeeRepository()
+
+        _productRepository = New ProductRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+    End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -39,11 +68,11 @@ Public Class EmployeeLeavesForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(SearchTextBox.Text.ToLower())
@@ -97,12 +126,19 @@ Public Class EmployeeLeavesForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
         Else
             EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeLeaves()
+
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -129,6 +165,21 @@ Public Class EmployeeLeavesForm
 
     Private Sub ResetForm()
 
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'leave grid view
+        RemoveHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
+        LeaveGridView.DataSource = Nothing
+
+        AddHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
+        'leave details
         Me._currentLeave = Nothing
 
         DetailsTabLayout.Enabled = False
@@ -159,7 +210,13 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -189,13 +246,17 @@ Public Class EmployeeLeavesForm
             Me._changedLeaves(index).EndTime = Me._currentLeaves(index).EndTime
         Next
 
-        LeaveListBindingSource.DataSource = Me._currentLeaves
-
-        LeaveGridView.DataSource = LeaveListBindingSource
+        PopulateLeaveGridView()
 
     End Function
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowEmployeeLeaves()
+
+    End Sub
+
+    Private Async Function ShowEmployeeLeaves() As Task
 
         ResetForm()
 
@@ -219,8 +280,7 @@ Public Class EmployeeLeavesForm
                                             ToString()
 
         Await LoadLeaves(currentEmployee)
-
-    End Sub
+    End Function
 
     Private Function GetSelectedLeave() As Leave
         Return CType(LeaveGridView.CurrentRow.DataBoundItem, Leave)
@@ -379,8 +439,8 @@ Public Class EmployeeLeavesForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 
@@ -422,8 +482,13 @@ Public Class EmployeeLeavesForm
 
     End Sub
 
-    Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
-        ResetForm()
+    Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowLeaveDetails()
+
+    End Sub
+
+    Private Sub ShowLeaveDetails()
 
         If LeaveGridView.CurrentRow Is Nothing Then Return
 
@@ -503,9 +568,21 @@ Public Class EmployeeLeavesForm
             Me._currentLeaves(index).EndTime = Me._changedLeaves(index).EndTime
         Next
 
+        PopulateLeaveGridView()
+    End Sub
+
+    Private Sub PopulateLeaveGridView()
+
+        RemoveHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
         LeaveListBindingSource.DataSource = Me._currentLeaves
 
         LeaveGridView.DataSource = LeaveListBindingSource
+
+        ShowLeaveDetails()
+
+        AddHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click

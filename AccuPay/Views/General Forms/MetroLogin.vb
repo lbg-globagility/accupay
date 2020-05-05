@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Data.Enums
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
@@ -107,133 +108,80 @@ Public Class MetroLogin
 
         If e_asc = 13 Then
 
-            btnlogin_Click(btnlogin, New EventArgs)
+            Login_Click(btnlogin, New EventArgs)
 
         End If
 
     End Sub
 
-    Async Sub btnlogin_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
-
-        btnlogin.Enabled = False
-
-        Dim n_edUserID As New EncryptString(txtbxUserID.Text)
-
-        Dim n_edPWord As New EncryptString(txtbxPword.Text)
-
-        Dim n_ReadSQLFunction As New ReadSQLFunction("user_improper_out",
-                                                     "return_val",
-                                                     orgztnID,
-                                                     n_edUserID.ResultValue,
-                                                     n_edPWord.ResultValue) 'New EncryptData(txtbxPword.Text).ResultValue
-
-        z_User = UserAuthentication(n_edPWord.ResultValue)
-
-        Console.WriteLine(DecryptData("¯õæøøüô÷"))
-
-        If z_User > 0 Then
-
-            Try
-
-                If cbxorganiz.SelectedIndex = -1 Then
-
-                    WarnBalloon("Please select a company.", "Invalid company", btnlogin, btnlogin.Width - 18, -69)
-
-                    cbxorganiz.Focus()
-                    btnlogin.Enabled = True
-                    Exit Sub
-
-                End If
-
-                err_count = 0 'resets the failed log in attempt count
-
-                Dim userFNameLName = EXECQUER("SELECT CONCAT(COALESCE(FirstName,'.'),',',COALESCE(LastName,'.')) FROM user WHERE RowID='" & z_User & "';")
-
-                Dim splitFNameLName = Split(userFNameLName, ",")
-
-                userFirstName = splitFNameLName(0).ToString.Replace(".", "")
-
-                If userFirstName = "" Then
-                Else
-                    userFirstName = StrConv(userFirstName, VbStrConv.ProperCase)
-
-                End If
-
-                userLastName = splitFNameLName(1).ToString.Replace(".", "")
-
-                If userLastName = "" Then
-                Else
-                    userLastName = StrConv(userLastName, VbStrConv.ProperCase)
-
-                End If
-
-                If dbnow = Nothing Then
-
-                    dbnow = EXECQUER(CURDATE_MDY)
-
-                End If
-
-                If cbxorganiz.SelectedIndex <> -1 Then
-
-                    numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
-
-                    If freq <> orgztnID Then
-                        freq = orgztnID
-
-                    End If
-
-                    position_view_table =
+    Private Async Sub Login_Click(sender As Object, e As EventArgs) Handles btnlogin.Click
+        Dim enableButton = Sub()
+                               btnlogin.Enabled = True
+                           End Sub
+        Dim disableButton = Sub()
+                                btnlogin.Enabled = False
+                            End Sub
+        Dim showError = Sub()
+                            err_count += 1 'increments the failed log in attempt
+                            WarnBalloon("Please input your correct credentials.", "Invalid credentials", btnlogin, btnlogin.Width - 18, -69)
+                            enableButton()
+                        End Sub
+        Dim loadUserPrivileges = Sub(userId As Integer, organizationId As Integer)
+                                     position_view_table =
                         New SQLQueryToDatatable(String.Concat("SELECT pv.*",
                                                               " FROM position_view pv",
-                                                              " INNER JOIN `user` u ON u.RowID=", z_User,
+                                                              " INNER JOIN `user` u ON u.RowID=", userId,
                                                               " INNER JOIN `position` pos ON pos.RowID=u.PositionID",
                                                               " INNER JOIN `position` p ON p.PositionName=pos.PositionName AND p.OrganizationID=pv.OrganizationID",
                                                               " WHERE pv.PositionID=p.RowID",
-                                                              " AND pv.OrganizationID='", orgztnID, "';")).ResultTable
+                                                              " AND pv.OrganizationID='", organizationId, "';")).ResultTable
 
-                    Dim i = position_view_table.Rows.Count
+                                 End Sub
+        disableButton()
 
-                End If
+        Dim username As String = New EncryptString(txtbxUserID.Text).ResultValue
+        Dim passkey As String = New EncryptString(txtbxPword.Text).ResultValue
 
-                z_postName = EXECQUER("SELECT p.PositionName FROM user u INNER JOIN position p ON p.RowID=u.PositionID WHERE u.RowID='" & z_User & "';")
+        Dim user = Await _userRepository.GetByUsernameWithPositionAsync(username)
 
-                If orgztnID <> Nothing Then
-
-                    If Await CheckIfAuthorizedByUserLevel() Then
-                        MDIPrimaryForm.Show()
-                    End If
-
-                    'Dim n_MDIPrimaryForm As New MDIPrimaryForm
-                    'n_MDIPrimaryForm.Show()
-                End If
-            Catch ex As Exception
-
-                MsgBox(getErrExcptn(ex, Me.Name))
-
-            End Try
-        Else
-            WarnBalloon("Please input your correct credentials.", "Invalid credentials", btnlogin, btnlogin.Width - 18, -69)
-
-            txtbxUserID.Focus()
-
-            err_count += 1 'increments the failed log in attempt
-
-            'If (err_log_limit > err_count) = False Then 'failed log in attempt reaches its limit
-            '    'prompts the log in failure
-            '    MessageBox.Show("You have reached the failed login attempts." & Environment.NewLine & "Sorry, please retry later.",
-            '                    "Failed login",
-            '                    MessageBoxButtons.OK,
-            '                    MessageBoxIcon.Stop)
-            '    'then exits the application
-            '    Me.Close()
-
-            'End If
-
+        If user Is Nothing Then
+            showError()
+            Return
         End If
-        btnlogin.Enabled = True
+
+        Dim passwordMatch = user.Password = passkey
+        If Not passwordMatch Then
+            showError()
+            Return
+        End If
+
+        If cbxorganiz.SelectedIndex = -1 Then
+            WarnBalloon("Please select a company.", "Invalid company", btnlogin, btnlogin.Width - 18, -69)
+            cbxorganiz.Focus()
+            enableButton()
+            Return
+        End If
+
+        err_count = 0
+
+        z_User = user.RowID.Value
+
+        loadUserPrivileges(z_User, z_OrganizationID)
+
+        userFirstName = user.FirstName
+        z_postName = user.Position.Name
+
+        If dbnow Is Nothing Then dbnow = EXECQUER(CURDATE_MDY)
+        If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
+
+        If Await CheckIfAuthorizedByUserLevel() Then
+            MDIPrimaryForm.Show()
+        End If
+
+        enableButton()
     End Sub
 
-    Private Async Function CheckIfAuthorizedByUserLevel() As Threading.Tasks.Task(Of Boolean)
+    Private Async Function CheckIfAuthorizedByUserLevel() As Task(Of Boolean)
         Dim user = Await _userRepository.GetByIdAsync(z_User)
 
         If user Is Nothing Then

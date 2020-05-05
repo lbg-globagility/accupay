@@ -27,7 +27,7 @@ Partial Class NewCalendarDialog
         Me.CopyCalendarComboBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.CreateButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'NameTextbox
@@ -71,21 +71,21 @@ Partial Class NewCalendarDialog
         Me.CreateButton.Text = "Create Calendar"
         Me.CreateButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelFormButton
         '
-        Me.CancelButton.Location = New System.Drawing.Point(200, 128)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(80, 24)
-        Me.CancelButton.TabIndex = 5
-        Me.CancelButton.Text = "Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Location = New System.Drawing.Point(200, 128)
+        Me.CancelDialogButton.Name = "CancelFormButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(80, 24)
+        Me.CancelDialogButton.TabIndex = 5
+        Me.CancelDialogButton.Text = "Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'NewCalendarDialog
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(288, 164)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.CreateButton)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.CopyCalendarComboBox)
@@ -105,5 +105,5 @@ Partial Class NewCalendarDialog
     Friend WithEvents CopyCalendarComboBox As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents CreateButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
 End Class

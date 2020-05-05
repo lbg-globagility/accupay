@@ -50,7 +50,7 @@ Public Class NewCalendarDialog
         DialogResult = DialogResult.OK
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         DialogResult = DialogResult.Cancel
     End Sub
 

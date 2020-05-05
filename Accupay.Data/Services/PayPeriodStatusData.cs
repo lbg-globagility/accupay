@@ -38,7 +38,7 @@ namespace AccuPay.Data.Services
                         Where(p => p.PayFrequencyID == (int)payFrequencyId).
                         Where(p => !p.IsClosed).
                         Where(p => context.Paystubs.
-                                    Where(s => s.PayPeriodID == p.RowID.Value).
+                                    Where(s => s.PayPeriodID == p.RowID).
                                     Any()).
                         ToList();
             }

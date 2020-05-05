@@ -23,10 +23,10 @@ Partial Class EmployeeLeavesForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeLeavesForm))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(EmployeeLeavesForm))
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
@@ -41,6 +41,7 @@ Partial Class EmployeeLeavesForm
         Me.CloseButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.ImportToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.pnlSearch = New System.Windows.Forms.Panel()
         Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
@@ -113,7 +114,6 @@ Partial Class EmployeeLeavesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.LeaveListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
-        Me.UserActivityToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
@@ -271,6 +271,14 @@ Partial Class EmployeeLeavesForm
         Me.ImportToolStripButton.Size = New System.Drawing.Size(63, 22)
         Me.ImportToolStripButton.Text = "Import"
         Me.ImportToolStripButton.ToolTipText = "Import loans"
+        '
+        'UserActivityToolStripButton
+        '
+        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
+        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'pnlSearch
         '
@@ -1015,14 +1023,6 @@ Partial Class EmployeeLeavesForm
         '
         'LeaveListBindingSource
         '
-        '
-        'UserActivityToolStripButton
-        '
-        Me.UserActivityToolStripButton.Image = CType(resources.GetObject("UserActivityToolStripButton.Image"), System.Drawing.Image)
-        Me.UserActivityToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivityToolStripButton.Name = "UserActivityToolStripButton"
-        Me.UserActivityToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityToolStripButton.Text = "User Activity"
         '
         'EmployeeLeavesForm
         '

@@ -164,6 +164,8 @@ namespace AccuPay.Data.Repositories
 
             public void Dispose()
             {
+                // TODO: use a standard code from the internet for disposing IDisposable objects
+                // and to other repository with builder pattern like User
                 _context.Dispose();
             }
 
@@ -260,12 +262,12 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(List<int?> employeeIdList)
+        public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
         {
             using (var builder = new EmployeeBuilder())
             {
                 return await builder.
-                    Filter(x => employeeIdList.Contains(x.RowID)).
+                    Filter(x => employeeIdList.Contains(x.RowID.Value)).
                     ToListAsync();
             }
         }
@@ -276,6 +278,16 @@ namespace AccuPay.Data.Repositories
             {
                 return await builder.
                                 Filter(x => x.PositionID == positionId).
+                                ToListAsync();
+            }
+        }
+
+        public async Task<IEnumerable<Employee>> GetByBranchAsync(int branchId)
+        {
+            using (var builder = new EmployeeBuilder())
+            {
+                return await builder.
+                                Filter(x => x.BranchID == branchId).
                                 ToListAsync();
             }
         }

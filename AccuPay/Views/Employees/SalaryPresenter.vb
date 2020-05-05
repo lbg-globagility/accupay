@@ -1,11 +1,9 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Entity
 Imports AccuPay.Utilities
-Imports Microsoft.EntityFrameworkCore
-Imports PayrollSys
 
 Namespace Global.AccuPay.Views.Employees
 
@@ -15,11 +13,17 @@ Namespace Global.AccuPay.Views.Employees
 
         Private WithEvents _view As SalaryTab2
 
-        Private _employee As Data.Entities.Employee
+        Private _employee As Employee
 
         Private _philHealthPolicy As PhilHealthPolicy
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
+
+        Private _philHealthBracketRepository As PhilHealthBracketRepository
+
+        Private _salaryRepository As SalaryRepository
+
+        Private _socialSecurityBracketRepository As SocialSecurityBracketRepository
 
         Private _salaries As IList(Of Salary)
 
@@ -27,6 +31,12 @@ Namespace Global.AccuPay.Views.Employees
 
         Public Sub New(view As SalaryTab2)
             _view = view
+
+            _philHealthBracketRepository = New PhilHealthBracketRepository()
+
+            _salaryRepository = New SalaryRepository()
+
+            _socialSecurityBracketRepository = New SocialSecurityBracketRepository()
         End Sub
 
         Private Sub OnLoad() Handles _view.Init
@@ -35,7 +45,7 @@ Namespace Global.AccuPay.Views.Employees
             _view.ChangeMode(SalaryTab2.Mode.Disabled)
         End Sub
 
-        Private Sub OnSelectedEmployee(employee As Data.Entities.Employee) Handles _view.SelectEmployee
+        Private Sub OnSelectedEmployee(employee As Employee) Handles _view.SelectEmployee
             _employee = employee
             _view.ShowEmployee(employee)
             LoadSalaries()
@@ -68,44 +78,39 @@ Namespace Global.AccuPay.Views.Employees
             End If
         End Sub
 
-        Private Sub OnDelete() Handles _view.DeleteSalary
-            Using context = New PayrollContext()
-                context.Salaries.Attach(_currentSalary)
-                context.Salaries.Remove(_currentSalary)
-                context.SaveChanges()
-            End Using
+        Private Async Sub OnDelete() Handles _view.DeleteSalary
+
+            If _currentSalary?.RowID Is Nothing Then Return
+
+            Await _salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
             _currentSalary = Nothing
             LoadSalaries()
         End Sub
 
-        Private Sub OnSave() Handles _view.SaveSalary
-            Using context = New PayrollContext()
-                Try
-                    Dim effectiveTo = _view.EffectiveTo
+        Private Async Sub OnSave() Handles _view.SaveSalary
+            Try
+                Dim effectiveTo = _view.EffectiveTo
 
-                    With _currentSalary
-                        .BasicSalary = _view.BasicSalary
-                        .AllowanceSalary = _view.AllowanceSalary
-                        .TotalSalary = (.BasicSalary + .AllowanceSalary)
-                        .EffectiveFrom = _view.EffectiveFrom
-                        .EffectiveTo = effectiveTo
-                        .PhilHealthDeduction = If(_view.PhilHealth, 0D)
-                        .HDMFAmount = _view.PagIBIG
-                    End With
+                With _currentSalary
+                    .BasicSalary = _view.BasicSalary
+                    .AllowanceSalary = _view.AllowanceSalary
+                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
+                    .EffectiveFrom = _view.EffectiveFrom
+                    .EffectiveTo = effectiveTo
+                    .PhilHealthDeduction = If(_view.PhilHealth, 0D)
+                    .HDMFAmount = _view.PagIBIG
+                End With
 
-                    If _currentSalary.RowID.HasValue Then
-                        _currentSalary.LastUpdBy = z_User
-                        context.Entry(_currentSalary).State = EntityState.Modified
-                    Else
-                        context.Salaries.Add(_currentSalary)
-                    End If
+                If _currentSalary.RowID.HasValue Then
+                    _currentSalary.LastUpdBy = z_User
 
-                    context.SaveChanges()
-                Catch ex As Exception
-                    MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this
-                    Throw
-                End Try
-            End Using
+                End If
+
+                Await _salaryRepository.SaveAsync(_currentSalary)
+            Catch ex As Exception
+                MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation) ' Remove this
+                Throw
+            End Try
             LoadSalaries()
         End Sub
 
@@ -114,7 +119,7 @@ Namespace Global.AccuPay.Views.Employees
             Dim basicPay = 0D
 
             If _employee.IsDaily Then
-                monthlyRate = amount * PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
+                monthlyRate = amount * Data.Helpers.PayrollTools.GetWorkDaysPerMonth(_employee.WorkDaysPerYear)
 
                 basicPay = amount
             ElseIf _employee.IsMonthly Or _employee.IsFixed Then
@@ -149,28 +154,22 @@ Namespace Global.AccuPay.Views.Employees
 
             Dim values = ListOfValueCollection.Create("PhilHealth")
 
-            Using context = New PayrollContext()
-
-                _philHealthPolicy = New PhilHealthPolicy(
+            _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),
                     values.GetDecimal("Rate"),
                     values.GetDecimal("MinimumContribution"),
                     values.GetDecimal("MaximumContribution"),
-                    context.PhilHealthBrackets.ToList())
-            End Using
+                    _philHealthBracketRepository.GetAll().ToList())
         End Sub
 
         Private Sub LoadSalaries()
-            If _employee Is Nothing Then
+            If _employee?.RowID Is Nothing Then
                 Return
             End If
 
-            Using context = New PayrollContext()
-                _salaries = context.Salaries.
-                    Where(Function(s) Nullable.Equals(s.EmployeeID, _employee.RowID)).
-                    OrderByDescending(Function(s) s.EffectiveFrom).
-                    ToList()
-            End Using
+            _salaries = _salaryRepository.GetByEmployee(_employee.RowID.Value).
+                                        OrderByDescending(Function(s) s.EffectiveFrom).
+                                        ToList()
 
             If _currentSalary Is Nothing OrElse _currentSalary.EmployeeID <> _employee.RowID Then
                 _currentSalary = _salaries.FirstOrDefault()
@@ -188,11 +187,9 @@ Namespace Global.AccuPay.Views.Employees
         End Sub
 
         Private Sub LoadSocialSecurityBrackets()
-            Using context = New PayrollContext()
-                Dim socialSecurityBrackets = context.SocialSecurityBrackets.ToList()
+            Dim socialSecurityBrackets = _socialSecurityBracketRepository.GetAll().ToList()
 
-                _socialSecurityPolicy = New SocialSecurityPolicy(socialSecurityBrackets)
-            End Using
+            _socialSecurityPolicy = New SocialSecurityPolicy(socialSecurityBrackets)
         End Sub
 
         Private Sub UpdateSss(monthlyRate As Decimal)

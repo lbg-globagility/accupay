@@ -7,7 +7,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 namespace AccuPay.Data.Entities
 {
     [Table("employee")]
-    public class Employee : IEmployee
+    public class Employee
     {
         [Key]
         public int? RowID { get; set; }
@@ -117,7 +117,8 @@ namespace AccuPay.Data.Entities
 
         public string FullNameLastNameFirst => $"{LastName}, {FirstName}";
 
-        public string FullNameWithMiddleInitialLastNameFirst => $"{LastName}, {FirstName} {MiddleInitial}";
+        public string FullNameWithMiddleInitialLastNameFirst =>
+            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}";
 
         public string FullNameWithMiddleInitial =>
             $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";

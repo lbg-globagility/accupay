@@ -98,6 +98,16 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<List<Position>> GetAllByNameAsync(string positionName)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                return await context.Positions.
+                    Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase()).
+                    ToListAsync();
+            }
+        }
+
         public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId, int divisionId)
         {
             var existingPosition = await GetByNameAsync(organizationId, positionName);

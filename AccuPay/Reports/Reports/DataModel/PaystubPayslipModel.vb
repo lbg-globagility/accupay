@@ -1,639 +1,101 @@
-﻿Imports System.Text
-Imports AccuPay.Data.Enums
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports AccuPay.Utilities.Extensions
+﻿Option Strict On
 
+Imports AccuPay.Data
+
+''' <summary>
+''' Anemic implementation of IPaystubPayslipModel just for Crystal Report data source
+''' </summary>
 Public Class PaystubPayslipModel
+    Implements IPaystubPayslipModel
 
-    Private Const MoneyFormat As String = "#,##0.00"
-
-    Public Property EmployeeId As Integer
-    Public Property EmployeeNumber As String
-    Public Property EmployeeName As String
-    Public Property RegularPay As Decimal
-
-    Public Property BasicHours As Decimal
-
-    Private _basicPay As Decimal
-
-    Public ReadOnly Property BasicPay As Decimal
-        Get
-            Return _basicPay
-        End Get
-    End Property
-
-    Public Property Allowance As Decimal
-    Public Property Ecola As Decimal
-    Public Property AbsentHours As Decimal
-
-    Private _absentAmount As Decimal
-
-    Public Property AbsentAmount As Decimal
-        Set(value As Decimal)
-
-            _absentAmount = Negative(value)
-        End Set
-        Get
-            Return _absentAmount
-        End Get
-    End Property
-
-    Public Property LateAndUndertimeHours As Decimal
-
-    Private _lateAndUndertimeAmount As Decimal
-
-    Public Property LateAndUndertimeAmount As Decimal
-        Set(value As Decimal)
-
-            _lateAndUndertimeAmount = Negative(value)
-        End Set
-        Get
-            Return _lateAndUndertimeAmount
-        End Get
-    End Property
-
-    Public Property GrossPay As Decimal
-
-    Private _SSSAmount As Decimal
-
-    Public Property SSSAmount As Decimal
-        Set(value As Decimal)
-
-            _SSSAmount = Negative(value)
-        End Set
-        Get
-            Return _SSSAmount
-        End Get
-    End Property
-
-    Private _philHealthAmount As Decimal
-
-    Public Property PhilHealthAmount As Decimal
-        Set(value As Decimal)
-
-            _philHealthAmount = Negative(value)
-        End Set
-        Get
-            Return _philHealthAmount
-        End Get
-    End Property
-
-    Private _pagibigAmount As Decimal
-
-    Public Property PagibigAmount As Decimal
-        Set(value As Decimal)
-
-            _pagibigAmount = Negative(value)
-        End Set
-        Get
-            Return _pagibigAmount
-        End Get
-    End Property
-
-    Private _taxWithheldAmount As Decimal
-
-    Public Property TaxWithheldAmount As Decimal
-        Set(value As Decimal)
-
-            _taxWithheldAmount = Negative(value)
-        End Set
-        Get
-            Return _taxWithheldAmount
-        End Get
-    End Property
-
-    Public Property LeaveHours As Decimal
-    Public Property LeavePay As Decimal
-
-    Public Property NetPay As Decimal
-
-    Public ReadOnly Property Employee As Employee
-
-    Sub New(employee As Employee)
-
-        Me.Employee = employee
-
-    End Sub
-
-    Private Function Negative(num As Decimal) As Decimal
-
-        If num > 0 Then
-
-            Return num * -1
-
-        End If
-
-        Return num
-
-    End Function
-
-    Public Function ComputeBasicPay(salary As Decimal, workHours As Decimal) As Decimal
-
-        If Employee.IsMonthly OrElse Employee.IsFixed Then
-
-            If Employee.PayFrequencyID.Value = PayFrequencyType.Monthly Then
-
-                Return salary
-
-            ElseIf Employee.PayFrequencyID.Value = PayFrequencyType.SemiMonthly Then
-
-                Return salary / PayrollTools.SemiMonthlyPayPeriodsPerMonth
-            Else
-
-                Throw New Exception("GetBasicPay is implemented on monthly and semimonthly only")
-
-            End If
-
-        ElseIf Employee.IsDaily Then
-
-            Return workHours * (salary / PayrollTools.WorkHoursPerDay)
-
-        End If
-
-        Return 0
-
-    End Function
-
-    Public Function CreateSummaries(salary As Decimal, workHours As Decimal) As PaystubPayslipModel
-
-        _basicPay = ComputeBasicPay(salary, workHours)
-
-        Return Me.CreateOvertimeSummaryColumns().
-                    CreateLoanSummaryColumns().
-                    CreateAdjustmentSummaryColumns()
-
-    End Function
-
-    Public ReadOnly Property TotalDeductions As Decimal
-        Get
-            Return Negative(SSSAmount + PhilHealthAmount + PagibigAmount + TaxWithheldAmount + TotalLoans)
-        End Get
-    End Property
+    Public ReadOnly Property EmployeeId As Integer Implements IPaystubPayslipModel.EmployeeId
+    Public ReadOnly Property EmployeeNumber As String Implements IPaystubPayslipModel.EmployeeNumber
+    Public ReadOnly Property EmployeeName As String Implements IPaystubPayslipModel.EmployeeName
+    Public ReadOnly Property RegularPay As Decimal Implements IPaystubPayslipModel.RegularPay
+    Public ReadOnly Property BasicHours As Decimal Implements IPaystubPayslipModel.BasicHours
+    Public ReadOnly Property BasicPay As Decimal Implements IPaystubPayslipModel.BasicPay
+    Public ReadOnly Property Allowance As Decimal Implements IPaystubPayslipModel.Allowance
+    Public ReadOnly Property Ecola As Decimal Implements IPaystubPayslipModel.Ecola
+    Public ReadOnly Property AbsentHours As Decimal Implements IPaystubPayslipModel.AbsentHours
+    Public ReadOnly Property AbsentAmount As Decimal Implements IPaystubPayslipModel.AbsentAmount
+    Public ReadOnly Property LateAndUndertimeHours As Decimal Implements IPaystubPayslipModel.LateAndUndertimeHours
+    Public ReadOnly Property LateAndUndertimeAmount As Decimal Implements IPaystubPayslipModel.LateAndUndertimeAmount
+    Public ReadOnly Property GrossPay As Decimal Implements IPaystubPayslipModel.GrossPay
+    Public ReadOnly Property SSSAmount As Decimal Implements IPaystubPayslipModel.SSSAmount
+    Public ReadOnly Property PhilHealthAmount As Decimal Implements IPaystubPayslipModel.PhilHealthAmount
+    Public ReadOnly Property PagibigAmount As Decimal Implements IPaystubPayslipModel.PagibigAmount
+    Public ReadOnly Property TaxWithheldAmount As Decimal Implements IPaystubPayslipModel.TaxWithheldAmount
+    Public ReadOnly Property LeaveHours As Decimal Implements IPaystubPayslipModel.LeaveHours
+    Public ReadOnly Property LeavePay As Decimal Implements IPaystubPayslipModel.LeavePay
+    Public ReadOnly Property NetPay As Decimal Implements IPaystubPayslipModel.NetPay
+    Public ReadOnly Property TotalDeductions As Decimal Implements IPaystubPayslipModel.TotalDeductions
 
 #Region "Loans and Adjustments"
 
-    Public Property Loans As List(Of Loan)
-    Public Property Adjustments As List(Of Adjustment)
-
-    Public ReadOnly Property TotalLoans As Decimal
-        Get
-            Return Negative(Loans.Sum(Function(l) l.Amount))
-        End Get
-    End Property
-
-    Public ReadOnly Property TotalAdjustments As Decimal
-        Get
-            Return Adjustments.Sum(Function(l) l.Amount)
-        End Get
-    End Property
-
-    Private _loanNamesSummary As String
-
-    Public ReadOnly Property LoanNamesSummary As String
-        Get
-            Return _loanNamesSummary
-        End Get
-    End Property
-
-    Private _loanAmountsSummary As String
-
-    Public ReadOnly Property LoanAmountsSummary As String
-        Get
-            Return _loanAmountsSummary
-        End Get
-    End Property
-
-    Private _loanBalancesSummary As String
-
-    Public ReadOnly Property LoanBalancesSummary As String
-        Get
-            Return _loanBalancesSummary
-        End Get
-    End Property
-
-    Private _adjustmentNamesSummary As String
-
-    Public ReadOnly Property AdjustmentNamesSummary As String
-        Get
-            Return _adjustmentNamesSummary
-        End Get
-    End Property
-
-    Private _adjustmentAmountsSummary As String
-
-    Public ReadOnly Property AdjustmentAmountsSummary As String
-        Get
-            Return _adjustmentAmountsSummary
-        End Get
-    End Property
-
-    Public Function CreateLoanSummaryColumns() As PaystubPayslipModel
-
-        _loanNamesSummary = ""
-        _loanAmountsSummary = ""
-        _loanBalancesSummary = ""
-
-        Dim loanNamesSummaryBuilder As New StringBuilder
-        Dim loanAmountsSummaryBuilder As New StringBuilder
-        Dim loanBalancesSummaryBuilder As New StringBuilder
-
-        Dim rightSideSummaryMaxCharacters = 15
-
-        For Each loan In Loans
-
-            If loan.Amount <> 0 Then
-
-                loanNamesSummaryBuilder.AppendLine(loan.Name.Ellipsis(rightSideSummaryMaxCharacters))
-                loanAmountsSummaryBuilder.AppendLine(loan.Amount.ToString(MoneyFormat))
-                loanBalancesSummaryBuilder.AppendLine(loan.Balance.ToString(MoneyFormat))
-
-            End If
-
-        Next
-
-        _loanNamesSummary = loanNamesSummaryBuilder.ToString
-        _loanAmountsSummary = loanAmountsSummaryBuilder.ToString
-        _loanBalancesSummary = loanBalancesSummaryBuilder.ToString
-
-        Return Me
-    End Function
-
-    Public Function CreateAdjustmentSummaryColumns() As PaystubPayslipModel
-
-        _adjustmentNamesSummary = ""
-        _adjustmentAmountsSummary = ""
-
-        Dim adjustmentNamesSummaryBuilder As New StringBuilder
-        Dim adjustmentAmountsSummaryBuilder As New StringBuilder
-
-        Dim rightSideSummaryMaxCharacters = 25
-
-        For Each adjustment In Adjustments
-
-            If adjustment.Amount <> 0 Then
-
-                adjustmentNamesSummaryBuilder.AppendLine(adjustment.Name.Ellipsis(rightSideSummaryMaxCharacters))
-                adjustmentAmountsSummaryBuilder.AppendLine(adjustment.Amount.ToString(MoneyFormat))
-
-            End If
-
-        Next
-
-        _adjustmentNamesSummary = adjustmentNamesSummaryBuilder.ToString
-        _adjustmentAmountsSummary = adjustmentAmountsSummaryBuilder.ToString
-
-        Return Me
-    End Function
+    Public ReadOnly Property TotalLoans As Decimal Implements IPaystubPayslipModel.TotalLoans
+    Public ReadOnly Property TotalAdjustments As Decimal Implements IPaystubPayslipModel.TotalAdjustments
+    Public ReadOnly Property LoanNamesSummary As String Implements IPaystubPayslipModel.LoanNamesSummary
+    Public ReadOnly Property LoanAmountsSummary As String Implements IPaystubPayslipModel.LoanAmountsSummary
+    Public ReadOnly Property LoanBalancesSummary As String Implements IPaystubPayslipModel.LoanBalancesSummary
+    Public ReadOnly Property AdjustmentNamesSummary As String Implements IPaystubPayslipModel.AdjustmentNamesSummary
+    Public ReadOnly Property AdjustmentAmountsSummary As String Implements IPaystubPayslipModel.AdjustmentAmountsSummary
 
 #End Region
 
 #Region "Overtimes Breakdowns and Summary"
 
-    Private _totalOvertimeHours As Decimal
-
-    Public ReadOnly Property TotalOvertimeHours As Decimal
-        Get
-            Return _totalOvertimeHours
-        End Get
-    End Property
-
-    Private _totalOvertimePay As Decimal
-
-    Public ReadOnly Property TotalOvertimePay As Decimal
-        Get
-            Return _totalOvertimePay
-        End Get
-    End Property
-
-    Private _overtimeNamesSummary As String
-
-    Public ReadOnly Property OvertimeNamesSummary As String
-        Get
-            Return _overtimeNamesSummary
-        End Get
-    End Property
-
-    Private _overtimeHoursSummary As String
-
-    Public ReadOnly Property OvertimeHoursSummary As String
-        Get
-            Return _overtimeHoursSummary
-        End Get
-    End Property
-
-    Private _overtimeAmountsSummary As String
-
-    Public ReadOnly Property OvertimeAmountsSummary As String
-        Get
-            Return _overtimeAmountsSummary
-        End Get
-    End Property
-
-    Public Function CreateOvertimeSummaryColumns() As PaystubPayslipModel
-
-        _totalOvertimeHours = 0
-        _totalOvertimePay = 0
-
-        Dim overtimeNamesSummaryBuilder As New StringBuilder
-        Dim overtimeHoursSummaryBuilder As New StringBuilder
-        Dim overtimeAmountsSummaryBuilder As New StringBuilder
-
-        If OvertimePay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Overtime")
-            overtimeHoursSummaryBuilder.AppendLine(OvertimeHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(OvertimePay.ToString(MoneyFormat))
-            _totalOvertimeHours += OvertimeHours
-            _totalOvertimePay += OvertimePay
-        End If
-        If NightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Night Diff")
-            overtimeHoursSummaryBuilder.AppendLine(NightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(NightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += NightDiffHours
-            _totalOvertimePay += NightDiffPay
-        End If
-        If NightDiffOvertimePay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Night Diff OT")
-            overtimeHoursSummaryBuilder.AppendLine(NightDiffOvertimeHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(NightDiffOvertimePay.ToString(MoneyFormat))
-            _totalOvertimeHours += NightDiffOvertimeHours
-            _totalOvertimePay += NightDiffOvertimePay
-        End If
-        If RestDayPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Rest Day")
-            overtimeHoursSummaryBuilder.AppendLine(RestDayHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RestDayPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RestDayHours
-            _totalOvertimePay += RestDayPay
-        End If
-        If RestDayOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Rest Day OT")
-            overtimeHoursSummaryBuilder.AppendLine(RestDayOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RestDayOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RestDayOTHours
-            _totalOvertimePay += RestDayOTPay
-        End If
-        If SpecialHolidayPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Special Holiday")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayHours
-            _totalOvertimePay += SpecialHolidayPay
-        End If
-        If SpecialHolidayOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Special Holiday OT")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayOTHours
-            _totalOvertimePay += SpecialHolidayOTPay
-        End If
-        If RegularHolidayPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Regular Holiday")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayHours
-            _totalOvertimePay += RegularHolidayPay
-        End If
-        If RegularHolidayOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Regular Holiday OT")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayOTHours
-            _totalOvertimePay += RegularHolidayOTPay
-        End If
-        If RestDayNightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Rest Day ND")
-            overtimeHoursSummaryBuilder.AppendLine(RestDayNightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RestDayNightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RestDayNightDiffHours
-            _totalOvertimePay += RestDayNightDiffPay
-        End If
-        If RestDayNightDiffOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("Rest Day ND OT")
-            overtimeHoursSummaryBuilder.AppendLine(RestDayNightDiffOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RestDayNightDiffOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RestDayNightDiffOTHours
-            _totalOvertimePay += RestDayNightDiffOTPay
-        End If
-        If SpecialHolidayNightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi ND")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayNightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayNightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayNightDiffHours
-            _totalOvertimePay += SpecialHolidayNightDiffPay
-        End If
-        If SpecialHolidayNightDiffOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi ND OT")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayNightDiffOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayNightDiffOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayNightDiffOTHours
-            _totalOvertimePay += SpecialHolidayNightDiffOTPay
-        End If
-        If SpecialHolidayRestDayPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi RD")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayRestDayHours
-            _totalOvertimePay += SpecialHolidayRestDayPay
-        End If
-        If SpecialHolidayRestDayOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi RD OT")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayRestDayOTHours
-            _totalOvertimePay += SpecialHolidayRestDayOTPay
-        End If
-        If SpecialHolidayRestDayNightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi RD ND")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayRestDayNightDiffHours
-            _totalOvertimePay += SpecialHolidayRestDayNightDiffPay
-        End If
-        If SpecialHolidayRestDayNightDiffOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("S. Holi RD ND OT")
-            overtimeHoursSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(SpecialHolidayRestDayNightDiffOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += SpecialHolidayRestDayNightDiffOTHours
-            _totalOvertimePay += SpecialHolidayRestDayNightDiffOTPay
-        End If
-        If RegularHolidayNightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. ND")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayNightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayNightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayNightDiffHours
-            _totalOvertimePay += RegularHolidayNightDiffPay
-        End If
-        If RegularHolidayNightDiffOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. ND OT")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayNightDiffOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayNightDiffOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayNightDiffOTHours
-            _totalOvertimePay += RegularHolidayNightDiffOTPay
-        End If
-        If RegularHolidayRestDayPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayRestDayHours
-            _totalOvertimePay += RegularHolidayRestDayPay
-        End If
-        If RegularHolidayRestDayOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD OT")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayRestDayOTHours
-            _totalOvertimePay += RegularHolidayRestDayOTPay
-        End If
-        If RegularHolidayRestDayNightDiffPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD ND")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayRestDayNightDiffHours
-            _totalOvertimePay += RegularHolidayRestDayNightDiffPay
-        End If
-        If RegularHolidayRestDayNightDiffOTPay <> 0 Then
-
-            overtimeNamesSummaryBuilder.AppendLine("R. Holi. RD ND OT")
-            overtimeHoursSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffOTHours.ToString(MoneyFormat))
-            overtimeAmountsSummaryBuilder.AppendLine(RegularHolidayRestDayNightDiffOTPay.ToString(MoneyFormat))
-            _totalOvertimeHours += RegularHolidayRestDayNightDiffOTHours
-            _totalOvertimePay += RegularHolidayRestDayNightDiffOTPay
-        End If
-
-        _overtimeNamesSummary = overtimeNamesSummaryBuilder.ToString
-        _overtimeHoursSummary = overtimeHoursSummaryBuilder.ToString
-        _overtimeAmountsSummary = overtimeAmountsSummaryBuilder.ToString
-
-        Return Me
-    End Function
-
-    Public Property OvertimeHours As Decimal
-    Public Property OvertimePay As Decimal
-    Public Property NightDiffHours As Decimal
-    Public Property NightDiffPay As Decimal
-    Public Property NightDiffOvertimeHours As Decimal
-    Public Property NightDiffOvertimePay As Decimal
-    Public Property RestDayHours As Decimal
-    Public Property RestDayPay As Decimal
-    Public Property RestDayOTHours As Decimal
-    Public Property RestDayOTPay As Decimal
-    Public Property SpecialHolidayHours As Decimal
-    Public Property SpecialHolidayPay As Decimal
-    Public Property SpecialHolidayOTHours As Decimal
-    Public Property SpecialHolidayOTPay As Decimal
-    Public Property RegularHolidayHours As Decimal
-    Public Property RegularHolidayPay As Decimal
-    Public Property RegularHolidayOTHours As Decimal
-    Public Property RegularHolidayOTPay As Decimal
-    Public Property RestDayNightDiffHours As Decimal
-    Public Property RestDayNightDiffPay As Decimal
-    Public Property RestDayNightDiffOTHours As Decimal
-    Public Property RestDayNightDiffOTPay As Decimal
-    Public Property SpecialHolidayNightDiffHours As Decimal
-    Public Property SpecialHolidayNightDiffPay As Decimal
-    Public Property SpecialHolidayNightDiffOTHours As Decimal
-    Public Property SpecialHolidayNightDiffOTPay As Decimal
-    Public Property SpecialHolidayRestDayHours As Decimal
-    Public Property SpecialHolidayRestDayPay As Decimal
-    Public Property SpecialHolidayRestDayOTHours As Decimal
-    Public Property SpecialHolidayRestDayOTPay As Decimal
-    Public Property SpecialHolidayRestDayNightDiffHours As Decimal
-    Public Property SpecialHolidayRestDayNightDiffPay As Decimal
-    Public Property SpecialHolidayRestDayNightDiffOTHours As Decimal
-    Public Property SpecialHolidayRestDayNightDiffOTPay As Decimal
-    Public Property RegularHolidayNightDiffHours As Decimal
-    Public Property RegularHolidayNightDiffPay As Decimal
-    Public Property RegularHolidayNightDiffOTHours As Decimal
-    Public Property RegularHolidayNightDiffOTPay As Decimal
-    Public Property RegularHolidayRestDayHours As Decimal
-    Public Property RegularHolidayRestDayPay As Decimal
-    Public Property RegularHolidayRestDayOTHours As Decimal
-    Public Property RegularHolidayRestDayOTPay As Decimal
-    Public Property RegularHolidayRestDayNightDiffHours As Decimal
-    Public Property RegularHolidayRestDayNightDiffPay As Decimal
-    Public Property RegularHolidayRestDayNightDiffOTHours As Decimal
-    Public Property RegularHolidayRestDayNightDiffOTPay As Decimal
+    Public ReadOnly Property TotalOvertimeHours As Decimal Implements IPaystubPayslipModel.TotalOvertimeHours
+    Public ReadOnly Property TotalOvertimePay As Decimal Implements IPaystubPayslipModel.TotalOvertimePay
+    Public ReadOnly Property OvertimeNamesSummary As String Implements IPaystubPayslipModel.OvertimeNamesSummary
+    Public ReadOnly Property OvertimeHoursSummary As String Implements IPaystubPayslipModel.OvertimeHoursSummary
+    Public ReadOnly Property OvertimeAmountsSummary As String Implements IPaystubPayslipModel.OvertimeAmountsSummary
+    Public ReadOnly Property OvertimeHours As Decimal Implements IPaystubPayslipModel.OvertimeHours
+    Public ReadOnly Property OvertimePay As Decimal Implements IPaystubPayslipModel.OvertimePay
+    Public ReadOnly Property NightDiffHours As Decimal Implements IPaystubPayslipModel.NightDiffHours
+    Public ReadOnly Property NightDiffPay As Decimal Implements IPaystubPayslipModel.NightDiffPay
+    Public ReadOnly Property NightDiffOvertimeHours As Decimal Implements IPaystubPayslipModel.NightDiffOvertimeHours
+    Public ReadOnly Property NightDiffOvertimePay As Decimal Implements IPaystubPayslipModel.NightDiffOvertimePay
+    Public ReadOnly Property RestDayHours As Decimal Implements IPaystubPayslipModel.RestDayHours
+    Public ReadOnly Property RestDayPay As Decimal Implements IPaystubPayslipModel.RestDayPay
+    Public ReadOnly Property RestDayOTHours As Decimal Implements IPaystubPayslipModel.RestDayOTHours
+    Public ReadOnly Property RestDayOTPay As Decimal Implements IPaystubPayslipModel.RestDayOTPay
+    Public ReadOnly Property SpecialHolidayHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayHours
+    Public ReadOnly Property SpecialHolidayPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayPay
+    Public ReadOnly Property SpecialHolidayOTHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayOTHours
+    Public ReadOnly Property SpecialHolidayOTPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayOTPay
+    Public ReadOnly Property RegularHolidayHours As Decimal Implements IPaystubPayslipModel.RegularHolidayHours
+    Public ReadOnly Property RegularHolidayPay As Decimal Implements IPaystubPayslipModel.RegularHolidayPay
+    Public ReadOnly Property RegularHolidayOTHours As Decimal Implements IPaystubPayslipModel.RegularHolidayOTHours
+    Public ReadOnly Property RegularHolidayOTPay As Decimal Implements IPaystubPayslipModel.RegularHolidayOTPay
+    Public ReadOnly Property RestDayNightDiffHours As Decimal Implements IPaystubPayslipModel.RestDayNightDiffHours
+    Public ReadOnly Property RestDayNightDiffPay As Decimal Implements IPaystubPayslipModel.RestDayNightDiffPay
+    Public ReadOnly Property RestDayNightDiffOTHours As Decimal Implements IPaystubPayslipModel.RestDayNightDiffOTHours
+    Public ReadOnly Property RestDayNightDiffOTPay As Decimal Implements IPaystubPayslipModel.RestDayNightDiffOTPay
+    Public ReadOnly Property SpecialHolidayNightDiffHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayNightDiffHours
+    Public ReadOnly Property SpecialHolidayNightDiffPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayNightDiffPay
+    Public ReadOnly Property SpecialHolidayNightDiffOTHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayNightDiffOTHours
+    Public ReadOnly Property SpecialHolidayNightDiffOTPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayNightDiffOTPay
+    Public ReadOnly Property SpecialHolidayRestDayHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayHours
+    Public ReadOnly Property SpecialHolidayRestDayPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayPay
+    Public ReadOnly Property SpecialHolidayRestDayOTHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayOTHours
+    Public ReadOnly Property SpecialHolidayRestDayOTPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayOTPay
+    Public ReadOnly Property SpecialHolidayRestDayNightDiffHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayNightDiffHours
+    Public ReadOnly Property SpecialHolidayRestDayNightDiffPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayNightDiffPay
+    Public ReadOnly Property SpecialHolidayRestDayNightDiffOTHours As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayNightDiffOTHours
+    Public ReadOnly Property SpecialHolidayRestDayNightDiffOTPay As Decimal Implements IPaystubPayslipModel.SpecialHolidayRestDayNightDiffOTPay
+    Public ReadOnly Property RegularHolidayNightDiffHours As Decimal Implements IPaystubPayslipModel.RegularHolidayNightDiffHours
+    Public ReadOnly Property RegularHolidayNightDiffPay As Decimal Implements IPaystubPayslipModel.RegularHolidayNightDiffPay
+    Public ReadOnly Property RegularHolidayNightDiffOTHours As Decimal Implements IPaystubPayslipModel.RegularHolidayNightDiffOTHours
+    Public ReadOnly Property RegularHolidayNightDiffOTPay As Decimal Implements IPaystubPayslipModel.RegularHolidayNightDiffOTPay
+    Public ReadOnly Property RegularHolidayRestDayHours As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayHours
+    Public ReadOnly Property RegularHolidayRestDayPay As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayPay
+    Public ReadOnly Property RegularHolidayRestDayOTHours As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayOTHours
+    Public ReadOnly Property RegularHolidayRestDayOTPay As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayOTPay
+    Public ReadOnly Property RegularHolidayRestDayNightDiffHours As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayNightDiffHours
+    Public ReadOnly Property RegularHolidayRestDayNightDiffPay As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayNightDiffPay
+    Public ReadOnly Property RegularHolidayRestDayNightDiffOTHours As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayNightDiffOTHours
+    Public ReadOnly Property RegularHolidayRestDayNightDiffOTPay As Decimal Implements IPaystubPayslipModel.RegularHolidayRestDayNightDiffOTPay
 
 #End Region
-
-    Public Class Overtime
-
-        Public Property Name As String
-        Public Property Hours As Decimal
-        Public Property Amount As Decimal
-
-    End Class
-
-    Public Class Loan
-
-        Public Property Name As String
-
-        Public Property Amount As Decimal
-
-        Public Property Balance As Decimal
-
-        Sub New(loan As LoanTransaction)
-
-            Me.New(loan.LoanSchedule?.LoanType?.PartNo, loan.Amount, loan.TotalBalance)
-
-        End Sub
-
-        Sub New(name As String, amount As Decimal, balance As Decimal)
-
-            Me.Name = name
-
-            Me.Amount = amount
-
-            Me.Balance = balance
-
-        End Sub
-
-    End Class
-
-    Public Class Adjustment
-
-        Public Property Name As String
-
-        Public Property Amount As Decimal
-
-        Sub New(adjustment As IAdjustment)
-
-            Me.New(adjustment.Product?.PartNo, adjustment.PayAmount)
-
-        End Sub
-
-        Sub New(name As String, amount As Decimal)
-
-            Me.Name = name
-
-            Me.Amount = amount
-
-        End Sub
-
-    End Class
 
 End Class

@@ -30,7 +30,7 @@ Partial Class ImportLoansForm
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportLoansForm))
         Me.BrowseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
@@ -90,15 +90,15 @@ Partial Class ImportLoansForm
         Me.BrowseButton.Text = "&Browse..."
         Me.BrowseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(790, 397)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(95, 32)
-        Me.CancelButton.TabIndex = 5
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(790, 397)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(95, 32)
+        Me.CancelDialogButton.TabIndex = 5
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'SaveButton
         '
@@ -126,7 +126,7 @@ Partial Class ImportLoansForm
         Me.ParsedTabControl.Controls.Add(Me.btnDownloadTemplate)
         Me.ParsedTabControl.Controls.Add(Me.BrowseButton)
         Me.ParsedTabControl.Controls.Add(Me.SaveButton)
-        Me.ParsedTabControl.Controls.Add(Me.CancelButton)
+        Me.ParsedTabControl.Controls.Add(Me.CancelDialogButton)
         Me.ParsedTabControl.Controls.Add(Me.LoansDataGrid)
         Me.ParsedTabControl.Controls.Add(Me.lblStatus)
         Me.ParsedTabControl.Location = New System.Drawing.Point(4, 22)
@@ -503,7 +503,7 @@ Partial Class ImportLoansForm
     Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn6 As DataGridViewTextBoxColumn
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents SaveButton As Button
     Friend WithEvents TabControl1 As TabControl
     Friend WithEvents ParsedTabControl As TabPage

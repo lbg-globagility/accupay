@@ -115,8 +115,12 @@ namespace AccuPay.Data.Services
 
                     var logDate = Convert.ToDateTime(logsByDay.Key);
 
-                    var firstTimeStampIn = logsByDayList.FirstOrDefault(l => Nullable.Equals(l.IsTimeIn, true))?.DateTime;
-                    var finalTimeStampOut = logsByDayList.LastOrDefault(l => Nullable.Equals(l.IsTimeIn, false))?.DateTime;
+                    var firstTimeStampIn = logsByDayList.
+                                            FirstOrDefault(l => Nullable.Equals(l.IsTimeIn, true))?.
+                                            DateTime;
+                    var finalTimeStampOut = logsByDayList.
+                                            LastOrDefault(l => Nullable.Equals(l.IsTimeIn, false))?.
+                                            DateTime;
 
                     TimeSpan? firstTimeIn, finalTimeOut;
 
@@ -167,7 +171,7 @@ namespace AccuPay.Data.Services
                     OrganizationID = _organizationId,
                     TimeStamp = log.DateTime,
                     IsTimeIn = log.IsTimeIn,
-                    WorkDay = System.Convert.ToDateTime(log.LogDate),
+                    WorkDay = Convert.ToDateTime(log.LogDate),
                     EmployeeID = Convert.ToInt32(employeeId)
                 });
             }

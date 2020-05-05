@@ -1,15 +1,15 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Helpers
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.ShiftSchedules
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportedShiftSchedulesForm
 
@@ -27,7 +27,9 @@ Public Class ImportedShiftSchedulesForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _employees As IList(Of IEmployee)
+    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+
+    Private _employees As IList(Of Employee)
 
     Public IsSaved As Boolean
 
@@ -41,7 +43,9 @@ Public Class ImportedShiftSchedulesForm
 
         _dataSourceFailed = New List(Of ShiftScheduleModel)
 
-        _employeeRepository = New EmployeeRepository
+        _employeeRepository = New EmployeeRepository()
+
+        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
 
     End Sub
 
@@ -55,53 +59,51 @@ Public Class ImportedShiftSchedulesForm
                                                     Select(Function(s) s.EmployeeNo).
                                                     ToArray
 
-        _employees = New List(Of IEmployee)((Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
+        _employees = (Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
                                                 employeeNumberList,
-                                                z_OrganizationID)))
-        Using context = New PayrollContext
+                                                z_OrganizationID)).ToList()
 
-            For Each shiftSched In _shiftScheduleRowRecords
+        For Each shiftSched In _shiftScheduleRowRecords
 
-                Dim seek = _employees.Where(Function(ee) ee.EmployeeNo = shiftSched.EmployeeNo)
+            Dim seek = _employees.Where(Function(ee) ee.EmployeeNo = shiftSched.EmployeeNo)
 
-                Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
-                Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
-                If seek.Any Then
-                    Dim employee = seek.FirstOrDefault
+            Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
+            Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
+            If seek.Any Then
+                Dim employee = seek.FirstOrDefault
 
-                    AppendToDataSourceWithEmployee(shiftSched, dates, employee)
-                Else
-                    AppendToDataSourceWithNoEmployee(shiftSched, dates)
-                End If
+                AppendToDataSourceWithEmployee(shiftSched, dates, employee)
+            Else
+                AppendToDataSourceWithNoEmployee(shiftSched, dates)
+            End If
 
-            Next
+        Next
 
-            Dim satisfy = Function(ssm As ShiftScheduleModel)
-                              Return ssm.IsValidToSave And ssm.IsExistingEmployee
-                          End Function
+        Dim satisfy = Function(ssm As ShiftScheduleModel)
+                          Return ssm.IsValidToSave And ssm.IsExistingEmployee
+                      End Function
 
-            _dataSourceOk = _dataSource.
-                Where(satisfy).
-                ToList()
+        _dataSourceOk = _dataSource.
+            Where(satisfy).
+            ToList()
 
-            gridOK.DataSource = _dataSourceOk
+        gridOK.DataSource = _dataSourceOk
 
-            _dataSourceFailed = _dataSource.
-                Where(Function(ssm) Not satisfy(ssm)).
-                ToList()
+        _dataSourceFailed = _dataSource.
+            Where(Function(ssm) Not satisfy(ssm)).
+            ToList()
 
-            For Each ssm In _dataSourceFailed
-                Dim reasons As New List(Of String)
+        For Each ssm In _dataSourceFailed
+            Dim reasons As New List(Of String)
 
-                If Not ssm.IsValidToSave Then reasons.Add("no shift")
+            If Not ssm.IsValidToSave Then reasons.Add("no shift")
 
-                If Not ssm.IsExistingEmployee Then reasons.Add("employee doesn't exists")
+            If Not ssm.IsExistingEmployee Then reasons.Add("employee doesn't exists")
 
-                ssm.Remarks = String.Join("; ", reasons.ToArray())
-            Next
-            gridFailed.DataSource = _dataSourceFailed
+            ssm.Remarks = String.Join("; ", reasons.ToArray())
+        Next
+        gridFailed.DataSource = _dataSourceFailed
 
-        End Using
     End Sub
 
     Private Sub AppendToDataSourceWithNoEmployee(shiftSched As ShiftScheduleRowRecord, dates As IEnumerable(Of Date))
@@ -120,7 +122,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord,
                                                dates As IEnumerable(Of Date),
-                                               employee As IEmployee)
+                                               employee As Employee)
         For Each d In dates
             _dataSource.Add(New ShiftScheduleModel(employee) With {
                         .DateValue = d,
@@ -175,7 +177,7 @@ Public Class ImportedShiftSchedulesForm
 
         End Sub
 
-        Public Sub New(employee As IEmployee)
+        Public Sub New(employee As Employee)
             AssignEmployee(employee)
 
         End Sub
@@ -209,7 +211,7 @@ Public Class ImportedShiftSchedulesForm
             origOffset = _IsRestDay
         End Sub
 
-        Private Sub AssignEmployee(employee As IEmployee)
+        Private Sub AssignEmployee(employee As Employee)
             _EmployeeId = employee.RowID
             _EmployeeNo = employee.EmployeeNo
             _FullName = String.Join(", ", employee.LastName, employee.FirstName)
@@ -421,85 +423,82 @@ Public Class ImportedShiftSchedulesForm
 
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
 
-        Using context = New PayrollContext
+        Dim minDate = _dataSourceOk.Min(Function(ssm) ssm.DateValue)
+        Dim maxDate = _dataSourceOk.Max(Function(ssm) ssm.DateValue)
 
-            Dim minDate = _dataSourceOk.Min(Function(ssm) ssm.DateValue)
-            Dim maxDate = _dataSourceOk.Max(Function(ssm) ssm.DateValue)
-            Dim employeeIDs = _dataSourceOk.Select(Function(ssm) ssm.EmployeeId).Distinct
+        Dim datePeriod = New TimePeriod(minDate, maxDate)
 
-            Dim eDutyScheds = Await context.EmployeeDutySchedules.
-                Where(Function(eds) eds.DateSched >= minDate AndAlso eds.DateSched <= maxDate).
-                Where(Function(eds) eds.OrganizationID.Value = z_OrganizationID).
-                Where(Function(eds) employeeIDs.Contains(eds.EmployeeID)).
-                ToListAsync()
+        Dim employeeIDs = _dataSourceOk.Select(Function(ssm) ssm.EmployeeId.Value).
+                                            Distinct().
+                                            ToArray()
 
-            Dim newShiftScheduleList As New List(Of EmployeeDutySchedule)
-            Dim existingShiftScheduleList As New List(Of EmployeeDutySchedule)
+        Dim eDutyScheds = Await _employeeDutyScheduleRepository.
+                            GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID,
+                                                                    employeeIDs,
+                                                                    datePeriod)
 
-            For Each ssm In _dataSourceOk
-                Dim seek = eDutyScheds.
+        Dim addedShiftSchedules As New List(Of EmployeeDutySchedule)
+        Dim updatedShiftSchedules As New List(Of EmployeeDutySchedule)
+
+        For Each ssm In _dataSourceOk
+            Dim seek = eDutyScheds.
                     Where(Function(eSched) eSched.EmployeeID.Value = ssm.EmployeeId.Value).
                     Where(Function(eSched) eSched.DateSched = ssm.DateValue)
 
-                Dim eds = seek.FirstOrDefault
-                ssm.ComputeShiftHours()
-                ssm.ComputeWorkHours()
+            Dim eds = seek.FirstOrDefault
+            ssm.ComputeShiftHours()
+            ssm.ComputeWorkHours()
 
-                If seek.Any Then
-                    eds.StartTime = ssm.TimeFrom
-                    eds.EndTime = ssm.TimeTo
-                    eds.BreakStartTime = ssm.BreakFrom
-                    eds.BreakLength = ssm.BreakLength
+            If seek.Any Then
+                eds.StartTime = ssm.TimeFrom
+                eds.EndTime = ssm.TimeTo
+                eds.BreakStartTime = ssm.BreakFrom
+                eds.BreakLength = ssm.BreakLength
 
-                    eds.ShiftHours = ssm.ShiftHours
-                    eds.WorkHours = ssm.WorkHours
+                eds.ShiftHours = ssm.ShiftHours
+                eds.WorkHours = ssm.WorkHours
+                eds.IsRestDay = ssm.IsRestDay
 
-                    existingShiftScheduleList.Add(eds)
-                Else
+                updatedShiftSchedules.Add(eds)
+            Else
 
-                    newShiftScheduleList.Add(ssm.ToEmployeeDutySchedule)
-                    context.EmployeeDutySchedules.Add(ssm.ToEmployeeDutySchedule)
-                End If
+                addedShiftSchedules.Add(ssm.ToEmployeeDutySchedule)
+            End If
 
-            Next
+        Next
 
-            Dim succeed As Boolean = False
-            Try
-                Dim i = Await context.SaveChangesAsync
+        Await FunctionUtils.TryCatchFunctionAsync("Import Shift Schedule",
+            Async Function()
 
-                Dim importList = New List(Of Entities.UserActivityItem)
+                Await _employeeDutyScheduleRepository.ChangeManyAsync(
+                                                        addedShifts:=addedShiftSchedules,
+                                                         updatedShifts:=updatedShiftSchedules)
+
+                Dim importList = New List(Of UserActivityItem)
                 Dim entityName = FormEntityName.ToLower()
 
-                For Each schedule In newShiftScheduleList
-                    importList.Add(New Entities.UserActivityItem() With
-                        {
-                        .Description = $"Imported a new {entityName}.",
-                        .EntityId = schedule.RowID
-                        })
+                For Each schedule In addedShiftSchedules
+                    importList.Add(New UserActivityItem() With
+                            {
+                            .Description = $"Imported a new {entityName}.",
+                            .EntityId = schedule.RowID
+                            })
                 Next
-                For Each schedule In existingShiftScheduleList
-                    importList.Add(New Entities.UserActivityItem() With
-                        {
-                        .Description = $"Updated a {entityName} on import.",
-                        .EntityId = schedule.RowID
-                        })
+                For Each schedule In updatedShiftSchedules
+                    importList.Add(New UserActivityItem() With
+                            {
+                            .Description = $"Updated a {entityName} on import.",
+                            .EntityId = schedule.RowID
+                            })
                 Next
 
                 Dim repo = New UserActivityRepository
                 repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                succeed = True
-            Catch ex As Exception
-                succeed = False
-                Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
-                MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
-            Finally
-                If succeed Then DialogResult = DialogResult.OK
-
                 Me.IsSaved = True
-            End Try
+                DialogResult = DialogResult.OK
 
-        End Using
+            End Function)
 
     End Sub
 

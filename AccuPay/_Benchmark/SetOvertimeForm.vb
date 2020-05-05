@@ -90,7 +90,7 @@ Public Class SetOvertimeForm
 
     Private Sub OvertimeComboBox_DrawItem(sender As Object, e As DrawItemEventArgs) Handles OvertimeComboBox.DrawItem
 
-        Dim backgroundColor As Brush
+        Dim backgroundColor = Brushes.White
         Dim g = e.Graphics
         Dim rect = e.Bounds
         Dim displayString = ""

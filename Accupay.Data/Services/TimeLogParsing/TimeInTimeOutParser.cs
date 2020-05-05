@@ -90,7 +90,7 @@ namespace AccuPay.Data.Services
                 var timeIn = parts[2].Trim();
                 var timeOut = parts.Length > 3 ? parts[3].Trim() : null;
 
-                if (string.IsNullOrEmpty(timeIn) & string.IsNullOrEmpty(timeOut))
+                if (string.IsNullOrEmpty(timeIn) && string.IsNullOrEmpty(timeOut))
                     return;
 
                 timeEntries.Add(new FixedFormatTimeEntry(employeeNo, dateOccurred, timeIn, timeOut));

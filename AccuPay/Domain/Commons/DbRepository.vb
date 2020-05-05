@@ -3,11 +3,11 @@
 Public Class DbRepository
     Implements IDisposable
 
-    Protected ReadOnly _context As PayrollContext
+    'Protected ReadOnly _context As PayrollContext
 
-    Public Sub New()
-        _context = New PayrollContext()
-    End Sub
+    'Public Sub New()
+    '    _context = New PayrollContext()
+    'End Sub
 
 #Region "IDisposable Support"
 
@@ -18,7 +18,7 @@ Public Class DbRepository
         If Not disposedValue Then
             If disposing Then
                 ' TODO: dispose managed state (managed objects).
-                _context.Dispose()
+                '_context.Dispose()
             End If
 
             ' TODO: free unmanaged resources (unmanaged objects) and override Finalize() below.

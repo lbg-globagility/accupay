@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
 Imports AccuPay.Utilities
 
 Namespace Benchmark
@@ -12,8 +12,8 @@ Namespace Benchmark
 
         Public Const WorkHoursPerDay As Decimal = 8
 
-        Public Property Employee As Entities.Employee
-        Public Property Salary As Entities.Salary
+        Public Property Employee As Employee
+        Public Property Salary As Salary
         Public Property MonthlyRate As Decimal
         Public Property DailyRate As Decimal
         Public Property HourlyRate As Decimal
@@ -21,7 +21,7 @@ Namespace Benchmark
         Public Property ActualDailyRate As Decimal
         Public Property ActualHourlyRate As Decimal
 
-        Sub New(employee As Entities.Employee, salary As Entities.Salary)
+        Sub New(employee As Employee, salary As Salary)
 
             Me.Employee = employee
 

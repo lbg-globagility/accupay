@@ -39,7 +39,6 @@ Source: ".\AccuPay\bin\Debug\AccuPay.exe.config"; DestDir: "{app}"; Flags: ignor
 Source: ".\AccuPay\bin\Debug\AccuPay.Data.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.DB.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.Payslip.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: ".\AccuPay\bin\Debug\AccuPay.Reference.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AccuPay.Utilities.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\Aga.Controls.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: ".\AccuPay\bin\Debug\AutoMapper.dll"; DestDir: "{app}"; Flags: ignoreversion

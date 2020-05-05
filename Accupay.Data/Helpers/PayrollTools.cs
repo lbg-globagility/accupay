@@ -12,13 +12,14 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Helpers
 {
+    /// <summary>
+    /// All the functions in here should be moved to an application or domain service.
+    /// </summary>
     public class PayrollTools
     {
         public const int MonthsPerYear = 12;
 
         public const int WorkHoursPerDay = 8;
-
-        public const int DivisorToDailyRate = 8;
 
         public const int SemiMonthlyPayPeriodsPerMonth = 2;
 
@@ -30,8 +31,8 @@ namespace AccuPay.Data.Helpers
 
         private const int PotentialLastWorkDay = 7;
 
-        public static decimal GetEmployeeMonthlyRate(IEmployee employee,
-                                                    ISalary salary,
+        public static decimal GetEmployeeMonthlyRate(Employee employee,
+                                                    Salary salary,
                                                     bool isActual = false)
         {
             var basicSalary = isActual ? salary.BasicSalary + salary.AllowanceSalary : salary.BasicSalary;
@@ -54,7 +55,7 @@ namespace AccuPay.Data.Helpers
             return monthlyRate / GetWorkDaysPerMonth(workDaysPerYear);
         }
 
-        public static decimal GetDailyRate(ISalary salary, IEmployee employee, bool isActual = false)
+        public static decimal GetDailyRate(Salary salary, Employee employee, bool isActual = false)
         {
             var dailyRate = 0M;
 
@@ -86,8 +87,8 @@ namespace AccuPay.Data.Helpers
             return dailyRate / WorkHoursPerDay;
         }
 
-        public static decimal GetHourlyRateByDailyRate(ISalary salary,
-                                                        IEmployee employee,
+        public static decimal GetHourlyRateByDailyRate(Salary salary,
+                                                        Employee employee,
                                                         bool isActual = false)
         {
             return GetDailyRate(salary, employee, isActual) / WorkHoursPerDay;
@@ -138,7 +139,7 @@ namespace AccuPay.Data.Helpers
 
         public static bool HasWorkAfterLegalHoliday(DateTime legalHolidayDate,
                                                     DateTime endOfCutOff,
-                                                    IList<ITimeEntry> currentTimeEntries,
+                                                    IList<TimeEntry> currentTimeEntries,
                                                     CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = legalHolidayDate.Date.AddDays(PotentialLastWorkDay);
@@ -184,35 +185,36 @@ namespace AccuPay.Data.Helpers
             return false;
         }
 
-        internal static async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYear(int organizationId, IEnumerable<IPayPeriod> payperiods = null)
+        public static async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYear(int organizationId, IEnumerable<IPayPeriod> payperiods = null)
         {
-            return await Task.Run(() =>
+            // replace this with a policy
+            // fourlinq can use this feature also
+            // for clients that has the same attendance and payroll period
+            var isBenchmarkOwner = ((new SystemOwnerService()).GetCurrentSystemOwner() ==
+                                                                SystemOwnerService.Benchmark);
+
+            var currentDay = DateTime.Today.ToMinimumHourValue();
+
+            using (var context = new PayrollContext())
             {
-                // replace this with a policy
-                // fourlinq can use this feature also
-                // for clients that has the same attendance and payroll period
-                var isBenchmarkOwner = ((new SystemOwnerService()).GetCurrentSystemOwner() ==
-                                                                    SystemOwnerService.Benchmark);
-
-                var currentDay = DateTime.Today.ToMinimumHourValue();
-
-                using (var context = new PayrollContext())
+                if (payperiods == null || payperiods.Count() == 0)
                 {
-                    if (payperiods == null || payperiods.Count() == 0)
-                        payperiods = context.PayPeriods.
-                                        Where(p => p.OrganizationID == organizationId).
-                                        Where(p => p.IsSemiMonthly);
-
-                    if (isBenchmarkOwner)
-                        return payperiods.
-                                Where(p => currentDay >= p.PayFromDate && currentDay <= p.PayToDate).
-                                LastOrDefault();
-                    else
-                        return payperiods.
-                                Where(p => p.PayToDate < currentDay).
-                                LastOrDefault();
+                    payperiods = await new PayPeriodRepository().GetAllSemiMonthlyAsync(organizationId);
                 }
-            });
+
+                if (isBenchmarkOwner)
+                {
+                    return payperiods.
+                            Where(p => currentDay >= p.PayFromDate && currentDay <= p.PayToDate).
+                            LastOrDefault();
+                }
+                else
+                {
+                    return payperiods.
+                            Where(p => p.PayToDate < currentDay).
+                            LastOrDefault();
+                }
+            }
         }
 
         public static async Task<Allowance> GetOrCreateEmployeeEcola(int employeeId,
@@ -296,26 +298,6 @@ namespace AccuPay.Data.Helpers
 
         //    var n_ExecSQLProcedure = new SQL(strquery_recompute_13monthpay, param_array);
         //    n_ExecSQLProcedure.ExecuteQuery();
-        //}
-
-        public static bool CheckIfUsingUserLevel()
-        {
-            var settings = ListOfValueCollection.Create();
-
-            return settings.GetBoolean("User Policy.UseUserLevel", false);
-        }
-
-        // TODO: DeletePaystub
-        //public static void DeletePaystub(int employeeId, int payPeriodId)
-        //{
-        //    ExecuteQuery n_ExecuteQuery = new ExecuteQuery("SELECT RowID" + " FROM paystub" + " WHERE EmployeeID='" + employeeId + "'" + " AND OrganizationID='" + orgztnID + "'" + " AND PayPeriodID='" + payPeriodId + "'" + " LIMIT 1;");
-
-        //    object paystubRowID = null;
-
-        //    paystubRowID = n_ExecuteQuery.Result;
-
-        //    if (paystubRowID != null)
-        //        n_ExecuteQuery = new ExecuteQuery("CALL DEL_specificpaystub('" + paystubRowID.ToString() + "');");
         //}
 
         public static async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)

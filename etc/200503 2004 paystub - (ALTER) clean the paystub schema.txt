@@ -1,0 +1,21 @@
+ALTER TABLE `paystub`
+	DROP FOREIGN KEY `FK_paystub_employee`,
+	DROP FOREIGN KEY `FK_paystub_payperiod`,
+	DROP FOREIGN KEY `paystub_ibfk_1`,
+	DROP FOREIGN KEY `paystub_ibfk_2`,
+	DROP FOREIGN KEY `paystub_ibfk_3`;
+ALTER TABLE `paystub`
+	ALTER `PayPeriodID` DROP DEFAULT,
+	ALTER `EmployeeID` DROP DEFAULT;
+ALTER TABLE `paystub`
+	CHANGE COLUMN `PayPeriodID` `PayPeriodID` INT(10) NOT NULL AFTER `LastUpdBy`,
+	CHANGE COLUMN `EmployeeID` `EmployeeID` INT(10) NOT NULL AFTER `PayPeriodID`,
+	DROP COLUMN `TimeEntryID`,
+	DROP INDEX `Index 5`,
+	ADD UNIQUE INDEX `AK_paystub_PayPeriodID_EmployeeID` (`PayPeriodID`, `EmployeeID`),
+	DROP FOREIGN KEY `FK_paystub_timeentry`,
+	ADD CONSTRAINT `FK_paystub_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`) ON DELETE CASCADE,
+	ADD CONSTRAINT `FK_paystub_payperiod_PayPeriodID` FOREIGN KEY (`PayPeriodID`) REFERENCES `payperiod` (`RowID`),
+	ADD CONSTRAINT `FK_paystub_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_paystub_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK-paystub_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`);

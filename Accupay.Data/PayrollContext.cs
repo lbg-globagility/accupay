@@ -15,7 +15,11 @@ namespace AccuPay.Data
                                                     level == LogLevel.Information, true)
         });
 
+        public virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
+        public virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
         public virtual DbSet<Address> Addresses { get; set; }
+        public virtual DbSet<Adjustment> Adjustments { get; set; }
+        public virtual DbSet<Agency> Agencies { get; set; }
         public virtual DbSet<AgencyFee> AgencyFees { get; set; }
         public virtual DbSet<Allowance> Allowances { get; set; }
         public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
@@ -30,9 +34,11 @@ namespace AccuPay.Data
         public virtual DbSet<DayType> DayTypes { get; set; }
         public virtual DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
+        public virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
         public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }
         public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
+        internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
         public virtual DbSet<JobCategory> JobCategories { get; set; }
         public virtual DbSet<JobLevel> JobLevels { get; set; }
         public virtual DbSet<Leave> Leaves { get; set; }
@@ -41,7 +47,6 @@ namespace AccuPay.Data
         public virtual DbSet<ListOfValue> ListOfValues { get; set; }
         public virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
         public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
-
         public virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<Overtime> Overtimes { get; set; }
@@ -49,21 +54,30 @@ namespace AccuPay.Data
         public virtual DbSet<PayPeriod> PayPeriods { get; set; }
         public virtual DbSet<PayRate> PayRates { get; set; }
         public virtual DbSet<Paystub> Paystubs { get; set; }
+        public virtual DbSet<PaystubActual> PaystubActuals { get; set; }
         public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        public virtual DbSet<PaystubItem> PaystubItems { get; set; }
+        public virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         public virtual DbSet<Position> Positions { get; set; }
+        public virtual DbSet<PositionView> PositionViews { get; set; }
         public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
+        public virtual DbSet<Privilege> Privileges { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
+        public virtual DbSet<Shift> Shifts { get; set; }
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
         public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
+        internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
         internal virtual DbSet<User> Users { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
+        internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
+        internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
         public PayrollContext()
         {
@@ -79,6 +93,33 @@ namespace AccuPay.Data
             optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
                             UseLoggerFactory(_loggerFactory).
                             EnableSensitiveDataLogging();
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            modelBuilder.Entity<Paystub>().
+            HasOne(x => x.ThirteenthMonthPay).
+            WithOne(x => x.Paystub).
+            HasForeignKey<ThirteenthMonthPay>(x => x.PaystubID);
+
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.AllowanceItems).
+                WithOne(x => x.Paystub);
+
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.LoanTransactions).
+                WithOne(x => x.Paystub);
+
+            // Leave transaction should be tied to Time Entry Generation not Payroll Generation
+            // thus leave transactions should be processed when we generate time entries.
+            modelBuilder.Entity<Paystub>().
+                HasMany(x => x.LeaveTransactions).
+                WithOne(x => x.Paystub);
+
+            modelBuilder.Entity<TardinessRecord>().
+                HasKey(t => new { t.EmployeeId, t.Year });
         }
     }
 }

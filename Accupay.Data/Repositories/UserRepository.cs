@@ -11,6 +11,8 @@ namespace AccuPay.Data.Repositories
 {
     public class UserRepository
     {
+        private readonly PositionViewRepository positionViewRepository;
+
         public class UserBuilder : IDisposable
         {
             private PayrollContext _context;
@@ -71,6 +73,11 @@ namespace AccuPay.Data.Repositories
             }
 
             #endregion Builder Methods
+        }
+
+        public UserRepository()
+        {
+            positionViewRepository = new PositionViewRepository();
         }
 
         #region User List
@@ -140,12 +147,25 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<User> GetByUsernameWithPositionAsync(string username)
+        {
+            using (var builder = new UserBuilder())
+            {
+                return await builder.
+                    IncludePosition().
+                    ByUsername(username).
+                    FirstOrDefaultAsync();
+            }
+        }
+
         #endregion By User
 
         #region CRUD
 
         public async Task SaveAsync(User user)
         {
+            await positionViewRepository.FillUserPositionViewAsync(positionId: user.PositionID, organizationId: user.OrganizationID, userId: user.CreatedBy.Value);
+
             List<User> users = new List<User>();
             users.Add(user);
 

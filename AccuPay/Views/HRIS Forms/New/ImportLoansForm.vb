@@ -176,7 +176,7 @@ Public Class ImportLoansForm
             Return False
         End If
 
-        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+        If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
 
             record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
             rejectedRecords.Add(record)
@@ -225,7 +225,7 @@ Public Class ImportLoansForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

@@ -11,21 +11,48 @@ Public Class EmployeeOvertimeForm
 
     Private Const FormEntityName As String = "Overtime"
 
-    Private _employees As New List(Of Employee)
-
-    Private _allEmployees As New List(Of Employee)
-
     Private _currentOvertime As Overtime
 
-    Private _currentOvertimes As New List(Of Overtime)
+    Private _employees As List(Of Employee)
 
-    Private _changedOvertimes As New List(Of Overtime)
+    Private _allEmployees As List(Of Employee)
 
-    Private _overtimeRepository As New OvertimeRepository
+    Private _currentOvertimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _changedOvertimes As List(Of Overtime)
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _overtimeRepository As OvertimeRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentOvertimes = New List(Of Overtime)
+
+        _changedOvertimes = New List(Of Overtime)
+
+        _overtimeRepository = New OvertimeRepository()
+
+        _employeeRepository = New EmployeeRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+    End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -36,11 +63,11 @@ Public Class EmployeeOvertimeForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(SearchTextBox.Text.ToLower())
@@ -94,12 +121,18 @@ Public Class EmployeeOvertimeForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
         Else
             EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeOvertimes()
+
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -125,6 +158,22 @@ Public Class EmployeeOvertimeForm
     End Function
 
     Private Sub ResetForm()
+
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'overtime grid view
+        RemoveHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
+        OvertimeGridView.DataSource = Nothing
+
+        AddHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
+        'overtime details
 
         Me._currentOvertime = Nothing
 
@@ -153,7 +202,13 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -183,9 +238,7 @@ Public Class EmployeeOvertimeForm
             Me._changedOvertimes(index).OTEndTime = Me._currentOvertimes(index).OTEndTime
         Next
 
-        OvertimeListBindingSource.DataSource = Me._currentOvertimes
-
-        OvertimeGridView.DataSource = OvertimeListBindingSource
+        PopulateOvertimeGridView()
 
     End Function
 
@@ -286,8 +339,7 @@ Public Class EmployeeOvertimeForm
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -330,8 +382,10 @@ Public Class EmployeeOvertimeForm
                                             Async Function()
                                                 Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID.Value)
 
-                                                Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, FormEntityName, Me._currentOvertime.RowID.Value, z_OrganizationID)
+                                                _userActivityRepository.RecordDelete(z_User,
+                                                                                     FormEntityName,
+                                                                                     Me._currentOvertime.RowID.Value,
+                                                                                     z_OrganizationID)
 
                                                 Await LoadOvertimes(currentEmployee)
 
@@ -352,9 +406,16 @@ Public Class EmployeeOvertimeForm
         End If
 
         EndDatePicker.Value = Me._currentOvertime.OTEndDate
+
     End Sub
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowEmployeeOvertimes()
+
+    End Sub
+
+    Private Async Function ShowEmployeeOvertimes() As Task
 
         ResetForm()
 
@@ -369,10 +430,15 @@ Public Class EmployeeOvertimeForm
 
         Await LoadOvertimes(currentEmployee)
 
+    End Function
+
+    Private Sub OvertimeGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowOvertimeDetails()
+
     End Sub
 
-    Private Sub OvertimeGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OvertimeGridView.SelectionChanged
-        ResetForm()
+    Private Sub ShowOvertimeDetails()
 
         If OvertimeGridView.CurrentRow Is Nothing Then Return
 
@@ -452,9 +518,21 @@ Public Class EmployeeOvertimeForm
             Me._currentOvertimes(index).OTEndTime = Me._changedOvertimes(index).OTEndTime
         Next
 
+        PopulateOvertimeGridView()
+    End Sub
+
+    Private Sub PopulateOvertimeGridView()
+
+        RemoveHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
         OvertimeListBindingSource.DataSource = Me._currentOvertimes
 
         OvertimeGridView.DataSource = OvertimeListBindingSource
+
+        ShowOvertimeDetails()
+
+        AddHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click

@@ -142,7 +142,7 @@ namespace AccuPay.Data.Repositories
         public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            using (var context = new PayrollContext())
             {
                 return CreateBaseQueryByTimePeriod(organizationId,
                                                             context,
@@ -183,6 +183,18 @@ namespace AccuPay.Data.Repositories
             using (var context = new PayrollContext())
             {
                 return await context.AllowanceItems.AnyAsync(a => a.AllowanceID == id);
+            }
+        }
+
+        public async Task<bool> CheckIfAlreadyUsed(string allowanceName)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.AllowanceItems.
+                                    Include(x => x.Allowance).
+                                    Include(x => x.Allowance.Product).
+                                    Where(x => x.Allowance.Product.PartNo == allowanceName).
+                                    AnyAsync();
             }
         }
 

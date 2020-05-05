@@ -10,21 +10,47 @@ Public Class OfficialBusinessForm
 
     Private Const FormEntityName As String = "Official Business"
 
-    Private _employees As New List(Of Employee)
-
-    Private _allEmployees As New List(Of Employee)
-
     Private _currentOfficialBusiness As OfficialBusiness
 
-    Private _currentOfficialBusinesses As New List(Of OfficialBusiness)
+    Private _employees As List(Of Employee)
 
-    Private _changedOfficialBusinesses As New List(Of OfficialBusiness)
+    Private _allEmployees As List(Of Employee)
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository()
+    Private _currentOfficialBusinesses As List(Of OfficialBusiness)
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _officialBusinessRepository As OfficialBusinessRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentOfficialBusinesses = New List(Of OfficialBusiness)
+
+        _changedOfficialBusinesses = New List(Of OfficialBusiness)
+
+        _officialBusinessRepository = New OfficialBusinessRepository()
+
+        _employeeRepository = New EmployeeRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+    End Sub
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -35,11 +61,11 @@ Public Class OfficialBusinessForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(SearchTextBox.Text.ToLower())
@@ -92,12 +118,19 @@ Public Class OfficialBusinessForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
         Else
             EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeOfficialBusinesses()
+
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -124,6 +157,21 @@ Public Class OfficialBusinessForm
 
     Private Sub ResetForm()
 
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'official business grid view
+        RemoveHandler OfficialBusinessGridView.SelectionChanged, AddressOf OfficialBusinessGridView_SelectionChanged
+
+        OfficialBusinessGridView.DataSource = Nothing
+
+        AddHandler OfficialBusinessGridView.SelectionChanged, AddressOf OfficialBusinessGridView_SelectionChanged
+
+        'official business details
         Me._currentOfficialBusiness = Nothing
 
         DetailsTabLayout.Enabled = False
@@ -151,7 +199,13 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -182,9 +236,7 @@ Public Class OfficialBusinessForm
             Me._changedOfficialBusinesses(index).EndTime = Me._currentOfficialBusinesses(index).EndTime
         Next
 
-        OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
-
-        OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+        PopulateOfficialBusinessGridView()
 
     End Function
 
@@ -287,13 +339,18 @@ Public Class OfficialBusinessForm
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowEmployeeOfficialBusinesses()
+
+    End Sub
+
+    Private Async Function ShowEmployeeOfficialBusinesses() As Task
 
         ResetForm()
 
@@ -308,7 +365,7 @@ Public Class OfficialBusinessForm
 
         Await LoadOfficialBusinesses(currentEmployee)
 
-    End Sub
+    End Function
 
     Private Function GetSelectedOfficialBusiness() As OfficialBusiness
         Return CType(OfficialBusinessGridView.CurrentRow.DataBoundItem, OfficialBusiness)
@@ -349,8 +406,10 @@ Public Class OfficialBusinessForm
                                                 Await _officialBusinessRepository.
                                                     DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
-                                                Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, FormEntityName, Me._currentOfficialBusiness.RowID.Value, z_OrganizationID)
+                                                _userActivityRepository.RecordDelete(z_User,
+                                                                                     FormEntityName,
+                                                                                     Me._currentOfficialBusiness.RowID.Value,
+                                                                                     z_OrganizationID)
 
                                                 Await LoadOfficialBusinesses(currentEmployee)
 
@@ -377,8 +436,13 @@ Public Class OfficialBusinessForm
 
     End Sub
 
-    Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OfficialBusinessGridView.SelectionChanged
-        ResetForm()
+    Private Sub OfficialBusinessGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowOfficialBusinessDetails()
+
+    End Sub
+
+    Private Sub ShowOfficialBusinessDetails()
 
         If OfficialBusinessGridView.CurrentRow Is Nothing Then Return
 
@@ -458,9 +522,20 @@ Public Class OfficialBusinessForm
             Me._currentOfficialBusinesses(index).EndTime = Me._changedOfficialBusinesses(index).EndTime
         Next
 
+        PopulateOfficialBusinessGridView()
+    End Sub
+
+    Private Sub PopulateOfficialBusinessGridView()
+
+        RemoveHandler OfficialBusinessGridView.SelectionChanged, AddressOf OfficialBusinessGridView_SelectionChanged
+
         OfficialBusinessListBindingSource.DataSource = Me._currentOfficialBusinesses
 
         OfficialBusinessGridView.DataSource = OfficialBusinessListBindingSource
+
+        ShowOfficialBusinessDetails()
+
+        AddHandler OfficialBusinessGridView.SelectionChanged, AddressOf OfficialBusinessGridView_SelectionChanged
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click

@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
-Imports AccuPay
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Entity
 Imports AccuPay.Utilities
 
 <TestFixture>
@@ -125,7 +126,7 @@ Public Class OvertimeHoursTest
         Dim today = Date.Parse("2017-01-01")
         Dim currentShift = GetShift(shiftStartTime, shiftEndTime, today)
 
-        Dim overtime = New Data.Entities.Overtime With {
+        Dim overtime = New Overtime With {
             .OTStartDate = today,
             .OTStartTime = TimeSpan.Parse(otStartTime),
             .OTEndTime = TimeSpan.Parse(otEndTime)

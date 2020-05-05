@@ -174,12 +174,14 @@ namespace AccuPay.Data.Services
                     if (logsByDay.Key == null)
                         continue;
 
-                    var logDate = System.Convert.ToDateTime(logsByDay.Key);
+                    var logDate = Convert.ToDateTime(logsByDay.Key);
 
                     var firstTimeStampIn = logsByDayList.
-                                                FirstOrDefault(l => Nullable.Equals(l.IsTimeIn, true))?.DateTime;
+                                                FirstOrDefault(l => Nullable.Equals(l.IsTimeIn, true))?.
+                                                DateTime;
                     var finalTimeStampOut = logsByDayList.
-                                                LastOrDefault(l => Nullable.Equals(l.IsTimeIn, false))?.DateTime;
+                                                LastOrDefault(l => Nullable.Equals(l.IsTimeIn, false))?.
+                                                DateTime;
 
                     TimeSpan? firstTimeIn, finalTimeOut;
 
@@ -253,11 +255,11 @@ namespace AccuPay.Data.Services
                     continue;
 
                 var currentEmployeeShifts = _employeeShifts.
-                                                Where(s => Nullable.Equals(s.EmployeeID, employeeId)).
+                                                Where(s => s.EmployeeID == employeeId).
                                                 ToList();
 
                 var currentEmployeeOvertimes = _employeeOvertimes.
-                                                Where(o => Nullable.Equals(o.EmployeeID, employeeId)).
+                                                Where(o => o.EmployeeID == employeeId).
                                                 ToList();
 
                 var employeeLogs = logGroup.ToList();

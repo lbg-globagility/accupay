@@ -30,13 +30,11 @@ Public Class JobLevelForm
     End Sub
 
     Private Sub LoadJobCategories()
-        Using context = New PayrollContext()
-            Dim jobCategories = _jobCategoryRepository.GetAll()
-            RemoveHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
-            JobCategoriesDataGridView.DataSource = jobCategories
-            SelectJobCategory(_category)
-            AddHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
-        End Using
+        Dim jobCategories = _jobCategoryRepository.GetAll()
+        RemoveHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
+        JobCategoriesDataGridView.DataSource = jobCategories
+        SelectJobCategory(_category)
+        AddHandler JobCategoriesDataGridView.SelectionChanged, AddressOf JobCategoriesDataGridView_SelectionChanged
     End Sub
 
     Private Sub SelectJobCategory(jobCategory As JobCategory)

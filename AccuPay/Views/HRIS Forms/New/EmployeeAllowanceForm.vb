@@ -11,25 +11,53 @@ Public Class EmployeeAllowanceForm
 
     Private Const FormEntityName As String = "Allowance"
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _currentAllowance As Allowance
 
-    Private _productRepository As New ProductRepository()
+    Private _employees As List(Of Employee)
 
-    Private _allowanceRepository As New AllowanceRepository()
+    Private _allEmployees As List(Of Employee)
 
     Private _allowanceTypeList As List(Of Product)
 
-    Private _employees As New List(Of Employee)
+    Private _currentAllowances As List(Of Allowance)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _changedAllowances As List(Of Allowance)
 
-    Private _currentAllowance As Allowance
+    Private _employeeRepository As EmployeeRepository
 
-    Private _currentAllowances As New List(Of Allowance)
+    Private _productRepository As ProductRepository
 
-    Private _changedAllowances As New List(Of Allowance)
+    Private _allowanceRepository As AllowanceRepository
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentAllowances = New List(Of Allowance)
+
+        _changedAllowances = New List(Of Allowance)
+
+        _employeeRepository = New EmployeeRepository()
+
+        _productRepository = New ProductRepository()
+
+        _allowanceRepository = New AllowanceRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+    End Sub
 
     Private Async Sub EmployeeAllowancesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -41,14 +69,14 @@ Public Class EmployeeAllowanceForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetAllowanceForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(searchTextBox.Text.ToLower())
+                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
 
                                                Return True
                                            End Function)
@@ -59,27 +87,38 @@ Public Class EmployeeAllowanceForm
         Me.Close()
     End Sub
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
 
-        ResetAllowanceForm()
+        Await ShowEmployeeAllowances()
+
+    End Sub
+
+    Private Async Function ShowEmployeeAllowances() As Task
+
+        ResetForm()
 
         Dim currentEmployee = GetSelectedEmployee()
 
         If currentEmployee Is Nothing Then Return
 
-        txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleInitial
-        txtEmployeeNumber.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
-        pbEmpPicAllow.Image = ConvByteToImage(currentEmployee.Image)
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
 
         Await LoadAllowances(currentEmployee)
 
+    End Function
+
+    Private Sub AllowanceGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowAllowanceDetails()
+
     End Sub
 
-    Private Sub dgvempallowance_SelectionChanged(sender As Object, e As EventArgs) Handles dgvempallowance.SelectionChanged
-        ResetAllowanceForm()
+    Private Sub ShowAllowanceDetails()
 
-        If dgvempallowance.CurrentRow Is Nothing Then Return
+        If AllowanceGridView.CurrentRow Is Nothing Then Return
 
         Dim currentAllowance As Allowance = GetSelectedAllowance()
 
@@ -127,7 +166,7 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Sub tsbtnSaveAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnSaveAllowance.Click
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceAllowanceGridViewCommit()
 
         Dim changedAllowances As New List(Of Allowance)
@@ -191,7 +230,7 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Sub tsbtnNewAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnNewAllowance.Click
+    Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
         Dim employee As Employee = GetSelectedEmployee()
 
@@ -226,7 +265,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub AllowanceBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles AllowancesBindingSource.CurrentItemChanged
 
-        Dim currentRow = dgvempallowance.CurrentRow
+        Dim currentRow = AllowanceGridView.CurrentRow
 
         If currentRow Is Nothing Then Return
 
@@ -244,7 +283,7 @@ Public Class EmployeeAllowanceForm
         End If
     End Sub
 
-    Private Sub tsbtnCancelAllowance_Click(sender As Object, e As EventArgs) Handles tsbtnCancelAllowance.Click
+    Private Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         Dim currentEmployee = GetSelectedEmployee()
 
@@ -260,13 +299,24 @@ Public Class EmployeeAllowanceForm
 
         Me._currentAllowances = Me._changedAllowances.CloneListJson()
 
+        PopulateAllowanceGridView()
+    End Sub
+
+    Private Sub PopulateAllowanceGridView()
+
+        RemoveHandler AllowanceGridView.SelectionChanged, AddressOf AllowanceGridView_SelectionChanged
+
         AllowancesBindingSource.DataSource = Me._currentAllowances
 
-        dgvempallowance.DataSource = AllowancesBindingSource
+        AllowanceGridView.DataSource = AllowancesBindingSource
+
+        ShowAllowanceDetails()
+
+        AddHandler AllowanceGridView.SelectionChanged, AddressOf AllowanceGridView_SelectionChanged
 
     End Sub
 
-    Private Async Sub tsbtnDeleteAllowanceButton_Click(sender As Object, e As EventArgs) Handles DeleteAllowanceButton.Click
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
 
         Dim currentEmployee = GetSelectedEmployee()
 
@@ -321,8 +371,10 @@ Public Class EmployeeAllowanceForm
                                             Async Function()
                                                 Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
 
-                                                Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, FormEntityName, CInt(Me._currentAllowance.RowID), z_OrganizationID)
+                                                _userActivityRepository.RecordDelete(z_User,
+                                                                                     FormEntityName,
+                                                                                     CInt(Me._currentAllowance.RowID),
+                                                                                     z_OrganizationID)
 
                                                 Await LoadAllowances(currentEmployee)
 
@@ -331,9 +383,7 @@ Public Class EmployeeAllowanceForm
                                             End Function)
     End Function
 
-    Private filepath As String
-
-    Private Async Sub tsbtnImportAllowances_Click(sender As Object, e As EventArgs) Handles tsbtnImportAllowance.Click
+    Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
         Using form = New ImportAllowanceForm()
             form.ShowDialog()
@@ -362,8 +412,14 @@ Public Class EmployeeAllowanceForm
 
     End Sub
 
-    Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+    Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Sub ShowBalloonInfo(content As String, title As String)
@@ -371,7 +427,7 @@ Public Class EmployeeAllowanceForm
     End Sub
 
     Private Sub InitializeComponentSettings()
-        dgvempallowance.AutoGenerateColumns = False
+        AllowanceGridView.AutoGenerateColumns = False
         employeesDataGridView.AutoGenerateColumns = False
     End Sub
 
@@ -384,12 +440,18 @@ Public Class EmployeeAllowanceForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler employeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             employeesDataGridView.DataSource = Me._employees
         Else
             employeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeAllowances()
+
+        AddHandler employeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
     End Function
 
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
@@ -410,15 +472,17 @@ Public Class EmployeeAllowanceForm
 
         Me._changedAllowances = Me._currentAllowances.CloneListJson()
 
-        AllowancesBindingSource.DataSource = Me._currentAllowances
-
-        dgvempallowance.DataSource = AllowancesBindingSource
+        PopulateAllowanceGridView()
 
     End Function
 
     Private Async Function LoadAllowanceTypes() As Task
 
         Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID))
+
+        ' TODO: decide on either deleting the allowance type on delete on ProductControlForm,
+        'or if we stil use ActiveData to soft delete the allowance, what should happen on the form
+        'if the selected allowance has a soft deleted allowance type.
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -458,15 +522,30 @@ Public Class EmployeeAllowanceForm
         cboallowfreq.DataBindings.Clear()
         cboallowfreq.DataBindings.Add("Text", Me._currentAllowance, "AllowanceFrequency")
 
-        AllowanceDetailsTabLayout.Enabled = True
+        DetailsTabLayout.Enabled = True
 
     End Sub
 
-    Private Sub ResetAllowanceForm()
+    Private Sub ResetForm()
 
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'allowance grid view
+        RemoveHandler AllowanceGridView.SelectionChanged, AddressOf AllowanceGridView_SelectionChanged
+
+        AllowanceGridView.DataSource = Nothing
+
+        AddHandler AllowanceGridView.SelectionChanged, AddressOf AllowanceGridView_SelectionChanged
+
+        'allowance details
         Me._currentAllowance = Nothing
 
-        AllowanceDetailsTabLayout.Enabled = False
+        DetailsTabLayout.Enabled = False
 
         cboallowtype.SelectedIndex = -1
         cboallowtype.DataBindings.Clear()
@@ -486,7 +565,7 @@ Public Class EmployeeAllowanceForm
     End Sub
 
     Private Function GetSelectedAllowance() As Allowance
-        Return CType(dgvempallowance.CurrentRow.DataBoundItem, Allowance)
+        Return CType(AllowanceGridView.CurrentRow.DataBoundItem, Allowance)
     End Function
 
     Private Sub ForceAllowanceGridViewCommit()
@@ -570,8 +649,7 @@ Public Class EmployeeAllowanceForm
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -586,7 +664,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Function ShowEmployeeList() As Task
 
-        If cbShowAll.Checked Then
+        If ShowAllCheckBox.Checked Then
 
             Me._employees = Me._allEmployees
         Else
@@ -606,7 +684,7 @@ Public Class EmployeeAllowanceForm
     Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
         If _currentAllowance Is Nothing Then Return
 
-        Dim showEndDate = Not cboallowfreq.Text = Allowance.FREQUENCY_ONE_TIME
+        Dim showEndDate = Not cboallowfreq.Text = Data.Entities.Allowance.FREQUENCY_ONE_TIME
 
         lblEndDate.Visible = showEndDate
         dtpallowenddate.Visible = showEndDate
