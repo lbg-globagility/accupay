@@ -41,6 +41,7 @@ Public Class AwardTab
 
         Dim awardRepo = New AwardRepository
         _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _awards = _awards.OrderByDescending(Function(x) x.AwardDate).ToList()
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
         dgvAwards.DataSource = _awards

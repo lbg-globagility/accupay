@@ -38,6 +38,7 @@ Public Class EducationalBackgroundTab
 
         Dim educbgRepo = New EducationalBackgroundRepository
         _educationalBackgrounds = Await educbgRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _educationalBackgrounds = _educationalBackgrounds.OrderByDescending(Function(x) x.DateFrom).ToList()
 
         RemoveHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged
         dgvEducBgs.DataSource = _educationalBackgrounds

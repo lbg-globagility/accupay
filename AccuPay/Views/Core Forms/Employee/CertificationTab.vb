@@ -39,6 +39,7 @@ Public Class CertificationTab
 
         Dim certificationRepo = New CertificationRepository
         _certifications = Await certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _certifications = _certifications.OrderByDescending(Function(x) x.IssueDate).ToList()
 
         RemoveHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged
         dgvCertifications.DataSource = _certifications
