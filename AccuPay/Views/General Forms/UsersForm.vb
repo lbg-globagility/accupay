@@ -289,6 +289,13 @@ Public Class UsersForm
                                     btnSave.Enabled = False
                                 End Sub
 
+        Dim usernameExistsAlready = Sub()
+                                        Dim userIDErrorMessage = "User ID Already exist."
+                                        SetWarning(txtUserName, userIDErrorMessage)
+                                        myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
+                                        enableSaveButton()
+                                    End Sub
+
         disableSaveButton()
 
         Dim hasWorry = ValidateRequiredFields()
@@ -310,10 +317,7 @@ Public Class UsersForm
         If isNew Then
             Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
-                Dim userIDErrorMessage = "User ID Already exist."
-                SetWarning(txtUserName, userIDErrorMessage)
-                myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
-                enableSaveButton()
+                usernameExistsAlready()
                 Return
             End If
 
@@ -333,6 +337,14 @@ Public Class UsersForm
             If userBoundItem Is Nothing Then Return
 
             Dim user = Await userRepo.GetByIdWithPositionAsync(userBoundItem.RowID)
+
+            If username <> user.Username Then
+                Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
+                If usernameExists Then
+                    usernameExistsAlready()
+                    Return
+                End If
+            End If
 
             ApplyChanges(user)
             Await userRepo.SaveAsync(user)
