@@ -14,50 +14,70 @@ Public Class EmployeeLoansForm
 
     Private sysowner_is_benchmark As Boolean
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _currentLoan As LoanSchedule
 
-    Private _productRepository As New ProductRepository()
+    Private _employees As List(Of Employee)
 
-    Private _listOfValueRepository As New ListOfValueRepository()
-
-    Private _loanScheduleRepository As New LoanScheduleRepository()
+    Private _allEmployees As List(Of Employee)
 
     Private _loanTypeList As List(Of Product)
 
-    Private _allEmployees As New List(Of Employee)
+    Private _currentloans As List(Of LoanSchedule)
 
-    Private _employees As New List(Of Employee)
+    Private _changedLoans As List(Of LoanSchedule)
 
-    Private _currentLoanSchedule As LoanSchedule
+    Private _currentLoanTransactions As List(Of LoanTransaction)
 
-    Private _currentloanSchedules As New List(Of LoanSchedule)
+    Private _employeeRepository As EmployeeRepository
 
-    Private _changedLoanSchedules As New List(Of LoanSchedule)
+    Private _productRepository As ProductRepository
 
-    Private _currentLoanTransactions As New List(Of LoanTransaction)
+    Private _listOfValueRepository As ListOfValueRepository
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
 
     Private Const FormEntityName As String = "Loan"
 
+    Private loanAmountBeforeTextChange As Decimal
+
+    Private loanInterestPercentageBeforeTextChange As Decimal
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentloans = New List(Of LoanSchedule)
+
+        _changedLoans = New List(Of LoanSchedule)
+
+        _currentLoanTransactions = New List(Of LoanTransaction)
+
+        _employeeRepository = New EmployeeRepository()
+
+        _productRepository = New ProductRepository()
+
+        _listOfValueRepository = New ListOfValueRepository()
+
+        _loanScheduleRepository = New LoanScheduleRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+    End Sub
+
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
-
-        sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
-        If sysowner_is_benchmark Then
-
-            RemoveHandler searchTextBox.TextChanged, AddressOf searchTextBox_TextChanged
-            AddHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
-        Else
-            AddHandler searchTextBox.TextChanged, AddressOf searchTextBox_TextChanged
-            RemoveHandler searchTextBox.KeyPress, AddressOf SearchTextBox_KeyPress
-        End If
-
-        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
-
-        DetailsTabControl.Enabled = False
 
         InitializeComponentSettings()
 
@@ -68,77 +88,61 @@ Public Class EmployeeLoansForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetLoanScheduleForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs)
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
-                                               Await FilterEmployees(searchTextBox.Text.ToLower())
+                                               Await FilterEmployees(SearchTextBox.Text.ToLower())
 
                                                Return True
                                            End Function)
 
     End Sub
 
-    Private Sub SearchTextBox_KeyPress(sender As Object, e As KeyPressEventArgs)
-        Dim e_asc = Asc(e.KeyChar)
-
-        If e_asc = 13 Then
-
-            _textBoxDelayedAction.ProcessAsync(Async Function()
-                                                   Await FilterEmployees(searchTextBox.Text.ToLower())
-
-                                                   Return True
-                                               End Function)
-        End If
-    End Sub
-
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         Me.Close()
     End Sub
 
-    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
 
-        ResetLoanScheduleForm()
-        Me._currentloanSchedules.Clear()
-        Me.LoanScheduleBindingSource.Clear()
-        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
+        Await ShowEmployeeLoans()
+
+    End Sub
+
+    Private Async Function ShowEmployeeLoans() As Task
+
+        ResetForm()
 
         Dim currentEmployee = GetSelectedEmployee()
 
         If currentEmployee Is Nothing Then Return
 
-        txtEmployeeFirstName.Text = currentEmployee.FullNameWithMiddleInitial
-        txtEmployeeNumber.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
+        EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
+        EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
-        pbEmployeePicture.Image = ConvByteToImage(currentEmployee.Image)
+        EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
 
-        Await LoadLoanSchedules(currentEmployee)
+        Await LoadLoans(currentEmployee)
+
+    End Function
+
+    Private Async Sub LoanGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowLoanDetails()
 
     End Sub
 
-    Private Async Sub loanSchedulesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+    Private Async Function ShowLoanDetails() As Task
+        If LoanGridView.CurrentRow Is Nothing Then Return
 
-        RemoveHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
-
-        ResetLoanScheduleForm()
-
-        DetailsTabControl.Enabled = False
-
-        If loanSchedulesDataGridView.CurrentRow Is Nothing Then
-
-            AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
-            Return
-
-        End If
-
-        Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
+        Dim currentLoan As LoanSchedule = GetSelectedLoan()
 
         Dim currentEmployee = GetSelectedEmployee()
-        If currentLoanSchedule IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
-           Nullable.Equals(currentLoanSchedule.EmployeeID, currentEmployee.RowID) Then
+        If currentLoan IsNot Nothing AndAlso currentEmployee IsNot Nothing AndAlso
+           Nullable.Equals(currentLoan.EmployeeID, currentEmployee.RowID) Then
 
             Await UpdateSelectedLoanScheduleData()
 
@@ -147,31 +151,25 @@ Public Class EmployeeLoansForm
             DetailsTabControl.Enabled = True
         End If
 
-        AddHandler loanSchedulesDataGridView.SelectionChanged, AddressOf loanSchedulesDataGridView_SelectionChanged
-
-    End Sub
-
-    Private loanAmountBeforeTextChange As Decimal
-
-    Private loanInterestPercentageBeforeTextChange As Decimal
+    End Function
 
     Private Sub txtLoanInterestPercentage_Enter(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Enter
 
-        If Me._currentLoanSchedule Is Nothing Then Return
+        If Me._currentLoan Is Nothing Then Return
 
-        loanInterestPercentageBeforeTextChange = Me._currentLoanSchedule.DeductionPercentage
+        loanInterestPercentageBeforeTextChange = Me._currentLoan.DeductionPercentage
 
     End Sub
 
     Private Sub txtLoanInterestPercentage_Leave(sender As Object, e As EventArgs) Handles txtLoanInterestPercentage.Leave
 
-        If Me._currentLoanSchedule Is Nothing Then Return
+        If Me._currentLoan Is Nothing Then Return
 
-        If loanInterestPercentageBeforeTextChange = Me._currentLoanSchedule.DeductionPercentage Then Return
+        If loanInterestPercentageBeforeTextChange = Me._currentLoan.DeductionPercentage Then Return
 
-        Dim totalPlusInterestRate As Decimal = 1 + (Me._currentLoanSchedule.DeductionPercentage * 0.01D)
+        Dim totalPlusInterestRate As Decimal = 1 + (Me._currentLoan.DeductionPercentage * 0.01D)
 
-        Me._currentLoanSchedule.TotalLoanAmount = Me._currentLoanSchedule.TotalLoanAmount * totalPlusInterestRate
+        Me._currentLoan.TotalLoanAmount = Me._currentLoan.TotalLoanAmount * totalPlusInterestRate
 
         UpdateBalanceAndNumberOfPayPeriod()
 
@@ -179,20 +177,20 @@ Public Class EmployeeLoansForm
 
     Private Sub txtTotalLoanAmount_Enter(sender As Object, e As EventArgs) Handles txtTotalLoanAmount.Enter
 
-        If Me._currentLoanSchedule Is Nothing Then Return
+        If Me._currentLoan Is Nothing Then Return
 
-        loanAmountBeforeTextChange = Me._currentLoanSchedule.TotalLoanAmount
+        loanAmountBeforeTextChange = Me._currentLoan.TotalLoanAmount
 
     End Sub
 
     Private Sub txtTotalLoanAmount_Leave(sender As Object, e As EventArgs) _
         Handles txtTotalLoanAmount.Leave, txtDeductionAmount.Leave
 
-        If Me._currentLoanSchedule Is Nothing Then Return
+        If Me._currentLoan Is Nothing Then Return
 
         If sender Is txtTotalLoanAmount Then
-            If loanAmountBeforeTextChange <> Me._currentLoanSchedule.TotalLoanAmount Then
-                Me._currentLoanSchedule.DeductionPercentage = 0
+            If loanAmountBeforeTextChange <> Me._currentLoan.TotalLoanAmount Then
+                Me._currentLoan.DeductionPercentage = 0
             End If
         End If
 
@@ -201,23 +199,23 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Sub UpdateBalanceAndNumberOfPayPeriod()
-        Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalLoanAmount)
-        Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoanSchedule.DeductionAmount)
+        Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoan.TotalLoanAmount)
+        Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoan.DeductionAmount)
 
         If Me._currentLoanTransactions.Count = 0 AndAlso
-            (Me._currentLoanSchedule.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
-            Me._currentLoanSchedule.Status IsNot LoanScheduleRepository.STATUS_COMPLETE) Then
+            (Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
+            Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_COMPLETE) Then
 
             Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
 
-            Me._currentLoanSchedule.TotalBalanceLeft = totalLoanAmount
-            Me._currentLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
+            Me._currentLoan.TotalBalanceLeft = totalLoanAmount
+            Me._currentLoan.NoOfPayPeriod = numberOfPayPeriod
 
         End If
 
-        Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoanSchedule.TotalBalanceLeft)
+        Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoan.TotalBalanceLeft)
 
-        Me._currentLoanSchedule.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
+        Me._currentLoan.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
@@ -231,10 +229,10 @@ Public Class EmployeeLoansForm
 
             PopulateLoanTypeCombobox()
 
-            If Me._currentLoanSchedule IsNot Nothing Then
+            If Me._currentLoan IsNot Nothing Then
 
-                Me._currentLoanSchedule.LoanTypeID = form.NewLoanType.RowID
-                Me._currentLoanSchedule.LoanName = form.NewLoanType.PartNo
+                Me._currentLoan.LoanTypeID = form.NewLoanType.RowID
+                Me._currentLoan.LoanName = form.NewLoanType.PartNo
 
                 Dim orderedLoanTypeList = Me._loanTypeList.OrderBy(Function(p) p.PartNo).ToList
 
@@ -247,28 +245,28 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Async Sub tsbtnSaveLoan_Click(sender As Object, e As EventArgs) Handles tsbtnSaveLoan.Click
+    Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         ForceLoanScheduleGridViewCommit()
 
-        Dim changedLoanSchedules As New List(Of LoanSchedule)
+        Dim changedLoans As New List(Of LoanSchedule)
 
         Dim messageTitle = "Update Loans"
 
-        For Each loanSchedule In Me._currentloanSchedules
+        For Each loan In Me._currentloans
 
-            If CheckIfLoanScheduleIsChanged(loanSchedule) Then
-                loanSchedule.LastUpdBy = z_User
-                changedLoanSchedules.Add(loanSchedule)
+            If CheckIfLoanIsChanged(loan) Then
+                loan.LastUpdBy = z_User
+                changedLoans.Add(loan)
             End If
 
         Next
 
-        If changedLoanSchedules.Count < 1 Then
+        If changedLoans.Count < 1 Then
 
             MessageBoxHelper.Warning("No changed loans!", messageTitle)
             Return
 
-        ElseIf changedLoanSchedules.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
+        ElseIf changedLoans.Count > 1 AndAlso MessageBoxHelper.Confirm(Of Boolean) _
             ($"You are about to update multiple loans. Do you want to proceed?", "Confirm Multiple Updates") = False Then
 
             Return
@@ -276,19 +274,19 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
-                Await _loanScheduleRepository.SaveManyAsync(changedLoanSchedules, Me._loanTypeList)
+                Await _loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
 
-                For Each item In changedLoanSchedules
+                For Each item In changedLoans
                     RecordUpdate(item)
                 Next
 
-                ShowBalloonInfo($"{changedLoanSchedules.Count} Loan(s) Successfully Updated.", messageTitle)
+                ShowBalloonInfo($"{changedLoans.Count} Loan(s) Successfully Updated.", messageTitle)
 
                 Dim currentEmployee = GetSelectedEmployee()
 
                 If currentEmployee Is Nothing Then Return
 
-                Await LoadLoanSchedules(currentEmployee)
+                Await LoadLoans(currentEmployee)
             End Function)
     End Sub
 
@@ -298,21 +296,21 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Sub UpdateLoanTypeID()
-        If Me._currentLoanSchedule IsNot Nothing Then
+        If Me._currentLoan IsNot Nothing Then
             Dim selectedLoanType = Me._loanTypeList.FirstOrDefault(Function(l) l.PartNo = cboLoanType.Text)
 
             If selectedLoanType Is Nothing Then
 
-                Me._currentLoanSchedule.LoanTypeID = Nothing
+                Me._currentLoan.LoanTypeID = Nothing
             Else
 
-                Me._currentLoanSchedule.LoanTypeID = selectedLoanType.RowID
+                Me._currentLoan.LoanTypeID = selectedLoanType.RowID
 
             End If
         End If
     End Sub
 
-    Private Async Sub tsbtnNewLoan_Click(sender As Object, e As EventArgs) Handles tsbtnNewLoan.Click
+    Private Async Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
 
         Dim employee As Employee = GetSelectedEmployee()
 
@@ -336,7 +334,7 @@ Public Class EmployeeLoansForm
                 PopulateLoanTypeCombobox()
             End If
 
-            Await LoadLoanSchedules(employee)
+            Await LoadLoans(employee)
 
             If form.ShowBalloonSuccess Then
                 ShowBalloonInfo("Loan Successfully Added", "Saved")
@@ -345,15 +343,15 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Sub LoanScheduleBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles LoanScheduleBindingSource.CurrentItemChanged
+    Private Sub LoanListBindingSource_CurrentItemChanged(sender As Object, e As EventArgs) Handles LoanListBindingSource.CurrentItemChanged
 
-        Dim currentRow = loanSchedulesDataGridView.CurrentRow
+        Dim currentRow = LoanGridView.CurrentRow
 
         If currentRow Is Nothing Then Return
 
-        If Me._currentLoanSchedule Is Nothing Then Return
+        If Me._currentLoan Is Nothing Then Return
 
-        Dim hasChanged = CheckIfLoanScheduleIsChanged(Me._currentLoanSchedule)
+        Dim hasChanged = CheckIfLoanIsChanged(Me._currentLoan)
 
         If hasChanged Then
             currentRow.DefaultCellStyle.BackColor = Color.Yellow
@@ -366,7 +364,7 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Sub tsbtnCancelLoan_Click(sender As Object, e As EventArgs) Handles tsbtnCancelLoan.Click
+    Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
 
         Dim currentEmployee = GetSelectedEmployee()
 
@@ -375,20 +373,31 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        If Me._currentloanSchedules Is Nothing Then
+        If Me._currentloans Is Nothing Then
             MessageBoxHelper.Warning("No loan schedules!")
             Return
         End If
 
-        Me._currentloanSchedules = Me._changedLoanSchedules.CloneListJson()
+        Me._currentloans = Me._changedLoans.CloneListJson()
 
-        LoanScheduleBindingSource.DataSource = Me._currentloanSchedules
-
-        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
-
+        Await PopulateLoanGridView()
     End Sub
 
-    Private Async Sub tsbtnDeleteLoanScheduleButton_Click(sender As Object, e As EventArgs) Handles DeleteLoanScheduleButton.Click
+    Private Async Function PopulateLoanGridView() As Task
+
+        RemoveHandler LoanGridView.SelectionChanged, AddressOf LoanGridView_SelectionChanged
+
+        LoanListBindingSource.DataSource = Me._currentloans
+
+        LoanGridView.DataSource = LoanListBindingSource
+
+        Await ShowLoanDetails()
+
+        AddHandler LoanGridView.SelectionChanged, AddressOf LoanGridView_SelectionChanged
+
+    End Function
+
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
 
         Dim currentEmployee = GetSelectedEmployee()
 
@@ -399,15 +408,15 @@ Public Class EmployeeLoansForm
 
         Const messageTitle As String = "Delete Loan"
 
-        If Me._currentLoanSchedule Is Nothing OrElse
-            Me._currentLoanSchedule.RowID Is Nothing Then
+        If Me._currentLoan Is Nothing OrElse
+            Me._currentLoan.RowID Is Nothing Then
             MessageBoxHelper.Warning("No loan selected!")
 
             Return
         End If
 
         Dim currentLoanSchedule = Await _loanScheduleRepository.
-                                            GetByIdAsync(Me._currentLoanSchedule.RowID.Value)
+                                            GetByIdAsync(Me._currentLoan.RowID.Value)
 
         If currentLoanSchedule Is Nothing Then
 
@@ -416,7 +425,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim loanNumber = Me._currentLoanSchedule.LoanNumber
+        Dim loanNumber = Me._currentLoan.LoanNumber
 
         Dim loanNumberString = If(String.IsNullOrWhiteSpace(loanNumber), "", $": {loanNumber} ")
 
@@ -437,7 +446,7 @@ Public Class EmployeeLoansForm
         Else
 
             Dim loanTransactions = Await _loanScheduleRepository.
-                GetLoanTransactionsWithPayPeriodAsync(Me._currentLoanSchedule.RowID.Value)
+                GetLoanTransactionsWithPayPeriodAsync(Me._currentLoan.RowID.Value)
 
             If loanTransactions.Count > 0 Then
 
@@ -459,34 +468,29 @@ Public Class EmployeeLoansForm
                                               messageTitle As String,
                                               loanNumberString As String) As Task
 
-        If Me._currentLoanSchedule Is Nothing OrElse
-            Me._currentLoanSchedule.RowID Is Nothing Then
+        If Me._currentLoan Is Nothing OrElse
+            Me._currentLoan.RowID Is Nothing Then
             MessageBoxHelper.Warning("No loan selected!")
 
             Return
         End If
 
-        Try
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+                                    Async Function()
+                                        Await _loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
 
-            Await _loanScheduleRepository.DeleteAsync(Me._currentLoanSchedule.RowID.Value)
+                                        _userActivityRepository.RecordDelete(z_User,
+                                                                             FormEntityName,
+                                                                             CInt(Me._currentLoan.RowID),
+                                                                             z_OrganizationID)
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, FormEntityName, CInt(Me._currentLoanSchedule.RowID), z_OrganizationID)
+                                        Await LoadLoans(currentEmployee)
 
-            Await LoadLoanSchedules(currentEmployee)
-
-            ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
-        Catch ex As ArgumentException
-
-            MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
-        End Try
+                                        ShowBalloonInfo($"Loan {If(String.IsNullOrWhiteSpace(loanNumberString), " ", loanNumberString)} Successfully Deleted.", messageTitle)
+                                    End Function)
     End Function
 
-    Private Async Sub tsbtnImportLoans_Click(sender As Object, e As EventArgs) Handles tsbtnImportLoans.Click
+    Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
         Using form = New ImportLoansForm()
             form.ShowDialog()
@@ -498,7 +502,7 @@ Public Class EmployeeLoansForm
                 Dim currentEmployee = GetSelectedEmployee()
 
                 If currentEmployee IsNot Nothing Then
-                    Await LoadLoanSchedules(currentEmployee)
+                    Await LoadLoans(currentEmployee)
                 End If
 
                 ShowBalloonInfo("Loans Successfully Imported", "Import Loans")
@@ -521,15 +525,21 @@ Public Class EmployeeLoansForm
 
         If currentEmployee Is Nothing Then Return
 
-        Await LoadLoanSchedules(currentEmployee)
+        Await LoadLoans(currentEmployee)
     End Sub
 
-    Private Sub loanHistoryGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles loanHistoryGridView.DataError
+    Private Sub LoanHistoryGridView_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles LoanHistoryGridView.DataError
         e.Cancel = True
     End Sub
 
-    Private Async Sub cbShowAll_CheckedChanged(sender As Object, e As EventArgs) Handles cbShowAll.CheckedChanged
+    Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
 #Region "Private Functions"
@@ -539,9 +549,9 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Sub InitializeComponentSettings()
-        employeesDataGridView.AutoGenerateColumns = False
-        loanSchedulesDataGridView.AutoGenerateColumns = False
-        loanHistoryGridView.AutoGenerateColumns = False
+        EmployeesDataGridView.AutoGenerateColumns = False
+        LoanGridView.AutoGenerateColumns = False
+        LoanHistoryGridView.AutoGenerateColumns = False
     End Sub
 
     Private Sub LoadLoanStatus()
@@ -556,36 +566,27 @@ Public Class EmployeeLoansForm
 
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         chkInProgressFilter.Text = LoanScheduleRepository.STATUS_IN_PROGRESS
         chkOnHoldFilter.Text = LoanScheduleRepository.STATUS_ON_HOLD
         chkCancelledFilter.Text = LoanScheduleRepository.STATUS_CANCELLED
         chkCompleteFilter.Text = LoanScheduleRepository.STATUS_COMPLETE
 
-        ResetLoanScheduleForm()
-        Me._currentloanSchedules.Clear()
-        Me.LoanScheduleBindingSource.Clear()
-        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
-
         If String.IsNullOrEmpty(searchValue) Then
-            employeesDataGridView.DataSource = Me._employees
+            EmployeesDataGridView.DataSource = Me._employees
         Else
-            employeesDataGridView.DataSource =
+            EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
 
-        If employeesDataGridView.Rows.Count = 0 Then
+        Await ShowEmployeeLoans()
 
-            Me._currentloanSchedules.Clear()
-            Me.LoanScheduleBindingSource.Clear()
-            loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
-
-            loanSchedulesDataGridView.Rows.Clear()
-
-        End If
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
 
     End Function
 
-    Private Async Function LoadLoanSchedules(currentEmployee As Employee) As Task
+    Private Async Function LoadLoans(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
         Dim inProgressChecked = chkInProgressFilter.Checked
@@ -599,22 +600,20 @@ Public Class EmployeeLoansForm
         Dim statusFilter = CreateStatusFilter()
 
         If statusFilter Is Nothing Then
-            Me._currentloanSchedules = New List(Of LoanSchedule)
+            Me._currentloans = New List(Of LoanSchedule)
         Else
-            Me._currentloanSchedules = loanSchedules.Where(statusFilter).ToList
+            Me._currentloans = loanSchedules.Where(statusFilter).ToList
 
         End If
 
-        Me._changedLoanSchedules = Me._currentloanSchedules.CloneListJson()
-
-        LoanScheduleBindingSource.DataSource = Me._currentloanSchedules
-
-        loanSchedulesDataGridView.DataSource = LoanScheduleBindingSource
+        Me._changedLoans = Me._currentloans.CloneListJson()
 
         chkInProgressFilter.Text = $"{LoanScheduleRepository.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_IN_PROGRESS)})"
         chkOnHoldFilter.Text = $"{LoanScheduleRepository.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_ON_HOLD)})"
         chkCancelledFilter.Text = $"{LoanScheduleRepository.STATUS_CANCELLED} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_CANCELLED)})"
         chkCompleteFilter.Text = $"{LoanScheduleRepository.STATUS_COMPLETE} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_COMPLETE)})"
+
+        Await PopulateLoanGridView()
 
     End Function
 
@@ -646,19 +645,19 @@ Public Class EmployeeLoansForm
 
     Private Async Function UpdateSelectedLoanScheduleData() As Task
 
-        Dim currentLoanSchedule As LoanSchedule = GetSelectedLoanSchedule()
+        Dim currentLoanSchedule As LoanSchedule = GetSelectedLoan()
         If currentLoanSchedule Is Nothing Then Return
 
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
             (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
 
-        loanHistoryGridView.DataSource = Me._currentLoanTransactions
+        LoanHistoryGridView.DataSource = Me._currentLoanTransactions
 
-        Dim loanHistoryCount As Integer = loanHistoryGridView.Rows.Count
+        Dim LoanHistoryCount As Integer = LoanHistoryGridView.Rows.Count
 
-        If loanHistoryCount > 0 Then
+        If LoanHistoryCount > 0 Then
 
-            loanHistoryGridView.CurrentCell = loanHistoryGridView.Rows(loanHistoryCount - 1).Cells(0)
+            LoanHistoryGridView.CurrentCell = LoanHistoryGridView.Rows(LoanHistoryCount - 1).Cells(0)
 
         End If
 
@@ -695,16 +694,16 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Function GetSelectedEmployee() As Employee
-        If employeesDataGridView.CurrentRow Is Nothing Then Return Nothing
+        If EmployeesDataGridView.CurrentRow Is Nothing Then Return Nothing
 
-        Return CType(employeesDataGridView.CurrentRow.DataBoundItem, Employee)
+        Return CType(EmployeesDataGridView.CurrentRow.DataBoundItem, Employee)
     End Function
 
     Private Sub PopulateLoanScheduleForm(loanSchedule As LoanSchedule)
-        Me._currentLoanSchedule = loanSchedule
+        Me._currentLoan = loanSchedule
 
-        Dim originalLoanSchedule = Me._changedLoanSchedules.
-            FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentLoanSchedule.RowID))
+        Dim originalLoanSchedule = Me._changedLoans.
+            FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentLoan.RowID))
 
         Dim isUneditable As Boolean = False
 
@@ -713,16 +712,16 @@ Public Class EmployeeLoansForm
             originalLoanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE
         End If
 
-        tbpDetails.Enabled = Not isUneditable
+        DetailsTabLayout.Enabled = Not isUneditable
 
         txtLoanNumber.DataBindings.Clear()
-        txtLoanNumber.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanNumber")
+        txtLoanNumber.DataBindings.Add("Text", Me._currentLoan, "LoanNumber")
 
         txtRemarks.DataBindings.Clear()
-        txtRemarks.DataBindings.Add("Text", Me._currentLoanSchedule, "Comments")
+        txtRemarks.DataBindings.Add("Text", Me._currentLoan, "Comments")
 
         txtTotalLoanAmount.DataBindings.Clear()
-        txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoan, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
         If Me._currentLoanTransactions IsNot Nothing AndAlso Me._currentLoanTransactions.Count > 0 Then
             txtTotalLoanAmount.Enabled = False
             txtLoanInterestPercentage.Enabled = False
@@ -732,48 +731,67 @@ Public Class EmployeeLoansForm
         End If
 
         txtLoanBalance.DataBindings.Clear()
-        txtLoanBalance.DataBindings.Add("Text", Me._currentLoanSchedule, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        txtLoanBalance.DataBindings.Add("Text", Me._currentLoan, "TotalBalanceLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         dtpDateFrom.DataBindings.Clear()
-        dtpDateFrom.DataBindings.Add("Value", Me._currentLoanSchedule, "DedEffectiveDateFrom")
+        dtpDateFrom.DataBindings.Add("Value", Me._currentLoan, "DedEffectiveDateFrom")
 
         txtNumberOfPayPeriod.DataBindings.Clear()
-        txtNumberOfPayPeriod.DataBindings.Add("Text", Me._currentLoanSchedule, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
+        txtNumberOfPayPeriod.DataBindings.Add("Text", Me._currentLoan, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
         txtNumberOfPayPeriodLeft.DataBindings.Clear()
-        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
+        txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._currentLoan, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
         txtDeductionAmount.DataBindings.Clear()
-        txtDeductionAmount.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        txtDeductionAmount.DataBindings.Add("Text", Me._currentLoan, "DeductionAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         txtLoanInterestPercentage.DataBindings.Clear()
-        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
+        txtLoanInterestPercentage.DataBindings.Add("Text", Me._currentLoan, "DeductionPercentage", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
 
         cboLoanType.DataBindings.Clear()
-        cboLoanType.DataBindings.Add("Text", Me._currentLoanSchedule, "LoanName")
-        cboLoanType.Text = Me._currentLoanSchedule.LoanName
+        cboLoanType.DataBindings.Add("Text", Me._currentLoan, "LoanName")
+        cboLoanType.Text = Me._currentLoan.LoanName
         UpdateLoanTypeID()
 
         txtLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Clear()
         If isUneditable Then
 
-            txtLoanStatus.DataBindings.Add("Text", Me._currentLoanSchedule, "Status")
+            txtLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status")
         Else
-            cmbLoanStatus.DataBindings.Add("Text", Me._currentLoanSchedule, "Status")
+            cmbLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status")
 
         End If
 
         cmbDeductionSchedule.DataBindings.Clear()
-        cmbDeductionSchedule.DataBindings.Add("Text", Me._currentLoanSchedule, "DeductionSchedule")
+        cmbDeductionSchedule.DataBindings.Add("Text", Me._currentLoan, "DeductionSchedule")
 
         ToggleLoanStatusComboboxVisibility(Not isUneditable)
 
     End Sub
 
-    Private Sub ResetLoanScheduleForm()
+    Private Sub ResetForm()
 
-        Me._currentLoanSchedule = Nothing
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'loan grid view
+        RemoveHandler LoanGridView.SelectionChanged, AddressOf LoanGridView_SelectionChanged
+
+        LoanGridView.DataSource = Nothing
+
+        LoanHistoryGridView.DataSource = Nothing
+
+        AddHandler LoanGridView.SelectionChanged, AddressOf LoanGridView_SelectionChanged
+
+        'loan details
+        Me._currentLoan = Nothing
+
+        DetailsTabLayout.Enabled = False
 
         Me._currentLoanTransactions.Clear()
 
@@ -828,8 +846,8 @@ Public Class EmployeeLoansForm
 
     End Sub
 
-    Private Function GetSelectedLoanSchedule() As LoanSchedule
-        Return CType(loanSchedulesDataGridView.CurrentRow.DataBoundItem, LoanSchedule)
+    Private Function GetSelectedLoan() As LoanSchedule
+        Return CType(LoanGridView.CurrentRow.DataBoundItem, LoanSchedule)
     End Function
 
     Private Sub ForceLoanScheduleGridViewCommit()
@@ -837,10 +855,10 @@ Public Class EmployeeLoansForm
         EmployeeInfoTabLayout.Focus()
     End Sub
 
-    Private Function CheckIfLoanScheduleIsChanged(newLoanSchedule As LoanSchedule) As Boolean
+    Private Function CheckIfLoanIsChanged(newLoanSchedule As LoanSchedule) As Boolean
 
         Dim oldLoanSchedule =
-            Me._changedLoanSchedules.
+            Me._changedLoans.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLoanSchedule.RowID))
 
         If oldLoanSchedule Is Nothing Then Return False
@@ -871,7 +889,7 @@ Public Class EmployeeLoansForm
     Private Function RecordUpdate(newLoanSchedule As LoanSchedule) As Boolean
 
         Dim oldLoanSchedule =
-            Me._changedLoanSchedules.
+            Me._changedLoans.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newLoanSchedule.RowID))
 
         If oldLoanSchedule Is Nothing Then Return False
@@ -944,8 +962,7 @@ Public Class EmployeeLoansForm
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -960,7 +977,7 @@ Public Class EmployeeLoansForm
 
     Private Async Function ShowEmployeeList() As Task
 
-        If cbShowAll.Checked Then
+        If ShowAllCheckBox.Checked Then
 
             Me._employees = Me._allEmployees
         Else
