@@ -28,6 +28,7 @@ namespace AccuPay.Data
         public virtual DbSet<Category> Categories { get; set; }
         public virtual DbSet<Certification> Certifications { get; set; }
         public virtual DbSet<DayType> DayTypes { get; set; }
+        public virtual DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
         public virtual DbSet<Division> Divisions { get; set; }
         public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         public virtual DbSet<Employee> Employees { get; set; }

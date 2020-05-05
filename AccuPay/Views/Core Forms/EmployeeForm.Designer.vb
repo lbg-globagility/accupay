@@ -306,46 +306,7 @@ Partial Class EmployeeForm
         Me.tbpCertifications = New System.Windows.Forms.TabPage()
         Me.CertificationTab = New AccuPay.CertificationTab()
         Me.tbpDiscipAct = New System.Windows.Forms.TabPage()
-        Me.Panel14 = New System.Windows.Forms.Panel()
-        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
-        Me.Label325 = New System.Windows.Forms.Label()
-        Me.cboAction = New System.Windows.Forms.ComboBox()
-        Me.pbEmpPicDiscip = New System.Windows.Forms.PictureBox()
-        Me.cmbFinding = New System.Windows.Forms.ComboBox()
-        Me.txtFNameDiscip = New System.Windows.Forms.TextBox()
-        Me.Label44 = New System.Windows.Forms.Label()
-        Me.txtEmpIDDiscip = New System.Windows.Forms.TextBox()
-        Me.Label43 = New System.Windows.Forms.Label()
-        Me.Label45 = New System.Windows.Forms.Label()
-        Me.lblAddFindingname = New System.Windows.Forms.LinkLabel()
-        Me.Label42 = New System.Windows.Forms.Label()
-        Me.dgvDisciplinaryList = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.dtpTo = New System.Windows.Forms.DateTimePicker()
-        Me.txtDesc = New System.Windows.Forms.TextBox()
-        Me.txtAction = New System.Windows.Forms.TextBox()
-        Me.Label40 = New System.Windows.Forms.Label()
-        Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
-        Me.txtdiscipcomment = New System.Windows.Forms.TextBox()
-        Me.Label41 = New System.Windows.Forms.Label()
-        Me.ToolStrip8 = New System.Windows.Forms.ToolStrip()
-        Me.btnNew = New System.Windows.Forms.ToolStripButton()
-        Me.btnSave = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
-        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnDelete = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.btnPrintMemo = New System.Windows.Forms.ToolStripButton()
-        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.btnAudittrail = New System.Windows.Forms.ToolStripButton()
-        Me.UserActivityDisciplinaryActionToolStripButton = New System.Windows.Forms.ToolStripButton()
+        Me.DisciplinaryActionTab = New AccuPay.DisciplinaryActionTab()
         Me.tbpEducBG = New System.Windows.Forms.TabPage()
         Me.EducationalBackgroundTab = New AccuPay.EducationalBackgroundTab()
         Me.tbpPrevEmp = New System.Windows.Forms.TabPage()
@@ -435,6 +396,46 @@ Partial Class EmployeeForm
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.tbpNewSalary = New System.Windows.Forms.TabPage()
         Me.SalaryTab = New AccuPay.SalaryTab()
+        Me.Panel14 = New System.Windows.Forms.Panel()
+        Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
+        Me.Label325 = New System.Windows.Forms.Label()
+        Me.cboAction = New System.Windows.Forms.ComboBox()
+        Me.pbEmpPicDiscip = New System.Windows.Forms.PictureBox()
+        Me.cmbFinding = New System.Windows.Forms.ComboBox()
+        Me.txtFNameDiscip = New System.Windows.Forms.TextBox()
+        Me.Label44 = New System.Windows.Forms.Label()
+        Me.txtEmpIDDiscip = New System.Windows.Forms.TextBox()
+        Me.Label43 = New System.Windows.Forms.Label()
+        Me.Label45 = New System.Windows.Forms.Label()
+        Me.lblAddFindingname = New System.Windows.Forms.LinkLabel()
+        Me.Label42 = New System.Windows.Forms.Label()
+        Me.dgvDisciplinaryList = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_FindingName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_action = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_datefrom = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_dateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_desc = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_comment = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.dtpTo = New System.Windows.Forms.DateTimePicker()
+        Me.txtDesc = New System.Windows.Forms.TextBox()
+        Me.txtAction = New System.Windows.Forms.TextBox()
+        Me.Label40 = New System.Windows.Forms.Label()
+        Me.dtpFrom = New System.Windows.Forms.DateTimePicker()
+        Me.txtdiscipcomment = New System.Windows.Forms.TextBox()
+        Me.Label41 = New System.Windows.Forms.Label()
+        Me.ToolStrip8 = New System.Windows.Forms.ToolStrip()
+        Me.btnNew = New System.Windows.Forms.ToolStripButton()
+        Me.btnSave = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripLabel1 = New System.Windows.Forms.ToolStripLabel()
+        Me.ToolStripSeparator1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnDelete = New System.Windows.Forms.ToolStripButton()
+        Me.ToolStripSeparator2 = New System.Windows.Forms.ToolStripSeparator()
+        Me.btnPrintMemo = New System.Windows.Forms.ToolStripButton()
+        Me.btnCancel = New System.Windows.Forms.ToolStripButton()
+        Me.btnClose = New System.Windows.Forms.ToolStripButton()
+        Me.btnAudittrail = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivityDisciplinaryActionToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.Panel12 = New System.Windows.Forms.Panel()
         Me.Label329 = New System.Windows.Forms.Label()
         Me.Label328 = New System.Windows.Forms.Label()
@@ -950,10 +951,6 @@ Partial Class EmployeeForm
         Me.tbpAwards.SuspendLayout
         Me.tbpCertifications.SuspendLayout
         Me.tbpDiscipAct.SuspendLayout
-        Me.Panel14.SuspendLayout
-        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).BeginInit
-        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).BeginInit
-        Me.ToolStrip8.SuspendLayout
         Me.tbpEducBG.SuspendLayout
         Me.tbpPrevEmp.SuspendLayout
         Me.tbpPromotion.SuspendLayout
@@ -969,6 +966,10 @@ Partial Class EmployeeForm
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip21.SuspendLayout
         Me.tbpNewSalary.SuspendLayout
+        Me.Panel14.SuspendLayout
+        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).BeginInit
+        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).BeginInit
+        Me.ToolStrip8.SuspendLayout
         Me.Panel12.SuspendLayout
         CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).BeginInit
         Me.grpDetails.SuspendLayout
@@ -3342,8 +3343,7 @@ Partial Class EmployeeForm
         '
         Me.tbpDiscipAct.AccessibleDescription = "Employee Disciplinary Action"
         Me.tbpDiscipAct.AutoScroll = True
-        Me.tbpDiscipAct.Controls.Add(Me.Panel14)
-        Me.tbpDiscipAct.Controls.Add(Me.ToolStrip8)
+        Me.tbpDiscipAct.Controls.Add(Me.DisciplinaryActionTab)
         Me.tbpDiscipAct.Location = New System.Drawing.Point(4, 4)
         Me.tbpDiscipAct.Name = "tbpDiscipAct"
         Me.tbpDiscipAct.Padding = New System.Windows.Forms.Padding(3)
@@ -3352,402 +3352,14 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.Text = "DISCIP"
         Me.tbpDiscipAct.UseVisualStyleBackColor = True
         '
-        'Panel14
-        '
-        Me.Panel14.AutoScroll = True
-        Me.Panel14.Controls.Add(Me.LinkLabel3)
-        Me.Panel14.Controls.Add(Me.Label325)
-        Me.Panel14.Controls.Add(Me.cboAction)
-        Me.Panel14.Controls.Add(Me.pbEmpPicDiscip)
-        Me.Panel14.Controls.Add(Me.cmbFinding)
-        Me.Panel14.Controls.Add(Me.txtFNameDiscip)
-        Me.Panel14.Controls.Add(Me.Label44)
-        Me.Panel14.Controls.Add(Me.txtEmpIDDiscip)
-        Me.Panel14.Controls.Add(Me.Label43)
-        Me.Panel14.Controls.Add(Me.Label45)
-        Me.Panel14.Controls.Add(Me.lblAddFindingname)
-        Me.Panel14.Controls.Add(Me.Label42)
-        Me.Panel14.Controls.Add(Me.dgvDisciplinaryList)
-        Me.Panel14.Controls.Add(Me.dtpTo)
-        Me.Panel14.Controls.Add(Me.txtDesc)
-        Me.Panel14.Controls.Add(Me.txtAction)
-        Me.Panel14.Controls.Add(Me.Label40)
-        Me.Panel14.Controls.Add(Me.dtpFrom)
-        Me.Panel14.Controls.Add(Me.txtdiscipcomment)
-        Me.Panel14.Controls.Add(Me.Label41)
-        Me.Panel14.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel14.Location = New System.Drawing.Point(3, 28)
-        Me.Panel14.Name = "Panel14"
-        Me.Panel14.Size = New System.Drawing.Size(854, 455)
-        Me.Panel14.TabIndex = 338
-        '
-        'LinkLabel3
-        '
-        Me.LinkLabel3.AutoSize = True
-        Me.LinkLabel3.Location = New System.Drawing.Point(107, 127)
-        Me.LinkLabel3.Name = "LinkLabel3"
-        Me.LinkLabel3.Size = New System.Drawing.Size(82, 13)
-        Me.LinkLabel3.TabIndex = 505
-        Me.LinkLabel3.TabStop = True
-        Me.LinkLabel3.Text = "Add/Edit Action"
-        '
-        'Label325
-        '
-        Me.Label325.AutoSize = True
-        Me.Label325.ForeColor = System.Drawing.Color.White
-        Me.Label325.Location = New System.Drawing.Point(29, 576)
-        Me.Label325.Name = "Label325"
-        Me.Label325.Size = New System.Drawing.Size(25, 13)
-        Me.Label325.TabIndex = 504
-        Me.Label325.Text = "___"
-        '
-        'cboAction
-        '
-        Me.cboAction.Enabled = False
-        Me.cboAction.FormattingEnabled = True
-        Me.cboAction.Location = New System.Drawing.Point(32, 143)
-        Me.cboAction.MaxLength = 100
-        Me.cboAction.Name = "cboAction"
-        Me.cboAction.Size = New System.Drawing.Size(205, 21)
-        Me.cboAction.TabIndex = 1
-        '
-        'pbEmpPicDiscip
-        '
-        Me.pbEmpPicDiscip.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmpPicDiscip.Location = New System.Drawing.Point(32, 8)
-        Me.pbEmpPicDiscip.Name = "pbEmpPicDiscip"
-        Me.pbEmpPicDiscip.Size = New System.Drawing.Size(89, 77)
-        Me.pbEmpPicDiscip.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmpPicDiscip.TabIndex = 337
-        Me.pbEmpPicDiscip.TabStop = False
-        '
-        'cmbFinding
-        '
-        Me.cmbFinding.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
-        Me.cmbFinding.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
-        Me.cmbFinding.Enabled = False
-        Me.cmbFinding.FormattingEnabled = True
-        Me.cmbFinding.Location = New System.Drawing.Point(32, 103)
-        Me.cmbFinding.Name = "cmbFinding"
-        Me.cmbFinding.Size = New System.Drawing.Size(205, 21)
-        Me.cmbFinding.TabIndex = 0
-        '
-        'txtFNameDiscip
-        '
-        Me.txtFNameDiscip.BackColor = System.Drawing.Color.White
-        Me.txtFNameDiscip.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtFNameDiscip.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtFNameDiscip.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtFNameDiscip.Location = New System.Drawing.Point(127, 22)
-        Me.txtFNameDiscip.MaxLength = 250
-        Me.txtFNameDiscip.Name = "txtFNameDiscip"
-        Me.txtFNameDiscip.ReadOnly = True
-        Me.txtFNameDiscip.Size = New System.Drawing.Size(516, 28)
-        Me.txtFNameDiscip.TabIndex = 332
-        '
-        'Label44
-        '
-        Me.Label44.AutoSize = True
-        Me.Label44.Location = New System.Drawing.Point(29, 166)
-        Me.Label44.Name = "Label44"
-        Me.Label44.Size = New System.Drawing.Size(101, 13)
-        Me.Label44.TabIndex = 21
-        Me.Label44.Text = "Effective Date From"
-        '
-        'txtEmpIDDiscip
-        '
-        Me.txtEmpIDDiscip.BackColor = System.Drawing.Color.White
-        Me.txtEmpIDDiscip.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmpIDDiscip.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmpIDDiscip.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmpIDDiscip.Location = New System.Drawing.Point(127, 49)
-        Me.txtEmpIDDiscip.MaxLength = 50
-        Me.txtEmpIDDiscip.Name = "txtEmpIDDiscip"
-        Me.txtEmpIDDiscip.ReadOnly = True
-        Me.txtEmpIDDiscip.Size = New System.Drawing.Size(516, 22)
-        Me.txtEmpIDDiscip.TabIndex = 327
-        '
-        'Label43
-        '
-        Me.Label43.AutoSize = True
-        Me.Label43.Location = New System.Drawing.Point(29, 87)
-        Me.Label43.Name = "Label43"
-        Me.Label43.Size = New System.Drawing.Size(72, 13)
-        Me.Label43.TabIndex = 23
-        Me.Label43.Text = "Finding Name"
-        '
-        'Label45
-        '
-        Me.Label45.AutoSize = True
-        Me.Label45.Location = New System.Drawing.Point(29, 205)
-        Me.Label45.Name = "Label45"
-        Me.Label45.Size = New System.Drawing.Size(91, 13)
-        Me.Label45.TabIndex = 20
-        Me.Label45.Text = "Effective Date To"
-        '
-        'lblAddFindingname
-        '
-        Me.lblAddFindingname.AutoSize = True
-        Me.lblAddFindingname.Location = New System.Drawing.Point(107, 87)
-        Me.lblAddFindingname.Name = "lblAddFindingname"
-        Me.lblAddFindingname.Size = New System.Drawing.Size(117, 13)
-        Me.lblAddFindingname.TabIndex = 324
-        Me.lblAddFindingname.TabStop = True
-        Me.lblAddFindingname.Text = "Add/Edit Finding Name"
-        '
-        'Label42
-        '
-        Me.Label42.AutoSize = True
-        Me.Label42.Location = New System.Drawing.Point(29, 127)
-        Me.Label42.Name = "Label42"
-        Me.Label42.Size = New System.Drawing.Size(37, 13)
-        Me.Label42.TabIndex = 24
-        Me.Label42.Text = "Action"
-        '
-        'dgvDisciplinaryList
-        '
-        Me.dgvDisciplinaryList.AllowUserToAddRows = False
-        Me.dgvDisciplinaryList.AllowUserToDeleteRows = False
-        Me.dgvDisciplinaryList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
-        Me.dgvDisciplinaryList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvDisciplinaryList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_FindingName, Me.c_action, Me.c_datefrom, Me.c_dateto, Me.c_desc, Me.c_comment, Me.c_rowid})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle4
-        Me.dgvDisciplinaryList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.dgvDisciplinaryList.Location = New System.Drawing.Point(32, 248)
-        Me.dgvDisciplinaryList.MultiSelect = False
-        Me.dgvDisciplinaryList.Name = "dgvDisciplinaryList"
-        Me.dgvDisciplinaryList.ReadOnly = True
-        Me.dgvDisciplinaryList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.dgvDisciplinaryList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.dgvDisciplinaryList.Size = New System.Drawing.Size(745, 325)
-        Me.dgvDisciplinaryList.TabIndex = 323
-        '
-        'c_FindingName
-        '
-        Me.c_FindingName.HeaderText = "Finding Name"
-        Me.c_FindingName.Name = "c_FindingName"
-        Me.c_FindingName.ReadOnly = True
-        Me.c_FindingName.Width = 117
-        '
-        'c_action
-        '
-        Me.c_action.HeaderText = "Action"
-        Me.c_action.Name = "c_action"
-        Me.c_action.ReadOnly = True
-        Me.c_action.Width = 117
-        '
-        'c_datefrom
-        '
-        Me.c_datefrom.HeaderText = "Effective Date From"
-        Me.c_datefrom.Name = "c_datefrom"
-        Me.c_datefrom.ReadOnly = True
-        Me.c_datefrom.Width = 117
-        '
-        'c_dateto
-        '
-        Me.c_dateto.HeaderText = "Effective Date To"
-        Me.c_dateto.Name = "c_dateto"
-        Me.c_dateto.ReadOnly = True
-        Me.c_dateto.Width = 117
-        '
-        'c_desc
-        '
-        Me.c_desc.HeaderText = "Finding Description"
-        Me.c_desc.Name = "c_desc"
-        Me.c_desc.ReadOnly = True
-        Me.c_desc.Width = 117
-        '
-        'c_comment
-        '
-        Me.c_comment.HeaderText = "Comments"
-        Me.c_comment.Name = "c_comment"
-        Me.c_comment.ReadOnly = True
-        Me.c_comment.Width = 117
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "RowID"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
-        '
-        'dtpTo
-        '
-        Me.dtpTo.Enabled = False
-        Me.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpTo.Location = New System.Drawing.Point(32, 222)
-        Me.dtpTo.Name = "dtpTo"
-        Me.dtpTo.Size = New System.Drawing.Size(205, 20)
-        Me.dtpTo.TabIndex = 3
-        '
-        'txtDesc
-        '
-        Me.txtDesc.Enabled = False
-        Me.txtDesc.Location = New System.Drawing.Point(243, 103)
-        Me.txtDesc.MaxLength = 2000
-        Me.txtDesc.Multiline = True
-        Me.txtDesc.Name = "txtDesc"
-        Me.txtDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtDesc.Size = New System.Drawing.Size(334, 59)
-        Me.txtDesc.TabIndex = 4
-        '
-        'txtAction
-        '
-        Me.txtAction.Enabled = False
-        Me.txtAction.Location = New System.Drawing.Point(608, 220)
-        Me.txtAction.Name = "txtAction"
-        Me.txtAction.Size = New System.Drawing.Size(205, 20)
-        Me.txtAction.TabIndex = 1
-        Me.txtAction.Visible = False
-        '
-        'Label40
-        '
-        Me.Label40.AutoSize = True
-        Me.Label40.Location = New System.Drawing.Point(240, 87)
-        Me.Label40.Name = "Label40"
-        Me.Label40.Size = New System.Drawing.Size(97, 13)
-        Me.Label40.TabIndex = 28
-        Me.Label40.Text = "Finding Description"
-        '
-        'dtpFrom
-        '
-        Me.dtpFrom.Enabled = False
-        Me.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
-        Me.dtpFrom.Location = New System.Drawing.Point(32, 182)
-        Me.dtpFrom.Name = "dtpFrom"
-        Me.dtpFrom.Size = New System.Drawing.Size(205, 20)
-        Me.dtpFrom.TabIndex = 2
-        '
-        'txtdiscipcomment
-        '
-        Me.txtdiscipcomment.Enabled = False
-        Me.txtdiscipcomment.Location = New System.Drawing.Point(243, 181)
-        Me.txtdiscipcomment.MaxLength = 500
-        Me.txtdiscipcomment.Multiline = True
-        Me.txtdiscipcomment.Name = "txtdiscipcomment"
-        Me.txtdiscipcomment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.txtdiscipcomment.Size = New System.Drawing.Size(334, 59)
-        Me.txtdiscipcomment.TabIndex = 5
-        '
-        'Label41
-        '
-        Me.Label41.AutoSize = True
-        Me.Label41.Location = New System.Drawing.Point(240, 165)
-        Me.Label41.Name = "Label41"
-        Me.Label41.Size = New System.Drawing.Size(56, 13)
-        Me.Label41.TabIndex = 26
-        Me.Label41.Text = "Comments"
-        '
-        'ToolStrip8
-        '
-        Me.ToolStrip8.BackColor = System.Drawing.Color.Transparent
-        Me.ToolStrip8.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail, Me.UserActivityDisciplinaryActionToolStripButton})
-        Me.ToolStrip8.Location = New System.Drawing.Point(3, 3)
-        Me.ToolStrip8.Name = "ToolStrip8"
-        Me.ToolStrip8.Size = New System.Drawing.Size(854, 25)
-        Me.ToolStrip8.TabIndex = 326
-        Me.ToolStrip8.Text = "ToolStrip8"
-        '
-        'btnNew
-        '
-        Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
-        Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnNew.Name = "btnNew"
-        Me.btnNew.Size = New System.Drawing.Size(153, 22)
-        Me.btnNew.Text = "&New Disciplinary Action"
-        '
-        'btnSave
-        '
-        Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
-        Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnSave.Name = "btnSave"
-        Me.btnSave.Size = New System.Drawing.Size(153, 22)
-        Me.btnSave.Text = "&Save Disciplinary Action"
-        '
-        'ToolStripLabel1
-        '
-        Me.ToolStripLabel1.AutoSize = False
-        Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(50, 22)
-        '
-        'ToolStripSeparator1
-        '
-        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
-        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
-        '
-        'btnDelete
-        '
-        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
-        Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnDelete.Name = "btnDelete"
-        Me.btnDelete.Size = New System.Drawing.Size(162, 22)
-        Me.btnDelete.Text = "&Delete Disciplinary Action"
-        '
-        'ToolStripSeparator2
-        '
-        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
-        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
-        '
-        'btnPrintMemo
-        '
-        Me.btnPrintMemo.Image = CType(resources.GetObject("btnPrintMemo.Image"), System.Drawing.Image)
-        Me.btnPrintMemo.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnPrintMemo.Name = "btnPrintMemo"
-        Me.btnPrintMemo.Size = New System.Drawing.Size(90, 22)
-        Me.btnPrintMemo.Text = "Print Memo"
-        Me.btnPrintMemo.Visible = False
-        '
-        'btnCancel
-        '
-        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
-        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
-        Me.btnCancel.Text = "&Cancel"
-        '
-        'btnClose
-        '
-        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
-        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnClose.Name = "btnClose"
-        Me.btnClose.Size = New System.Drawing.Size(56, 22)
-        Me.btnClose.Text = "Close"
-        '
-        'btnAudittrail
-        '
-        Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnAudittrail.Name = "btnAudittrail"
-        Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.btnAudittrail.Text = "ToolStripButton1"
-        Me.btnAudittrail.ToolTipText = "Show audit trails"
-        '
-        'UserActivityDisciplinaryActionToolStripButton
-        '
-        Me.UserActivityDisciplinaryActionToolStripButton.Image = CType(resources.GetObject("UserActivityDisciplinaryActionToolStripButton.Image"), System.Drawing.Image)
-        Me.UserActivityDisciplinaryActionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivityDisciplinaryActionToolStripButton.Name = "UserActivityDisciplinaryActionToolStripButton"
-        Me.UserActivityDisciplinaryActionToolStripButton.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivityDisciplinaryActionToolStripButton.Text = "User Activity"
+        'DisciplinaryActionTab
+        '
+        Me.DisciplinaryActionTab.BackColor = System.Drawing.Color.White
+        Me.DisciplinaryActionTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.DisciplinaryActionTab.Location = New System.Drawing.Point(3, 3)
+        Me.DisciplinaryActionTab.Name = "DisciplinaryActionTab"
+        Me.DisciplinaryActionTab.Size = New System.Drawing.Size(854, 480)
+        Me.DisciplinaryActionTab.TabIndex = 0
         '
         'tbpEducBG
         '
@@ -3906,24 +3518,24 @@ Partial Class EmployeeForm
         Me.dgvPromotionList.AllowUserToAddRows = False
         Me.dgvPromotionList.AllowUserToDeleteRows = False
         Me.dgvPromotionList.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
+        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPromotionList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
         Me.dgvPromotionList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPromotionList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_empID2, Me.c_empname2, Me.c_promotRowID, Me.c_PostionFrom, Me.c_positionto, Me.c_effecDate, Me.c_compensation, Me.c_basicpay, Me.c_reasonpromot})
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle6
+        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPromotionList.DefaultCellStyle = DataGridViewCellStyle4
         Me.dgvPromotionList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvPromotionList.Location = New System.Drawing.Point(32, 239)
         Me.dgvPromotionList.MultiSelect = False
@@ -4378,36 +3990,36 @@ Partial Class EmployeeForm
         Me.dgvempatta.AllowUserToOrderColumns = True
         Me.dgvempatta.AllowUserToResizeRows = False
         Me.dgvempatta.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvempatta.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle5
         Me.dgvempatta.ColumnHeadersHeight = 34
         Me.dgvempatta.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.eatt_RowID, Me.eatt_Type, Me.eatt_FileName, Me.eatt_FileType, Me.eatt_EmployeeID, Me.eatt_Created, Me.eatt_CreatedBy, Me.eatt_LastUpd, Me.eatt_LastUpdBy, Me.eatt_AttachedFile, Me.eatt_viewthis, Me.Column38})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempatta.DefaultCellStyle = DataGridViewCellStyle6
         Me.dgvempatta.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempatta.Location = New System.Drawing.Point(32, 91)
         Me.dgvempatta.MultiSelect = False
         Me.dgvempatta.Name = "dgvempatta"
-        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle9
+        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvempatta.RowHeadersDefaultCellStyle = DataGridViewCellStyle7
         Me.dgvempatta.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvempatta.Size = New System.Drawing.Size(611, 345)
         Me.dgvempatta.TabIndex = 0
@@ -4649,6 +4261,403 @@ Partial Class EmployeeForm
         Me.SalaryTab.PhilHealth = Nothing
         Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
         Me.SalaryTab.TabIndex = 0
+        '
+        'Panel14
+        '
+        Me.Panel14.AutoScroll = True
+        Me.Panel14.Controls.Add(Me.LinkLabel3)
+        Me.Panel14.Controls.Add(Me.Label325)
+        Me.Panel14.Controls.Add(Me.cboAction)
+        Me.Panel14.Controls.Add(Me.pbEmpPicDiscip)
+        Me.Panel14.Controls.Add(Me.cmbFinding)
+        Me.Panel14.Controls.Add(Me.txtFNameDiscip)
+        Me.Panel14.Controls.Add(Me.Label44)
+        Me.Panel14.Controls.Add(Me.txtEmpIDDiscip)
+        Me.Panel14.Controls.Add(Me.Label43)
+        Me.Panel14.Controls.Add(Me.Label45)
+        Me.Panel14.Controls.Add(Me.lblAddFindingname)
+        Me.Panel14.Controls.Add(Me.Label42)
+        Me.Panel14.Controls.Add(Me.dgvDisciplinaryList)
+        Me.Panel14.Controls.Add(Me.dtpTo)
+        Me.Panel14.Controls.Add(Me.txtDesc)
+        Me.Panel14.Controls.Add(Me.txtAction)
+        Me.Panel14.Controls.Add(Me.Label40)
+        Me.Panel14.Controls.Add(Me.dtpFrom)
+        Me.Panel14.Controls.Add(Me.txtdiscipcomment)
+        Me.Panel14.Controls.Add(Me.Label41)
+        Me.Panel14.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel14.Location = New System.Drawing.Point(3, 28)
+        Me.Panel14.Name = "Panel14"
+        Me.Panel14.Size = New System.Drawing.Size(854, 455)
+        Me.Panel14.TabIndex = 338
+        '
+        'LinkLabel3
+        '
+        Me.LinkLabel3.AutoSize = True
+        Me.LinkLabel3.Location = New System.Drawing.Point(107, 127)
+        Me.LinkLabel3.Name = "LinkLabel3"
+        Me.LinkLabel3.Size = New System.Drawing.Size(82, 13)
+        Me.LinkLabel3.TabIndex = 505
+        Me.LinkLabel3.TabStop = True
+        Me.LinkLabel3.Text = "Add/Edit Action"
+        '
+        'Label325
+        '
+        Me.Label325.AutoSize = True
+        Me.Label325.ForeColor = System.Drawing.Color.White
+        Me.Label325.Location = New System.Drawing.Point(29, 576)
+        Me.Label325.Name = "Label325"
+        Me.Label325.Size = New System.Drawing.Size(25, 13)
+        Me.Label325.TabIndex = 504
+        Me.Label325.Text = "___"
+        '
+        'cboAction
+        '
+        Me.cboAction.Enabled = False
+        Me.cboAction.FormattingEnabled = True
+        Me.cboAction.Location = New System.Drawing.Point(32, 143)
+        Me.cboAction.MaxLength = 100
+        Me.cboAction.Name = "cboAction"
+        Me.cboAction.Size = New System.Drawing.Size(205, 21)
+        Me.cboAction.TabIndex = 1
+        '
+        'pbEmpPicDiscip
+        '
+        Me.pbEmpPicDiscip.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.pbEmpPicDiscip.Location = New System.Drawing.Point(32, 8)
+        Me.pbEmpPicDiscip.Name = "pbEmpPicDiscip"
+        Me.pbEmpPicDiscip.Size = New System.Drawing.Size(89, 77)
+        Me.pbEmpPicDiscip.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.pbEmpPicDiscip.TabIndex = 337
+        Me.pbEmpPicDiscip.TabStop = False
+        '
+        'cmbFinding
+        '
+        Me.cmbFinding.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
+        Me.cmbFinding.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cmbFinding.Enabled = False
+        Me.cmbFinding.FormattingEnabled = True
+        Me.cmbFinding.Location = New System.Drawing.Point(32, 103)
+        Me.cmbFinding.Name = "cmbFinding"
+        Me.cmbFinding.Size = New System.Drawing.Size(205, 21)
+        Me.cmbFinding.TabIndex = 0
+        '
+        'txtFNameDiscip
+        '
+        Me.txtFNameDiscip.BackColor = System.Drawing.Color.White
+        Me.txtFNameDiscip.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtFNameDiscip.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.txtFNameDiscip.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.txtFNameDiscip.Location = New System.Drawing.Point(127, 22)
+        Me.txtFNameDiscip.MaxLength = 250
+        Me.txtFNameDiscip.Name = "txtFNameDiscip"
+        Me.txtFNameDiscip.ReadOnly = True
+        Me.txtFNameDiscip.Size = New System.Drawing.Size(516, 28)
+        Me.txtFNameDiscip.TabIndex = 332
+        '
+        'Label44
+        '
+        Me.Label44.AutoSize = True
+        Me.Label44.Location = New System.Drawing.Point(29, 166)
+        Me.Label44.Name = "Label44"
+        Me.Label44.Size = New System.Drawing.Size(101, 13)
+        Me.Label44.TabIndex = 21
+        Me.Label44.Text = "Effective Date From"
+        '
+        'txtEmpIDDiscip
+        '
+        Me.txtEmpIDDiscip.BackColor = System.Drawing.Color.White
+        Me.txtEmpIDDiscip.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.txtEmpIDDiscip.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.txtEmpIDDiscip.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.txtEmpIDDiscip.Location = New System.Drawing.Point(127, 49)
+        Me.txtEmpIDDiscip.MaxLength = 50
+        Me.txtEmpIDDiscip.Name = "txtEmpIDDiscip"
+        Me.txtEmpIDDiscip.ReadOnly = True
+        Me.txtEmpIDDiscip.Size = New System.Drawing.Size(516, 22)
+        Me.txtEmpIDDiscip.TabIndex = 327
+        '
+        'Label43
+        '
+        Me.Label43.AutoSize = True
+        Me.Label43.Location = New System.Drawing.Point(29, 87)
+        Me.Label43.Name = "Label43"
+        Me.Label43.Size = New System.Drawing.Size(72, 13)
+        Me.Label43.TabIndex = 23
+        Me.Label43.Text = "Finding Name"
+        '
+        'Label45
+        '
+        Me.Label45.AutoSize = True
+        Me.Label45.Location = New System.Drawing.Point(29, 205)
+        Me.Label45.Name = "Label45"
+        Me.Label45.Size = New System.Drawing.Size(91, 13)
+        Me.Label45.TabIndex = 20
+        Me.Label45.Text = "Effective Date To"
+        '
+        'lblAddFindingname
+        '
+        Me.lblAddFindingname.AutoSize = True
+        Me.lblAddFindingname.Location = New System.Drawing.Point(107, 87)
+        Me.lblAddFindingname.Name = "lblAddFindingname"
+        Me.lblAddFindingname.Size = New System.Drawing.Size(117, 13)
+        Me.lblAddFindingname.TabIndex = 324
+        Me.lblAddFindingname.TabStop = True
+        Me.lblAddFindingname.Text = "Add/Edit Finding Name"
+        '
+        'Label42
+        '
+        Me.Label42.AutoSize = True
+        Me.Label42.Location = New System.Drawing.Point(29, 127)
+        Me.Label42.Name = "Label42"
+        Me.Label42.Size = New System.Drawing.Size(37, 13)
+        Me.Label42.TabIndex = 24
+        Me.Label42.Text = "Action"
+        '
+        'dgvDisciplinaryList
+        '
+        Me.dgvDisciplinaryList.AllowUserToAddRows = False
+        Me.dgvDisciplinaryList.AllowUserToDeleteRows = False
+        Me.dgvDisciplinaryList.BackgroundColor = System.Drawing.Color.White
+        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvDisciplinaryList.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle8
+        Me.dgvDisciplinaryList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.dgvDisciplinaryList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_FindingName, Me.c_action, Me.c_datefrom, Me.c_dateto, Me.c_desc, Me.c_comment, Me.c_rowid})
+        DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle9.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle9.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvDisciplinaryList.DefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvDisciplinaryList.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.dgvDisciplinaryList.Location = New System.Drawing.Point(32, 248)
+        Me.dgvDisciplinaryList.MultiSelect = False
+        Me.dgvDisciplinaryList.Name = "dgvDisciplinaryList"
+        Me.dgvDisciplinaryList.ReadOnly = True
+        Me.dgvDisciplinaryList.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.dgvDisciplinaryList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.dgvDisciplinaryList.Size = New System.Drawing.Size(745, 325)
+        Me.dgvDisciplinaryList.TabIndex = 323
+        '
+        'c_FindingName
+        '
+        Me.c_FindingName.HeaderText = "Finding Name"
+        Me.c_FindingName.Name = "c_FindingName"
+        Me.c_FindingName.ReadOnly = True
+        Me.c_FindingName.Width = 117
+        '
+        'c_action
+        '
+        Me.c_action.HeaderText = "Action"
+        Me.c_action.Name = "c_action"
+        Me.c_action.ReadOnly = True
+        Me.c_action.Width = 117
+        '
+        'c_datefrom
+        '
+        Me.c_datefrom.HeaderText = "Effective Date From"
+        Me.c_datefrom.Name = "c_datefrom"
+        Me.c_datefrom.ReadOnly = True
+        Me.c_datefrom.Width = 117
+        '
+        'c_dateto
+        '
+        Me.c_dateto.HeaderText = "Effective Date To"
+        Me.c_dateto.Name = "c_dateto"
+        Me.c_dateto.ReadOnly = True
+        Me.c_dateto.Width = 117
+        '
+        'c_desc
+        '
+        Me.c_desc.HeaderText = "Finding Description"
+        Me.c_desc.Name = "c_desc"
+        Me.c_desc.ReadOnly = True
+        Me.c_desc.Width = 117
+        '
+        'c_comment
+        '
+        Me.c_comment.HeaderText = "Comments"
+        Me.c_comment.Name = "c_comment"
+        Me.c_comment.ReadOnly = True
+        Me.c_comment.Width = 117
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "RowID"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
+        'dtpTo
+        '
+        Me.dtpTo.Enabled = False
+        Me.dtpTo.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpTo.Location = New System.Drawing.Point(32, 222)
+        Me.dtpTo.Name = "dtpTo"
+        Me.dtpTo.Size = New System.Drawing.Size(205, 20)
+        Me.dtpTo.TabIndex = 3
+        '
+        'txtDesc
+        '
+        Me.txtDesc.Enabled = False
+        Me.txtDesc.Location = New System.Drawing.Point(243, 103)
+        Me.txtDesc.MaxLength = 2000
+        Me.txtDesc.Multiline = True
+        Me.txtDesc.Name = "txtDesc"
+        Me.txtDesc.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtDesc.Size = New System.Drawing.Size(334, 59)
+        Me.txtDesc.TabIndex = 4
+        '
+        'txtAction
+        '
+        Me.txtAction.Enabled = False
+        Me.txtAction.Location = New System.Drawing.Point(608, 220)
+        Me.txtAction.Name = "txtAction"
+        Me.txtAction.Size = New System.Drawing.Size(205, 20)
+        Me.txtAction.TabIndex = 1
+        Me.txtAction.Visible = False
+        '
+        'Label40
+        '
+        Me.Label40.AutoSize = True
+        Me.Label40.Location = New System.Drawing.Point(240, 87)
+        Me.Label40.Name = "Label40"
+        Me.Label40.Size = New System.Drawing.Size(97, 13)
+        Me.Label40.TabIndex = 28
+        Me.Label40.Text = "Finding Description"
+        '
+        'dtpFrom
+        '
+        Me.dtpFrom.Enabled = False
+        Me.dtpFrom.Format = System.Windows.Forms.DateTimePickerFormat.[Short]
+        Me.dtpFrom.Location = New System.Drawing.Point(32, 182)
+        Me.dtpFrom.Name = "dtpFrom"
+        Me.dtpFrom.Size = New System.Drawing.Size(205, 20)
+        Me.dtpFrom.TabIndex = 2
+        '
+        'txtdiscipcomment
+        '
+        Me.txtdiscipcomment.Enabled = False
+        Me.txtdiscipcomment.Location = New System.Drawing.Point(243, 181)
+        Me.txtdiscipcomment.MaxLength = 500
+        Me.txtdiscipcomment.Multiline = True
+        Me.txtdiscipcomment.Name = "txtdiscipcomment"
+        Me.txtdiscipcomment.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
+        Me.txtdiscipcomment.Size = New System.Drawing.Size(334, 59)
+        Me.txtdiscipcomment.TabIndex = 5
+        '
+        'Label41
+        '
+        Me.Label41.AutoSize = True
+        Me.Label41.Location = New System.Drawing.Point(240, 165)
+        Me.Label41.Name = "Label41"
+        Me.Label41.Size = New System.Drawing.Size(56, 13)
+        Me.Label41.TabIndex = 26
+        Me.Label41.Text = "Comments"
+        '
+        'ToolStrip8
+        '
+        Me.ToolStrip8.BackColor = System.Drawing.Color.Transparent
+        Me.ToolStrip8.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
+        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail, Me.UserActivityDisciplinaryActionToolStripButton})
+        Me.ToolStrip8.Location = New System.Drawing.Point(3, 3)
+        Me.ToolStrip8.Name = "ToolStrip8"
+        Me.ToolStrip8.Size = New System.Drawing.Size(854, 25)
+        Me.ToolStrip8.TabIndex = 326
+        Me.ToolStrip8.Text = "ToolStrip8"
+        '
+        'btnNew
+        '
+        Me.btnNew.Image = Global.AccuPay.My.Resources.Resources._new
+        Me.btnNew.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnNew.Name = "btnNew"
+        Me.btnNew.Size = New System.Drawing.Size(153, 22)
+        Me.btnNew.Text = "&New Disciplinary Action"
+        '
+        'btnSave
+        '
+        Me.btnSave.Image = Global.AccuPay.My.Resources.Resources.Save
+        Me.btnSave.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnSave.Name = "btnSave"
+        Me.btnSave.Size = New System.Drawing.Size(153, 22)
+        Me.btnSave.Text = "&Save Disciplinary Action"
+        '
+        'ToolStripLabel1
+        '
+        Me.ToolStripLabel1.AutoSize = False
+        Me.ToolStripLabel1.Name = "ToolStripLabel1"
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(50, 22)
+        '
+        'ToolStripSeparator1
+        '
+        Me.ToolStripSeparator1.Name = "ToolStripSeparator1"
+        Me.ToolStripSeparator1.Size = New System.Drawing.Size(6, 25)
+        '
+        'btnDelete
+        '
+        Me.btnDelete.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
+        Me.btnDelete.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnDelete.Name = "btnDelete"
+        Me.btnDelete.Size = New System.Drawing.Size(162, 22)
+        Me.btnDelete.Text = "&Delete Disciplinary Action"
+        '
+        'ToolStripSeparator2
+        '
+        Me.ToolStripSeparator2.Name = "ToolStripSeparator2"
+        Me.ToolStripSeparator2.Size = New System.Drawing.Size(6, 25)
+        '
+        'btnPrintMemo
+        '
+        Me.btnPrintMemo.Image = CType(resources.GetObject("btnPrintMemo.Image"), System.Drawing.Image)
+        Me.btnPrintMemo.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnPrintMemo.Name = "btnPrintMemo"
+        Me.btnPrintMemo.Size = New System.Drawing.Size(90, 22)
+        Me.btnPrintMemo.Text = "Print Memo"
+        Me.btnPrintMemo.Visible = False
+        '
+        'btnCancel
+        '
+        Me.btnCancel.Image = Global.AccuPay.My.Resources.Resources.cancel1
+        Me.btnCancel.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnCancel.Name = "btnCancel"
+        Me.btnCancel.Size = New System.Drawing.Size(63, 22)
+        Me.btnCancel.Text = "&Cancel"
+        '
+        'btnClose
+        '
+        Me.btnClose.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnClose.Image = Global.AccuPay.My.Resources.Resources.Button_Delete_icon
+        Me.btnClose.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnClose.Name = "btnClose"
+        Me.btnClose.Size = New System.Drawing.Size(56, 22)
+        Me.btnClose.Text = "Close"
+        '
+        'btnAudittrail
+        '
+        Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
+        Me.btnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
+        Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnAudittrail.Name = "btnAudittrail"
+        Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
+        Me.btnAudittrail.Text = "ToolStripButton1"
+        Me.btnAudittrail.ToolTipText = "Show audit trails"
+        '
+        'UserActivityDisciplinaryActionToolStripButton
+        '
+        Me.UserActivityDisciplinaryActionToolStripButton.Image = CType(resources.GetObject("UserActivityDisciplinaryActionToolStripButton.Image"), System.Drawing.Image)
+        Me.UserActivityDisciplinaryActionToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivityDisciplinaryActionToolStripButton.Name = "UserActivityDisciplinaryActionToolStripButton"
+        Me.UserActivityDisciplinaryActionToolStripButton.Size = New System.Drawing.Size(93, 20)
+        Me.UserActivityDisciplinaryActionToolStripButton.Text = "User Activity"
         '
         'Panel12
         '
@@ -5758,7 +5767,7 @@ Partial Class EmployeeForm
         Me.dgvempcert.AllowUserToOrderColumns = True
         Me.dgvempcert.BackgroundColor = System.Drawing.Color.White
         Me.dgvempcert.ColumnHeadersHeight = 34
-        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle9
+        Me.dgvempcert.DefaultCellStyle = DataGridViewCellStyle7
         Me.dgvempcert.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvempcert.Location = New System.Drawing.Point(32, 170)
         Me.dgvempcert.MultiSelect = False
@@ -9068,13 +9077,6 @@ Partial Class EmployeeForm
         Me.tbpAwards.ResumeLayout(False)
         Me.tbpCertifications.ResumeLayout(False)
         Me.tbpDiscipAct.ResumeLayout(False)
-        Me.tbpDiscipAct.PerformLayout
-        Me.Panel14.ResumeLayout(False)
-        Me.Panel14.PerformLayout
-        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit
-        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).EndInit
-        Me.ToolStrip8.ResumeLayout(False)
-        Me.ToolStrip8.PerformLayout
         Me.tbpEducBG.ResumeLayout(False)
         Me.tbpPrevEmp.ResumeLayout(False)
         Me.tbpPromotion.ResumeLayout(False)
@@ -9096,6 +9098,12 @@ Partial Class EmployeeForm
         Me.ToolStrip21.ResumeLayout(False)
         Me.ToolStrip21.PerformLayout
         Me.tbpNewSalary.ResumeLayout(False)
+        Me.Panel14.ResumeLayout(False)
+        Me.Panel14.PerformLayout
+        CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit
+        CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).EndInit
+        Me.ToolStrip8.ResumeLayout(False)
+        Me.ToolStrip8.PerformLayout
         Me.Panel12.ResumeLayout(False)
         Me.Panel12.PerformLayout
         CType(Me.pbEmpPicPrevEmp, System.ComponentModel.ISupportInitialize).EndInit
@@ -9773,6 +9781,7 @@ Partial Class EmployeeForm
     Friend WithEvents AwardTab As AwardTab
     Friend WithEvents EducationalBackgroundTab As EducationalBackgroundTab
     Friend WithEvents CertificationTab As CertificationTab
+    Friend WithEvents DisciplinaryActionTab As DisciplinaryActionTab
     Friend WithEvents PreviousEmployerTab As PreviousEmployerTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton

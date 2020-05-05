@@ -2062,7 +2062,6 @@ Public Class EmployeeForm
             tsbtnNewEmp.Enabled = 1
         End If
 
-        IsNewDiscip = 0 'Disciplinary Action
         IsNewPromot = 0 'Promotion
         publicEmpRowID = String.Empty
 
@@ -2335,14 +2334,11 @@ Public Class EmployeeForm
                     Await CertificationTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpDiscipAct Then
-                    controlclear()
-                    controlfalseDiscipAct()
-                    fillempdisciplinary()
-                    txtFNameDiscip.Text = employeefullname
-                    txtEmpIDDiscip.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    pbEmpPicDiscip.Image = Nothing
-                    pbEmpPicDiscip.Image = EmployeeImage
+                    Await DisciplinaryActionTab.SetEmployee(employee)
+
                 ElseIf selectedTab Is tbpEducBG Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
@@ -2433,14 +2429,6 @@ Public Class EmployeeForm
                     chkutflag.Checked = 0
                     chkotflag.Checked = 0
                     listofEditDepen.Clear()
-
-                Case GetDisciplinaryActionTabPageIndex() 'Disciplinary Action
-                    controlclear()
-                    controlfalseDiscipAct()
-                    fillempdisciplinary()
-                    txtEmpIDDiscip.Text = ""
-                    txtFNameDiscip.Text = ""
-                    pbEmpPicDiscip.Image = Nothing
 
                 Case GetPromotionTabPageIndex() 'Promotion
                     cmbfrom.SelectedIndex = -1
@@ -4396,13 +4384,6 @@ Public Class EmployeeForm
 
 #Region "Disciplinary Action"
 
-    Dim IsNew As Integer
-    Dim view_IDDiscip As Integer
-
-    Public categDiscipID As String
-
-    Dim empdiscippenal As New DataTable
-
     Sub tbpDiscipAct_Enter(sender As Object, e As EventArgs) Handles tbpDiscipAct.Enter
 
         UpdateTabPageText()
@@ -4410,374 +4391,11 @@ Public Class EmployeeForm
         tbpDiscipAct.Text = "DISCIPLINARY ACTION               "
 
         Label25.Text = "DISCIPLINARY ACTION"
-        Static once As SByte = 0
-        If once = 0 Then
-            once = 1
 
-            cboAction.ContextMenu = New ContextMenu
-
-            dtpFrom.Value = Format(CDate(dbnow), machineShortDateFormat)
-            dtpTo.Value = Format(CDate(dbnow), machineShortDateFormat)
-
-            categDiscipID = EXECQUER("SELECT RowID FROM category WHERE OrganizationID=" & orgztnID & " AND CategoryName='" & "Employee Disciplinary" & "' LIMIT 1;")
-
-            If Val(categDiscipID) = 0 Then
-                categDiscipID = INSUPD_category(, "Employee Disciplinary")
-            End If
-
-            fillfindingcombobox()
-
-            fillempdisciplinary()
-            If Not dgvDisciplinaryList.Rows.Count = 0 Then
-                fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
-            End If
-
-            'Employee Disciplinary Penalty
-            empdiscippenal = retAsDatTbl("SELECT * FROM listofval WHERE Type='Employee Disciplinary Penalty' AND Active='Yes' ORDER BY OrderBy;")
-
-            For Each drow As DataRow In empdiscippenal.Rows
-                cboAction.Items.Add(Trim(drow("DisplayValue").ToString))
-            Next
-
-            view_IDDiscip = VIEW_privilege("Employee Disciplinary Action", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDDiscip)
-
-            If formuserprivilege.Count = 0 Then
-
-                btnNew.Visible = 0
-                btnSave.Visible = 0
-                btnDelete.Visible = 0
-
-                dontUpdateDiscip = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        'ToolStripButton2.Visible = 0
-                        btnNew.Visible = 0
-                        btnSave.Visible = 0
-                        btnDelete.Visible = 0
-                        dontUpdateDiscip = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            btnNew.Visible = 0
-                        Else
-                            btnNew.Visible = 1
-                        End If
-
-                        If drow("Deleting").ToString = "N" Then
-                            btnDelete.Visible = 0
-                        Else
-                            btnDelete.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateDiscip = 1
-                        Else
-                            dontUpdateDiscip = 0
-                        End If
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        tabIndx = GetDisciplinaryActionTabPageIndex()
-
-        If btnNew.Enabled = False Then
-        Else
-            dgvEmp_SelectionChanged(sender, e)
-        End If
+        dgvEmp_SelectionChanged(sender, e)
 
     End Sub
 
-    Dim discipenalty = Nothing
-
-    Private Sub cboAction_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cboAction.SelectedIndexChanged
-        discipenalty = Nothing
-
-        For Each drow As DataRow In empdiscippenal.Rows
-            If Trim(drow("DisplayValue").ToString) = Trim(cboAction.Text) Then
-                discipenalty = drow("LIC").ToString
-                Exit For
-            End If
-        Next
-        'empdiscippenal
-    End Sub
-
-    Private Sub dgvDisciplinaryList_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvDisciplinaryList.CellClick
-
-        If Not dgvDisciplinaryList.Rows.Count = 0 Then
-            controltrue()
-            fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
-        End If
-
-    End Sub
-
-    Private Sub TabPage8_Leave(sender As Object, e As EventArgs) 'Handles tbpDiscipAct.Leave
-        tbpDiscipAct.Text = "DISCIP"
-    End Sub
-
-    Private Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
-
-        Dim p As New ProdCtrlForm
-
-        With p
-
-            .Status.HeaderText = "Taxable Flag"
-
-            .PartNo.HeaderText = "Item Name"
-
-            .NameOfCategory = "Employee Disciplinary"
-
-            Dim dgv_cols =
-                .dgvproducts.Columns.Cast(Of DataGridViewColumn).Where(Function(dgcol) dgcol.Name <> "PartNo")
-
-            For Each dcol In dgv_cols
-                dcol.Visible = False
-            Next
-
-            If .ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                fillfindingcombobox()
-
-            End If
-
-        End With
-
-    End Sub
-
-    Private Sub fillempdisciplinary()
-        If Not dgvEmp.Rows.Count = 0 Then
-            Dim dt As New DataTable
-            dt = getDataTableForSQL("Select *,ed.Comments 'ed_Comments' From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " &
-                                    "Where ed.OrganizationID = '" & z_OrganizationID & "' And ed.EmployeeID = '" & dgvEmp.CurrentRow.Cells("RowID").Value & "' Order by ed.RowID DESC")
-
-            dgvDisciplinaryList.Rows.Clear()
-            If dt.Rows.Count > 0 Then
-                For Each drow As DataRow In dt.Rows
-                    Dim n As Integer = dgvDisciplinaryList.Rows.Add()
-                    With drow
-
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_action.Index).Value = .Item("Action").ToString
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_datefrom.Index).Value = CDate(.Item("DateFrom")).ToString(machineShortDateFormat)
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_dateto.Index).Value = CDate(.Item("DateTo")).ToString(machineShortDateFormat)
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_FindingName.Index).Value = .Item("PartNo").ToString
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_comment.Index).Value = .Item("ed_Comments").ToString
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_desc.Index).Value = .Item("FindingDescription").ToString
-                        dgvDisciplinaryList.Rows.Item(n).Cells(c_rowid.Index).Value = .Item("RowID").ToString
-                    End With
-                Next
-            End If
-        Else
-            dgvDisciplinaryList.Rows.Clear()
-        End If
-
-    End Sub
-
-    Private Function fillempdisciplinaryselected(ByVal dID As Integer) As Boolean
-
-        If Not dgvDisciplinaryList.Rows.Count = 0 Then
-            Dim dt As New DataTable
-
-            dt = getDataTableForSQL("Select * From employeedisciplinaryaction ed inner join product p on ed.FindingID = p.RowID " &
-                                    "Where ed.OrganizationID = '" & z_OrganizationID & "' And ed.RowID = '" & dID & "'")
-
-            If dt.Rows.Count > 0 Then
-                For Each drow As DataRow In dt.Rows
-
-                    With drow
-
-                        cboAction.Text = .Item("Action").ToString
-                        dtpFrom.Text = CDate(.Item("DateFrom")).ToString(machineShortDateFormat)
-                        dtpTo.Text = CDate(.Item("DateTo")).ToString(machineShortDateFormat)
-                        txtDesc.Text = .Item("FindingDescription").ToString
-                        txtdiscipcomment.Text = .Item("Comments").ToString
-                        cmbFinding.Text = .Item("PartNo").ToString
-                    End With
-                Next
-            End If
-        End If
-        Return True
-
-    End Function
-
-    Private Sub controltrue()
-        cmbFinding.Enabled = True
-        cboAction.Enabled = True
-        txtdiscipcomment.Enabled = True
-        txtDesc.Enabled = True
-        dtpFrom.Enabled = True
-        dtpTo.Enabled = True
-    End Sub
-
-    Private Sub controlfalseDiscipAct()
-        cmbFinding.Enabled = 0
-        cboAction.Enabled = 0
-        txtdiscipcomment.Enabled = 0
-        txtDesc.Enabled = 0
-        dtpFrom.Enabled = 0
-        dtpTo.Enabled = 0
-    End Sub
-
-    Private Sub controlclear()
-        cmbFinding.SelectedIndex = -1
-        cboAction.Text = ""
-        txtdiscipcomment.Clear()
-        txtDesc.Clear()
-        dtpFrom.Value = Date.Now
-        dtpTo.Value = Date.Now
-    End Sub
-
-    Sub fillfindingcombobox()
-        Dim strQuery As String = "select partno from product Where OrganizationID = '" & z_OrganizationID & "' AND CategoryID='" & categDiscipID & "';"
-        cmbFinding.Items.Clear()
-        cmbFinding.Items.Add("-Please select one-")
-        cmbFinding.Items.AddRange(CType(SQL_ArrayList(strQuery).ToArray(GetType(String)), String()))
-        cmbFinding.SelectedIndex = 0
-    End Sub
-
-    Dim IsNewDiscip As SByte = 0
-
-    Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
-        IsNewDiscip = 1
-        btnNew.Enabled = False
-        dgvEmp.Enabled = False
-        controltrue()
-        controlclear()
-
-    End Sub
-
-    Dim dontUpdateDiscip As SByte = 0
-
-    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
-        If IsNewDiscip = 1 Then
-            If dgvEmp.RowCount = 0 Then
-
-                Exit Sub
-            Else
-
-                Dim fID As String = getStringItem("Select RowID From product where PartNo = '" & cmbFinding.Text & "' And organizationID = '" & z_OrganizationID & "'")
-                Dim getfID As Integer = Val(fID)
-
-                sp_employeedisciplinaryaction(z_datetime,
-                                              z_User,
-                                              z_datetime,
-                                              z_OrganizationID,
-                                              z_User,
-                                              Trim(cboAction.Text),
-                                              "",
-                                              txtDesc.Text,
-                                              getfID, dgvEmp.CurrentRow.Cells("RowID").Value,
-                                              dtpFrom.Value.ToString("yyyy-MM-dd"),
-                                              dtpTo.Value.ToString("yyyy-MM-dd"),
-                                              discipenalty)
-
-                fillempdisciplinary()
-                fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
-
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, DisciplinaryActionEntityName, dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value, z_OrganizationID)
-
-                myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
-            End If
-
-            dgvEmp.Enabled = True
-            btnNew.Enabled = True
-            IsNewDiscip = 0
-        Else
-            If dontUpdateDiscip = 1 Then
-                Exit Sub
-            ElseIf dgvEmp.RowCount = 0 Then
-                Exit Sub
-            End If
-
-            If dgvDisciplinaryList.RowCount <> 0 Then
-                Dim fID As String = getStringItem("Select RowID From product where PartNo = '" & cmbFinding.Text & "' And organizationID = '" & z_OrganizationID & "'")
-                Dim getfID As Integer = Val(fID)
-                Dim penaltyUpd = If(discipenalty Is Nothing, Nothing, ",Penalty='" & discipenalty & "'")
-
-                DirectCommand("UPDATE employeedisciplinaryaction SET Action = '" & cboAction.Text & "', DateFrom = '" & dtpFrom.Value.ToString("yyyy-MM-dd") & "' " &
-                              ", DateTo = '" & dtpTo.Value.ToString("yyyy-MM-dd") & "', FindingDescription = '" & txtDesc.Text & "', Comments = '" & txtdiscipcomment.Text & "', " &
-                              "FindingID = '" & getfID & "'" & penaltyUpd & " Where RowID = '" & dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value & "';")
-
-                fillempdisciplinary()
-                fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
-                myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
-            End If
-            IsNewDiscip = 0
-
-        End If
-
-        IsNewDiscip = 0
-
-        fillempdisciplinary()
-        controlfalseDiscipAct()
-    End Sub
-
-    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
-
-        Dim selected_rows =
-            dgvDisciplinaryList.Rows.OfType(Of DataGridViewRow).Where(Function(dgvr) dgvr.Selected)
-
-        Dim selected_rowids = New List(Of String)
-
-        For Each dgvr As DataGridViewRow In selected_rows
-            selected_rowids.Add(Convert.ToString(dgvr.Cells("c_rowid").Value))
-        Next
-
-        If selected_rows.Count > 0 Then
-
-            Console.WriteLine("HERE")
-            Console.WriteLine(String.Join(", ", selected_rowids.ToArray))
-
-            Dim str_quer =
-                String.Concat("DELETE FROM employeedisciplinaryaction",
-                              " WHERE OrganizationID = ", orgztnID,
-                              " AND RowID IN (", String.Join(", ", selected_rowids.ToArray), ");")
-
-            Dim sql As New SQL(str_quer)
-            sql.ExecuteQuery()
-
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DisciplinaryActionEntityName, selected_rowids.First, z_OrganizationID)
-
-            If sql.HasError = False Then
-
-                For Each dgvr As DataGridViewRow In selected_rows
-                    dgvDisciplinaryList.Rows.Remove(dgvr)
-                Next
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
-        Try
-            controlclear()
-
-            If Not dgvDisciplinaryList.Rows.Count = 0 Then
-                fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
-            End If
-        Catch ex As Exception
-            MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
-        End Try
-        btnNew.Enabled = True
-        dgvEmp.Enabled = True
-        IsNewDiscip = 0
-        controlfalseDiscipAct()
-
-    End Sub
-
-    Private Sub cboAction_KeyPress(sender As Object, e As KeyPressEventArgs) Handles cboAction.KeyPress
-        e.Handled = True
-    End Sub
 
 #End Region 'Disciplinary Action
 
@@ -6454,25 +6072,25 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
+    'Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
 
-        Dim n_DiscipAction As New DiscipAction
+    '    Dim n_DiscipAction As New DiscipAction
 
-        'n_DiscipAction.call_asdialog = 1
+    '    'n_DiscipAction.call_asdialog = 1
 
-        If n_DiscipAction.ShowDialog() = Windows.Forms.DialogResult.OK Then
+    '    If n_DiscipAction.ShowDialog() = Windows.Forms.DialogResult.OK Then
 
-            cboAction.Items.Clear()
+    '        cboAction.Items.Clear()
 
-            empdiscippenal = retAsDatTbl("SELECT * FROM listofval WHERE Type='Employee Disciplinary Penalty' AND Active='Yes' ORDER BY OrderBy;")
+    '        empdiscippenal = retAsDatTbl("SELECT * FROM listofval WHERE Type='Employee Disciplinary Penalty' AND Active='Yes' ORDER BY OrderBy;")
 
-            For Each drow As DataRow In empdiscippenal.Rows
-                cboAction.Items.Add(Trim(drow("DisplayValue").ToString))
-            Next
+    '        For Each drow As DataRow In empdiscippenal.Rows
+    '            cboAction.Items.Add(Trim(drow("DisplayValue").ToString))
+    '        Next
 
-        End If
+    '    End If
 
-    End Sub
+    'End Sub
 
     Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged

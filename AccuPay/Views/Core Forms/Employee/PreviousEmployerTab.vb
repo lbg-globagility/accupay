@@ -266,7 +266,7 @@ Public Class PreviousEmployerTab
             End Function)
 
         If succeed Then
-            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            ShowBalloonInfo("Previous Employer successfuly saved.", messageTitle)
             Return True
         End If
         Return False

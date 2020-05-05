@@ -31,6 +31,11 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeDisciplinaryPenalties()
+        {
+            return await GetListOfValuesAsync("Employee Disciplinary Penalty");
+        }
+
         public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("DutyShift");
@@ -87,6 +92,33 @@ namespace AccuPay.Data.Repositories
             }
 
             return stringList;
+        }
+
+        public async Task DeleteAsync(ListOfValue value)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                context.ListOfValues.Remove(value);
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task UpdateAsync(ListOfValue value)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                context.Entry(value).State = EntityState.Modified;
+                await context.SaveChangesAsync();
+            }
+        }
+
+        public async Task CreateAsync(ListOfValue value)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                context.ListOfValues.Add(value);
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

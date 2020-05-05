@@ -521,6 +521,12 @@
     <Compile Include="Views\Core Forms\Employee\AddAwardForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddDisciplinaryAction.Designer.vb">
+      <DependentUpon>AddDisciplinaryAction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddDisciplinaryAction.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.Designer.vb">
       <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
     </Compile>
@@ -531,6 +537,24 @@
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\DisciplinaryActionTab.Designer.vb">
+      <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\DisciplinaryActionTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.Designer.vb">
+      <DependentUpon>NewListOfValDisciplinaryPenaltyForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.Designer.vb">
+      <DependentUpon>NewProductDisciplinaryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.Designer.vb">
@@ -2015,11 +2039,23 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddDisciplinaryAction.resx">
+      <DependentUpon>AddDisciplinaryAction.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.resx">
       <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\DisciplinaryActionTab.resx">
+      <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.resx">
+      <DependentUpon>NewListOfValDisciplinaryPenaltyForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.resx">
+      <DependentUpon>NewProductDisciplinaryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
