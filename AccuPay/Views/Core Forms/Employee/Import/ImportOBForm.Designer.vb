@@ -51,6 +51,8 @@ Partial Class ImportOBForm
         Me.btnDownloadTemplate = New System.Windows.Forms.Button()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
+        Me.BrowseButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.OBDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -59,6 +61,7 @@ Partial Class ImportOBForm
         Me.Column8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.SaveButton = New System.Windows.Forms.Button()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.RejectedRecordsGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -71,9 +74,6 @@ Partial Class ImportOBForm
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn12 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.CancelButton = New System.Windows.Forms.Button()
-        Me.SaveButton = New System.Windows.Forms.Button()
-        Me.BrowseButton = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -130,7 +130,7 @@ Partial Class ImportOBForm
         '
         Me.ParsedTabControl.Controls.Add(Me.btnDownloadTemplate)
         Me.ParsedTabControl.Controls.Add(Me.BrowseButton)
-        Me.ParsedTabControl.Controls.Add(Me.CancelButton)
+        Me.ParsedTabControl.Controls.Add(Me.CancelDialogButton)
         Me.ParsedTabControl.Controls.Add(Me.OBDataGrid)
         Me.ParsedTabControl.Controls.Add(Me.SaveButton)
         Me.ParsedTabControl.Controls.Add(Me.lblStatus)
@@ -141,6 +141,26 @@ Partial Class ImportOBForm
         Me.ParsedTabControl.TabIndex = 0
         Me.ParsedTabControl.Text = "Ok"
         Me.ParsedTabControl.UseVisualStyleBackColor = True
+        '
+        'BrowseButton
+        '
+        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.BrowseButton.Location = New System.Drawing.Point(8, 397)
+        Me.BrowseButton.Name = "BrowseButton"
+        Me.BrowseButton.Size = New System.Drawing.Size(96, 32)
+        Me.BrowseButton.TabIndex = 22
+        Me.BrowseButton.Text = "&Browse..."
+        Me.BrowseButton.UseVisualStyleBackColor = True
+        '
+        'CancelDialogButton
+        '
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(790, 397)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(96, 32)
+        Me.CancelDialogButton.TabIndex = 24
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'OBDataGrid
         '
@@ -229,6 +249,17 @@ Partial Class ImportOBForm
         Me.Column9.HeaderText = "End Time"
         Me.Column9.Name = "Column9"
         Me.Column9.ReadOnly = True
+        '
+        'SaveButton
+        '
+        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.SaveButton.Enabled = False
+        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
+        Me.SaveButton.Name = "SaveButton"
+        Me.SaveButton.Size = New System.Drawing.Size(96, 32)
+        Me.SaveButton.TabIndex = 23
+        Me.SaveButton.Text = "&Save"
+        Me.SaveButton.UseVisualStyleBackColor = True
         '
         'lblStatus
         '
@@ -364,37 +395,6 @@ Partial Class ImportOBForm
         Me.DataGridViewTextBoxColumn12.HeaderText = "End Time"
         Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
         Me.DataGridViewTextBoxColumn12.ReadOnly = True
-        '
-        'CancelButton
-        '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(790, 397)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(96, 32)
-        Me.CancelButton.TabIndex = 24
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
-        '
-        'SaveButton
-        '
-        Me.SaveButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.SaveButton.Enabled = False
-        Me.SaveButton.Location = New System.Drawing.Point(685, 397)
-        Me.SaveButton.Name = "SaveButton"
-        Me.SaveButton.Size = New System.Drawing.Size(96, 32)
-        Me.SaveButton.TabIndex = 23
-        Me.SaveButton.Text = "&Save"
-        Me.SaveButton.UseVisualStyleBackColor = True
-        '
-        'BrowseButton
-        '
-        Me.BrowseButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.BrowseButton.Location = New System.Drawing.Point(8, 397)
-        Me.BrowseButton.Name = "BrowseButton"
-        Me.BrowseButton.Size = New System.Drawing.Size(96, 32)
-        Me.BrowseButton.TabIndex = 22
-        Me.BrowseButton.Text = "&Browse..."
-        Me.BrowseButton.UseVisualStyleBackColor = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -662,7 +662,7 @@ Partial Class ImportOBForm
     Friend WithEvents lblStatus As Label
     Friend WithEvents ErrorsTabControl As TabPage
     Friend WithEvents RejectedRecordsGrid As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents SaveButton As Button
     Friend WithEvents DataGridViewTextBoxColumn21 As DataGridViewTextBoxColumn
     Friend WithEvents BrowseButton As Button

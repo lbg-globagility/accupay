@@ -400,7 +400,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection
+        Dim calendarCollection As CalendarCollection = Nothing
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
             calendarCollection = GetCalendarCollection(payPeriod)
         End If
@@ -648,7 +648,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection
+        Dim calendarCollection As CalendarCollection = Nothing
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
             calendarCollection = GetCalendarCollection(payPeriod)
         End If

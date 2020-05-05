@@ -207,7 +207,7 @@ Public Class ImportSalaryForm
         Close()
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Close()
     End Sub
 

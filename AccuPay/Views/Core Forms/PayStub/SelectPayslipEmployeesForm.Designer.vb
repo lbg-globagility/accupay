@@ -35,12 +35,13 @@ Partial Class SelectPayslipEmployeesForm
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(SelectPayslipEmployeesForm))
         Me.Panel1 = New System.Windows.Forms.Panel()
+        Me.RefreshEmailServiceButton = New System.Windows.Forms.Button()
         Me.RefreshEmailStatusButton = New System.Windows.Forms.Button()
         Me.PreviewButton = New System.Windows.Forms.Button()
         Me.PayslipTypePanel = New System.Windows.Forms.Panel()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.PayslipTypeComboBox = New System.Windows.Forms.ComboBox()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SendEmailsButton = New System.Windows.Forms.Button()
         Me.EmployeesDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
@@ -65,7 +66,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.RefreshEmailServiceButton = New System.Windows.Forms.Button()
         Me.Panel1.SuspendLayout()
         Me.PayslipTypePanel.SuspendLayout()
         CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -77,13 +77,26 @@ Partial Class SelectPayslipEmployeesForm
         Me.Panel1.Controls.Add(Me.RefreshEmailStatusButton)
         Me.Panel1.Controls.Add(Me.PreviewButton)
         Me.Panel1.Controls.Add(Me.PayslipTypePanel)
-        Me.Panel1.Controls.Add(Me.CancelButton)
+        Me.Panel1.Controls.Add(Me.CancelDialogButton)
         Me.Panel1.Controls.Add(Me.SendEmailsButton)
         Me.Panel1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.Panel1.Location = New System.Drawing.Point(0, 413)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(1084, 50)
         Me.Panel1.TabIndex = 0
+        '
+        'RefreshEmailServiceButton
+        '
+        Me.RefreshEmailServiceButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.RefreshEmailServiceButton.BackColor = System.Drawing.Color.Red
+        Me.RefreshEmailServiceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.RefreshEmailServiceButton.ForeColor = System.Drawing.Color.White
+        Me.RefreshEmailServiceButton.Location = New System.Drawing.Point(481, 15)
+        Me.RefreshEmailServiceButton.Name = "RefreshEmailServiceButton"
+        Me.RefreshEmailServiceButton.Size = New System.Drawing.Size(123, 23)
+        Me.RefreshEmailServiceButton.TabIndex = 9
+        Me.RefreshEmailServiceButton.Text = "Restart Email Service"
+        Me.RefreshEmailServiceButton.UseVisualStyleBackColor = False
         '
         'RefreshEmailStatusButton
         '
@@ -138,15 +151,15 @@ Partial Class SelectPayslipEmployeesForm
         Me.PayslipTypeComboBox.Size = New System.Drawing.Size(121, 21)
         Me.PayslipTypeComboBox.TabIndex = 5
         '
-        'CancelButton
+        'CancelFormButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(970, 15)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(96, 23)
-        Me.CancelButton.TabIndex = 3
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(970, 15)
+        Me.CancelDialogButton.Name = "CancelFormButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(96, 23)
+        Me.CancelDialogButton.TabIndex = 3
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'SendEmailsButton
         '
@@ -397,19 +410,6 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 177
         '
-        'Button1
-        '
-        Me.RefreshEmailServiceButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.RefreshEmailServiceButton.BackColor = System.Drawing.Color.Red
-        Me.RefreshEmailServiceButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.RefreshEmailServiceButton.ForeColor = System.Drawing.Color.White
-        Me.RefreshEmailServiceButton.Location = New System.Drawing.Point(481, 15)
-        Me.RefreshEmailServiceButton.Name = "Button1"
-        Me.RefreshEmailServiceButton.Size = New System.Drawing.Size(123, 23)
-        Me.RefreshEmailServiceButton.TabIndex = 9
-        Me.RefreshEmailServiceButton.Text = "Restart Email Service"
-        Me.RefreshEmailServiceButton.UseVisualStyleBackColor = False
-        '
         'SelectPayslipEmployeesForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -433,7 +433,7 @@ Partial Class SelectPayslipEmployeesForm
     End Sub
 
     Friend WithEvents Panel1 As Panel
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents SendEmailsButton As Button
     Friend WithEvents PayslipTypePanel As Panel
     Friend WithEvents Label1 As Label

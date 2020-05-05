@@ -310,7 +310,9 @@ Public Class TimeLogsForm2
             'This codes work even if it is not awaited.
             'Using async and await does not update the UI.
             'Tried using ConfigureAwait(False) and .Wait() but it did not work
+#Disable Warning BC42358 ' Because this call is not awaited, execution of the current method continues before the call is completed
             ReloadAsync()
+#Enable Warning BC42358 ' Because this call is not awaited, execution of the current method continues before the call is completed
 
         End If
 
