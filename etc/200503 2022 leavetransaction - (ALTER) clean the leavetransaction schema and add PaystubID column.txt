@@ -1,0 +1,36 @@
+ALTER TABLE `leavetransaction`
+	DROP FOREIGN KEY `FK_leavetransaction_employee`,
+	DROP FOREIGN KEY `FK_leavetransaction_employeeleave`,
+	DROP FOREIGN KEY `FK_leavetransaction_leaveledger`,
+	DROP FOREIGN KEY `FK_leavetransaction_organization`,
+	DROP FOREIGN KEY `FK_leavetransaction_payperiod`,
+	DROP FOREIGN KEY `FK_leavetransaction_user`,
+	DROP FOREIGN KEY `FK_leavetransaction_user_2`;
+ALTER TABLE `leavetransaction`
+	ADD COLUMN `PaystubID` INT(10) NULL DEFAULT NULL AFTER `PayPeriodID`,
+	ADD CONSTRAINT `FK_leavetransaction_employee_EmployeeID` FOREIGN KEY (`EmployeeID`) REFERENCES `employee` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_employeeleave_ReferenceID` FOREIGN KEY (`ReferenceID`) REFERENCES `employeeleave` (`RowID`) ON DELETE SET NULL,
+	ADD CONSTRAINT `FK_leavetransaction_leaveledger_LeaveLedgerID` FOREIGN KEY (`LeaveLedgerID`) REFERENCES `leaveledger` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_organization_OrganizationID` FOREIGN KEY (`OrganizationID`) REFERENCES `organization` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_payperiod_PayPeriodID` FOREIGN KEY (`PayPeriodID`) REFERENCES `payperiod` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_user_CreatedBy` FOREIGN KEY (`CreatedBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_user_LastUpdBy` FOREIGN KEY (`LastUpdBy`) REFERENCES `user` (`RowID`),
+	ADD CONSTRAINT `FK_leavetransaction_paystub_PaystubID` FOREIGN KEY (`PaystubID`) REFERENCES `paystub` (`RowID`);
+
+UPDATE leavetransaction
+INNER JOIN paystub
+ON leavetransaction.PayPeriodID = paystub.PayPeriodID
+AND leavetransaction.EmployeeID = paystub.EmployeeID
+SET leavetransaction.PaystubID = paystub.RowID
+;
+
+/*
+SELECT *
+FROM leavetransaction
+INNER JOIN paystub
+ON leavetransaction.PayPeriodID = paystub.PayPeriodID
+AND leavetransaction.EmployeeID = paystub.EmployeeID
+;
+
+SELECT (SELECT RowID FROM paystub p WHERE p.PayPeriodID = l.PayPeriodID AND p.EmployeeID = l.EmployeeID) AS PaystubID, l.* FROM leavetransaction l HAVING PaystubID IS NOT NULL;
+*/

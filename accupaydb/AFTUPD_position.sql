@@ -25,23 +25,6 @@ IF OLD.ParentPositionID != NEW.ParentPositionID THEN
 
 END IF;
 
-IF OLD.DivisionId != NEW.DivisionId THEN
-
-    INSERT INTO audittrail (Created,CreatedBy,LastUpdBy,OrganizationID,ViewID,FieldChanged,ChangedRowID,OldValue,NewValue,ActionPerformed) VALUES (CURRENT_TIMESTAMP(),NEW.LastUpdBy,NEW.LastUpdBy,NEW.OrganizationID,viewID,'DivisionId',NEW.RowID,OLD.DivisionId,NEW.DivisionId,'Update');
-
-    UPDATE employee e
-    INNER JOIN `division` d ON d.RowID=NEW.DivisionId
-    SET e.PayFrequencyID=d.PayFrequencyID
-    ,e.WorkDaysPerYear=d.WorkDaysPerYear
-    ,e.LateGracePeriod=d.GracePeriod
-    ,e.LastUpdBy=NEW.LastUpdBy
-    WHERE e.OrganizationID=NEW.OrganizationID
-    AND e.PositionID=NEW.RowID;
-
-END IF;
-
-
-
 END//
 DELIMITER ;
 SET SQL_MODE=@OLDTMP_SQL_MODE;

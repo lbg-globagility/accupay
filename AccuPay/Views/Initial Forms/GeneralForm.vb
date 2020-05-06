@@ -1,13 +1,30 @@
-﻿Imports AccuPay
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
+    Dim sys_ownr As SystemOwnerService
 
-    Private _payRateCalculationBasis As PayRateCalculationBasis
+    Private _policyHelper As PolicyHelper
+
+    Private _userRepository As UserRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _policyHelper = New PolicyHelper()
+
+        sys_ownr = New SystemOwnerService()
+
+        _userRepository = New UserRepository()
+    End Sub
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -17,7 +34,7 @@ Public Class GeneralForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -94,48 +111,42 @@ Public Class GeneralForm
 
     End Sub
 
-    Private Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub GeneralForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Using context As New PayrollContext
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            If user Is Nothing Then
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        If _policyHelper.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
 
-            If settings.GetEnum("Pay rate.CalculationBasis",
-                   PayRateCalculationBasis.Organization) = PayRateCalculationBasis.Branch Then
+            CalendarsToolStripMenuItem.Visible = True
+            PayRateToolStripMenuItem.Visible = False
+        Else
 
-                CalendarsToolStripMenuItem.Visible = True
-                PayRateToolStripMenuItem.Visible = False
-            Else
+            CalendarsToolStripMenuItem.Visible = False
+            PayRateToolStripMenuItem.Visible = True
 
-                CalendarsToolStripMenuItem.Visible = False
-                PayRateToolStripMenuItem.Visible = True
+        End If
 
-            End If
+        If _policyHelper.ShowBranch = False Then
+            BranchToolStripMenuItem.Visible = False
+        End If
 
-            If settings.GetBoolean("Employee Policy.ShowBranch", False) = False Then
-                BranchToolStripMenuItem.Visible = False
-            End If
+        If _policyHelper.UseUserLevel = False Then
+            Return
+        Else
+            UserPrivilegeToolStripMenuItem.Visible = False
+        End If
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
-                Return
-            Else
-                UserPrivilegeToolStripMenuItem.Visible = False
-            End If
+        If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
 
-            If user.UserLevel = UserLevel.Two OrElse user.UserLevel = UserLevel.Three Then
+            UserToolStripMenuItem.Visible = False
+            OrganizationToolStripMenuItem.Visible = False
+            ListOfValueToolStripMenuItem.Visible = False
 
-                UserToolStripMenuItem.Visible = False
-                OrganizationToolStripMenuItem.Visible = False
-                ListOfValueToolStripMenuItem.Visible = False
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 
@@ -390,7 +401,7 @@ Public Class GeneralForm
             Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
 
         AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.CurrentSystemOwner)
+            ownr.Contains(sys_ownr.GetCurrentSystemOwner())
 
         MyBase.OnLoad(e)
 

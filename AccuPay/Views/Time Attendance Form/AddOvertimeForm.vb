@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
@@ -6,11 +8,13 @@ Public Class AddOvertimeForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _overtimeRepository As New OvertimeRepository
+    Private Const FormEntityName As String = "Overtime"
+
+    Private _overtimeRepository As New OvertimeRepository()
 
     Private _currentEmployee As Employee
 
-    Private _newOvertime As New Overtime
+    Private _newOvertime As New Overtime()
 
     Sub New(employee As Employee)
 
@@ -54,6 +58,9 @@ Public Class AddOvertimeForm
 
         Me._newOvertime = New Overtime
         Me._newOvertime.EmployeeID = _currentEmployee.RowID
+        Me._newOvertime.OrganizationID = z_OrganizationID
+        Me._newOvertime.CreatedBy = z_User
+
         Me._newOvertime.OTStartDate = Date.Now
         Me._newOvertime.OTEndDate = Date.Now
         Me._newOvertime.OTStartTime = Date.Now.TimeOfDay
@@ -131,7 +138,7 @@ Public Class AddOvertimeForm
         EndDatePicker.Value = Me._newOvertime.OTEndDate
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -143,10 +150,10 @@ Public Class AddOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
-                Await _overtimeRepository.SaveAsync(z_OrganizationID, z_User, Me._newOvertime)
+                Await _overtimeRepository.SaveAsync(Me._newOvertime)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Overtime", Me._newOvertime.RowID, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

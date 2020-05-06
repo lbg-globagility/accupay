@@ -1,26 +1,58 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class EmployeeOvertimeForm
 
-    Private _employees As New List(Of Employee)
-
-    Private _allEmployees As New List(Of Employee)
+    Private Const FormEntityName As String = "Overtime"
 
     Private _currentOvertime As Overtime
 
-    Private _currentOvertimes As New List(Of Overtime)
+    Private _employees As List(Of Employee)
 
-    Private _changedOvertimes As New List(Of Overtime)
+    Private _allEmployees As List(Of Employee)
 
-    Private _overtimeRepository As New OvertimeRepository
+    Private _currentOvertimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _changedOvertimes As List(Of Overtime)
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _overtimeRepository As OvertimeRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentOvertimes = New List(Of Overtime)
+
+        _changedOvertimes = New List(Of Overtime)
+
+        _overtimeRepository = New OvertimeRepository()
+
+        _employeeRepository = New EmployeeRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+    End Sub
 
     Private Async Sub EmployeeOvertimeForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -31,11 +63,11 @@ Public Class EmployeeOvertimeForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(SearchTextBox.Text.ToLower())
@@ -46,7 +78,7 @@ Public Class EmployeeOvertimeForm
 
     Private Sub EmployeeOvertimeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-        InfoBalloon(, , FormTitleLabel, , , 1)
+        myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
@@ -89,12 +121,18 @@ Public Class EmployeeOvertimeForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
         Else
             EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeOvertimes()
+
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -120,6 +158,22 @@ Public Class EmployeeOvertimeForm
     End Function
 
     Private Sub ResetForm()
+
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'overtime grid view
+        RemoveHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
+        OvertimeGridView.DataSource = Nothing
+
+        AddHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
+        'overtime details
 
         Me._currentOvertime = Nothing
 
@@ -148,7 +202,13 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -164,9 +224,9 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentOvertimes = (Await _overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+        Me._currentOvertimes = (Await _overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.OTStartDate).
                                 ToList
 
@@ -178,9 +238,7 @@ Public Class EmployeeOvertimeForm
             Me._changedOvertimes(index).OTEndTime = Me._currentOvertimes(index).OTEndTime
         Next
 
-        OvertimeListBindingSource.DataSource = Me._currentOvertimes
-
-        OvertimeGridView.DataSource = OvertimeListBindingSource
+        PopulateOvertimeGridView()
 
     End Function
 
@@ -220,7 +278,7 @@ Public Class EmployeeOvertimeForm
 
     End Function
 
-    Private Function RecordUpdate(newOvertime As Overtime)
+    Private Function RecordUpdate(newOvertime As Overtime) As Boolean
         Dim oldOvertime =
             Me._changedOvertimes.
                 FirstOrDefault(Function(l) Nullable.Equals(l.RowID, newOvertime.RowID))
@@ -229,58 +287,59 @@ Public Class EmployeeOvertimeForm
 
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If newOvertime.OTStartDate <> oldOvertime.OTStartDate Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} start date from '{oldOvertime.OTStartDate.ToShortDateString}' to '{newOvertime.OTStartDate.ToShortDateString}'."
                         })
         End If
         If newOvertime.OTEndDate <> oldOvertime.OTEndDate Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} end date from '{oldOvertime.OTEndDate.ToShortDateString}' to '{newOvertime.OTEndDate.ToShortDateString}'."
                         })
         End If
         If newOvertime.OTStartTime <> oldOvertime.OTStartTime Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} start time from '{oldOvertime.OTStartTime.StripSeconds.ToString}' to '{newOvertime.OTStartTime.StripSeconds.ToString}'."
                         })
         End If
         If newOvertime.OTEndTime <> oldOvertime.OTEndTime Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} end time from '{oldOvertime.OTEndTime.StripSeconds.ToString}' to '{newOvertime.OTEndTime.StripSeconds.ToString}'."
                         })
         End If
         If newOvertime.Reason <> oldOvertime.Reason Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} reason from '{oldOvertime.Reason}' to '{newOvertime.Reason}'."
                         })
         End If
         If newOvertime.Comments <> oldOvertime.Comments Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} comments from '{oldOvertime.Comments}' to '{newOvertime.Comments}'."
                         })
         End If
         If newOvertime.Status <> oldOvertime.Status Then
             changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldOvertime.RowID,
-                        .Description = $"Update overtime status from '{oldOvertime.Status}' to '{newOvertime.Status}'"
+                        .EntityId = oldOvertime.RowID.Value,
+                        .Description = $"Updated {entityName} status from '{oldOvertime.Status}' to '{newOvertime.Status}'."
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Overtime", z_OrganizationID, "EDIT", changes)
+        _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
         Return True
     End Function
@@ -321,10 +380,12 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID)
+                                                Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID.Value)
 
-                                                Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, "Overtime", Me._currentOvertime.RowID, z_OrganizationID)
+                                                _userActivityRepository.RecordDelete(z_User,
+                                                                                     FormEntityName,
+                                                                                     Me._currentOvertime.RowID.Value,
+                                                                                     z_OrganizationID)
 
                                                 Await LoadOvertimes(currentEmployee)
 
@@ -345,9 +406,16 @@ Public Class EmployeeOvertimeForm
         End If
 
         EndDatePicker.Value = Me._currentOvertime.OTEndDate
+
     End Sub
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowEmployeeOvertimes()
+
+    End Sub
+
+    Private Async Function ShowEmployeeOvertimes() As Task
 
         ResetForm()
 
@@ -362,10 +430,15 @@ Public Class EmployeeOvertimeForm
 
         Await LoadOvertimes(currentEmployee)
 
+    End Function
+
+    Private Sub OvertimeGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowOvertimeDetails()
+
     End Sub
 
-    Private Sub OvertimeGridView_SelectionChanged(sender As Object, e As EventArgs) Handles OvertimeGridView.SelectionChanged
-        ResetForm()
+    Private Sub ShowOvertimeDetails()
 
         If OvertimeGridView.CurrentRow Is Nothing Then Return
 
@@ -445,9 +518,21 @@ Public Class EmployeeOvertimeForm
             Me._currentOvertimes(index).OTEndTime = Me._changedOvertimes(index).OTEndTime
         Next
 
+        PopulateOvertimeGridView()
+    End Sub
+
+    Private Sub PopulateOvertimeGridView()
+
+        RemoveHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
         OvertimeListBindingSource.DataSource = Me._currentOvertimes
 
         OvertimeGridView.DataSource = OvertimeListBindingSource
+
+        ShowOvertimeDetails()
+
+        AddHandler OvertimeGridView.SelectionChanged, AddressOf OvertimeGridView_SelectionChanged
+
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
@@ -461,14 +546,13 @@ Public Class EmployeeOvertimeForm
 
         Const messageTitle As String = "Delete Overtime"
 
-        If Me._currentOvertime Is Nothing OrElse
-            Me._currentOvertime.RowID Is Nothing Then
+        If Me._currentOvertime?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No overtime selected!")
 
             Return
         End If
 
-        Dim currentOvertime = Await _overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID)
+        Dim currentOvertime = Await _overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then
 
@@ -521,6 +605,7 @@ Public Class EmployeeOvertimeForm
                     Return
                 End If
 
+                item.LastUpdBy = z_User
                 changedOvertimes.Add(item)
             End If
         Next
@@ -538,7 +623,7 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, changedOvertimes)
+                                            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
 
                                             For Each item In changedOvertimes
                                                 RecordUpdate(item)
@@ -567,7 +652,7 @@ Public Class EmployeeOvertimeForm
         For Each employeeID In employeeIDs
 
             Dim overtimeList = otList.
-                Where(Function(ot) ot.EmployeeID = employeeID).
+                Where(Function(ot) ot.EmployeeID.Value = employeeID.Value).
                 GroupBy(Function(ot) ot.OTStartDate).
                 GroupBy(Function(ot) ot.FirstOrDefault.OTEndDate).
                 Select(Function(ot) New With {ot.Key, ot.FirstOrDefault.FirstOrDefault.OTEndDate}).
@@ -618,13 +703,13 @@ Public Class EmployeeOvertimeForm
 
     Private Sub SetCurrentOvertimeRow(overtime As Overtime)
         Dim gridRow = OvertimeGridView.Rows.OfType(Of DataGridViewRow).
-            Where(Function(r) r.Cells(Column2.Name).Value = overtime.OTStartTime.Value).
-            Where(Function(r) r.Cells(Column4.Name).Value = overtime.OTEndTime.Value).
-            Where(Function(r) r.Cells(Column1.Name).Value = overtime.OTStartDate).
-            Where(Function(r) r.Cells(Column3.Name).Value = overtime.OTEndDate).
-            Where(Function(r) r.Cells(Column7.Name).Value = overtime.Status).
-            Where(Function(r) r.Cells(Column5.Name).Value = overtime.Reason).
-            Where(Function(r) r.Cells(Column6.Name).Value = overtime.Comments).
+            Where(Function(r) ObjectUtils.ToNullableTimeSpan(r.Cells(Column2.Name).Value).Value = overtime.OTStartTime.Value).
+            Where(Function(r) ObjectUtils.ToNullableTimeSpan(r.Cells(Column4.Name).Value).Value = overtime.OTEndTime.Value).
+            Where(Function(r) ObjectUtils.ToNullableDateTime(r.Cells(Column1.Name).Value).Value = overtime.OTStartDate).
+            Where(Function(r) ObjectUtils.ToNullableDateTime(r.Cells(Column3.Name).Value).Value = overtime.OTEndDate).
+            Where(Function(r) r.Cells(Column7.Name).Value.ToString() = overtime.Status).
+            Where(Function(r) r.Cells(Column5.Name).Value.ToString() = overtime.Reason).
+            Where(Function(r) r.Cells(Column6.Name).Value.ToString() = overtime.Comments).
             FirstOrDefault
 
         If gridRow Is Nothing Then Return
@@ -648,7 +733,7 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Overtime")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

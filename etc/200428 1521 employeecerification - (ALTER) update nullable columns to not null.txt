@@ -1,0 +1,10 @@
+ALTER TABLE `employeecertification`
+	ALTER `CreatedBy` DROP DEFAULT,
+	ALTER `EmployeeID` DROP DEFAULT,
+	ALTER `CertificationType` DROP DEFAULT,
+	ALTER `IssueDate` DROP DEFAULT;
+ALTER TABLE `employeecertification`
+	CHANGE COLUMN `CreatedBy` `CreatedBy` INT(10) NOT NULL AFTER `Created`,
+	CHANGE COLUMN `EmployeeID` `EmployeeID` INT(10) NOT NULL AFTER `LastUpdBy`,
+	CHANGE COLUMN `CertificationType` `CertificationType` VARCHAR(50) NOT NULL AFTER `EmployeeID`,
+	CHANGE COLUMN `IssueDate` `IssueDate` DATE NOT NULL AFTER `CertificationNo`;

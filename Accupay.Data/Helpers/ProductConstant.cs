@@ -2,34 +2,22 @@
 {
     public class ProductConstant
     {
-        public static readonly string ADJUSTMENT_TYPE_CATEGORY = "Adjustment Type";
-
-        public static readonly string ALLOWANCE_TYPE_CATEGORY = "Allowance Type";
-
-        public static readonly string LEAVE_TYPE_CATEGORY = "Leave Type";
-
-        public static readonly string LOAN_TYPE_CATEGORY = "Loan Type";
-
-        public static readonly string ADJUSTMENT_TYPE_DEDUCTION = "DEDUCTION";
-
-        public static readonly string ADJUSTMENT_TYPE_ADDITION = "ADDITION";
-
-        public static readonly string PAG_IBIG_LOAN = "PAGIBIG LOAN";
-
-        public static readonly string SSS_LOAN = "SSS LOAN";
-
-        public static readonly string ECOLA = "ecola";
-
-        public static readonly string VACATION_LEAVE = "Vacation leave";
-
-        public static readonly string SICK_LEAVE = "Sick leave";
-
-        public static readonly string MATERNITY_LEAVE = "Maternity leave";
-
-        public static readonly string PARENTAL_LEAVE = "Parental";
-
-        public static readonly string OTHERS_LEAVE = "Others";
-
-        public static readonly string BPI_INSURANCE_ADJUSTMENT = "BPI Insurance";
+        public const string ADJUSTMENT_TYPE_ADDITION = "ADDITION";
+        public const string ADJUSTMENT_TYPE_CATEGORY = "Adjustment Type";
+        public const string ADJUSTMENT_TYPE_DEDUCTION = "DEDUCTION";
+        public const string ALLOWANCE_TYPE_CATEGORY = "Allowance Type";
+        public const string BPI_INSURANCE_ADJUSTMENT = "BPI Insurance";
+        public const string BONUS_TYPE_CATEGORY = "Bonus";
+        public const string ECOLA = "ecola";
+        public const string HMO_LOAN = "HMO";
+        public const string LEAVE_TYPE_CATEGORY = "Leave Type";
+        public const string LOAN_TYPE_CATEGORY = "Loan Type";
+        public const string MATERNITY_LEAVE = "Maternity leave";
+        public const string OTHERS_LEAVE = "Others";
+        public const string PAG_IBIG_LOAN = "PAGIBIG LOAN";
+        public const string PARENTAL_LEAVE = "Parental";
+        public const string SICK_LEAVE = "Sick leave";
+        public const string SSS_LOAN = "SSS LOAN";
+        public const string VACATION_LEAVE = "Vacation leave";
     }
 }

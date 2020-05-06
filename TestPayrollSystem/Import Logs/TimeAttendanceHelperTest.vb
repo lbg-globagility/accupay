@@ -1,7 +1,7 @@
 ﻿Option Strict On
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
+
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class TimeAttendanceHelperTest
@@ -17,7 +17,10 @@ Public Class TimeAttendanceHelperTest
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -29,7 +32,6 @@ Public Class TimeAttendanceHelperTest
         AssertTimeLog(results.Item(3), "05:00:00", "03:00:00", "2018-06-04")
         AssertTimeLog(results.Item(4), "04:00:00", "01:00:00", "2018-06-05")
         AssertTimeLog(results.Item(5), "08:00:00", "03:00:00", "2018-06-06")
-
 
         ' Original AssertTimeLog(results.Item(6), "", "23:30:00", "2018-06-07")
         ' In old analyzer, 11:30 PM was analyzed as time out
@@ -45,7 +47,10 @@ Public Class TimeAttendanceHelperTest
         Dim employeeShifts As New List(Of ShiftSchedule)
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -69,7 +74,10 @@ Public Class TimeAttendanceHelperTest
         Dim employeeShifts As List(Of ShiftSchedule) = GetSampleShiftSchedules_WithNextShiftScheduleWithoutShift()
         Dim employees As List(Of Employee) = GetSampleEmployees()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelper(logs, employees, employeeShifts, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 

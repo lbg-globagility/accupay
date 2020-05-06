@@ -1,9 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
 Imports AccuPay.Data
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 
 Public Class DateRangePickerDialog
 
@@ -24,7 +25,10 @@ Public Class DateRangePickerDialog
     Private _rowId As Integer
 
     Private _passedPayPeriod As IPayPeriod
+
     Private ReadOnly _removePayPeriodValidation As Boolean
+
+    Private _payPeriodRepository As PayPeriodRepository
 
     Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
@@ -33,7 +37,10 @@ Public Class DateRangePickerDialog
 
         ' Add any initialization after the InitializeComponent() call.
         _passedPayPeriod = passedPayPeriod
+
         _removePayPeriodValidation = removePayPeriodValidation
+
+        _payPeriodRepository = New PayPeriodRepository()
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -57,7 +64,7 @@ Public Class DateRangePickerDialog
     Private Async Sub DateRangePickerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         PayperiodsDataGridView.AutoGenerateColumns = False
 
-        _payFrequencyId = PayrollTools.PayFrequencySemiMonthlyId
+        _payFrequencyId = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId
 
         Await LoadPayPeriods()
 
@@ -75,7 +82,9 @@ Public Class DateRangePickerDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            currentPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payperiods))
+            currentPayPeriod = Await Data.Helpers.PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(
+                                                                z_OrganizationID,
+                                                                New List(Of IPayPeriod)(_payperiods))
         Else
             currentPayPeriod = _passedPayPeriod
 
@@ -104,15 +113,15 @@ Public Class DateRangePickerDialog
     End Function
 
     Private Async Function LoadPayPeriods() As Task
-        Using context = New PayrollContext()
-            _payperiods = Await context.PayPeriods.
-                Where(Function(p) p.Year = Year).
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                Where(Function(p) Nullable.Equals(p.PayFrequencyID, _payFrequencyId)).
-                ToListAsync()
-        End Using
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+        _payperiods = (Await _payPeriodRepository.
+                        GetByPayFrequencyAndYearAsync(
+                                                organizationId:=z_OrganizationID,
+                                                payFrequencyId:=_payFrequencyId,
+                                                year:=Me.Year)).
+                    ToList()
+
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
 
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 

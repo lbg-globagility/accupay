@@ -1,6 +1,7 @@
 ﻿Option Strict On
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class newProdBonus
 
@@ -19,7 +20,10 @@ Public Class newProdBonus
                 TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
                 Dim productRepo = New ProductRepository
-                _newProduct = Await productRepo.AddBonusType(TextBox1.Text, chktaxab.Checked)
+                _newProduct = Await productRepo.AddBonusTypeAsync(TextBox1.Text,
+                                                             organizationId:=z_OrganizationID,
+                                                             userId:=z_User,
+                                                             isTaxable:=chktaxab.Checked)
 
             End If
 
@@ -40,7 +44,6 @@ Public Class newProdBonus
             Button2_Click(Button2, New EventArgs)
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)

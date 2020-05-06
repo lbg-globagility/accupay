@@ -1,30 +1,26 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Microsoft.EntityFrameworkCore
 
 Public Class ImportOBForm
 
-    Private _officialbus As List(Of OfficialBusiness)
+    Private Const FormEntityName As String = "Official Business"
 
-    Private _officialbusTypeList As List(Of ListOfValue)
+    Private _officialBusinesses As List(Of OfficialBusiness)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As New EmployeeRepository()
+
+    Private _officialBusinessRepository As New OfficialBusinessRepository()
 
     Public IsSaved As Boolean
 
-    Private Async Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.IsSaved = False
-
-        Using context = New PayrollContext()
-            _officialbusTypeList = Await context.ListOfValues.
-                                    Where(Function(l) l.Type = "Official Business Type").
-                                    Where(Function(l) l.Active = "Yes").
-                                    ToListAsync
-        End Using
 
         OBDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -55,7 +51,7 @@ Public Class ImportOBForm
 
         If parsedSuccessfully = False Then Return
 
-        _officialbus = New List(Of OfficialBusiness)
+        _officialBusinesses = New List(Of OfficialBusiness)
 
         Dim acceptedRecords As New List(Of OBRowRecord)
         Dim rejectedRecords As New List(Of OBRowRecord)
@@ -63,7 +59,8 @@ Public Class ImportOBForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
             record.Status = OfficialBusiness.StatusApproved
 
             If employee Is Nothing Then
@@ -81,58 +78,6 @@ Public Class ImportOBForm
                 Continue For
 
             End If
-
-            Dim officialbusType As New ListOfValue
-
-            Using context = New PayrollContext()
-
-                officialbusType = Await context.ListOfValues.
-                                    Where(Function(l) l.Type = "Official Business Type").
-                                    Where(Function(l) l.Active = "Yes").
-                                    Where(Function(l) l.DisplayValue.Equals(record.Type, StringComparison.InvariantCultureIgnoreCase)).
-                                    FirstOrDefaultAsync()
-
-                If officialbusType Is Nothing Then
-                    Try
-                        Using OBContext = New PayrollContext
-
-                            Dim listOfVal As New ListOfValue
-                            listOfVal.DisplayValue = record.Type.Trim()
-                            listOfVal.Type = "Official Business Type"
-                            listOfVal.Active = "Yes"
-
-                            listOfVal.Created = Date.Now
-                            listOfVal.CreatedBy = z_User
-                            listOfVal.LastUpd = Date.Now
-                            listOfVal.LastUpdBy = z_User
-                            OBContext.ListOfValues.Add(listOfVal)
-
-                            Await OBContext.SaveChangesAsync()
-
-                            officialbusType = Await context.ListOfValues.
-                            FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
-
-                        End Using
-                    Catch ex As DbUpdateException
-                        officialbusType = Nothing
-                    Catch ex As Exception
-                        officialbusType = Nothing
-                    End Try
-                End If
-
-            End Using
-
-            If officialbusType Is Nothing Then
-
-                record.ErrorMessage = "Cannot get or create official business type. Please contact " & My.Resources.AppCreator
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            record.Type = officialbusType.DisplayValue 'For displaying on datagrid view
 
             If Not record.StartDate.HasValue Then
                 record.ErrorMessage = "No start date"
@@ -156,7 +101,6 @@ Public Class ImportOBForm
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
-                .Type = record.Type,
                 .StartDate = record.StartDate.Value,
                 .EndDate = record.EndDate.Value,
                 .StartTime = record.StartTime,
@@ -165,15 +109,15 @@ Public Class ImportOBForm
             }
 
             acceptedRecords.Add(record)
-            _officialbus.Add(officialbus)
+            _officialBusinesses.Add(officialbus)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._officialbus.Count})"
+        ParsedTabControl.Text = $"Ok ({Me._officialBusinesses.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
-        SaveButton.Enabled = _officialbus.Count > 0
+        SaveButton.Enabled = _officialBusinesses.Count > 0
 
         OBDataGrid.DataSource = acceptedRecords
         RejectedRecordsGrid.DataSource = rejectedRecords
@@ -198,7 +142,7 @@ Public Class ImportOBForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -208,31 +152,31 @@ Public Class ImportOBForm
 
         Dim messageTitle = "Import Official Businesses"
 
-        Try
-            Using context As New PayrollContext
-                For Each officialbus In _officialbus
-                    context.OfficialBusinesses.Add(officialbus)
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+
+                Await _officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
+
+                Dim importlist = New List(Of UserActivityItem)
+
+                For Each officialBusiness In Me._officialBusinesses
+                    importlist.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
+                        .EntityId = officialBusiness.RowID.Value
+                        })
                 Next
 
-                Await context.SaveChangesAsync()
-            End Using
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
-            Me.IsSaved = True
+                Me.IsSaved = True
 
-            Me.Close()
-        Catch ex As ArgumentException
+                Me.Close()
 
-            Dim errorMessage = "One of the official businesses has an error:" & Environment.NewLine & ex.Message
+            End Function)
 
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+        Me.Cursor = Cursors.Default
 
     End Sub
 
@@ -243,13 +187,6 @@ Public Class ImportOBForm
     End Sub
 
     Private Function CheckIfRecordIsValid(record As OBRowRecord, rejectedRecords As List(Of OBRowRecord)) As Boolean
-
-        If String.IsNullOrWhiteSpace(record.Type) Then
-
-            record.ErrorMessage = "OB Type cannot be blank."
-            rejectedRecords.Add(record)
-            Return False
-        End If
 
         Dim officialBusiness = record.ToOfficialBusiness()
 

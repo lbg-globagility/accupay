@@ -311,15 +311,6 @@
     <Import Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auditing\AuditContext.vb" />
-    <Compile Include="Auditing\Entity\AuditTrail.vb" />
-    <Compile Include="Auditing\Entity\View.vb" />
-    <Compile Include="Auditing\Forms\TimeLogForm.Designer.vb">
-      <DependentUpon>TimeLogForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Auditing\Forms\TimeLogForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Core\DB\DataBaseConnection.vb" />
     <Compile Include="Core\DB\ExecSQLMultiDimArrProcedure.vb" />
     <Compile Include="Core\DB\ExecSQLProcedure.vb" />
@@ -335,9 +326,6 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
-    <Compile Include="Core\Enums\PayFrequencyType.vb" />
-    <Compile Include="Core\PayPeriodStatusData.vb" />
-    <Compile Include="Core\UserLevel.vb" />
     <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
@@ -346,55 +334,29 @@
     <Compile Include="Core\Utilities\Excel\WorkSheetRowParseValueException.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
-    <Compile Include="Core\Utilities\Helper\NameHelper.vb" />
     <Compile Include="Core\Utilities\Helper\OpenFileDialogImportHelper.vb" />
     <Compile Include="Core\Utilities\Helper\SaveFileDialogHelper.vb" />
     <Compile Include="Core\Utilities\Helper\TemplatesHelper.vb" />
     <Compile Include="Core\Utilities\MessageBoxHelper.vb" />
-    <Compile Include="Core\Utilities\Helper\PolicyHelper.vb" />
-    <Compile Include="Domain\AgencyFees\Agency.vb" />
-    <Compile Include="Domain\AgencyFees\AgencyFee.vb" />
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
-    <Compile Include="Domain\Calendars\CalendarCollection.vb" />
-    <Compile Include="Domain\Calendars\CalendarDay.vb" />
-    <Compile Include="Domain\Calendars\DayType.vb" />
-    <Compile Include="Domain\Calendars\PayCalendar.vb" />
     <Compile Include="Domain\Commons\Calendar.vb" />
-    <Compile Include="Domain\Commons\CalendarConstants.vb" />
-    <Compile Include="Domain\Commons\DailyAllowanceCalculator.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
-    <Compile Include="Domain\Commons\Enums.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Domain\Employees\TardinessRecord.vb" />
-    <Compile Include="Domain\Payroll\AllowancePolicy.vb" />
-    <Compile Include="Domain\Payroll\IPaystubRate.vb" />
-    <Compile Include="Domain\Payroll\OvertimeRate.vb" />
-    <Compile Include="Domain\Payroll\OvertimeRateService.vb" />
-    <Compile Include="Domain\Payroll\PaystubActualCalculator.vb" />
-    <Compile Include="Domain\Payroll\Rate.vb" />
-    <Compile Include="Domain\Payroll\SemiMonthlyAllowanceCalculator.vb" />
-    <Compile Include="Domain\Leaves\LeaveConvertible.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
-    <Compile Include="Domain\Payroll\PhilHealthPolicy.vb" />
-    <Compile Include="Domain\Payroll\ThirteenthMonthPayCalculator.vb" />
-    <Compile Include="Core\Enums\AdjustmentType.vb" />
-    <Compile Include="Domain\Paystubs\IAdjustment.vb" />
-    <Compile Include="Domain\Paystubs\IPayrate.vb" />
-    <Compile Include="Domain\Paystubs\PaystubEmail.vb" />
-    <Compile Include="Domain\Paystubs\PaystubEmailHistory.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
-    <Compile Include="Domain\TimeLogs\BreakTimeBracketHelper.vb" />
-    <Compile Include="Domain\TimeLogs\BreakTimeBracket.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
-    <Compile Include="Domain\TimeLogs\ITimeAttendanceHelper.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceHelperNew.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceLog.vb" />
-    <Compile Include="Domain\User.vb" />
+    <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
+      <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\CrystalReportParameterValueSetter.vb" />
     <Compile Include="Reports\Reports\DataModel\PaystubPayslipModel.vb" />
     <Compile Include="Reports\Reports\Cinema%27s Tardiness Report1.vb">
       <AutoGen>True</AutoGen>
@@ -403,16 +365,46 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\DataModel\CinemaTardinessReportModel.vb" />
-    <Compile Include="Reports\Reports\EmploymentContractPage1.vb">
+    <Compile Include="Reports\Reports\LA Global\ActiveEmployeeChecklistReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ActiveEmployeeChecklistReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>BpiInsuranceAmountReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\LA Global\EmploymentContract.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>EmploymentContract.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\LA Global\EmploymentContractPage1.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EmploymentContractPage1.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\EmploymentContractPage2.vb">
+    <Compile Include="Reports\Reports\LA Global\EmploymentContractPage2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>EmploymentContractPage2.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\LA Global\MonthlyBirthdayCelebrantsReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MonthlyBirthdayCelebrantsReport.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports\Reports\LA Global\MonthlyEndOfContractReport.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>MonthlyEndOfContractReport.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Reports\Reports\New Employee Leave Ledger.vb">
@@ -424,33 +416,36 @@
     <Compile Include="Reports\Reports\DataModel\LeaveLedgerReportModel.vb" />
     <Compile Include="Reports\Reports\Providers\Cinema2000TardinessReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\DefaultPayslipFullOvertimeBreakdownProvider.vb" />
-    <Compile Include="Reports\Reports\SMDeploymentEndorsement.vb">
+    <Compile Include="Reports\Reports\Providers\LA Global\ActiveEmployeeChecklistReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\BpiInsurancePaymentReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\EmploymentContractReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\MonthlyEndofContractReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\ILaGlobalEmployeeReport.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\LaGlobalEmployeeReports.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\MonthlyBirthdayCelebrantsReportProvider.vb" />
+    <Compile Include="Reports\Reports\Providers\LA Global\SmDeploymentEndorsementReportProvider.vb" />
+    <Compile Include="Reports\Reports\LA Global\SMDeploymentEndorsement.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>SMDeploymentEndorsement.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\WorkOrder.vb">
+    <Compile Include="Reports\Reports\Providers\ExcelFormatReport.vb" />
+    <Compile Include="Reports\Reports\Providers\ExcelReportColumn.vb" />
+    <Compile Include="Reports\Reports\Providers\CostCenterReportProvider.vb" />
+    <Compile Include="Reports\Reports\LA Global\WorkOrder.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WorkOrder.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Reports\Reports\Providers\LA Global\WorkOrderReportProvider.vb" />
     <Compile Include="Reports\rpt\rpt\DefaulltPayslipFullOvertimeBreakdown.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Repositories\CalendarRepository.vb" />
-    <Compile Include="Repositories\ContributionSchedule.vb" />
-    <Compile Include="Repositories\DayTypeRepository.vb" />
-    <Compile Include="Repositories\DivisionRepository.vb" />
-    <Compile Include="Repositories\JobLevelRepository.vb" />
-    <Compile Include="Repositories\OfficialBusinessRepository.vb" />
-    <Compile Include="Repositories\PayFrequencyRepository.vb" />
-    <Compile Include="Repositories\PositionRepository.vb" />
-    <Compile Include="Repositories\SalaryRepository.vb" />
     <Compile Include="Views\Core Forms\Calendars\CalendarDayControl.Designer.vb">
       <DependentUpon>CalendarDayControl.vb</DependentUpon>
     </Compile>
@@ -497,6 +492,72 @@
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAwardForm.Designer.vb">
+      <DependentUpon>AddAwardForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAwardForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.Designer.vb">
+      <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.Designer.vb">
+      <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.Designer.vb">
+      <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
+      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddBonusForm.Designer.vb">
+      <DependentUpon>AddBonusForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddBonusForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddCertificationForm.Designer.vb">
+      <DependentUpon>AddCertificationForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddCertificationForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AwardTab.Designer.vb">
+      <DependentUpon>AwardTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AwardTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\CertificationTab.Designer.vb">
+      <DependentUpon>CertificationTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\CertificationTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\EducationalBackgroundTab.Designer.vb">
+      <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\EducationalBackgroundTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
+      <DependentUpon>SelectBranchForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
@@ -618,9 +679,6 @@
     <Compile Include="Views\Core Forms\NewDivisionPositionForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Repositories\EmployeeData.vb" />
-    <Compile Include="Repositories\LeaveRepository.vb" />
-    <Compile Include="Repositories\ProductConstant.vb" />
     <Compile Include="Views\Core Forms\Employee\Import\ImportEmployeeForm.Designer.vb">
       <DependentUpon>ImportEmployeeForm.vb</DependentUpon>
     </Compile>
@@ -689,30 +747,7 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\HRIS Forms\New\LoanRowRecord.vb" />
-    <Compile Include="Domain\Payroll\CashOutUnusedLeave.vb" />
-    <Compile Include="Domain\Payroll\HdmfCalculator.vb" />
-    <Compile Include="Domain\Commons\ListOfValueCollection.vb" />
-    <Compile Include="Domain\Commons\PayratesCalendar.vb" />
-    <Compile Include="Domain\Commons\PayrollConstants.vb" />
-    <Compile Include="Domain\Commons\PayrollContext.vb" />
     <Compile Include="Domain\Commons\PayrollTools.vb" />
-    <Compile Include="Domain\Payroll\PayrollException.vb" />
-    <Compile Include="Domain\Payroll\PhilHealthCalculator.vb" />
-    <Compile Include="Domain\Payroll\ReleaseThirteenthMonthPay.vb" />
-    <Compile Include="Domain\Payroll\SssCalculator.vb" />
-    <Compile Include="Domain\Paystubs\Category.vb" />
-    <Compile Include="Domain\Paystubs\DivisionMinimumWage.vb" />
-    <Compile Include="Domain\Shifts\EmployeeDutySchedule.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntryCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntryPolicy.vb" />
-    <Compile Include="Domain\TimeEntry\AgencyFeeCalculator.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceAnalyzer.vb" />
-    <Compile Include="Domain\Payroll\WithholdingTaxCalculator.vb" />
-    <Compile Include="Domain\TimeLogs\TimeAttendanceHelper.vb" />
-    <Compile Include="Repositories\CategoryRepository.vb" />
-    <Compile Include="Repositories\ListOfValueRepository.vb" />
-    <Compile Include="Repositories\LoanScheduleRepository.vb" />
-    <Compile Include="Repositories\ProductRepository.vb" />
     <Compile Include="Reports\Reports\EmployeeProfile.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -734,7 +769,6 @@
     <Compile Include="Reports\Reports\Providers\Employee201ReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\LoanLedgerReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\PayrollLedgerExcelFormatReportProvider.vb" />
-    <Compile Include="Repositories\EmployeeRepository.vb" />
     <Compile Include="Views\Core Forms\Employee\BonusTab.Designer.vb">
       <DependentUpon>BonusTab.vb</DependentUpon>
     </Compile>
@@ -759,9 +793,6 @@
     <Compile Include="Views\Core Forms\Employee\SalaryTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Domain\Government\PhilHealthBracket.vb" />
-    <Compile Include="Domain\Government\SocialSecurityBracket.vb" />
-    <Compile Include="Domain\Government\WithholdingTaxBracket.vb" />
     <Compile Include="Views\Core Forms\Independent filing\LeaveForm.designer.vb">
       <DependentUpon>LeaveForm.vb</DependentUpon>
     </Compile>
@@ -780,9 +811,6 @@
     <Compile Include="Views\Core Forms\Independent filing\OverTimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\JobLevels\JobCategory.vb" />
-    <Compile Include="Domain\JobLevels\JobLevel.vb" />
-    <Compile Include="Domain\JobLevels\JobPoint.vb" />
     <Compile Include="Views\Core Forms\JobLevel\JobLevelForm.Designer.vb">
       <DependentUpon>JobLevelForm.vb</DependentUpon>
     </Compile>
@@ -796,31 +824,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\JobLevel\JobPointsPresenter.vb" />
-    <Compile Include="Domain\Loans\LoanSchedule.vb" />
-    <Compile Include="Domain\Loans\LoanTransaction.vb" />
-    <Compile Include="Domain\Paystubs\ActualAdjustment.vb" />
-    <Compile Include="Domain\TimeEntry\ActualTimeEntry.vb" />
-    <Compile Include="Domain\Paystubs\Adjustment.vb" />
-    <Compile Include="Domain\Paystubs\Allowance.vb" />
-    <Compile Include="Domain\Paystubs\AllowanceItem.vb" />
-    <Compile Include="Domain\Paystubs\AllowancePerDay.vb" />
-    <Compile Include="Domain\Paystubs\Division.vb" />
-    <Compile Include="Domain\Paystubs\Item.vb" />
-    <Compile Include="Domain\Leaves\Leave.vb" />
-    <Compile Include="Domain\Leaves\LeaveLedger.vb" />
-    <Compile Include="Domain\Leaves\LeaveTransaction.vb" />
-    <Compile Include="Domain\Leaves\LeaveType.vb" />
-    <Compile Include="Domain\Paystubs\ListOfValue.vb" />
-    <Compile Include="Domain\Paystubs\Organization.vb" />
-    <Compile Include="Domain\Paystubs\PayFrequency.vb" />
-    <Compile Include="Domain\Paystubs\PayPeriod.vb" />
-    <Compile Include="Domain\Paystubs\PayRate.vb" />
-    <Compile Include="Domain\Paystubs\Paystub.vb" />
-    <Compile Include="Domain\Paystubs\PaystubActual.vb" />
-    <Compile Include="Domain\Paystubs\Position.vb" />
-    <Compile Include="Domain\Paystubs\Product.vb" />
-    <Compile Include="Domain\Paystubs\ThirteenthMonthPay.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntry.vb" />
     <Compile Include="Views\Core Forms\OffSetting.designer.vb">
       <DependentUpon>OffSetting.vb</DependentUpon>
     </Compile>
@@ -839,7 +842,6 @@
     <Compile Include="Views\Core Forms\PayStub\PaystubView.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\Shifts\ShiftSchedule.vb" />
     <Compile Include="Reports\Reports\AttendanceSheet2.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -917,7 +919,6 @@
     <Compile Include="Views\Core Forms\Salary\ImportSalaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\Salaries\Salary.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelParser.vb" />
     <Compile Include="Domain\Salaries\SalaryRowRecord.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.Designer.vb">
@@ -926,23 +927,12 @@
     <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Domain\TimeEntry\DayCalculator.vb" />
-    <Compile Include="Domain\Employees\Employee.vb" />
-    <Compile Include="Domain\TimeEntry\OfficialBusiness.vb" />
-    <Compile Include="Domain\TimeEntry\ProgressMeter.vb" />
-    <Compile Include="Domain\Shifts\Shift.vb" />
-    <Compile Include="Domain\TimeEntry\CurrentShift.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEmployeeNo.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryCalculator.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryGenerator.vb" />
-    <Compile Include="Domain\TimeEntry\TimeEntryPolicy.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.Designer.vb">
       <DependentUpon>PreviewLeaveBalanceForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\PreviewLeaveBalanceForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\TimeEntry\RenewLeaveBalancePolicy.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntryProgressDialog.Designer.vb">
       <DependentUpon>TimeEntryProgressDialog.vb</DependentUpon>
     </Compile>
@@ -956,13 +946,6 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\TimeEntry\TimeEntrySummaryPresenter.vb" />
-    <Compile Include="Domain\TimeEntry\TimePeriod.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLog.vb" />
-    <Compile Include="Domain\Payroll\PayrollResources.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLogInOut.vb" />
-    <Compile Include="Domain\TimeEntry\TimeLogsTempIn.vb" />
-    <Compile Include="Domain\TimeEntry\TimeLogsTempOut.vb" />
-    <Compile Include="Domain\TimeLogs\TimeLogsReader.vb" />
     <Compile Include="Views\Core Forms\TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.Designer.vb">
       <DependentUpon>TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog.vb</DependentUpon>
     </Compile>
@@ -975,7 +958,6 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportAllowance.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOB.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\ImportOvertime.vb" />
-    <Compile Include="Views\Core Forms\USER CONTROLS\SystemOwner.vb" />
     <Compile Include="Views\Core Forms\USER CONTROLS\TimeTextBox.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -1041,7 +1023,6 @@
       <DependentUpon>PayrollSumma.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Domain\Commons\SeparateLineTimeParser.vb" />
     <Compile Include="Views\General Forms\ImproperLogOut.Designer.vb">
       <DependentUpon>ImproperLogOut.vb</DependentUpon>
     </Compile>
@@ -1068,28 +1049,10 @@
     <Compile Include="Views\General Forms\AddListOfValueForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\Address.designer.vb">
-      <DependentUpon>Address.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\Address.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\AddressForm.Designer.vb">
-      <DependentUpon>AddressForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AddressForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\General Forms\AgencyForm.designer.vb">
       <DependentUpon>AgencyForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\General Forms\AgencyForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\General Forms\AuditTrailForm.Designer.vb">
-      <DependentUpon>AuditTrailForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\AuditTrailForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\General Forms\ForgotPasswordForm.designer.vb">
@@ -1108,18 +1071,6 @@
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\HRIS Forms\DepartmentMinWages.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\DivisionForm.Designer.vb">
-      <DependentUpon>DivisionForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\DivisionForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\LoanScheduleForm.Designer.vb">
-      <DependentUpon>LoanScheduleForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\HRIS Forms\LoanScheduleForm.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Initial Forms\FormReports.designer.vb">
@@ -1234,12 +1185,6 @@
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\EmployeeSelection.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmpPosition.Designer.vb">
-      <DependentUpon>EmpPosition.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\EmpPosition.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\dutyshift.Designer.vb">
@@ -1708,11 +1653,8 @@
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
     <Compile Include="Domain\Commons\FileObserver.vb" />
-    <Compile Include="Domain\Loans\ImportLoans.vb" />
     <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
-    <Compile Include="Domain\Payroll\PayrollGeneration.vb" />
-    <Compile Include="Domain\TimeLogs\TimeInTimeOutParser.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Domain\Commons\UserAccessRights.vb" />
     <Compile Include="Views\Core Forms\viewtotallow.Designer.vb">
@@ -1841,12 +1783,6 @@
     <Compile Include="Views\Time Attendance Form\MassOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.Designer.vb">
-      <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Time Attendance Form\PayrollGenerateForm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Time Attendance Form\ShiftEntryForm.Designer.vb">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>
     </Compile>
@@ -1904,27 +1840,49 @@
     <None Include="Resources\baseline_undo_black_24dp.png" />
     <None Include="Resources\baseline_undo_black_18dp.png" />
     <None Include="Resources\baseline_delete_forever_black_18dp.png" />
+    <EmbeddedResource Include="Reports\Report Forms\LaGlobalEmployeeReportForm.resx">
+      <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Cinema%27s Tardiness Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Cinema%27s Tardiness Report1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\EmploymentContractPage1.rpt">
+    <EmbeddedResource Include="Reports\Reports\LA Global\ActiveEmployeeChecklistReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ActiveEmployeeChecklistReport.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\BpiInsuranceAmountReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>BpiInsuranceAmountReport.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContract.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContractPage1.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmploymentContractPage1.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\EmploymentContractPage2.rpt">
+    <EmbeddedResource Include="Reports\Reports\LA Global\EmploymentContractPage2.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmploymentContractPage2.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\MonthlyBirthdayCelebrantsReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MonthlyBirthdayCelebrantsReport.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Reports\LA Global\MonthlyEndOfContractReport.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>MonthlyEndOfContractReport.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\New Employee Leave Ledger.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>New Employee Leave Ledger.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\SMDeploymentEndorsement.rpt">
+    <EmbeddedResource Include="Reports\Reports\LA Global\SMDeploymentEndorsement.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>SMDeploymentEndorsement.vb</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\WorkOrder.rpt">
+    <EmbeddedResource Include="Reports\Reports\LA Global\WorkOrder.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>WorkOrder.vb</LastGenOutput>
     </EmbeddedResource>
@@ -1955,6 +1913,39 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
+      <DependentUpon>AddAwardForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.resx">
+      <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
+      <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\PreviousEmployerTab.resx">
+      <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
+      <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddBonusForm.resx">
+      <DependentUpon>AddBonusForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddCertificationForm.resx">
+      <DependentUpon>AddCertificationForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AwardTab.resx">
+      <DependentUpon>AwardTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\CertificationTab.resx">
+      <DependentUpon>CertificationTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\EducationalBackgroundTab.resx">
+      <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
+      <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
@@ -2047,9 +2038,6 @@
     <None Include="Resources\AccuPayLogo.ico" />
     <None Include="Resources\loading-icon.gif" />
     <None Include="Resources\ajax-loader.gif" />
-    <EmbeddedResource Include="Auditing\Forms\TimeLogForm.resx">
-      <DependentUpon>TimeLogForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\EmployeeProfile.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>EmployeeProfile.vb</LastGenOutput>
@@ -2064,6 +2052,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeForm.resx">
       <DependentUpon>EmployeeForm.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\BonusTab.resx">
       <DependentUpon>BonusTab.vb</DependentUpon>
@@ -2076,6 +2065,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\SalaryTab.resx">
       <DependentUpon>SalaryTab.vb</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Independent filing\LeaveForm.resx">
       <DependentUpon>LeaveForm.vb</DependentUpon>
@@ -2188,17 +2178,8 @@
     <EmbeddedResource Include="Views\General Forms\AddListOfValueForm.resx">
       <DependentUpon>AddListOfValueForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\Address.resx">
-      <DependentUpon>Address.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AddressForm.resx">
-      <DependentUpon>AddressForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\AgencyForm.resx">
       <DependentUpon>AgencyForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\AuditTrailForm.resx">
-      <DependentUpon>AuditTrailForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\General Forms\ForgotPasswordForm.resx">
       <DependentUpon>ForgotPasswordForm.vb</DependentUpon>
@@ -2208,12 +2189,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\DepartmentMinWages.resx">
       <DependentUpon>DepartmentMinWages.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\DivisionForm.resx">
-      <DependentUpon>DivisionForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\HRIS Forms\LoanScheduleForm.resx">
-      <DependentUpon>LoanScheduleForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\HRIS Forms\New\AddLoanScheduleForm.resx">
       <DependentUpon>AddLoanScheduleForm.vb</DependentUpon>
@@ -2274,9 +2249,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeSelection.resx">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\EmpPosition.resx">
-      <DependentUpon>EmpPosition.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\dutyshift.resx">
       <DependentUpon>dutyshift.vb</DependentUpon>
@@ -2598,9 +2570,6 @@
     <EmbeddedResource Include="Views\Time Attendance Form\MassOvertimeForm.resx">
       <DependentUpon>MassOvertimeForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\Time Attendance Form\PayrollGenerateForm.resx">
-      <DependentUpon>PayrollGenerateForm.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Time Attendance Form\ShiftEntryForm.resx">
       <DependentUpon>ShiftEntryForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -2714,15 +2683,12 @@
       <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
       <Name>AccuPay.Payslip</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.Reference\AccuPay.Reference.vbproj">
-      <Project>{69f7cdee-ad55-4458-b444-e315e05a1525}</Project>
-      <Name>AccuPay.Reference</Name>
-    </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>
       <Name>AccuPay.Utilities</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

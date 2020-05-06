@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class EmployeeTreeView
 
@@ -17,6 +17,7 @@ Public Class EmployeeTreeView
     Public Event TickedEmployee(s As Object, e As EventArgs)
 
     Private tickedEmployees As IList(Of Employee)
+
     Private tickedEmployeeIDs As IList(Of Integer)
 
     Private _organizationID As Integer
@@ -257,22 +258,23 @@ Public Class EmployeeTreeView
         End Sub
 
         Private Function LoadDivisions() As IList(Of Division)
-            Using context = New PayrollContext()
-                Return context.Divisions.
-                    Where(Function(d) Nullable.Equals(d.OrganizationID, _organizationId)).
-                    OrderBy(Function(d) d.Name).
-                    ToList()
-            End Using
+
+            Return New DivisionRepository().GetAll(z_OrganizationID).
+                                OrderBy(Function(d) d.Name).
+                                ToList()
         End Function
 
         Private Function LoadEmployees() As IList(Of Employee)
-            Using context = New PayrollContext()
-                Return context.Employees.Include(Function(e) e.Position.Division).
-                    Where(Function(e) Nullable.Equals(e.OrganizationID, _organizationId)).
-                    OrderBy(Function(e) e.LastName).
-                    ThenBy(Function(e) e.FirstName).
-                    ToList()
-            End Using
+
+            Dim employees = New EmployeeRepository().
+                                    GetAllWithDivisionAndPosition(z_OrganizationID).
+                                    ToList
+
+            Return employees.
+                        OrderBy(Function(e) e.LastName).
+                        ThenBy(Function(e) e.FirstName).
+                        ToList()
+
         End Function
 
         Public Async Sub FilterEmployees(needle As String, isActiveOnly As Boolean)

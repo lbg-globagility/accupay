@@ -1,18 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
+﻿using AccuPay.Utilities.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using AccuPay.Utilities.Extensions;
+using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
@@ -23,49 +13,47 @@ namespace AccuPay.Data.Entities
 
         public const string StatusPending = "Pending";
 
-        public const string DefaultType = "Overtime";
-
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual int? RowID { get; set; }
+        public int? RowID { get; set; }
 
-        public virtual int? OrganizationID { get; set; }
+        public int? OrganizationID { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual DateTime Created { get; set; }
+        public DateTime Created { get; set; }
 
-        public virtual int? CreatedBy { get; set; }
+        public int? CreatedBy { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
-        public virtual DateTime? LastUpd { get; set; }
+        public DateTime? LastUpd { get; set; }
 
-        public virtual int? LastUpdBy { get; set; }
+        public int? LastUpdBy { get; set; }
 
-        public virtual int? EmployeeID { get; set; }
+        public int? EmployeeID { get; set; }
 
         [Column("OTType")]
-        public virtual string Type { get; set; }
+        public string Type { get; set; }
 
-        public virtual TimeSpan? OTStartTime { get; set; }
+        public TimeSpan? OTStartTime { get; set; }
 
-        public virtual TimeSpan? OTEndTime { get; set; }
+        public TimeSpan? OTEndTime { get; set; }
 
-        public virtual DateTime OTStartDate { get; set; }
+        public DateTime OTStartDate { get; set; }
 
-        public virtual DateTime OTEndDate { get; set; }
+        public DateTime OTEndDate { get; set; }
 
         [Column("OTStatus")]
-        public virtual string Status { get; set; }
+        public string Status { get; set; }
 
         [NotMapped]
-        public virtual DateTime? Start { get; set; }
+        public DateTime? Start { get; set; }
 
         [NotMapped]
-        public virtual DateTime? End { get; set; }
+        public DateTime? End { get; set; }
 
-        public virtual string Reason { get; set; }
+        public string Reason { get; set; }
 
-        public virtual string Comments { get; set; }
+        public string Comments { get; set; }
 
         public Overtime()
         {
@@ -75,43 +63,21 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public DateTime? OTStartTimeFull
         {
-            get
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (OTStartTime == null)
-                    return default(DateTime?);
-                else
-                    return OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
-            }
-            set
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (value == null)
-                    OTStartTime = default(TimeSpan?);
-                else
-                    OTStartTime = value?.TimeOfDay;
-            }
+            get => OTStartTime == null ?
+                        (DateTime?)null :
+                        OTStartDate.Date.ToMinimumHourValue().Add(OTStartTime.Value);
+
+            set => OTStartTime = value == null ? null : value?.TimeOfDay;
         }
 
         [NotMapped]
         public DateTime? OTEndTimeFull
         {
-            get
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (OTEndTime == null)
-                    return default(DateTime?);
-                else
-                    return OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
-            }
-            set
-            {
-                // Using Nothing as output on ternary operator does not work
-                if (value == null)
-                    OTEndTime = default(TimeSpan?);
-                else
-                    OTEndTime = value?.TimeOfDay;
-            }
+            get => OTEndTime == null ?
+                        (DateTime?)null :
+                        OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
+
+            set => OTEndTime = value == null ? null : value?.TimeOfDay;
         }
 
         public string Validate()

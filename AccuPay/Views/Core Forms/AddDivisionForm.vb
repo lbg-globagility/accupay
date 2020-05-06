@@ -1,15 +1,20 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Repository
-Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddDivisionForm
 
-    Private _divisionRepository As New DivisionRepository
+    Private Const FormEntityName As String = "Division"
 
-    Private _positionRepository As New PositionRepository
+    Private _divisionRepository As New DivisionRepository()
 
-    Private _payFrequencyRepository As New PayFrequencyRepository
+    Private _positionRepository As New PositionRepository()
+
+    Private _payFrequencyRepository As New PayFrequencyRepository()
 
     Private _parentDivisions As List(Of Division)
 
@@ -22,6 +27,8 @@ Public Class AddDivisionForm
     Private _divisionTypes As List(Of String)
 
     Private _deductionSchedules As List(Of String)
+
+    Private _listOfValueRepository As New ListOfValueRepository
 
     Public Property IsSaved As Boolean
 
@@ -52,7 +59,7 @@ Public Class AddDivisionForm
 
         GetDivisionTypes()
 
-        GetDeductionSchedules()
+        Await GetDeductionSchedules()
 
         ResetForm()
 
@@ -60,7 +67,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllParentsAsync()
+        Dim divisions = Await _divisionRepository.GetAllParentsAsync(z_OrganizationID)
 
         _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -68,7 +75,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync()
+        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -78,7 +85,9 @@ Public Class AddDivisionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.OrderBy(Function(p) p.Type).ToList
+        _payFrequencies = payFrequencies.
+                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
+                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
 
     End Function
 
@@ -88,15 +97,17 @@ Public Class AddDivisionForm
 
     End Sub
 
-    Private Sub GetDeductionSchedules()
+    Private Async Function GetDeductionSchedules() As Task
 
-        _deductionSchedules = ContributionSchedule.GetList()
+        _deductionSchedules = _listOfValueRepository.
+                    ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
-    End Sub
+    End Function
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.CreateEmptyDivision()
+        Me._newDivision = Division.CreateEmptyDivision(organizationId:=z_OrganizationID,
+                                                       userId:=z_User)
 
         DivisionUserControl1.SetDivision(Me._newDivision,
                                          _parentDivisions,
@@ -126,17 +137,17 @@ Public Class AddDivisionForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                           Async Function()
-                              Await SaveDivision(messageTitle, sender)
+                              Await SaveDivision(sender)
                           End Function)
 
     End Sub
 
-    Private Async Function SaveDivision(messageTitle As String, sender As Object) As Task
+    Private Async Function SaveDivision(sender As Object) As Task
 
-        Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision)
+        Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
 
-        Dim repo As New Data.Repositories.UserActivityRepository
-        repo.RecordAdd(z_User, "Division", Me._newDivision.RowID, z_OrganizationID)
+        Dim repo As New UserActivityRepository
+        repo.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

@@ -60,6 +60,9 @@ Partial Class PaystubView
         Dim DataGridViewCellStyle35 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle36 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle37 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PaystubView))
         Dim DataGridViewCellStyle58 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle40 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle41 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -121,9 +124,6 @@ Partial Class PaystubView
         Dim DataGridViewCellStyle98 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle99 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle100 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle38 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle39 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PaystubView))
         Me.dgvPaystubs = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column37 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -178,6 +178,10 @@ Partial Class PaystubView
         Me.Button2 = New System.Windows.Forms.Button()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.dgvAdjustments = New System.Windows.Forms.DataGridView()
+        Me.colAdjustmentsName = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
+        Me.colAdjustmentsAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column44 = New System.Windows.Forms.DataGridViewImageColumn()
         Me.txtTotalAmount = New System.Windows.Forms.TextBox()
         Me.txt13thMonthPay = New System.Windows.Forms.TextBox()
         Me.txtNetPay = New System.Windows.Forms.TextBox()
@@ -346,10 +350,6 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn58 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn59 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn60 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.colAdjustmentsName = New EWSoftware.ListControls.DataGridViewControls.AutoCompleteTextBoxColumn()
-        Me.colAdjustmentsAmount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column44 = New System.Windows.Forms.DataGridViewImageColumn()
         CType(Me.dgvPaystubs, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
         Me.PaystubTab.SuspendLayout()
@@ -1052,6 +1052,42 @@ Partial Class PaystubView
         Me.dgvAdjustments.Name = "dgvAdjustments"
         Me.dgvAdjustments.Size = New System.Drawing.Size(512, 192)
         Me.dgvAdjustments.TabIndex = 23
+        '
+        'colAdjustmentsName
+        '
+        Me.colAdjustmentsName.DataPropertyName = "Name"
+        Me.colAdjustmentsName.HeaderText = "Name"
+        Me.colAdjustmentsName.Name = "colAdjustmentsName"
+        Me.colAdjustmentsName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        '
+        'colAdjustmentsAmount
+        '
+        Me.colAdjustmentsAmount.DataPropertyName = "Amount"
+        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle38.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
+        Me.colAdjustmentsAmount.DefaultCellStyle = DataGridViewCellStyle38
+        Me.colAdjustmentsAmount.HeaderText = "Amount"
+        Me.colAdjustmentsAmount.Name = "colAdjustmentsAmount"
+        '
+        'Column46
+        '
+        Me.Column46.DataPropertyName = "Remarks"
+        Me.Column46.HeaderText = "Remarks"
+        Me.Column46.Name = "Column46"
+        '
+        'Column44
+        '
+        Me.Column44.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
+        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
+        DataGridViewCellStyle39.NullValue = CType(resources.GetObject("DataGridViewCellStyle39.NullValue"), Object)
+        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.Color.Transparent
+        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.Color.Transparent
+        Me.Column44.DefaultCellStyle = DataGridViewCellStyle39
+        Me.Column44.HeaderText = ""
+        Me.Column44.Image = Global.AccuPay.My.Resources.Resources.baseline_delete_forever_black_18dp
+        Me.Column44.Name = "Column44"
+        Me.Column44.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.Column44.Width = 21
         '
         'txtTotalAmount
         '
@@ -2831,42 +2867,6 @@ Partial Class PaystubView
         Me.DataGridViewTextBoxColumn60.HeaderText = "Total Pay"
         Me.DataGridViewTextBoxColumn60.Name = "DataGridViewTextBoxColumn60"
         Me.DataGridViewTextBoxColumn60.Width = 60
-        '
-        'colAdjustmentsName
-        '
-        Me.colAdjustmentsName.DataPropertyName = "Name"
-        Me.colAdjustmentsName.HeaderText = "Name"
-        Me.colAdjustmentsName.Name = "colAdjustmentsName"
-        Me.colAdjustmentsName.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        '
-        'colAdjustmentsAmount
-        '
-        Me.colAdjustmentsAmount.DataPropertyName = "Amount"
-        DataGridViewCellStyle38.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle38.Format = "#,###,##0.00;(#,###,##0.00);"""""""""
-        Me.colAdjustmentsAmount.DefaultCellStyle = DataGridViewCellStyle38
-        Me.colAdjustmentsAmount.HeaderText = "Amount"
-        Me.colAdjustmentsAmount.Name = "colAdjustmentsAmount"
-        '
-        'Column46
-        '
-        Me.Column46.DataPropertyName = "Remarks"
-        Me.Column46.HeaderText = "Remarks"
-        Me.Column46.Name = "Column46"
-        '
-        'Column44
-        '
-        Me.Column44.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.DisplayedCells
-        DataGridViewCellStyle39.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter
-        DataGridViewCellStyle39.NullValue = CType(resources.GetObject("DataGridViewCellStyle39.NullValue"), Object)
-        DataGridViewCellStyle39.SelectionBackColor = System.Drawing.Color.Transparent
-        DataGridViewCellStyle39.SelectionForeColor = System.Drawing.Color.Transparent
-        Me.Column44.DefaultCellStyle = DataGridViewCellStyle39
-        Me.Column44.HeaderText = ""
-        Me.Column44.Image = Global.AccuPay.My.Resources.Resources.baseline_delete_forever_black_18dp
-        Me.Column44.Name = "Column44"
-        Me.Column44.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.Column44.Width = 21
         '
         'PaystubView
         '

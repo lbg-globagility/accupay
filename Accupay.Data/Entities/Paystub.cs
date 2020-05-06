@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
     [Table("paystub")]
-    public class Paystub : IPaystub
+    public class Paystub
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -26,8 +28,6 @@ namespace AccuPay.Data.Entities
         public int? PayPeriodID { get; set; }
 
         public int? EmployeeID { get; set; }
-
-        public int? TimeEntryID { get; set; }
 
         public DateTime PayFromdate { get; set; }
 
@@ -156,20 +156,111 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PayPeriodID")]
         public virtual PayPeriod PayPeriod { get; set; }
 
-        //public virtual ICollection<Adjustment> Adjustments { get; set; }
+        public virtual ICollection<Adjustment> Adjustments { get; set; }
 
-        //public virtual ICollection<ActualAdjustment> ActualAdjustments { get; set; }
+        public virtual ICollection<ActualAdjustment> ActualAdjustments { get; set; }
 
-        //public virtual ICollection<PaystubItem> PaystubItems { get; set; }
+        public virtual ICollection<AllowanceItem> AllowanceItems { get; set; }
 
-        //public virtual ICollection<AllowanceItem> AllowanceItems { get; set; }
+        public virtual ICollection<LeaveTransaction> LeaveTransactions { get; set; }
 
-        //public virtual ThirteenthMonthPay ThirteenthMonthPay { get; set; }
+        public virtual ICollection<LoanTransaction> LoanTransactions { get; set; }
 
-        //public virtual PaystubActual Actual { get; set; }
+        public virtual ICollection<PaystubEmail> PaystubEmails { get; set; }
 
+        public virtual ICollection<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+
+        public virtual ICollection<PaystubItem> PaystubItems { get; set; }
+
+        public virtual ThirteenthMonthPay ThirteenthMonthPay { get; set; }
+
+        public virtual PaystubActual Actual { get; set; }
+
+        public decimal RestDayNightDiffHours { get; set; }
+        public decimal RestDayNightDiffPay { get; set; }
+        public decimal RestDayNightDiffOTHours { get; set; }
+        public decimal RestDayNightDiffOTPay { get; set; }
+
+        public decimal SpecialHolidayNightDiffHours { get; set; }
+        public decimal SpecialHolidayNightDiffPay { get; set; }
+        public decimal SpecialHolidayNightDiffOTHours { get; set; }
+        public decimal SpecialHolidayNightDiffOTPay { get; set; }
+        public decimal SpecialHolidayRestDayHours { get; set; }
         public decimal SpecialHolidayRestDayPay { get; set; }
+        public decimal SpecialHolidayRestDayOTHours { get; set; }
+        public decimal SpecialHolidayRestDayOTPay { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffHours { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffPay { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffOTHours { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffOTPay { get; set; }
 
+        public decimal RegularHolidayNightDiffHours { get; set; }
+        public decimal RegularHolidayNightDiffPay { get; set; }
+        public decimal RegularHolidayNightDiffOTHours { get; set; }
+        public decimal RegularHolidayNightDiffOTPay { get; set; }
+        public decimal RegularHolidayRestDayHours { get; set; }
         public decimal RegularHolidayRestDayPay { get; set; }
+        public decimal RegularHolidayRestDayOTHours { get; set; }
+        public decimal RegularHolidayRestDayOTPay { get; set; }
+        public decimal RegularHolidayRestDayNightDiffHours { get; set; }
+        public decimal RegularHolidayRestDayNightDiffPay { get; set; }
+        public decimal RegularHolidayRestDayNightDiffOTHours { get; set; }
+        public decimal RegularHolidayRestDayNightDiffOTPay { get; set; }
+
+        [NotMapped]
+        public decimal Ecola { get; set; }
+
+        public decimal AdditionalPay
+        {
+            get
+            {
+                var original = OvertimePay + NightDiffPay + NightDiffOvertimePay + RestDayPay + RestDayOTPay + SpecialHolidayPay + SpecialHolidayOTPay + RegularHolidayPay + RegularHolidayOTPay;
+
+                var newBreakdowns = RestDayNightDiffPay + RestDayNightDiffOTPay + SpecialHolidayNightDiffPay + SpecialHolidayNightDiffOTPay + SpecialHolidayRestDayPay + SpecialHolidayRestDayOTPay + SpecialHolidayRestDayNightDiffPay + SpecialHolidayRestDayNightDiffOTPay + RegularHolidayNightDiffPay + RegularHolidayNightDiffOTPay + RegularHolidayRestDayPay + RegularHolidayRestDayOTPay + RegularHolidayRestDayNightDiffPay + RegularHolidayRestDayNightDiffOTPay;
+
+                return original + newBreakdowns;
+            }
+        }
+
+        public decimal NetDeductions => GovernmentDeductions + TotalLoans + WithholdingTax;
+
+        public decimal BasicDeductions => LateDeduction + UndertimeDeduction + AbsenceDeduction;
+
+        public decimal GovernmentDeductions => SssEmployeeShare + PhilHealthEmployeeShare + HdmfEmployeeShare;
+
+        public decimal RegularHoursAndTotalRestDay => RegularHours +
+                                                        RestDayHours +
+                                                        SpecialHolidayRestDayHours +
+                                                        RegularHolidayRestDayHours;
+
+        public decimal TotalWorkedHoursWithoutOvertimeAndLeave => RegularHours +
+                                                                RestDayHours +
+                                                                SpecialHolidayHours +
+                                                                SpecialHolidayRestDayHours +
+                                                                RegularHolidayHours +
+                                                                RegularHolidayRestDayHours;
+
+        public decimal TotalDaysPayWithOutOvertimeAndLeave => RegularPay +
+                                                            RestDayPay +
+                                                            SpecialHolidayPay +
+                                                            SpecialHolidayRestDayPay +
+                                                            RegularHolidayPay +
+                                                            RegularHolidayRestDayPay;
+
+        public decimal TotalDeductionAdjustments =>
+                        Adjustments.Where(a => a.Amount < 0).Sum(a => a.Amount) +
+                        ActualAdjustments.Where(a => a.Amount < 0).Sum(a => a.Amount);
+
+        public decimal TotalAdditionAdjustments =>
+                        Adjustments.Where(a => a.Amount > 0).Sum(a => a.Amount) +
+                        ActualAdjustments.Where(a => a.Amount > 0).Sum(a => a.Amount);
+
+        public Paystub()
+        {
+            Adjustments = new List<Adjustment>();
+            ActualAdjustments = new List<ActualAdjustment>();
+            PaystubItems = new List<PaystubItem>();
+            AllowanceItems = new List<AllowanceItem>();
+        }
     }
 }

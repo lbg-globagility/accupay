@@ -10,17 +10,7 @@ DELIMITER //
 CREATE TRIGGER `AFTUPD_division` AFTER UPDATE ON `division` FOR EACH ROW BEGIN
 
 DECLARE anyint INT(11);
-/*
-UPDATE employee e
-INNER JOIN `position` ps
-ON ps.DivisionId = NEW.RowID
-SET # e.PayFrequencyID = NEW.PayFrequencyID,
-    e.WorkDaysPerYear = NEW.WorkDaysPerYear,
-    e.LateGracePeriod = NEW.GracePeriod,
-    e.LastUpdBy = NEW.LastUpdBy
-WHERE e.OrganizationID = NEW.OrganizationID
-AND e.PositionID = ps.RowID;
-*/
+
 IF NEW.AutomaticOvertimeFiling = 1 THEN
      SET anyint = 0;
 END IF;

@@ -1,9 +1,8 @@
 Option Strict On
 
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities
 Imports AccuPay.Views.Employees
-Imports PayrollSys
 
 Public Class SalaryTab2
 

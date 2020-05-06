@@ -22,9 +22,6 @@ Partial Class UsersForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.Deleteg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.ToolStripSeparator11 = New System.Windows.Forms.ToolStripSeparator()
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
@@ -42,18 +39,15 @@ Partial Class UsersForm
         Me.lblSaveMsg = New System.Windows.Forms.Label()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.dgvPrivilege = New System.Windows.Forms.DataGridView()
+        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Addg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Modifyg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Readg = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.grpDetails = New System.Windows.Forms.GroupBox()
+        Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
+        Me.UserLevelLabel = New System.Windows.Forms.Label()
         Me.cboxposition = New System.Windows.Forms.ComboBox()
         Me.lblAddPosition = New System.Windows.Forms.LinkLabel()
-        Me.Label17 = New System.Windows.Forms.Label()
-        Me.Label16 = New System.Windows.Forms.Label()
-        Me.Label15 = New System.Windows.Forms.Label()
-        Me.Label14 = New System.Windows.Forms.Label()
-        Me.Label13 = New System.Windows.Forms.Label()
-        Me.Label12 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.txtEmailAdd = New System.Windows.Forms.TextBox()
         Me.lblCompare = New System.Windows.Forms.Label()
@@ -73,11 +67,24 @@ Partial Class UsersForm
         Me.txtFirstName = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.txtLastName = New System.Windows.Forms.TextBox()
+        Me.Label17 = New System.Windows.Forms.Label()
+        Me.Label16 = New System.Windows.Forms.Label()
+        Me.Label15 = New System.Windows.Forms.Label()
+        Me.Label14 = New System.Windows.Forms.Label()
+        Me.Label13 = New System.Windows.Forms.Label()
+        Me.Label12 = New System.Windows.Forms.Label()
         Me.dgvUserList = New System.Windows.Forms.DataGridView()
+        Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_fname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Mname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_emailadd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserLevelDescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserLevelColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.UserPrivilegeLabel = New System.Windows.Forms.Label()
-        Me.UserLevelLabel = New System.Windows.Forms.Label()
-        Me.UserLevelComboBox = New System.Windows.Forms.ComboBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -88,16 +95,6 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Modules = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_fname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Mname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailadd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserLevelDescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserLevelColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip3.SuspendLayout()
         CType(Me.dgvPrivilege, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpDetails.SuspendLayout()
@@ -240,38 +237,21 @@ Partial Class UsersForm
         Me.dgvPrivilege.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.dgvPrivilege.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPrivilege.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle4
         Me.dgvPrivilege.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPrivilege.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Modules, Me.Addg, Me.Modifyg, Me.Deleteg, Me.Readg})
-        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle5.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPrivilege.DefaultCellStyle = DataGridViewCellStyle5
         Me.dgvPrivilege.Location = New System.Drawing.Point(665, 243)
         Me.dgvPrivilege.Name = "dgvPrivilege"
         Me.dgvPrivilege.ReadOnly = True
-        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle6.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPrivilege.RowHeadersDefaultCellStyle = DataGridViewCellStyle6
         Me.dgvPrivilege.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.dgvPrivilege.Size = New System.Drawing.Size(420, 304)
         Me.dgvPrivilege.TabIndex = 1
+        '
+        'Modules
+        '
+        Me.Modules.HeaderText = "Module Name"
+        Me.Modules.Name = "Modules"
+        Me.Modules.ReadOnly = True
+        Me.Modules.Width = 150
         '
         'Addg
         '
@@ -307,12 +287,6 @@ Partial Class UsersForm
         Me.grpDetails.Controls.Add(Me.UserLevelLabel)
         Me.grpDetails.Controls.Add(Me.cboxposition)
         Me.grpDetails.Controls.Add(Me.lblAddPosition)
-        Me.grpDetails.Controls.Add(Me.Label17)
-        Me.grpDetails.Controls.Add(Me.Label16)
-        Me.grpDetails.Controls.Add(Me.Label15)
-        Me.grpDetails.Controls.Add(Me.Label14)
-        Me.grpDetails.Controls.Add(Me.Label13)
-        Me.grpDetails.Controls.Add(Me.Label12)
         Me.grpDetails.Controls.Add(Me.Label9)
         Me.grpDetails.Controls.Add(Me.txtEmailAdd)
         Me.grpDetails.Controls.Add(Me.lblCompare)
@@ -332,6 +306,12 @@ Partial Class UsersForm
         Me.grpDetails.Controls.Add(Me.txtFirstName)
         Me.grpDetails.Controls.Add(Me.Label1)
         Me.grpDetails.Controls.Add(Me.txtLastName)
+        Me.grpDetails.Controls.Add(Me.Label17)
+        Me.grpDetails.Controls.Add(Me.Label16)
+        Me.grpDetails.Controls.Add(Me.Label15)
+        Me.grpDetails.Controls.Add(Me.Label14)
+        Me.grpDetails.Controls.Add(Me.Label13)
+        Me.grpDetails.Controls.Add(Me.Label12)
         Me.grpDetails.Location = New System.Drawing.Point(10, 49)
         Me.grpDetails.Name = "grpDetails"
         Me.grpDetails.Size = New System.Drawing.Size(790, 164)
@@ -339,92 +319,51 @@ Partial Class UsersForm
         Me.grpDetails.TabStop = False
         Me.grpDetails.Text = "Users Details"
         '
+        'UserLevelComboBox
+        '
+        Me.UserLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.UserLevelComboBox.FormattingEnabled = True
+        Me.UserLevelComboBox.Location = New System.Drawing.Point(256, 125)
+        Me.UserLevelComboBox.Name = "UserLevelComboBox"
+        Me.UserLevelComboBox.Size = New System.Drawing.Size(210, 21)
+        Me.UserLevelComboBox.TabIndex = 44
+        '
+        'UserLevelLabel
+        '
+        Me.UserLevelLabel.AutoSize = True
+        Me.UserLevelLabel.Location = New System.Drawing.Point(253, 109)
+        Me.UserLevelLabel.Name = "UserLevelLabel"
+        Me.UserLevelLabel.Size = New System.Drawing.Size(58, 13)
+        Me.UserLevelLabel.TabIndex = 43
+        Me.UserLevelLabel.Text = "User Level"
+        '
         'cboxposition
         '
         Me.cboxposition.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboxposition.FormattingEnabled = True
-        Me.cboxposition.Location = New System.Drawing.Point(256, 77)
+        Me.cboxposition.Location = New System.Drawing.Point(256, 82)
         Me.cboxposition.Name = "cboxposition"
         Me.cboxposition.Size = New System.Drawing.Size(210, 21)
         Me.cboxposition.TabIndex = 42
+        Me.cboxposition.Tag = "Required"
         '
         'lblAddPosition
         '
         Me.lblAddPosition.AutoSize = True
         Me.lblAddPosition.Location = New System.Drawing.Point(479, 85)
         Me.lblAddPosition.Name = "lblAddPosition"
-        Me.lblAddPosition.Size = New System.Drawing.Size(66, 13)
+        Me.lblAddPosition.Size = New System.Drawing.Size(73, 13)
         Me.lblAddPosition.TabIndex = 41
         Me.lblAddPosition.TabStop = True
         Me.lblAddPosition.Text = "Add Position"
         Me.lblAddPosition.Visible = False
         '
-        'Label17
-        '
-        Me.Label17.AutoSize = True
-        Me.Label17.ForeColor = System.Drawing.Color.Red
-        Me.Label17.Location = New System.Drawing.Point(637, 108)
-        Me.Label17.Name = "Label17"
-        Me.Label17.Size = New System.Drawing.Size(11, 13)
-        Me.Label17.TabIndex = 40
-        Me.Label17.Text = "*"
-        '
-        'Label16
-        '
-        Me.Label16.AutoSize = True
-        Me.Label16.ForeColor = System.Drawing.Color.Red
-        Me.Label16.Location = New System.Drawing.Point(599, 61)
-        Me.Label16.Name = "Label16"
-        Me.Label16.Size = New System.Drawing.Size(11, 13)
-        Me.Label16.TabIndex = 39
-        Me.Label16.Text = "*"
-        '
-        'Label15
-        '
-        Me.Label15.AutoSize = True
-        Me.Label15.ForeColor = System.Drawing.Color.Red
-        Me.Label15.Location = New System.Drawing.Point(601, 22)
-        Me.Label15.Name = "Label15"
-        Me.Label15.Size = New System.Drawing.Size(11, 13)
-        Me.Label15.TabIndex = 38
-        Me.Label15.Text = "*"
-        '
-        'Label14
-        '
-        Me.Label14.AutoSize = True
-        Me.Label14.ForeColor = System.Drawing.Color.Red
-        Me.Label14.Location = New System.Drawing.Point(329, 62)
-        Me.Label14.Name = "Label14"
-        Me.Label14.Size = New System.Drawing.Size(11, 13)
-        Me.Label14.TabIndex = 37
-        Me.Label14.Text = "*"
-        '
-        'Label13
-        '
-        Me.Label13.AutoSize = True
-        Me.Label13.ForeColor = System.Drawing.Color.Red
-        Me.Label13.Location = New System.Drawing.Point(71, 61)
-        Me.Label13.Name = "Label13"
-        Me.Label13.Size = New System.Drawing.Size(11, 13)
-        Me.Label13.TabIndex = 36
-        Me.Label13.Text = "*"
-        '
-        'Label12
-        '
-        Me.Label12.AutoSize = True
-        Me.Label12.ForeColor = System.Drawing.Color.Red
-        Me.Label12.Location = New System.Drawing.Point(70, 24)
-        Me.Label12.Name = "Label12"
-        Me.Label12.Size = New System.Drawing.Size(11, 13)
-        Me.Label12.TabIndex = 35
-        Me.Label12.Text = "*"
-        '
         'Label9
         '
         Me.Label9.AutoSize = True
-        Me.Label9.Location = New System.Drawing.Point(256, 22)
+        Me.Label9.Location = New System.Drawing.Point(253, 22)
         Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(73, 13)
+        Me.Label9.Size = New System.Drawing.Size(78, 13)
         Me.Label9.TabIndex = 34
         Me.Label9.Text = "Email Address"
         '
@@ -432,7 +371,7 @@ Partial Class UsersForm
         '
         Me.txtEmailAdd.Location = New System.Drawing.Point(256, 38)
         Me.txtEmailAdd.Name = "txtEmailAdd"
-        Me.txtEmailAdd.Size = New System.Drawing.Size(210, 20)
+        Me.txtEmailAdd.Size = New System.Drawing.Size(210, 22)
         Me.txtEmailAdd.TabIndex = 20
         '
         'lblCompare
@@ -455,9 +394,9 @@ Partial Class UsersForm
         'Label4
         '
         Me.Label4.AutoSize = True
-        Me.Label4.Location = New System.Drawing.Point(547, 109)
+        Me.Label4.Location = New System.Drawing.Point(544, 109)
         Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(91, 13)
+        Me.Label4.Size = New System.Drawing.Size(100, 13)
         Me.Label4.TabIndex = 29
         Me.Label4.Text = "Confirm Password"
         '
@@ -466,32 +405,34 @@ Partial Class UsersForm
         Me.txtConfirmPassword.Location = New System.Drawing.Point(547, 125)
         Me.txtConfirmPassword.Name = "txtConfirmPassword"
         Me.txtConfirmPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
-        Me.txtConfirmPassword.Size = New System.Drawing.Size(210, 20)
+        Me.txtConfirmPassword.Size = New System.Drawing.Size(210, 22)
         Me.txtConfirmPassword.TabIndex = 24
+        Me.txtConfirmPassword.Tag = "Required"
         '
         'Label5
         '
         Me.Label5.AutoSize = True
-        Me.Label5.Location = New System.Drawing.Point(547, 61)
+        Me.Label5.Location = New System.Drawing.Point(544, 66)
         Me.Label5.Name = "Label5"
-        Me.Label5.Size = New System.Drawing.Size(53, 13)
+        Me.Label5.Size = New System.Drawing.Size(56, 13)
         Me.Label5.TabIndex = 27
         Me.Label5.Text = "Password"
         '
         'txtPassword
         '
-        Me.txtPassword.Location = New System.Drawing.Point(547, 77)
+        Me.txtPassword.Location = New System.Drawing.Point(547, 82)
         Me.txtPassword.Name = "txtPassword"
         Me.txtPassword.PasswordChar = Global.Microsoft.VisualBasic.ChrW(9679)
-        Me.txtPassword.Size = New System.Drawing.Size(210, 20)
+        Me.txtPassword.Size = New System.Drawing.Size(210, 22)
         Me.txtPassword.TabIndex = 23
+        Me.txtPassword.Tag = "Required"
         '
         'Label6
         '
         Me.Label6.AutoSize = True
-        Me.Label6.Location = New System.Drawing.Point(547, 22)
+        Me.Label6.Location = New System.Drawing.Point(544, 22)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(55, 13)
+        Me.Label6.Size = New System.Drawing.Size(58, 13)
         Me.Label6.TabIndex = 25
         Me.Label6.Text = "Username"
         '
@@ -499,15 +440,16 @@ Partial Class UsersForm
         '
         Me.txtUserName.Location = New System.Drawing.Point(547, 38)
         Me.txtUserName.Name = "txtUserName"
-        Me.txtUserName.Size = New System.Drawing.Size(210, 20)
+        Me.txtUserName.Size = New System.Drawing.Size(210, 22)
         Me.txtUserName.TabIndex = 22
+        Me.txtUserName.Tag = "Required"
         '
         'Label7
         '
         Me.Label7.AutoSize = True
-        Me.Label7.Location = New System.Drawing.Point(253, 61)
+        Me.Label7.Location = New System.Drawing.Point(253, 66)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(75, 13)
+        Me.Label7.Size = New System.Drawing.Size(81, 13)
         Me.Label7.TabIndex = 24
         Me.Label7.Text = "Position Name"
         '
@@ -523,9 +465,9 @@ Partial Class UsersForm
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(13, 109)
+        Me.Label3.Location = New System.Drawing.Point(10, 109)
         Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(69, 13)
+        Me.Label3.Size = New System.Drawing.Size(75, 13)
         Me.Label3.TabIndex = 21
         Me.Label3.Text = "Middle Name"
         '
@@ -533,7 +475,7 @@ Partial Class UsersForm
         '
         Me.txtMiddleName.Location = New System.Drawing.Point(13, 125)
         Me.txtMiddleName.Name = "txtMiddleName"
-        Me.txtMiddleName.Size = New System.Drawing.Size(210, 20)
+        Me.txtMiddleName.Size = New System.Drawing.Size(210, 22)
         Me.txtMiddleName.TabIndex = 19
         '
         'lblid
@@ -547,25 +489,26 @@ Partial Class UsersForm
         'Label2
         '
         Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(13, 61)
+        Me.Label2.Location = New System.Drawing.Point(10, 66)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(57, 13)
+        Me.Label2.Size = New System.Drawing.Size(61, 13)
         Me.Label2.TabIndex = 18
         Me.Label2.Text = "First Name"
         '
         'txtFirstName
         '
-        Me.txtFirstName.Location = New System.Drawing.Point(13, 77)
+        Me.txtFirstName.Location = New System.Drawing.Point(13, 82)
         Me.txtFirstName.Name = "txtFirstName"
-        Me.txtFirstName.Size = New System.Drawing.Size(210, 20)
+        Me.txtFirstName.Size = New System.Drawing.Size(210, 22)
         Me.txtFirstName.TabIndex = 18
+        Me.txtFirstName.Tag = "Required"
         '
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(13, 24)
+        Me.Label1.Location = New System.Drawing.Point(10, 24)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(58, 13)
+        Me.Label1.Size = New System.Drawing.Size(59, 13)
         Me.Label1.TabIndex = 16
         Me.Label1.Text = "Last Name"
         '
@@ -573,8 +516,75 @@ Partial Class UsersForm
         '
         Me.txtLastName.Location = New System.Drawing.Point(13, 38)
         Me.txtLastName.Name = "txtLastName"
-        Me.txtLastName.Size = New System.Drawing.Size(210, 20)
+        Me.txtLastName.Size = New System.Drawing.Size(210, 22)
         Me.txtLastName.TabIndex = 17
+        Me.txtLastName.Tag = "Required"
+        '
+        'Label17
+        '
+        Me.Label17.AutoSize = True
+        Me.Label17.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label17.ForeColor = System.Drawing.Color.Red
+        Me.Label17.Location = New System.Drawing.Point(640, 103)
+        Me.Label17.Name = "Label17"
+        Me.Label17.Size = New System.Drawing.Size(17, 21)
+        Me.Label17.TabIndex = 40
+        Me.Label17.Text = "*"
+        '
+        'Label16
+        '
+        Me.Label16.AutoSize = True
+        Me.Label16.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label16.ForeColor = System.Drawing.Color.Red
+        Me.Label16.Location = New System.Drawing.Point(596, 60)
+        Me.Label16.Name = "Label16"
+        Me.Label16.Size = New System.Drawing.Size(17, 21)
+        Me.Label16.TabIndex = 39
+        Me.Label16.Text = "*"
+        '
+        'Label15
+        '
+        Me.Label15.AutoSize = True
+        Me.Label15.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label15.ForeColor = System.Drawing.Color.Red
+        Me.Label15.Location = New System.Drawing.Point(598, 18)
+        Me.Label15.Name = "Label15"
+        Me.Label15.Size = New System.Drawing.Size(17, 21)
+        Me.Label15.TabIndex = 38
+        Me.Label15.Text = "*"
+        '
+        'Label14
+        '
+        Me.Label14.AutoSize = True
+        Me.Label14.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label14.ForeColor = System.Drawing.Color.Red
+        Me.Label14.Location = New System.Drawing.Point(330, 60)
+        Me.Label14.Name = "Label14"
+        Me.Label14.Size = New System.Drawing.Size(17, 21)
+        Me.Label14.TabIndex = 37
+        Me.Label14.Text = "*"
+        '
+        'Label13
+        '
+        Me.Label13.AutoSize = True
+        Me.Label13.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label13.ForeColor = System.Drawing.Color.Red
+        Me.Label13.Location = New System.Drawing.Point(67, 60)
+        Me.Label13.Name = "Label13"
+        Me.Label13.Size = New System.Drawing.Size(17, 21)
+        Me.Label13.TabIndex = 36
+        Me.Label13.Text = "*"
+        '
+        'Label12
+        '
+        Me.Label12.AutoSize = True
+        Me.Label12.Font = New System.Drawing.Font("Segoe UI", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.Label12.ForeColor = System.Drawing.Color.Red
+        Me.Label12.Location = New System.Drawing.Point(65, 18)
+        Me.Label12.Name = "Label12"
+        Me.Label12.Size = New System.Drawing.Size(17, 21)
+        Me.Label12.TabIndex = 35
+        Me.Label12.Text = "*"
         '
         'dgvUserList
         '
@@ -595,6 +605,70 @@ Partial Class UsersForm
         Me.dgvUserList.Size = New System.Drawing.Size(647, 304)
         Me.dgvUserList.TabIndex = 62
         '
+        'c_userid
+        '
+        Me.c_userid.DataPropertyName = "UserID"
+        Me.c_userid.HeaderText = "Username"
+        Me.c_userid.Name = "c_userid"
+        Me.c_userid.ReadOnly = True
+        '
+        'c_Position
+        '
+        Me.c_Position.DataPropertyName = "PositionName"
+        Me.c_Position.HeaderText = "Position"
+        Me.c_Position.Name = "c_Position"
+        Me.c_Position.ReadOnly = True
+        '
+        'c_lname
+        '
+        Me.c_lname.DataPropertyName = "LastName"
+        Me.c_lname.HeaderText = "Last Name"
+        Me.c_lname.Name = "c_lname"
+        Me.c_lname.ReadOnly = True
+        '
+        'c_fname
+        '
+        Me.c_fname.DataPropertyName = "FirstName"
+        Me.c_fname.HeaderText = "First Name"
+        Me.c_fname.Name = "c_fname"
+        Me.c_fname.ReadOnly = True
+        '
+        'c_Mname
+        '
+        Me.c_Mname.DataPropertyName = "MiddleName"
+        Me.c_Mname.HeaderText = "Middle Name"
+        Me.c_Mname.Name = "c_Mname"
+        Me.c_Mname.ReadOnly = True
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "Column1"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
+        'c_emailadd
+        '
+        Me.c_emailadd.DataPropertyName = "EmailAddress"
+        Me.c_emailadd.HeaderText = "Email Address"
+        Me.c_emailadd.Name = "c_emailadd"
+        Me.c_emailadd.ReadOnly = True
+        '
+        'UserLevelDescriptionColumn
+        '
+        Me.UserLevelDescriptionColumn.DataPropertyName = "UserLevelIndex"
+        Me.UserLevelDescriptionColumn.HeaderText = "User Level"
+        Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
+        Me.UserLevelDescriptionColumn.ReadOnly = True
+        '
+        'UserLevelColumn
+        '
+        Me.UserLevelColumn.DataPropertyName = "UserLevel"
+        Me.UserLevelColumn.HeaderText = "User Level (Index)"
+        Me.UserLevelColumn.Name = "UserLevelColumn"
+        Me.UserLevelColumn.ReadOnly = True
+        Me.UserLevelColumn.Visible = False
+        '
         'Label10
         '
         Me.Label10.AutoSize = True
@@ -614,24 +688,6 @@ Partial Class UsersForm
         Me.UserPrivilegeLabel.Size = New System.Drawing.Size(182, 24)
         Me.UserPrivilegeLabel.TabIndex = 66
         Me.UserPrivilegeLabel.Text = "USER PRIVILEGE"
-        '
-        'UserLevelLabel
-        '
-        Me.UserLevelLabel.AutoSize = True
-        Me.UserLevelLabel.Location = New System.Drawing.Point(256, 109)
-        Me.UserLevelLabel.Name = "UserLevelLabel"
-        Me.UserLevelLabel.Size = New System.Drawing.Size(58, 13)
-        Me.UserLevelLabel.TabIndex = 43
-        Me.UserLevelLabel.Text = "User Level"
-        '
-        'UserLevelComboBox
-        '
-        Me.UserLevelComboBox.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.UserLevelComboBox.FormattingEnabled = True
-        Me.UserLevelComboBox.Location = New System.Drawing.Point(256, 125)
-        Me.UserLevelComboBox.Name = "UserLevelComboBox"
-        Me.UserLevelComboBox.Size = New System.Drawing.Size(210, 21)
-        Me.UserLevelComboBox.TabIndex = 44
         '
         'DataGridViewTextBoxColumn1
         '
@@ -703,69 +759,6 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 150
         '
-        'Modules
-        '
-        Me.Modules.HeaderText = "Module Name"
-        Me.Modules.Name = "Modules"
-        Me.Modules.ReadOnly = True
-        Me.Modules.Width = 150
-        '
-        'c_userid
-        '
-        Me.c_userid.HeaderText = "Username"
-        Me.c_userid.Name = "c_userid"
-        Me.c_userid.ReadOnly = True
-        '
-        'c_Position
-        '
-        Me.c_Position.HeaderText = "Position"
-        Me.c_Position.Name = "c_Position"
-        Me.c_Position.ReadOnly = True
-        '
-        'c_lname
-        '
-        Me.c_lname.HeaderText = "Last Name"
-        Me.c_lname.Name = "c_lname"
-        Me.c_lname.ReadOnly = True
-        '
-        'c_fname
-        '
-        Me.c_fname.HeaderText = "First Name"
-        Me.c_fname.Name = "c_fname"
-        Me.c_fname.ReadOnly = True
-        '
-        'c_Mname
-        '
-        Me.c_Mname.HeaderText = "Middle Name"
-        Me.c_Mname.Name = "c_Mname"
-        Me.c_Mname.ReadOnly = True
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "Column1"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
-        '
-        'c_emailadd
-        '
-        Me.c_emailadd.HeaderText = "Email Address"
-        Me.c_emailadd.Name = "c_emailadd"
-        Me.c_emailadd.ReadOnly = True
-        '
-        'UserLevelDescriptionColumn
-        '
-        Me.UserLevelDescriptionColumn.HeaderText = "User Level"
-        Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
-        Me.UserLevelDescriptionColumn.ReadOnly = True
-        '
-        'UserLevelColumn
-        '
-        Me.UserLevelColumn.HeaderText = "User Level (Index)"
-        Me.UserLevelColumn.Name = "UserLevelColumn"
-        Me.UserLevelColumn.ReadOnly = True
-        Me.UserLevelColumn.Visible = False
-        '
         'UsersForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -781,6 +774,7 @@ Partial Class UsersForm
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.grpDetails)
         Me.Controls.Add(Me.dgvUserList)
+        Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
         Me.HelpButton = True
         Me.MaximizeBox = False
@@ -860,6 +854,7 @@ Partial Class UsersForm
     Friend WithEvents DataGridViewTextBoxColumn7 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
     Friend WithEvents c_userid As DataGridViewTextBoxColumn
     Friend WithEvents c_Position As DataGridViewTextBoxColumn
     Friend WithEvents c_lname As DataGridViewTextBoxColumn
@@ -869,5 +864,4 @@ Partial Class UsersForm
     Friend WithEvents c_emailadd As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelDescriptionColumn As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelColumn As DataGridViewTextBoxColumn
-    Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
 End Class

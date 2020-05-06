@@ -5,7 +5,7 @@ namespace AccuPay.Data.Repositories
 {
     public class AddressRepository
     {
-        public Address FindById(int id)
+        public Address GetById(int id)
         {
             using (PayrollContext context = new PayrollContext())
             {

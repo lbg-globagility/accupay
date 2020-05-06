@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Repository
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class TimeAttendForm
@@ -7,9 +9,25 @@ Public Class TimeAttendForm
 
     Public listTimeAttendForm As New List(Of String)
 
-    Private sys_ownr As New SystemOwner
-
     Private lRepo As ListOfValueRepository
+
+    Private _policyHelper As PolicyHelper
+
+    Private _userRepository As UserRepository
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        lRepo = New ListOfValueRepository()
+
+        _policyHelper = New PolicyHelper()
+
+        _userRepository = New UserRepository()
+
+    End Sub
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
@@ -19,7 +37,7 @@ Public Class TimeAttendForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -111,14 +129,13 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
-        lRepo = New ListOfValueRepository
-        Dim shiftPolicies = Await lRepo.GetShiftPolicies()
+        Dim shiftPolicies = Await lRepo.GetShiftPoliciesAsync()
 
         If Not shiftPolicies.Any() Then
             ShiftScheduleToolStripMenuItem.Visible = False
             Return
         End If
-        Dim settings = New ListOfValueCollection(shiftPolicies)
+        Dim settings = ListOfValueCollection.Create(shiftPolicies)
         Dim _policy = New TimeEntryPolicy(settings)
 
         Dim _bool = _policy.UseShiftSchedule
@@ -126,39 +143,35 @@ Public Class TimeAttendForm
         TimeEntToolStripMenuItem.Visible = Not _bool
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
 
-        Using context As New PayrollContext
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            Return
 
-                Return
+        End If
 
-            End If
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
+            LeaveToolStripMenuItem.Visible = False
+            OfficialBusinessToolStripMenuItem.Visible = False
 
-                LeaveToolStripMenuItem.Visible = False
-                OfficialBusinessToolStripMenuItem.Visible = False
+            If user.UserLevel = UserLevel.Five Then
 
-                If user.UserLevel = UserLevel.Five Then
-
-                    OvertimeToolStripMenuItem.Visible = False
-
-                End If
+                OvertimeToolStripMenuItem.Visible = False
 
             End If
 
-        End Using
+        End If
 
     End Sub
 

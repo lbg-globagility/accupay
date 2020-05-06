@@ -1,16 +1,22 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddAllowanceForm
+
+    Private Const FormEntityName As String = "Allowance"
+
     Private _currentEmployee As Employee
 
-    Private _newAllowance As New Allowance
+    Private _newAllowance As New Allowance()
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As New ProductRepository()
 
-    Private _allowanceRepository As New AllowanceRepository
+    Private _allowanceRepository As New AllowanceRepository()
 
     Private _allowanceTypeList As List(Of Product)
 
@@ -61,6 +67,8 @@ Public Class AddAllowanceForm
         Me._newAllowance.EmployeeID = _currentEmployee.RowID
         Me._newAllowance.EffectiveStartDate = Date.Now
         Me._newAllowance.EffectiveEndDate = Date.Now
+        Me._newAllowance.CreatedBy = z_User
+        Me._newAllowance.OrganizationID = z_OrganizationID
 
         Dim firstAllowanceType = Me._allowanceTypeList.FirstOrDefault()
 
@@ -69,7 +77,7 @@ Public Class AddAllowanceForm
             Me._newAllowance.Product = firstAllowanceType
         End If
 
-        Me._newAllowance.AllowanceFrequency = cboallowfreq.SelectedItem
+        Me._newAllowance.AllowanceFrequency = cboallowfreq.SelectedItem.ToString()
 
         CreateDataBindings()
     End Sub
@@ -139,12 +147,10 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveAsync(organizationID:=z_OrganizationID,
-                                                     userID:=z_User,
-                                                     allowance:=Me._newAllowance)
+                Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Allowance", Me._newAllowance.RowID, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -181,7 +187,7 @@ Public Class AddAllowanceForm
 
     Private Async Function LoadAllowanceTypes() As Task
 
-        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypes(z_OrganizationID))
+        Dim allowanceList = New List(Of Product)(Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID))
 
         Me._allowanceTypeList = allowanceList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).

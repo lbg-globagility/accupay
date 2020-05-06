@@ -1,5 +1,6 @@
 Imports AccuPay.Data
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 
 Public Class selectPayPeriod
@@ -7,9 +8,9 @@ Public Class selectPayPeriod
     Public Property PayPeriod As IPayPeriod
     Public Property GeneratePayroll As Boolean = True
 
-    Private ReadOnly selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Private ReadOnly unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim m_PayFreqType = ""
 
@@ -23,7 +24,8 @@ Public Class selectPayPeriod
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         Dim payfrqncy As New AutoCompleteStringCollection
 
@@ -54,14 +56,14 @@ Public Class selectPayPeriod
             With new_tsbtn
                 .AutoSize = False
                 .BackColor = Color.FromArgb(255, 255, 255)
-                .ImageTransparentColor = System.Drawing.Color.Magenta
-                .Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+                .ImageTransparentColor = Color.Magenta
+                .Margin = New Padding(0, 1, 0, 1)
                 .Name = String.Concat("tsbtn" & strval)
-                .Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-                .Size = New System.Drawing.Size(110, 30)
+                .Overflow = ToolStripItemOverflow.Never
+                .Size = New Size(110, 30)
                 .Text = strval
-                .TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-                .TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+                .TextAlign = ContentAlignment.MiddleLeft
+                .TextImageRelation = TextImageRelation.ImageBeforeText
                 .ToolTipText = strval
             End With
 
@@ -165,7 +167,8 @@ Public Class selectPayPeriod
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(PayFreqType)
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.
+                                            GetPeriodsWithPaystubCount(z_OrganizationID, PayFreqType)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0
@@ -201,7 +204,10 @@ Public Class selectPayPeriod
 
     End Sub
 
-    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod), index As Integer, drow As DataRow) As PayPeriodStatusData
+    Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
+                                         index As Integer,
+                                         drow As DataRow) _
+                                         As PayPeriodStatusData
         Dim payPeriodData As New PayPeriodStatusData
 
         payPeriodData.Index = index

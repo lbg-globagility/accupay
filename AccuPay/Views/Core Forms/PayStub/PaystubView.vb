@@ -1,9 +1,7 @@
 Option Strict On
 
 Imports System.ComponentModel
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports PayrollSys
+Imports AccuPay.Data.Entities
 
 Public Class PaystubView
 
@@ -163,13 +161,19 @@ Public Class PaystubView
     End Sub
 
     Public Sub ShowAdjustments(adjustments As ICollection(Of Adjustment))
-        Dim adjustmentModels = adjustments.
-            Select(Function(a) New AdjustmentModel() With {
-                .Name = a.Product.Name,
-                .Amount = a.Amount,
-                .Remarks = a.Comment
-            }).
-            ToList()
+        Dim adjustmentModels As New List(Of AdjustmentModel)
+
+        If adjustments.Any() Then
+
+            adjustmentModels = adjustments.
+                                Select(Function(a) New AdjustmentModel() With {
+                                    .Name = a.Product.Name,
+                                    .Amount = a.Amount,
+                                    .Remarks = a.Comment
+                                }).
+                                ToList()
+
+        End If
 
         _adjustmentSource.DataSource = adjustmentModels
     End Sub
@@ -283,12 +287,12 @@ Public Class PaystubView
         RaiseEvent ToggleActual()
     End Sub
 
-    Private Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
+    Private Async Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles ToolStripButton3.Click
         Dim dateFrom As Date = New Date(2017, 1, 1)
         Dim dateTo As Date = New Date(2017, 1, 15)
 
         Dim exporter = New ExportBankFile(dateFrom, dateTo)
-        exporter.Extract()
+        Await exporter.Extract()
     End Sub
 
     Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click

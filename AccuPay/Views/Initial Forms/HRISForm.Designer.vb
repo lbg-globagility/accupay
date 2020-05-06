@@ -38,7 +38,6 @@ Partial Class HRISForm
         Me.AttachmentToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.OffSetToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DivisionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PositionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobLevelToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.JobCategoryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PointsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -52,7 +51,7 @@ Partial Class HRISForm
         'MenuStrip1
         '
         Me.MenuStrip1.BackColor = System.Drawing.Color.Transparent
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.PositionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem, Me.DeductionsToolStripMenuItem, Me.OtherIncomeToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.EmployeeToolStripMenuItem, Me.DivisionToolStripMenuItem, Me.JobLevelToolStripMenuItem, Me.EmployeeExperimentalToolStripMenuItem, Me.DeductionsToolStripMenuItem, Me.OtherIncomeToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(1006, 24)
@@ -150,13 +149,6 @@ Partial Class HRISForm
         Me.DivisionToolStripMenuItem.Size = New System.Drawing.Size(120, 20)
         Me.DivisionToolStripMenuItem.Text = "D&ivision && Position"
         '
-        'PositionToolStripMenuItem
-        '
-        Me.PositionToolStripMenuItem.Name = "PositionToolStripMenuItem"
-        Me.PositionToolStripMenuItem.Size = New System.Drawing.Size(62, 20)
-        Me.PositionToolStripMenuItem.Text = "Position"
-        Me.PositionToolStripMenuItem.Visible = False
-        '
         'JobLevelToolStripMenuItem
         '
         Me.JobLevelToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.JobCategoryToolStripMenuItem, Me.PointsToolStripMenuItem})
@@ -224,7 +216,6 @@ Partial Class HRISForm
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents EmpSalToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PrevEmplyrToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents PositionToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents PanelHRIS As System.Windows.Forms.Panel
     Friend WithEvents EmployeeToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents AwardsToolStripMenuItem As System.Windows.Forms.ToolStripMenuItem

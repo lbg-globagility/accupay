@@ -276,8 +276,6 @@ Partial Class TimeEntrySummaryForm
         Me.ToolStripSeparator13 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsbtnNxt = New System.Windows.Forms.ToolStripButton()
         Me.Panel2 = New System.Windows.Forms.Panel()
-        Me.ctxtmenstrpTimeEntry = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.DeleteShiftToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -386,7 +384,6 @@ Partial Class TimeEntrySummaryForm
         CType(Me.timeEntriesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.payPeriodsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
-        Me.ctxtmenstrpTimeEntry.SuspendLayout()
         Me.SuspendLayout()
         '
         'employeesDataGridView
@@ -1718,18 +1715,6 @@ Partial Class TimeEntrySummaryForm
         Me.Panel2.Size = New System.Drawing.Size(312, 56)
         Me.Panel2.TabIndex = 139
         '
-        'ctxtmenstrpTimeEntry
-        '
-        Me.ctxtmenstrpTimeEntry.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.DeleteShiftToolStripMenuItem})
-        Me.ctxtmenstrpTimeEntry.Name = "ctxtmenstrpTimeEntry"
-        Me.ctxtmenstrpTimeEntry.Size = New System.Drawing.Size(193, 26)
-        '
-        'DeleteShiftToolStripMenuItem
-        '
-        Me.DeleteShiftToolStripMenuItem.Name = "DeleteShiftToolStripMenuItem"
-        Me.DeleteShiftToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
-        Me.DeleteShiftToolStripMenuItem.Text = "Delete shift schedule..."
-        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None
@@ -2778,7 +2763,6 @@ Partial Class TimeEntrySummaryForm
         CType(Me.payPeriodsDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout()
-        Me.ctxtmenstrpTimeEntry.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -2971,8 +2955,6 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents Panel2 As Panel
     Friend WithEvents ToolStripSeparator14 As ToolStripSeparator
     Friend WithEvents btnAmPm As ToolStripButton
-    Friend WithEvents ctxtmenstrpTimeEntry As ContextMenuStrip
-    Friend WithEvents DeleteShiftToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Button1 As Button
     Friend WithEvents tstbnResetLeaveBalance As ToolStripButton
     Friend WithEvents tsBtnDeleteTimeEntry As ToolStripButton

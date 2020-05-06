@@ -1,7 +1,8 @@
-﻿Imports AccuPay.Entity
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Loans
-Imports AccuPay.Repository
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -9,6 +10,8 @@ Imports Globagility.AccuPay.Loans
 Imports OfficeOpenXml
 
 Public Class ImportLoansForm
+
+    Private Const FormEntityName As String = "Loan"
 
     Private _loans As List(Of LoanSchedule)
 
@@ -31,10 +34,10 @@ Public Class ImportLoansForm
         Me.IsSaved = False
 
         Me._deductionSchedulesList = _listOfValueRepository.
-            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedules())
+            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
 
         Me._loanTypeList = New List(Of Product) _
-                (Await _productRepository.GetLoanTypes())
+                (Await _productRepository.GetLoanTypesAsync(z_OrganizationID))
 
         LoansDataGrid.AutoGenerateColumns = False
         RejectedRecordsGrid.AutoGenerateColumns = False
@@ -72,7 +75,8 @@ Public Class ImportLoansForm
 
         For Each record In records
 
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber)
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
             If employee Is Nothing Then
 
@@ -92,7 +96,9 @@ Public Class ImportLoansForm
                 Continue For
             End If
 
-            Dim loanType = Await Me._productRepository.GetOrCreateLoanType(record.LoanName)
+            Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(record.LoanName,
+                                                                    organizationId:=z_OrganizationID,
+                                                                    userId:=z_User)
 
             If loanType Is Nothing Then
 
@@ -123,6 +129,8 @@ Public Class ImportLoansForm
 
             End If
 
+            'TODO: use a ViewModel instead of showing the entity to the gridview
+            'problems with detaching Employee
             Dim loanSchedule = New LoanSchedule With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
@@ -131,17 +139,17 @@ Public Class ImportLoansForm
                 .Employee = employee,
                 .LoanNumber = record.LoanNumber,
                 .Comments = record.Comments,
-                .TotalLoanAmount = record.TotalLoanAmount,
-                .TotalBalanceLeft = record.TotalBalanceLeft,
-                .DedEffectiveDateFrom = record.StartDate,
-                .DeductionAmount = record.DeductionAmount,
+                .TotalLoanAmount = record.TotalLoanAmount.Value,
+                .TotalBalanceLeft = record.TotalBalanceLeft.Value,
+                .DedEffectiveDateFrom = record.StartDate.Value,
+                .DeductionAmount = record.DeductionAmount.Value,
                 .DeductionPercentage = 0,
                 .LoanName = record.LoanName,
                 .LoanTypeID = loanType.RowID,
                 .Status = LoanScheduleRepository.STATUS_IN_PROGRESS,
                 .DeductionSchedule = deductionSchedule,
-                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount, record.DeductionAmount),
-                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft, record.DeductionAmount)
+                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount.Value, record.DeductionAmount.Value),
+                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft.Value, record.DeductionAmount.Value)
             }
 
             _loans.Add(loanSchedule)
@@ -168,7 +176,7 @@ Public Class ImportLoansForm
             Return False
         End If
 
-        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+        If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
 
             record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
             rejectedRecords.Add(record)
@@ -217,7 +225,7 @@ Public Class ImportLoansForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -235,19 +243,20 @@ Public Class ImportLoansForm
                     loan.Employee = Nothing
                 Next
 
-                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject, Me._loanTypeList)
+                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject,
+                                                            Me._loanTypeList)
 
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
+                Dim importList = New List(Of UserActivityItem)
                 For Each item In loansWithOutEmployeeObject
-                    importList.Add(New Data.Entities.UserActivityItem() With
+                    importList.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new loan.",
-                        .EntityId = item.RowID
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
+                        .EntityId = item.RowID.Value
                         })
                 Next
 
-                Dim repo = New Data.Repositories.UserActivityRepository
-                repo.CreateRecord(z_User, "Loan", z_OrganizationID, Data.Repositories.UserActivityRepository.RecordTypeImport, importList)
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

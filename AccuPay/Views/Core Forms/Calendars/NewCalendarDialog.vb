@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class NewCalendarDialog
@@ -15,7 +15,7 @@ Public Class NewCalendarDialog
     End Sub
 
     Private Async Sub NewCalendarDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim calendars = Await _repository.GetAll()
+        Dim calendars = Await _repository.GetAllAsync()
         CopyCalendarComboBox.DataSource = calendars
     End Sub
 
@@ -45,12 +45,12 @@ Public Class NewCalendarDialog
 
         Dim copiedCalendar = DirectCast(CopyCalendarComboBox.SelectedItem, PayCalendar)
 
-        Await _repository.Create(calendar, copiedCalendar)
+        Await _repository.CreateAsync(calendar, copiedCalendar)
 
         DialogResult = DialogResult.OK
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         DialogResult = DialogResult.Cancel
     End Sub
 

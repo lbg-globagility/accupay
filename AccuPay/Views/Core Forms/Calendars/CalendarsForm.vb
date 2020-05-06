@@ -2,8 +2,8 @@
 
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class CalendarsForm
 
@@ -85,7 +85,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub LoadCalendars()
-        _calendars = Await _repository.GetAll()
+        _calendars = Await _repository.GetAllAsync()
         CalendarsDataGridView.DataSource = _calendars
     End Sub
 
@@ -131,14 +131,11 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
-        Using context = New PayrollContext()
-            For Each calendarDay In _changeTracker
-                context.Entry(calendarDay).State = Microsoft.EntityFrameworkCore.EntityState.Modified
-            Next
 
-            Await context.SaveChangesAsync()
-            ClearChangeTracker()
-        End Using
+        Await _repository.UpdateManyAsync(_changeTracker)
+
+        ClearChangeTracker()
+
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click

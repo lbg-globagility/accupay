@@ -212,7 +212,7 @@ Public Class LeaveForm
 
         param(12, 1) = imageobj
 
-        param(13, 1) = If(LeaveStatusValue = Nothing, AccuPay.Entity.Leave.StatusPending, LeaveStatusValue) 'CboListOfValue1.Text
+        param(13, 1) = If(LeaveStatusValue = Nothing, Data.Entities.Leave.StatusPending, LeaveStatusValue) 'CboListOfValue1.Text
 
         Dim leavetypeRowID = If(cboleavetypes.Tag(0) Is Nothing, DBNull.Value,
                                 If(cboleavetypes.Tag(0) = Nothing, DBNull.Value, cboleavetypes.Tag(0)))

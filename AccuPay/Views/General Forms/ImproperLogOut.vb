@@ -54,7 +54,7 @@ Public Class ImproperLogOut
 
             '                                            End Sub, TaskScheduler.FromCurrentSynchronizationContext)
 
-            Dim n_EncryptData As New EncryptData(password_text)
+            Dim n_EncryptData As New EncryptString(password_text)
             z_User = MetroLogin.UserAuthentication(n_EncryptData.ResultValue)
 
             If z_User > 0 Then

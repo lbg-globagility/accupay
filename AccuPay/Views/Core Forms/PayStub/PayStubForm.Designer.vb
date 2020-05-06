@@ -283,6 +283,7 @@ Partial Class PayStubForm
         Me.PrintPayrollSummaryToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -330,6 +331,7 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3036,7 +3038,7 @@ Partial Class PayStubForm
         '
         'ManagePayrollToolStripDropDownButton
         '
-        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
+        Me.ManagePayrollToolStripDropDownButton.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ManagePayslipsToolStripMenuItem, Me.PrintPaySlipToolStripMenuItem, Me.PrintPayrollSummaryToolStripMenuItem, Me.CostCenterReportToolStripMenuItem, Me.DeletePayrollToolStripMenuItem, Me.ClosePayrollToolStripMenuItem, Me.ReopenPayrollToolStripMenuItem, Me.OthersToolStripMenuItem})
         Me.ManagePayrollToolStripDropDownButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.ManagePayrollToolStripDropDownButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.ManagePayrollToolStripDropDownButton.Name = "ManagePayrollToolStripDropDownButton"
@@ -3107,6 +3109,13 @@ Partial Class PayStubForm
         Me.PayrollSummaryActualToolStripMenuItem.Tag = "1"
         Me.PayrollSummaryActualToolStripMenuItem.Text = "Actual"
         '
+        'CostCenterReportToolStripMenuItem
+        '
+        Me.CostCenterReportToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.Document
+        Me.CostCenterReportToolStripMenuItem.Name = "CostCenterReportToolStripMenuItem"
+        Me.CostCenterReportToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
+        Me.CostCenterReportToolStripMenuItem.Text = "Cost Center Report"
+        '
         'DeletePayrollToolStripMenuItem
         '
         Me.DeletePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
@@ -3137,18 +3146,21 @@ Partial Class PayStubForm
         Me.OthersToolStripMenuItem.Name = "OthersToolStripMenuItem"
         Me.OthersToolStripMenuItem.Size = New System.Drawing.Size(192, 22)
         Me.OthersToolStripMenuItem.Text = "Others"
+        Me.OthersToolStripMenuItem.Visible = False
         '
         'Include13thMonthPayToolStripMenuItem
         '
         Me.Include13thMonthPayToolStripMenuItem.Name = "Include13thMonthPayToolStripMenuItem"
         Me.Include13thMonthPayToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.Include13thMonthPayToolStripMenuItem.Text = "Include 13th Month Pay"
+        Me.Include13thMonthPayToolStripMenuItem.Visible = False
         '
         'CashOutUnusedLeavesToolStripMenuItem
         '
         Me.CashOutUnusedLeavesToolStripMenuItem.Name = "CashOutUnusedLeavesToolStripMenuItem"
         Me.CashOutUnusedLeavesToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.CashOutUnusedLeavesToolStripMenuItem.Text = "Cash Out Unused Leaves"
+        Me.CashOutUnusedLeavesToolStripMenuItem.Visible = False
         '
         'RegeneratePayrollToolStripMenuItem
         '
@@ -3464,6 +3476,9 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn28.HeaderText = "IsAdjustmentActual"
         Me.DataGridViewTextBoxColumn28.Name = "DataGridViewTextBoxColumn28"
         Me.DataGridViewTextBoxColumn28.Visible = False
+        '
+        'ProgressTimer
+        '
         '
         'PayStubForm
         '
@@ -3803,4 +3818,6 @@ Partial Class PayStubForm
     Friend WithEvents ManagePayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManagePrintPayslipsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ManageEmailPayslipsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents CostCenterReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ProgressTimer As Timer
 End Class

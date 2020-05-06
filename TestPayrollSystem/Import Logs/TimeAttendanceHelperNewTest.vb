@@ -1,8 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Entity
-Imports AccuPay.Helper.TimeLogsReader
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class TimeAttendanceHelperNewTest
@@ -20,7 +19,10 @@ Public Class TimeAttendanceHelperNewTest
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -49,7 +51,10 @@ Public Class TimeAttendanceHelperNewTest
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 
@@ -75,7 +80,10 @@ Public Class TimeAttendanceHelperNewTest
 
         Dim employeeOvertimes As List(Of Overtime) = GetSampleEmployeeOvertimes()
 
-        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes)
+        Dim organizationId = 1
+        Dim userId = 1
+
+        Dim timeAttendanceHelper = New TimeAttendanceHelperNew(logs, employees, employeeShifts, employeeOvertimes, organizationId, userId)
 
         logs = timeAttendanceHelper.Analyze()
 

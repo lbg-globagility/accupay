@@ -1,29 +1,62 @@
-﻿Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.ModelData
-Imports AccuPay.Repository
+﻿Option Strict On
+
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class EmployeeLeavesForm
 
-    Private _employees As New List(Of Employee)
-
-    Private _allEmployees As New List(Of Employee)
+    Private Const FormEntityName As String = "Leave"
 
     Private _currentLeave As Leave
 
-    Private _currentLeaves As New List(Of Leave)
+    Private _employees As List(Of Employee)
 
-    Private _changedLeaves As New List(Of Leave)
+    Private _allEmployees As List(Of Employee)
 
-    Private _leaveRepository As New LeaveRepository
+    Private _currentLeaves As List(Of Leave)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _changedLeaves As List(Of Leave)
 
-    Private _productRepository As New ProductRepository
+    Private _leaveRepository As LeaveRepository
 
-    Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employees = New List(Of Employee)
+
+        _allEmployees = New List(Of Employee)
+
+        _currentLeaves = New List(Of Leave)
+
+        _changedLeaves = New List(Of Leave)
+
+        _leaveRepository = New LeaveRepository()
+
+        _employeeRepository = New EmployeeRepository()
+
+        _productRepository = New ProductRepository()
+
+        _userActivityRepository = New UserActivityRepository()
+
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+    End Sub
 
     Private Async Sub EmployeeLeavesForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -35,11 +68,11 @@ Public Class EmployeeLeavesForm
         Await LoadEmployees()
         Await ShowEmployeeList()
 
-        ResetForm()
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
 
     End Sub
 
-    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchTextBox.TextChanged
+    Private Sub SearchTextBox_TextChanged(sender As Object, e As EventArgs)
 
         _textBoxDelayedAction.ProcessAsync(Async Function()
                                                Await FilterEmployees(SearchTextBox.Text.ToLower())
@@ -50,7 +83,7 @@ Public Class EmployeeLeavesForm
 
     Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
         TimeAttendForm.listTimeAttendForm.Remove(Name)
-        InfoBalloon(, , FormTitleLabel, , , 1)
+        myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
@@ -93,17 +126,24 @@ Public Class EmployeeLeavesForm
     Private Async Function FilterEmployees(Optional searchValue As String = "") As Task
         Dim filteredEmployees As New List(Of Employee)
 
+        RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
         Else
             EmployeesDataGridView.DataSource =
                 Await _employeeRepository.SearchSimpleLocal(Me._employees, searchValue)
         End If
+
+        Await ShowEmployeeLeaves()
+
+        AddHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
+
     End Function
 
     Private Async Function LoadEmployees() As Task
 
-        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync()).
+        Me._allEmployees = (Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)).
                             OrderBy(Function(e) e.LastName).
                             ToList
 
@@ -125,6 +165,21 @@ Public Class EmployeeLeavesForm
 
     Private Sub ResetForm()
 
+        'employee details
+
+        EmployeeNameTextBox.Text = String.Empty
+        EmployeeNumberTextBox.Text = String.Empty
+
+        EmployeePictureBox.Image = Nothing
+
+        'leave grid view
+        RemoveHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
+        LeaveGridView.DataSource = Nothing
+
+        AddHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
+        'leave details
         Me._currentLeave = Nothing
 
         DetailsTabLayout.Enabled = False
@@ -155,7 +210,13 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Sub ShowAllCheckBox_CheckedChanged(sender As Object, e As EventArgs) Handles ShowAllCheckBox.CheckedChanged
+
+        RemoveHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
+
+        SearchTextBox.Clear()
         Await ShowEmployeeList()
+
+        AddHandler SearchTextBox.TextChanged, AddressOf SearchTextBox_TextChanged
     End Sub
 
     Private Function GetSelectedEmployee() As Employee
@@ -171,9 +232,9 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID)).
+        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
 
@@ -185,34 +246,41 @@ Public Class EmployeeLeavesForm
             Me._changedLeaves(index).EndTime = Me._currentLeaves(index).EndTime
         Next
 
-        LeaveListBindingSource.DataSource = Me._currentLeaves
-
-        LeaveGridView.DataSource = LeaveListBindingSource
+        PopulateLeaveGridView()
 
     End Function
 
-    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles EmployeesDataGridView.SelectionChanged
+    Private Async Sub EmployeesDataGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        Await ShowEmployeeLeaves()
+
+    End Sub
+
+    Private Async Function ShowEmployeeLeaves() As Task
 
         ResetForm()
 
         Dim currentEmployee = GetSelectedEmployee()
 
-        If currentEmployee Is Nothing Then Return
+        If currentEmployee?.RowID Is Nothing Then Return
 
         EmployeeNameTextBox.Text = currentEmployee.FullNameWithMiddleInitial
         EmployeeNumberTextBox.Text = currentEmployee.EmployeeIdWithPositionAndEmployeeType
 
         EmployeePictureBox.Image = ConvByteToImage(currentEmployee.Image)
 
-        VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance
-        SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance
+        VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance.ToString()
+        SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance.ToString()
 
-        VacationLeaveBalanceTextBox.Text = Await EmployeeData.GetVacationLeaveBalance(currentEmployee.RowID)
-        SickLeaveBalanceTextBox.Text = Await EmployeeData.GetSickLeaveBalance(currentEmployee.RowID)
+        VacationLeaveBalanceTextBox.Text = (Await EmployeeData.
+                                            GetVacationLeaveBalance(currentEmployee.RowID.Value)).
+                                            ToString()
+        SickLeaveBalanceTextBox.Text = (Await EmployeeData.
+                                            GetSickLeaveBalance(currentEmployee.RowID.Value)).
+                                            ToString()
 
         Await LoadLeaves(currentEmployee)
-
-    End Sub
+    End Function
 
     Private Function GetSelectedLeave() As Leave
         Return CType(LeaveGridView.CurrentRow.DataBoundItem, Leave)
@@ -251,7 +319,7 @@ Public Class EmployeeLeavesForm
 
     Private Async Function LoadLeaveTypes() As Task
 
-        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypes())
+        Dim leaveList = New List(Of Product)(Await _productRepository.GetLeaveTypesAsync(z_OrganizationID))
 
         leaveList = leaveList.Where(Function(a) a.PartNo IsNot Nothing).
                                                 Where(Function(a) a.PartNo.Trim <> String.Empty).
@@ -301,7 +369,7 @@ Public Class EmployeeLeavesForm
 
     End Function
 
-    Private Function RecordUpdate(newLeave As Leave)
+    Private Function RecordUpdate(newLeave As Leave) As Boolean
 
         Dim oldLeave =
             Me._changedLeaves.
@@ -309,68 +377,70 @@ Public Class EmployeeLeavesForm
 
         If oldLeave Is Nothing Then Return False
 
-        Dim changes = New List(Of Data.Entities.UserActivityItem)
+        Dim changes = New List(Of UserActivityItem)
+
+        Dim entityName = FormEntityName.ToLower()
 
         If newLeave.StartDate <> oldLeave.StartDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                         {
-                        .EntityId = oldLeave.RowID,
-                        .Description = $"Update leave start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'"
+                        .EntityId = oldLeave.RowID.Value,
+                        .Description = $"Updated {entityName} start date from '{oldLeave.StartDate.ToShortDateString}' to '{newLeave.StartDate.ToShortDateString}'."
                         })
         End If
         If newLeave.EndDate <> oldLeave.EndDate Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} end date from '{oldLeave.EndDate?.ToShortDateString}' to '{newLeave.EndDate?.ToShortDateString}'."
                        })
         End If
         If newLeave.StartTime.ToString <> oldLeave.StartTime.ToString Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} start time from '{oldLeave.StartTime.StripSeconds.ToString}' to '{newLeave.StartTime.StripSeconds.ToString}'."
                        })
         End If
         If newLeave.EndTime.ToString <> oldLeave.EndTime.ToString Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} end time from '{oldLeave.EndTime.StripSeconds.ToString}' to '{newLeave.EndTime.StripSeconds.ToString}'."
                        })
         End If
         If newLeave.Reason <> oldLeave.Reason Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave reason from '{oldLeave.Reason}' to '{newLeave.Reason}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} reason from '{oldLeave.Reason}' to '{newLeave.Reason}'."
                        })
         End If
         If newLeave.Comments <> oldLeave.Comments Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave comments from '{oldLeave.Comments}' to '{newLeave.Comments}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} comments from '{oldLeave.Comments}' to '{newLeave.Comments}'."
                        })
         End If
         If newLeave.LeaveType <> oldLeave.LeaveType Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} type from '{oldLeave.LeaveType}' to '{newLeave.LeaveType}'."
                        })
         End If
         If newLeave.Status <> oldLeave.Status Then
-            changes.Add(New Data.Entities.UserActivityItem() With
+            changes.Add(New UserActivityItem() With
                        {
-                       .EntityId = oldLeave.RowID,
-                       .Description = $"Update leave status from '{oldLeave.Status}' to '{newLeave.Status}'"
+                       .EntityId = oldLeave.RowID.Value,
+                       .Description = $"Updated {entityName} status from '{oldLeave.Status}' to '{newLeave.Status}'."
                        })
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New Data.Repositories.UserActivityRepository
-            repo.CreateRecord(z_User, "Leave", z_OrganizationID, "EDIT", changes)
+
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 
@@ -381,10 +451,10 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID)
+                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
 
-                                                Dim repo As New Data.Repositories.UserActivityRepository
-                                                repo.RecordDelete(z_User, "Leave", Me._currentLeave.RowID, z_OrganizationID)
+                                                Dim repo As New UserActivityRepository
+                                                repo.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 
@@ -405,11 +475,20 @@ Public Class EmployeeLeavesForm
 
         End If
 
-        EndDatePicker.Value = Me._currentLeave.EndDate
+        If Me._currentLeave.EndDate.HasValue Then
+            EndDatePicker.Value = Me._currentLeave.EndDate.Value
+
+        End If
+
     End Sub
 
-    Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs) Handles LeaveGridView.SelectionChanged
-        ResetForm()
+    Private Sub LeaveGridView_SelectionChanged(sender As Object, e As EventArgs)
+
+        ShowLeaveDetails()
+
+    End Sub
+
+    Private Sub ShowLeaveDetails()
 
         If LeaveGridView.CurrentRow Is Nothing Then Return
 
@@ -489,9 +568,21 @@ Public Class EmployeeLeavesForm
             Me._currentLeaves(index).EndTime = Me._changedLeaves(index).EndTime
         Next
 
+        PopulateLeaveGridView()
+    End Sub
+
+    Private Sub PopulateLeaveGridView()
+
+        RemoveHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
         LeaveListBindingSource.DataSource = Me._currentLeaves
 
         LeaveGridView.DataSource = LeaveListBindingSource
+
+        ShowLeaveDetails()
+
+        AddHandler LeaveGridView.SelectionChanged, AddressOf LeaveGridView_SelectionChanged
+
     End Sub
 
     Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
@@ -505,14 +596,13 @@ Public Class EmployeeLeavesForm
 
         Const messageTitle As String = "Delete Leave"
 
-        If Me._currentLeave Is Nothing OrElse
-            Me._currentLeave.RowID Is Nothing Then
+        If Me._currentLeave?.RowID Is Nothing Then
             MessageBoxHelper.Warning("No leave selected!")
 
             Return
         End If
 
-        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID)
+        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID.Value)
 
         If currentLeave Is Nothing Then
 
@@ -548,6 +638,7 @@ Public Class EmployeeLeavesForm
                     Return
                 End If
 
+                item.LastUpdBy = z_User
                 changedLeaves.Add(item)
             End If
         Next
@@ -565,7 +656,9 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _leaveRepository.SaveManyAsync(changedLeaves)
+                                            Await _leaveRepository.
+                                            SaveManyAsync(changedLeaves,
+                                                        organizationId:=z_OrganizationID)
 
                                             For Each item In changedLeaves
                                                 RecordUpdate(item)
@@ -592,7 +685,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm("Leave")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

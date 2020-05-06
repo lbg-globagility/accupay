@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.ValueObjects
 Imports log4net
 
 Namespace Benchmark
@@ -10,9 +11,10 @@ Namespace Benchmark
     Public Class BenchmarkPayrollHelper
 
         Private _productRepository As ProductRepository
+        Private _loanScheduleRepository As LoanScheduleRepository
 
-        Private _pagibigLoanId As Integer?
-        Private _sssLoanId As Integer?
+        Private _pagibigLoanId As Integer
+        Private _sssLoanId As Integer
 
 #Region "Read-only Properties"
 
@@ -36,22 +38,25 @@ Namespace Benchmark
 
         Private Sub New()
 
-            _productRepository = New ProductRepository
+            _loanScheduleRepository = New LoanScheduleRepository()
+            _productRepository = New ProductRepository()
 
         End Sub
 
         Public Shared Async Function GetEcola(
                                         employeeId As Integer,
                                         payDateFrom As Date,
-                                        payDateTo As Date) As Task(Of Data.Entities.Allowance)
+                                        payDateTo As Date) As Task(Of Allowance)
 
-            Return Await PayrollTools.GetOrCreateEmployeeEcola(
-                                                employeeId,
-                                                payDateFrom:=payDateFrom,
-                                                payDateTo:=payDateTo,
+            Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
+
+            Return Await Data.Helpers.PayrollTools.GetOrCreateEmployeeEcola(
+                                                employeeId:=employeeId,
+                                                organizationId:=z_OrganizationID,
+                                                userId:=z_User,
+                                                timePeriod:=timePeriod,
                                                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
-                                                amount:=0,
-                                                effectiveEndDateShouldBeNull:=True)
+                                                amount:=0)
 
         End Function
 
@@ -108,18 +113,10 @@ Namespace Benchmark
         ''' </summary>
         Public Async Function CleanEmployee(employeeId As Integer) As Task
 
-            Using context As New PayrollContext
-
-                'delete all loans that are not HDMF or SSS
-                'only HDMF or SSS loans are supported in benchmark
-                context.LoanSchedules.
-                        RemoveRange(context.LoanSchedules.
-                                    Where(Function(l) l.EmployeeID.Value = employeeId).
-                                    Where(Function(l) l.LoanTypeID.Value <> _pagibigLoanId.Value).
-                                    Where(Function(l) l.LoanTypeID.Value <> _sssLoanId.Value))
-
-                Await context.SaveChangesAsync
-            End Using
+            Await _loanScheduleRepository.
+                    DeleteAllLoansExceptGovernmentLoansAsync(employeeId:=employeeId,
+                                                            pagibigLoanId:=_pagibigLoanId,
+                                                            ssLoanId:=_sssLoanId)
 
         End Function
 
@@ -138,12 +135,12 @@ Namespace Benchmark
 
         Private Async Function InitializeLoanIds(logger As ILog) As Task(Of Boolean)
 
-            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypes()
+            Dim govermentLoans = Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID)
 
-            _pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
-            _sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
+            Dim pagibigLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsPagibigLoan)?.RowID
+            Dim sssLoanId = govermentLoans.FirstOrDefault(Function(l) l.IsSssLoan)?.RowID
 
-            If _pagibigLoanId Is Nothing OrElse _sssLoanId Is Nothing Then
+            If pagibigLoanId Is Nothing OrElse sssLoanId Is Nothing Then
 
                 logger.Error("Pagibig or SSS loan Id were not found in the database.")
 
@@ -151,14 +148,16 @@ Namespace Benchmark
 
             End If
 
+            _pagibigLoanId = pagibigLoanId.Value
+            _sssLoanId = sssLoanId.Value
             Return True
 
         End Function
 
         Private Async Function InitializeAdjustmentsLists() As Task(Of Boolean)
 
-            _deductionList = New List(Of Product)(Await _productRepository.GetDeductionAdjustmentTypes())
-            _incomeList = New List(Of Product)(Await _productRepository.GetAdditionAdjustmentTypes())
+            _deductionList = New List(Of Product)(Await _productRepository.GetDeductionAdjustmentTypesAsync(z_OrganizationID))
+            _incomeList = New List(Of Product)(Await _productRepository.GetAdditionAdjustmentTypesAsync(z_OrganizationID))
 
             If _deductionList Is Nothing OrElse _incomeList Is Nothing Then Return False
 

@@ -1,12 +1,13 @@
 ﻿using AccuPay.Data.Enums;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employee")]
-    public class Employee : IEmployee
+    public class Employee
     {
         [Key]
         public int? RowID { get; set; }
@@ -84,6 +85,7 @@ namespace AccuPay.Data.Entities
         public Byte[] Image { get; set; }
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
+        public int? BranchID { get; set; }
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
@@ -94,164 +96,58 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
 
+        public virtual ICollection<Salary> Salaries { get; set; }
+
         public string MiddleInitial
-        {
-            get
-            {
-                return string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
-            }
-        }
+            => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
 
-        public bool IsDaily
-        {
-            get
-            {
-                return (EmployeeType.ToLower() == "daily"); // "Daily"
-            }
-        }
+        public bool IsDaily => (EmployeeType.ToLower() == "daily"); // "Daily"
 
-        public bool IsMonthly
-        {
-            get
-            {
-                return (EmployeeType.ToLower() == "monthly"); // "Monthly"
-            }
-        }
+        public bool IsMonthly => (EmployeeType.ToLower() == "monthly"); // "Monthly"
 
-        public bool IsFixed
-        {
-            get
-            {
-                return (EmployeeType.ToLower() == "fixed"); // "Fixed"
-            }
-        }
+        public bool IsFixed => (EmployeeType.ToLower() == "fixed"); // "Fixed"
 
-        public bool IsWeeklyPaid
-        {
-            get
-            {
-                return PayFrequencyID.Value == (int)PayFrequencyType.Weekly;
-            }
-        }
+        public bool IsWeeklyPaid => PayFrequencyID == (int)PayFrequencyType.Weekly;
 
-        public bool IsPremiumInclusive
-        {
-            get
-            {
-                return IsMonthly || IsFixed;
-            }
-        }
+        public bool IsPremiumInclusive => IsMonthly || IsFixed;
 
-        public string FullNameLastNameFirst
-        {
-            get
-            {
-                return $"{LastName}, {FirstName}";
-            }
-        }
+        public bool IsUnderAgency => AgencyID.HasValue;
 
-        public string FullNameWithMiddleInitialLastNameFirst
-        {
-            get
-            {
-                return $"{LastName}, {FirstName} {MiddleInitial}";
-            }
-        }
+        public string FullName => $"{FirstName} {LastName}";
 
-        public string FullNameWithMiddleInitial
-        {
-            get
-            {
-                return $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";
-            }
-        }
+        public string FullNameLastNameFirst => $"{LastName}, {FirstName}";
 
-        public string FullName
-        {
-            get
-            {
-                return $"{FirstName} {LastName}";
-            }
-        }
+        public string FullNameWithMiddleInitialLastNameFirst =>
+            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}";
+
+        public string FullNameWithMiddleInitial =>
+            $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";
 
         public string EmployeeIdWithPositionAndEmployeeType
-        {
-            get
-            {
-                return $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary";
-            }
-        }
+            => $"ID# {EmployeeNo}, {Position?.Name}, {EmployeeType} Salary";
 
-        public bool IsUnderAgency
-        {
-            get
-            {
-                return AgencyID.HasValue;
-            }
-        }
+        public string SssSchedule =>
+            IsUnderAgency ? Position?.Division?.AgencySssDeductionSchedule :
+                            Position?.Division?.SssDeductionSchedule;
 
-        public string SssSchedule
-        {
-            get
-            {
-                return IsUnderAgency ? Position?.Division?.AgencySssDeductionSchedule : Position?.Division?.SssDeductionSchedule;
-            }
-        }
+        public string PhilHealthSchedule => IsUnderAgency ?
+                        Position?.Division?.AgencyPhilHealthDeductionSchedule :
+                        Position?.Division?.PhilHealthDeductionSchedule;
 
-        public string PhilHealthSchedule
-        {
-            get
-            {
-                return IsUnderAgency ? Position?.Division?.AgencyPhilHealthDeductionSchedule : Position?.Division?.PhilHealthDeductionSchedule;
-            }
-        }
+        public string PagIBIGSchedule => IsUnderAgency ?
+                        Position?.Division?.AgencyPagIBIGDeductionSchedule :
+                        Position?.Division?.PagIBIGDeductionSchedule;
 
-        public string PagIBIGSchedule
-        {
-            get
-            {
-                return IsUnderAgency ? Position?.Division?.AgencyPagIBIGDeductionSchedule : Position?.Division?.PagIBIGDeductionSchedule;
-            }
-        }
+        public string WithholdingTaxSchedule => IsUnderAgency ?
+                        Position?.Division?.AgencyWithholdingTaxSchedule :
+                        Position?.Division?.WithholdingTaxSchedule;
 
-        public string WithholdingTaxSchedule
-        {
-            get
-            {
-                return IsUnderAgency ? Position?.Division?.AgencyWithholdingTaxSchedule : Position?.Division?.WithholdingTaxSchedule;
-            }
-        }
+        public bool IsActive => IsResigned == false && IsTerminated == false && IsRetired == false;
 
-        public bool IsActive
-        {
-            get
-            {
-                return IsResigned == false && IsTerminated == false && IsRetired == false;
-            }
-        }
+        public bool IsResigned => EmploymentStatus.Trim().ToUpper() == "RESIGNED";
 
-        public bool IsResigned
-        {
-            get
-            {
-                return EmploymentStatus.Trim().ToUpper() == "RESIGNED";
-            }
-        }
+        public bool IsTerminated => EmploymentStatus.Trim().ToUpper() == "TERMINATED";
 
-        public bool IsTerminated
-        {
-            get
-            {
-                return EmploymentStatus.Trim().ToUpper() == "TERMINATED";
-            }
-        }
-
-        public bool IsRetired
-        {
-            get
-            {
-                return EmploymentStatus.ToUpper().Trim() == "RETIRED";
-            }
-        }
+        public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
     }
 }

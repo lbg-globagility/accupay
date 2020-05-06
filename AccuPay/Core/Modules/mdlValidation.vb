@@ -69,10 +69,12 @@ Module mdlValidation
 
     Public Function SetWarningIfEmpty(ByVal co As Control,
                                       Optional SetErrorString As String = Nothing)
+        Z_ErrorProvider.Clear()
         Z_ErrorProvider.BlinkStyle = ErrorBlinkStyle.NeverBlink
         If co.Text.Trim = Nothing Then
-            Z_ErrorProvider.SetError(co, If(SetErrorString = Nothing, "Required to fill", Nothing))
-            co.Focus()
+            Dim errorMessage = If(SetErrorString = Nothing, "Required to fill", SetErrorString)
+            Z_ErrorProvider.SetError(co, errorMessage)
+            If errorMessage.Trim.Length > 0 Then co.Focus()
             Return False
         End If
         Return True
@@ -159,7 +161,7 @@ Module mdlValidation
 
     End Function
 
-    Public Function EncrypedData(ByVal a As String)
+    Public Function EncryptData(ByVal a As String)
         Dim Encryped As String = Nothing
         If Not a Is Nothing Then
             For Each x As Char In a
@@ -171,7 +173,7 @@ Module mdlValidation
         Return Encryped
     End Function
 
-    Public Function DecrypedData(ByVal a As String)
+    Public Function DecryptData(ByVal a As String)
         Dim DEcrypedio As String = Nothing
         If Not a Is Nothing Then
             For Each x As Char In a

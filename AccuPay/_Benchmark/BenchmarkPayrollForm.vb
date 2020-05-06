@@ -4,15 +4,15 @@ Imports System.ComponentModel
 Imports System.Threading.Tasks
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
-Imports AccuPay.Entity
-Imports AccuPay.Loans
-Imports AccuPay.ModelData
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
-Imports PayrollSys
 
 Public Class BenchmarkPayrollForm
 
@@ -22,8 +22,8 @@ Public Class BenchmarkPayrollForm
     Private _salaryRepository As SalaryRepository
     Private _loanScheduleRepository As LoanScheduleRepository
     Private _currentPayPeriod As IPayPeriod
-    Private _salaries As List(Of Salary)
-    Private _employees As List(Of Employee)
+    Private _salaries As List(Of Entities.Salary)
+    Private _employees As List(Of Entities.Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
 
     Private _selectedDeductions As List(Of AdjustmentInput)
@@ -47,11 +47,11 @@ Public Class BenchmarkPayrollForm
 
     Private _overtimes As List(Of OvertimeInput)
 
-    Private _ecola As Data.Entities.Allowance
+    Private _ecola As Entities.Allowance
 
-    Private _pagibigLoan As LoanSchedule
+    Private _pagibigLoan As Entities.LoanSchedule
 
-    Private _sssLoan As LoanSchedule
+    Private _sssLoan As Entities.LoanSchedule
 
     Private _leaveBalance As Decimal
 
@@ -63,17 +63,18 @@ Public Class BenchmarkPayrollForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New EmployeeRepository
-        _salaryRepository = New SalaryRepository
-        _salaries = New List(Of Salary)
-        _employees = New List(Of Employee)
+        _employeeRepository = New EmployeeRepository()
+        _loanScheduleRepository = New LoanScheduleRepository()
+        _salaryRepository = New SalaryRepository()
+
+        _salaries = New List(Of Entities.Salary)
+        _employees = New List(Of Entities.Employee)
 
         _overtimes = New List(Of OvertimeInput)
 
         _selectedDeductions = New List(Of AdjustmentInput)
         _selectedIncomes = New List(Of AdjustmentInput)
 
-        _loanScheduleRepository = New LoanScheduleRepository
     End Sub
 
     Private Async Sub BenchmarkPayrollForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -118,8 +119,9 @@ Public Class BenchmarkPayrollForm
 
         Await LoadPayrollResourcesAsync()
 
-        _salaries = Await _salaryRepository.
-                                GetAllByCutOff(_currentPayPeriod.PayFromDate)
+        _salaries = (Await _salaryRepository.
+                            GetByCutOffAsync(z_OrganizationID, _currentPayPeriod.PayFromDate)).
+                    ToList()
 
         Await ShowEmployees()
 
@@ -142,17 +144,13 @@ Public Class BenchmarkPayrollForm
 
         _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings As New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
-
-        End Using
+        _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
 
         'TODO: Add loading bar
 
-        Dim paypRowID = _currentPayPeriod.RowID.Value
+        Dim payPeriodId = _currentPayPeriod.RowID.Value
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
 
@@ -162,7 +160,11 @@ Public Class BenchmarkPayrollForm
                     Return Nothing
                 End If
 
-                Dim resources = New PayrollResources(paypRowID, CDate(paypFrom), CDate(paypTo))
+                Dim resources = New PayrollResources(payPeriodId:=payPeriodId,
+                                                     organizationId:=z_OrganizationID,
+                                                     userId:=z_User,
+                                                     payDateFrom:=paypFrom,
+                                                     payDateTo:=paypTo)
                 Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
 
@@ -181,10 +183,11 @@ Public Class BenchmarkPayrollForm
 
         If payPeriodId IsNot Nothing Then
 
-            _employees = Await _employeeRepository.
-                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID)
+            _employees = (Await _employeeRepository.
+                                GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID.Value,
+                                                                z_OrganizationID)).ToList
         Else
-            _employees = New List(Of Employee)
+            _employees = New List(Of Entities.Employee)
         End If
 
         Await FilterEmployeeGridView()
@@ -203,12 +206,15 @@ Public Class BenchmarkPayrollForm
 
             If employeeId Is Nothing Then Return
 
-            Dim employee = Await _employeeRepository.GetEmployeeWithDivisionAsync(employeeId)
+            Dim employee = Await _employeeRepository.
+                                    GetActiveEmployeeWithDivisionAndPositionAsync(employeeId.Value)
+
+            If employee Is Nothing Then Return
 
             Await _benchmarkPayrollHelper.CleanEmployee(employeeId.Value)
 
             Dim salary = _salaries.
-                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee?.RowID)).
+                            Where(Function(s) Nullable.Equals(s.EmployeeID, employee.RowID.Value)).
                             FirstOrDefault
 
             If salary Is Nothing Then
@@ -221,7 +227,7 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID)
+            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -336,8 +342,8 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await PayrollTools.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear()
+        _currentPayPeriod = Await Data.Helpers.PayrollTools.
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function
@@ -364,7 +370,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedEmployee() As Employee
+    Private Function GetSelectedEmployee() As Entities.Employee
 
         If EmployeesGridView.CurrentRow Is Nothing Then
 
@@ -578,7 +584,7 @@ Public Class BenchmarkPayrollForm
         SummaryGroupBox.Enabled = True
     End Sub
 
-    Private Function GetSelectedDeduction() As Product
+    Private Function GetSelectedDeduction() As Entities.Product
 
         If DeductionComboBox.SelectedIndex < 0 OrElse
             DeductionComboBox.SelectedIndex >= _benchmarkPayrollHelper.DeductionList.Count Then
@@ -591,7 +597,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedIncome() As Product
+    Private Function GetSelectedIncome() As Entities.Product
 
         If OtherIncomeComboBox.SelectedIndex < 0 OrElse
             OtherIncomeComboBox.SelectedIndex >= _benchmarkPayrollHelper.IncomeList.Count Then
@@ -760,7 +766,7 @@ Public Class BenchmarkPayrollForm
 
         If e.RowIndex >= 0 Then
 
-            Dim adjustmentInput As AdjustmentInput
+            Dim adjustmentInput As AdjustmentInput = Nothing
 
             If sender Is DeductionsGridView Then
 

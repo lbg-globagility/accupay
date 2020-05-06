@@ -1,19 +1,24 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
-Imports AccuPay.Payroll
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Salaries
-Imports PayrollSys
 
 Public Class ImportSalaryForm
+
+    Private Const FormEntityName As String = "Salary"
 
     Private _salaries As IList(Of Salary)
 
     Public Property IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _salaryRepository As SalaryRepository
 
     Sub New()
 
@@ -24,9 +29,13 @@ Public Class ImportSalaryForm
 
         Me.IsSaved = False
 
+        _employeeRepository = New EmployeeRepository()
+
+        _salaryRepository = New SalaryRepository()
+
     End Sub
 
-    Private Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
+    Private Async Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
         Dim browseFile = New OpenFileDialog With {
             .Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
@@ -60,61 +69,60 @@ Public Class ImportSalaryForm
         Dim salaryViewModels = New List(Of SalaryViewModel)
         _salaries = New List(Of Salary)
 
-        Using context = New PayrollContext()
-            For Each record In records
+        Dim employeeNos = records.Select(Function(s) s.EmployeeNo).ToArray()
 
-                Dim employee = context.Employees.
-                    FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo AndAlso t.OrganizationID = z_OrganizationID))
+        Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNos, z_OrganizationID)
 
-                If employee Is Nothing Then
-                    record.ErrorMessage = "Employee does not exist!"
-                    rejectedRecords.Add(record)
-                    Continue For
-                End If
+        For Each record In records
 
-                If record.EffectiveFrom IsNot Nothing AndAlso
-                    record.EffectiveFrom.Value < PayrollTools.MinimumMicrosoftDate Then
-                    record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
-                    rejectedRecords.Add(record)
-                    Continue For
-                End If
+            Dim employee = employees.FirstOrDefault(Function(t) CBool(t.EmployeeNo = record.EmployeeNo))
 
-                Dim lastSalary = context.Salaries.
-                    Where(Function(s) Nullable.Equals(employee.RowID, s.EmployeeID)).
-                    OrderByDescending(Function(s) s.EffectiveTo).
-                    FirstOrDefault
+            If employee Is Nothing Then
+                record.ErrorMessage = "Employee does not exist!"
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
-                Dim doPaySSSContribution = True
+            If record.EffectiveFrom IsNot Nothing AndAlso
+                record.EffectiveFrom.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+                record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
-                If lastSalary IsNot Nothing Then
-                    doPaySSSContribution = lastSalary.DoPaySSSContribution
-                End If
+            Dim lastSalary = Await _employeeRepository.GetCurrentSalaryAsync(employee.RowID.Value)
 
-                If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+            Dim doPaySSSContribution = True
 
-                    Continue For
+            If lastSalary IsNot Nothing Then
+                doPaySSSContribution = lastSalary.DoPaySSSContribution
+            End If
 
-                End If
+            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
-                Dim salary = New Salary With {
-                    .OrganizationID = z_OrganizationID,
-                    .CreatedBy = z_User,
-                    .EmployeeID = employee.RowID,
-                    .PositionID = employee.PositionID,
-                    .EffectiveFrom = record.EffectiveFrom.Value,
-                    .BasicSalary = record.BasicSalary.Value,
-                    .AllowanceSalary = record.AllowanceSalary,
-                    .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
-                    .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
-                    .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
-                    .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
-                    .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
-                }
+                Continue For
 
-                _salaries.Add(salary)
-                salaryViewModels.Add(New SalaryViewModel(salary, employee))
-            Next
-        End Using
+            End If
+
+            Dim salary = New Salary With {
+                .OrganizationID = z_OrganizationID,
+                .CreatedBy = z_User,
+                .EmployeeID = employee.RowID,
+                .PositionID = employee.PositionID,
+                .EffectiveFrom = record.EffectiveFrom.Value,
+                .BasicSalary = record.BasicSalary.Value,
+                .AllowanceSalary = record.AllowanceSalary,
+                .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
+                .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
+                .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
+                .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
+                .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
+                .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
+            }
+
+            _salaries.Add(salary)
+            salaryViewModels.Add(New SalaryViewModel(salary, employee))
+        Next
 
         UpdateStatusLabel(rejectedRecords.Count)
 
@@ -176,30 +184,21 @@ Public Class ImportSalaryForm
 
         Try
 
-            Using context = New PayrollContext()
-                For Each salary In _salaries
-                    salary.TotalSalary = salary.BasicSalary + salary.AllowanceSalary
+            Await _salaryRepository.SaveManyAsync(_salaries.ToList())
 
-                    context.Salaries.Add(salary)
-                Next
-
-                Await context.SaveChangesAsync()
-
-                Dim importList = New List(Of Data.Entities.UserActivityItem)
-                For Each item In _salaries
-                    importList.Add(New Data.Entities.UserActivityItem() With
+            Dim importList = New List(Of UserActivityItem)
+            For Each item In _salaries
+                importList.Add(New UserActivityItem() With
                         {
-                        .Description = $"Imported a new salary.",
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
                         .EntityId = CInt(item.RowID)
                         })
-                Next
+            Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, "Salary", z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            Dim repo = New UserActivityRepository
+            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
-                Me.IsSaved = True
-
-            End Using
+            Me.IsSaved = True
         Catch ex As Exception
 
             MessageBoxHelper.DefaultErrorMessage("Import Salary", ex)
@@ -208,7 +207,7 @@ Public Class ImportSalaryForm
         Close()
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Close()
     End Sub
 

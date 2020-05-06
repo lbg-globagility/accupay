@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Globalization
-Imports AccuPay.Entity
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class CalendarDayEditorControl
 
@@ -28,7 +28,7 @@ Public Class CalendarDayEditorControl
     End Sub
 
     Private Async Sub LoadDayTypes()
-        _dayTypes = Await _repository.GetAll()
+        _dayTypes = Await _repository.GetAllAsync()
         DayTypesComboBox.DataSource = _dayTypes
     End Sub
 

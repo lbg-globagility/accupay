@@ -107,6 +107,7 @@ Partial Class selectMonth
         Me.MinimizeBox = False
         Me.Name = "selectMonth"
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
+        Me.Text = "Select Month"
         Me.ResumeLayout(False)
         Me.PerformLayout()
 

@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
 
 Public Interface IBankExporter
 

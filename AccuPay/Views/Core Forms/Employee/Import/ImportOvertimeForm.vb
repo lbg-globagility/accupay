@@ -8,9 +8,11 @@ Imports Globagility.AccuPay
 
 Public Class ImportOvertimeForm
 
+    Private Const FormEntityName As String = "Overtime"
+
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository()
+    Private _employeeRepository As New EmployeeRepository
 
     Private overtimeRepository As New OvertimeRepository()
 
@@ -57,7 +59,8 @@ Public Class ImportOvertimeForm
         Dim _okEmployees As New List(Of String)
 
         For Each record In records
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID)
+            'TODO: this is an N+1 query problem. Refactor this
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
 
             If employee Is Nothing Then
 
@@ -70,7 +73,6 @@ Public Class ImportOvertimeForm
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
             record.EmployeeID = employee.EmployeeNo
-            record.Type = Overtime.DefaultType
 
             If CheckIfRecordIsValid(record, rejectedRecords) = False Then
 
@@ -84,7 +86,6 @@ Public Class ImportOvertimeForm
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
                 .EmployeeID = employee.RowID,
-                .Type = record.Type,
                 .OTStartDate = record.StartDate.Value,
                 .OTEndDate = record.EndDate.Value,
                 .OTStartTime = record.StartTime,
@@ -119,7 +120,7 @@ Public Class ImportOvertimeForm
             Return False
         End If
 
-        If record.StartDate < PayrollTools.MinimumMicrosoftDate Then
+        If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
 
             record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
             rejectedRecords.Add(record)
@@ -170,7 +171,7 @@ Public Class ImportOvertimeForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -180,38 +181,31 @@ Public Class ImportOvertimeForm
 
         Dim messageTitle = "Import Overtimes"
 
-        Try
-            Await overtimeRepository.SaveManyAsync(z_OrganizationID, z_User, _overtimes)
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
 
-            Dim importlist = New List(Of UserActivityItem)
+                Await overtimeRepository.SaveManyAsync(_overtimes)
 
-            For Each overtime In _overtimes
-                importlist.Add(New UserActivityItem() With
-                    {
-                    .Description = $"Imported a new Overtime.",
-                    .EntityId = CInt(overtime.RowID)
-                    })
-            Next
+                Dim importlist = New List(Of UserActivityItem)
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, "Overtime", z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                For Each overtime In _overtimes
+                    importlist.Add(New UserActivityItem() With
+                        {
+                        .Description = $"Imported a new {FormEntityName.ToLower()}.",
+                        .EntityId = CInt(overtime.RowID)
+                        })
+                Next
 
-            Me.IsSaved = True
+                Dim repo = New UserActivityRepository
+                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
-            Me.Close()
-        Catch ex As ArgumentException
+                Me.IsSaved = True
 
-            Dim errorMessage = "One of the overtimes has an error:" & Environment.NewLine & ex.Message
+                Me.Close()
 
-            MessageBoxHelper.ErrorMessage(errorMessage, messageTitle)
-        Catch ex As Exception
+            End Function)
 
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-        Finally
-
-            Me.Cursor = Cursors.Default
-
-        End Try
+        Me.Cursor = Cursors.Default
 
     End Sub
 

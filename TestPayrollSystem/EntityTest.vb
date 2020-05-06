@@ -1,16 +1,18 @@
-﻿Option Strict On
-
-Imports AccuPay.Data.Repositories
-Imports AccuPay
-Imports AccuPay.Utilities
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+﻿Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 
 <TestFixture>
 Public Class EntityTest
 
+    ''' <summary>
+    ''' Mostly used as a sandbox in testing queries of entities.
+    ''' </summary>
+
     <Test>
     Public Sub Test1()
+        Dim repo As New UserActivityRepository
+        Dim userActivities = repo.List(11, "Employee")
 
         Assert.IsTrue(UserActivityRepository.CheckIfFirstLetterIsVowel("employee"))
 
@@ -34,51 +36,75 @@ Public Class EntityTest
 
     <Test>
     Public Sub TestEntity()
-        Dim repo As New PaystubRepository()
 
-        Dim count = repo.List.Count
+        'Dim adjustment = New AdjustmentService().
+        '                GetByMultipleEmployeeAndDatePeriodAsync(2, {1}, New TimePeriod(New Date(2020, 2, 1), New Date(2020, 2, 1))).
+        '                ToList()
 
-        Assert.IsTrue(repo.List.Count > 0)
+        Dim date1 = New Date(2020, 5, 31)
+        Dim date2 = New Date(2020, 5, 30)
+
+        Dim date3 = date1.AddMonths(1)
+        Dim date4 = date2.AddMonths(1)
+
+        Dim repo1 As New UserActivityRepository()
+
+        Dim count1 = repo1.GetAll(2, "EMPLOYEE")
+        Dim count1u = count1.Where(Function(c) c.User Is Nothing).ToList
+
+        'for checking if we can access the accupay.data repository without error
+        Dim repo4 As New EmployeeRepository()
+
+        Dim count4 = repo4.GetAllAsync(2)
+
+        Dim branchRepo As New BranchRepository()
+
+        Dim count2 = branchRepo.GetAll().Count
+
+        Assert.IsTrue(count2 > 0)
     End Sub
 
     <Test>
-    Public Sub TestEntity2()
+    Public Sub CheckVBNullableId()
 
-        'Using context = New PayrollContext()
+        'Change the PayrollContext to public to use this
+        'Using context = New Data.PayrollContext()
 
-        '    Dim paystubCount = context.Paystubs.ToList.Count
+        '    Dim organization = context.Organizations.
+        '                FirstOrDefault(Function(o) o.LastUpdBy IsNot Nothing)
 
-        '    Assert.IsTrue(context.Paystubs.ToList.Count > 0)
+        '    CompareQueries(context, organization)
 
-        'End Using
+        '    'Dim organizationNull = context.Organizations.
+        '    '            FirstOrDefault(Function(o) o.LastUpdBy Is Nothing)
 
-        '' Code below needs to succeed for the OB Import
-        'Dim officialbusType As New ListOfValue
+        '    'CompareQueries(context, organizationNull)
 
-        'Using context = New PayrollContext
-
-        '    Dim listOfVal As New ListOfValue
-        '    listOfVal.DisplayValue = "FIELDWORK DUTY"
-        '    listOfVal.Type = "Official Business Type"
-        '    listOfVal.Active = "Yes"
-
-        '    listOfVal.Created = Date.Now
-        '    listOfVal.CreatedBy = 1
-        '    listOfVal.LastUpd = Date.Now
-        '    listOfVal.LastUpdBy = 1
-        '    context.ListOfValues.Add(listOfVal)
-
-        '    Await context.SaveChangesAsync()
-
-        '    officialbusType = Await context.ListOfValues.
-        '                    FirstOrDefaultAsync(Function(l) Nullable.Equals(l.RowID, listOfVal.RowID))
-
-        '    Assert.IsTrue(officialbusType IsNot Nothing)
+        '    Assert.IsTrue(True)
 
         'End Using
-
-        Assert.True(True)
-
     End Sub
+
+    'Private Shared Sub CompareQueries(context As Data.PayrollContext, organization As Organization)
+    '    Dim organization2 = context.Organizations.
+    '                                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy)
+
+    '    Dim organization3 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy)
+
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization4 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy = organization.LastUpdBy.Value)
+
+    '    'Has problem when LastUpdBy is null (not because of DB)
+    '    Dim organization5 = context.Organizations.
+    '                    FirstOrDefault(Function(o) o.LastUpdBy.Value = organization.LastUpdBy.Value)
+
+    '    Dim organization6 = context.Organizations.
+    '                    FirstOrDefault(Function(o) CBool(o.LastUpdBy = organization.LastUpdBy))
+
+    '    Dim organization7 = context.Organizations.
+    '                    FirstOrDefault(Function(o) Nullable.Equals(o.LastUpdBy, organization.LastUpdBy))
+    'End Sub
 
 End Class

@@ -2,30 +2,29 @@
 
 Imports System.IO
 Imports System.IO.Compression
-Imports System.Text
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports System.Threading.Tasks
+Imports AccuPay.Data.Repositories
 
 Public Class ExportBankFile
 
-    Private _cutoffStart As Date
+    Private ReadOnly _cutoffStart As Date
 
-    Private _cutoffEnd As Date
+    Private ReadOnly _cutoffEnd As Date
+
+    Private ReadOnly _paystubRepository As PaystubRepository
 
     Public Sub New(cutoffStart As Date, cutoffEnd As Date)
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
+        _paystubRepository = New PaystubRepository()
     End Sub
 
-    Public Sub Extract()
-        Dim paystubs As IList(Of Paystub) = Nothing
+    Public Async Function Extract() As Task
 
-        Using context = New PayrollContext()
-            paystubs = context.Paystubs.Include(Function(p) p.Employee).
-                Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                Where(Function(p) p.PayFromdate = _cutoffStart And p.PayToDate = _cutoffEnd).
-                ToList()
-        End Using
+        Dim paystubDateKey = New PaystubRepository.DateCompositeKey(z_OrganizationID,
+                                                                    payFromDate:=_cutoffStart,
+                                                                    payToDate:=_cutoffEnd)
+        Dim paystubs = Await _paystubRepository.GetAllWithEmployeeAsync(paystubDateKey)
 
         Dim sortedPaystubs = paystubs.
             Where(Function(p) Not String.IsNullOrWhiteSpace(p.Employee.BankName)).
@@ -60,7 +59,7 @@ Public Class ExportBankFile
         End If
 
         System.IO.Directory.Delete(directory, True)
-    End Sub
+    End Function
 
     Private Function CreateRandomDirectory() As String
         Dim random = Guid.NewGuid.ToString()

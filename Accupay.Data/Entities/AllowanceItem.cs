@@ -1,15 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.CompilerServices;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualBasic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -71,6 +61,27 @@ namespace AccuPay.Data.Entities
             AllowancesPerDay.Add(perDay);
 
             this.Amount += perDay.Amount;
+        }
+
+        public static AllowanceItem Create(
+                                Paystub paystub,
+                                Product product,
+                                int payperiodId,
+                                int allowanceId,
+                                int organizationId,
+                                int userId)
+        {
+            return new AllowanceItem()
+            {
+                OrganizationID = organizationId,
+                CreatedBy = userId,
+                LastUpdBy = userId,
+                Paystub = paystub,
+                PayPeriodID = payperiodId,
+                AllowanceID = allowanceId,
+                IsTaxable = product.IsTaxable,
+                IsThirteenthMonthPay = product.IsThirteenthMonthPay
+            };
         }
     }
 }

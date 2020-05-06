@@ -1,15 +1,21 @@
-﻿Imports AccuPay.Enums
+﻿Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class HRISForm
 
     Public listHRISForm As New List(Of String)
 
-    Dim sys_ownr As New SystemOwner
-
-    Private curr_sys_owner_name As String = sys_ownr.CurrentSystemOwner
+    Private curr_sys_owner_name As String = ""
 
     Private if_sysowner_is_benchmark As Boolean
+
+    Private _policyHelper As PolicyHelper
+
+    Dim sys_ownr As SystemOwnerService
+
+    Private _userRepository As UserRepository
 
     Sub New()
 
@@ -17,7 +23,16 @@ Public Class HRISForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.CurrentSystemOwner = SystemOwner.Benchmark
+
+        sys_ownr = New SystemOwnerService()
+
+        curr_sys_owner_name = sys_ownr.GetCurrentSystemOwner()
+
+        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
+        _policyHelper = New PolicyHelper()
+
+        _userRepository = New UserRepository()
 
         PrepareFormForBenchmark()
     End Sub
@@ -52,7 +67,7 @@ Public Class HRISForm
 
         Dim formuserprivilege = position_view_table.Select("ViewID = " & view_ID)
 
-        If PayrollTools.CheckIfUsingUserLevel() = True OrElse formuserprivilege.Count > 0 Then
+        If _policyHelper.UseUserLevel OrElse formuserprivilege.Count > 0 Then
 
             For Each drow In formuserprivilege
                 'If drow("ReadOnly").ToString = "Y" Then
@@ -116,22 +131,6 @@ Public Class HRISForm
                 pb.Enabled = False
             Next
         End Try
-    End Sub
-
-    Sub PositionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PositionToolStripMenuItem.Click
-
-        Dim n_UserAccessRights As New UserAccessRights(EmpPosition.ViewIdentification)
-
-        'If n_UserAccessRights.ResultValue(AccessRightName.HasReadOnly) Then
-
-        ChangeForm(EmpPosition, "Position")
-        previousForm = EmpPosition
-
-        'End If
-
-        'ChangeForm(Positn)
-        'previousForm = Positn
-
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DivisionToolStripMenuItem.Click
@@ -282,7 +281,7 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If sys_ownr.CurrentSystemOwner <> SystemOwner.Hyundai Then
+        If sys_ownr.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False
@@ -296,44 +295,33 @@ Public Class HRISForm
 
     End Sub
 
-    Private Sub PrepareFormForUserLevelAuthorizations()
+    Private Async Sub PrepareFormForUserLevelAuthorizations()
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-        Using context As New PayrollContext
+        If user Is Nothing Then
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-            If user Is Nothing Then
+        If _policyHelper.UseUserLevel = False Then Return
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
+            DivisionToolStripMenuItem.Visible = False
 
-            If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+            CheckListToolStripMenuItem.Visible = False
+            AwardsToolStripMenuItem.Visible = False
+            CertificatesToolStripMenuItem.Visible = False
+            EducBGToolStripMenuItem.Visible = False
+            PrevEmplyrToolStripMenuItem.Visible = False
+            PromotionToolStripMenuItem.Visible = False
+            DisciplinaryActionToolStripMenuItem.Visible = False
+            EmpSalToolStripMenuItem.Visible = False
+            BonusToolStripMenuItem.Visible = False
+            AttachmentToolStripMenuItem.Visible = False
+            OffSetToolStripMenuItem.Visible = False
 
-                Return
-
-            End If
-
-            If user.UserLevel = UserLevel.Four OrElse user.UserLevel = UserLevel.Five Then
-
-                DivisionToolStripMenuItem.Visible = False
-
-                CheckListToolStripMenuItem.Visible = False
-                AwardsToolStripMenuItem.Visible = False
-                CertificatesToolStripMenuItem.Visible = False
-                EducBGToolStripMenuItem.Visible = False
-                PrevEmplyrToolStripMenuItem.Visible = False
-                PromotionToolStripMenuItem.Visible = False
-                DisciplinaryActionToolStripMenuItem.Visible = False
-                EmpSalToolStripMenuItem.Visible = False
-                BonusToolStripMenuItem.Visible = False
-                AttachmentToolStripMenuItem.Visible = False
-                OffSetToolStripMenuItem.Visible = False
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 
@@ -379,7 +367,7 @@ Public Class HRISForm
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         OffSetToolStripMenuItem.Visible =
-            (curr_sys_owner_name = SystemOwner.Cinema2000)
+            (curr_sys_owner_name = SystemOwnerService.Cinema2000)
 
         MyBase.OnLoad(e)
 

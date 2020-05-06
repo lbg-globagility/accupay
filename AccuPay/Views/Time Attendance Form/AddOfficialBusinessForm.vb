@@ -1,18 +1,20 @@
-﻿Imports AccuPay
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Entity
-Imports AccuPay.Repository
 Imports AccuPay.Utils
 
 Public Class AddOfficialBusinessForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository
+    Private Const FormEntityName As String = "Official Business"
+
+    Private _officialBusinessRepository As New OfficialBusinessRepository()
 
     Private _currentEmployee As Employee
 
-    Private _newOfficialBusiness As New OfficialBusiness
+    Private _newOfficialBusiness As New OfficialBusiness()
 
     Sub New(employee As Employee)
 
@@ -56,6 +58,9 @@ Public Class AddOfficialBusinessForm
 
         Me._newOfficialBusiness = New OfficialBusiness
         Me._newOfficialBusiness.EmployeeID = _currentEmployee.RowID
+        Me._newOfficialBusiness.OrganizationID = z_OrganizationID
+        Me._newOfficialBusiness.CreatedBy = z_User
+
         Me._newOfficialBusiness.StartDate = Date.Now
         Me._newOfficialBusiness.EndDate = Date.Now
         Me._newOfficialBusiness.StartTime = Date.Now.TimeOfDay
@@ -130,10 +135,12 @@ Public Class AddOfficialBusinessForm
 
         End If
 
-        EndDatePicker.Value = Me._newOfficialBusiness.EndDate
+        If Me._newOfficialBusiness.EndDate.HasValue Then
+            EndDatePicker.Value = Me._newOfficialBusiness.EndDate.Value
+        End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -148,7 +155,7 @@ Public Class AddOfficialBusinessForm
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
 
                 Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, "Official Business", Me._newOfficialBusiness.RowID, z_OrganizationID)
+                repo.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

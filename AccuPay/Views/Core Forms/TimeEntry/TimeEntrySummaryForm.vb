@@ -4,14 +4,16 @@ Imports System.Collections.ObjectModel
 Imports System.Threading
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.Entity
-Imports AccuPay.Helpers
-Imports AccuPay.Repository
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
-Imports Microsoft.EntityFrameworkCore
 Imports MySql.Data.MySqlClient
 
 Public Class TimeEntrySummaryForm
@@ -19,7 +21,7 @@ Public Class TimeEntrySummaryForm
     Private Const Clock24HourFormat As String = "HH:mm"
     Private Const Clock12HourFormat As String = "hh:mm tt"
 
-    Private Shared _logger As ILog = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType)
+    Private Shared _logger As ILog = LogManager.GetLogger(Reflection.MethodBase.GetCurrentMethod().DeclaringType)
 
     Private Shared HoursPerDay As TimeSpan = New TimeSpan(24, 0, 0)
 
@@ -50,13 +52,19 @@ Public Class TimeEntrySummaryForm
 
     Private _currentTimeEntryDate As Date
 
-    Private _employeeRepository As EmployeeRepository
-
     Private _hideMoneyColumns As Boolean
 
     Private _formHasLoaded As Boolean = False
 
     Private _policy As PolicyHelper
+
+    Private _breakTimeBracketRepository As BreakTimeBracketRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
+
+    Private _userRepository As UserRepository
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -68,7 +76,11 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        _employeeRepository = New EmployeeRepository
+        _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
+
+        _employeeRepository = New Repositories.EmployeeRepository()
+
+        _userRepository = New Repositories.UserRepository()
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -99,37 +111,28 @@ Public Class TimeEntrySummaryForm
         CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
 
-    Private Sub CheckIfMoneyColumnsAreGoingToBeHidden()
-        Using context As New PayrollContext
+    Private Async Sub CheckIfMoneyColumnsAreGoingToBeHidden()
+        Dim user = Await _userRepository.GetByIdAsync(z_User)
 
-            Dim user = context.Users.FirstOrDefault(Function(u) u.RowID.Value = z_User)
+        If user Is Nothing Then
 
-            If user Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
+        End If
 
-                MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
-            End If
+        If _policy.UseUserLevel = False Then
 
-            If _policy.UseUserLevel = False Then
+            Return
 
-                Return
+        End If
 
-            End If
-
-            _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
+        _hideMoneyColumns = user.UserLevel <> UserLevel.One AndAlso
                                 user.UserLevel <> UserLevel.Two AndAlso
                                 user.UserLevel <> UserLevel.Three
-
-        End Using
     End Sub
 
     Private Function GetBreakTimeBrackets() As List(Of BreakTimeBracket)
 
-        Using context As New PayrollContext
-            Return context.BreakTimeBrackets.
-                            Include(Function(b) b.Division).
-                            Where(Function(b) Nullable.Equals(b.Division.OrganizationID, z_OrganizationID)).
-                            ToList()
-        End Using
+        Return _breakTimeBracketRepository.GetAll(z_OrganizationID).ToList()
 
     End Function
 
@@ -137,13 +140,10 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Using context As New PayrollContext
-            Return PayrollTools.GetCalendarCollection(payPeriod.PayFromDate,
-                                                        payPeriod.PayToDate,
-                                                        context,
-                                                        _policy.PayRateCalculationBasis)
-        End Using
-
+        Return Data.Helpers.PayrollTools.
+                                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
+                                                        _policy.PayRateCalculationBasis,
+                                                        z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -153,7 +153,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetEmployeesWithPosition() As Task(Of ICollection(Of Employee))
 
-        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync()
+        Dim unsortedList = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
         Dim list = unsortedList.
             OrderBy(Function(e) e.LastName).
             ToList()
@@ -216,7 +216,9 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(New List(Of IPayPeriod)(_payPeriods))
+            Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID,
+                                                                    New List(Of IPayPeriod)(_payPeriods))
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 
@@ -249,7 +251,7 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriods = New Collection(Of PayPeriod)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount()
+        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -398,7 +400,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection
+        Dim calendarCollection As CalendarCollection = Nothing
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
             calendarCollection = GetCalendarCollection(payPeriod)
         End If
@@ -646,7 +648,7 @@ Public Class TimeEntrySummaryForm
 
     Private Async Function GetActualTimeEntries(employee As Employee, payPeriod As PayPeriod) As Task(Of ICollection(Of TimeEntry))
 
-        Dim calendarCollection As CalendarCollection
+        Dim calendarCollection As CalendarCollection = Nothing
         If _policy.PayRateCalculationBasis = PayRateCalculationBasis.Branch Then
             calendarCollection = GetCalendarCollection(payPeriod)
         End If
@@ -888,36 +890,30 @@ Public Class TimeEntrySummaryForm
         End Using
 
         If result = DialogResult.OK Then
-            Dim generator = New TimeEntryGenerator(startDate, endDate)
-            Dim progressDialog = New TimeEntryProgressDialog(generator)
-            progressDialog.Show()
-
-            Await Task.Run(Sub() generator.Start()).
-                ContinueWith(
-                    Sub() DoneGenerating(progressDialog, generator),
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext)
+            Await GenerateTimeEntries(startDate, endDate)
         End If
 
         LoadTimeEntries()
     End Sub
 
-    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
-
-        If Await PayrollTools.
-                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
-
-        Dim generator = New TimeEntryGenerator(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
-
+    Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
+        Dim generator = New TimeEntryGenerator(z_OrganizationID, startDate, endDate)
         Dim progressDialog = New TimeEntryProgressDialog(generator)
         progressDialog.Show()
+
         Await Task.Run(Sub() generator.Start()).
             ContinueWith(
                 Sub() DoneGenerating(progressDialog, generator),
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnRanToCompletion,
                 TaskScheduler.FromCurrentSynchronizationContext)
+    End Function
+
+    Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
+
+        If Await PayrollTools.ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+
+        Await GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
         LoadTimeEntries()
     End Sub
@@ -1280,189 +1276,13 @@ Public Class TimeEntrySummaryForm
         Dim task = LoadPayPeriods()
     End Sub
 
-    Private Sub timeEntriesDataGridView_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles timeEntriesDataGridView.CellMouseDown
-        Dim hasRows = timeEntriesDataGridView.Rows.Count > 0
-        If e.Button = Windows.Forms.MouseButtons.Right _
-            And hasRows Then
-
-            Dim negaOne = -1
-            If e.ColumnIndex > negaOne And e.RowIndex > negaOne Then
-                timeEntriesDataGridView.Focus()
-                timeEntriesDataGridView.Item(e.ColumnIndex, e.RowIndex).Selected = True
-
-                ctxtmenstrpTimeEntry.Show(MousePosition, ToolStripDropDownDirection.Default)
-            End If
-        End If
-    End Sub
-
-    Private Async Sub DeleteShiftToolStripMenuItem_ClickAsync(sender As Object, e As EventArgs) Handles DeleteShiftToolStripMenuItem.Click
-        If timeEntriesDataGridView.Rows.Count > 0 Then
-
-            If Await PayrollTools.
-                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
-
-            Dim currentRow = timeEntriesDataGridView.CurrentRow
-
-            Dim dateTimeValue = currentRow?.Cells(ColumnDate.Name).Value
-
-            Dim hasDateSelected = dateTimeValue IsNot Nothing
-
-            If hasDateSelected Then
-                Dim dateValue = DirectCast(dateTimeValue, Date)
-                Dim employeeRowId = Convert.ToInt32(_selectedEmployee.RowID)
-
-                Dim balloon As New ToolTip() With {
-                    .ToolTipTitle = "Delete shift schedule",
-                    .UseFading = True,
-                    .UseAnimation = True,
-                    .ShowAlways = True,
-                    .IsBalloon = True,
-                    .ToolTipIcon = ToolTipIcon.Info
-                }
-
-                If _policy.UseShiftSchedule Then
-
-                    Await DeleteNewShift(dateValue, employeeRowId, balloon)
-                Else
-                    Await DeleteOldShift(dateValue, employeeRowId, balloon)
-                End If
-
-            End If
-        Else
-            _currentTimeEntryDate = Date.Now
-        End If
-    End Sub
-
-    Private Async Function DeleteNewShift(dateValue As Date, employeeRowId As Integer, balloon As ToolTip) As Task
-
-        Using context = New PayrollContext()
-
-            Dim currentShift = Await context.EmployeeDutySchedules.
-                                        Where(Function(s) Nullable.Equals(s.EmployeeID, employeeRowId)).
-                                        Where(Function(s) s.DateSched = dateValue).
-                                        FirstOrDefaultAsync
-
-            If currentShift IsNot Nothing Then
-
-                context.EmployeeDutySchedules.Remove(currentShift)
-
-                Try
-                    Await context.SaveChangesAsync()
-
-                    balloon.ToolTipTitle = "Shift schedule deleted successfully"
-                    balloon.Show("Done!", Button1)
-
-                    _selectedPayPeriod = Nothing
-                    payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
-                Catch ex As Exception
-                    _logger.Error("Error deleting shift schedule.", ex)
-
-                    MessageBoxHelper.DefaultErrorMessage()
-                End Try
-
-            End If
-
-        End Using
-
-    End Function
-
-    Private Async Function DeleteOldShift(dateValue As Date, employeeRowId As Integer, balloon As ToolTip) As Task
-        Using context = New PayrollContext()
-
-            Dim eTimeEntry = Await context.TimeEntries.
-                    Where(Function(et) Nullable.Equals(et.EmployeeID, employeeRowId)).
-                    Where(Function(et) et.Date = dateValue).FirstOrDefaultAsync()
-
-            Dim shiftRecord = Await context.ShiftSchedules.FindAsync(eTimeEntry.EmployeeShiftID)
-
-            If shiftRecord IsNot Nothing Then
-                balloon.Show("Please wait a few moment while deleting", Button1, 3000)
-                InfoBalloon()
-                Dim orgId = Convert.ToInt32(orgztnID)
-
-                Dim hasTimeEntry = eTimeEntry IsNot Nothing
-
-                Dim isShiftServeOneDay = (DateDiff("d", shiftRecord.EffectiveFrom, shiftRecord.EffectiveTo) = 0)
-                If isShiftServeOneDay Then
-                    context.ShiftSchedules.Remove(shiftRecord)
-                Else
-
-                    Dim primaryDiff = DateDiff("d", shiftRecord.EffectiveFrom, dateValue)
-                    Dim ultiDiff = DateDiff("d", dateValue, shiftRecord.EffectiveTo)
-
-                    Dim isLead = primaryDiff = 0
-                    Dim isTrail = ultiDiff = 0
-
-                    Dim effectDateFrom = shiftRecord.EffectiveFrom
-                    Dim effectDateTo = shiftRecord.EffectiveTo
-
-                    If isLead Then
-                        shiftRecord.EffectiveFrom = effectDateFrom.AddDays(1)
-                        shiftRecord.LastUpdBy = z_User
-                    End If
-
-                    If isTrail Then
-                        shiftRecord.EffectiveTo = effectDateTo.AddDays(-1)
-                        shiftRecord.LastUpdBy = z_User
-                    End If
-
-                    Dim isDoesntSatisfy = isLead = False And isTrail = False
-
-                    If isDoesntSatisfy Then
-                        shiftRecord.EffectiveTo = dateValue.AddDays(-1)
-                        shiftRecord.LastUpdBy = z_User
-
-                        Dim newShiftSched = New ShiftSchedule With {
-                            .EffectiveFrom = dateValue.AddDays(1),
-                            .EffectiveTo = effectDateTo,
-                            .EmployeeID = shiftRecord.EmployeeID,
-                            .ShiftID = shiftRecord.ShiftID,
-                            .IsNightShift = shiftRecord.IsNightShift,
-                            .OrganizationID = orgId,
-                            .CreatedBy = z_User,
-                            .LastUpdBy = z_User
-                        }
-
-                        context.ShiftSchedules.Add(newShiftSched)
-                    End If
-
-                End If
-
-                If hasTimeEntry Then
-                    eTimeEntry.EmployeeShiftID = Nothing
-                End If
-
-                Try
-                    Await context.SaveChangesAsync()
-
-                    'MsgBox("Shift schedule deleted successfully.", MsgBoxStyle.Information)
-                    balloon.ToolTipTitle = "Shift schedule deleted successfully"
-                    balloon.Show("Done!", Button1)
-
-                    _selectedPayPeriod = Nothing
-                    payPeriodDataGridView_SelectionChanged(timeEntriesDataGridView, New EventArgs)
-                Catch ex As Exception
-                    _logger.Error("Error deleting shift schedule.", ex)
-                    MsgBox(String.Concat("Something went wrong when deleting shift schedule.", vbNewLine, "Please contact Globagility Inc. for assistance."),
-                           MsgBoxStyle.OkOnly,
-                           "Time entry summary form")
-                    'Finally
-                    '    If hasDateSelected _
-                    '        And currentRow.Index < timeEntriesDataGridView.Rows.Count Then
-                    '        timeEntriesDataGridView.Item(ColumnDate.Name, currentRow.Index).Selected = True
-                    '    End If
-                End Try
-            End If
-        End Using
-    End Function
-
     Private Sub timeEntriesDataGridView_SelectionChangedAsync(sender As Object, e As EventArgs) Handles timeEntriesDataGridView.SelectionChanged
 
     End Sub
 
     Private Async Sub timeEntriesDataGridView_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles timeEntriesDataGridView.CellContentClick
 
-        If _selectedEmployee Is Nothing Then Return
+        If _selectedEmployee?.RowID Is Nothing Then Return
 
         If e.ColumnIndex < 0 OrElse e.RowIndex < 0 Then Return
 
@@ -1482,9 +1302,7 @@ Public Class TimeEntrySummaryForm
 
             Dim currentDate = Convert.ToDateTime(nullableCurrentDate)
 
-            Dim timeAttendanceLogs As New List(Of TimeAttendanceLog)
-
-            timeAttendanceLogs = Await _
+            Dim timeAttendanceLogs = Await _
                GetTimeAttendanceLogsOfSelectedTimeEntry(currentRow, currentDate)
 
             If timeAttendanceLogs Is Nothing OrElse
@@ -1543,17 +1361,10 @@ Public Class TimeEntrySummaryForm
     End Function
 
     Private Async Function GetTimeAttendanceLogsOfSelectedTimeEntry(currentRow As DataGridViewRow, currentDate As Date) As Task(Of List(Of TimeAttendanceLog))
-        Dim timeAttendanceLogs As List(Of TimeAttendanceLog)
 
-        Using context As New PayrollContext
-
-            timeAttendanceLogs = Await context.TimeAttendanceLogs.
-                                    Where(Function(t) Nullable.Equals(t.EmployeeID, _selectedEmployee.RowID)).
-                                    Where(Function(t) t.WorkDay = currentDate).
-                                    OrderBy(Function(t) t.TimeStamp).
-                                    ToListAsync
-
-        End Using
+        Dim timeAttendanceLogs = (Await _timeAttendanceLogRepository.
+                                GetByDateAndEmployeeAsync(currentDate, _selectedEmployee.RowID.Value)).
+                                ToList()
 
         If timeAttendanceLogs Is Nothing OrElse timeAttendanceLogs.Count = 0 Then
             Dim timeIn = ObjectUtils.
@@ -1574,7 +1385,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeIn IsNot Nothing Then
 
-                    actualTimeIn = dateTimeIn.
+                    actualTimeIn = dateTimeIn.Value.
                                     ToMinimumHourValue.
                                     Add(timeIn.Value.TimeOfDay)
                 Else
@@ -1598,7 +1409,7 @@ Public Class TimeEntrySummaryForm
 
                 If dateTimeOut IsNot Nothing Then
 
-                    actualTimeOut = dateTimeOut.
+                    actualTimeOut = dateTimeOut.Value.
                                     ToMinimumHourValue.
                                     Add(timeOut.Value.TimeOfDay)
                 Else

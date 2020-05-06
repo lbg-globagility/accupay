@@ -25,7 +25,9 @@ Partial Class BonusTab
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BonusTab))
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnNewBon = New System.Windows.Forms.ToolStripButton()
@@ -54,13 +56,19 @@ Partial Class BonusTab
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
-        Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserActivity = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip20.SuspendLayout()
         CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -70,7 +78,7 @@ Partial Class BonusTab
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon, Me.UserActivity})
         Me.ToolStrip20.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(856, 25)
@@ -247,6 +255,7 @@ Partial Class BonusTab
         '
         Me.cbobontype.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
         Me.cbobontype.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cbobontype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbobontype.FormattingEnabled = True
         Me.cbobontype.Location = New System.Drawing.Point(171, 141)
         Me.cbobontype.Name = "cbobontype"
@@ -257,6 +266,7 @@ Partial Class BonusTab
         '
         Me.cbobonfreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
         Me.cbobonfreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cbobonfreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cbobonfreq.FormattingEnabled = True
         Me.cbobonfreq.Items.AddRange(New Object() {"One time"})
         Me.cbobonfreq.Location = New System.Drawing.Point(171, 168)
@@ -370,43 +380,6 @@ Partial Class BonusTab
         Me.dgvempbon.Size = New System.Drawing.Size(782, 242)
         Me.dgvempbon.TabIndex = 370
         '
-        'bon_RowID
-        '
-        Me.bon_RowID.DataPropertyName = "RowID"
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
-        '
-        'bon_Type
-        '
-        Me.bon_Type.DataPropertyName = "BonusType"
-        Me.bon_Type.HeaderText = "Type"
-        Me.bon_Type.Name = "bon_Type"
-        Me.bon_Type.ReadOnly = True
-        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Type.Width = 180
-        '
-        'bon_Amount
-        '
-        Me.bon_Amount.DataPropertyName = "BonusAmount"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle2
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 180
-        '
-        'bon_Frequency
-        '
-        Me.bon_Frequency.DataPropertyName = "AllowanceFrequency"
-        Me.bon_Frequency.HeaderText = "Frequency"
-        Me.bon_Frequency.Name = "bon_Frequency"
-        Me.bon_Frequency.ReadOnly = True
-        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Frequency.Width = 180
-        '
         'bon_Start
         '
         '
@@ -485,6 +458,83 @@ Partial Class BonusTab
         Me.bon_End.ReadOnly = True
         Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.DataPropertyName = "RowID"
+        Me.DataGridViewTextBoxColumn1.HeaderText = "RowID"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        Me.DataGridViewTextBoxColumn1.Visible = False
+        Me.DataGridViewTextBoxColumn1.Width = 50
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.DataPropertyName = "BonusType"
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Type"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        Me.DataGridViewTextBoxColumn2.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn2.Width = 180
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.DataPropertyName = "BonusAmount"
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn3.DefaultCellStyle = DataGridViewCellStyle5
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Amount"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        Me.DataGridViewTextBoxColumn3.Width = 180
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.DataPropertyName = "AllowanceFrequency"
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Frequency"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        Me.DataGridViewTextBoxColumn4.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridViewTextBoxColumn4.Width = 180
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.DataPropertyName = "ProductID"
+        Me.DataGridViewTextBoxColumn5.HeaderText = "ProductID"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        Me.DataGridViewTextBoxColumn5.Visible = False
+        '
+        'bon_RowID
+        '
+        Me.bon_RowID.DataPropertyName = "RowID"
+        Me.bon_RowID.HeaderText = "RowID"
+        Me.bon_RowID.Name = "bon_RowID"
+        Me.bon_RowID.ReadOnly = True
+        Me.bon_RowID.Visible = False
+        Me.bon_RowID.Width = 50
+        '
+        'bon_Type
+        '
+        Me.bon_Type.DataPropertyName = "BonusType"
+        Me.bon_Type.HeaderText = "Type"
+        Me.bon_Type.Name = "bon_Type"
+        Me.bon_Type.ReadOnly = True
+        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Type.Width = 180
+        '
+        'bon_Amount
+        '
+        Me.bon_Amount.DataPropertyName = "BonusAmount"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle2
+        Me.bon_Amount.HeaderText = "Amount"
+        Me.bon_Amount.Name = "bon_Amount"
+        Me.bon_Amount.ReadOnly = True
+        Me.bon_Amount.Width = 180
+        '
+        'bon_Frequency
+        '
+        Me.bon_Frequency.DataPropertyName = "AllowanceFrequency"
+        Me.bon_Frequency.HeaderText = "Frequency"
+        Me.bon_Frequency.Name = "bon_Frequency"
+        Me.bon_Frequency.ReadOnly = True
+        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Frequency.Width = 180
+        '
         'bon_ProdID
         '
         Me.bon_ProdID.DataPropertyName = "ProductID"
@@ -492,6 +542,14 @@ Partial Class BonusTab
         Me.bon_ProdID.Name = "bon_ProdID"
         Me.bon_ProdID.ReadOnly = True
         Me.bon_ProdID.Visible = False
+        '
+        'UserActivity
+        '
+        Me.UserActivity.Image = CType(resources.GetObject("UserActivity.Image"), System.Drawing.Image)
+        Me.UserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivity.Name = "UserActivity"
+        Me.UserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivity.Text = "User Activity"
         '
         'BonusTab
         '
@@ -565,4 +623,10 @@ Partial Class BonusTab
     Friend WithEvents bon_Start As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_ProdID As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn3 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn4 As DataGridViewTextBoxColumn
+    Friend WithEvents DataGridViewTextBoxColumn5 As DataGridViewTextBoxColumn
+    Friend WithEvents UserActivity As ToolStripButton
 End Class

@@ -27,6 +27,9 @@ Partial Class AddOvertimeForm
         Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
         Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
         Me.DetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
+        Me.Panel5 = New System.Windows.Forms.Panel()
+        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
+        Me.Label9 = New System.Windows.Forms.Label()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.Label8 = New System.Windows.Forms.Label()
         Me.StartTimePicker = New System.Windows.Forms.DateTimePicker()
@@ -49,19 +52,16 @@ Partial Class AddOvertimeForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.StatusComboBox = New System.Windows.Forms.ComboBox()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
-        Me.Panel5 = New System.Windows.Forms.Panel()
-        Me.EndTimePicker = New System.Windows.Forms.DateTimePicker()
-        Me.Label9 = New System.Windows.Forms.Label()
         Me.EmployeeInfoTabLayout.SuspendLayout()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.DetailsTabLayout.SuspendLayout()
+        Me.Panel5.SuspendLayout()
         Me.Panel4.SuspendLayout()
         Me.Panel3.SuspendLayout()
         Me.Panel2.SuspendLayout()
         Me.Panel1.SuspendLayout()
-        Me.Panel5.SuspendLayout()
         Me.SuspendLayout()
         '
         'EmployeeInfoTabLayout
@@ -158,6 +158,37 @@ Partial Class AddOvertimeForm
         Me.DetailsTabLayout.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20.0!))
         Me.DetailsTabLayout.Size = New System.Drawing.Size(684, 193)
         Me.DetailsTabLayout.TabIndex = 6
+        '
+        'Panel5
+        '
+        Me.Panel5.Controls.Add(Me.EndTimePicker)
+        Me.Panel5.Controls.Add(Me.Label9)
+        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.Panel5.Location = New System.Drawing.Point(0, 159)
+        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
+        Me.Panel5.Name = "Panel5"
+        Me.Panel5.Size = New System.Drawing.Size(210, 34)
+        Me.Panel5.TabIndex = 19
+        '
+        'EndTimePicker
+        '
+        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
+        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
+        Me.EndTimePicker.Location = New System.Drawing.Point(20, 3)
+        Me.EndTimePicker.Name = "EndTimePicker"
+        Me.EndTimePicker.ShowUpDown = True
+        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
+        Me.EndTimePicker.TabIndex = 7
+        '
+        'Label9
+        '
+        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label9.Location = New System.Drawing.Point(3, 4)
+        Me.Label9.Name = "Label9"
+        Me.Label9.Size = New System.Drawing.Size(13, 13)
+        Me.Label9.TabIndex = 507
+        Me.Label9.Text = "*"
         '
         'Panel4
         '
@@ -383,15 +414,15 @@ Partial Class AddOvertimeForm
         Me.AddAndCloseButton.Text = "&Add && Close"
         Me.AddAndCloseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(404, 325)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 17
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(404, 325)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelDialogButton.TabIndex = 17
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'AddAndNewButton
         '
@@ -403,37 +434,6 @@ Partial Class AddOvertimeForm
         Me.AddAndNewButton.Text = "Add && &New"
         Me.AddAndNewButton.UseVisualStyleBackColor = True
         '
-        'Panel5
-        '
-        Me.Panel5.Controls.Add(Me.EndTimePicker)
-        Me.Panel5.Controls.Add(Me.Label9)
-        Me.Panel5.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.Panel5.Location = New System.Drawing.Point(0, 159)
-        Me.Panel5.Margin = New System.Windows.Forms.Padding(0)
-        Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(210, 34)
-        Me.Panel5.TabIndex = 19
-        '
-        'EndTimePicker
-        '
-        Me.EndTimePicker.CustomFormat = "  hh:mm tt"
-        Me.EndTimePicker.Format = System.Windows.Forms.DateTimePickerFormat.Custom
-        Me.EndTimePicker.Location = New System.Drawing.Point(20, 3)
-        Me.EndTimePicker.Name = "EndTimePicker"
-        Me.EndTimePicker.ShowUpDown = True
-        Me.EndTimePicker.Size = New System.Drawing.Size(110, 22)
-        Me.EndTimePicker.TabIndex = 7
-        '
-        'Label9
-        '
-        Me.Label9.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label9.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label9.Location = New System.Drawing.Point(3, 4)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(13, 13)
-        Me.Label9.TabIndex = 507
-        Me.Label9.Text = "*"
-        '
         'AddOvertimeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -441,7 +441,7 @@ Partial Class AddOvertimeForm
         Me.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(166, Byte), Integer))
         Me.ClientSize = New System.Drawing.Size(684, 361)
         Me.Controls.Add(Me.AddAndCloseButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
         Me.Controls.Add(Me.DetailsTabLayout)
         Me.Controls.Add(Me.EmployeeInfoTabLayout)
@@ -456,11 +456,11 @@ Partial Class AddOvertimeForm
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.DetailsTabLayout.ResumeLayout(False)
         Me.DetailsTabLayout.PerformLayout()
+        Me.Panel5.ResumeLayout(False)
         Me.Panel4.ResumeLayout(False)
         Me.Panel3.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel1.ResumeLayout(False)
-        Me.Panel5.ResumeLayout(False)
         Me.ResumeLayout(False)
 
     End Sub
@@ -489,7 +489,7 @@ Partial Class AddOvertimeForm
     Friend WithEvents Label2 As Label
     Friend WithEvents StatusComboBox As ComboBox
     Friend WithEvents AddAndCloseButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Label8 As Label

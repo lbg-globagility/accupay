@@ -2,19 +2,24 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class AddBranchForm
 
     Private _branchRepository As BranchRepository
 
+    Private _calendarRepository As CalendarRepository
+
+    Private _employeeRepository As EmployeeRepository
+
     Private _branches As IEnumerable(Of Branch)
 
-    Private _calendars As IEnumerable(Of Entity.PayCalendar)
+    Private _calendars As IEnumerable(Of PayCalendar)
 
     Private _currentBranch As Branch
 
@@ -25,36 +30,43 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
+    Sub New()
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _branchRepository = New BranchRepository()
+
+        _calendarRepository = New CalendarRepository()
+
+        _employeeRepository = New EmployeeRepository()
+    End Sub
+
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.HasChanges = False
 
         Me.LastAddedBranchId = Nothing
 
-        _branchRepository = New BranchRepository()
-
-        ShowBranch()
+        ShowCalendar()
 
         Await RefreshForm()
 
     End Sub
 
-    Private Sub ShowBranch()
+    Private Sub ShowCalendar()
 
-        Using context As New PayrollContext
+        Dim settings = ListOfValueCollection.Create()
 
-            Dim settings = New ListOfValueCollection(context.ListOfValues.ToList())
-
-            _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
+        _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                             PayRateCalculationBasis.Organization)
 
-            If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
+        If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
-                CalendarPanel.Visible = False
+            CalendarPanel.Visible = False
 
-            End If
-
-        End Using
+        End If
 
     End Sub
 
@@ -62,11 +74,7 @@ Public Class AddBranchForm
 
         _branches = Await _branchRepository.GetAllAsync()
 
-        Using context As New PayrollContext
-
-            _calendars = Await context.Calendars.ToListAsync()
-
-        End Using
+        _calendars = Await _calendarRepository.GetAllAsync()
 
         NameTextBox.Clear()
         DetailsGroupBox.Enabled = False
@@ -177,6 +185,13 @@ Public Class AddBranchForm
 
         End If
 
+        If (Await _employeeRepository.GetByBranchAsync(branchId.Value)).Any() Then
+
+            MessageBoxHelper.ErrorMessage("Branch already has employee therefore cannot be deleted.")
+            Return
+
+        End If
+
         Dim confirmMessage = $"Are you sure you want to delete branch: '{branch.Name}'?"
 
         If MessageBoxHelper.Confirm(Of Boolean) _
@@ -221,7 +236,7 @@ Public Class AddBranchForm
                                 Async Function()
 
                                     Dim branchName = NameTextBox.Text.Trim
-                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, Entity.PayCalendar)
+                                    Dim calendar = DirectCast(CalendarComboBox.SelectedItem, PayCalendar)
 
                                     Me.LastAddedBranchId = Await SaveBranch(branchName, calendar)
                                     Dim successMesage = ""
@@ -249,7 +264,7 @@ Public Class AddBranchForm
 
     End Sub
 
-    Private Async Function SaveBranch(branchName As String, calendar As Entity.PayCalendar) As Task(Of Integer?)
+    Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then

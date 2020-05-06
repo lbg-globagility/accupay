@@ -14,14 +14,15 @@ namespace AccuPay.Data.Repositories
         public const string RecordTypeDelete = "DELETE";
         public const string RecordTypeImport = "IMPORT";
 
-        public IEnumerable<UserActivity> List(int organizationId = 0, string entityName = null)
+        public IEnumerable<UserActivity> GetAll(int? organizationId = null, string entityName = null)
         {
             using (PayrollContext context = new PayrollContext())
             {
                 IQueryable<UserActivity> query = context.UserActivities.
-                                                    Include(x => x.ActivityItems).Include(x => x.User);
+                                                    Include(x => x.ActivityItems).
+                                                    Include(x => x.User);
 
-                if (organizationId > 0)
+                if (organizationId != null)
                 {
                     query = query.Where(x => x.OrganizationID == organizationId);
                 }
@@ -64,7 +65,7 @@ namespace AccuPay.Data.Repositories
                     new UserActivityItem()
                     {
                         EntityId = entityId,
-                        Description = $"{simpleDescription} {entityName}."
+                        Description = $"{simpleDescription} {entityName?.ToLower()}."
                     }
                 };
 

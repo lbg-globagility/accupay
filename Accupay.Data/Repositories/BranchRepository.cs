@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,19 +9,12 @@ namespace AccuPay.Data.Repositories
 {
     public class BranchRepository
     {
-        public IEnumerable<Branch> GetAll()
+        public async Task DeleteAsync(Branch branch)
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return context.Branches.ToList();
-            }
-        }
-
-        public async Task<IEnumerable<Branch>> GetAllAsync()
-        {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Branches.ToListAsync();
+                context.Branches.Remove(branch);
+                await context.SaveChangesAsync();
             }
         }
 
@@ -59,20 +53,19 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(Branch branch)
+        public IEnumerable<Branch> GetAll()
         {
             using (PayrollContext context = new PayrollContext())
             {
-                context.Entry(branch).State = EntityState.Deleted;
-                await context.SaveChangesAsync();
+                return context.Branches.ToList();
             }
         }
 
-        public Branch FindById(int id)
+        public async Task<IEnumerable<Branch>> GetAllAsync()
         {
             using (PayrollContext context = new PayrollContext())
             {
-                return context.Branches.FirstOrDefault(x => x.RowID == id);
+                return await context.Branches.ToListAsync();
             }
         }
     }

@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Entity
-Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 
 Public Class PersonalInfoTab
 
@@ -67,15 +67,10 @@ Public Class PersonalInfoTab
         Dim positionDtos = New List(Of PositionDto) From {
             New PositionDto(Nothing)}
 
-        Using context = New PayrollContext()
-            Dim positions = Await Task.Run(
-                Function() context.Positions.
-                    Where(Function(p) Nullable.Equals(p.OrganizationID, z_OrganizationID)).
-                    OrderBy(Function(p) p.Name).
-                    ToList())
+        Dim positionRepository As New PositionRepository
+        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
-            positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
-        End Using
+        positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
 
         Return positionDtos
     End Function
