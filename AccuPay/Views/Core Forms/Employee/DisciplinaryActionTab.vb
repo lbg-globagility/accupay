@@ -8,6 +8,9 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 
 Public Class DisciplinaryActionTab
+
+    Private Const FormEntityName As String = "Disciplinary Action"
+
     Private _employee As Employee
 
     Private _disciplinaryActions As IEnumerable(Of DisciplinaryAction)
@@ -21,6 +24,14 @@ Public Class DisciplinaryActionTab
     Private _currentFindingName As Product
 
     Private _mode As FormMode = FormMode.Empty
+
+    Private _disciplinaryActionRepo As New DisciplinaryActionRepository
+
+    Private _productRepo As New ProductRepository
+
+    Private _listOfValRepo As New ListOfValueRepository
+
+    Private _userActivityRepo As New UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
@@ -41,15 +52,12 @@ Public Class DisciplinaryActionTab
     Private Async Function LoadDisciplinaryActions() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim discActionRepo = New DisciplinaryActionRepository
-        _disciplinaryActions = Await discActionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _disciplinaryActions = Await _disciplinaryActionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _disciplinaryActions = _disciplinaryActions.OrderByDescending(Function(x) x.DateFrom).ToList()
 
-        Dim productsRepo = New ProductRepository
-        _findingNames = Await productsRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
+        _findingNames = Await _productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
 
-        Dim listOfValRepo = New ListOfValueRepository
-        _actions = Await listOfValRepo.GetEmployeeDisciplinaryPenalties()
+        _actions = Await _listOfValRepo.GetEmployeeDisciplinaryPenalties()
 
         RemoveHandler dgvDisciplinaryList.SelectionChanged, AddressOf dgvDisciplinaryList_SelectionChanged
 
@@ -155,11 +163,10 @@ Public Class DisciplinaryActionTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action",
                 Async Function()
-                    Dim repo = New DisciplinaryActionRepository
-                    Await repo.DeleteAsync(_currentDiscAction)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Disciplinary Action", CInt(_currentDiscAction.RowID), z_OrganizationID)
+                    Await _disciplinaryActionRepo.DeleteAsync(_currentDiscAction)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentDiscAction.RowID), z_OrganizationID)
 
                     Await LoadDisciplinaryActions()
                 End Function)
@@ -203,8 +210,7 @@ Public Class DisciplinaryActionTab
 
                     End With
 
-                    Dim discActionRepo = New DisciplinaryActionRepository
-                    Await discActionRepo.UpdateAsync(_currentDiscAction)
+                    Await _disciplinaryActionRepo.UpdateAsync(_currentDiscAction)
 
                     RecordUpdateDiscAction(oldDisciplinaryAction)
 
@@ -226,51 +232,52 @@ Public Class DisciplinaryActionTab
         Dim changes = New List(Of UserActivityItem)
         Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If _currentDiscAction.FindingID <> oldDisciplinaryAction.FindingID Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action finding name from '{oldDisciplinaryAction.FindingName}' to '{currentFinding.PartNo}'."
+                        .Description = $"Updated {entityName} finding name from '{oldDisciplinaryAction.FindingName}' to '{currentFinding.PartNo}'."
                         })
         End If
         If _currentDiscAction.Action <> oldDisciplinaryAction.Action Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action penaty from '{oldDisciplinaryAction.Action}' to '{_currentDiscAction.Action}'."
+                        .Description = $"Updated {entityName} penaty from '{oldDisciplinaryAction.Action}' to '{_currentDiscAction.Action}'."
                         })
         End If
         If _currentDiscAction.DateFrom <> oldDisciplinaryAction.DateFrom Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action start date from '{oldDisciplinaryAction.DateFrom.ToShortDateString}' to '{_currentDiscAction.DateFrom.ToShortDateString}'."
+                        .Description = $"Updated {entityName} start date from '{oldDisciplinaryAction.DateFrom.ToShortDateString}' to '{_currentDiscAction.DateFrom.ToShortDateString}'."
                         })
         End If
         If _currentDiscAction.DateTo <> oldDisciplinaryAction.DateTo Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action end date from '{oldDisciplinaryAction.DateTo.ToShortDateString}' to '{_currentDiscAction.DateTo.ToShortDateString}'."
+                        .Description = $"Updated {entityName} end date from '{oldDisciplinaryAction.DateTo.ToShortDateString}' to '{_currentDiscAction.DateTo.ToShortDateString}'."
                         })
         End If
         If _currentDiscAction.FindingDescription <> oldDisciplinaryAction.FindingDescription Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action finding description from '{oldDisciplinaryAction.FindingDescription}' to '{_currentDiscAction.FindingDescription}'."
+                        .Description = $"Updated {entityName} finding description from '{oldDisciplinaryAction.FindingDescription}' to '{_currentDiscAction.FindingDescription}'."
                         })
         End If
         If _currentDiscAction.Comments <> oldDisciplinaryAction.Comments Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldDisciplinaryAction.RowID),
-                        .Description = $"Updated disciplinary action comments from '{oldDisciplinaryAction.Comments}' to '{_currentDiscAction.Comments}'."
+                        .Description = $"Updated {entityName} comments from '{oldDisciplinaryAction.Comments}' to '{_currentDiscAction.Comments}'."
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Disciplinary Action", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 
@@ -312,7 +319,7 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm("Disciplinary Action")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

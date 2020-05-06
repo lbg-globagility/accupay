@@ -8,6 +8,8 @@ Imports AccuPay.Utils
 
 Public Class EducationalBackgroundTab
 
+    Private Const FormEntityName As String = "Educational Background"
+
     Private _employee As Employee
 
     Private _educationalBackgrounds As IEnumerable(Of EducationalBackground)
@@ -15,6 +17,10 @@ Public Class EducationalBackgroundTab
     Private _currentEducBg As EducationalBackground
 
     Private _mode As FormMode = FormMode.Empty
+
+    Private _educBgRepo As New EducationalBackgroundRepository
+
+    Private _userActivityRepo As New UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
@@ -36,8 +42,7 @@ Public Class EducationalBackgroundTab
     Private Async Function LoadEducationalBackgrounds() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim educbgRepo = New EducationalBackgroundRepository
-        _educationalBackgrounds = Await educbgRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _educationalBackgrounds = Await _educBgRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _educationalBackgrounds = _educationalBackgrounds.OrderByDescending(Function(x) x.DateFrom).ToList()
 
         RemoveHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged
@@ -136,11 +141,10 @@ Public Class EducationalBackgroundTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Educational Background",
                 Async Function()
-                    Dim repo = New EducationalBackgroundRepository
-                    Await repo.DeleteAsync(_currentEducBg)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Educational Background", CInt(_currentEducBg.RowID), z_OrganizationID)
+                    Await _educBgRepo.DeleteAsync(_currentEducBg)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentEducBg.RowID), z_OrganizationID)
 
                     Await LoadEducationalBackgrounds()
                 End Function)
@@ -186,7 +190,7 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm("Educational Background")
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
@@ -226,8 +230,7 @@ Public Class EducationalBackgroundTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim educBgRepo = New EducationalBackgroundRepository
-                    Await educBgRepo.UpdateAsync(_currentEducBg)
+                    Await _educBgRepo.UpdateAsync(_currentEducBg)
 
                     RecordUpdateEducBg(oldEducBg)
 
@@ -247,65 +250,66 @@ Public Class EducationalBackgroundTab
     Private Sub RecordUpdateEducBg(oldEducBg As EducationalBackground)
         Dim changes = New List(Of UserActivityItem)
 
+        Dim entityName = FormEntityName.ToLower()
+
         If _currentEducBg.Type <> oldEducBg.Type Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated education type from '{oldEducBg.Type}' to '{_currentEducBg.Type}'."
+                        .Description = $"Updated {entityName} type from '{oldEducBg.Type}' to '{_currentEducBg.Type}'."
                         })
         End If
         If _currentEducBg.School <> oldEducBg.School Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated educational background school from '{oldEducBg.School}' to '{_currentEducBg.School}'."
+                        .Description = $"Updated {entityName} school from '{oldEducBg.School}' to '{_currentEducBg.School}'."
                         })
         End If
         If _currentEducBg.Degree <> oldEducBg.Degree Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated educational background degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}'."
+                        .Description = $"Updated {entityName} degree from '{oldEducBg.Degree}' to '{_currentEducBg.Degree}'."
                         })
         End If
         If _currentEducBg.Course <> oldEducBg.Course Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated educational background course from '{oldEducBg.Course}' to '{_currentEducBg.Course}'."
+                        .Description = $"Updated {entityName} course from '{oldEducBg.Course}' to '{_currentEducBg.Course}'."
                         })
         End If
         If _currentEducBg.Major <> oldEducBg.Major Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated educational background major from '{oldEducBg.Major}' to '{_currentEducBg.Major}'."
+                        .Description = $"Updated {entityName} major from '{oldEducBg.Major}' to '{_currentEducBg.Major}'."
                         })
         End If
         If _currentEducBg.DateFrom <> oldEducBg.DateFrom Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated education start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}'."
+                        .Description = $"Updated {entityName} start date from '{oldEducBg.DateFrom.ToShortDateString}' to '{_currentEducBg.DateFrom.ToShortDateString}'."
                         })
         End If
         If _currentEducBg.DateTo <> oldEducBg.DateTo Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated education end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}'."
+                        .Description = $"Updated {entityName} end date from '{oldEducBg.DateTo.ToShortDateString}' to '{_currentEducBg.DateTo.ToShortDateString}'."
                         })
         End If
         If _currentEducBg.Remarks <> oldEducBg.Remarks Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldEducBg.RowID),
-                        .Description = $"Updated educational background remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}'."
+                        .Description = $"Updated {entityName} remarks from '{oldEducBg.Remarks}' to '{_currentEducBg.Remarks}'."
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Educational Background", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
     Private Function isChanged() As Boolean

@@ -7,6 +7,8 @@ Public Class newProdBonus
 
     Private _newProduct As New Product
 
+    Private _productRepo As New ProductRepository
+
     Private Sub newProdBonus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()
 
@@ -19,8 +21,7 @@ Public Class newProdBonus
             If Trim(TextBox1.Text) <> "" Then
                 TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
-                Dim productRepo = New ProductRepository
-                _newProduct = Await productRepo.AddBonusTypeAsync(TextBox1.Text,
+                _newProduct = Await _productRepo.AddBonusTypeAsync(TextBox1.Text,
                                                              organizationId:=z_OrganizationID,
                                                              userId:=z_User,
                                                              isTaxable:=chktaxab.Checked)

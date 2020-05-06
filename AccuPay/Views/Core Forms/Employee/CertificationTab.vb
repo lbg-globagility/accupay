@@ -17,6 +17,10 @@ Public Class CertificationTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _certificationRepo As New CertificationRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvCertifications.AutoGenerateColumns = False
@@ -37,8 +41,7 @@ Public Class CertificationTab
     Private Async Function LoadCertifications() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim certificationRepo = New CertificationRepository
-        _certifications = Await certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _certifications = Await _certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _certifications = _certifications.OrderByDescending(Function(x) x.IssueDate).ToList()
 
         RemoveHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged
@@ -128,11 +131,10 @@ Public Class CertificationTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Certification",
                 Async Function()
-                    Dim repo = New CertificationRepository
-                    Await repo.DeleteAsync(_currentCertification)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
+                    Await _certificationRepo.DeleteAsync(_currentCertification)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
 
                     Await LoadCertifications()
                 End Function)
@@ -209,8 +211,7 @@ Public Class CertificationTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim certificationRepo = New CertificationRepository
-                    Await certificationRepo.UpdateAsync(_currentCertification)
+                    Await _certificationRepo.UpdateAsync(_currentCertification)
 
                     RecordUpdateCertification(oldCertification)
 
@@ -276,8 +277,7 @@ Public Class CertificationTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
     Private Function isChanged() As Boolean

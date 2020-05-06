@@ -32,7 +32,7 @@ Partial Class AddAwardForm
         Me.txtDescription = New System.Windows.Forms.TextBox()
         Me.txtAwardType = New System.Windows.Forms.TextBox()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
         Me.Label3 = New System.Windows.Forms.Label()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -137,15 +137,15 @@ Partial Class AddAwardForm
         Me.AddAndCloseButton.Text = "&Add && Close"
         Me.AddAndCloseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(387, 286)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 407
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(387, 286)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelDialogButton.TabIndex = 407
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'AddAndNewButton
         '
@@ -175,7 +175,7 @@ Partial Class AddAwardForm
         Me.ClientSize = New System.Drawing.Size(684, 321)
         Me.Controls.Add(Me.Label3)
         Me.Controls.Add(Me.AddAndCloseButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
         Me.Controls.Add(Me.lblAwardDate)
         Me.Controls.Add(Me.lblDescription)
@@ -208,7 +208,7 @@ Partial Class AddAwardForm
     Friend WithEvents txtDescription As TextBox
     Friend WithEvents txtAwardType As TextBox
     Friend WithEvents AddAndCloseButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
     Friend WithEvents Label3 As Label
 End Class

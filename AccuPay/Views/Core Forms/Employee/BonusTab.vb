@@ -23,6 +23,12 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
+    Private _bonusRepo As New BonusRepository
+
+    Private _productRepo As New ProductRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvempbon.AutoGenerateColumns = False
@@ -51,12 +57,10 @@ Public Class BonusTab
             Return
         End If
 
-        Dim bonusRepo = New BonusRepository
-        _bonuses = Await bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _frequencies = bonusRepo.GetFrequencyList
+        _bonuses = Await _bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _frequencies = _bonusRepo.GetFrequencyList
 
-        Dim productRepo = New ProductRepository
-        _products = Await productRepo.GetBonusTypesAsync(z_OrganizationID)
+        _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         BindDataSource()
@@ -144,11 +148,9 @@ Public Class BonusTab
             If result = MsgBoxResult.Yes Then
                 Await FunctionUtils.TryCatchFunctionAsync("Delete Bonus",
                 Async Function()
-                    Dim repo = New BonusRepository
-                    Await repo.DeleteAsync(_currentBonus)
+                    Await _bonusRepo.DeleteAsync(_currentBonus)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
 
                     Await LoadBonuses()
                 End Function)
@@ -223,12 +225,10 @@ Public Class BonusTab
                         .EmployeeID = _employee.RowID
                         .OrganizationID = z_OrganizationID
                         .TaxableFlag = product.Status
+                        .LastUpdBy = z_User
                     End With
 
-                    Dim repo = New BonusRepository
-
-                    _currentBonus.LastUpdBy = z_User
-                    Await repo.UpdateAsync(_currentBonus)
+                    Await _bonusRepo.UpdateAsync(_currentBonus)
 
                     RecordUpdateBonus(oldBonus)
 
@@ -371,8 +371,7 @@ Public Class BonusTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 
