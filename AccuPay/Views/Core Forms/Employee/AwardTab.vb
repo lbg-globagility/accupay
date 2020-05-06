@@ -19,14 +19,17 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _awardRepo As New AwardRepository
+    Private _awardRepo As AwardRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvAwards.AutoGenerateColumns = False
 
+        _awardRepo = New AwardRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task

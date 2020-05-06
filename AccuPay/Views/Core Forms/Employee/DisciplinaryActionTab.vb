@@ -25,18 +25,25 @@ Public Class DisciplinaryActionTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _disciplinaryActionRepo As New DisciplinaryActionRepository
+    Private _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _productRepo As New ProductRepository
+    Private _productRepo As ProductRepository
 
-    Private _listOfValRepo As New ListOfValueRepository
+    Private _listOfValRepo As ListOfValueRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvDisciplinaryList.AutoGenerateColumns = False
 
+        _disciplinaryActionRepo = New DisciplinaryActionRepository
+
+        _productRepo = New ProductRepository
+
+        _listOfValRepo = New ListOfValueRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()

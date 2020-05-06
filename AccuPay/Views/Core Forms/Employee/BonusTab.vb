@@ -23,16 +23,21 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
-    Private _bonusRepo As New BonusRepository
+    Private _bonusRepo As BonusRepository
 
-    Private _productRepo As New ProductRepository
+    Private _productRepo As ProductRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvempbon.AutoGenerateColumns = False
 
+        _bonusRepo = New BonusRepository
+
+        _productRepo = New ProductRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load

@@ -17,14 +17,17 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _previousEmployerRepo As New PreviousEmployerRepository
+    Private _previousEmployerRepo As PreviousEmployerRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvPrevEmployers.AutoGenerateColumns = False
 
+        _previousEmployerRepo = New PreviousEmployerRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()

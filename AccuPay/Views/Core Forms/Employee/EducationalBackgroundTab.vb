@@ -18,14 +18,17 @@ Public Class EducationalBackgroundTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _educBgRepo As New EducationalBackgroundRepository
+    Private _educBgRepo As EducationalBackgroundRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvEducBgs.AutoGenerateColumns = False
 
+        _educBgRepo = New EducationalBackgroundRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task

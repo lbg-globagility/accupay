@@ -12,13 +12,17 @@ Public Class AddEducationalBackgroundForm
 
     Private _newEducBg As EducationalBackground
 
-    Private _educBgRepo As New EducationalBackgroundRepository
+    Private _educBgRepo As EducationalBackgroundRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _educBgRepo = New EducationalBackgroundRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub AddEducationalBackgroundForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

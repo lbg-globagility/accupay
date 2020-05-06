@@ -12,13 +12,17 @@ Public Class AddPreviousEmployerForm
 
     Private _newPreviousEmployer As PreviousEmployer
 
-    Private _previousEmployerRepo As New PreviousEmployerRepository
+    Private _previousEmployerRepo As PreviousEmployerRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _previousEmployerRepo = New PreviousEmployerRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub AddAwardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

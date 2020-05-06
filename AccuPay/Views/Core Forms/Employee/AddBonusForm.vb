@@ -20,15 +20,21 @@ Public Class AddBonusForm
 
     Private _newBonus As New Bonus()
 
-    Private _bonusRepo As New BonusRepository
+    Private _bonusRepo As BonusRepository
 
-    Private _productRepo As New ProductRepository
+    Private _productRepo As ProductRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _bonusRepo = New BonusRepository
+
+        _productRepo = New ProductRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Async Sub AddBonusForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

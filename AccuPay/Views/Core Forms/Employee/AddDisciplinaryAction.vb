@@ -19,17 +19,25 @@ Public Class AddDisciplinaryAction
 
     Private _actions As IEnumerable(Of ListOfValue)
 
-    Private _disciplinaryActionRepo As New DisciplinaryActionRepository
+    Private _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _productRepo As New ProductRepository
+    Private _productRepo As ProductRepository
 
-    Private _listOfValRepo As New ListOfValueRepository
+    Private _listOfValRepo As ListOfValueRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _disciplinaryActionRepo = New DisciplinaryActionRepository
+
+        _productRepo = New ProductRepository
+
+        _listOfValRepo = New ListOfValueRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Async Sub AddDisciplinaryAction_Load(sender As Object, e As EventArgs) Handles MyBase.Load
