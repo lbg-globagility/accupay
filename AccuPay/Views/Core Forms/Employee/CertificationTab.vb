@@ -17,14 +17,17 @@ Public Class CertificationTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _certificationRepo As New CertificationRepository
+    Private _certificationRepo As CertificationRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
         InitializeComponent()
         dgvCertifications.AutoGenerateColumns = False
 
+        _certificationRepo = New CertificationRepository()
+
+        _userActivityRepo = New UserActivityRepository()
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task

@@ -14,13 +14,17 @@ Public Class AddCertificationForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
-    Private _certificationRepo As New CertificationRepository
+    Private _certificationRepo As CertificationRepository
 
-    Private _userActivityRepo As New UserActivityRepository
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _certificationRepo = New CertificationRepository()
+
+        _userActivityRepo = New UserActivityRepository()
     End Sub
 
     Private Sub AddCertificationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
