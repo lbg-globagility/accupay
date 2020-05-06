@@ -1,5 +1,6 @@
 Imports System.Configuration
 Imports System.Threading
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -84,6 +85,12 @@ Public Class MDIPrimaryForm
         Panel15.Font = DefaultFontStyle
 
         setProperDashBoardAccordingToSystemOwner()
+
+        Task.Run(
+            Async Function()
+                Dim service = New LeaveAccrualService()
+                Await service.CheckAccruals(z_OrganizationID, z_User)
+            End Function)
 
         Panel1.Focus()
         BackgroundWorker1.RunWorkerAsync()

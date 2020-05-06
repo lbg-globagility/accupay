@@ -2,6 +2,7 @@
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,6 +17,23 @@ namespace AccuPay.Data.Services
             _calculator = new LeaveAccrualCalculator();
         }
 
+        public async Task CheckAccruals(int organizationId, int userId)
+        {
+            ICollection<Employee> employees;
+
+            using (var context = new PayrollContext())
+            {
+                employees = await context.Employees
+                    .Where(e => e.OrganizationID == organizationId)
+                    .ToListAsync();
+            }
+
+            foreach (var employee in employees)
+            {
+                await ComputeAccrual2(employee, organizationId, userId);
+            }
+        }
+
         public async Task ComputeAccrual(Employee employee, PayPeriod payperiod, int z_OrganizationID, int z_User)
         {
             using (var context = new PayrollContext())
@@ -24,14 +42,14 @@ namespace AccuPay.Data.Services
 
                 var firstPayperiodOfYear = await context.PayPeriods
                     .Where(p => p.PayFromDate <= startOfFirstYear && startOfFirstYear <= p.PayToDate)
-                    .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                    .Where(p => p.OrganizationID == z_OrganizationID)
                     .FirstOrDefaultAsync();
 
                 var endOfFirstYear = employee.StartDate.AddYears(1);
 
                 var lastPayperiodOfYear = await context.PayPeriods
                     .Where(p => p.PayFromDate <= endOfFirstYear && endOfFirstYear <= p.PayToDate)
-                    .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                    .Where(p => p.OrganizationID == z_OrganizationID)
                     .FirstOrDefaultAsync();
 
                 await UpdateVacationLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
@@ -51,16 +69,16 @@ namespace AccuPay.Data.Services
         {
             var leaveType = await context.Products
                 .Where(p => p.PartNo == ProductConstant.SICK_LEAVE)
-                .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
             var ledger = await context.LeaveLedgers
-                .Where(l => l.EmployeeID.Value == employee.RowID.Value)
-                .Where(l => l.ProductID.Value == leaveType.RowID)
+                .Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.ProductID == leaveType.RowID)
                 .FirstOrDefaultAsync();
 
             var lastTransaction = await context.LeaveTransactions
-                .Where(t => t.RowID.Value == ledger.LastTransactionID)
+                .Where(t => t.RowID == ledger.LastTransactionID)
                 .FirstOrDefaultAsync();
 
             var existingTransaction = await context.LeaveTransactions
@@ -100,16 +118,16 @@ namespace AccuPay.Data.Services
         {
             var leaveType = await context.Products
                 .Where(p => p.PartNo == ProductConstant.VACATION_LEAVE)
-                .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
             var ledger = await context.LeaveLedgers
-                .Where(l => l.EmployeeID.Value == employee.RowID.Value)
-                .Where(l => l.ProductID.Value == leaveType.RowID)
+                .Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.ProductID == leaveType.RowID)
                 .FirstOrDefaultAsync();
 
             var lastTransaction = await context.LeaveTransactions
-                .Where(t => t.RowID.Value == ledger.LastTransactionID)
+                .Where(t => t.RowID == ledger.LastTransactionID)
                 .FirstOrDefaultAsync();
 
             var existingTransaction = await context.LeaveTransactions
@@ -154,15 +172,16 @@ namespace AccuPay.Data.Services
         {
             var leaveType = await context.Products
                 .Where(p => p.PartNo == ProductConstant.VACATION_LEAVE)
-                .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
             var ledger = await context.LeaveLedgers.
-                Where(l => l.EmployeeID.Value == employee.RowID.Value).
-                Where(l => l.ProductID.Value == leaveType.RowID).FirstOrDefaultAsync();
+                Where(l => l.EmployeeID == employee.RowID).
+                Where(l => l.ProductID == leaveType.RowID).
+                FirstOrDefaultAsync();
 
             var lastTransaction = await context.LeaveTransactions
-                .Where(t => t.RowID.Value == ledger.LastTransactionID.GetValueOrDefault())
+                .Where(t => t.RowID == ledger.LastTransactionID)
                 .Where(t => t.Description == "Accrual")
                 .OrderByDescending(t => t.TransactionDate).FirstOrDefaultAsync();
 
@@ -189,16 +208,16 @@ namespace AccuPay.Data.Services
         {
             var leaveType = await context.Products
                 .Where(p => p.PartNo == ProductConstant.SICK_LEAVE)
-                .Where(p => p.OrganizationID.Value == z_OrganizationID)
+                .Where(p => p.OrganizationID == z_OrganizationID)
                 .FirstOrDefaultAsync();
 
             var ledger = await context.LeaveLedgers
-                .Where(l => l.EmployeeID.Value == employee.RowID.Value)
-                .Where(l => System.Convert.ToBoolean(l.ProductID.Value == leaveType.RowID))
+                .Where(l => l.EmployeeID == employee.RowID)
+                .Where(l => l.ProductID == leaveType.RowID)
                 .FirstOrDefaultAsync();
 
             var lastTransaction = await context.LeaveTransactions
-                .Where(t => t.RowID.Value == ledger.LastTransactionID.GetValueOrDefault())
+                .Where(t => t.RowID == ledger.LastTransactionID)
                 .Where(t => t.Description == "Accrual")
                 .OrderByDescending(t => t.TransactionDate)
                 .FirstOrDefaultAsync();
