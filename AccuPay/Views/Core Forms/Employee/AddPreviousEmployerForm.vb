@@ -119,7 +119,7 @@ Public Class AddPreviousEmployerForm
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

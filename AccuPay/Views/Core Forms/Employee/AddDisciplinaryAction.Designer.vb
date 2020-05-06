@@ -42,7 +42,7 @@ Partial Class AddDisciplinaryAction
         Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.lblAddFindingname = New System.Windows.Forms.LinkLabel()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -251,15 +251,15 @@ Partial Class AddDisciplinaryAction
         Me.AddAndCloseButton.Text = "&Add && Close"
         Me.AddAndCloseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(401, 286)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 540
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(401, 286)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelDialogButton.TabIndex = 540
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'AddAndNewButton
         '
@@ -278,7 +278,7 @@ Partial Class AddDisciplinaryAction
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(711, 323)
         Me.Controls.Add(Me.AddAndCloseButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.Label61)
@@ -331,6 +331,6 @@ Partial Class AddDisciplinaryAction
     Friend WithEvents LinkLabel3 As LinkLabel
     Friend WithEvents lblAddFindingname As LinkLabel
     Friend WithEvents AddAndCloseButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
 End Class
