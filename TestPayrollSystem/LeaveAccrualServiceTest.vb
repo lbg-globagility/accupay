@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Entity
+Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Services
 
 <TestFixture>
 Public Class LeaveAccrualServiceTest
@@ -136,7 +136,7 @@ Public Class LeaveAccrualServiceTest
         Dim result = sut.Calculate(employee, payperiod, employee.VacationLeaveAllowance, firstPayperiod, lastPayperiod)
 
         ' Assert
-        Assert.AreEqual(1.64D, result)
+        Assert.AreEqual(0D, result)
     End Sub
 
     <Test>

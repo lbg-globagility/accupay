@@ -6,6 +6,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Tools
 
+Imports AccuPay.Utilities
+
 Public Class MassOvertimeForm
 
     Private _presenter As MassOvertimePresenter

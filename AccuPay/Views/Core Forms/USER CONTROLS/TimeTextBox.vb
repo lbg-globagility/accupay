@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Tools
+Imports AccuPay.Utilities
 Imports System.Drawing
 Imports System.Runtime.InteropServices
 
