@@ -95,6 +95,15 @@ Namespace Global.AccuPay.Tools
             Return (b - a).Duration().Days + 1
         End Function
 
+        Public Shared Function MonthsBetween(a As Date, b As Date) As Integer
+            Dim start = {a, b}.Min()
+            Dim [end] = {a, b}.Max()
+
+            Dim months = (([end].Year * CalendarConstants.MonthsInAYear) + [end].Month) - ((start.Year * CalendarConstants.MonthsInAYear) + start.Month)
+
+            Return months
+        End Function
+
     End Class
 
 End Namespace
