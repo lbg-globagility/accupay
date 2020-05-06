@@ -3,6 +3,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddPreviousEmployerForm
+
+    Private Const FormEntityName As String = "Previous Employer"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
@@ -34,7 +36,7 @@ Public Class AddPreviousEmployerForm
             messageBody = "Contact Name is empty."
         ElseIf String.IsNullOrWhiteSpace(txtMainPhone.Text) Then
             messageBody = "Main Phone is empty."
-        ElseIf String.IsNullOrWhiteSpace(txtEmailAdd.text) Then
+        ElseIf String.IsNullOrWhiteSpace(txtEmailAdd.Text) Then
             messageBody = "Email Address is empty."
         ElseIf String.IsNullOrWhiteSpace(txtCompAddr.Text) Then
             messageBody = "Company Address is empty."
@@ -74,7 +76,7 @@ Public Class AddPreviousEmployerForm
                 Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
 
                 Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Previous Employer", CInt(_newPreviousEmployer.RowID), z_OrganizationID)
+                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

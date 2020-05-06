@@ -6,6 +6,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddDisciplinaryAction
+
+    Private Const FormEntityName As String = "Disciplinary Action"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
@@ -79,7 +81,7 @@ Public Class AddDisciplinaryAction
                 Await disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
 
                 Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Disciplinary Action", CInt(_newDisciplinaryAction.RowID), z_OrganizationID)
+                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newDisciplinaryAction.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

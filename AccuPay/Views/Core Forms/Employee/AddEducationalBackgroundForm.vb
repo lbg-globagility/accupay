@@ -3,6 +3,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddEducationalBackgroundForm
+
+    Private Const FormEntityName As String = "Educational Background"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
@@ -72,7 +74,7 @@ Public Class AddEducationalBackgroundForm
                 Await educBGRepo.CreateAsync(_newEducBg)
 
                 Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Educational Background", CInt(_newEducBg.RowID), z_OrganizationID)
+                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
