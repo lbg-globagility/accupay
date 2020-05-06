@@ -12,6 +12,10 @@ Public Class AddEducationalBackgroundForm
 
     Private _newEducBg As EducationalBackground
 
+    Private _educBgRepo As New EducationalBackgroundRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
@@ -70,11 +74,9 @@ Public Class AddEducationalBackgroundForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim educBGRepo = New EducationalBackgroundRepository
-                Await educBGRepo.CreateAsync(_newEducBg)
+                Await _educBgRepo.CreateAsync(_newEducBg)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

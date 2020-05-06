@@ -13,6 +13,8 @@ Public Class NewProductDisciplinaryForm
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _productRepo As New ProductRepository
+
     Public Sub New()
 
         ' This call is required by the designer.
@@ -30,8 +32,7 @@ Public Class NewProductDisciplinaryForm
 
         RemoveHandler dgvFindings.SelectionChanged, AddressOf dgvFindings_SelectionChanged
 
-        Dim productRepo = New ProductRepository
-        _findings = Await productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
+        _findings = Await _productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
         dgvFindings.DataSource = _findings
 
         If _findings.Count > 0 Then
@@ -77,8 +78,7 @@ Public Class NewProductDisciplinaryForm
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Finding",
                 Async Function()
-                    Dim repo = New ProductRepository
-                    Await repo.DeleteAsync(_currentFinding.RowID.Value)
+                    Await _productRepo.DeleteAsync(_currentFinding.RowID.Value)
 
                     Await LoadFindings()
                 End Function)
@@ -133,16 +133,14 @@ Public Class NewProductDisciplinaryForm
                 If isChanged() Then
 
                     If _mode = FormMode.Creating Then
-                        Dim productRepo = New ProductRepository
-                        Await productRepo.AddDecipilinaryTypeAsync(txtName.Text,
+                        Await _productRepo.AddDecipilinaryTypeAsync(txtName.Text,
                                                                    z_OrganizationID,
                                                                    z_User,
                                                                    txtDescription.Text)
 
                         messageTitle = "New Disciplinary Action Finding"
                     Else
-                        Dim productRepo = New ProductRepository
-                        Await productRepo.UpdateDisciplinaryTypeAsync(_currentFinding.RowID.Value,
+                        Await _productRepo.UpdateDisciplinaryTypeAsync(_currentFinding.RowID.Value,
                                                                       z_User,
                                                                       txtName.Text,
                                                                       txtDescription.Text)

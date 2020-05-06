@@ -14,6 +14,8 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _listOfValRepo As New ListOfValueRepository
+
     Public Sub New()
         InitializeComponent()
         dgvActions.AutoGenerateColumns = False
@@ -27,8 +29,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
         RemoveHandler dgvActions.SelectionChanged, AddressOf DgvActions_SelectionChanged
 
-        Dim listOfValRepo = New ListOfValueRepository
-        _actions = Await listOfValRepo.GetEmployeeDisciplinaryPenalties()
+        _actions = Await _listOfValRepo.GetEmployeeDisciplinaryPenalties()
         dgvActions.DataSource = _actions
 
         If _actions.Count > 0 Then
@@ -101,8 +102,7 @@ Public Class NewListOfValDisciplinaryPenaltyForm
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action Penalty",
                 Async Function()
-                    Dim repo = New ListOfValueRepository
-                    Await repo.DeleteAsync(_currentAction)
+                    Await _listOfValRepo.DeleteAsync(_currentAction)
 
                     Await LoadActions()
                 End Function)
@@ -133,8 +133,6 @@ Public Class NewListOfValDisciplinaryPenaltyForm
                         .DisplayValue = txtName.Text
                         .Description = txtDescription.Text
 
-
-                        Dim listOfValRepo = New ListOfValueRepository
                         If Not .RowID.HasValue Then
 
                             .LIC = txtName.Text
@@ -146,13 +144,13 @@ Public Class NewListOfValDisciplinaryPenaltyForm
                             .LastUpd = Date.Now
                             .OrderBy = GetMaxOrderBy()
 
-                            Await listOfValRepo.CreateAsync(_currentAction)
+                            Await _listOfValRepo.CreateAsync(_currentAction)
 
                             messageTitle = "Save Disciplinary Action Penalty"
                         Else
                             .LastUpdBy = z_User
                             .LastUpd = Now
-                            Await listOfValRepo.UpdateAsync(_currentAction)
+                            Await _listOfValRepo.UpdateAsync(_currentAction)
 
                             messageTitle = "Update Disciplinary Action Penalty"
                         End If

@@ -25,6 +25,14 @@ Public Class DisciplinaryActionTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _disciplinaryActionRepo As New DisciplinaryActionRepository
+
+    Private _productRepo As New ProductRepository
+
+    Private _listOfValRepo As New ListOfValueRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvDisciplinaryList.AutoGenerateColumns = False
@@ -44,15 +52,12 @@ Public Class DisciplinaryActionTab
     Private Async Function LoadDisciplinaryActions() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim discActionRepo = New DisciplinaryActionRepository
-        _disciplinaryActions = Await discActionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _disciplinaryActions = Await _disciplinaryActionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _disciplinaryActions = _disciplinaryActions.OrderByDescending(Function(x) x.DateFrom).ToList()
 
-        Dim productsRepo = New ProductRepository
-        _findingNames = Await productsRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
+        _findingNames = Await _productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
 
-        Dim listOfValRepo = New ListOfValueRepository
-        _actions = Await listOfValRepo.GetEmployeeDisciplinaryPenalties()
+        _actions = Await _listOfValRepo.GetEmployeeDisciplinaryPenalties()
 
         RemoveHandler dgvDisciplinaryList.SelectionChanged, AddressOf dgvDisciplinaryList_SelectionChanged
 
@@ -158,11 +163,10 @@ Public Class DisciplinaryActionTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Disciplinary Action",
                 Async Function()
-                    Dim repo = New DisciplinaryActionRepository
-                    Await repo.DeleteAsync(_currentDiscAction)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentDiscAction.RowID), z_OrganizationID)
+                    Await _disciplinaryActionRepo.DeleteAsync(_currentDiscAction)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentDiscAction.RowID), z_OrganizationID)
 
                     Await LoadDisciplinaryActions()
                 End Function)
@@ -206,8 +210,7 @@ Public Class DisciplinaryActionTab
 
                     End With
 
-                    Dim discActionRepo = New DisciplinaryActionRepository
-                    Await discActionRepo.UpdateAsync(_currentDiscAction)
+                    Await _disciplinaryActionRepo.UpdateAsync(_currentDiscAction)
 
                     RecordUpdateDiscAction(oldDisciplinaryAction)
 
@@ -274,8 +277,7 @@ Public Class DisciplinaryActionTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 

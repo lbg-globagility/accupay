@@ -19,6 +19,10 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _awardRepo As New AwardRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvAwards.AutoGenerateColumns = False
@@ -39,8 +43,7 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim awardRepo = New AwardRepository
-        _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _awards = Await _awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _awards = _awards.OrderByDescending(Function(x) x.AwardDate).ToList()
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
@@ -145,11 +148,10 @@ Public Class AwardTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-                    Dim repo = New AwardRepository
-                    Await repo.DeleteAsync(_currentAward)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
+                    Await _awardRepo.DeleteAsync(_currentAward)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
 
                     Await LoadAwards()
                 End Function)
@@ -209,8 +211,7 @@ Public Class AwardTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim awardRepo = New AwardRepository
-                    Await awardRepo.UpdateAsync(_currentAward)
+                    Await _awardRepo.UpdateAsync(_currentAward)
 
                     RecordUpdateAward(oldAward)
 
@@ -269,8 +270,7 @@ Public Class AwardTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
 End Class

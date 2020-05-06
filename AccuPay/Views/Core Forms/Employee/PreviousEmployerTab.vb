@@ -17,6 +17,10 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _previousEmployerRepo As New PreviousEmployerRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvPrevEmployers.AutoGenerateColumns = False
@@ -36,8 +40,7 @@ Public Class PreviousEmployerTab
     Private Async Function LoadPrevEmployers() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim previousEmployerRepo = New PreviousEmployerRepository
-        _previousEmployers = Await previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        _previousEmployers = Await _previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvPrevEmployers.SelectionChanged, AddressOf dgvPrevEmployers_SelectionChanged
         dgvPrevEmployers.DataSource = _previousEmployers
@@ -160,11 +163,10 @@ Public Class PreviousEmployerTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Previous Employer",
                 Async Function()
-                    Dim repo = New PreviousEmployerRepository
-                    Await repo.DeleteAsync(_currentPrevEmployer)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentPrevEmployer.RowID), z_OrganizationID)
+                    Await _previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentPrevEmployer.RowID), z_OrganizationID)
 
                     Await LoadPrevEmployers()
                 End Function)
@@ -255,8 +257,7 @@ Public Class PreviousEmployerTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim prevEmployerRepo = New PreviousEmployerRepository
-                    Await prevEmployerRepo.UpdateAsync(_currentPrevEmployer)
+                    Await _previousEmployerRepo.UpdateAsync(_currentPrevEmployer)
 
                     RecordUpdatePrevEmployer(oldPrevEmployer)
 
@@ -392,8 +393,7 @@ Public Class PreviousEmployerTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 

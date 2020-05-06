@@ -14,6 +14,10 @@ Public Class AddAwardForm
 
     Private _newAward As Award
 
+    Private _awardRepo As New AwardRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
@@ -49,11 +53,9 @@ Public Class AddAwardForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim awardRepo = New AwardRepository
-                Await awardRepo.CreateAsync(_newAward)
+                Await _awardRepo.CreateAsync(_newAward)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

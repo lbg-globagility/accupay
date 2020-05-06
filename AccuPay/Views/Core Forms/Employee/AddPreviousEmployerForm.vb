@@ -12,6 +12,10 @@ Public Class AddPreviousEmployerForm
 
     Private _newPreviousEmployer As PreviousEmployer
 
+    Private _previousEmployerRepo As New PreviousEmployerRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
@@ -72,11 +76,9 @@ Public Class AddPreviousEmployerForm
                     .CreatedBy = z_User
                 End With
 
-                Dim prevEmployerRepo = New PreviousEmployerRepository
-                Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
+                Await _previousEmployerRepo.CreateAsync(_newPreviousEmployer)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

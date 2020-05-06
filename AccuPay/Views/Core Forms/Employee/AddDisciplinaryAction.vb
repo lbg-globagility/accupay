@@ -19,6 +19,14 @@ Public Class AddDisciplinaryAction
 
     Private _actions As IEnumerable(Of ListOfValue)
 
+    Private _disciplinaryActionRepo As New DisciplinaryActionRepository
+
+    Private _productRepo As New ProductRepository
+
+    Private _listOfValRepo As New ListOfValueRepository
+
+    Private _userActivityRepo As New UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
@@ -34,11 +42,9 @@ Public Class AddDisciplinaryAction
     End Sub
 
     Private Async Function BindDataSource() As Task
-        Dim productsRepo = New ProductRepository
-        _findingNames = Await productsRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
+        _findingNames = Await _productRepo.GetDisciplinaryTypesAsync(z_OrganizationID)
 
-        Dim listOfValRepo = New ListOfValueRepository
-        _actions = Await listOfValRepo.GetEmployeeDisciplinaryPenalties()
+        _actions = Await _listOfValRepo.GetEmployeeDisciplinaryPenalties()
 
         cboFinding.DataSource = _findingNames
         cboAction.DataSource = _actions
@@ -77,11 +83,9 @@ Public Class AddDisciplinaryAction
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim disciplinaryActionRepo = New DisciplinaryActionRepository
-                Await disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
+                Await _disciplinaryActionRepo.CreateAsync(_newDisciplinaryAction)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newDisciplinaryAction.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newDisciplinaryAction.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
