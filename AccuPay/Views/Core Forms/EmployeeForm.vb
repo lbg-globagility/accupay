@@ -238,13 +238,13 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'tsbtnNewAtta_Click(sender, e)
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Performance appraisal"
-                    dgvempatta.Item("Column38", indx).Value = "Performance appraisal"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Performance appraisal"
+                    'dgvempatta.Item("Column38", indx).Value = "Performance appraisal"
                 End If
             ElseIf .Name = "chklistlinklbl_1" Then 'BIR TIN = 4
                 tabctrlemp.SelectedIndex = GetEmployeeProfileTabPageIndex()
@@ -257,27 +257,27 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Diploma"
-                    dgvempatta.Item("Column38", indx).Value = "Diploma"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Diploma"
+                    'dgvempatta.Item("Column38", indx).Value = "Diploma"
                 End If
             ElseIf .Name = "chklistlinklbl_3" Then 'ID Info slip = 8
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "ID Info slip"
-                    dgvempatta.Item("Column38", indx).Value = "ID Info slip"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "ID Info slip"
+                    'dgvempatta.Item("Column38", indx).Value = "ID Info slip"
                 End If
             ElseIf .Name = "chklistlinklbl_4" Then 'Philhealth ID = 10
                 tabctrlemp.SelectedIndex = GetEmployeeProfileTabPageIndex()
@@ -301,158 +301,158 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Transcript of record"
-                    dgvempatta.Item("Column38", indx).Value = "Transcript of record"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Transcript of record"
+                    'dgvempatta.Item("Column38", indx).Value = "Transcript of record"
                 End If
             ElseIf .Name = "chklistlinklbl_8" Then 'Birth certificate = 18
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Birth certificate"
-                    dgvempatta.Item("Column38", indx).Value = "Birth certificate"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Birth certificate"
+                    'dgvempatta.Item("Column38", indx).Value = "Birth certificate"
                 End If
             ElseIf .Name = "chklistlinklbl_9" Then 'Employee contract = 20
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Employee contract"
-                    dgvempatta.Item("Column38", indx).Value = "Employee contract"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Employee contract"
+                    'dgvempatta.Item("Column38", indx).Value = "Employee contract"
                 End If
             ElseIf .Name = "chklistlinklbl_10" Then 'Medical exam = 22
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Medical exam"
-                    dgvempatta.Item("Column38", indx).Value = "Medical exam"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Medical exam"
+                    'dgvempatta.Item("Column38", indx).Value = "Medical exam"
                 End If
             ElseIf .Name = "chklistlinklbl_11" Then 'NBI clearance = 24
 
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "NBI clearance"
-                    dgvempatta.Item("Column38", indx).Value = "NBI clearance"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "NBI clearance"
+                    'dgvempatta.Item("Column38", indx).Value = "NBI clearance"
                 End If
             ElseIf .Name = "chklistlinklbl_12" Then 'COE employer = 26
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "COE employer"
-                    dgvempatta.Item("Column38", indx).Value = "COE employer"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "COE employer"
+                    'dgvempatta.Item("Column38", indx).Value = "COE employer"
                 End If
             ElseIf .Name = "chklistlinklbl_13" Then 'Marriage contract = 28
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Marriage contract"
-                    dgvempatta.Item("Column38", indx).Value = "Marriage contract"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Marriage contract"
+                    'dgvempatta.Item("Column38", indx).Value = "Marriage contract"
                 End If
             ElseIf .Name = "chklistlinklbl_14" Then 'House sketch = 30
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "House sketch"
-                    dgvempatta.Item("Column38", indx).Value = "House sketch"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "House sketch"
+                    'dgvempatta.Item("Column38", indx).Value = "House sketch"
                 End If
             ElseIf .Name = "chklistlinklbl_15" Then '2305 = 32 'Training agreement = 32
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "2305" '"Training agreement"
-                    dgvempatta.Item("Column38", indx).Value = "2305"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "2305" '"Training agreement"
+                    'dgvempatta.Item("Column38", indx).Value = "2305"
                 End If
             ElseIf .Name = "chklistlinklbl_16" Then 'Health permit = 34
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Health permit"
-                    dgvempatta.Item("Column38", indx).Value = "Health permit"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Health permit"
+                    'dgvempatta.Item("Column38", indx).Value = "Health permit"
                 End If
             ElseIf .Name = "chklistlinklbl_17" Then 'SSS loan certificate = 36 'Valid ID = 36
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "SSS loan certificate" '"Valid ID"
-                    dgvempatta.Item("Column38", indx).Value = "SSS loan certificate"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "SSS loan certificate" '"Valid ID"
+                    'dgvempatta.Item("Column38", indx).Value = "SSS loan certificate"
                 End If
             ElseIf .Name = "chklistlinklbl_18" Then 'Resume = 38
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    tsbtnNewAtta_Click(sender, e)
+                    'tsbtnNewAtta_Click(sender, e)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = "Resume"
-                    dgvempatta.Item("Column38", indx).Value = "Resume"
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = "Resume"
+                    'dgvempatta.Item("Column38", indx).Value = "Resume"
                 End If
             Else
                 ctrlAttachment(link_lablesender)
@@ -515,14 +515,14 @@ Public Class EmployeeForm
 
                 If .ImageIndex = 0 Then
 
-                    tsbtnNewAtta_Click(lnk_lablesender, New EventArgs)
+                    'tsbtnNewAtta_Click(lnk_lablesender, New EventArgs)
 
-                    Dim indx = dgvempatta.CurrentRow.Index
+                    'Dim indx = dgvempatta.CurrentRow.Index
 
-                    dgvempatta.Rows.Add()
-                    dgvempatta.Item("eatt_Type", indx).Selected = True
-                    dgvempatta.Item("eatt_Type", indx).Value = .Text.Trim
-                    dgvempatta.Item("Column38", indx).Value = .Text.Trim
+                    'dgvempatta.Rows.Add()
+                    'dgvempatta.Item("eatt_Type", indx).Selected = True
+                    'dgvempatta.Item("eatt_Type", indx).Value = .Text.Trim
+                    'dgvempatta.Item("Column38", indx).Value = .Text.Trim
                 End If
             End With
         End If
@@ -2384,13 +2384,18 @@ Public Class EmployeeForm
                     Await BonusTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
-                    txtFNameAtta.Text = employeefullname
-                    txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
-                    pbEmpPicAtta.Image = Nothing
-                    pbEmpPicAtta.Image = EmployeeImage
-                    listofEditRoweatt.Clear()
-                    VIEW_employeeattachments(.Cells("RowID").Value)
-                    dgvempatta_SelectionChanged(sender, e)
+                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+
+                    Await AttachmentTab.SetEmployee(employee)
+
+                    'txtFNameAtta.Text = employeefullname
+                    'txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
+                    'pbEmpPicAtta.Image = Nothing
+                    'pbEmpPicAtta.Image = EmployeeImage
+                    'listofEditRoweatt.Clear()
+                    'VIEW_employeeattachments(.Cells("RowID").Value)
+                    'dgvempatta_SelectionChanged(sender, e)
                 ElseIf selectedTab Is tbpNewSalary Then
 
                     'transferred here so this function will not fetch data from database
@@ -2449,13 +2454,6 @@ Public Class EmployeeForm
 
                     RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
 
-                Case GetAttachmentTabPageIndex() 'Attachment
-                    dgvempatta.Rows.Clear()
-                    cboattatype.SelectedIndex = -1
-                    txtFNameAtta.Text = ""
-                    txtEmpIDAtta.Text = ""
-                    pbEmpPicAtta.Image = Nothing
-                    listofEditRoweatt.Clear()
             End Select
         End If
         listofEditDepen.Clear()
@@ -5337,14 +5335,6 @@ Public Class EmployeeForm
 
 #Region "Attachment"
 
-    Dim computertemppath = Nothing
-
-    Dim view_IDAttach As Integer = Nothing
-
-    Private Sub dgvempatta_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvempatta.DataError
-        'this is needed to handle data error. It can be blank.
-    End Sub
-
     Sub tbpAttachment_Enter(sender As Object, e As EventArgs) Handles tbpAttachment.Enter
 
         UpdateTabPageText()
@@ -5353,460 +5343,8 @@ Public Class EmployeeForm
 
         Label25.Text = "ATTACHMENT"
 
-        Static once As SByte = 0
-
-        If once = 0 Then
-            once = 1
-
-            computertemppath = Path.GetTempPath
-
-            enlistToCboBox("SELECT DisplayValue FROM listofval WHERE Type='Employee Checklist' ORDER BY OrderBy;",
-                            cboattatype)
-
-            For Each strval In cboattatype.Items
-                eatt_Type.Items.Add(strval)
-            Next
-
-            AddHandler dgvempatta.SelectionChanged, AddressOf dgvempatta_SelectionChanged
-
-            dgvempatta.Focus()
-
-            view_IDAttach = VIEW_privilege("Employee Attachment", orgztnID)
-
-            Dim formuserprivilege = position_view_table.Select("ViewID = " & view_IDAttach)
-
-            If formuserprivilege.Count = 0 Then
-
-                tsbtnNewAtta.Visible = 0
-                tsbtnSaveAtta.Visible = 0
-
-                dontUpdateAtta = 1
-            Else
-                For Each drow In formuserprivilege
-                    If drow("ReadOnly").ToString = "Y" Then
-                        tsbtnNewAtta.Visible = 0
-                        tsbtnSaveAtta.Visible = 0
-
-                        dontUpdateAtta = 1
-                        Exit For
-                    Else
-                        If drow("Creates").ToString = "N" Then
-                            tsbtnNewAtta.Visible = 0
-                        Else
-                            tsbtnNewAtta.Visible = 1
-                        End If
-
-                        If drow("Updates").ToString = "N" Then
-                            dontUpdateAtta = 1
-                        Else
-                            dontUpdateAtta = 0
-                        End If
-
-                    End If
-
-                Next
-
-            End If
-
-        End If
-
-        tabIndx = GetAttachmentTabPageIndex()
-
         dgvEmp_SelectionChanged(sender, e)
 
-    End Sub
-
-    Private Sub dgvempatta_CellEndEdit(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempatta.CellEndEdit
-
-        Dim rowindx = e.RowIndex
-
-        Dim viewthis = dgvempatta.Columns(e.ColumnIndex).Name
-
-        If viewthis = "eatt_Type" Then
-
-            For Each strval In cboattatype.Items
-                If strval = Trim(dgvempatta.Item("eatt_Type", rowindx).Value) Then
-                    dgvempatta.Item("Column38", rowindx).Value = strval
-                    dgvempatta.Item("eatt_viewthis", rowindx).Value = "view this"
-                    Exit For
-                End If
-            Next
-
-        End If
-
-        listofEditRoweatt.Add(dgvempatta.Item("eatt_RowID", rowindx).Value)
-
-    End Sub
-
-    Private Sub dgvempatta_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempatta.CellContentClick
-
-        If dgvempatta.RowCount = 1 Then
-            MsgBox("Nothing to view.", MsgBoxStyle.Information)
-        Else
-            Dim viewthis = dgvempatta.Columns(dgvempatta.CurrentCell.ColumnIndex).Name
-
-            If viewthis = "eatt_viewthis" Then
-                If dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value IsNot Nothing Then
-
-                    Dim savefilepath = Path.GetTempPath &
-                                             dgvempatta.CurrentRow.Cells("eatt_FileName").Value &
-                                             dgvempatta.CurrentRow.Cells("eatt_FileType").Value
-
-                    If Trim(dgvempatta.CurrentRow.Cells("eatt_FileType").Value) Is Nothing Then
-                    Else
-                        If Trim(dgvempatta.CurrentRow.Cells("eatt_FileName").Value) Is Nothing Then
-                            dgvempatta.CurrentRow.Cells("eatt_FileName").Selected = 1
-                            dgvempatta.BeginEdit(1)
-                            InfoBalloon("Please input a file name.", "Attachment has no file name", Label235, 0, -69)
-                        Else
-                            Dim fs As New FileStream(savefilepath,
-                                                     FileMode.Create)
-
-                            Dim blob As Byte() = DirectCast(dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value, Byte())
-                            fs.Write(blob, 0, blob.Length)
-                            fs.Close()
-                            fs = Nothing
-
-                            Process.Start(savefilepath)
-                        End If
-
-                    End If
-                Else
-                    MsgBox("Nothing to view", MsgBoxStyle.Information)
-
-                End If
-            End If
-        End If
-    End Sub
-
-    Private Sub dgvempatta_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvempatta.SelectionChanged
-        If dgvempatta.RowCount = 1 Then
-            pbatta.Image = Nothing
-        Else
-            With dgvempatta.CurrentRow
-                If .IsNewRow Then
-                    pbatta.Image = Nothing
-                Else
-                    If .Cells("eatt_AttachedFile").Value Is Nothing Then
-                        pbatta.Image = Nothing
-                    Else
-                        pbatta.Image = ConvByteToImage(.Cells("eatt_AttachedFile").Value)
-
-                        Dim eattachment_type = .Cells("eatt_Type").Value
-
-                    End If
-                End If
-            End With
-        End If
-    End Sub
-
-    Sub VIEW_employeeattachments(ByVal EmpID As Object)
-        Dim params(1, 2) As Object
-
-        params(0, 0) = "EmpID"
-
-        params(0, 1) = EmpID
-
-        EXEC_VIEW_PROCEDURE(params,
-                             "VIEW_employeeattachments",
-                             dgvempatta)
-
-    End Sub
-
-    Function INSUPD_employeeattachment(Optional eatta_RowID As Object = Nothing,
-                                       Optional eatta_EmployeeID As Object = Nothing,
-                                       Optional eatta_Type As Object = Nothing,
-                                       Optional eatta_FileName As Object = Nothing,
-                                       Optional eatta_FileType As Object = Nothing,
-                                       Optional eatta_AttachedFile As Object = Nothing) As Object
-
-        Dim params(7, 2) As Object
-
-        'eatt_RowID
-        'eatt_Type
-        'eatt_FileName
-        'eatt_FileType
-        'eatt_EmployeeID
-        'eatt_Created
-        'eatt_CreatedBy
-        'eatt_LastUpd
-        'eatt_LastUpdBy
-        'eatt_AttachedFile
-        'eatt_viewthis
-
-        params(0, 0) = "eatta_RowID"
-        params(1, 0) = "eatta_EmployeeID"
-        params(2, 0) = "eatta_CreatedBy"
-        params(3, 0) = "eatta_LastUpdBy"
-        params(4, 0) = "eatta_Type"
-        params(5, 0) = "eatta_FileName"
-        params(6, 0) = "eatta_FileType"
-        params(7, 0) = "eatta_AttachedFile"
-
-        params(0, 1) = If(eatta_RowID Is Nothing, DBNull.Value, eatta_RowID)
-        params(1, 1) = eatta_EmployeeID
-        params(2, 1) = z_User
-        params(3, 1) = z_User
-        params(4, 1) = eatta_Type
-        params(5, 1) = Trim(eatta_FileName)
-        params(6, 1) = Trim(eatta_FileType)
-        params(7, 1) = If(eatta_AttachedFile Is Nothing, DBNull.Value, eatta_AttachedFile)
-
-        INSUPD_employeeattachment =
-            EXEC_INSUPD_PROCEDURE(params,
-                                   "INSUPD_employeeattachment",
-                                   "empattaID")
-
-    End Function
-
-    Private Sub btnattaclear_Click(sender As Object, e As EventArgs) Handles btnattaclear.Click
-        dgvempatta.Focus()
-
-        pbatta.Image = Nothing
-
-        With dgvempatta.CurrentRow
-            .Cells("eatt_AttachedFile").Value = Nothing
-            .Cells("eatt_FileName").Value = Nothing
-            .Cells("eatt_FileType").Value = Nothing
-            .Cells("eatt_viewthis").Value = Nothing
-
-            listofEditRoweatt.Add(dgvempatta.Item("eatt_RowID", .Index).Value)
-
-        End With
-
-    End Sub
-
-    Public listofEditRoweatt As New AutoCompleteStringCollection
-
-    Dim atta_nameatt As String = Nothing
-    Dim atta_extensnatt As String = Nothing
-    Dim thefilepathatt As String = Nothing
-
-    Private Sub btnattabrowse_Click(sender As Object, e As EventArgs) Handles btnattabrowse.Click
-        dgvempatta.Focus()
-        'RemoveHandler dgvEmpOT.SelectionChanged, AddressOf dgvEmpOT_SelectionChanged
-        atta_nameatt = Nothing
-        atta_extensnatt = Nothing
-
-        Static employeeEmpOTRowID As Integer = -1
-        Try
-            Dim browsefile As OpenFileDialog = New OpenFileDialog()
-
-            'browsefile.Filter = "JPEG(*.jpg)|*.jpg"
-
-            browsefile.Filter = "All files (*.*)|*.*" &
-                                "|JPEG (*.jpg)|*.jpg" &
-                                "|PNG (*.PNG)|*.png" &
-                                "|MS Word 97-2003 Document (*.doc)|*.doc" &
-                                "|MS Word Document (*.docx)|*.docx" &
-                                "|MS Excel 97-2003 Workbook (*.xls)|*.xls" &
-                                "|MS Excel Workbook (*.xlsx)|*.xlsx"
-
-            '|" & _
-            '"PNG(*.PNG)|*.png|" & _
-            '"Bitmap(*.BMP)|*.bmp"
-            If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
-                With dgvempatta
-                    '.ClearSelection()
-                    .Focus()
-                    'If .RowCount = 1 Then
-                    '    .Rows.Add()
-                    '    .Item("Column9", 0).Value = convertFileToByte(browsefile.FileName)
-                    '    '.Item(.CurrentCell.ColumnIndex, 0).Selected = True
-                    'Else
-
-                    thefilepathatt = browsefile.FileName
-                    atta_nameatt = Path.GetFileNameWithoutExtension(thefilepathatt)
-                    atta_extensnatt = Path.GetExtension(thefilepathatt)
-
-                    If .CurrentRow.IsNewRow Then
-                        Dim e_rowindx As Integer = .CurrentRow.Index
-                        Dim currcol As String = .Columns(.CurrentCell.ColumnIndex).Name
-                        .Rows.Add()
-                        .Item("eatt_AttachedFile", e_rowindx).Value = Nothing
-                        .Item("eatt_AttachedFile", e_rowindx).Value = convertFileToByte(thefilepathatt)
-
-                        .Item("eatt_FileName", e_rowindx).Value = atta_nameatt
-                        .Item("eatt_FileType", e_rowindx).Value = atta_extensnatt
-                        .Item("eatt_viewthis", e_rowindx).Value = "view this"
-
-                        .CurrentRow.Cells("Column38").Value = .CurrentRow.Cells("eatt_Type").Value
-
-                        .Item(currcol, e_rowindx).Selected = True
-                    Else
-                        .CurrentRow.Cells("eatt_AttachedFile").Value = Nothing
-                        .CurrentRow.Cells("eatt_AttachedFile").Value = convertFileToByte(thefilepathatt)
-
-                        .CurrentRow.Cells("eatt_FileName").Value = atta_nameatt
-                        .CurrentRow.Cells("eatt_FileType").Value = atta_extensnatt
-                        .CurrentRow.Cells("eatt_viewthis").Value = "view this"
-
-                        .CurrentRow.Cells("Column38").Value = .CurrentRow.Cells("eatt_Type").Value
-
-                        If employeeEmpOTRowID <> Val(dgvempatta.Item("eatt_RowID", .CurrentRow.Index).Value) Then
-                            listofEditRoweatt.Add(dgvempatta.Item("eatt_RowID", .CurrentRow.Index).Value)
-                        End If
-
-                    End If
-                    .Focus()
-                End With
-            Else
-
-            End If
-        Catch ex As Exception
-            MsgBox(ex.Message & " Error on File")
-        Finally
-            dgvempatta_SelectionChanged(sender, e)
-            'AddHandler dgvEmpOT.SelectionChanged, AddressOf dgvEmpOT_SelectionChanged
-        End Try
-    End Sub
-
-    Private Sub btnattadl_Click(sender As Object, e As EventArgs) Handles btnattadl.Click
-        dgvempatta.Focus()
-
-        If dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value Is Nothing Then
-            MsgBox("Nothing to view.", MsgBoxStyle.Information)
-        Else
-
-            Dim dlImage As SaveFileDialog = New SaveFileDialog
-            dlImage.RestoreDirectory = True
-
-            'dlImage.Filter = "JPEG(*.jpg)|*.jpg"
-
-            'dlImage.Filter = "All files (*.*)|*.*" & _
-            '                 "|JPEG (*.jpg)|*.jpg" & _
-            '                 "|PNG (*.PNG)|*.png" & _
-            '                 "|MS Word 97-2003 Document (*.doc)|*.doc" & _
-            '                 "|MS Word Document (*.docx)|*.docx" & _
-            '                 "|MS Excel 97-2003 Workbook (*.xls)|*.xls" & _
-            '                 "|MS Excel Workbook (*.xlsx)|*.xlsx"
-
-            If dlImage.ShowDialog = Windows.Forms.DialogResult.OK Then
-
-                'dlImage.FileName = dgvOBF.CurrentRow.Cells("obf_attafilename").Value & _
-                '                   dgvOBF.CurrentRow.Cells("obf_attafileextensn").Value
-
-                Dim savefilepath As String =
-                    Path.GetFullPath(dlImage.FileName) &
-                    dgvempatta.CurrentRow.Cells("eatt_FileType").Value
-
-                Dim fs As New FileStream(savefilepath, FileMode.Create)
-                Dim blob As Byte() = DirectCast(dgvempatta.CurrentRow.Cells("eatt_AttachedFile").Value, Byte())
-                fs.Write(blob, 0, blob.Length)
-                fs.Close()
-                fs = Nothing
-
-                Dim prompt = MessageBox.Show("Do you want to open the saved file ?", "Show file", MessageBoxButtons.YesNoCancel)
-
-                If prompt = Windows.Forms.DialogResult.Yes Then
-                    Process.Start(savefilepath)
-                End If
-
-            End If
-
-        End If
-
-    End Sub
-
-    Private Sub tsbtnNewAtta_Click(sender As Object, e As EventArgs) Handles tsbtnNewAtta.Click
-        dgvempatta.EndEdit(1)
-
-        For Each dgvrow As DataGridViewRow In dgvempatta.Rows
-            If dgvrow.IsNewRow Then
-                dgvrow.Cells("eatt_Type").Selected = 1
-                dgvempatta.Focus()
-                Exit For
-            End If
-        Next
-
-        dgvempatta_SelectionChanged(sender, e)
-
-    End Sub
-
-    Dim dontUpdateAtta As SByte = 0
-
-    Private Sub tsbtnSaveAtta_Click(sender As Object, e As EventArgs) Handles tsbtnSaveAtta.Click
-
-        dgvempatta.EndEdit(1)
-
-        If dontUpdateAtta = 1 Then
-            listofEditRoweatt.Clear()
-        End If
-
-        If dgvEmp.RowCount = 0 Then
-            Exit Sub
-        End If
-
-        For Each dgvrow As DataGridViewRow In dgvempatta.Rows
-            With dgvrow
-
-                'eatt_RowID
-                'eatt_Type
-                'eatt_FileName
-                'eatt_FileType
-                'eatt_EmployeeID
-                'eatt_Created
-                'eatt_CreatedBy
-                'eatt_LastUpd
-                'eatt_LastUpdBy
-                'eatt_AttachedFile
-                'eatt_viewthis
-
-                If .IsNewRow Then
-                Else
-                    'MsgBox(("LambertBGalit").Substring(0, If(("LambertBGalit").ToString.Length >= 200, 200, ("LambertBGalit").ToString.Length)))
-
-                    Dim filenameLength = If(Trim(.Cells("eatt_FileName").Value).Length >= 200, 200, Trim(.Cells("eatt_FileName").Value).Length)
-                    Dim fileextnsnLength = If(Trim(.Cells("eatt_FileType").Value).Length >= 200, 200, Trim(.Cells("eatt_FileType").Value).Length)
-
-                    If .Cells("eatt_RowID").Value Is Nothing And
-                        tsbtnNewAtta.Visible = True Then
-
-                        If .Cells("Column38").Value Is Nothing Then
-
-                            WarnBalloon("The file '" & .Cells("eatt_FileName").Value & .Cells("eatt_FileType").Value & "' has no Attachment type." & vbNewLine &
-                                        "Please supply it's attachment type.",
-                                        "An attachment has no Type", cboattatype, 0, -69)
-
-                            Exit Sub
-                        Else
-                            .Cells("eatt_RowID").Value = INSUPD_employeeattachment(,
-                                                                               dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                                               .Cells("Column38").Value,
-                                                                               Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength),
-                                                                               Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength),
-                                                                               .Cells("eatt_AttachedFile").Value)
-
-                        End If
-                    Else
-                        If listofEditRoweatt.Contains(.Cells("eatt_RowID").Value) Then
-
-                            INSUPD_employeeattachment(.Cells("eatt_RowID").Value,
-                                                      dgvEmp.CurrentRow.Cells("RowID").Value,
-                                                      .Cells("Column38").Value,
-                                                      Trim(.Cells("eatt_FileName").Value).Substring(0, filenameLength),
-                                                      Trim(.Cells("eatt_FileType").Value).Substring(0, fileextnsnLength),
-                                                      .Cells("eatt_AttachedFile").Value)
-
-                        End If
-
-                    End If
-
-                End If
-
-            End With
-
-        Next
-
-        listofEditRoweatt.Clear()
-
-        InfoBalloon("Changes made in Employee ID '" & dgvEmp.CurrentRow.Cells("Column1").Value & "' has successfully saved.", "Changes successfully save", lblforballoon, 0, -69)
-
-    End Sub
-
-    Private Sub tsbtnCancelAtta_Click(sender As Object, e As EventArgs) Handles tsbtnCancelAtta.Click
-        listofEditRoweatt.Clear()
-        dgvEmp_SelectionChanged(sender, e)
     End Sub
 
 #End Region

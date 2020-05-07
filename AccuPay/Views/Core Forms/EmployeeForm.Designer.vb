@@ -363,6 +363,9 @@ Partial Class EmployeeForm
         Me.tbpBonus = New System.Windows.Forms.TabPage()
         Me.BonusTab = New AccuPay.BonusTab()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
+        Me.AttachmentTab = New AccuPay.AttachmentTab()
+        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label344 = New System.Windows.Forms.Label()
         Me.Label343 = New System.Windows.Forms.Label()
@@ -394,8 +397,6 @@ Partial Class EmployeeForm
         Me.tsbtnCancelAtta = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
-        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
-        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel14 = New System.Windows.Forms.Panel()
         Me.LinkLabel3 = New System.Windows.Forms.LinkLabel()
         Me.Label325 = New System.Windows.Forms.Label()
@@ -960,12 +961,12 @@ Partial Class EmployeeForm
         Me.ToolStrip11.SuspendLayout
         Me.tbpBonus.SuspendLayout
         Me.tbpAttachment.SuspendLayout
+        Me.tbpNewSalary.SuspendLayout
         Me.Panel2.SuspendLayout
         CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip21.SuspendLayout
-        Me.tbpNewSalary.SuspendLayout
         Me.Panel14.SuspendLayout
         CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvDisciplinaryList, System.ComponentModel.ISupportInitialize).BeginInit
@@ -3923,8 +3924,7 @@ Partial Class EmployeeForm
         '
         Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
         Me.tbpAttachment.AutoScroll = True
-        Me.tbpAttachment.Controls.Add(Me.Panel2)
-        Me.tbpAttachment.Controls.Add(Me.ToolStrip21)
+        Me.tbpAttachment.Controls.Add(Me.AttachmentTab)
         Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
         Me.tbpAttachment.Name = "tbpAttachment"
         Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
@@ -3932,6 +3932,38 @@ Partial Class EmployeeForm
         Me.tbpAttachment.TabIndex = 18
         Me.tbpAttachment.Text = "ATTACH"
         Me.tbpAttachment.UseVisualStyleBackColor = True
+        '
+        'AttachmentTab
+        '
+        Me.AttachmentTab.BackColor = System.Drawing.Color.White
+        Me.AttachmentTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AttachmentTab.Location = New System.Drawing.Point(3, 3)
+        Me.AttachmentTab.Name = "AttachmentTab"
+        Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
+        Me.AttachmentTab.TabIndex = 0
+        '
+        'tbpNewSalary
+        '
+        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
+        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
+        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
+        Me.tbpNewSalary.Name = "tbpNewSalary"
+        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
+        Me.tbpNewSalary.TabIndex = 19
+        Me.tbpNewSalary.Text = "SALARY"
+        Me.tbpNewSalary.UseVisualStyleBackColor = True
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.PhilHealth = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
+        Me.SalaryTab.TabIndex = 0
         '
         'Panel2
         '
@@ -4238,29 +4270,6 @@ Partial Class EmployeeForm
         Me.ToolStripButton34.Size = New System.Drawing.Size(23, 22)
         Me.ToolStripButton34.Text = "ToolStripButton1"
         Me.ToolStripButton34.ToolTipText = "Show audit trails"
-        '
-        'tbpNewSalary
-        '
-        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
-        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
-        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
-        Me.tbpNewSalary.Name = "tbpNewSalary"
-        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
-        Me.tbpNewSalary.TabIndex = 19
-        Me.tbpNewSalary.Text = "SALARY"
-        Me.tbpNewSalary.UseVisualStyleBackColor = True
-        '
-        'SalaryTab
-        '
-        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.BackColor = System.Drawing.Color.White
-        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
-        Me.SalaryTab.Name = "SalaryTab"
-        Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
-        Me.SalaryTab.TabIndex = 0
         '
         'Panel14
         '
@@ -9089,7 +9098,7 @@ Partial Class EmployeeForm
         Me.ToolStrip11.PerformLayout
         Me.tbpBonus.ResumeLayout(False)
         Me.tbpAttachment.ResumeLayout(False)
-        Me.tbpAttachment.PerformLayout
+        Me.tbpNewSalary.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout
         CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).EndInit
@@ -9097,7 +9106,6 @@ Partial Class EmployeeForm
         CType(Me.pbatta, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip21.ResumeLayout(False)
         Me.ToolStrip21.PerformLayout
-        Me.tbpNewSalary.ResumeLayout(False)
         Me.Panel14.ResumeLayout(False)
         Me.Panel14.PerformLayout
         CType(Me.pbEmpPicDiscip, System.ComponentModel.ISupportInitialize).EndInit
@@ -9783,6 +9791,7 @@ Partial Class EmployeeForm
     Friend WithEvents CertificationTab As CertificationTab
     Friend WithEvents DisciplinaryActionTab As DisciplinaryActionTab
     Friend WithEvents PreviousEmployerTab As PreviousEmployerTab
+    Friend WithEvents AttachmentTab As AttachmentTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
     Friend WithEvents tsbtnImport As ToolStripButton

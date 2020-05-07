@@ -514,12 +514,6 @@ Public Class MDIPrimaryForm
 
                                 End If
 
-                            Case .GetAttachmentTabPageIndex
-                                If .listofEditRoweatt.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
 
                         End Select
 

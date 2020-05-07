@@ -31,6 +31,11 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeChecklistsAsync()
+        {
+            return await GetListOfValuesAsync("Employee Checklist");
+        }
+
         public async Task<IEnumerable<ListOfValue>> GetEmployeeDisciplinaryPenalties()
         {
             return await GetListOfValuesAsync("Employee Disciplinary Penalty");

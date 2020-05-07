@@ -494,6 +494,12 @@
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAttachmentForm.Designer.vb">
+      <DependentUpon>AddAttachmentForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAttachmentForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\AddAwardForm.Designer.vb">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
     </Compile>
@@ -517,6 +523,12 @@
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AttachmentTab.Designer.vb">
+      <DependentUpon>AttachmentTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AttachmentTab.vb">
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\DisciplinaryActionTab.Designer.vb">
       <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
@@ -1938,6 +1950,9 @@
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddAttachmentForm.resx">
+      <DependentUpon>AddAttachmentForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
     </EmbeddedResource>
@@ -1949,6 +1964,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AttachmentTab.resx">
+      <DependentUpon>AttachmentTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\DisciplinaryActionTab.resx">
       <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
