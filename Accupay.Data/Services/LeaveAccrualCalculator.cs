@@ -8,28 +8,17 @@ namespace AccuPay.Data.Services
     public class LeaveAccrualCalculator
     {
         public decimal Calculate2(Employee employee,
-                                  DateTime currentDate,
+                                  DateTime currentAccrualDate,
                                   decimal leaveAllowance,
-                                  LeaveTransaction lastTransaction)
+                                  LeaveTransaction lastAccrual)
         {
-            DateTime nextDate;
-            if (lastTransaction == null)
-                nextDate = employee.StartDate.AddMonths(1).AddDays(1);
-            else
-                nextDate = lastTransaction.TransactionDate.AddMonths(1);
+            var lastAccrualDate = lastAccrual?.TransactionDate ?? employee.StartDate;
+            var leaveHoursPerMonth = decimal.Divide(leaveAllowance, CalendarConstants.MonthsInAYear);
 
-            // Check if the current date is still too early to update the ledger
-            if (currentDate < nextDate)
-                return 0M;
-
-            var leaveHoursPerMonth = leaveAllowance / (decimal)CalendarConstants.MonthsInAYear;
-
-            var lastTransactionDate = lastTransaction?.TransactionDate ?? employee.StartDate;
-
-            var previousTotalMonths = Calendar.MonthsBetween(employee.StartDate, lastTransactionDate);
+            var previousTotalMonths = Calendar.MonthsBetween(employee.StartDate, lastAccrualDate);
             var previousTotal = AccuMath.CommercialRound(leaveHoursPerMonth * previousTotalMonths);
 
-            var currentTotalMonths = Calendar.MonthsBetween(employee.StartDate, nextDate);
+            var currentTotalMonths = Calendar.MonthsBetween(employee.StartDate, currentAccrualDate);
             var currentTotal = AccuMath.CommercialRound(leaveHoursPerMonth * currentTotalMonths);
 
             var leaveHours = currentTotal - previousTotal;
@@ -60,6 +49,7 @@ namespace AccuPay.Data.Services
 
                 return leaveHours;
             }
+            // TODO: NEed to implement for the last cutoff
             else if (currentPayperiod.RowID == lastPayperiodOfYear.RowID)
             {
                 var daysInCutoff = Calendar.DaysBetween(currentPayperiod.PayFromDate, currentPayperiod.PayToDate);
