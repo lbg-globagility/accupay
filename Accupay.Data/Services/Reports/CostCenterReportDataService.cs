@@ -587,11 +587,23 @@ namespace AccuPay.Data.Services
                                                                     allTimeEntries: allTimeEntries,
                                                                     branchTimeEntries: branchTimeEntries);
 
-                paystubModel.ThirteenthMonthPay = ThirteenthMonthPayCalculator.
-                                                    ComputeByRegularPayAndAllowanceDaily(employee,
-                                                                                        branchTimeEntries,
-                                                                                        branchActualTimeEntries);
+                paystubModel.ThirteenthMonthPay = ComputeThirteenthMonthPay(
+                                                                employee,
+                                                                branchTimeEntries: branchTimeEntries,
+                                                                branchActualTimeEntries: branchActualTimeEntries);
                 return paystubModel;
+            }
+
+            private static decimal ComputeThirteenthMonthPay(Employee employee,
+                                                        List<TimeEntry> branchTimeEntries,
+                                                        List<ActualTimeEntry> branchActualTimeEntries)
+            {
+                var thirteenthMonthPay = ThirteenthMonthPayCalculator.
+                                            ComputeByRegularPayAndAllowanceDaily(employee,
+                                                                                branchTimeEntries,
+                                                                                branchActualTimeEntries);
+
+                return AccuMath.CommercialRound(thirteenthMonthPay / CalendarConstants.MonthsInAYear);
             }
 
             private static decimal ComputeTotalAllowance(List<Allowance> dailyAllowances,
@@ -694,9 +706,9 @@ namespace AccuPay.Data.Services
 
             private int EmployeeId => Employee.RowID.Value;
 
-            private string EmployeeName => Employee.FullNameWithMiddleInitialLastNameFirst.ToUpper() +
+            private string EmployeeName => Employee.FullNameWithMiddleInitialLastNameFirst.ToUpper()/* +
                                             " " +
-                                            Employee.EmployeeNo;
+                                            Employee.EmployeeNo*/;
 
             private decimal RegularDays => RegularHours / PayrollTools.WorkHoursPerDay;
 
