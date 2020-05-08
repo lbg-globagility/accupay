@@ -53,53 +53,43 @@ namespace AccuPay.Data.Services
             switch (thirteenMonthPolicy)
             {
                 case ThirteenthMonthCalculationBasis.RegularPayAndAllowance:
-                    return ComputeRegularPayAndAllowance(employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
+                    return ComputeByRegularPayAndAllowance(employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
 
                 case ThirteenthMonthCalculationBasis.DailyRate:
                     var hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
                     if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    {
                         hoursWorked = paystub.RegularHoursAndTotalRestDay;
+                    }
 
-                    var daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay;
-
-                    var dailyRate = PayrollTools.GetDailyRate(salary, employee);
-
-                    return AccuMath.CommercialRound(daysWorked * dailyRate);
+                    return ComputeByDailyRate(employee, salary, hoursWorked);
 
                 default:
                     return 0;
             }
         }
 
-        private static decimal ComputeRegularPayAndAllowance(Employee _employee, ICollection<TimeEntry> timeEntries, ICollection<ActualTimeEntry> actualtimeentries, Salary salary, ListOfValueCollection settings, ICollection<AllowanceItem> allowanceItems)
+        private static decimal ComputeByDailyRate(Employee employee, Salary salary, decimal hoursWorked)
         {
-            var contractualEmployementStatuses = new string[] { "Contractual", "SERVICE CONTRACT" };
+            var daysWorked = hoursWorked / PayrollTools.WorkHoursPerDay;
 
+            var dailyRate = PayrollTools.GetDailyRate(salary, employee);
+
+            return AccuMath.CommercialRound(daysWorked * dailyRate);
+        }
+
+        private static decimal ComputeByRegularPayAndAllowance(Employee employee, ICollection<TimeEntry> timeEntries, ICollection<ActualTimeEntry> actualtimeentries, Salary salary, ListOfValueCollection settings, ICollection<AllowanceItem> allowanceItems)
+        {
             var thirteenthMonthAmount = 0M;
 
-            if (_employee.IsDaily)
+            if (employee.IsDaily)
             {
-                if (contractualEmployementStatuses.Contains(_employee.EmploymentStatus))
-                    thirteenthMonthAmount = timeEntries.
-                                                Where(t => !t.IsRestDay).
-                                                Sum(t => t.BasicDayPay + t.LeavePay);
-                else
-                {
-                    foreach (var actualTimeEntry in actualtimeentries)
-                    {
-                        var timeEntry = timeEntries.
-                                        Where(t => t.Date == actualTimeEntry.Date).
-                                        FirstOrDefault();
-
-                        if (timeEntry == null || timeEntry.IsRestDay)
-                            continue;
-
-                        thirteenthMonthAmount += actualTimeEntry.BasicDayPay + actualTimeEntry.LeavePay;
-                    }
-                }
+                thirteenthMonthAmount = ComputeByRegularPayAndAllowanceDaily(employee,
+                                                                            timeEntries,
+                                                                            actualtimeentries);
             }
-            else if (_employee.IsMonthly || _employee.IsFixed)
+            else if (employee.IsMonthly || employee.IsFixed)
             {
                 var trueSalary = salary.TotalSalary;
                 var basicPay = trueSalary / CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
@@ -108,13 +98,55 @@ namespace AccuPay.Data.Services
 
                 decimal additionalAmount = 0;
                 if ((settings.GetBoolean("ThirteenthMonthPolicy.IsAllowancePaid")))
+                {
+                    // all allowance
                     additionalAmount = allowanceItems.Sum(a => a.Amount);
+                }
+                else
+                {
+                    // allowance that the 13th month pay flag is checked
+                    additionalAmount = allowanceItems.Where(a => a.IsThirteenthMonthPay).Sum(a => a.Amount);
+                }
 
                 thirteenthMonthAmount = ((basicPay + additionalAmount) - totalDeductions);
             }
 
-            var allowanceAmount = allowanceItems.Where(a => a.IsThirteenthMonthPay).Sum(a => a.Amount);
-            thirteenthMonthAmount += allowanceAmount;
+            return thirteenthMonthAmount;
+        }
+
+        // turn this back to private when we can use this class without coupling it with paystub
+        // this should only be a calculator class, not an update paystub class
+        public static decimal ComputeByRegularPayAndAllowanceDaily(Employee employee,
+                                                                    ICollection<TimeEntry> timeEntries,
+                                                                    ICollection<ActualTimeEntry> actualtimeentries)
+        {
+            decimal thirteenthMonthAmount = 0M;
+
+            var contractualEmployementStatuses = new string[] { "Contractual", "SERVICE CONTRACT" };
+
+            if (contractualEmployementStatuses.Contains(employee.EmploymentStatus))
+            {
+                thirteenthMonthAmount = timeEntries.
+                                            Where(t => !t.IsRestDay).
+                                            Sum(t => t.BasicDayPay + t.LeavePay);
+            }
+            else
+            {
+                foreach (var actualTimeEntry in actualtimeentries)
+                {
+                    var timeEntry = timeEntries.
+                                    Where(t => t.Date == actualTimeEntry.Date).
+                                    FirstOrDefault();
+
+                    if (timeEntry == null || timeEntry.IsRestDay)
+                    {
+                        continue;
+                    }
+
+                    thirteenthMonthAmount += actualTimeEntry.BasicDayPay + actualTimeEntry.LeavePay;
+                }
+            }
+
             return thirteenthMonthAmount;
         }
     }
