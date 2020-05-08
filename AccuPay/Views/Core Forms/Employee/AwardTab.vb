@@ -226,7 +226,7 @@ Public Class AwardTab
             End Function)
 
         If succeed Then
-            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            ShowBalloonInfo("Award successfuly saved.", messageTitle)
             Return True
         End If
         Return False

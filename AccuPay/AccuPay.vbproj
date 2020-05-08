@@ -524,6 +524,12 @@
     <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.Designer.vb">
+      <DependentUpon>AddPromotionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\AttachmentTab.Designer.vb">
       <DependentUpon>AttachmentTab.vb</DependentUpon>
     </Compile>
@@ -552,6 +558,12 @@
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PromotionTab.Designer.vb">
+      <DependentUpon>PromotionTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PromotionTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
@@ -1965,6 +1977,9 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddPromotionForm.resx">
+      <DependentUpon>AddPromotionForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AttachmentTab.resx">
       <DependentUpon>AttachmentTab.vb</DependentUpon>
     </EmbeddedResource>
@@ -1979,6 +1994,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\PromotionTab.resx">
+      <DependentUpon>PromotionTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>

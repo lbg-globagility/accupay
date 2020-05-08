@@ -65,6 +65,7 @@ namespace AccuPay.Data
         public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         public virtual DbSet<Privilege> Privileges { get; set; }
         public virtual DbSet<Product> Products { get; set; }
+        public virtual DbSet<Promotion> Promotions { get; set; }
         public virtual DbSet<Salary> Salaries { get; set; }
         public virtual DbSet<Shift> Shifts { get; set; }
         public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }

@@ -312,6 +312,13 @@ Partial Class EmployeeForm
         Me.tbpPrevEmp = New System.Windows.Forms.TabPage()
         Me.PreviousEmployerTab = New AccuPay.PreviousEmployerTab()
         Me.tbpPromotion = New System.Windows.Forms.TabPage()
+        Me.PromotionTab = New AccuPay.PromotionTab()
+        Me.tbpBonus = New System.Windows.Forms.TabPage()
+        Me.BonusTab = New AccuPay.BonusTab()
+        Me.tbpAttachment = New System.Windows.Forms.TabPage()
+        Me.AttachmentTab = New AccuPay.AttachmentTab()
+        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
+        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel11 = New System.Windows.Forms.Panel()
         Me.Label331 = New System.Windows.Forms.Label()
         Me.Label330 = New System.Windows.Forms.Label()
@@ -360,12 +367,6 @@ Partial Class EmployeeForm
         Me.ToolStripButton18 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton19 = New System.Windows.Forms.ToolStripButton()
         Me.UserActivityPromotionToolStripButton = New System.Windows.Forms.ToolStripButton()
-        Me.tbpBonus = New System.Windows.Forms.TabPage()
-        Me.BonusTab = New AccuPay.BonusTab()
-        Me.tbpAttachment = New System.Windows.Forms.TabPage()
-        Me.AttachmentTab = New AccuPay.AttachmentTab()
-        Me.tbpNewSalary = New System.Windows.Forms.TabPage()
-        Me.SalaryTab = New AccuPay.SalaryTab()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Label344 = New System.Windows.Forms.Label()
         Me.Label343 = New System.Windows.Forms.Label()
@@ -955,13 +956,13 @@ Partial Class EmployeeForm
         Me.tbpEducBG.SuspendLayout
         Me.tbpPrevEmp.SuspendLayout
         Me.tbpPromotion.SuspendLayout
+        Me.tbpBonus.SuspendLayout
+        Me.tbpAttachment.SuspendLayout
+        Me.tbpNewSalary.SuspendLayout
         Me.Panel11.SuspendLayout
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).BeginInit
         Me.ToolStrip11.SuspendLayout
-        Me.tbpBonus.SuspendLayout
-        Me.tbpAttachment.SuspendLayout
-        Me.tbpNewSalary.SuspendLayout
         Me.Panel2.SuspendLayout
         CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).BeginInit
         CType(Me.dgvempatta, System.ComponentModel.ISupportInitialize).BeginInit
@@ -3409,8 +3410,7 @@ Partial Class EmployeeForm
         'tbpPromotion
         '
         Me.tbpPromotion.AccessibleDescription = "Employee Promotion"
-        Me.tbpPromotion.Controls.Add(Me.Panel11)
-        Me.tbpPromotion.Controls.Add(Me.ToolStrip11)
+        Me.tbpPromotion.Controls.Add(Me.PromotionTab)
         Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
         Me.tbpPromotion.Name = "tbpPromotion"
         Me.tbpPromotion.Padding = New System.Windows.Forms.Padding(3)
@@ -3418,6 +3418,81 @@ Partial Class EmployeeForm
         Me.tbpPromotion.TabIndex = 8
         Me.tbpPromotion.Text = "PROMOT"
         Me.tbpPromotion.UseVisualStyleBackColor = True
+        '
+        'PromotionTab
+        '
+        Me.PromotionTab.BackColor = System.Drawing.Color.White
+        Me.PromotionTab.Location = New System.Drawing.Point(0, 0)
+        Me.PromotionTab.Name = "PromotionTab"
+        Me.PromotionTab.Size = New System.Drawing.Size(905, 552)
+        Me.PromotionTab.TabIndex = 0
+        '
+        'tbpBonus
+        '
+        Me.tbpBonus.AccessibleDescription = "Employee Bonus"
+        Me.tbpBonus.AutoScroll = True
+        Me.tbpBonus.Controls.Add(Me.BonusTab)
+        Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
+        Me.tbpBonus.Name = "tbpBonus"
+        Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpBonus.Size = New System.Drawing.Size(860, 486)
+        Me.tbpBonus.TabIndex = 17
+        Me.tbpBonus.Text = "BONUS"
+        Me.tbpBonus.UseVisualStyleBackColor = True
+        '
+        'BonusTab
+        '
+        Me.BonusTab.BackColor = System.Drawing.Color.White
+        Me.BonusTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.BonusTab.Location = New System.Drawing.Point(3, 3)
+        Me.BonusTab.Name = "BonusTab"
+        Me.BonusTab.Size = New System.Drawing.Size(854, 480)
+        Me.BonusTab.TabIndex = 0
+        '
+        'tbpAttachment
+        '
+        Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
+        Me.tbpAttachment.AutoScroll = True
+        Me.tbpAttachment.Controls.Add(Me.AttachmentTab)
+        Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
+        Me.tbpAttachment.Name = "tbpAttachment"
+        Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbpAttachment.Size = New System.Drawing.Size(860, 486)
+        Me.tbpAttachment.TabIndex = 18
+        Me.tbpAttachment.Text = "ATTACH"
+        Me.tbpAttachment.UseVisualStyleBackColor = True
+        '
+        'AttachmentTab
+        '
+        Me.AttachmentTab.BackColor = System.Drawing.Color.White
+        Me.AttachmentTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.AttachmentTab.Location = New System.Drawing.Point(3, 3)
+        Me.AttachmentTab.Name = "AttachmentTab"
+        Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
+        Me.AttachmentTab.TabIndex = 0
+        '
+        'tbpNewSalary
+        '
+        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
+        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
+        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
+        Me.tbpNewSalary.Name = "tbpNewSalary"
+        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
+        Me.tbpNewSalary.TabIndex = 19
+        Me.tbpNewSalary.Text = "SALARY"
+        Me.tbpNewSalary.UseVisualStyleBackColor = True
+        '
+        'SalaryTab
+        '
+        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.BackColor = System.Drawing.Color.White
+        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
+        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
+        Me.SalaryTab.Name = "SalaryTab"
+        Me.SalaryTab.PhilHealth = Nothing
+        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
+        Me.SalaryTab.TabIndex = 0
         '
         'Panel11
         '
@@ -3897,73 +3972,6 @@ Partial Class EmployeeForm
         Me.UserActivityPromotionToolStripButton.Name = "UserActivityPromotionToolStripButton"
         Me.UserActivityPromotionToolStripButton.Size = New System.Drawing.Size(93, 22)
         Me.UserActivityPromotionToolStripButton.Text = "User Activity"
-        '
-        'tbpBonus
-        '
-        Me.tbpBonus.AccessibleDescription = "Employee Bonus"
-        Me.tbpBonus.AutoScroll = True
-        Me.tbpBonus.Controls.Add(Me.BonusTab)
-        Me.tbpBonus.Location = New System.Drawing.Point(4, 4)
-        Me.tbpBonus.Name = "tbpBonus"
-        Me.tbpBonus.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpBonus.Size = New System.Drawing.Size(860, 486)
-        Me.tbpBonus.TabIndex = 17
-        Me.tbpBonus.Text = "BONUS"
-        Me.tbpBonus.UseVisualStyleBackColor = True
-        '
-        'BonusTab
-        '
-        Me.BonusTab.BackColor = System.Drawing.Color.White
-        Me.BonusTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.BonusTab.Location = New System.Drawing.Point(3, 3)
-        Me.BonusTab.Name = "BonusTab"
-        Me.BonusTab.Size = New System.Drawing.Size(854, 480)
-        Me.BonusTab.TabIndex = 0
-        '
-        'tbpAttachment
-        '
-        Me.tbpAttachment.AccessibleDescription = "Employee Attachment"
-        Me.tbpAttachment.AutoScroll = True
-        Me.tbpAttachment.Controls.Add(Me.AttachmentTab)
-        Me.tbpAttachment.Location = New System.Drawing.Point(4, 4)
-        Me.tbpAttachment.Name = "tbpAttachment"
-        Me.tbpAttachment.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpAttachment.Size = New System.Drawing.Size(860, 486)
-        Me.tbpAttachment.TabIndex = 18
-        Me.tbpAttachment.Text = "ATTACH"
-        Me.tbpAttachment.UseVisualStyleBackColor = True
-        '
-        'AttachmentTab
-        '
-        Me.AttachmentTab.BackColor = System.Drawing.Color.White
-        Me.AttachmentTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.AttachmentTab.Location = New System.Drawing.Point(3, 3)
-        Me.AttachmentTab.Name = "AttachmentTab"
-        Me.AttachmentTab.Size = New System.Drawing.Size(854, 480)
-        Me.AttachmentTab.TabIndex = 0
-        '
-        'tbpNewSalary
-        '
-        Me.tbpNewSalary.AccessibleDescription = "Employee Salary"
-        Me.tbpNewSalary.Controls.Add(Me.SalaryTab)
-        Me.tbpNewSalary.Location = New System.Drawing.Point(4, 4)
-        Me.tbpNewSalary.Name = "tbpNewSalary"
-        Me.tbpNewSalary.Size = New System.Drawing.Size(860, 486)
-        Me.tbpNewSalary.TabIndex = 19
-        Me.tbpNewSalary.Text = "SALARY"
-        Me.tbpNewSalary.UseVisualStyleBackColor = True
-        '
-        'SalaryTab
-        '
-        Me.SalaryTab.AllowanceSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.BackColor = System.Drawing.Color.White
-        Me.SalaryTab.BasicSalary = New Decimal(New Integer() {0, 0, 0, 0})
-        Me.SalaryTab.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.SalaryTab.Location = New System.Drawing.Point(0, 0)
-        Me.SalaryTab.Name = "SalaryTab"
-        Me.SalaryTab.PhilHealth = Nothing
-        Me.SalaryTab.Size = New System.Drawing.Size(860, 486)
-        Me.SalaryTab.TabIndex = 0
         '
         'Panel2
         '
@@ -9089,16 +9097,15 @@ Partial Class EmployeeForm
         Me.tbpEducBG.ResumeLayout(False)
         Me.tbpPrevEmp.ResumeLayout(False)
         Me.tbpPromotion.ResumeLayout(False)
-        Me.tbpPromotion.PerformLayout
+        Me.tbpBonus.ResumeLayout(False)
+        Me.tbpAttachment.ResumeLayout(False)
+        Me.tbpNewSalary.ResumeLayout(False)
         Me.Panel11.ResumeLayout(False)
         Me.Panel11.PerformLayout
         CType(Me.pbEmpPicPromot, System.ComponentModel.ISupportInitialize).EndInit
         CType(Me.dgvPromotionList, System.ComponentModel.ISupportInitialize).EndInit
         Me.ToolStrip11.ResumeLayout(False)
         Me.ToolStrip11.PerformLayout
-        Me.tbpBonus.ResumeLayout(False)
-        Me.tbpAttachment.ResumeLayout(False)
-        Me.tbpNewSalary.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
         Me.Panel2.PerformLayout
         CType(Me.pbEmpPicAtta, System.ComponentModel.ISupportInitialize).EndInit
@@ -9791,6 +9798,7 @@ Partial Class EmployeeForm
     Friend WithEvents CertificationTab As CertificationTab
     Friend WithEvents DisciplinaryActionTab As DisciplinaryActionTab
     Friend WithEvents PreviousEmployerTab As PreviousEmployerTab
+    Friend WithEvents PromotionTab As PromotionTab
     Friend WithEvents AttachmentTab As AttachmentTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton
