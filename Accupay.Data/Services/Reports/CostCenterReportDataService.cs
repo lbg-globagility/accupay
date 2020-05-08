@@ -78,6 +78,8 @@ namespace AccuPay.Data.Services
                                         Where(t => t.BranchID == _selectedBranch.RowID).
                                         ToList();
 
+                var branchActualTimeEntries = GetBranchActualTimeEntries(branchTimeEntries, context);
+
                 var salaries = context.Salaries.
                                         Where(s => s.EffectiveFrom <= reportPeriod.Start).
                                         ToList();
@@ -134,10 +136,41 @@ namespace AccuPay.Data.Services
                                                         settings,
                                                         allPayPeriods,
                                                         allTimeEntries: allTimeEntries,
-                                                        branchTimeEntries: branchTimeEntries);
+                                                        branchTimeEntries: branchTimeEntries,
+                                                        branchActualTimeEntries: branchActualTimeEntries);
             }
 
             return payPeriodModels;
+        }
+
+        private List<ActualTimeEntry> GetBranchActualTimeEntries(List<TimeEntry> branchTimeEntries, PayrollContext context)
+        {
+            var firstDate = branchTimeEntries.OrderBy(x => x.Date).FirstOrDefault()?.Date;
+            var lastDate = branchTimeEntries.OrderBy(x => x.Date).LastOrDefault()?.Date;
+
+            if (firstDate == null || lastDate == null)
+            {
+                return new List<ActualTimeEntry>();
+            }
+
+            var actualTimeEntries = context.ActualTimeEntries.
+                                        Where(x => x.Date >= firstDate).
+                                        Where(x => x.Date <= lastDate).
+                                        ToList();
+
+            var branchActualTimeEntries = new List<ActualTimeEntry>();
+            foreach (var actualTimeEntry in actualTimeEntries)
+            {
+                if (branchTimeEntries.
+                        Where(x => x.Date == actualTimeEntry.Date).
+                        Where(x => x.EmployeeID == actualTimeEntry.EmployeeID).
+                        Any())
+                {
+                    branchActualTimeEntries.Add(actualTimeEntry);
+                }
+            }
+
+            return branchActualTimeEntries;
         }
 
         private List<TimePeriod> GetPayPeriod(PayrollContext context)
@@ -350,15 +383,16 @@ namespace AccuPay.Data.Services
                                                             ListOfValueCollection settings,
                                                             List<PayPeriod> allPayPeriods,
                                                             List<TimeEntry> allTimeEntries,
-                                                            List<TimeEntry> branchTimeEntries)
+                                                            List<TimeEntry> branchTimeEntries,
+                                                            List<ActualTimeEntry> branchActualTimeEntries)
         {
             List<PayPeriodModel> payPeriodModels = new List<PayPeriodModel>();
             foreach (var payPeriod in payPeriods)
             {
                 var payPeriodPaystubs = paystubs.
-                                            Where(p => p.PayPeriod.PayFromDate >= payPeriod.Start).
-                                            Where(p => p.PayPeriod.PayToDate <= payPeriod.End).
-                                            ToList();
+                                         Where(p => p.PayPeriod.PayFromDate >= payPeriod.Start).
+                                         Where(p => p.PayPeriod.PayToDate <= payPeriod.End).
+                                         ToList();
 
                 var payPeriodHmoLoans = hmoLoans.
                                             Where(p => p.PayPeriod.PayFromDate >= payPeriod.Start).
@@ -376,7 +410,8 @@ namespace AccuPay.Data.Services
                                                         settings,
                                                         allPayPeriods,
                                                         allTimeEntries: allTimeEntries,
-                                                        branchTimeEntries: branchTimeEntries);
+                                                        branchTimeEntries: branchTimeEntries,
+                                                        branchActualTimeEntries: branchActualTimeEntries);
 
                 payPeriodModels.Add(new PayPeriodModel()
                 {
@@ -399,7 +434,8 @@ namespace AccuPay.Data.Services
                                                             ListOfValueCollection settings,
                                                             List<PayPeriod> payPeriods,
                                                             List<TimeEntry> allTimeEntries,
-                                                            List<TimeEntry> branchTimeEntries)
+                                                            List<TimeEntry> branchTimeEntries,
+                                                            List<ActualTimeEntry> branchActualTimeEntries)
         {
             List<PaystubModel> paystubModels = new List<PaystubModel>();
 
@@ -415,6 +451,12 @@ namespace AccuPay.Data.Services
                                     ToList();
 
                 var employeeBranchTimeEntries = branchTimeEntries.
+                                    Where(t => t.Date >= payPeriod.Start).
+                                    Where(t => t.Date <= payPeriod.End).
+                                    Where(t => t.EmployeeID == employee.RowID).
+                                    ToList();
+
+                var employeeBranchActualTimeEntries = branchActualTimeEntries.
                                     Where(t => t.Date >= payPeriod.Start).
                                     Where(t => t.Date <= payPeriod.End).
                                     Where(t => t.EmployeeID == employee.RowID).
@@ -463,7 +505,8 @@ namespace AccuPay.Data.Services
                                                                 _userId,
                                                                 currentPayPeriod,
                                                                 allTimeEntries: employeeAllTimeEntries,
-                                                                branchTimeEntries: employeeBranchTimeEntries);
+                                                                branchTimeEntries: employeeBranchTimeEntries,
+                                                                branchActualTimeEntries: employeeBranchActualTimeEntries);
 
                 if (createdPaystubModel != null && createdPaystubModel.GrossPay > 0)
                     paystubModels.Add(createdPaystubModel);
@@ -508,7 +551,8 @@ namespace AccuPay.Data.Services
                                                 int userId,
                                                 PayPeriod payPeriod,
                                                 List<TimeEntry> allTimeEntries,
-                                                List<TimeEntry> branchTimeEntries)
+                                                List<TimeEntry> branchTimeEntries,
+                                                List<ActualTimeEntry> branchActualTimeEntries)
             {
                 if (employee == null)
                     return null;
@@ -527,7 +571,10 @@ namespace AccuPay.Data.Services
                     // If employee worked for 100 hours in total, and he worked 40 hours in this branch,
                     // then he worked 40% of his total worked hours in this branch.
                     var workedPercentage = AccuMath.CommercialRound(paystubModel.RegularHours / currentPaystub.RegularHours); // 40 / 100
-                    paystubModel = ComputeGovernmentDeductions(hmoLoan, monthlyDeduction, paystubModel, workedPercentage);
+                    paystubModel = ComputeGovernmentDeductions(hmoLoan,
+                                                                monthlyDeduction,
+                                                                paystubModel,
+                                                                workedPercentage);
                 }
 
                 paystubModel.TotalAllowance = ComputeTotalAllowance(dailyAllowances,
@@ -539,6 +586,11 @@ namespace AccuPay.Data.Services
                                                                     payPeriod,
                                                                     allTimeEntries: allTimeEntries,
                                                                     branchTimeEntries: branchTimeEntries);
+
+                paystubModel.ThirteenthMonthPay = ThirteenthMonthPayCalculator.
+                                                    ComputeByRegularPayAndAllowanceDaily(employee,
+                                                                                        branchTimeEntries,
+                                                                                        branchActualTimeEntries);
                 return paystubModel;
             }
 
@@ -578,7 +630,10 @@ namespace AccuPay.Data.Services
                 return totalAllowance;
             }
 
-            private static PaystubModel ComputeGovernmentDeductions(LoanTransaction hmoLoan, MonthlyDeduction monthlyDeduction, PaystubModel paystubModel, decimal workedPercentage)
+            private static PaystubModel ComputeGovernmentDeductions(LoanTransaction hmoLoan,
+                                                                    MonthlyDeduction monthlyDeduction,
+                                                                    PaystubModel paystubModel,
+                                                                    decimal workedPercentage)
             {
                 paystubModel.HMOAmount = MonthlyDeductionAmount.
                                             ComputeBranchPercentage(hmoLoan?.Amount ?? 0, workedPercentage);
@@ -593,10 +648,6 @@ namespace AccuPay.Data.Services
                                             GetBranchPercentage(workedPercentage);
 
                 paystubModel.PhilHealthAmount = monthlyDeduction.PhilHealthAmount.
-                                            GetBranchPercentage(workedPercentage);
-
-                // TODO: 13th month should be computed every cutoff. 13th month needs to be calculated every cutoff.
-                paystubModel.ThirteenthMonthPay = monthlyDeduction.ThirteenthMonthPay.
                                             GetBranchPercentage(workedPercentage);
 
                 return paystubModel;
