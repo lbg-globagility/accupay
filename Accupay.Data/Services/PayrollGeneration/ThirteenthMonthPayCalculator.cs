@@ -19,7 +19,7 @@ namespace AccuPay.Data.Services
             _userId = userId;
         }
 
-        public void Calculate(Employee employee,
+        public ThirteenthMonthPay Calculate(Employee employee,
                             Paystub paystub,
                             ICollection<TimeEntry> timeEntries,
                             ICollection<ActualTimeEntry> actualtimeentries,
@@ -37,18 +37,22 @@ namespace AccuPay.Data.Services
             else
                 paystub.ThirteenthMonthPay.LastUpdBy = _userId;
 
-            decimal thirteenthMonthAmount;
+            decimal thirteenthMonthBasicPay;
 
             var thirteenMonthCalculation = settings.GetEnum("ThirteenthMonthPolicy.CalculationBasis", ThirteenthMonthCalculationBasis.RegularPayAndAllowance);
 
-            thirteenthMonthAmount = GetThirteenMonthAmount(paystub, thirteenMonthCalculation, employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
+            thirteenthMonthBasicPay = GetThirteenMonthBasicPay(paystub, thirteenMonthCalculation, employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
 
-            paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthAmount;
-            paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount / CalendarConstants.MonthsInAYear;
+            var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstants.MonthsInAYear;
+
+            paystub.ThirteenthMonthPay.BasicPay = thirteenthMonthBasicPay;
+            paystub.ThirteenthMonthPay.Amount = thirteenthMonthAmount;
             paystub.ThirteenthMonthPay.Paystub = paystub;
+
+            return paystub.ThirteenthMonthPay;
         }
 
-        private static decimal GetThirteenMonthAmount(Paystub paystub, ThirteenthMonthCalculationBasis thirteenMonthPolicy, Employee employee, ICollection<TimeEntry> timeEntries, ICollection<ActualTimeEntry> actualtimeentries, Salary salary, ListOfValueCollection settings, ICollection<AllowanceItem> allowanceItems)
+        private static decimal GetThirteenMonthBasicPay(Paystub paystub, ThirteenthMonthCalculationBasis thirteenMonthPolicy, Employee employee, ICollection<TimeEntry> timeEntries, ICollection<ActualTimeEntry> actualtimeentries, Salary salary, ListOfValueCollection settings, ICollection<AllowanceItem> allowanceItems)
         {
             switch (thirteenMonthPolicy)
             {

@@ -454,6 +454,7 @@ Public Class PayStubForm
 
     Private Sub EnablePayrollToolStripItem(Optional enable As Boolean = True)
         'RegeneratePayrollToolStripMenuItem.Visible = enable
+        RecalculateThirteenthMonthPayToolStripMenuItem.Visible = enable
         DeletePayrollToolStripMenuItem.Visible = enable
         ReopenPayrollToolStripMenuItem.Visible = enable
         ClosePayrollToolStripMenuItem.Visible = enable
@@ -2070,6 +2071,16 @@ Public Class PayStubForm
         Dim provider = New CostCenterReportProvider()
 
         provider.Run()
+
+    End Sub
+
+    Private Sub RecalculateThirteenthMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles RecalculateThirteenthMonthPayToolStripMenuItem.Click
+
+        Dim payPeriodId = ValNoComma(paypRowID)
+
+        Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId)
+
+        form.ShowDialog()
 
     End Sub
 

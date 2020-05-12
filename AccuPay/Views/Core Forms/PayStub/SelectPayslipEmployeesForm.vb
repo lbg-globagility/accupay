@@ -7,7 +7,6 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
@@ -16,13 +15,13 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _isEmail As Boolean
 
-    Private Declared As String = "Declared"
+    Private Const Declared As String = "Declared"
 
-    Private Actual As String = "Actual"
+    Private Const Actual As String = "Actual"
 
-    Private PayslipTypes As New List(Of String) From {Declared, Actual}
+    Private _payslipTypes As List(Of String)
 
-    Private _employeeModels As New List(Of EmployeeModel)
+    Private _employeeModels As List(Of EmployeeModel)
 
     Private _currentPayPeriod As PayPeriod
 
@@ -43,18 +42,25 @@ Public Class SelectPayslipEmployeesForm
         _isEmail = isEmail
         _currentPayPeriodId = currentPayPeriodId
 
+        _employeeModels = New List(Of EmployeeModel)
+
+        _payslipTypes = New List(Of String) From {Declared, Actual}
+
         _payPeriodRepository = New PayPeriodRepository()
+
         _paystubRepository = New PaystubRepository()
+
         _paystubEmailRepository = New PaystubEmailRepository()
+
         _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
 
     End Sub
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        EmployeesDataGrid.AutoGenerateColumns = False
+        EmployeeGridView.AutoGenerateColumns = False
 
-        PayslipTypeComboBox.DataSource = PayslipTypes
+        PayslipTypeComboBox.DataSource = _payslipTypes
 
         SendEmailsButton.Visible = _isEmail
         RefreshEmailStatusButton.Visible = _isEmail
@@ -110,7 +116,7 @@ Public Class SelectPayslipEmployeesForm
 
         _employeeModels = employeeModels.OrderBy(Function(e) e.FullName).ToList
 
-        EmployeesDataGrid.DataSource = _employeeModels
+        EmployeeGridView.DataSource = _employeeModels
 
         Await RefreshEmailStatus()
 
@@ -132,7 +138,7 @@ Public Class SelectPayslipEmployeesForm
         Dim index = 0
         For Each employee In _employeeModels
 
-            Dim row = EmployeesDataGrid.Rows(index)
+            Dim row = EmployeeGridView.Rows(index)
             Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
 
             Dim history = paystubEmailHistories.
@@ -223,24 +229,6 @@ Public Class SelectPayslipEmployeesForm
 
     End Sub
 
-    Private Class EmployeeModel
-        Public Property EmployeeId As Integer
-        Public Property EmailAddress As String
-        Public Property PaystubId As Integer
-        Public Property IsSelected As Boolean
-        Public Property EmployeeNumber As String
-        Public Property FirstName As String
-        Public Property MiddleName As String
-        Public Property LastName As String
-        Public Property FullName As String
-        Public Property EmployeeType As String
-        Public Property PositionName As String
-        Public Property DivisionName As String
-        Public Property EmailStatus As String
-        Public Property SentDateTime As Date?
-        Public Property ErrorLogMessage As String
-    End Class
-
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
@@ -297,7 +285,7 @@ Public Class SelectPayslipEmployeesForm
         EnableDisableButtons()
     End Sub
 
-    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeesDataGrid.CellMouseUp
+    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeeGridView.CellMouseUp
 
         EnableDisableButtons()
     End Sub
@@ -332,5 +320,23 @@ Public Class SelectPayslipEmployeesForm
         End Try
 
     End Sub
+
+    Private Class EmployeeModel
+        Public Property EmployeeId As Integer
+        Public Property EmailAddress As String
+        Public Property PaystubId As Integer
+        Public Property IsSelected As Boolean
+        Public Property EmployeeNumber As String
+        Public Property FirstName As String
+        Public Property MiddleName As String
+        Public Property LastName As String
+        Public Property FullName As String
+        Public Property EmployeeType As String
+        Public Property PositionName As String
+        Public Property DivisionName As String
+        Public Property EmailStatus As String
+        Public Property SentDateTime As Date?
+        Public Property ErrorLogMessage As String
+    End Class
 
 End Class

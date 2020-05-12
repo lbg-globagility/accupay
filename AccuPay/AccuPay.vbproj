@@ -602,6 +602,12 @@
     <Compile Include="Views\Core Forms\Employee\EducationalBackgroundTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectThirteenthMonthEmployeesForm.Designer.vb">
+      <DependentUpon>SelectThirteenthMonthEmployeesForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\PayStub\SelectThirteenthMonthEmployeesForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\SelectBranchForm.Designer.vb">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
     </Compile>
@@ -2015,6 +2021,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\EducationalBackgroundTab.resx">
       <DependentUpon>EducationalBackgroundTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\PayStub\SelectThirteenthMonthEmployeesForm.resx">
+      <DependentUpon>SelectThirteenthMonthEmployeesForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
