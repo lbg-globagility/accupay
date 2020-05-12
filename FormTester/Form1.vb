@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿Option Strict On
+
+Imports System.IO
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Payslip
 Imports CrystalDecisions.Shared
@@ -8,6 +10,19 @@ Imports PdfSharp.Pdf.IO
 Imports PdfSharp.Pdf.Security
 
 Public Class Form1
+
+    Private ReadOnly payslipCreator As PayslipCreator
+    Private ReadOnly _paystubEmailRepository As PaystubEmailRepository
+
+    Sub New(payslipCreator As PayslipCreator, paystubEmailRepositoryrepo As PaystubEmailRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        Me.payslipCreator = payslipCreator
+        _paystubEmailRepository = paystubEmailRepositoryrepo
+    End Sub
 
     Private Sub PrintPayslipButton_Click(sender As Object, e As EventArgs) Handles PrintPayslipButton.Click
         Dim reportDocument As CrystalDecisions.CrystalReports.Engine.ReportClass = GetPayslipReport()
@@ -23,9 +38,9 @@ Public Class Form1
 
         Dim pdfName = "Payslip1.pdf"
         Dim password = "admin"
-        Dim pdfFullPath As String = Path.Combine("E:\Downloads", pdfName)
+        Dim pdfFullPath As String = Path.Combine("C:\Downloads", pdfName)
 
-        Dim CrExportOptions As CrystalDecisions.[Shared].ExportOptions
+        Dim CrExportOptions As ExportOptions
         Dim CrDiskFileDestinationOptions As DiskFileDestinationOptions = New DiskFileDestinationOptions()
         Dim CrFormatTypeOptions As PdfRtfWordFormatOptions = New PdfRtfWordFormatOptions()
         CrDiskFileDestinationOptions.DiskFileName = pdfFullPath
@@ -66,18 +81,13 @@ Public Class Form1
             .PayToDate = New Date(2019, 10, 15)
         }
 
-        Dim payslipCreator As New PayslipCreator(currentPayPeriod, isActual:=False)
-
-        Dim nextPayPeriod As New PayPeriod With {
-        .RowID = 621,
-        .PayFromDate = New Date(2019, 10, 16),
-        .PayToDate = New Date(2019, 10, 31)
-        }
-
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
         Dim reportDocument = payslipCreator.
-                CreateReportDocument(2, nextPayPeriod, employeeIds).
+                CreateReportDocument(2,
+                                     currentPayPeriod.RowID.Value,
+                                     isActual:=0,
+                                     employeeIds:=employeeIds).
                 GetReportDocument()
 
         Return reportDocument
@@ -136,13 +146,6 @@ Public Class Form1
             .PayFromDate = New Date(2019, 10, 1),
             .PayToDate = New Date(2019, 10, 15)
         }
-        Dim payslipCreator As New PayslipCreator(currentPayPeriod, isActual:=False)
-
-        Dim nextPayPeriod As New PayPeriod With {
-        .RowID = 621,
-        .PayFromDate = New Date(2019, 10, 16),
-        .PayToDate = New Date(2019, 10, 31)
-        }
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
@@ -151,7 +154,10 @@ Public Class Form1
         Dim password = PasswordTextBox.Text
 
         Return payslipCreator.
-                CreateReportDocument(2, nextPayPeriod, employeeIds).
+                CreateReportDocument(2,
+                                     currentPayPeriod.RowID.Value,
+                                     isActual:=0,
+                                     employeeIds:=employeeIds).
                 GeneratePDF(saveFolderPath, fileName).
                 AddPdfPassword(password).
                 GetPDF()
@@ -172,8 +178,11 @@ Public Class Form1
 
         Dim employeeIds = EmployeesTextBox.Text.Split(","c).[Select](AddressOf Integer.Parse).ToArray()
 
-        Dim payslipCreator = (New PayslipCreator(currentPayPeriod, isActual:=False)).
-                                    CreateReportDocument(2, nextPayPeriod, employeeIds)
+        payslipCreator.CreateReportDocument(2,
+                                            currentPayPeriod.RowID.Value,
+                                            isActual:=0,
+                                            employeeIds:=employeeIds)
+
         Dim employee = payslipCreator.GetFirstEmployee()
 
         If employee Is Nothing Then
@@ -193,7 +202,7 @@ Public Class Form1
 
         Dim cutoffDate = currentPayPeriod.PayToDate.ToString("MMMM d, yyyy")
 
-        Dim sendTo = employee("EmailAddress")
+        Dim sendTo = employee("EmailAddress").ToString()
         Dim subject = $"Please see attached payslip for {cutoffDate}"
         Dim body = $"Please see attached payslip for {cutoffDate}.
 
@@ -212,11 +221,9 @@ HRD"
 
     Private Sub QueryPaystubButton_Click(sender As Object, e As EventArgs) Handles QueryPaystubButton.Click
 
-        Dim repo As New PaystubEmailRepository()
+        Dim paystubEmail = _paystubEmailRepository.FirstOnQueueWithPaystubDetails()
 
-        Dim paystubEmail = repo.FirstOnQueueWithPaystubDetails()
-
-        MessageBox.Show(paystubEmail.PaystubID)
+        MessageBox.Show(paystubEmail.PaystubID.ToString())
 
     End Sub
 

@@ -61,6 +61,7 @@ Partial Class Form1
         Me.EmployeesTextBox.Name = "EmployeesTextBox"
         Me.EmployeesTextBox.Size = New System.Drawing.Size(359, 20)
         Me.EmployeesTextBox.TabIndex = 1
+        Me.EmployeesTextBox.Text = "3,5,6,7,9,10"
         '
         'PDFPayslipButton
         '
