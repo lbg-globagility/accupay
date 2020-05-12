@@ -86,11 +86,7 @@ Public Class MDIPrimaryForm
 
         setProperDashBoardAccordingToSystemOwner()
 
-        Task.Run(
-            Async Function()
-                Dim service = New LeaveAccrualService()
-                Await service.CheckAccruals(z_OrganizationID, z_User)
-            End Function)
+        RunLeaveAccrual()
 
         Panel1.Focus()
         BackgroundWorker1.RunWorkerAsync()
@@ -126,6 +122,18 @@ Public Class MDIPrimaryForm
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         lblTime.Text = TimeOfDay
+    End Sub
+
+    Private Async Sub RunLeaveAccrual()
+        Dim collection = Await ListOfValueCollection.CreateAsync("LeavePolicy")
+
+        If collection.GetBoolean("AutomaticAccrual") Then
+            Dim unused = Task.Run(
+                Async Function()
+                    Dim service = New LeaveAccrualService()
+                    Await service.CheckAccruals(z_OrganizationID, z_User)
+                End Function)
+        End If
     End Sub
 
     Dim ClosingForm As Form = Nothing 'New
