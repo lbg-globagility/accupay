@@ -287,7 +287,6 @@ Partial Class EmployeeForm
         Me.tsbtnCancel = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImport = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
-        Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel11 = New System.Windows.Forms.ToolStripLabel()
         Me.tsprogbarempimport = New System.Windows.Forms.ToolStripProgressBar()
         Me.tsbtnImportEmployee = New System.Windows.Forms.ToolStripButton()
@@ -929,6 +928,7 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DisplayLeaveHistoryButton = New System.Windows.Forms.Button()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1513,6 +1513,7 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.DisplayLeaveHistoryButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel4)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceText)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceLabel)
@@ -3155,7 +3156,7 @@ Partial Class EmployeeForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnImport, Me.tsbtnClose, Me.tsbtnAudittrail, Me.ToolStripLabel11, Me.tsprogbarempimport, Me.tsbtnImportEmployee, Me.ReportsToolStripDropDownButton, Me.UserActivityEmployeeToolStripButton})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnNewEmp, Me.tsbtnSaveEmp, Me.tsbtnCancel, Me.tsbtnImport, Me.tsbtnClose, Me.ToolStripLabel11, Me.tsprogbarempimport, Me.tsbtnImportEmployee, Me.ReportsToolStripDropDownButton, Me.UserActivityEmployeeToolStripButton})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(854, 25)
@@ -3202,17 +3203,6 @@ Partial Class EmployeeForm
         Me.tsbtnClose.Name = "tsbtnClose"
         Me.tsbtnClose.Size = New System.Drawing.Size(56, 22)
         Me.tsbtnClose.Text = "Close"
-        '
-        'tsbtnAudittrail
-        '
-        Me.tsbtnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsbtnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.tsbtnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsbtnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsbtnAudittrail.Name = "tsbtnAudittrail"
-        Me.tsbtnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsbtnAudittrail.Text = "ToolStripButton1"
-        Me.tsbtnAudittrail.ToolTipText = "Show audit trails"
         '
         'ToolStripLabel11
         '
@@ -9044,6 +9034,15 @@ Partial Class EmployeeForm
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
         '
+        'DisplayLeaveHistoryButton
+        '
+        Me.DisplayLeaveHistoryButton.Location = New System.Drawing.Point(72, 76)
+        Me.DisplayLeaveHistoryButton.Name = "DisplayLeaveHistoryButton"
+        Me.DisplayLeaveHistoryButton.Size = New System.Drawing.Size(75, 23)
+        Me.DisplayLeaveHistoryButton.TabIndex = 543
+        Me.DisplayLeaveHistoryButton.Text = "Button2"
+        Me.DisplayLeaveHistoryButton.UseVisualStyleBackColor = True
+        '
         'EmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -9666,7 +9665,6 @@ Partial Class EmployeeForm
     Friend WithEvents bon_End As DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn
     Friend WithEvents bon_ProdID As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents Label311 As System.Windows.Forms.Label
-    Friend WithEvents tsbtnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton6 As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton14 As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton15 As System.Windows.Forms.ToolStripButton
@@ -10020,4 +10018,5 @@ Partial Class EmployeeForm
     Friend WithEvents WorkOrderToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Print201ReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DisplayLeaveHistoryButton As Button
 End Class

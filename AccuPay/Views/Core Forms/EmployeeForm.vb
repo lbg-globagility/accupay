@@ -2393,13 +2393,6 @@ Public Class EmployeeForm
 
                     Await AttachmentTab.SetEmployee(employee)
 
-                    'txtFNameAtta.Text = employeefullname
-                    'txtEmpIDAtta.Text = subdetails '"ID# " & .Cells("Column1").Value
-                    'pbEmpPicAtta.Image = Nothing
-                    'pbEmpPicAtta.Image = EmployeeImage
-                    'listofEditRoweatt.Clear()
-                    'VIEW_employeeattachments(.Cells("RowID").Value)
-                    'dgvempatta_SelectionChanged(sender, e)
                 ElseIf selectedTab Is tbpNewSalary Then
 
                     'transferred here so this function will not fetch data from database
@@ -2960,126 +2953,6 @@ Public Class EmployeeForm
             SearchEmployee_Click(sender, e)
         End If
     End Sub
-
-    Function searchCommon(Optional cbox1 As ComboBox = Nothing, Optional search1 As Object = Nothing,
-                          Optional cbox2 As ComboBox = Nothing, Optional search2 As Object = Nothing,
-                          Optional cbox3 As ComboBox = Nothing, Optional search3 As Object = Nothing,
-                          Optional cbox4 As ComboBox = Nothing, Optional search4 As Object = Nothing,
-                          Optional cbox5 As ComboBox = Nothing, Optional search5 As Object = Nothing) As String
-
-        Dim _search1, _search2, _search3, _search4, _search5 As String ', ordate, credate
-
-        Select Case cbox1.SelectedIndex
-            Case 0
-                _search1 = If(search1.Text = "", Nothing, " e.EmployeeID LIKE '" & search1.Text & "%'")
-            Case 1
-                _search1 = If(search1.Text = "", Nothing, " e.EmployeeID LIKE '%" & search1.Text & "%'")
-            Case 2
-                _search1 = If(search1.Text = "", Nothing, " e.EmployeeID = '" & search1.Text & "'")
-            Case 3
-                _search1 = If(search1.Text = "", Nothing, " e.EmployeeID NOT LIKE '%" & search1.Text & "%'")
-            Case 4
-                _search1 = " e.EmployeeID IS NULL"
-            Case 5
-                _search1 = " e.EmployeeID IS NOT NULL"
-            Case Else
-                _search1 = If(search1.Text = "", Nothing, " e.EmployeeID = '" & search1.Text & "'")
-        End Select
-
-        Select Case cbox2.SelectedIndex
-            Case 0
-                _search2 = If(search2.Text = "", Nothing, " e.FirstName LIKE '" & search2.Text & "%'")
-            Case 1
-                _search2 = If(search2.Text = "", Nothing, " e.FirstName LIKE '%" & search2.Text & "%'")
-            Case 2
-                _search2 = If(search2.Text = "", Nothing, " e.FirstName = '" & search2.Text & "'")
-            Case 3
-                _search2 = If(search2.Text = "", Nothing, " e.FirstName NOT LIKE '%" & search2.Text & "%'")
-            Case 4
-                _search2 = " e.FirstName IS NULL"
-            Case 5
-                _search2 = " e.FirstName IS NOT NULL"
-            Case Else
-                _search2 = If(search2.Text = "", Nothing, " e.FirstName = '" & search2.Text & "'")
-        End Select
-
-        If _search1 <> "" And _search2 <> "" Then
-            _search2 = " AND" & _search2
-        End If
-
-        Select Case cbox3.SelectedIndex
-            Case 0
-                _search3 = If(search3.Text = "", Nothing, " e.LastName LIKE '" & search3.Text & "%'")
-            Case 1
-                _search3 = If(search3.Text = "", Nothing, " e.LastName LIKE '%" & search3.Text & "%'")
-            Case 2
-                _search3 = If(search3.Text = "", Nothing, " e.LastName = '" & search3.Text & "'")
-            Case 3
-                _search3 = If(search3.Text = "", Nothing, " e.LastName NOT LIKE '%" & search3.Text & "%'")
-            Case 4
-                _search3 = " e.LastName IS NULL"
-            Case 5
-                _search3 = " e.LastName IS NOT NULL"
-            Case Else
-                _search3 = If(search3.Text = "", Nothing, " e.LastName = '" & search3.Text & "'")
-        End Select
-
-        If (_search1 <> "" Or _search2 <> "") And _search3 <> "" Then
-            _search3 = " AND" & _search3
-        End If
-
-        If cbox4 Is Nothing Then
-            _search4 = Nothing
-        Else
-            Select Case cbox4.SelectedIndex
-                Case 0
-                    _search4 = If(search4.Text = "", Nothing, " e.Surname LIKE '" & search4.Text & "%'")
-                Case 1
-                    _search4 = If(search4.Text = "", Nothing, " e.Surname LIKE '%" & search4.Text & "%'")
-                Case 2
-                    _search4 = If(search4.Text = "", Nothing, " e.Surname = '" & search4.Text & "'")
-                Case 3
-                    _search4 = If(search4.Text = "", Nothing, " e.Surname NOT LIKE '%" & search4.Text & "%'")
-                Case 4
-                    _search4 = " e.Surname IS NULL"
-                Case 5
-                    _search4 = " e.Surname IS NOT NULL"
-                Case Else
-                    _search4 = If(search4.Text = "", Nothing, " e.Surname = '" & search4.Text & "'")
-            End Select
-
-            If (_search1 <> "" Or _search2 <> "" Or _search3 <> "") And _search4 <> "" Then
-                _search4 = " AND" & _search4
-            End If
-        End If
-
-        If cbox5 Is Nothing Then
-            _search5 = Nothing
-        Else
-            Select Case cbox5.SelectedIndex
-                Case 0
-                    _search5 = If(search5.Text = "", Nothing, " e.MiddleName LIKE '" & search5.Text & "%'")
-                Case 1
-                    _search5 = If(search5.Text = "", Nothing, " e.MiddleName LIKE '%" & search5.Text & "%'")
-                Case 2
-                    _search5 = If(search5.Text = "", Nothing, " e.MiddleName = '" & search5.Text & "'")
-                Case 3
-                    _search5 = If(search5.Text = "", Nothing, " e.MiddleName NOT LIKE '%" & search5.Text & "%'")
-                Case 4
-                    _search5 = " e.MiddleName IS NULL"
-                Case 5
-                    _search5 = " e.MiddleName IS NOT NULL"
-                Case Else
-                    _search5 = If(search5.Text = "", Nothing, " e.MiddleName = '" & search5.Text & "'")
-            End Select
-
-            If (_search1 <> "" Or _search2 <> "" Or _search3 <> "" Or _search4 <> "") And _search5 <> "" Then
-                _search5 = " AND" & _search5
-            End If
-        End If
-
-        Return _search1 & _search2 & _search3 & _search4 & _search5
-    End Function
 
     Dim colName As String
 
@@ -4379,7 +4252,6 @@ Public Class EmployeeForm
 
     End Sub
 
-
 #End Region 'Disciplinary Action
 
 #Region "Educational Background"
@@ -4423,7 +4295,6 @@ Public Class EmployeeForm
         dgvEmp_SelectionChanged(sender, e)
 
     End Sub
-
 
 #End Region 'Promotion
 
@@ -4495,42 +4366,6 @@ Public Class EmployeeForm
 
     End Sub
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Dim view_IDDependents As String = Nothing
-
-    Private Sub ToolStripButton6_Click(sender As Object, e As EventArgs) Handles ToolStripButton6.Click
-        Static once As SByte = 0
-        If once = 0 Then
-            once = 1
-
-            view_IDDependents = VIEW_privilege("Employee Dependents", orgztnID)
-
-        End If
-
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_IDDependents)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
-    Private Sub ToolStripButton20_Click(sender As Object, e As EventArgs)
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_IDMed)
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
         Dim form As New AddBranchForm
@@ -4561,25 +4396,6 @@ Public Class EmployeeForm
 
         End If
 
-    End Sub
-
-    Private Sub dgvempawar_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvempawar.CellContentClick
-    End Sub
-
-    Private Sub dgvempawar_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempawar.EditingControlShowing
-        e.Control.ContextMenu = New ContextMenu
-    End Sub
-
-    Private Sub dgvempcert_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempcert.EditingControlShowing
-        e.Control.ContextMenu = New ContextMenu
-    End Sub
-
-    Private Sub dgvmedrec_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs)
-        e.Control.ContextMenu = New ContextMenu
-    End Sub
-
-    Private Sub dgvempatta_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) Handles dgvempatta.EditingControlShowing
-        e.Control.ContextMenu = New ContextMenu
     End Sub
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
