@@ -252,7 +252,7 @@ Public Class PreviewLeaveBalanceForm
         Dim activeEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
 
         _employees = activeEmployees.
-            OrderBy(Function(e) e.FullNameWithMiddleInitial).
+            OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst).
             ToList()
 
         _employeeModels = _employees.Select(Function(e) New EmployeeModel(e)).ToList()

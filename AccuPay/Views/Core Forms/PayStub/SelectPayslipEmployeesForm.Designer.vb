@@ -43,7 +43,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.PayslipTypeComboBox = New System.Windows.Forms.ComboBox()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.SendEmailsButton = New System.Windows.Forms.Button()
-        Me.EmployeesDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.EmployeeGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.SelectedCheckBoxColumn = New System.Windows.Forms.DataGridViewCheckBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -68,7 +68,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         Me.PayslipTypePanel.SuspendLayout()
-        CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'Panel1
@@ -174,12 +174,12 @@ Partial Class SelectPayslipEmployeesForm
         '
         'EmployeesDataGrid
         '
-        Me.EmployeesDataGrid.AllowUserToAddRows = False
-        Me.EmployeesDataGrid.AllowUserToDeleteRows = False
-        Me.EmployeesDataGrid.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.EmployeesDataGrid.BackgroundColor = System.Drawing.Color.White
-        Me.EmployeesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.EmployeesDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column6, Me.Column2, Me.Column3, Me.EmailAddressColumn, Me.Column4, Me.Column5, Me.Column7, Me.EmailStatusColumn, Me.ErrorLogMessageColumn})
+        Me.EmployeeGridView.AllowUserToAddRows = False
+        Me.EmployeeGridView.AllowUserToDeleteRows = False
+        Me.EmployeeGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.EmployeeGridView.BackgroundColor = System.Drawing.Color.White
+        Me.EmployeeGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.EmployeeGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.SelectedCheckBoxColumn, Me.Column1, Me.Column6, Me.Column2, Me.Column3, Me.EmailAddressColumn, Me.Column4, Me.Column5, Me.Column7, Me.EmailStatusColumn, Me.ErrorLogMessageColumn})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -187,13 +187,13 @@ Partial Class SelectPayslipEmployeesForm
         DataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle6.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.EmployeesDataGrid.DefaultCellStyle = DataGridViewCellStyle6
-        Me.EmployeesDataGrid.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.EmployeesDataGrid.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.EmployeesDataGrid.Location = New System.Drawing.Point(0, 21)
-        Me.EmployeesDataGrid.Name = "EmployeesDataGrid"
-        Me.EmployeesDataGrid.Size = New System.Drawing.Size(1084, 392)
-        Me.EmployeesDataGrid.TabIndex = 1
+        Me.EmployeeGridView.DefaultCellStyle = DataGridViewCellStyle6
+        Me.EmployeeGridView.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.EmployeeGridView.Location = New System.Drawing.Point(0, 21)
+        Me.EmployeeGridView.Name = "EmployeesDataGrid"
+        Me.EmployeeGridView.Size = New System.Drawing.Size(1084, 392)
+        Me.EmployeeGridView.TabIndex = 1
         '
         'SelectedCheckBoxColumn
         '
@@ -416,7 +416,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1084, 463)
-        Me.Controls.Add(Me.EmployeesDataGrid)
+        Me.Controls.Add(Me.EmployeeGridView)
         Me.Controls.Add(Me.lblStatus)
         Me.Controls.Add(Me.Panel1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -427,7 +427,7 @@ Partial Class SelectPayslipEmployeesForm
         Me.Panel1.ResumeLayout(False)
         Me.PayslipTypePanel.ResumeLayout(False)
         Me.PayslipTypePanel.PerformLayout()
-        CType(Me.EmployeesDataGrid, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.EmployeeGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
 
     End Sub
@@ -439,7 +439,7 @@ Partial Class SelectPayslipEmployeesForm
     Friend WithEvents Label1 As Label
     Friend WithEvents PayslipTypeComboBox As ComboBox
     Friend WithEvents PreviewButton As Button
-    Friend WithEvents EmployeesDataGrid As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents EmployeeGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents lblStatus As Label
     Friend WithEvents DataGridViewTextBoxColumn1 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn2 As DataGridViewTextBoxColumn

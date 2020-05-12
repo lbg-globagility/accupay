@@ -64,6 +64,18 @@ namespace AccuPay.Data.Repositories
                               userId: userId);
         }
 
+        public async Task DeleteAsync(int id, int userId)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                await DeleteAsyncWithContext(id: id,
+                                            userId: userId,
+                                            context: context);
+
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
         {
             using (var context = new PayrollContext())
@@ -84,13 +96,14 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task DeleteAsync(int id, int userId)
+        public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
         {
-            using (PayrollContext context = new PayrollContext())
+            using (var context = new PayrollContext())
             {
-                await DeleteAsyncWithContext(id: id,
-                                            userId: userId,
-                                            context: context);
+                foreach (var thirteenthMonthPay in thirteenthMonthPays)
+                {
+                    context.Entry(thirteenthMonthPay).State = EntityState.Modified;
+                }
 
                 await context.SaveChangesAsync();
             }
@@ -217,6 +230,26 @@ namespace AccuPay.Data.Repositories
             {
                 return await context.Paystubs.
                                 Include(x => x.Employee.Position.Division).
+                                Where(x => x.PayPeriodID == payPeriodId).
+                                ToListAsync();
+            }
+        }
+
+        /// <summary>
+        /// Get a list of paystub by pay period ID including employee, position and division details.
+        /// Also including the entities needed by Thirteenth Month Pay calculations like Thirteenth Month Pay entity
+        /// and allowance items.
+        /// </summary>
+        /// <param name="payPeriodId"></param>
+        /// <returns></returns>
+        public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId)
+        {
+            using (var context = new PayrollContext())
+            {
+                return await context.Paystubs.
+                                Include(x => x.Employee.Position.Division).
+                                Include(x => x.ThirteenthMonthPay).
+                                Include(x => x.AllowanceItems).
                                 Where(x => x.PayPeriodID == payPeriodId).
                                 ToListAsync();
             }
