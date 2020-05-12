@@ -53,8 +53,6 @@ Public Class PayStubForm
     Dim dtJosh As DataTable
     Dim da As New MySqlDataAdapter()
 
-    Private sys_ownr As SystemOwnerService
-
     Private _results As BlockingCollection(Of PayrollGeneration.Result)
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
@@ -63,7 +61,14 @@ Public Class PayStubForm
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New()
+    Private _systemOwnerService As SystemOwnerService
+
+    Private _payslipCreator As PayslipCreator
+
+    Sub New(policy As PolicyHelper,
+            payPeriodRepository As PayPeriodRepository,
+            systemOwnerService As SystemOwnerService,
+            payslipCreator As PayslipCreator)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -73,11 +78,13 @@ Public Class PayStubForm
 
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
-        _policy = New PolicyHelper()
+        _policy = policy
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = payPeriodRepository
 
-        sys_ownr = New SystemOwnerService()
+        _systemOwnerService = systemOwnerService
+
+        _payslipCreator = payslipCreator
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -122,11 +129,11 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+    Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
 
-        VIEW_payperiodofyear()
+        Await VIEW_payperiodofyear()
 
         dgvpayper.Focus()
 
@@ -217,7 +224,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub VIEW_payperiodofyear(Optional param_Date As Object = Nothing)
+    Async Function VIEW_payperiodofyear(Optional param_Date As Object = Nothing) As Task
         ClosePayrollToolStripMenuItem.Visible = False
         ReopenPayrollToolStripMenuItem.Visible = False
 
@@ -232,7 +239,7 @@ Public Class PayStubForm
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL VIEW_payperiodofyear('" & orgztnID & "'," & date_param & ",'0');")
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
-        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
+        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
                                             GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
@@ -253,7 +260,7 @@ Public Class PayStubForm
         If hasValue Then
             AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
         End If
-    End Sub
+    End Function
 
     Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
                                          index As Integer,
@@ -468,7 +475,7 @@ Public Class PayStubForm
         btndiscardchanges.Visible = enable
     End Sub
 
-    Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
+    Private Async Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
         current_year = current_year - 1
@@ -476,14 +483,14 @@ Public Class PayStubForm
         linkPrev.Text = "← " & (current_year - 1)
         linkNxt.Text = (current_year + 1) & " →"
 
-        VIEW_payperiodofyear(current_year)
+        Await VIEW_payperiodofyear(current_year)
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
         dgvpayper_SelectionChanged(sender, e)
     End Sub
 
-    Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
+    Private Async Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         RemoveHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
         current_year = current_year + 1
@@ -491,7 +498,7 @@ Public Class PayStubForm
         linkNxt.Text = (current_year + 1) & " →"
         linkPrev.Text = "← " & (current_year - 1)
 
-        VIEW_payperiodofyear(current_year)
+        Await VIEW_payperiodofyear(current_year)
 
         AddHandler dgvpayper.SelectionChanged, AddressOf dgvpayper_SelectionChanged
 
@@ -845,7 +852,7 @@ Public Class PayStubForm
 
         ProgressTimer.Stop()
 
-        RefreshForm()
+        Await RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -865,8 +872,8 @@ Public Class PayStubForm
 
     Public genpayselyear As String = Nothing
 
-    Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
-        VIEW_payperiodofyear()
+    Async Sub btnrefresh_Click(sender As Object, e As EventArgs) Handles btnrefresh.Click
+        Await VIEW_payperiodofyear()
     End Sub
 
     Private Sub TabControl1_DrawItem(sender As Object, e As DrawItemEventArgs) Handles TabControl1.DrawItem
@@ -1073,14 +1080,14 @@ Public Class PayStubForm
 
                     .AutoSize = False
                     .BackColor = Color.FromArgb(255, 255, 255)
-                    .ImageTransparentColor = System.Drawing.Color.Magenta
-                    .Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+                    .ImageTransparentColor = Color.Magenta
+                    .Margin = New Padding(0, 1, 0, 1)
                     .Name = String.Concat("tsbtn" & strval)
-                    .Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-                    .Size = New System.Drawing.Size(110, 30)
+                    .Overflow = ToolStripItemOverflow.Never
+                    .Size = New Size(110, 30)
                     .Text = strval
-                    .TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-                    .TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+                    .TextAlign = ContentAlignment.MiddleLeft
+                    .TextImageRelation = TextImageRelation.ImageBeforeText
                     .ToolTipText = strval
 
                 End With
@@ -1784,7 +1791,7 @@ Public Class PayStubForm
                                                                         payPeriodId:=payPeriodId.Value),
                                                                     z_User)
 
-                        RefreshForm()
+                        Await RefreshForm()
 
                         Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -1803,7 +1810,7 @@ Public Class PayStubForm
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
         Static _bool As Boolean =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
         If _bool Then
             Dim str_empty As String = String.Empty
             TabPage1.Text = str_empty
@@ -1815,7 +1822,7 @@ Public Class PayStubForm
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 
         Static _bool As Boolean =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
         e.Cancel = _bool
 
@@ -1896,7 +1903,7 @@ Public Class PayStubForm
 
         End If
 
-        RefreshForm()
+        Await RefreshForm()
 
         Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -1912,10 +1919,10 @@ Public Class PayStubForm
 
     End Function
 
-    Private Sub RefreshForm()
-        VIEW_payperiodofyear()
+    Private Async Function RefreshForm() As Task
+        Await VIEW_payperiodofyear()
         dgvpayper_SelectionChanged(Nothing, Nothing)
-    End Sub
+    End Function
 
     Private Sub GeneratePayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
@@ -1993,7 +2000,7 @@ Public Class PayStubForm
                       Await New PaystubRepository().DeleteByPeriodAsync(payPeriodId:=payperiodId.Value,
                                                                         userId:=z_User)
 
-                      RefreshForm()
+                      Await RefreshForm()
 
                       Await TimeEntrySummaryForm.LoadPayPeriods()
 
@@ -2005,35 +2012,31 @@ Public Class PayStubForm
         DeletePayrollToolStripMenuItem.Enabled = True
     End Sub
 
-    Private Async Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
+    Private Sub PrintPaySlipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPaySlipToolStripMenuItem.Click
 
         If _policy.ShowActual = False Then
 
-            Await PrintPayslip(isActual:=0)
+            PrintPayslip(isActual:=0)
 
         End If
     End Sub
 
-    Private Async Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
+    Private Sub PrintAllPaySlip_Click(sender As Object, e As EventArgs) Handles PayslipDeclaredToolStripMenuItem.Click, PayslipActualToolStripMenuItem.Click
         Dim IsActualFlag = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
-        Await PrintPayslip(IsActualFlag)
+        PrintPayslip(IsActualFlag)
     End Sub
 
-    Private Async Function PrintPayslip(isActual As SByte) As Task
-        Dim payPeriod = Await _payPeriodRepository.GetByIdAsync(ValNoComma(paypRowID))
+    Private Sub PrintPayslip(isActual As SByte)
 
-        Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
+        Dim payPeriodId = ValNoComma(paypRowID)
 
-        Dim nextPayPeriod = _payPeriodRepository.
-                            GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
-
-        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
+        Dim reportDocument = _payslipCreator.CreateReportDocument(orgztnID, payPeriodId, isActual)
 
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
         crvwr.Show()
-    End Function
+    End Sub
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click
 

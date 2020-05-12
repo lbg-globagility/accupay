@@ -7,7 +7,7 @@ namespace AccuPay.Data
 {
     public class PayrollContext : DbContext
     {
-        private readonly ILoggerFactory _loggerFactory;
+        //private readonly ILoggerFactory _loggerFactory;
 
         //internal static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(new[] {
         //    new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name &&
