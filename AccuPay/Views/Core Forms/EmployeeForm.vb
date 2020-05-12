@@ -6500,6 +6500,13 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Async Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
+        Dim employeeRepository = New EmployeeRepository()
+        Dim employee = Await employeeRepository.GetByIdAsync(CInt(publicEmpRowID))
+        Dim dialog = New ViewLeaveLedgerDialog(employee)
+        dialog.ShowDialog()
+    End Sub
+
     Private Sub Print201ReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Print201ReportToolStripMenuItem.Click
         Print201Report()
     End Sub

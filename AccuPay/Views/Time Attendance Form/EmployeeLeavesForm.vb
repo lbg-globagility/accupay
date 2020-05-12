@@ -689,4 +689,9 @@ Public Class EmployeeLeavesForm
         userActivity.ShowDialog()
     End Sub
 
+    Private Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
+        Dim dialog = New ViewLeaveLedgerDialog(GetSelectedEmployee())
+        dialog.ShowDialog()
+    End Sub
+
 End Class
