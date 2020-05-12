@@ -12,22 +12,16 @@ namespace AccuPay.Data.Repositories
     public class UserRepository
     {
         private readonly PositionViewRepository positionViewRepository;
+        private readonly PayrollContext context;
 
         public class UserBuilder : IDisposable
         {
             private PayrollContext _context;
             private IQueryable<User> _query;
 
-            public UserBuilder(ILoggerFactory loggerFactory = null)
+            public UserBuilder(PayrollContext context)
             {
-                if (loggerFactory != null)
-                {
-                    _context = new PayrollContext(loggerFactory);
-                }
-                else
-                {
-                    _context = new PayrollContext();
-                }
+                _context = context;
                 _query = _context.Users;
             }
 
@@ -75,87 +69,66 @@ namespace AccuPay.Data.Repositories
             #endregion Builder Methods
         }
 
-        public UserRepository()
+        public UserRepository(PayrollContext context)
         {
-            positionViewRepository = new PositionViewRepository();
+            positionViewRepository = new PositionViewRepository(context);
+            this.context = context;
         }
 
         #region User List
 
-        public async Task<IEnumerable<User>> GetAllAsync()
+        public async Task<IEnumerable<User>> GetAllAsync(UserBuilder builder)
         {
-            //using (var builder = new UserBuilder(PayrollContext.DbCommandConsoleLoggerFactory))
-            using (var builder = new UserBuilder())
-            {
-                return await builder.ToListAsync();
-            }
+            return await builder.ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllActiveAsync()
+        public async Task<IEnumerable<User>> GetAllActiveAsync(UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    IsActive().
-                    ToListAsync();
-            }
+            return await builder.
+                IsActive().
+                ToListAsync();
         }
 
-        public async Task<IEnumerable<User>> GetAllActiveWithPositionAsync()
+        public async Task<IEnumerable<User>> GetAllActiveWithPositionAsync(UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    IncludePosition().
-                    IsActive().
-                    ToListAsync();
-            }
+            return await builder.
+                IncludePosition().
+                IsActive().
+                ToListAsync();
         }
 
         #endregion User List
 
         #region By User
 
-        public async Task<User> GetByIdAsync(int rowId)
+        public async Task<User> GetByIdAsync(int rowId, UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    ById(rowId).
-                    FirstOrDefaultAsync();
-            }
+            return await builder.
+                ById(rowId).
+                FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetByIdWithPositionAsync(int rowId)
+        public async Task<User> GetByIdWithPositionAsync(int rowId, UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    IncludePosition().
-                    ById(rowId).
-                    FirstOrDefaultAsync();
-            }
+            return await builder.
+                IncludePosition().
+                ById(rowId).
+                FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetByUsernameAsync(string username)
+        public async Task<User> GetByUsernameAsync(string username, UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    ByUsername(username).
-                    FirstOrDefaultAsync();
-            }
+            return await builder.
+                ByUsername(username).
+                FirstOrDefaultAsync();
         }
 
-        public async Task<User> GetByUsernameWithPositionAsync(string username)
+        public async Task<User> GetByUsernameWithPositionAsync(string username, UserBuilder builder)
         {
-            using (var builder = new UserBuilder())
-            {
-                return await builder.
-                    IncludePosition().
-                    ByUsername(username).
-                    FirstOrDefaultAsync();
-            }
+            return await builder.
+                IncludePosition().
+                ByUsername(username).
+                FirstOrDefaultAsync();
         }
 
         #endregion By User
@@ -174,38 +147,32 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<User> users)
         {
-            using (PayrollContext context = new PayrollContext(PayrollContext.DbCommandConsoleLoggerFactory))
+            var updated = users.Where(e => e.RowID.HasValue).ToList();
+            if (updated.Any())
             {
-                var updated = users.Where(e => e.RowID.HasValue).ToList();
-                if (updated.Any())
-                {
-                    updated.ForEach(x => context.Entry(x).State = EntityState.Modified);
-                }
-
-                var added = users.Where(e => !e.RowID.HasValue).ToList();
-                if (added.Any())
-                {
-                    // this adds a value to RowID (int minimum value)
-                    // so if there is a code checking for null to RowID
-                    // it will always be false
-                    context.Users.AddRange(added);
-                }
-                await context.SaveChangesAsync();
+                updated.ForEach(x => context.Entry(x).State = EntityState.Modified);
             }
+
+            var added = users.Where(e => !e.RowID.HasValue).ToList();
+            if (added.Any())
+            {
+                // this adds a value to RowID (int minimum value)
+                // so if there is a code checking for null to RowID
+                // it will always be false
+                context.Users.AddRange(added);
+            }
+            await context.SaveChangesAsync();
         }
 
-        public async Task SoftDeleteAsync(int id)
+        public async Task SoftDeleteAsync(UserBuilder builder, int id)
         {
-            using (var context = new PayrollContext())
-            {
-                var user = await GetByIdAsync(id);
+            var user = await GetByIdAsync(id, builder);
 
-                user.SetStatus(UserStatus.Inactive);
+            user.SetStatus(UserStatus.Inactive);
 
-                context.Entry(user).State = EntityState.Modified;
+            context.Entry(user).State = EntityState.Modified;
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         #endregion CRUD

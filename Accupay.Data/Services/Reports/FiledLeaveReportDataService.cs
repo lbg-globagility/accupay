@@ -11,31 +11,27 @@ namespace AccuPay.Data.Services
 {
     public class FiledLeaveReportDataService
     {
-        private readonly int _organizationId;
-        private readonly TimePeriod _selectedPeriod;
+        private readonly PayrollContext _context;
 
-        public FiledLeaveReportDataService(int organizationId, TimePeriod selectedPeriod)
+        public FiledLeaveReportDataService(PayrollContext context)
         {
-            _organizationId = organizationId;
-            _selectedPeriod = selectedPeriod;
+            _context = context;
         }
 
-        public async Task<IEnumerable<LeaveTransaction>> GetData()
+        public async Task<IEnumerable<LeaveTransaction>> GetData(int organizationId,
+                                                                TimePeriod selectedPeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LeaveTransactions.
-                                    Include(x => x.Employee).
-                                    Include(x => x.LeaveLedger.Product).
-                                    Include(x => x.Leave).
-                                    Where(x => x.TransactionDate >= _selectedPeriod.Start).
-                                    Where(x => x.TransactionDate <= _selectedPeriod.End).
-                                    Where(x => x.OrganizationID == _organizationId).
-                                    Where(x => x.Type == LeaveTransactionType.Debit).
-                                    Where(x => x.Amount != 0).
-                                    OrderBy(x => x.TransactionDate).
-                                    ToListAsync();
-            }
+            return await _context.LeaveTransactions.
+                                Include(x => x.Employee).
+                                Include(x => x.LeaveLedger.Product).
+                                Include(x => x.Leave).
+                                Where(x => x.TransactionDate >= selectedPeriod.Start).
+                                Where(x => x.TransactionDate <= selectedPeriod.End).
+                                Where(x => x.OrganizationID == organizationId).
+                                Where(x => x.Type == LeaveTransactionType.Debit).
+                                Where(x => x.Amount != 0).
+                                OrderBy(x => x.TransactionDate).
+                                ToListAsync();
         }
     }
 }

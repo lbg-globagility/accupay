@@ -185,110 +185,6 @@ namespace AccuPay.Data.Helpers
             return false;
         }
 
-        public static async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYear(int organizationId, IEnumerable<IPayPeriod> payperiods = null)
-        {
-            // replace this with a policy
-            // fourlinq can use this feature also
-            // for clients that has the same attendance and payroll period
-            var isBenchmarkOwner = ((new SystemOwnerService()).GetCurrentSystemOwner() ==
-                                                                SystemOwnerService.Benchmark);
-
-            var currentDay = DateTime.Today.ToMinimumHourValue();
-
-            using (var context = new PayrollContext())
-            {
-                if (payperiods == null || payperiods.Count() == 0)
-                {
-                    payperiods = await new PayPeriodRepository().GetAllSemiMonthlyAsync(organizationId);
-                }
-
-                if (isBenchmarkOwner)
-                {
-                    return payperiods.
-                            Where(p => currentDay >= p.PayFromDate && currentDay <= p.PayToDate).
-                            LastOrDefault();
-                }
-                else
-                {
-                    return payperiods.
-                            Where(p => p.PayToDate < currentDay).
-                            LastOrDefault();
-                }
-            }
-        }
-
-        public static async Task<Allowance> GetOrCreateEmployeeEcola(int employeeId,
-                                                                        int organizationId,
-                                                                        int userId,
-                                                                        TimePeriod timePeriod,
-                                                                        string allowanceFrequency = Allowance.FREQUENCY_SEMI_MONTHLY,
-                                                                        decimal amount = 0)
-        {
-            var allowanceRepository = new AllowanceRepository();
-            var productRepository = new ProductRepository();
-
-            var ecolaAllowance = await allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
-                                                                            organizationId: organizationId,
-                                                                            timePeriod: timePeriod);
-
-            if (ecolaAllowance == null)
-            {
-                var ecolaProductId = (await productRepository.GetOrCreateAllowanceTypeAsync(ProductConstant.ECOLA,
-                                                                                        organizationId,
-                                                                                        userId))?.RowID;
-
-                DateTime? effectiveEndDate = null;
-
-                ecolaAllowance = new Allowance();
-                ecolaAllowance.EmployeeID = employeeId;
-                ecolaAllowance.ProductID = ecolaProductId;
-                ecolaAllowance.AllowanceFrequency = allowanceFrequency;
-                ecolaAllowance.EffectiveStartDate = timePeriod.Start;
-                ecolaAllowance.EffectiveEndDate = effectiveEndDate;
-                ecolaAllowance.Amount = amount;
-                ecolaAllowance.CreatedBy = userId;
-                ecolaAllowance.OrganizationID = organizationId;
-
-                await allowanceRepository.SaveAsync(ecolaAllowance);
-
-                ecolaAllowance = await allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
-                                                                            organizationId: organizationId,
-                                                                            timePeriod: timePeriod);
-            }
-
-            return ecolaAllowance;
-        }
-
-        internal static async Task<PayPeriod> GetFirstPayPeriodOfTheYear(PayrollContext context,
-                                                                        PayPeriod currentPayPeriod,
-                                                                        int organizationId)
-        {
-            var currentPayPeriodYear = currentPayPeriod?.Year;
-
-            if (currentPayPeriodYear == null)
-                return null;
-
-            if (context == null)
-                context = new PayrollContext();
-
-            return await context.PayPeriods.Where(p => p.OrganizationID == organizationId).
-                                            Where(p => p.Year == currentPayPeriodYear).
-                                            Where(p => p.IsSemiMonthly).
-                                            Where(p => p.IsFirstPayPeriodOfTheYear).
-                                            FirstOrDefaultAsync();
-        }
-
-        internal static async Task<DateTime?> GetFirstDayOfTheYear(PayrollContext context,
-                                                                    PayPeriod currentPayPeriod,
-                                                                    int organizationId)
-        {
-            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(context,
-                                                                            currentPayPeriod,
-                                                                            organizationId);
-
-            return firstPayPeriodOfTheYear?.PayFromDate;
-        }
-
         // TODO: UpdateLoanSchedule
         //public static void UpdateLoanSchedule(int paypRowID, int organizationId, int userId)
         //{
@@ -300,68 +196,51 @@ namespace AccuPay.Data.Helpers
         //    n_ExecSQLProcedure.ExecuteQuery();
         //}
 
-        public static async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)
-        {
-            var systemOwner = new SystemOwnerService();
+        // TODO
+        //public static async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)
+        //{
+        //    var systemOwner = new SystemOwnerService();
 
-            if (systemOwner.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
-            {
-                // Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
-                return FunctionResult.Success();
-            }
+        //    if (systemOwner.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
+        //    {
+        //        // Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
+        //        return FunctionResult.Success();
+        //    }
 
-            using (PayrollContext context = new PayrollContext())
-            {
-                if (payPeriodId == null)
-                {
-                    return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
-                }
+        //    using (PayrollContext context = new PayrollContext())
+        //    {
+        //        if (payPeriodId == null)
+        //        {
+        //            return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
+        //        }
 
-                var payPeriod = await context.PayPeriods.
-                                FirstOrDefaultAsync(p => p.RowID == payPeriodId);
+        //        var payPeriod = await context.PayPeriods.
+        //                        FirstOrDefaultAsync(p => p.RowID == payPeriodId);
 
-                if (payPeriod == null)
-                {
-                    return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
-                }
+        //        if (payPeriod == null)
+        //        {
+        //            return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
+        //        }
 
-                var otherProcessingPayPeriod = await context.Paystubs.
-                                                            Include(p => p.PayPeriod).
-                                                            Where(p => p.PayPeriod.RowID != payPeriodId).
-                                                            Where(p => p.PayPeriod.IsClosed == false).
-                                                            Where(p => p.PayPeriod.OrganizationID == organizationId).
-                                                            FirstOrDefaultAsync();
+        //        var otherProcessingPayPeriod = await context.Paystubs.
+        //                                                    Include(p => p.PayPeriod).
+        //                                                    Where(p => p.PayPeriod.RowID != payPeriodId).
+        //                                                    Where(p => p.PayPeriod.IsClosed == false).
+        //                                                    Where(p => p.PayPeriod.OrganizationID == organizationId).
+        //                                                    FirstOrDefaultAsync();
 
-                if (payPeriod.IsClosed)
-                {
-                    return FunctionResult.Failed("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are \"Processing\" pay periods, make sure to close them first.");
-                }
-                else if (!payPeriod.IsClosed && otherProcessingPayPeriod != null)
-                {
-                    return FunctionResult.Failed("There is currently a pay period with \"PROCESSING\" status. Please finish that pay period first then close it to process other open pay periods.");
-                }
-            }
+        //        if (payPeriod.IsClosed)
+        //        {
+        //            return FunctionResult.Failed("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are \"Processing\" pay periods, make sure to close them first.");
+        //        }
+        //        else if (!payPeriod.IsClosed && otherProcessingPayPeriod != null)
+        //        {
+        //            return FunctionResult.Failed("There is currently a pay period with \"PROCESSING\" status. Please finish that pay period first then close it to process other open pay periods.");
+        //        }
+        //    }
 
-            return FunctionResult.Success();
-        }
-
-        public static PayPeriod GetNextPayPeriod(int payPeriodId)
-        {
-            using (PayrollContext context = new PayrollContext())
-            {
-                var currentPayPeriod = context.PayPeriods.FirstOrDefault(p => p.RowID == payPeriodId);
-
-                if (currentPayPeriod == null)
-                    return null;
-
-                return context.PayPeriods.
-                                Where(p => p.OrganizationID == currentPayPeriod.OrganizationID).
-                                Where(p => p.PayFrequencyID == currentPayPeriod.PayFrequencyID).
-                                Where(p => p.PayFromDate > currentPayPeriod.PayFromDate).
-                                OrderBy(p => p.PayFromDate).
-                                FirstOrDefault();
-            }
-        }
+        //    return FunctionResult.Success();
+        //}
 
         // TODO: GetOrganizationAddress
         //public static string GetOrganizationAddress()
@@ -370,35 +249,6 @@ namespace AccuPay.Data.Helpers
 
         //    return Convert.ToString(new SQL(str_quer_address).GetFoundRow);
         //}
-
-        public static CalendarCollection GetCalendarCollection(TimePeriod timePeriod,
-                                                                PayRateCalculationBasis calculationBasis,
-                                                                int organizationId)
-        {
-            using (var context = new PayrollContext())
-            {
-                var payrates = context.PayRates.
-                                    Where(p => p.OrganizationID == organizationId).
-                                    Where(p => timePeriod.Start <= p.Date).
-                                    Where(p => p.Date <= timePeriod.End).
-                                    ToList();
-                if (calculationBasis == PayRateCalculationBasis.Branch)
-                {
-                    BranchRepository branchRepository = new BranchRepository();
-                    var branches = branchRepository.GetAll();
-
-                    var calendarDays = context.CalendarDays.
-                                                Include(t => t.DayType).
-                                                Where(t => timePeriod.Start <= t.Date).
-                                                Where(t => t.Date <= timePeriod.End).
-                                                ToList();
-
-                    return new CalendarCollection(payrates, (ICollection<Branch>)branches, calendarDays, organizationId);
-                }
-                else
-                    return new CalendarCollection(payrates, organizationId);
-            }
-        }
 
         public static DateTime GetPreviousCutoffDateForCheckingLastWorkingDay(DateTime currentCutOffStart)
         {

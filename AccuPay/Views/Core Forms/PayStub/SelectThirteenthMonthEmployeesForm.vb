@@ -17,17 +17,19 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _paystubRepository As PaystubRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _timeEntryRepository As TimeEntryRepository
+    Private ReadOnly _paystubRepository As PaystubRepository
 
-    Private _actualTimeEntryRepository As ActualTimeEntryRepository
+    Private ReadOnly _timeEntryRepository As TimeEntryRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
 
-    Sub New(currentPayPeriodId As Integer)
+    Private ReadOnly _salaryRepository As SalaryRepository
+
+    Sub New(currentPayPeriodId As Integer, systemOwnerService As SystemOwnerService)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -36,6 +38,8 @@ Public Class SelectThirteenthMonthEmployeesForm
         _currentPayPeriodId = currentPayPeriodId
 
         _employeeModels = New List(Of EmployeeModel)
+
+        _systemOwnerService = systemOwnerService
 
         _payPeriodRepository = New PayPeriodRepository()
 
@@ -125,7 +129,8 @@ Public Class SelectThirteenthMonthEmployeesForm
                                                                           employeeActualTimeEntries,
                                                                           salary,
                                                                           settings,
-                                                                          employee.PaystubObject.AllowanceItems)
+                                                                          employee.PaystubObject.AllowanceItems,
+                                                                        _systemOwnerService)
 
                 employee.UpdateNewThirteenthMonthPayAmount(amount:=newPaystubThirteenthMonthPay.Amount,
                                                         basicPay:=newPaystubThirteenthMonthPay.BasicPay)

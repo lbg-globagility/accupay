@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports log4net
 
@@ -10,8 +11,9 @@ Namespace Benchmark
 
     Public Class BenchmarkPayrollHelper
 
-        Private _productRepository As ProductRepository
-        Private _loanScheduleRepository As LoanScheduleRepository
+        Private ReadOnly _productService As ProductService
+        Private ReadOnly _productRepository As ProductRepository
+        Private ReadOnly _loanScheduleRepository As LoanScheduleRepository
 
         Private _pagibigLoanId As Integer
         Private _sssLoanId As Integer
@@ -36,41 +38,30 @@ Namespace Benchmark
 
 #End Region
 
-        Private Sub New()
+        Private Sub New(productService As ProductService,
+                        productRepository As ProductRepository,
+                        loanScheduleRepository As LoanScheduleRepository)
 
-            _loanScheduleRepository = New LoanScheduleRepository()
-            _productRepository = New ProductRepository()
+            _productService = productService
+            _productRepository = productRepository
+            _loanScheduleRepository = loanScheduleRepository
 
         End Sub
 
-        Public Shared Async Function GetEcola(
+        Public Async Function GetEcola(
                                         employeeId As Integer,
                                         payDateFrom As Date,
                                         payDateTo As Date) As Task(Of Allowance)
 
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
-            Return Await Data.Helpers.PayrollTools.GetOrCreateEmployeeEcola(
+            Return Await _productService.GetOrCreateEmployeeEcola(
                                                 employeeId:=employeeId,
                                                 organizationId:=z_OrganizationID,
                                                 userId:=z_User,
                                                 timePeriod:=timePeriod,
                                                 allowanceFrequency:=Allowance.FREQUENCY_DAILY,
                                                 amount:=0)
-
-        End Function
-
-        Public Shared Async Function GetInstance(logger As ILog) As Task(Of BenchmarkPayrollHelper)
-
-            Dim helper = New BenchmarkPayrollHelper()
-
-            If Await helper.Initialize(logger) = False Then
-
-                Return Nothing
-
-            End If
-
-            Return helper
 
         End Function
 

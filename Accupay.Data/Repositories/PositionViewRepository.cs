@@ -10,22 +10,22 @@ namespace AccuPay.Data.Repositories
 {
     public class PositionViewRepository
     {
+        private readonly PayrollContext _context;
+
+        public PositionViewRepository(PayrollContext context)
+        {
+            this._context = context;
+        }
+
         private class PositionViewBuilder : IDisposable
         {
             private PayrollContext _context;
             private IQueryable<PositionView> _query;
 
-            public PositionViewBuilder(ILoggerFactory loggerFactory = null)
+            public PositionViewBuilder(PayrollContext context)
             {
-                if (loggerFactory != null)
-                {
-                    _context = new PayrollContext(loggerFactory);
-                }
-                else
-                {
-                    _context = new PayrollContext();
-                }
                 _query = _context.PositionViews;
+                _context = context;
             }
 
             public PositionViewBuilder ByOrganizationId(int organizationId)
@@ -65,7 +65,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task FillUserPositionViewAsync(int positionId, int organizationId, int userId)
         {
-            using (var builder = new PositionViewBuilder())
+            using (var builder = new PositionViewBuilder(_context))
             {
                 var jobPositionView = await builder.
                     ByOrganizationId(organizationId).
@@ -74,42 +74,39 @@ namespace AccuPay.Data.Repositories
 
                 // if no PositionView fetched, base on PositionId and OrganizationId given,
                 // this code should provide for it
-                using (var context = new PayrollContext())
+                var mockPositionViews = await ImitationPositionViews(positionId, userId);
+
+                if (!jobPositionView.Any())
                 {
-                    var mockPositionViews = await ImitationPositionViews(positionId, userId, context);
+                    _context.PositionViews.AddRange(mockPositionViews);
+                    await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var jobPositionViewPositionIds = jobPositionView.Select(p => p.PositionID).ToList();
+                    var jobPositionViewViewIds = jobPositionView.Select(p => p.ViewID).ToList();
+                    var jobPositionViewOrganizationIds = jobPositionView.Select(p => p.OrganizationID).ToList();
+                    var missingPositionViews = mockPositionViews.
+                        Where(p => !jobPositionViewPositionIds.Contains(p.PositionID)).
+                        Where(p => !jobPositionViewViewIds.Contains(p.ViewID)).
+                        Where(p => !jobPositionViewOrganizationIds.Contains(p.OrganizationID)).
+                        ToList();
 
-                    if (!jobPositionView.Any())
+                    if (missingPositionViews.Any())
                     {
-                        context.PositionViews.AddRange(mockPositionViews);
-                        await context.SaveChangesAsync();
-                    }
-                    else
-                    {
-                        var jobPositionViewPositionIds = jobPositionView.Select(p => p.PositionID).ToList();
-                        var jobPositionViewViewIds = jobPositionView.Select(p => p.ViewID).ToList();
-                        var jobPositionViewOrganizationIds = jobPositionView.Select(p => p.OrganizationID).ToList();
-                        var missingPositionViews = mockPositionViews.
-                            Where(p => !jobPositionViewPositionIds.Contains(p.PositionID)).
-                            Where(p => !jobPositionViewViewIds.Contains(p.ViewID)).
-                            Where(p => !jobPositionViewOrganizationIds.Contains(p.OrganizationID)).
-                            ToList();
-
-                        if (missingPositionViews.Any())
-                        {
-                            context.PositionViews.AddRange(mockPositionViews);
-                            await context.SaveChangesAsync();
-                        }
+                        _context.PositionViews.AddRange(mockPositionViews);
+                        await _context.SaveChangesAsync();
                     }
                 }
             }
         }
 
-        private async Task<List<PositionView>> ImitationPositionViews(int positionId, int userId, PayrollContext context)
+        private async Task<List<PositionView>> ImitationPositionViews(int positionId, int userId)
         {
-            var position = await context.Positions.FindAsync(positionId);
+            var position = await _context.Positions.FindAsync(positionId);
             //var samePositions = await positionRepository.GetAllByNameAsync(position.Name);
 
-            var privileges = await context.Privileges.ToListAsync();
+            var privileges = await _context.Privileges.ToListAsync();
 
             var newPositionViews = new List<PositionView>();
             foreach (var view in privileges)

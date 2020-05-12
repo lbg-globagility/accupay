@@ -58,13 +58,37 @@ Public Class TimeEntrySummaryForm
 
     Private _policy As PolicyHelper
 
+    Private _calendarService As CalendarService
+
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
 
     Private _employeeRepository As EmployeeRepository
 
+    Private _payPeriodRepository As PayPeriodRepository
+
     Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
     Private _userRepository As UserRepository
+
+    Sub New(calendarService As CalendarService,
+            breakTimeBracketRepository As BreakTimeBracketRepository,
+            EmployeeRepository As EmployeeRepository,
+            PayPeriodRepository As PayPeriodRepository,
+            timeAttendanceLogRepository As TimeAttendanceLogRepository,
+            userRepository As UserRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _calendarService = calendarService
+
+        _breakTimeBracketRepository = breakTimeBracketRepository
+        _employeeRepository = EmployeeRepository
+        _payPeriodRepository = PayPeriodRepository
+        _timeAttendanceLogRepository = timeAttendanceLogRepository
+        _userRepository = userRepository
+    End Sub
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -75,12 +99,6 @@ Public Class TimeEntrySummaryForm
 
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
-
-        _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
-
-        _employeeRepository = New Repositories.EmployeeRepository()
-
-        _userRepository = New Repositories.UserRepository()
 
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
@@ -140,8 +158,8 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Return Data.Helpers.PayrollTools.
-                                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
+        Return _calendarService.
+                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
                                                         _policy.PayRateCalculationBasis,
                                                         z_OrganizationID)
     End Function
@@ -216,7 +234,7 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.
                         GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID,
                                                                     New List(Of IPayPeriod)(_payPeriods))
 
@@ -251,7 +269,8 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriods = New Collection(Of PayPeriod)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
+                                            GetPeriodsWithPaystubCount(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)

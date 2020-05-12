@@ -232,7 +232,8 @@ Public Class PayStubForm
         Dim n_SQLQueryToDatatable As New SQLQueryToDatatable("CALL VIEW_payperiodofyear('" & orgztnID & "'," & date_param & ",'0');")
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
+                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         dgvpayper.Rows.Clear()
@@ -2024,8 +2025,8 @@ Public Class PayStubForm
 
         Dim payslipCreator As New PayslipCreator(payPeriod, isActual)
 
-        Dim nextPayPeriod = Data.Helpers.PayrollTools.
-                                GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
+        Dim nextPayPeriod = _payPeriodRepository.
+                            GetNextPayPeriod(ObjectUtils.ToNullableInteger(ValNoComma(paypRowID)))
 
         Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, nextPayPeriod)
 

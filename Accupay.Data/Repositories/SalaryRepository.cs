@@ -9,30 +9,31 @@ namespace AccuPay.Data.Repositories
 {
     public class SalaryRepository
     {
+        private readonly PayrollContext _context;
+
+        public SalaryRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int id)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                var salary = await GetByIdAsync(id);
+            var salary = await GetByIdAsync(id);
 
-                context.Salaries.Remove(salary);
+            _context.Salaries.Remove(salary);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<Salary> salaries)
         {
-            using (PayrollContext context = new PayrollContext())
+            foreach (var salary in salaries)
             {
-                foreach (var salary in salaries)
-                {
-                    await SaveWithContextAsync(salary, context);
+                await SaveWithContextAsync(salary);
 
-                    await context.SaveChangesAsync();
-                }
+                await _context.SaveChangesAsync();
             }
         }
 
@@ -42,28 +43,25 @@ namespace AccuPay.Data.Repositories
         }
 
         private async Task SaveWithContextAsync(Salary salary,
-                                                PayrollContext passedContext = null)
+                                                bool deferSave = true)
         {
-            if (passedContext == null)
+            if (deferSave == false)
             {
-                using (var newContext = new PayrollContext())
-                {
-                    SaveFunction(salary, newContext);
-                    await newContext.SaveChangesAsync();
-                }
+                SaveFunction(salary);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                SaveFunction(salary, passedContext);
+                SaveFunction(salary);
             }
         }
 
-        private void SaveFunction(Salary salary, PayrollContext context)
+        private void SaveFunction(Salary salary)
         {
             if (salary.RowID == null)
-                context.Salaries.Add(salary);
+                _context.Salaries.Add(salary);
             else
-                context.Entry(salary).State = EntityState.Modified;
+                _context.Entry(salary).State = EntityState.Modified;
         }
 
         #endregion CRUD
@@ -74,10 +72,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Salary> GetByIdAsync(int id)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Salaries.Where(x => x.RowID == id).FirstOrDefaultAsync();
-            }
+            return await _context.Salaries.Where(x => x.RowID == id).FirstOrDefaultAsync();
         }
 
         #endregion Single entity
@@ -86,40 +81,28 @@ namespace AccuPay.Data.Repositories
 
         public IEnumerable<Salary> GetByEmployee(int employeeId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Salaries.
-                        Where(x => x.EmployeeID == employeeId).
-                        ToList();
-            }
+            return _context.Salaries.
+                    Where(x => x.EmployeeID == employeeId).
+                    ToList();
         }
 
         public async Task<IEnumerable<Salary>> GetAll(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Salaries.
-                    Where(x => x.OrganizationID == organizationId).
-                    ToListAsync();
-            }
+            return await _context.Salaries.
+                Where(x => x.OrganizationID == organizationId).
+                ToListAsync();
         }
 
         public IEnumerable<Salary> GetByCutOff(int organizationId, DateTime cutoffStart)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return CreateBaseQueryByCutOff(organizationId, cutoffStart, context).
-                                ToList();
-            }
+            return CreateBaseQueryByCutOff(organizationId, cutoffStart).
+                            ToList();
         }
 
         public async Task<IEnumerable<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffStart)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await CreateBaseQueryByCutOff(organizationId, cutoffStart, context).
-                                ToListAsync();
-            }
+            return await CreateBaseQueryByCutOff(organizationId, cutoffStart).
+                            ToListAsync();
         }
 
         #endregion List of entities
@@ -127,10 +110,9 @@ namespace AccuPay.Data.Repositories
         #endregion Queries
 
         private IQueryable<Salary> CreateBaseQueryByCutOff(int organizationId,
-                                                        DateTime cutoffStart,
-                                                        PayrollContext context)
+                                                        DateTime cutoffStart)
         {
-            return context.Salaries.
+            return _context.Salaries.
                             Where(x => x.OrganizationID == organizationId).
                             Where(x => x.EffectiveFrom <= cutoffStart).
                             OrderByDescending(x => x.EffectiveFrom).

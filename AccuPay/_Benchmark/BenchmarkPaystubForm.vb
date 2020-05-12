@@ -9,7 +9,6 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 
 Public Class BenchmarkPaystubForm
 
@@ -37,17 +36,23 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Sub New()
+    Sub New(payPeriodService As PayPeriodService,
+            adjustmentRepository As AdjustmentRepository,
+            employeeRepository As EmployeeRepository,
+            salaryRepository As SalaryRepository,
+            paystubRepository As PaystubRepository,
+            productRepository As ProductRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _adjustmentRepository = New AdjustmentRepository()
-        _employeeRepository = New EmployeeRepository()
-        _salaryRepository = New SalaryRepository()
-        _paystubRepository = New PaystubRepository()
-        _productRepository = New ProductRepository()
+        _payPeriodService = payPeriodService
+        _adjustmentRepository = adjustmentRepository
+        _employeeRepository = employeeRepository
+        _salaryRepository = salaryRepository
+        _paystubRepository = paystubRepository
+        _productRepository = productRepository
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -124,7 +129,7 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await Data.Helpers.PayrollTools.
+        _currentPayPeriod = Await _payPeriodService.
                                     GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         UpdateCutOffLabel()

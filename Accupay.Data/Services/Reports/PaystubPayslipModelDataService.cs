@@ -11,249 +11,240 @@ namespace AccuPay.Data.Services
 {
     public class PaystubPayslipModelDataService
     {
-        private readonly int _organizationId;
-        private readonly IPayPeriod _payPeriod;
-        private readonly bool _isActual;
-
+        private readonly PayrollContext _context;
         private readonly SalaryRepository _salaryRepository;
 
-        public PaystubPayslipModelDataService(int organizationId, IPayPeriod payPeriod, bool isActual = false)
+        public PaystubPayslipModelDataService(PayrollContext context, SalaryRepository salaryRepository)
         {
-            _organizationId = organizationId;
-            _payPeriod = payPeriod;
-            _isActual = isActual;
-
-            _salaryRepository = new SalaryRepository();
+            _context = context;
+            _salaryRepository = salaryRepository;
         }
 
-        public async Task<List<PaystubPayslipModel>> GetData()
+        public async Task<List<PaystubPayslipModel>> GetData(int organizationId, IPayPeriod payPeriod, bool isActual = false)
         {
             List<PaystubPayslipModel> paystubPayslipModels = new List<PaystubPayslipModel>();
 
             // TODO Create PaystubPayslipModel from database THEN check if equal to new payslip
-            using (PayrollContext context = new PayrollContext())
+            // use paystub repository GetFullPaystub
+            var paystubs = await _context.Paystubs.
+                                    Include(p => p.Employee).Include(p => p.Actual).
+                                    Where(p => p.PayPeriodID == payPeriod.RowID).
+                                    Where(p => p.OrganizationID == organizationId).
+                                    ToListAsync();
+
+            paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
+
+            var loans = await _context.LoanTransactions.
+                                    Include(l => l.LoanSchedule).
+                                    Include(l => l.LoanSchedule.LoanType).
+                                    Include(l => l.Paystub).
+                                    Where(l => l.Paystub.PayPeriodID == payPeriod.RowID).
+                                    ToListAsync();
+
+            var adjustments = await _context.Adjustments.
+                                    Include(a => a.Product).
+                                    Include(a => a.Paystub).
+                                    Where(a => a.Paystub.PayPeriodID == payPeriod.RowID).
+                                    ToListAsync();
+
+            var actualAdjustments = await _context.ActualAdjustments.
+                                    Include(a => a.Product).
+                                    Include(a => a.Paystub).
+                                    Where(a => a.Paystub.PayPeriodID == payPeriod.RowID).
+                                    ToListAsync();
+
+            var employeeSalaries = (await _salaryRepository.GetByCutOffAsync(organizationId,
+                                                                            payPeriod.PayFromDate)).
+                                            ToList();
+
+            var ecolas = await _context.AllowanceItems.
+                        Include(p => p.Allowance).
+                        Include(p => p.Allowance.Product).
+                        Where(p => p.Allowance.Product.PartNo.ToUpper() == ProductConstant.ECOLA.ToUpper()).
+                        ToListAsync();
+
+            foreach (var paystub in paystubs)
             {
-                // use paystub repository GetFullPaystub
-                var paystubs = await context.Paystubs.
-                                        Include(p => p.Employee).Include(p => p.Actual).
-                                        Where(p => p.PayPeriodID == _payPeriod.RowID).
-                                        Where(p => p.OrganizationID == _organizationId).
-                                        ToListAsync();
+                var employeeId = paystub.EmployeeID.Value;
 
-                paystubs = paystubs.OrderBy(p => p.Employee.FullNameWithMiddleInitialLastNameFirst).ToList();
+                var employeeSalary = employeeSalaries.FirstOrDefault(s => s.EmployeeID == employeeId);
 
-                var loans = await context.LoanTransactions.
-                                        Include(l => l.LoanSchedule).
-                                        Include(l => l.LoanSchedule.LoanType).
-                                        Include(l => l.Paystub).
-                                        Where(l => l.Paystub.PayPeriodID == _payPeriod.RowID).
-                                        ToListAsync();
+                paystub.Ecola = ecolas.
+                                    Where(e => e.PaystubID == paystub.RowID).
+                                    FirstOrDefault()?.Amount ?? 0;
 
-                var adjustments = await context.Adjustments.
-                                        Include(a => a.Product).
-                                        Include(a => a.Paystub).
-                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID).
-                                        ToListAsync();
+                var salary = isActual ? employeeSalary.TotalSalary : employeeSalary.BasicSalary;
 
-                var actualAdjustments = await context.ActualAdjustments.
-                                        Include(a => a.Product).
-                                        Include(a => a.Paystub).
-                                        Where(a => a.Paystub.PayPeriodID == _payPeriod.RowID).
-                                        ToListAsync();
+                var allAdjustments = GetEmployeeAdjustments(actualAdjustments, employeeId);
+                allAdjustments.AddRange(GetEmployeeAdjustments(adjustments, employeeId));
 
-                var employeeSalaries = (await _salaryRepository.GetByCutOffAsync(_organizationId,
-                                                                                _payPeriod.PayFromDate)).
-                                                ToList();
-
-                var ecolas = await context.AllowanceItems.
-                            Include(p => p.Allowance).
-                            Include(p => p.Allowance.Product).
-                            Where(p => p.Allowance.Product.PartNo.ToUpper() == ProductConstant.ECOLA.ToUpper()).
-                            ToListAsync();
-
-                foreach (var paystub in paystubs)
+                PaystubPayslipModel paystubPayslipModel = new PaystubPayslipModel(paystub.Employee)
                 {
-                    var employeeId = paystub.EmployeeID.Value;
+                    EmployeeId = employeeId,
 
-                    var employeeSalary = employeeSalaries.FirstOrDefault(s => s.EmployeeID == employeeId);
+                    EmployeeNumber = paystub.Employee?.EmployeeNo,
 
-                    paystub.Ecola = ecolas.
-                                        Where(e => e.PaystubID == paystub.RowID).
-                                        FirstOrDefault()?.Amount ?? 0;
+                    EmployeeName = paystub.Employee?.FullNameWithMiddleInitialLastNameFirst,
 
-                    var salary = _isActual ? employeeSalary.TotalSalary : employeeSalary.BasicSalary;
+                    RegularPay = salary,
 
-                    var allAdjustments = GetEmployeeAdjustments(actualAdjustments, employeeId);
-                    allAdjustments.AddRange(GetEmployeeAdjustments(adjustments, employeeId));
+                    BasicHours = paystub.BasicHours,
 
-                    PaystubPayslipModel paystubPayslipModel = new PaystubPayslipModel(paystub.Employee)
-                    {
-                        EmployeeId = employeeId,
+                    Allowance = paystub.TotalAllowance - paystub.Ecola,
 
-                        EmployeeNumber = paystub.Employee?.EmployeeNo,
+                    Ecola = paystub.Ecola,
 
-                        EmployeeName = paystub.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                    AbsentHours = paystub.AbsentHours +
+                                    (paystub.Employee.IsMonthly ? paystub.LeaveHours : 0),
 
-                        RegularPay = salary,
+                    AbsentAmount = isActual ?
+                                        paystub.Actual.AbsenceDeduction +
+                                        (paystub.Employee.IsMonthly ? paystub.Actual.LeavePay : 0)
+                                        :
+                                        paystub.AbsenceDeduction +
+                                        (paystub.Employee.IsMonthly ? paystub.LeavePay : 0),
 
-                        BasicHours = paystub.BasicHours,
+                    LateAndUndertimeHours = paystub.LateHours + paystub.UndertimeHours,
 
-                        Allowance = paystub.TotalAllowance - paystub.Ecola,
+                    LateAndUndertimeAmount = isActual ?
+                                        paystub.Actual.LateDeduction + paystub.UndertimeDeduction
+                                        :
+                                        paystub.LateDeduction + paystub.UndertimeDeduction,
 
-                        Ecola = paystub.Ecola,
+                    LeaveHours = paystub.LeaveHours,
 
-                        AbsentHours = paystub.AbsentHours +
-                                        (paystub.Employee.IsMonthly ? paystub.LeaveHours : 0),
+                    LeavePay = isActual ? paystub.Actual.LeavePay : paystub.LeavePay,
 
-                        AbsentAmount = _isActual ?
-                                            paystub.Actual.AbsenceDeduction +
-                                            (paystub.Employee.IsMonthly ? paystub.Actual.LeavePay : 0)
-                                            :
-                                            paystub.AbsenceDeduction +
-                                            (paystub.Employee.IsMonthly ? paystub.LeavePay : 0),
+                    GrossPay = isActual ? paystub.Actual.GrossPay : paystub.GrossPay,
 
-                        LateAndUndertimeHours = paystub.LateHours + paystub.UndertimeHours,
+                    SSSAmount = paystub.SssEmployeeShare,
 
-                        LateAndUndertimeAmount = _isActual ?
-                                            paystub.Actual.LateDeduction + paystub.UndertimeDeduction
-                                            :
-                                            paystub.LateDeduction + paystub.UndertimeDeduction,
+                    PhilHealthAmount = paystub.PhilHealthEmployeeShare,
 
-                        LeaveHours = paystub.LeaveHours,
+                    PagibigAmount = paystub.HdmfEmployeeShare,
 
-                        LeavePay = _isActual ? paystub.Actual.LeavePay : paystub.LeavePay,
+                    NetPay = isActual ? paystub.Actual.NetPay : paystub.NetPay,
 
-                        GrossPay = _isActual ? paystub.Actual.GrossPay : paystub.GrossPay,
+                    TaxWithheldAmount = paystub.WithholdingTax,
 
-                        SSSAmount = paystub.SssEmployeeShare,
+                    Loans = GetEmployeeLoans(loans, employeeId),
 
-                        PhilHealthAmount = paystub.PhilHealthEmployeeShare,
+                    Adjustments = allAdjustments,
 
-                        PagibigAmount = paystub.HdmfEmployeeShare,
+                    // overtimes
+                    OvertimeHours = paystub.OvertimeHours,
 
-                        NetPay = _isActual ? paystub.Actual.NetPay : paystub.NetPay,
+                    OvertimePay = isActual ? paystub.Actual.OvertimePay : paystub.OvertimePay,
 
-                        TaxWithheldAmount = paystub.WithholdingTax,
+                    NightDiffHours = paystub.NightDiffHours,
 
-                        Loans = GetEmployeeLoans(loans, employeeId),
+                    NightDiffPay = isActual ? paystub.Actual.NightDiffPay : paystub.NightDiffPay,
 
-                        Adjustments = allAdjustments,
+                    NightDiffOvertimeHours = paystub.NightDiffOvertimeHours,
 
-                        // overtimes
-                        OvertimeHours = paystub.OvertimeHours,
+                    NightDiffOvertimePay = isActual ? paystub.Actual.NightDiffOvertimePay :
+                                                    paystub.NightDiffOvertimePay,
 
-                        OvertimePay = _isActual ? paystub.Actual.OvertimePay : paystub.OvertimePay,
+                    RestDayHours = paystub.RestDayHours,
 
-                        NightDiffHours = paystub.NightDiffHours,
+                    RestDayPay = isActual ? paystub.Actual.RestDayPay : paystub.RestDayPay,
 
-                        NightDiffPay = _isActual ? paystub.Actual.NightDiffPay : paystub.NightDiffPay,
+                    RestDayOTHours = paystub.RestDayOTHours,
 
-                        NightDiffOvertimeHours = paystub.NightDiffOvertimeHours,
+                    RestDayOTPay = isActual ? paystub.Actual.RestDayOTPay : paystub.RestDayOTPay,
 
-                        NightDiffOvertimePay = _isActual ? paystub.Actual.NightDiffOvertimePay :
-                                                        paystub.NightDiffOvertimePay,
+                    SpecialHolidayHours = paystub.SpecialHolidayHours,
 
-                        RestDayHours = paystub.RestDayHours,
+                    SpecialHolidayPay = isActual ? paystub.Actual.SpecialHolidayPay :
+                                                    paystub.SpecialHolidayPay,
 
-                        RestDayPay = _isActual ? paystub.Actual.RestDayPay : paystub.RestDayPay,
+                    SpecialHolidayOTHours = paystub.SpecialHolidayOTHours,
 
-                        RestDayOTHours = paystub.RestDayOTHours,
+                    SpecialHolidayOTPay = isActual ? paystub.Actual.SpecialHolidayOTPay :
+                                                        paystub.SpecialHolidayOTPay,
 
-                        RestDayOTPay = _isActual ? paystub.Actual.RestDayOTPay : paystub.RestDayOTPay,
+                    RegularHolidayHours = paystub.RegularHolidayHours,
 
-                        SpecialHolidayHours = paystub.SpecialHolidayHours,
+                    RegularHolidayPay = isActual ? paystub.Actual.RegularHolidayPay :
+                                                    paystub.RegularHolidayPay,
 
-                        SpecialHolidayPay = _isActual ? paystub.Actual.SpecialHolidayPay :
-                                                        paystub.SpecialHolidayPay,
+                    RegularHolidayOTHours = paystub.RegularHolidayOTHours,
 
-                        SpecialHolidayOTHours = paystub.SpecialHolidayOTHours,
+                    RegularHolidayOTPay = isActual ? paystub.Actual.RegularHolidayOTPay :
+                                                        paystub.RegularHolidayOTPay,
 
-                        SpecialHolidayOTPay = _isActual ? paystub.Actual.SpecialHolidayOTPay :
-                                                            paystub.SpecialHolidayOTPay,
+                    RestDayNightDiffHours = paystub.RestDayNightDiffHours,
 
-                        RegularHolidayHours = paystub.RegularHolidayHours,
+                    RestDayNightDiffPay = isActual ? paystub.Actual.RestDayNightDiffPay :
+                                                        paystub.RestDayNightDiffPay,
 
-                        RegularHolidayPay = _isActual ? paystub.Actual.RegularHolidayPay :
-                                                        paystub.RegularHolidayPay,
+                    RestDayNightDiffOTHours = paystub.RestDayNightDiffOTHours,
 
-                        RegularHolidayOTHours = paystub.RegularHolidayOTHours,
+                    RestDayNightDiffOTPay = isActual ? paystub.Actual.RestDayNightDiffOTPay :
+                                                        paystub.RestDayNightDiffOTPay,
 
-                        RegularHolidayOTPay = _isActual ? paystub.Actual.RegularHolidayOTPay :
-                                                            paystub.RegularHolidayOTPay,
+                    SpecialHolidayNightDiffHours = paystub.SpecialHolidayNightDiffHours,
 
-                        RestDayNightDiffHours = paystub.RestDayNightDiffHours,
+                    SpecialHolidayNightDiffPay = isActual ? paystub.Actual.SpecialHolidayNightDiffPay :
+                                                            paystub.SpecialHolidayNightDiffPay,
 
-                        RestDayNightDiffPay = _isActual ? paystub.Actual.RestDayNightDiffPay :
-                                                            paystub.RestDayNightDiffPay,
+                    SpecialHolidayNightDiffOTHours = paystub.SpecialHolidayNightDiffOTHours,
 
-                        RestDayNightDiffOTHours = paystub.RestDayNightDiffOTHours,
+                    SpecialHolidayNightDiffOTPay = isActual ? paystub.Actual.SpecialHolidayNightDiffOTPay :
+                                                                paystub.SpecialHolidayNightDiffOTPay,
 
-                        RestDayNightDiffOTPay = _isActual ? paystub.Actual.RestDayNightDiffOTPay :
-                                                            paystub.RestDayNightDiffOTPay,
+                    SpecialHolidayRestDayHours = paystub.SpecialHolidayRestDayHours,
 
-                        SpecialHolidayNightDiffHours = paystub.SpecialHolidayNightDiffHours,
+                    SpecialHolidayRestDayPay = isActual ? paystub.Actual.SpecialHolidayRestDayPay :
+                                                            paystub.SpecialHolidayRestDayPay,
 
-                        SpecialHolidayNightDiffPay = _isActual ? paystub.Actual.SpecialHolidayNightDiffPay :
-                                                                paystub.SpecialHolidayNightDiffPay,
+                    SpecialHolidayRestDayOTHours = paystub.SpecialHolidayRestDayOTHours,
 
-                        SpecialHolidayNightDiffOTHours = paystub.SpecialHolidayNightDiffOTHours,
+                    SpecialHolidayRestDayOTPay = isActual ? paystub.Actual.SpecialHolidayRestDayOTPay :
+                                                            paystub.SpecialHolidayRestDayOTPay,
 
-                        SpecialHolidayNightDiffOTPay = _isActual ? paystub.Actual.SpecialHolidayNightDiffOTPay :
-                                                                    paystub.SpecialHolidayNightDiffOTPay,
+                    SpecialHolidayRestDayNightDiffHours = paystub.SpecialHolidayRestDayNightDiffHours,
 
-                        SpecialHolidayRestDayHours = paystub.SpecialHolidayRestDayHours,
+                    SpecialHolidayRestDayNightDiffPay = isActual ? paystub.Actual.SpecialHolidayRestDayNightDiffPay :
+                                                                    paystub.SpecialHolidayRestDayNightDiffPay,
 
-                        SpecialHolidayRestDayPay = _isActual ? paystub.Actual.SpecialHolidayRestDayPay :
-                                                                paystub.SpecialHolidayRestDayPay,
+                    SpecialHolidayRestDayNightDiffOTHours = paystub.SpecialHolidayRestDayNightDiffOTHours,
 
-                        SpecialHolidayRestDayOTHours = paystub.SpecialHolidayRestDayOTHours,
+                    SpecialHolidayRestDayNightDiffOTPay = isActual ? paystub.Actual.SpecialHolidayRestDayNightDiffOTPay :
+                                                                    paystub.SpecialHolidayRestDayNightDiffOTPay,
 
-                        SpecialHolidayRestDayOTPay = _isActual ? paystub.Actual.SpecialHolidayRestDayOTPay :
-                                                                paystub.SpecialHolidayRestDayOTPay,
+                    RegularHolidayNightDiffHours = paystub.RegularHolidayNightDiffHours,
 
-                        SpecialHolidayRestDayNightDiffHours = paystub.SpecialHolidayRestDayNightDiffHours,
+                    RegularHolidayNightDiffPay = isActual ? paystub.Actual.RegularHolidayNightDiffPay :
+                                                            paystub.RegularHolidayNightDiffPay,
 
-                        SpecialHolidayRestDayNightDiffPay = _isActual ? paystub.Actual.SpecialHolidayRestDayNightDiffPay :
-                                                                        paystub.SpecialHolidayRestDayNightDiffPay,
+                    RegularHolidayNightDiffOTHours = paystub.RegularHolidayNightDiffOTHours,
 
-                        SpecialHolidayRestDayNightDiffOTHours = paystub.SpecialHolidayRestDayNightDiffOTHours,
+                    RegularHolidayNightDiffOTPay = isActual ? paystub.Actual.RegularHolidayNightDiffOTPay :
+                                                                paystub.RegularHolidayNightDiffOTPay,
 
-                        SpecialHolidayRestDayNightDiffOTPay = _isActual ? paystub.Actual.SpecialHolidayRestDayNightDiffOTPay :
-                                                                        paystub.SpecialHolidayRestDayNightDiffOTPay,
+                    RegularHolidayRestDayHours = paystub.RegularHolidayRestDayHours,
 
-                        RegularHolidayNightDiffHours = paystub.RegularHolidayNightDiffHours,
+                    RegularHolidayRestDayPay = isActual ? paystub.Actual.RegularHolidayRestDayPay :
+                                                            paystub.RegularHolidayRestDayPay,
 
-                        RegularHolidayNightDiffPay = _isActual ? paystub.Actual.RegularHolidayNightDiffPay :
-                                                                paystub.RegularHolidayNightDiffPay,
+                    RegularHolidayRestDayOTHours = paystub.RegularHolidayRestDayOTHours,
 
-                        RegularHolidayNightDiffOTHours = paystub.RegularHolidayNightDiffOTHours,
+                    RegularHolidayRestDayOTPay = isActual ? paystub.Actual.RegularHolidayRestDayOTPay :
+                                                            paystub.RegularHolidayRestDayOTPay,
 
-                        RegularHolidayNightDiffOTPay = _isActual ? paystub.Actual.RegularHolidayNightDiffOTPay :
-                                                                    paystub.RegularHolidayNightDiffOTPay,
+                    RegularHolidayRestDayNightDiffHours = paystub.RegularHolidayRestDayNightDiffHours,
 
-                        RegularHolidayRestDayHours = paystub.RegularHolidayRestDayHours,
+                    RegularHolidayRestDayNightDiffPay = isActual ? paystub.Actual.RegularHolidayRestDayNightDiffPay :
+                                                                    paystub.RegularHolidayRestDayNightDiffPay,
 
-                        RegularHolidayRestDayPay = _isActual ? paystub.Actual.RegularHolidayRestDayPay :
-                                                                paystub.RegularHolidayRestDayPay,
+                    RegularHolidayRestDayNightDiffOTHours = paystub.RegularHolidayRestDayNightDiffOTHours,
 
-                        RegularHolidayRestDayOTHours = paystub.RegularHolidayRestDayOTHours,
+                    RegularHolidayRestDayNightDiffOTPay = isActual ? paystub.Actual.RegularHolidayRestDayNightDiffOTPay :
+                                                                        paystub.RegularHolidayRestDayNightDiffOTPay
+                };
 
-                        RegularHolidayRestDayOTPay = _isActual ? paystub.Actual.RegularHolidayRestDayOTPay :
-                                                                paystub.RegularHolidayRestDayOTPay,
-
-                        RegularHolidayRestDayNightDiffHours = paystub.RegularHolidayRestDayNightDiffHours,
-
-                        RegularHolidayRestDayNightDiffPay = _isActual ? paystub.Actual.RegularHolidayRestDayNightDiffPay :
-                                                                        paystub.RegularHolidayRestDayNightDiffPay,
-
-                        RegularHolidayRestDayNightDiffOTHours = paystub.RegularHolidayRestDayNightDiffOTHours,
-
-                        RegularHolidayRestDayNightDiffOTPay = _isActual ? paystub.Actual.RegularHolidayRestDayNightDiffOTPay :
-                                                                            paystub.RegularHolidayRestDayNightDiffOTPay
-                    };
-
-                    paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(salary, paystub.BasicHours));
-                }
+                paystubPayslipModels.Add(paystubPayslipModel.CreateSummaries(salary, paystub.BasicHours));
             }
 
             return paystubPayslipModels;

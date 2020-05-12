@@ -17,34 +17,35 @@ namespace AccuPay.Data.Repositories
         public const string DEFAULT_LOCATION = "Default Location";
         public const string DEFAULT_DIVISION = "Default Division";
 
+        private readonly PayrollContext _context;
+
+        public DivisionRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int divisionId)
         {
-            using (var context = new PayrollContext())
-            {
-                if (context.AgencyFees.Any(a => a.DivisionID == divisionId))
-                    throw new ArgumentException("Division already has agency fees therefore cannot be deleted.");
-                else if (context.Divisions.Any(d => d.ParentDivisionID == divisionId))
-                    throw new ArgumentException("Division already has child divisions therefore cannot be deleted.");
-                else if (context.Positions.Any(p => p.DivisionID == divisionId))
-                    throw new ArgumentException("Division already has positions therefore cannot be deleted.");
+            if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
+                throw new ArgumentException("Division already has agency fees therefore cannot be deleted.");
+            else if (_context.Divisions.Any(d => d.ParentDivisionID == divisionId))
+                throw new ArgumentException("Division already has child divisions therefore cannot be deleted.");
+            else if (_context.Positions.Any(p => p.DivisionID == divisionId))
+                throw new ArgumentException("Division already has positions therefore cannot be deleted.");
 
-                var division = await context.Divisions.
-                                FirstOrDefaultAsync(d => d.RowID == divisionId);
+            var division = await _context.Divisions.
+                            FirstOrDefaultAsync(d => d.RowID == divisionId);
 
-                context.Remove(division);
+            _context.Remove(division);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Division> SaveAsync(Division division, int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await SaveAsyncFunction(division, organizationId, context);
-            }
+            return await SaveAsyncFunction(division, organizationId, _context);
         }
 
         private async Task<Division> SaveAsyncFunction(Division division, int organizationId, PayrollContext context)
@@ -87,75 +88,72 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {
-            using (var context = new PayrollContext())
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                using (var transaction = await context.Database.BeginTransactionAsync())
+                try
                 {
-                    try
+                    var defaultParentDivision = await _context.Divisions.
+                                            Where(x => x.OrganizationID == organizationId).
+                                            Where(x => x.Name.Trim().ToLower() == DEFAULT_LOCATION.ToTrimmedLowerCase()).
+                                            Where(x => x.IsRoot).
+                                            FirstOrDefaultAsync();
+
+                    if (defaultParentDivision == null)
                     {
-                        var defaultParentDivision = await context.Divisions.
-                                                Where(x => x.OrganizationID == organizationId).
-                                                Where(x => x.Name.Trim().ToLower() == DEFAULT_LOCATION.ToTrimmedLowerCase()).
-                                                Where(x => x.IsRoot).
-                                                FirstOrDefaultAsync();
+                        defaultParentDivision = Division.CreateEmptyDivision(
+                                                            organizationId: organizationId,
+                                                            userId: userId);
 
-                        if (defaultParentDivision == null)
-                        {
-                            defaultParentDivision = Division.CreateEmptyDivision(
-                                                                organizationId: organizationId,
-                                                                userId: userId);
+                        defaultParentDivision.Name = DEFAULT_LOCATION;
+                        defaultParentDivision.ParentDivisionID = null;
 
-                            defaultParentDivision.Name = DEFAULT_LOCATION;
-                            defaultParentDivision.ParentDivisionID = null;
-
-                            await SaveAsyncFunction(defaultParentDivision, organizationId, context);
-                            // querying the new default parent division from here can already
-                            // get the new row data. This can replace the context.local in leaverepository
-                        }
-                        if (defaultParentDivision?.RowID == null)
-                            throw new Exception("Cannot create default division location.");
-
-                        var defaultDivision = await context.Divisions.
-                                                        Where(x => x.OrganizationID == organizationId).
-                                                        Where(x => x.Name.Trim().ToLower() == DEFAULT_DIVISION.ToTrimmedLowerCase()).
-                                                        Where(x => x.IsRoot == false).
-                                                        FirstOrDefaultAsync();
-
-                        if (defaultDivision == null)
-                        {
-                            defaultDivision = Division.CreateEmptyDivision(
-                                                                organizationId: organizationId,
-                                                                userId: userId);
-
-                            defaultDivision.Name = DEFAULT_DIVISION;
-                            defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
-                            await SaveAsyncFunction(defaultDivision, organizationId, context);
-                        }
-
-                        transaction.Commit();
-
-                        return defaultDivision;
+                        await SaveAsyncFunction(defaultParentDivision, organizationId, _context);
+                        // querying the new default parent division from here can already
+                        // get the new row data. This can replace the context.local in leaverepository
                     }
-                    catch (Exception)
+                    if (defaultParentDivision?.RowID == null)
+                        throw new Exception("Cannot create default division location.");
+
+                    var defaultDivision = await _context.Divisions.
+                                                    Where(x => x.OrganizationID == organizationId).
+                                                    Where(x => x.Name.Trim().ToLower() == DEFAULT_DIVISION.ToTrimmedLowerCase()).
+                                                    Where(x => x.IsRoot == false).
+                                                    FirstOrDefaultAsync();
+
+                    if (defaultDivision == null)
                     {
-                        transaction.Rollback();
-                        throw;
+                        defaultDivision = Division.CreateEmptyDivision(
+                                                            organizationId: organizationId,
+                                                            userId: userId);
+
+                        defaultDivision.Name = DEFAULT_DIVISION;
+                        defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
+                        await SaveAsyncFunction(defaultDivision, organizationId, _context);
                     }
+
+                    transaction.Commit();
+
+                    return defaultDivision;
+                }
+                catch (Exception)
+                {
+                    transaction.Rollback();
+                    throw;
                 }
             }
         }
 
-        public async Task<Division> GetByNameAndParentDivisionAsync(string positionName, int? parentDivisionId, int organizationId)
+        public async Task<Division> GetByNameAndParentDivisionAsync(string positionName,
+                                                                    int? parentDivisionId,
+                                                                    int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Divisions.
-                                        Include(d => d.ParentDivision).
-                                        Where(d => d.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase()).
-                                        Where(d => d.ParentDivisionID == parentDivisionId).
-                                        Where(d => d.OrganizationID == organizationId).
-                                        FirstOrDefaultAsync();
-            }
+            return await _context.Divisions.
+                            Include(d => d.ParentDivision).
+                            Where(d => d.Name.Trim().ToLower() ==
+                                        positionName.ToTrimmedLowerCase()).
+                            Where(d => d.ParentDivisionID == parentDivisionId).
+                            Where(d => d.OrganizationID == organizationId).
+                            FirstOrDefaultAsync();
         }
 
         #endregion Single entity
@@ -164,33 +162,24 @@ namespace AccuPay.Data.Repositories
 
         public IEnumerable<Division> GetAll(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Divisions.
-                                Where(d => d.OrganizationID == organizationId).
-                                ToList();
-            }
+            return _context.Divisions.
+                            Where(d => d.OrganizationID == organizationId).
+                            ToList();
         }
 
         public async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Divisions.
-                                        Where(d => d.OrganizationID == organizationId).
-                                        ToListAsync();
-            }
+            return await _context.Divisions.
+                                Where(d => d.OrganizationID == organizationId).
+                                ToListAsync();
         }
 
         public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Divisions.
-                                Where(d => d.OrganizationID == organizationId).
-                                Where(d => d.IsRoot).
-                                ToListAsync();
-            }
+            return await _context.Divisions.
+                            Where(d => d.OrganizationID == organizationId).
+                            Where(d => d.IsRoot).
+                            ToListAsync();
         }
 
         #endregion List of entities

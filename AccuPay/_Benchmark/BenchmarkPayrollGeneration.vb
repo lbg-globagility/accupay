@@ -82,7 +82,7 @@ Namespace Benchmark
         End Class
 
         Public Shared Function DoProcess(
-                                    employee As Entities.Employee,
+                                    employee As Employee,
                                     payrollResources As PayrollResources,
                                     currentPayPeriod As IPayPeriod,
                                     employeeRate As BenchmarkPaystubRate,

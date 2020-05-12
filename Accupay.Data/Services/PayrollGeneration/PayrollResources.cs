@@ -16,13 +16,13 @@ namespace AccuPay.Data.Services
     /// </summary>
     public class PayrollResources
     {
-        private readonly int _payPeriodId;
-        private readonly int _organizationId;
-        private readonly int _userId;
+        private int _payPeriodId;
+        private int _organizationId;
+        private int _userId;
 
-        private readonly DateTime _payDateFrom;
-        private readonly DateTime _payDateTo;
-        private readonly TimePeriod _payPeriodSpan;
+        private DateTime _payDateFrom;
+        private DateTime _payDateTo;
+        private TimePeriod _payPeriodSpan;
 
         public ListOfValueCollection ListOfValueCollection { get; private set; }
 
@@ -58,8 +58,6 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<DivisionMinimumWage> DivisionMinimumWages { get; private set; }
 
-        public SystemOwnerService SystemOwner { get; private set; }
-
         public CalendarCollection CalendarCollection { get; private set; }
 
         public Product BpiInsuranceProduct { get; private set; }
@@ -68,7 +66,82 @@ namespace AccuPay.Data.Services
 
         public Product VacationLeaveProduct { get; private set; }
 
-        public PayrollResources(int payPeriodId,
+        private readonly CalendarService _calendarService;
+
+        private readonly ListOfValueService _listOfValueService;
+
+        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
+
+        private readonly AllowanceRepository _allowanceRepository;
+
+        private readonly DivisionMinimumWageRepository _divisionMinimumWageRepository;
+
+        private readonly EmployeeRepository _employeeRepository;
+
+        private readonly FilingStatusTypeRepository _filingStatusTypeRepository;
+
+        private readonly LeaveRepository _leaveRepository;
+
+        private readonly LoanScheduleRepository _loanScheduleRepository;
+
+        private readonly LoanTransactionRepository _loanTransactionRepository;
+
+        private readonly PayPeriodRepository _payPeriodRepository;
+
+        private readonly PaystubRepository _paystubRepository;
+
+        private readonly PhilHealthBracketRepository _philHealthBracketRepository;
+
+        private readonly ProductRepository _productRepository;
+
+        private readonly SalaryRepository _salaryRepository;
+
+        private readonly SocialSecurityBracketRepository _socialSecurityBracketRepository;
+
+        private readonly TimeEntryRepository _timeEntryRepository;
+
+        private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
+
+        public PayrollResources(CalendarService calendarService,
+                                ListOfValueService listOfValueService,
+                                ActualTimeEntryRepository actualTimeEntryRepository,
+                                AllowanceRepository allowanceRepository,
+                                DivisionMinimumWageRepository divisionMinimumWageRepository,
+                                EmployeeRepository employeeRepository,
+                                FilingStatusTypeRepository filingStatusTypeRepository,
+                                LeaveRepository leaveRepository,
+                                LoanScheduleRepository loanScheduleRepository,
+                                LoanTransactionRepository loanTransactionRepository,
+                                PayPeriodRepository payPeriodRepository,
+                                PaystubRepository paystubRepository,
+                                PhilHealthBracketRepository philHealthBracketRepository,
+                                ProductRepository productRepository,
+                                SalaryRepository salaryRepository,
+                                SocialSecurityBracketRepository socialSecurityBracketRepository,
+                                TimeEntryRepository timeEntryRepository,
+                                WithholdingTaxBracketRepository withholdingTaxBracketRepository)
+        {
+            _calendarService = calendarService;
+            _listOfValueService = listOfValueService;
+            _actualTimeEntryRepository = actualTimeEntryRepository;
+            _allowanceRepository = allowanceRepository;
+            _divisionMinimumWageRepository = divisionMinimumWageRepository;
+            _employeeRepository = employeeRepository;
+            _filingStatusTypeRepository = filingStatusTypeRepository;
+            _leaveRepository = leaveRepository;
+            _loanScheduleRepository = loanScheduleRepository;
+            _loanTransactionRepository = loanTransactionRepository;
+            _payPeriodRepository = payPeriodRepository;
+            _paystubRepository = paystubRepository;
+            _philHealthBracketRepository = philHealthBracketRepository;
+            _productRepository = productRepository;
+            _salaryRepository = salaryRepository;
+            _socialSecurityBracketRepository = socialSecurityBracketRepository;
+            _timeEntryRepository = timeEntryRepository;
+            _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
+        }
+
+        public async Task Load(int payPeriodId,
                                 int organizationId,
                                 int userId,
                                 DateTime payDateFrom,
@@ -81,10 +154,6 @@ namespace AccuPay.Data.Services
             _payDateTo = payDateTo;
 
             _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
-        }
-
-        public async Task Load()
-        {
             // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
             await LoadPayPeriod();
 
@@ -92,7 +161,6 @@ namespace AccuPay.Data.Services
             await LoadListOfValueCollection();
 
             await Task.WhenAll(new[] {
-                    LoadSystemOwner(),
                     LoadEmployees(),
                     LoadLoanSchedules(),
                     LoadLoanTransactions(),
@@ -124,7 +192,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Paystubs = (await new PaystubRepository().
+                Paystubs = (await _paystubRepository.
                                 GetByPayPeriodFullPaystubAsync(_payPeriodId)).
                                 ToList();
             }
@@ -138,7 +206,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                PayPeriod = (await new PayPeriodRepository().GetByIdAsync(_payPeriodId));
+                PayPeriod = (await _payPeriodRepository.GetByIdAsync(_payPeriodId));
             }
             catch (Exception ex)
             {
@@ -150,7 +218,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                ListOfValueCollection = await ListOfValueCollection.CreateAsync();
+                ListOfValueCollection = await _listOfValueService.CreateAsync();
             }
             catch (Exception ex)
             {
@@ -158,26 +226,11 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task LoadSystemOwner()
-        {
-            try
-            {
-                await Task.Run(() =>
-                {
-                    SystemOwner = new SystemOwnerService();
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("SystemOwner", ex);
-            }
-        }
-
         public async Task LoadEmployees()
         {
             try
             {
-                Employees = (await new EmployeeRepository().
+                Employees = (await _employeeRepository.
                                 GetAllActiveWithDivisionAndPositionAsync(_organizationId)).
                                 ToList();
             }
@@ -197,7 +250,7 @@ namespace AccuPay.Data.Services
                 var datePeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay,
                                                 _payDateTo);
 
-                TimeEntries = (await new TimeEntryRepository().
+                TimeEntries = (await _timeEntryRepository.
                                     GetByDatePeriodAsync(_organizationId, datePeriod)).
                                     ToList();
             }
@@ -221,8 +274,9 @@ namespace AccuPay.Data.Services
 
                     var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
 
-                    CalendarCollection = PayrollTools.
-                            GetCalendarCollection(payPeriod, calculationBasis, _organizationId);
+                    CalendarCollection = _calendarService.GetCalendarCollection(payPeriod,
+                                                                                calculationBasis,
+                                                                                _organizationId);
                 });
             }
             catch (Exception ex)
@@ -236,7 +290,7 @@ namespace AccuPay.Data.Services
             try
             {
                 var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
-                ActualTimeEntries = (await new ActualTimeEntryRepository().
+                ActualTimeEntries = (await _actualTimeEntryRepository.
                                         GetByDatePeriodAsync(_organizationId, datePeriod)).
                                         ToList();
             }
@@ -250,7 +304,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                LoanSchedules = (await new LoanScheduleRepository().
+                LoanSchedules = (await _loanScheduleRepository.
                                     GetCurrentPayrollLoansAsync(_organizationId, _payDateTo)).
                                     ToList();
             }
@@ -265,7 +319,7 @@ namespace AccuPay.Data.Services
             try
             {
                 // TODO: get this from paystub
-                LoanTransactions = (await new LoanTransactionRepository().
+                LoanTransactions = (await _loanTransactionRepository.
                                         GetByPayPeriodAsync(_payPeriodId)).
                                         ToList();
             }
@@ -279,7 +333,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Salaries = (await new SalaryRepository().
+                Salaries = (await _salaryRepository.
                                 GetByCutOffAsync(_organizationId, _payDateFrom)).
                                 ToList();
             }
@@ -293,7 +347,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                PreviousPaystubs = (await new PaystubRepository().
+                PreviousPaystubs = (await _paystubRepository.
                                         GetPreviousCutOffPaystubsAsync(_payDateFrom, _organizationId)).
                                         ToList();
             }
@@ -310,7 +364,7 @@ namespace AccuPay.Data.Services
                 // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
                 var taxEffectivityDate = new DateTime(PayPeriod.Year, PayPeriod.Month, 1);
 
-                SocialSecurityBrackets = (await new SocialSecurityBracketRepository().
+                SocialSecurityBrackets = (await _socialSecurityBracketRepository.
                                             GetByTimePeriodAsync(taxEffectivityDate)).
                                             ToList();
             }
@@ -324,7 +378,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                PhilHealthBrackets = (await new PhilHealthBracketRepository().GetAllAsync()).ToList();
+                PhilHealthBrackets = (await _philHealthBracketRepository.GetAllAsync()).ToList();
             }
             catch (Exception ex)
             {
@@ -336,7 +390,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                WithholdingTaxBrackets = (await new WithholdingTaxBracketRepository().
+                WithholdingTaxBrackets = (await _withholdingTaxBracketRepository.
                                             GetAllAsync()).
                                             ToList();
             }
@@ -350,11 +404,9 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                var allowanceRepo = new AllowanceRepository();
-
-                Allowances = await (allowanceRepo.
+                Allowances = await _allowanceRepository.
                                 GetByPayPeriodWithProductAsync(organizationId: _organizationId,
-                                                                timePeriod: _payPeriodSpan));
+                                                                timePeriod: _payPeriodSpan);
             }
             catch (Exception ex)
             {
@@ -366,7 +418,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                FilingStatuses = (await new FilingStatusTypeRepository().GetAllAsync()).ToList();
+                FilingStatuses = (await _filingStatusTypeRepository.GetAllAsync()).ToList();
             }
             catch (Exception ex)
             {
@@ -378,7 +430,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                DivisionMinimumWages = (await new DivisionMinimumWageRepository().
+                DivisionMinimumWages = (await _divisionMinimumWageRepository.
                                             GetByDateAsync(_organizationId, _payDateTo)).
                                             ToList();
             }
@@ -392,7 +444,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                BpiInsuranceProduct = await new ProductRepository().
+                BpiInsuranceProduct = await _productRepository.
                     GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
                                                     organizationId: _organizationId,
                                                     userId: _userId);
@@ -407,7 +459,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                SickLeaveProduct = await new ProductRepository().
+                SickLeaveProduct = await _productRepository.
                     GetOrCreateLeaveTypeAsync(ProductConstant.SICK_LEAVE,
                                                 organizationId: _organizationId,
                                                 userId: _userId);
@@ -422,7 +474,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                VacationLeaveProduct = await new ProductRepository().
+                VacationLeaveProduct = await _productRepository.
                     GetOrCreateLeaveTypeAsync(ProductConstant.VACATION_LEAVE,
                                                 organizationId: _organizationId,
                                                 userId: _userId);
@@ -437,7 +489,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Leaves = (await new LeaveRepository().
+                Leaves = (await _leaveRepository.
                         GetByTimePeriodAsync(organizationId: _organizationId,
                                             timePeriod: _payPeriodSpan)).
                         ToList();

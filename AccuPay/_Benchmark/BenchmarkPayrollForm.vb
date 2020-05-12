@@ -18,12 +18,17 @@ Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
 
-    Private _employeeRepository As EmployeeRepository
-    Private _salaryRepository As SalaryRepository
-    Private _loanScheduleRepository As LoanScheduleRepository
+    Private ReadOnly _benchmarkPayrollHelper As BenchmarkPayrollHelper
+    Private ReadOnly _payrollResources As PayrollResources
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+    Private ReadOnly _loanScheduleRepository As LoanScheduleRepository
+    Private ReadOnly _salaryRepository As SalaryRepository
+
     Private _currentPayPeriod As IPayPeriod
-    Private _salaries As List(Of Entities.Salary)
-    Private _employees As List(Of Entities.Employee)
+    Private _salaries As List(Of Salary)
+    Private _employees As List(Of Employee)
     Private _actualSalaryPolicy As ActualTimeEntryPolicy
 
     Private _selectedDeductions As List(Of AdjustmentInput)
@@ -37,38 +42,42 @@ Public Class BenchmarkPayrollForm
 
     Public _loanTransanctions As List(Of LoanTransaction)
 
-    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
-
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
-
-    Private _payrollResources As PayrollResources
 
     Private _employeeRate As BenchmarkPaystubRate
 
     Private _overtimes As List(Of OvertimeInput)
 
-    Private _ecola As Entities.Allowance
+    Private _ecola As Allowance
 
-    Private _pagibigLoan As Entities.LoanSchedule
+    Private _pagibigLoan As LoanSchedule
 
-    Private _sssLoan As Entities.LoanSchedule
+    Private _sssLoan As LoanSchedule
 
     Private _leaveBalance As Decimal
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
-    Sub New()
+    Sub New(benchmarkPayrollHelper As BenchmarkPayrollHelper,
+            payrollResources As PayrollResources,
+            PayPeriodService As PayPeriodService,
+            employeeRepository As EmployeeRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            salaryRepository As SalaryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeRepository = New EmployeeRepository()
-        _loanScheduleRepository = New LoanScheduleRepository()
-        _salaryRepository = New SalaryRepository()
+        _benchmarkPayrollHelper = benchmarkPayrollHelper
+        _payrollResources = payrollResources
 
-        _salaries = New List(Of Entities.Salary)
-        _employees = New List(Of Entities.Employee)
+        _employeeRepository = employeeRepository
+        _loanScheduleRepository = loanScheduleRepository
+        _salaryRepository = salaryRepository
+
+        _salaries = New List(Of Salary)
+        _employees = New List(Of Employee)
 
         _overtimes = New List(Of OvertimeInput)
 
@@ -85,16 +94,6 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function RefreshForm(Optional refreshPayPeriod As Boolean = True) As Task
         InitializeControls()
-
-        _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
-
-        If _benchmarkPayrollHelper Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
-
-            Return
-
-        End If
 
         DeductionComboBox.DataSource = _benchmarkPayrollHelper.DeductionList
         DeductionComboBox.SelectedIndex = -1
@@ -154,26 +153,21 @@ Public Class BenchmarkPayrollForm
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
 
-        Dim loadTask = Task.Factory.StartNew(
-            Function()
-                If paypFrom = Nothing And paypTo = Nothing Then
-                    Return Nothing
-                End If
+        If paypFrom = Nothing And paypTo = Nothing Then
+            Return
+        End If
 
-                Dim resources = New PayrollResources(payPeriodId:=payPeriodId,
+        Dim loadTask = Task.Run(
+            Sub()
+
+                Dim resourcesTask = _payrollResources.Load(payPeriodId:=payPeriodId,
                                                      organizationId:=z_OrganizationID,
                                                      userId:=z_User,
                                                      payDateFrom:=paypFrom,
                                                      payDateTo:=paypTo)
-                Dim resourcesTask = resources.Load()
                 resourcesTask.Wait()
-
-                Return resources
-            End Function,
-            0
+            End Sub
         )
-
-        _payrollResources = loadTask.Result
 
     End Function
 
@@ -260,8 +254,8 @@ Public Class BenchmarkPayrollForm
     End Function
 
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
-        _ecola = Await BenchmarkPayrollHelper.GetEcola(
-                                                        employeeId.Value,
+
+        _ecola = Await _benchmarkPayrollHelper.GetEcola(employeeId.Value,
                                                         payDateFrom:=_currentPayPeriod.PayFromDate,
                                                         payDateTo:=_currentPayPeriod.PayToDate)
 
@@ -342,7 +336,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await Data.Helpers.PayrollTools.
+        _currentPayPeriod = Await _payPeriodService.
                                     GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         UpdateCutOffLabel()

@@ -13,7 +13,7 @@ Public Class SalaryTab
 
     Private Const FormEntityName As String = "Salary"
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _mode As FormMode = FormMode.Empty
 
@@ -62,17 +62,23 @@ Public Class SalaryTab
         End Set
     End Property
 
-    Public Sub New()
+    Public Sub New(payPeriodService As PayPeriodService,
+                    systemOwnerService As SystemOwnerService,
+                    AllowanceRepository As AllowanceRepository,
+                    SalaryRepository As SalaryRepository,
+                    UserActivityRepository As UserActivityRepository)
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        sys_ownr = New SystemOwnerService()
+        _payPeriodService = payPeriodService
 
-        _allowanceRepository = New AllowanceRepository()
+        _systemOwnerService = systemOwnerService
 
-        _salaryRepository = New SalaryRepository()
+        _allowanceRepository = AllowanceRepository
 
-        _userActivityRepository = New UserActivityRepository()
+        _salaryRepository = SalaryRepository
+
+        _userActivityRepository = UserActivityRepository
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -108,7 +114,7 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim currentPayPeriod = Await Data.Helpers.PayrollTools.
+            Dim currentPayPeriod = _payPeriodService.
                                 GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
@@ -159,7 +165,7 @@ Public Class SalaryTab
         LoadSalaries()
 
         OverlapWarningLabel.Visible = False
-        _isSystemOwnerBenchMark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         ToggleBenchmarkEcola()
 

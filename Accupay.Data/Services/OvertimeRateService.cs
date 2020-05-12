@@ -8,7 +8,14 @@ namespace AccuPay.Data.Services
 {
     public class OvertimeRateService
     {
-        public static async Task<OvertimeRate> GetOvertimeRates()
+        private readonly ListOfValueRepository _listOfValueRepository;
+
+        public OvertimeRateService(ListOfValueRepository listOfValueRepository)
+        {
+            _listOfValueRepository = listOfValueRepository;
+        }
+
+        public async Task<OvertimeRate> GetOvertimeRates()
         {
             var listOfValuesType = "Pay rate";
             var regularDayLIC = "Regular Day";
@@ -16,7 +23,7 @@ namespace AccuPay.Data.Services
             var regularHolidayLIC = "Regular Holiday";
             var doubleHolidayLIC = "Double Holiday";
 
-            var payRates = await new ListOfValueRepository().GetListOfValuesAsync(listOfValuesType);
+            var payRates = await _listOfValueRepository.GetListOfValuesAsync(listOfValuesType);
 
             decimal basePay = 0;
             decimal overtime = 0;
@@ -156,7 +163,7 @@ namespace AccuPay.Data.Services
                                     doubleHolidayRestDayNightDifferentialOvertime: doubleHolidayRestDayNightDifferentialOvertime);
         }
 
-        private static decimal ConvertToRate(string input)
+        private decimal ConvertToRate(string input)
         {
             if (input.Length > 2)
 

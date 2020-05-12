@@ -28,6 +28,7 @@ namespace AccuPay.Data.Services
         private readonly int _organizationId;
         private readonly int _userId;
         private DataTable _leaveLedger;
+        private readonly PayrollContext context;
         private CategoryRepository _categoryRepository;
         private const string strAdjType = "Adjustment Type";
 
@@ -39,7 +40,17 @@ namespace AccuPay.Data.Services
 
         private PayPeriodRepository _payPeriodRepository;
 
-        public CashOutUnusedLeave(int PayPeriodFromId, int PayPeriodToId, int CurrentPeriodID, int organizationId, int userId)
+        public CashOutUnusedLeave(PayrollContext context,
+                                    CategoryRepository categoryRepository,
+                                    EmployeeRepository employeeRepository,
+                                    ListOfValueRepository listOfValueRepository,
+                                    PayPeriodRepository payPeriodRepository,
+                                    // this should be in a load or compute method
+                                    int PayPeriodFromId,
+                                    int PayPeriodToId,
+                                    int CurrentPeriodID,
+                                    int organizationId,
+                                    int userId)
         {
             _payPeriodFromId = PayPeriodFromId;
             _payPeriodToId = PayPeriodToId;
@@ -47,13 +58,15 @@ namespace AccuPay.Data.Services
             _organizationId = organizationId;
             _userId = userId;
 
-            _categoryRepository = new CategoryRepository();
+            this.context = context;
 
-            _employeeRepository = new EmployeeRepository();
+            _categoryRepository = categoryRepository;
 
-            _listOfValRepository = new ListOfValueRepository();
+            _employeeRepository = employeeRepository;
 
-            _payPeriodRepository = new PayPeriodRepository();
+            _listOfValRepository = listOfValueRepository;
+
+            _payPeriodRepository = payPeriodRepository;
 
             var listOfValues = _listOfValRepository.GetLeaveConvertiblePolicies();
 
@@ -120,17 +133,14 @@ namespace AccuPay.Data.Services
             var leaveCategory = await _categoryRepository.GetByNameAsync(_organizationId, strVacationLeave);
             var leaveCategoryId = leaveCategory.RowID;
 
-            using (var context = new PayrollContext())
-            {
-                var product = context.Products.
-                            Where(p => p.PartNo.ToLower() == strVacationLeave.ToLower()).
-                            Where(p => p.OrganizationID == _organizationId).
-                            Where(p => p.CategoryID == leaveCategoryId).
-                            Where(p => p.Category == strLeaveType).
-                            FirstOrDefault();
+            var product = context.Products.
+                        Where(p => p.PartNo.ToLower() == strVacationLeave.ToLower()).
+                        Where(p => p.OrganizationID == _organizationId).
+                        Where(p => p.CategoryID == leaveCategoryId).
+                        Where(p => p.Category == strLeaveType).
+                        FirstOrDefault();
 
-                value = product.RowID.Value;
-            }
+            value = product.RowID.Value;
 
             return value;
         }
@@ -143,18 +153,19 @@ namespace AccuPay.Data.Services
             var adjustmentCategory = await _categoryRepository.GetByNameAsync(_organizationId, strAdjType);
             var adjustmentCategoryId = adjustmentCategory.RowID;
 
-            using (var context = new PayrollContext())
-            {
-                var product = context.Products.Where(p => p.PartNo.ToLower() == _adjUnusedVacationLeave.ToLower()).
-                                    Where(p => p.OrganizationID == _organizationId).
-                                    Where(p => p.CategoryID == adjustmentCategoryId).
-                                    Where(p => p.Category == strAdjType).
-                                    FirstOrDefault();
+            var product = context.Products.Where(p => p.PartNo.ToLower() == _adjUnusedVacationLeave.ToLower()).
+                                Where(p => p.OrganizationID == _organizationId).
+                                Where(p => p.CategoryID == adjustmentCategoryId).
+                                Where(p => p.Category == strAdjType).
+                                FirstOrDefault();
 
-                if (product == null)
-                    value = CreateProduct(context, _adjUnusedVacationLeave, strAdjType, adjustmentCategoryId);
-                else
-                    value = product.RowID.Value;
+            if (product == null)
+            {
+                value = CreateProduct(context, _adjUnusedVacationLeave, strAdjType, adjustmentCategoryId);
+            }
+            else
+            {
+                value = product.RowID.Value;
             }
 
             return value;
@@ -197,73 +208,67 @@ namespace AccuPay.Data.Services
 
                 payperiod = _payPeriodRepository.GetById(_currentPeriodId);
 
-                using (var context = new PayrollContext())
+                var paystubs = (from p in context.Paystubs.Include(p => p.ActualAdjustments)
+                                where p.PayPeriodID.Value == _currentPeriodId &&
+                                        p.OrganizationID == _organizationId
+                                select p).ToList();
+
+                foreach (DataRow row in _leaveLedger.Rows)
                 {
-                    var paystubs = (from p in context.Paystubs.Include(p => p.ActualAdjustments)
-                                    where p.PayPeriodID.Value == _currentPeriodId &&
-                                            p.OrganizationID == _organizationId
-                                    select p).ToList();
+                    var employeePrimKey = Convert.ToInt32(row["EmployeeID"]);
+                    var llRowId = Convert.ToInt32(row["RowID"]);
 
-                    foreach (DataRow row in _leaveLedger.Rows)
+                    LeaveLedger ll = new LeaveLedger() { RowID = llRowId, EmployeeID = employeePrimKey };
+
+                    var unusedLeaveAmount = Convert.ToDecimal(row["Balance"]) * Convert.ToDecimal(row["HourlyRate"]);
+
+                    var leaveBalance = Convert.ToDecimal(row["Balance"]);
+                    var leaveDayBalance = leaveBalance / _defaultWorkHours;
+
+                    var paystub = paystubs.Where(p => p.EmployeeID.Value == employeePrimKey).FirstOrDefault();
+
+                    if (paystub != null)
                     {
-                        var employeePrimKey = Convert.ToInt32(row["EmployeeID"]);
-                        var llRowId = Convert.ToInt32(row["RowID"]);
+                        var adjustmentsExceptUnusedLeave = paystub.ActualAdjustments.
+                                                            Where(a => a.ProductID != _adjUnusedVacationLeaveId);
 
-                        LeaveLedger ll = new LeaveLedger() { RowID = llRowId, EmployeeID = employeePrimKey };
+                        paystub.ActualAdjustments.Clear();
 
-                        var unusedLeaveAmount = Convert.ToDecimal(row["Balance"]) * Convert.ToDecimal(row["HourlyRate"]);
-
-                        var leaveBalance = Convert.ToDecimal(row["Balance"]);
-                        var leaveDayBalance = leaveBalance / _defaultWorkHours;
-
-                        var paystub = paystubs.Where(p => p.EmployeeID.Value == employeePrimKey).FirstOrDefault();
-
-                        if (paystub != null)
+                        ActualAdjustment aa = new ActualAdjustment()
                         {
-                            var adjustmentsExceptUnusedLeave = paystub.ActualAdjustments.
-                                                                Where(a => a.ProductID != _adjUnusedVacationLeaveId);
+                            Created = DateTime.Now,
+                            Comment = string.Concat(leaveDayBalance, leaveDayBalance > 1 ? " days" : " day"),
+                            CreatedBy = _userId,
+                            IsActual = true,
+                            LastUpd = DateTime.Now,
+                            LastUpdBy = _userId,
+                            OrganizationID = _organizationId,
+                            Amount = unusedLeaveAmount,
+                            PaystubID = paystub.RowID,
+                            ProductID = _adjUnusedVacationLeaveId
+                        };
 
-                            paystub.ActualAdjustments.Clear();
+                        paystub.ActualAdjustments.Add(aa);
 
-                            ActualAdjustment aa = new ActualAdjustment()
-                            {
-                                Created = DateTime.Now,
-                                Comment = string.Concat(leaveDayBalance, leaveDayBalance > 1 ? " days" : " day"),
-                                CreatedBy = _userId,
-                                IsActual = true,
-                                LastUpd = DateTime.Now,
-                                LastUpdBy = _userId,
-                                OrganizationID = _organizationId,
-                                Amount = unusedLeaveAmount,
-                                PaystubID = paystub.RowID,
-                                ProductID = _adjUnusedVacationLeaveId
-                            };
+                        foreach (var adj in adjustmentsExceptUnusedLeave)
+                            paystub.ActualAdjustments.Add(adj);
 
-                            paystub.ActualAdjustments.Add(aa);
-
-                            foreach (var adj in adjustmentsExceptUnusedLeave)
-                                paystub.ActualAdjustments.Add(adj);
-
-                            CreateLeaveTransaction(context, LeaveTransactionType.Debit, ll, payperiod, leaveBalance);
-                        }
-                        else
-                            continue;
+                        CreateLeaveTransaction(context, LeaveTransactionType.Debit, ll, payperiod, leaveBalance);
                     }
-
-                    context.SaveChanges();
-                    success = true;
+                    else
+                        continue;
                 }
+
+                context.SaveChanges();
+                success = true;
 
                 if (success)
                 {
                     string strCutOff;
-                    using (var context = new PayrollContext())
-                    {
-                        if (payperiod == null)
-                            payperiod = _payPeriodRepository.GetById(_currentPeriodId);
+                    if (payperiod == null)
+                        payperiod = _payPeriodRepository.GetById(_currentPeriodId);
 
-                        strCutOff = string.Join(" to ", payperiod.PayFromDate.ToShortDateString(), payperiod.PayToDate.ToShortDateString());
-                    }
+                    strCutOff = string.Join(" to ", payperiod.PayFromDate.ToShortDateString(), payperiod.PayToDate.ToShortDateString());
                     // Do this. Was not migrated from VB to C#
                     //Interaction.MsgBox(string.Concat("Unused leaves were successfully computed.", Constants.vbNewLine, "Please generate the ", strCutOff, " payroll."), MsgBoxStyle.Information);
                 }

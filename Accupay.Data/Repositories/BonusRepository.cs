@@ -8,31 +8,29 @@ namespace AccuPay.Data.Repositories
 {
     public class BonusRepository
     {
+        private readonly PayrollContext _context;
+
+        public BonusRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task DeleteAsync(Bonus currentBonus)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Bonuses.Remove(currentBonus);
-                await context.SaveChangesAsync();
-            }
+            _context.Bonuses.Remove(currentBonus);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(Bonus bonus)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Bonuses.Add(bonus);
-                await context.SaveChangesAsync();
-            }
+            _context.Bonuses.Add(bonus);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Bonus bonus)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(bonus).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(bonus).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public List<string> GetFrequencyList()
@@ -48,10 +46,10 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Bonus>> GetByEmployeeAsync(int employeeId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Bonuses.Include(x => x.Product).Where(x => x.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.Bonuses.
+                                    Include(x => x.Product).
+                                    Where(x => x.EmployeeID == employeeId).
+                                    ToListAsync();
         }
     }
 }

@@ -40,8 +40,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Public Property IsActual As Boolean
 
-    Sub New()
-        _payPeriodRepository = New PayPeriodRepository()
+    Sub New(payPeriodRepository As PayPeriodRepository)
+
+        _payPeriodRepository = payPeriodRepository
 
         _adjustmentService = New AdjustmentService()
 
@@ -280,8 +281,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             attendancePeriodCell.Value = $"Attendance Period: {short_dates(0)} to {short_dates(1)}"
 
-            Dim payFromNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
-            Dim payToNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
+            Dim payFromNextCutOff = _payPeriodRepository.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
+            Dim payToNextCutOff = _payPeriodRepository.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
 
             Dim payrollPeriodCell = worksheet.Cells(3, 1)
             Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payToNextCutOff?.PayToDate Is Nothing, "", payToNextCutOff.PayToDate.ToShortDateString)}"

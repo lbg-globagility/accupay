@@ -1,5 +1,6 @@
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 
@@ -20,11 +21,22 @@ Public Class selectPayPeriod
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Sub New(payPeriodRepository As PayPeriodRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _payPeriodRepository = payPeriodRepository
+    End Sub
+
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.
                                         GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
 
         Dim payfrqncy As New AutoCompleteStringCollection
@@ -167,8 +179,8 @@ Public Class selectPayPeriod
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.
-                                            GetPeriodsWithPaystubCount(z_OrganizationID, PayFreqType)
+        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
+                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID) 'PayFreqType | old method passes the PayFreqType
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0

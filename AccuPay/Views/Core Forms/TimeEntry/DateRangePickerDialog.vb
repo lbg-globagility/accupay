@@ -121,7 +121,8 @@ Public Class DateRangePickerDialog
                                                 year:=Me.Year)).
                     ToList()
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
+                                        GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 

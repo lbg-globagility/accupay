@@ -25,7 +25,8 @@ namespace AccuPay.Data.Services
                             ICollection<ActualTimeEntry> actualtimeentries,
                             Salary salary,
                             ListOfValueCollection settings,
-                            ICollection<AllowanceItem> allowanceItems)
+                            ICollection<AllowanceItem> allowanceItems,
+                            SystemOwnerService systemOwnerService)
         {
             if (paystub.ThirteenthMonthPay == null)
                 paystub.ThirteenthMonthPay = new ThirteenthMonthPay()
@@ -41,7 +42,15 @@ namespace AccuPay.Data.Services
 
             var thirteenMonthCalculation = settings.GetEnum("ThirteenthMonthPolicy.CalculationBasis", ThirteenthMonthCalculationBasis.RegularPayAndAllowance);
 
-            thirteenthMonthBasicPay = GetThirteenMonthBasicPay(paystub, thirteenMonthCalculation, employee, timeEntries, actualtimeentries, salary, settings, allowanceItems);
+            thirteenthMonthBasicPay = GetThirteenMonthBasicPay(paystub,
+                                                                thirteenMonthCalculation,
+                                                                employee,
+                                                                timeEntries,
+                                                                actualtimeentries,
+                                                                salary,
+                                                                settings,
+                                                                allowanceItems,
+                                                                systemOwnerService);
 
             var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstants.MonthsInAYear;
 
@@ -52,7 +61,15 @@ namespace AccuPay.Data.Services
             return paystub.ThirteenthMonthPay;
         }
 
-        private static decimal GetThirteenMonthBasicPay(Paystub paystub, ThirteenthMonthCalculationBasis thirteenMonthPolicy, Employee employee, ICollection<TimeEntry> timeEntries, ICollection<ActualTimeEntry> actualtimeentries, Salary salary, ListOfValueCollection settings, ICollection<AllowanceItem> allowanceItems)
+        private static decimal GetThirteenMonthBasicPay(Paystub paystub,
+                                                        ThirteenthMonthCalculationBasis thirteenMonthPolicy,
+                                                        Employee employee,
+                                                        ICollection<TimeEntry> timeEntries,
+                                                        ICollection<ActualTimeEntry> actualtimeentries,
+                                                        Salary salary,
+                                                        ListOfValueCollection settings,
+                                                        ICollection<AllowanceItem> allowanceItems,
+                                                        SystemOwnerService systemOwnerService)
         {
             switch (thirteenMonthPolicy)
             {
@@ -62,7 +79,7 @@ namespace AccuPay.Data.Services
                 case ThirteenthMonthCalculationBasis.DailyRate:
                     var hoursWorked = paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                    if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
                     {
                         hoursWorked = paystub.RegularHoursAndTotalRestDay;
                     }

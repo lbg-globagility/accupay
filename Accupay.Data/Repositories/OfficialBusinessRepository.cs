@@ -11,40 +11,41 @@ namespace AccuPay.Data.Repositories
 {
     public class OfficialBusinessRepository
     {
+        private readonly PayrollContext _context;
+
+        public OfficialBusinessRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int id)
         {
-            using (var context = new PayrollContext())
-            {
-                var officialBusiness = await GetByIdAsync(id);
+            var officialBusiness = await GetByIdAsync(id);
 
-                context.Remove(officialBusiness);
+            _context.Remove(officialBusiness);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
         {
-            using (PayrollContext context = new PayrollContext())
+            foreach (var officialBusiness in officialBusinesses)
             {
-                foreach (var officialBusiness in officialBusinesses)
-                {
-                    await this.SaveWithContextAsync(officialBusiness, context);
+                await this.SaveWithContextAsync(officialBusiness);
 
-                    await context.SaveChangesAsync();
-                }
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task SaveAsync(OfficialBusiness officialBusiness)
         {
-            await SaveWithContextAsync(officialBusiness);
+            await SaveWithContextAsync(officialBusiness, deferSave: false);
         }
 
         private async Task SaveWithContextAsync(OfficialBusiness officialBusiness,
-                                                PayrollContext context = null)
+                                                bool deferSave = true)
         {
             if (officialBusiness.EmployeeID == null)
                 throw new ArgumentException("Employee does not exists.");
@@ -54,23 +55,20 @@ namespace AccuPay.Data.Repositories
             if (officialBusiness.EndTime.HasValue)
                 officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
 
-            if (context == null)
+            if (deferSave == false)
             {
-                using (context = new PayrollContext())
-                {
-                    await SaveAsyncFunction(officialBusiness, context);
-                    await context.SaveChangesAsync();
-                }
+                await SaveAsyncFunction(officialBusiness);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                await SaveAsyncFunction(officialBusiness, context);
+                await SaveAsyncFunction(officialBusiness);
             }
         }
 
-        private async Task SaveAsyncFunction(OfficialBusiness officialBusiness, PayrollContext context)
+        private async Task SaveAsyncFunction(OfficialBusiness officialBusiness)
         {
-            if (await context.OfficialBusinesses.
+            if (await _context.OfficialBusinesses.
                     Where(l => officialBusiness.RowID == null ? true : officialBusiness.RowID != l.RowID).
                     Where(l => l.EmployeeID == officialBusiness.EmployeeID).
                     Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).
@@ -79,12 +77,12 @@ namespace AccuPay.Data.Repositories
 
             if (officialBusiness.RowID == null)
             {
-                context.OfficialBusinesses.Add(officialBusiness);
+                _context.OfficialBusinesses.Add(officialBusiness);
             }
             else
             {
-                context.OfficialBusinesses.Attach(officialBusiness);
-                context.Entry(officialBusiness).State = EntityState.Modified;
+                _context.OfficialBusinesses.Attach(officialBusiness);
+                _context.Entry(officialBusiness).State = EntityState.Modified;
             }
         }
 
@@ -96,11 +94,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<OfficialBusiness> GetByIdAsync(int id)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.OfficialBusinesses.
-                                FirstOrDefaultAsync(l => l.RowID == id);
-            }
+            return await _context.OfficialBusinesses.
+                            FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
@@ -109,25 +104,19 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.OfficialBusinesses.
-                                    Where(l => l.EmployeeID == employeeId).
-                                    ToListAsync();
-            }
+            return await _context.OfficialBusinesses.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
 
         public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.OfficialBusinesses.
-                                Where(l => l.OrganizationID == organizationId).
-                                Where(l => timePeriod.Start <= l.StartDate).
-                                Where(l => l.EndDate <= timePeriod.End).
-                                Where(l => l.Status == OfficialBusiness.StatusApproved).
-                                ToList();
-            }
+            return _context.OfficialBusinesses.
+                            Where(l => l.OrganizationID == organizationId).
+                            Where(l => timePeriod.Start <= l.StartDate).
+                            Where(l => l.EndDate <= timePeriod.End).
+                            Where(l => l.Status == OfficialBusiness.StatusApproved).
+                            ToList();
         }
 
         #endregion List of entities

@@ -9,14 +9,18 @@ namespace AccuPay.Data.Repositories
 {
     public class PaystubEmailHistoryRepository
     {
+        private readonly PayrollContext _context;
+
+        public PaystubEmailHistoryRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<PaystubEmailHistory>> GetByPaystubIdsAsync(int[] paystubIds)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.PaystubEmailHistories.
-                    Where(x => paystubIds.Contains(x.PaystubID)).
-                    ToListAsync();
-            }
+            return await _context.PaystubEmailHistories.
+                Where(x => paystubIds.Contains(x.PaystubID)).
+                ToListAsync();
         }
     }
 }

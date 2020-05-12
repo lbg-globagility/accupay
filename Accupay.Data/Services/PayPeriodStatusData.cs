@@ -7,6 +7,8 @@ namespace AccuPay.Data.Services
 {
     public class PayPeriodStatusData
     {
+        private readonly PayrollContext context;
+
         public enum PayPeriodStatus
         {
             Open,
@@ -27,21 +29,9 @@ namespace AccuPay.Data.Services
         public int Index { get; set; }
         public PayPeriodStatus Status { get; set; }
 
-        public static List<PayPeriod> GetPeriodsWithPaystubCount(int organizationId, string payFreqType = "SEMI-MONTHLY")
+        public PayPeriodStatusData(PayrollContext context)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                var payFrequencyId = payFreqType == "WEEKLY" ? PayFrequencyType.Weekly : PayFrequencyType.SemiMonthly;
-
-                return context.PayPeriods.
-                        Where(p => p.OrganizationID == organizationId).
-                        Where(p => p.PayFrequencyID == (int)payFrequencyId).
-                        Where(p => !p.IsClosed).
-                        Where(p => context.Paystubs.
-                                    Where(s => s.PayPeriodID == p.RowID).
-                                    Any()).
-                        ToList();
-            }
+            this.context = context;
         }
     }
 }

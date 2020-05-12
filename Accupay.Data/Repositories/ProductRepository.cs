@@ -12,18 +12,22 @@ namespace AccuPay.Data.Repositories
 {
     public class ProductRepository
     {
+        private readonly PayrollContext context;
+
+        public ProductRepository(PayrollContext context)
+        {
+            this.context = context;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int id)
         {
-            using (var context = new PayrollContext())
-            {
-                var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+            var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
 
-                context.Products.Remove(product);
+            context.Products.Remove(product);
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         public async Task<Product> AddBonusTypeAsync(string loanName, int organizationId, int userId, bool isTaxable = false)
@@ -88,38 +92,32 @@ namespace AccuPay.Data.Repositories
             product.CreatedBy = userId;
             product.OrganizationID = organizationId;
 
-            using (var context = new PayrollContext())
-            {
-                context.Products.Add(product);
+            context.Products.Add(product);
 
-                await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-                var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
-                return newProduct;
-            }
+            return newProduct;
         }
 
         public async Task<Product> UpdateAdjustmentTypeAsync(int id, int userId, string adjustmentName, string code)
         {
-            using (var context = new PayrollContext())
-            {
-                var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+            var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
 
-                if (product == null) return null;
+            if (product == null) return null;
 
-                product.PartNo = adjustmentName.Trim();
-                product.Name = adjustmentName.Trim();
+            product.PartNo = adjustmentName.Trim();
+            product.Name = adjustmentName.Trim();
 
-                product.Comments = code;
-                product.LastUpdBy = userId;
+            product.Comments = code;
+            product.LastUpdBy = userId;
 
-                await context.SaveChangesAsync();
+            await context.SaveChangesAsync();
 
-                var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
-                return newProduct;
-            }
+            return newProduct;
         }
 
         #endregion CRUD
@@ -205,11 +203,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Product>> GetLoanTypesAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await (await GetLoanTypesBaseQuery(context, organizationId)
-                            ).ToListAsync();
-            }
+            return await (await GetLoanTypesBaseQuery(organizationId)
+                        ).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetGovernmentLoanTypesAsync(int organizationId)
@@ -219,37 +214,29 @@ namespace AccuPay.Data.Repositories
                 ProductConstant.SSS_LOAN
             };
 
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await (await GetLoanTypesBaseQuery(context, organizationId)).
-                                    Where(p => governmentLoans.Contains(p.PartNo)
-                            ).ToListAsync();
-            }
+            return await (await GetLoanTypesBaseQuery(organizationId)).
+                                Where(p => governmentLoans.Contains(p.PartNo)
+                        ).ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAdjustmentTypesAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await (await GetAdjustmentTypesBaseQuery(context, organizationId)).
-                                ToListAsync();
-            }
+            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetDeductionAdjustmentTypesAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await (await GetAdjustmentTypesBaseQuery(context, organizationId)).Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).ToListAsync();
-            }
+            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
+                        Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_DEDUCTION).
+                        ToListAsync();
         }
 
         public async Task<IEnumerable<Product>> GetAdditionAdjustmentTypesAsync(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await (await GetAdjustmentTypesBaseQuery(context, organizationId)).Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_ADDITION).ToListAsync();
-            }
+            return await (await GetAdjustmentTypesBaseQuery(organizationId)).
+                        Where(p => p.Description == ProductConstant.ADJUSTMENT_TYPE_ADDITION).
+                        ToListAsync();
         }
 
         #endregion List of entities
@@ -286,12 +273,9 @@ namespace AccuPay.Data.Repositories
 
         private async Task<Product> GetProductByNameAndCategory(string productName, int categoryId, int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await CreateBaseQueryByCategory(categoryId, context, organizationId).
-                                Where(p => p.PartNo.Trim().ToLower() == productName.ToTrimmedLowerCase()).
-                                FirstOrDefaultAsync();
-            }
+            return await CreateBaseQueryByCategory(categoryId, organizationId).
+                            Where(p => p.PartNo.Trim().ToLower() == productName.ToTrimmedLowerCase()).
+                            FirstOrDefaultAsync();
         }
 
         private async Task<bool> CheckIfProductExists(string productName, int categoryId, int organizationId)
@@ -305,96 +289,90 @@ namespace AccuPay.Data.Repositories
         // this may only apply to "Loan Type" use with caution
         private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId)
         {
-            using (var context = new PayrollContext())
+            var categoryProduct = await context.Categories.
+                                    Where(c => c.OrganizationID == organizationId).
+                                    Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase()).
+                                    FirstOrDefaultAsync();
+
+            if (categoryProduct == null)
             {
-                var categoryProduct = await context.Categories.
-                                        Where(c => c.OrganizationID == organizationId).
-                                        Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase()).
-                                        FirstOrDefaultAsync();
+                // get the existing category with same name to use as CategoryID
+                // this is due to the design of the database wanting the category to have a CategoryID
+                // to maybe group them across different organization but never used them in the application ever
+                var existingCategoryProduct = await context.Categories.
+                                                Where(c => c.CategoryName == categoryName).
+                                                FirstOrDefaultAsync();
 
-                if (categoryProduct == null)
+                var existingCategoryProductId = existingCategoryProduct?.RowID;
+
+                categoryProduct = new Category
                 {
-                    // get the existing category with same name to use as CategoryID
-                    // this is due to the design of the database wanting the category to have a CategoryID
-                    // to maybe group them across different organization but never used them in the application ever
-                    var existingCategoryProduct = await context.Categories.
-                                                    Where(c => c.CategoryName == categoryName).
-                                                    FirstOrDefaultAsync();
+                    CategoryID = existingCategoryProductId,
+                    CategoryName = categoryName,
+                    OrganizationID = organizationId,
+                    CatalogID = null,
+                    LastUpd = DateTime.Now
+                };
 
-                    var existingCategoryProductId = existingCategoryProduct?.RowID;
+                context.Categories.Add(categoryProduct);
+                await context.SaveChangesAsync();
 
-                    categoryProduct = new Category
+                // if there is no existing category with same name,
+                // use the newly added category's RowID as its CategoryID
+
+                if (existingCategoryProductId == null)
+                {
+                    try
                     {
-                        CategoryID = existingCategoryProductId,
-                        CategoryName = categoryName,
-                        OrganizationID = organizationId,
-                        CatalogID = null,
-                        LastUpd = DateTime.Now
-                    };
-
-                    context.Categories.Add(categoryProduct);
-                    await context.SaveChangesAsync();
-
-                    // if there is no existing category with same name,
-                    // use the newly added category's RowID as its CategoryID
-
-                    if (existingCategoryProductId == null)
+                        categoryProduct.CategoryID = categoryProduct.RowID;
+                        await context.SaveChangesAsync();
+                    }
+                    catch (Exception ex)
                     {
-                        try
-                        {
-                            categoryProduct.CategoryID = categoryProduct.RowID;
-                            await context.SaveChangesAsync();
-                        }
-                        catch (Exception ex)
-                        {
-                            // if for some reason hindi na update, we can't let that row
-                            // to have no CategoryID so dapat i-delete rin yung added category
-                            context.Categories.Remove(categoryProduct);
-                            await context.SaveChangesAsync();
+                        // if for some reason hindi na update, we can't let that row
+                        // to have no CategoryID so dapat i-delete rin yung added category
+                        context.Categories.Remove(categoryProduct);
+                        await context.SaveChangesAsync();
 
-                            throw ex;
-                        }
+                        throw ex;
                     }
                 }
-
-                if (categoryProduct == null)
-                {
-                    var ex = new Exception("ProductRepository->GetOrCreate: Category not found.");
-                    throw ex;
-                }
-
-                return categoryProduct;
             }
+
+            if (categoryProduct == null)
+            {
+                var ex = new Exception("ProductRepository->GetOrCreate: Category not found.");
+                throw ex;
+            }
+
+            return categoryProduct;
         }
 
         private async Task<IEnumerable<Product>> GetProductsByCategory(int categoryId, int organizationId)
         {
-            using (var context = new PayrollContext())
-            {
-                var listOfValues = await CreateBaseQueryByCategory(categoryId, context, organizationId).
-                                            ToListAsync();
+            var listOfValues = await CreateBaseQueryByCategory(categoryId, organizationId).
+                                        ToListAsync();
 
-                return listOfValues;
-            }
+            return listOfValues;
         }
 
-        private async Task<IQueryable<Product>> GetAdjustmentTypesBaseQuery(PayrollContext context, int organizationId)
+        private async Task<IQueryable<Product>> GetAdjustmentTypesBaseQuery(int organizationId)
         {
             var categoryName = ProductConstant.ADJUSTMENT_TYPE_CATEGORY;
 
             var category = await GetOrCreateCategoryByName(categoryName, organizationId);
-            return CreateBaseQueryByCategory(category.RowID, context, organizationId);
+            return CreateBaseQueryByCategory(category.RowID, organizationId);
         }
 
-        private async Task<IQueryable<Product>> GetLoanTypesBaseQuery(PayrollContext context, int organizationId)
+        private async Task<IQueryable<Product>> GetLoanTypesBaseQuery(int organizationId)
         {
             var categoryName = ProductConstant.LOAN_TYPE_CATEGORY;
 
             var category = await GetOrCreateCategoryByName(categoryName, organizationId);
-            return CreateBaseQueryByCategory(category.RowID, context, organizationId);
+            return CreateBaseQueryByCategory(category.RowID, organizationId);
         }
 
-        private IQueryable<Product> CreateBaseQueryByCategory(int categoryId, PayrollContext context, int organizationId)
+        private IQueryable<Product> CreateBaseQueryByCategory(int categoryId, int organizationId)
         {
             return context.Products.
                             Where(p => p.OrganizationID == organizationId).

@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 
 Public Class AddLeaveForm
@@ -11,21 +12,37 @@ Public Class AddLeaveForm
 
     Private Const FormEntityName As String = "Leave"
 
-    Private _leaveRepository As New LeaveRepository()
+    Private _leaveService As LeaveService
 
-    Private _productRepository As New ProductRepository()
+    Private _leaveRepository As LeaveRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
 
     Private _currentEmployee As Employee
 
     Private _newLeave As New Leave
 
-    Sub New(employee As Employee)
+    Sub New(employee As Employee,
+            leaveService As LeaveService,
+            leaveRepository As LeaveRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _leaveService = leaveService
+
+        _leaveRepository = leaveRepository
+
+        _productRepository = productRepository
+
+        _userActivityRepository = userActivityRepository
 
         Me.IsSaved = False
 
@@ -186,10 +203,14 @@ Public Class AddLeaveForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Await _leaveRepository.SaveAsync(Me._newLeave)
+                Dim list As New List(Of Leave)
+                list.Add(Me._newLeave)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
+                'Temporarily use SaveMany to validate the leave
+                'TODO: use SaveAsync
+                Await _leaveService.SaveManyAsync(list, z_OrganizationID)
+
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
