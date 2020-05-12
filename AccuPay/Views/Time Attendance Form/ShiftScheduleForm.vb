@@ -17,6 +17,7 @@ Public Class ShiftScheduleForm
 
     Private Const ENABLED_TEXT As String = "Enabled"
     Private Const DISABLED_TEXT As String = "Disabled"
+    Private Const FormEntityName As String = "Shift Schedule"
 
     Private Shared logger As ILog = LogManager.GetLogger("ShiftScheduleAppender")
 
@@ -36,6 +37,8 @@ Public Class ShiftScheduleForm
 
     Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
+    Private _userActivityRepo As UserActivityRepository
+
     Sub New()
 
         ' This call is required by the designer.
@@ -44,6 +47,8 @@ Public Class ShiftScheduleForm
         ' Add any initialization after the InitializeComponent() call.
 
         _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private WriteOnly Property ChangesCount As Integer
@@ -316,6 +321,53 @@ Public Class ShiftScheduleForm
         infohint.Show("Done.", Button2, 3475)
 
         _balloonToolTips.Add(infohint)
+    End Sub
+
+    Private Sub RecordUpdate(oldRecords As IEnumerable(Of EmployeeDutySchedule), updatedShiftSchedules As List(Of EmployeeDutySchedule))
+        For Each ssm In updatedShiftSchedules      'for update
+            Dim changes As New List(Of UserActivityItem)
+            Dim entityName = FormEntityName.ToLower()
+
+            Dim oldShiftSchedule = oldRecords.Where(Function(x) x.RowID = ssm.RowID).FirstOrDefault()
+
+            If Not Nullable.Equals(ssm.StartTime, oldShiftSchedule.StartTime) Then
+                changes.Add(New UserActivityItem() With
+                    {
+                    .EntityId = CInt(ssm.RowID),
+                    .Description = $"Updated {entityName} start time from '{oldShiftSchedule.StartTime}' to '{ssm.StartTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    })
+            End If
+            If Not Nullable.Equals(ssm.EndTime, oldShiftSchedule.EndTime) Then
+                changes.Add(New UserActivityItem() With
+                    {
+                    .EntityId = CInt(ssm.RowID),
+                    .Description = $"Updated {entityName} end time from '{oldShiftSchedule.EndTime}' to '{ssm.EndTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    })
+            End If
+            If Not Nullable.Equals(ssm.BreakStartTime, oldShiftSchedule.BreakStartTime) Then
+                changes.Add(New UserActivityItem() With
+                    {
+                    .EntityId = CInt(ssm.RowID),
+                    .Description = $"Updated {entityName} break start from '{oldShiftSchedule.BreakStartTime}' to '{ssm.BreakStartTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    })
+            End If
+            If oldShiftSchedule.BreakLength <> ssm.BreakLength Then
+                changes.Add(New UserActivityItem() With
+                    {
+                    .EntityId = CInt(ssm.RowID),
+                    .Description = $"Updated {entityName} break length from '{oldShiftSchedule.BreakLength}' to '{ssm.BreakLength}' on '{ssm.DateSched.ToShortDateString}'."
+                    })
+            End If
+            If oldShiftSchedule.IsRestDay <> ssm.IsRestDay Then
+                changes.Add(New UserActivityItem() With
+                    {
+                    .EntityId = CInt(ssm.RowID),
+                    .Description = $"Updated {entityName} restday from '{oldShiftSchedule.IsRestDay}' to '{ssm.IsRestDay}' on '{ssm.DateSched.ToShortDateString}'."
+                    })
+            End If
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        Next
     End Sub
 
 #End Region
@@ -860,6 +912,10 @@ Public Class ShiftScheduleForm
         Dim toSaveList = saveList.Where(Function(ssm) ssm.HasChanged)
         If Not toSaveList.Any Then Return
 
+        Dim toSaveListEmployeeIDs = toSaveList.Select(Function(tlm) tlm.EmployeeId.Value).ToArray()
+
+        Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
+
         Dim addedShiftSchedules As New List(Of EmployeeDutySchedule)
         Dim updatedShiftSchedules As New List(Of EmployeeDutySchedule)
         Dim deletedShiftSchedules As New List(Of EmployeeDutySchedule)
@@ -880,10 +936,25 @@ Public Class ShiftScheduleForm
             ssm.CommitChanges()
         Next
 
+        Dim oldRecords = Await _employeeDutyScheduleRepository.GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID,
+                                                                                                       toSaveListEmployeeIDs,
+                                                                                                       datePeriod)
+
         Try
             Await _employeeDutyScheduleRepository.ChangeManyAsync(addedShifts:=addedShiftSchedules,
                                                                 updatedShifts:=updatedShiftSchedules,
                                                                 deletedShifts:=deletedShiftSchedules)
+
+            For Each ssm In addedShiftSchedules      'for new
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
+            Next
+
+            RecordUpdate(oldRecords, updatedShiftSchedules)
+
+            For Each ssm In deletedShiftSchedules   'for delete
+                _userActivityRepo.RecordDelete(z_User, FormEntityName, ssm.RowID, z_OrganizationID)
+            Next
+
             ShowSuccessBalloon()
 
             For Each row As DataGridViewRow In grid.Rows
@@ -898,6 +969,11 @@ Public Class ShiftScheduleForm
             Dim errMsg = String.Concat("Oops! something went wrong, please", Environment.NewLine, "contact ", My.Resources.AppCreator, " for assistance.")
             MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
+    End Sub
+
+    Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
+        Dim userActivity As New UserActivityForm(FormEntityName)
+        userActivity.ShowDialog()
     End Sub
 
     Private Async Sub EmployeeTreeView1_TickedEmployee(sender As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
@@ -1315,6 +1391,8 @@ Public Class ShiftScheduleForm
             tTip.Dispose()
         Next
     End Sub
+
+
 
 #End Region
 

@@ -42,6 +42,8 @@ Public Class TimeLogsForm2
 
     Private _timeLogRepository As TimeLogRepository
 
+    Private _userActivityRepo As UserActivityRepository
+
     Public Enum TimeLogsFormat
         Optimized = 0
         Conventional = 1
@@ -64,6 +66,8 @@ Public Class TimeLogsForm2
         _shiftScheduleRepository = New ShiftScheduleRepository()
 
         _timeLogRepository = New TimeLogRepository()
+
+        _userActivityRepo = New UserActivityRepository()
     End Sub
 
 #Region "Methods"
@@ -363,6 +367,59 @@ Public Class TimeLogsForm2
                     And currColIndex > 0 Then
             grid.CurrentCell = grid.Item(currColIndex, currRowIndex)
         End If
+    End Sub
+
+    Private Sub RecordUpdate(updatedTimeLogs As List(Of Entities.TimeLog), oldRecords As IEnumerable(Of Entities.TimeLog))
+        For Each item In updatedTimeLogs
+            Dim changes As New List(Of Entities.UserActivityItem)
+            Dim entityName = FormEntityName.ToLower()
+            Dim oldValue = oldRecords.
+                Where(Function(tl) tl.EmployeeID.Value = item.EmployeeID.Value).
+                Where(Function(tl) tl.LogDate = item.LogDate).
+                FirstOrDefault()
+
+            If Not Nullable.Equals(item.TimeIn, oldValue.TimeIn) Then
+                changes.Add(New Entities.UserActivityItem() With
+                    {
+                    .EntityId = CInt(item.RowID),
+                    .Description = $"Updated {entityName} time in from '{oldValue.TimeIn}' to '{item.TimeIn}' on '{oldValue.LogDate.ToShortDateString}'."
+                    })
+            End If
+            If Not Nullable.Equals(item.TimeOut, oldValue.TimeOut) Then
+                changes.Add(New Entities.UserActivityItem() With
+                    {
+                    .EntityId = CInt(item.RowID),
+                    .Description = $"Updated {entityName} time out from '{oldValue.TimeOut}' to '{item.TimeOut}' on '{oldValue.LogDate.ToShortDateString}'."
+                    })
+            End If
+            If item.TimeStampOut.Value.Date <> oldValue.TimeStampOut.Value.Date Then
+                changes.Add(New Entities.UserActivityItem() With
+                    {
+                    .EntityId = CInt(item.RowID),
+                    .Description = $"Updated {entityName} date out from '{oldValue.TimeStampOut.Value.ToShortDateString}' to '{item.TimeStampOut.Value.ToShortDateString}' on '{oldValue.LogDate.ToShortDateString}'."
+                    })
+            End If
+            If Not Nullable.Equals(item.BranchID, oldValue.BranchID) Then
+                Dim branches As List(Of Entities.Branch) = CType(colBranchID.DataSource, List(Of Entities.Branch))
+                Dim oldBranch = ""
+                Dim newBranch = ""
+
+                If oldValue.BranchID.HasValue Then
+                    oldBranch = branches.Where(Function(x) x.RowID.Value = oldValue.BranchID.Value).FirstOrDefault.Name
+                End If
+                If item.BranchID.HasValue Then
+                    newBranch = branches.Where(Function(x) x.RowID.Value = item.BranchID.Value).FirstOrDefault.Name
+                End If
+
+                changes.Add(New Entities.UserActivityItem() With
+                    {
+                    .EntityId = CInt(item.RowID),
+                    .Description = $"Updated {entityName} branch from '{oldBranch}' to '{newBranch}' on '{oldValue.LogDate.ToShortDateString}'."
+                    })
+            End If
+
+            _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        Next
     End Sub
 
 #End Region
@@ -822,6 +879,7 @@ Public Class TimeLogsForm2
 
         Dim existingRecords = Await _timeLogRepository.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(toSaveListEmployeeIDs, datePeriod)
+        Dim oldRecords = existingRecords.CloneJson()
 
         Dim addedTimeLogs As New List(Of Entities.TimeLog)
         Dim updatedTimeLogs As New List(Of Entities.TimeLog)
@@ -875,6 +933,20 @@ Public Class TimeLogsForm2
             Await _timeLogRepository.ChangeManyAsync(addedTimeLogs:=addedTimeLogs,
                                                      updatedTimeLogs:=updatedTimeLogs,
                                                      deletedTimeLogs:=deletedTimeLogs)
+
+            For Each item In addedTimeLogs      'for new
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, item.RowID.Value, z_OrganizationID)
+            Next
+
+            RecordUpdate(updatedTimeLogs, oldRecords)
+
+            Dim groupedDeletedTimeLogs = deletedTimeLogs.GroupBy(Function(x) New With {Key x.EmployeeID, Key x.LogDate}).
+                                                        Select(Function(x) x.First).ToArray
+
+            For Each item In groupedDeletedTimeLogs
+                _userActivityRepo.RecordDelete(z_User, FormEntityName, item.RowID.Value, z_OrganizationID)
+            Next
+
 
             If addedTimeLogs.Any() Then
                 Dim addedTimeLogEmployeeIDs = addedTimeLogs.Select(Function(tl) tl.EmployeeID.Value).ToArray()
@@ -1287,6 +1359,11 @@ Public Class TimeLogsForm2
 
         End Try
 
+    End Sub
+
+    Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
+        Dim userActivity As New UserActivityForm(FormEntityName)
+        userActivity.ShowDialog()
     End Sub
 
 #End Region
