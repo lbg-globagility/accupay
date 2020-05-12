@@ -12,11 +12,7 @@ Public Class AddAllowanceForm
 
     Private _currentEmployee As Employee
 
-    Private _newAllowance As New Allowance()
-
-    Private _productRepository As New ProductRepository()
-
-    Private _allowanceRepository As New AllowanceRepository()
+    Private _newAllowance As Allowance
 
     Private _allowanceTypeList As List(Of Product)
 
@@ -26,7 +22,16 @@ Public Class AddAllowanceForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Employee)
+    Private _productRepository As ProductRepository
+
+    Private _allowanceRepository As AllowanceRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employee As Employee,
+            productRepository As ProductRepository,
+            allowanceRepository As AllowanceRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -37,6 +42,12 @@ Public Class AddAllowanceForm
         Me.IsSaved = False
 
         Me.NewAllowanceTypes = New List(Of Product)
+
+        _productRepository = productRepository
+        
+        _allowanceRepository = allowanceRepository
+
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -149,8 +160,7 @@ Public Class AddAllowanceForm
             Async Function()
                 Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

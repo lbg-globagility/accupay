@@ -10,8 +10,6 @@ Imports AccuPay.Utils
 
 Public Class EmployeeLoansForm
 
-    Dim sys_ownr As New SystemOwnerService()
-
     Private sysowner_is_benchmark As Boolean
 
     Private _currentLoan As LoanSchedule
@@ -28,16 +26,6 @@ Public Class EmployeeLoansForm
 
     Private _currentLoanTransactions As List(Of LoanTransaction)
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _productRepository As ProductRepository
-
-    Private _listOfValueRepository As ListOfValueRepository
-
-    Private _loanScheduleRepository As LoanScheduleRepository
-
-    Private _userActivityRepository As UserActivityRepository
-
     Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
@@ -48,7 +36,22 @@ Public Class EmployeeLoansForm
 
     Private loanInterestPercentageBeforeTextChange As Decimal
 
-    Sub New()
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            listOfValueRepository As ListOfValueRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            userActivityRepository As UserActivityRepository,
+            systemOwnerService As SystemOwnerService)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -64,17 +67,22 @@ Public Class EmployeeLoansForm
 
         _currentLoanTransactions = New List(Of LoanTransaction)
 
-        _employeeRepository = New EmployeeRepository()
-
-        _productRepository = New ProductRepository()
-
-        _listOfValueRepository = New ListOfValueRepository()
-
-        _loanScheduleRepository = New LoanScheduleRepository()
-
-        _userActivityRepository = New UserActivityRepository()
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _employeeRepository = employeeRepository
+
+        _productRepository = productRepository
+
+        _listOfValueRepository = listOfValueRepository
+
+        _loanScheduleRepository = loanScheduleRepository
+
+        _userActivityRepository = userActivityRepository
+
+        _systemOwnerService = systemOwnerService
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+
     End Sub
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -320,7 +328,12 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim form As New AddLoanScheduleForm(employee)
+        Dim form As New AddLoanScheduleForm(employee,
+                                            _productRepository,
+                                            _listOfValueRepository,
+                                            _loanScheduleRepository,
+                                            _userActivityRepository,
+                                            _systemOwnerService)
         form.ShowDialog()
 
         If form.IsSaved Then

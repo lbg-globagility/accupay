@@ -21,15 +21,17 @@ Public Class EmployeeOvertimeForm
 
     Private _changedOvertimes As List(Of Overtime)
 
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
     Private _overtimeRepository As OvertimeRepository
 
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Sub New()
+    Sub New(overtimeRepository As OvertimeRepository,
+            employeeRepository As EmployeeRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -44,13 +46,13 @@ Public Class EmployeeOvertimeForm
 
         _changedOvertimes = New List(Of Overtime)
 
-        _overtimeRepository = New OvertimeRepository()
-
-        _employeeRepository = New EmployeeRepository()
-
-        _userActivityRepository = New UserActivityRepository()
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _overtimeRepository = overtimeRepository
+
+        _employeeRepository = employeeRepository
+
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -462,7 +464,7 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim form As New AddOvertimeForm(employee)
+        Dim form As New AddOvertimeForm(employee, _overtimeRepository, _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then

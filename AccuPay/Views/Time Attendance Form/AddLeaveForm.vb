@@ -22,7 +22,7 @@ Public Class AddLeaveForm
 
     Private _currentEmployee As Employee
 
-    Private _newLeave As New Leave
+    Private _newLeave As Leave
 
     Sub New(employee As Employee,
             leaveService As LeaveService,

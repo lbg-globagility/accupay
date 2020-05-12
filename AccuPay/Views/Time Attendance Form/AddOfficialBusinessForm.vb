@@ -10,19 +10,27 @@ Public Class AddOfficialBusinessForm
 
     Private Const FormEntityName As String = "Official Business"
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository()
-
     Private _currentEmployee As Employee
 
-    Private _newOfficialBusiness As New OfficialBusiness()
+    Private _newOfficialBusiness As OfficialBusiness
 
-    Sub New(employee As Employee)
+    Private _officialBusinessRepository As OfficialBusinessRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employee As Employee,
+            officialBusinessRepository As OfficialBusinessRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _officialBusinessRepository = officialBusinessRepository
+
+        _userActivityRepository = userActivityRepository
 
         Me.IsSaved = False
 
@@ -154,8 +162,7 @@ Public Class AddOfficialBusinessForm
             Async Function()
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

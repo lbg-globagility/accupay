@@ -23,17 +23,20 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Private _allowanceRepository As AllowanceRepository
+
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
 
-    Private _allowanceRepository As AllowanceRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Sub New()
+    Sub New(allowanceRepository As AllowanceRepository,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -47,15 +50,15 @@ Public Class EmployeeAllowanceForm
 
         _changedAllowances = New List(Of Allowance)
 
-        _employeeRepository = New EmployeeRepository()
-
-        _productRepository = New ProductRepository()
-
-        _allowanceRepository = New AllowanceRepository()
-
-        _userActivityRepository = New UserActivityRepository()
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _allowanceRepository = allowanceRepository
+
+        _employeeRepository = employeeRepository
+
+        _productRepository = productRepository
+        
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -240,7 +243,9 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim form As New AddAllowanceForm(employee)
+        Dim form As New AddAllowanceForm(employee,
+                                        _productRepository,
+                                        _allowanceRepository)
         form.ShowDialog()
 
         If form.IsSaved Then

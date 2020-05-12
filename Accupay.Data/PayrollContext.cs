@@ -1,5 +1,4 @@
-﻿using Accupay.DB;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;

@@ -21,6 +21,8 @@ Public Class EmployeeLeavesForm
 
     Private _changedLeaves As List(Of Leave)
 
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
     Private _leaveRepository As LeaveRepository
 
     Private _employeeRepository As EmployeeRepository
@@ -29,9 +31,13 @@ Public Class EmployeeLeavesForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private _leaveService As LeaveService
 
-    Sub New()
+    Sub New(leaveRepository As LeaveRepository,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository,
+            leaveService As LeaveService))
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -46,15 +52,15 @@ Public Class EmployeeLeavesForm
 
         _changedLeaves = New List(Of Leave)
 
-        _leaveRepository = New LeaveRepository()
-
-        _employeeRepository = New EmployeeRepository()
-
-        _productRepository = New ProductRepository()
-
-        _userActivityRepository = New UserActivityRepository()
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _leaveRepository = leaveRepository
+
+        _employeeRepository = employeeRepository
+
+        _productRepository = productRepository
+
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -453,8 +459,7 @@ Public Class EmployeeLeavesForm
                                             Async Function()
                                                 Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
 
-                                                Dim repo As New UserActivityRepository
-                                                repo.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
+                                                _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
                                                 Await LoadLeaves(currentEmployee)
 
@@ -512,7 +517,11 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        Dim form As New AddLeaveForm(employee)
+        Dim form As New AddLeaveForm(employee,
+                                    _leaveService,
+                                    _leaveRepository,
+                                    _productRepository,
+                                    _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then

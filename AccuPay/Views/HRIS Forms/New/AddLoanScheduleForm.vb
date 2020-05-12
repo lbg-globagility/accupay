@@ -11,19 +11,9 @@ Public Class AddLoanScheduleForm
 
     Private Const FormEntityName As String = "Loan"
 
-    Dim sys_ownr As New SystemOwnerService()
-
     Private if_sysowner_is_benchmark As Boolean
 
     Private _currentEmployee As Employee
-
-    Private _newLoanSchedule As New LoanSchedule()
-
-    Private _productRepository As New ProductRepository()
-
-    Private _listOfValueRepository As New ListOfValueRepository()
-
-    Private _loanScheduleRepository As New LoanScheduleRepository()
 
     Private _loanTypeList As List(Of Product)
 
@@ -35,7 +25,22 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Employee)
+    Private _newLoanSchedule As LoanSchedule
+
+    Private _productRepository As ProductRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employee As Employee,
+            productRepository As ProductRepository,
+            listOfValueRepository As ListOfValueRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            userActivityRepository As UserActivityRepository,
+            systemOwnerService As SystemOwnerService)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -47,7 +52,17 @@ Public Class AddLoanScheduleForm
 
         Me.NewLoanTypes = New List(Of Product)
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _productRepository = productRepository
+
+        _listOfValueRepository = listOfValueRepository
+
+        _loanScheduleRepository = loanScheduleRepository
+
+        _userActivityRepository = userActivityRepository
+
+        _systemOwnerService = systemOwnerService
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
     End Sub
 
@@ -186,8 +201,7 @@ Public Class AddLoanScheduleForm
             Async Function()
                 Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

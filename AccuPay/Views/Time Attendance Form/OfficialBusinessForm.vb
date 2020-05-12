@@ -20,15 +20,17 @@ Public Class OfficialBusinessForm
 
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
     Private _officialBusinessRepository As OfficialBusinessRepository
 
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Sub New()
+    Sub New(officialBusinessRepository As OfficialBusinessRepository,
+            employeeRepository As EmployeeRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -43,13 +45,13 @@ Public Class OfficialBusinessForm
 
         _changedOfficialBusinesses = New List(Of OfficialBusiness)
 
-        _officialBusinessRepository = New OfficialBusinessRepository()
-
-        _employeeRepository = New EmployeeRepository()
-
-        _userActivityRepository = New UserActivityRepository()
-
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
+
+        _officialBusinessRepository = officialBusinessRepository
+
+        _employeeRepository = employeeRepository
+
+        _userActivityRepository = userActivityRepository
     End Sub
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -466,7 +468,9 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim form As New AddOfficialBusinessForm(employee)
+        Dim form As New AddOfficialBusinessForm(employee,
+                                                _officialBusinessRepository,
+                                                _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
