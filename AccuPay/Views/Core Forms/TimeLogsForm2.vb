@@ -49,21 +49,25 @@ Public Class TimeLogsForm2
 
 #End Region
 
-    Sub New()
+    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+            employeeRepository As EmployeeRepository
+            overtimeRepository As OvertimeRepository
+            shiftScheduleRepository As ShiftScheduleRepository
+            timeLogRepository As TimeLogRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+        _employeeDutyScheduleRepository =  employeeDutyScheduleRepository
 
-        _employeeRepository = New EmployeeRepository()
+        _employeeRepository =  employeeRepository
 
-        _overtimeRepository = New OvertimeRepository()
+        _overtimeRepository =  overtimeRepository
 
-        _shiftScheduleRepository = New ShiftScheduleRepository()
+        _shiftScheduleRepository =  shiftScheduleRepository
 
-        _timeLogRepository = New TimeLogRepository()
+        _timeLogRepository =  timeLogRepository
     End Sub
 
 #Region "Methods"

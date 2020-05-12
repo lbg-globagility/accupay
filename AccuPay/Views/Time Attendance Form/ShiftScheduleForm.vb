@@ -36,14 +36,14 @@ Public Class ShiftScheduleForm
 
     Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
-    Sub New()
+    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
 
-        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+        _employeeDutyScheduleRepository = employeeDutyScheduleRepository
     End Sub
 
     Private WriteOnly Property ChangesCount As Integer
