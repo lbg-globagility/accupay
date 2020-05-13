@@ -278,7 +278,7 @@ namespace AccuPay.Data.Services
             decimal newBalance = newAllowance;
 
             var currentPayPeriod = await _payPeriodService.
-                                            GetCurrentlyWorkedOnPayPeriodByCurrentYear(organizationId);
+                                            GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(organizationId);
 
             var firstPayPeriodOfTheYear = await _payPeriodRepository.GetFirstPayPeriodOfTheYear(
                                                                         (PayPeriod)currentPayPeriod,

@@ -8,6 +8,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SalaryTab
 
@@ -27,7 +28,13 @@ Public Class SalaryTab
 
     Private _ecolaAllowance As Allowance
 
+    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
+
+    Private _payPeriodService As PayPeriodService
+
     Private _allowanceRepository As AllowanceRepository
+
+    Private _employeeRepository As EmployeeRepository
 
     Private _salaryRepository As SalaryRepository
 
@@ -62,23 +69,25 @@ Public Class SalaryTab
         End Set
     End Property
 
-    Public Sub New(payPeriodService As PayPeriodService,
-                    systemOwnerService As SystemOwnerService,
-                    AllowanceRepository As AllowanceRepository,
-                    SalaryRepository As SalaryRepository,
-                    UserActivityRepository As UserActivityRepository)
+    Public Sub New()
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        _payPeriodService = payPeriodService
+        Using MainServiceProvider
+            _benchmarkPayrollHelper = MainServiceProvider.GetRequiredService(Of BenchmarkPayrollHelper)()
 
-        _systemOwnerService = systemOwnerService
+            _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)()
 
-        _allowanceRepository = AllowanceRepository
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)()
 
-        _salaryRepository = SalaryRepository
+            _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)()
 
-        _userActivityRepository = UserActivityRepository
+            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
+
+            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
+
+            _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        End Using
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -114,8 +123,8 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim currentPayPeriod = _payPeriodService.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+            Dim currentPayPeriod = Await _payPeriodService.
+                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
@@ -128,7 +137,7 @@ Public Class SalaryTab
             'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
             'If _employee.IsDaily Then
             'End If
-            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
+            _ecolaAllowance = Await _benchmarkPayrollHelper.GetEcola(
                                                 employeeId.Value,
                                                 payDateFrom:=currentPayPeriod.PayFromDate,
                                                 payDateTo:=currentPayPeriod.PayToDate)
@@ -598,7 +607,9 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
-        Using dialog = New ImportSalaryForm()
+        Using dialog = New ImportSalaryForm(_employeeRepository,
+                                            _salaryRepository,
+                                            _userActivityRepository)
             dialog.ShowDialog()
 
             If dialog.IsSaved Then
@@ -622,7 +633,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UserActivitySalaryToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivitySalaryToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

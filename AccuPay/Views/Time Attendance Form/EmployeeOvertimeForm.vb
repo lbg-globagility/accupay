@@ -88,7 +88,9 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Using form = New ImportOvertimeForm()
+        Using form = New ImportOvertimeForm(_employeeRepository,
+                                            _overtimeRepository,
+                                            _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -735,7 +737,7 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

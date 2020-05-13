@@ -17,6 +17,8 @@ Public Class AddBranchForm
 
     Private _employeeRepository As EmployeeRepository
 
+    Private _listOfValueService As ListOfValueService
+
     Private _branches As IEnumerable(Of Branch)
 
     Private _calendars As IEnumerable(Of PayCalendar)
@@ -30,17 +32,22 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
-    Sub New()
+    Sub New(branchRepository As BranchRepository,
+            calendarRepository As CalendarRepository,
+            employeeRepository As EmployeeRepository,
+            listOfValueService As ListOfValueService)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _branchRepository = New BranchRepository()
+        _branchRepository = branchRepository
 
-        _calendarRepository = New CalendarRepository()
+        _calendarRepository = calendarRepository
 
-        _employeeRepository = New EmployeeRepository()
+        _employeeRepository = employeeRepository
+
+        _listOfValueService = listOfValueService
     End Sub
 
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -57,7 +64,7 @@ Public Class AddBranchForm
 
     Private Sub ShowCalendar()
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
                                             PayRateCalculationBasis.Organization)

@@ -19,14 +19,14 @@ Public Class AdjustmentForm
 
     Private _currentFormType As FormMode
 
-    Sub New(Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
+    Sub New(productRepository As ProductRepository, Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
 
-        _productRepository = New ProductRepository
+        _productRepository = productRepository
         _adjustmentType = adjustmentType
 
     End Sub

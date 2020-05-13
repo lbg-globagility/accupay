@@ -35,6 +35,8 @@ Public Class AddLoanScheduleForm
 
     Private _userActivityRepository As UserActivityRepository
 
+    Private _systemOwnerService As SystemOwnerService
+
     Sub New(employee As Employee,
             productRepository As ProductRepository,
             listOfValueRepository As ListOfValueRepository,
@@ -42,10 +44,8 @@ Public Class AddLoanScheduleForm
             userActivityRepository As UserActivityRepository,
             systemOwnerService As SystemOwnerService)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
         Me.IsSaved = False
@@ -281,7 +281,7 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
-        Dim form As New AddLoanTypeForm()
+        Dim form As New AddLoanTypeForm(_productRepository)
         form.ShowDialog()
 
         If form.IsSaved Then

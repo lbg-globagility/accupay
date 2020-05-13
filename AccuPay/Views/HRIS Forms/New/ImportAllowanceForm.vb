@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -14,17 +14,39 @@ Public Class ImportAllowanceForm
 
     Private _allowances As List(Of Allowance)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
-
-    Private _allowanceRepository As New AllowanceRepository
-
     Private _allowanceTypeList As List(Of Product)
 
     Private _allowanceFrequencyList As New List(Of String)
 
     Public IsSaved As Boolean
+
+    Private _allowanceRepository As AllowanceRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(allowanceRepository As AllowanceRepository,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _allowanceRepository = allowanceRepository
+
+        _employeeRepository = employeeRepository
+
+        _productRepository = productRepository
+
+        _userActivityRepository = userActivityRepository
+
+    End Sub
 
     Private Async Sub ImportAllowanceForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -216,8 +238,7 @@ Public Class ImportAllowanceForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
                 Me.Cursor = Cursors.Default
@@ -229,7 +250,8 @@ Public Class ImportAllowanceForm
     End Sub
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance,
+                                                                        _employeeRepository)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

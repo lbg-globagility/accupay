@@ -8,11 +8,25 @@ Public Class AddDivisionLocationForm
 
     Private Const FormEntityName As String = "Division Location"
 
-    Private _divisionRepository As New DivisionRepository()
-
     Public Property NewDivision As Division
 
     Public Property IsSaved As Boolean
+
+    Private _divisionRepository As DivisionRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(divisionRepository As DivisionRepository, userActivityRepository As UserActivityRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _divisionRepository = divisionRepository
+
+        _userActivityRepository = userActivityRepository
+
+    End Sub
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -41,8 +55,7 @@ Public Class AddDivisionLocationForm
 
             Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
 
-            Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
+            _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
 
             Me.IsSaved = True
 

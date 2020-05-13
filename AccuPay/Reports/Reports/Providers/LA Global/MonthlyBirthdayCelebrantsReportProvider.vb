@@ -1,4 +1,7 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
 Public Class MonthlyBirthdayCelebrantsReportProvider
@@ -10,9 +13,14 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
 
     Private recordFound As Boolean
 
-    Private employeeRepo As New EmployeeRepository()
-
+    Private ReadOnly _context As PayrollContext
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
+
+    Sub New(context As PayrollContext)
+
+        _context = context
+
+    End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim monthSelector = New selectMonth()
@@ -38,12 +46,12 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
 
         Dim fetchAll As New List(Of Employee)
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder(_context)
 
             fetchAll = Await employeeBuilder.
                             IsActive().
                             IncludeBranch().
-                            ToListAsync()
+                            ToListAsync(z_OrganizationID)
         End Using
 
         Dim employees = fetchAll.

@@ -4,6 +4,7 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Entities
 Imports AccuPay.Utils
+Imports AccuPay.Data.Repositories
 
 Public Class PreviewLeaveBalanceForm
 
@@ -17,10 +18,32 @@ Public Class PreviewLeaveBalanceForm
 
     Private policy As New RenewLeaveBalancePolicy
 
-    Private _employeeRepo As New Repositories.EmployeeRepository
+    Private _employeeRepository As EmployeeRepository
+
+    Private _payPeriodRepository As PayPeriodRepository
+
+    Private _listOfValueService As ListOfValueService
+
+    Private _payPeriodService As PayPeriodService
+
+    Sub New(employeeRepository As EmployeeRepository,
+            payPeriodRepository As PayPeriodRepository,
+            listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService)
+
+        InitializeComponent()
+
+        _employeeRepository = employeeRepository
+
+        _payPeriodRepository = payPeriodRepository
+
+        _listOfValueService = listOfValueService
+
+        _payPeriodService = payPeriodService
+    End Sub
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim basis = Await ListOfValueCollection.CreateAsync("ResetLeaveBalancePolicy")
+        Dim basis = Await _listOfValueService.CreateAsync("ResetLeaveBalancePolicy")
 
         Dim leaveAllowanceAmountBasis = basis.GetValue("LeaveAllowanceAmountBasis")
 
@@ -46,7 +69,9 @@ Public Class PreviewLeaveBalanceForm
         Dim result As DialogResult
         Dim isOk As Boolean = False
 
-        Using dialog = New DateRangePickerDialog(removePayPeriodValidation:=True)
+        Using dialog = New DateRangePickerDialog(_payPeriodRepository,
+                                                 _payPeriodService,
+                                                 removePayPeriodValidation:=True)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -249,7 +274,7 @@ Public Class PreviewLeaveBalanceForm
     Private Async Function LoadEmployees() As Threading.Tasks.Task
         Dim unemployedStatuses = New String() {"Resigned", "Terminated"}
 
-        Dim activeEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+        Dim activeEmployees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
 
         _employees = activeEmployees.
             OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst).

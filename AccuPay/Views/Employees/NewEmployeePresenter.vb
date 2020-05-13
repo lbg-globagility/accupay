@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
@@ -11,8 +12,11 @@ Public Class NewEmployeePresenter
     Private _employees As IList(Of Employee)
 
     Private WithEvents _view As NewEmployeeForm
+    Private ReadOnly _context As PayrollContext
 
-    Public Sub New(view As NewEmployeeForm)
+    'TODO: create a Presenter that does know the view
+    Public Sub New(context As PayrollContext, view As NewEmployeeForm)
+        _context = context
         _view = view
     End Sub
 
@@ -51,11 +55,11 @@ Public Class NewEmployeePresenter
 
         End If
 
-        Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+        Using builder = New EmployeeRepository.EmployeeBuilder(_context)
 
             _currentEmployee = Await builder.IncludePosition().
                                         IncludePayFrequency().
-                                        GetByIdAsync(employeeID.Value)
+                                        GetByIdAsync(employeeID.Value, z_OrganizationID)
         End Using
 
         If _currentEmployee IsNot Nothing Then
@@ -96,14 +100,14 @@ Public Class NewEmployeePresenter
         Return Await Task.Run(
             Function()
 
-                Using builder As New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+                Using builder As New EmployeeRepository.EmployeeBuilder(_context)
 
                     Dim employees As IEnumerable(Of Employee)
 
                     If _view.IsActive Then
-                        employees = builder.IsActive().ToList()
+                        employees = builder.IsActive().ToList(z_OrganizationID)
                     Else
-                        employees = builder.ToList()
+                        employees = builder.ToList(z_OrganizationID)
 
                     End If
 

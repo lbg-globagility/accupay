@@ -13,7 +13,7 @@ Namespace Global.AccuPay.JobLevels
     ''' </summary>
     Public Class JobPointsPresenter
 
-        Private WithEvents _view As JobPointsView
+        Private WithEvents _view As IJobPointsView
 
         'Private _context As PayrollContext
 
@@ -23,14 +23,25 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
-        Private _employeeRepo As New EmployeeRepository
+        Private _employeeRepository As EmployeeRepository
 
-        Private _salaryRepo As New SalaryRepository
+        Private _salaryRepository As SalaryRepository
 
-        Private _jobLevelRepositories As New JobLevelRepository
+        Private _jobLevelRepository As JobLevelRepository
 
-        Public Sub New(view As JobPointsView)
+        Public Sub New(view As IJobPointsView,
+                       employeeRepository As EmployeeRepository,
+                       salaryRepository As SalaryRepository,
+                       jobLevelRepository As JobLevelRepository)
+
             _view = view
+
+            _employeeRepository = employeeRepository
+
+            _salaryRepository = salaryRepository
+
+            _jobLevelRepository = jobLevelRepository
+
         End Sub
 
         Private Async Sub OnLoad() Handles _view.OnLoad
@@ -80,13 +91,13 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Function GetJobLevels() As ICollection(Of JobLevel)
-            Return _jobLevelRepositories.GetAll(z_OrganizationID).ToList
+            Return _jobLevelRepository.GetAll(z_OrganizationID).ToList
         End Function
 
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))
 
-            Dim fetchEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
-            Dim salaries = Await _salaryRepo.GetAll(z_OrganizationID)
+            Dim fetchEmployees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
+            Dim salaries = Await _salaryRepository.GetAll(z_OrganizationID)
 
             Dim employees =
                 (From e In fetchEmployees

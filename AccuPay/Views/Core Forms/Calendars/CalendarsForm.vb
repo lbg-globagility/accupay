@@ -15,7 +15,9 @@ Public Class CalendarsForm
 
     Private WithEvents Editor As CalendarDayEditorControl
 
-    Private ReadOnly _repository As CalendarRepository
+    Private ReadOnly _calendarRepository As CalendarRepository
+
+    Private ReadOnly _dayTypeRepository As DayTypeRepository
 
     Private _calendars As ICollection(Of PayCalendar)
 
@@ -31,9 +33,14 @@ Public Class CalendarsForm
 
     Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
 
-    Public Sub New()
-        Editor = New CalendarDayEditorControl()
-        _repository = New CalendarRepository()
+    Public Sub New(calendarRepository As CalendarRepository, dayTypeRepository As DayTypeRepository)
+
+        _calendarRepository = calendarRepository
+
+        _dayTypeRepository = dayTypeRepository
+
+        Editor = New CalendarDayEditorControl(dayTypeRepository)
+
         _changeTracker = New Collection(Of CalendarDay)
 
         InitializeComponent()
@@ -85,12 +92,12 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub LoadCalendars()
-        _calendars = Await _repository.GetAllAsync()
+        _calendars = Await _calendarRepository.GetAllAsync()
         CalendarsDataGridView.DataSource = _calendars
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
-        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
+        _calendarDays = Await _calendarRepository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
         DisplayCalendarDays()
     End Function
 
@@ -126,13 +133,13 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
-        Dim dialog = New NewCalendarDialog()
+        Dim dialog = New NewCalendarDialog(_calendarRepository)
         dialog.ShowDialog()
     End Sub
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
 
-        Await _repository.UpdateManyAsync(_changeTracker)
+        Await _calendarRepository.UpdateManyAsync(_changeTracker)
 
         ClearChangeTracker()
 
@@ -144,7 +151,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub DayTypesToolStripButton_Click(sender As Object, e As EventArgs) Handles DayTypesToolStripButton.Click
-        Dim dialog = New DayTypesDialog()
+        Dim dialog = New DayTypesDialog(_dayTypeRepository)
         dialog.ShowDialog()
     End Sub
 

@@ -25,6 +25,10 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
+    Private _payslipCreator As PayslipCreator
+
+    Private _listOfValueService As ListOfValueService
+
     Private _payPeriodRepository As PayPeriodRepository
 
     Private _paystubRepository As PaystubRepository
@@ -33,7 +37,14 @@ Public Class SelectPayslipEmployeesForm
 
     Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
 
-    Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
+    Sub New(currentPayPeriodId As Integer,
+            isEmail As Boolean,
+            payslipCreator As PayslipCreator,
+            listOfValueService As ListOfValueService,
+            payPeriodRepository As PayPeriodRepository,
+            paystubRepository As PaystubRepository,
+            paystubEmailRepository As PaystubEmailRepository,
+            paystubEmailHistoryRepository As PaystubEmailHistoryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -46,13 +57,17 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipTypes = New List(Of String) From {Declared, Actual}
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _payslipCreator = payslipCreator
 
-        _paystubRepository = New PaystubRepository()
+        _listOfValueService = listOfValueService
 
-        _paystubEmailRepository = New PaystubEmailRepository()
+        _payPeriodRepository = payPeriodRepository
 
-        _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
+        _paystubRepository = paystubRepository
+
+        _paystubEmailRepository = paystubEmailRepository
+
+        _paystubEmailHistoryRepository = paystubEmailHistoryRepository
 
     End Sub
 
@@ -74,7 +89,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
 
@@ -237,16 +252,15 @@ Public Class SelectPayslipEmployeesForm
 
         Dim isActual = PayslipTypeComboBox.Text = Actual
 
-        Dim payslipCreator As New PayslipCreator(_currentPayPeriod, Convert.ToSByte(isActual))
-
-        Dim nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
-
         Dim employeeIds = _employeeModels.
                             Where(Function(m) m.IsSelected).
                             Select(Function(m) m.EmployeeId).
                             ToArray()
 
-        Dim reportDocument = payslipCreator.CreateReportDocument(z_OrganizationID, nextPayPeriod, employeeIds)
+        Dim reportDocument = _payslipCreator.CreateReportDocument(organizationId:=z_OrganizationID,
+                                                                 payPeriodId:=_currentPayPeriod.RowID.Value,
+                                                                 Convert.ToSByte(isActual),
+                                                                 employeeIds)
 
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()

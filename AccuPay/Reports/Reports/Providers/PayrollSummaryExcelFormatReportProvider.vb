@@ -3,17 +3,15 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -34,22 +32,31 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private _settings As ListOfValueCollection
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _adjustmentService As AdjustmentService
+    Private ReadOnly _adjustmentService As AdjustmentService
 
+    Private ReadOnly _systemOwnerService As SystemOwnerService
     Public Property IsActual As Boolean
 
-    Sub New(payPeriodRepository As PayPeriodRepository)
+    Sub New(payPeriodRepository As PayPeriodRepository,
+            adjustmentService As AdjustmentService,
+            listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            systemOwnerService As SystemOwnerService)
+
+        MyBase.New(payPeriodService)
 
         _payPeriodRepository = payPeriodRepository
 
-        _adjustmentService = New AdjustmentService()
+        _adjustmentService = adjustmentService
 
-        _settings = ListOfValueCollection.Create()
+        _settings = listOfValueService.Create()
+
+        _systemOwnerService = systemOwnerService
     End Sub
 
-    Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
+    Private Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
         Dim allowanceColumnName = "Allowance"
 
@@ -131,9 +138,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 New ExcelReportColumn("Total", "Total")
             })
 
-        Dim sys_ownr As New SystemOwnerService()
-
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             Dim allowanceColumn = reportColumns.Where(Function(r) r.Name = allowanceColumnName).FirstOrDefault
 
@@ -260,9 +265,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwnerService()
-
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

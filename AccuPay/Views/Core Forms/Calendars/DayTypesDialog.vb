@@ -9,8 +9,8 @@ Public Class DayTypesDialog
 
     Private _dayTypes As ICollection(Of DayType)
 
-    Public Sub New()
-        _repository = New DayTypeRepository()
+    Public Sub New(repository As DayTypeRepository)
+        _repository = repository
 
         InitializeComponent()
         InitializeView()

@@ -19,6 +19,8 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
+        Private _listOfValueService As ListOfValueService
+
         Private _philHealthBracketRepository As PhilHealthBracketRepository
 
         Private _salaryRepository As SalaryRepository
@@ -29,14 +31,21 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _currentSalary As Salary
 
-        Public Sub New(view As SalaryTab2)
+        Public Sub New(view As SalaryTab2,
+                        listOfValueService As ListOfValueService,
+                        philHealthBracketRepository As PhilHealthBracketRepository,
+                        salaryRepository As SalaryRepository,
+                        socialSecurityBracketRepository As SocialSecurityBracketRepository)
+
             _view = view
 
-            _philHealthBracketRepository = New PhilHealthBracketRepository()
+            _listOfValueService = listOfValueService
 
-            _salaryRepository = New SalaryRepository()
+            _philHealthBracketRepository = philHealthBracketRepository
 
-            _socialSecurityBracketRepository = New SocialSecurityBracketRepository()
+            _salaryRepository = salaryRepository
+
+            _socialSecurityBracketRepository = socialSecurityBracketRepository
         End Sub
 
         Private Sub OnLoad() Handles _view.Init
@@ -152,7 +161,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Sub LoadPhilHealthBrackets()
 
-            Dim values = ListOfValueCollection.Create("PhilHealth")
+            Dim values = _listOfValueService.Create("PhilHealth")
 
             _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),

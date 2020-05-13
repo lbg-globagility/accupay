@@ -7,8 +7,6 @@ namespace AccuPay.Data.Services
 {
     public class PayPeriodStatusData
     {
-        private readonly PayrollContext context;
-
         public enum PayPeriodStatus
         {
             Open,
@@ -29,9 +27,8 @@ namespace AccuPay.Data.Services
         public int Index { get; set; }
         public PayPeriodStatus Status { get; set; }
 
-        public PayPeriodStatusData(PayrollContext context)
+        public PayPeriodStatusData()
         {
-            this.context = context;
         }
     }
 }

@@ -1,44 +1,98 @@
 Option Strict On
 
 Imports System.Collections.ObjectModel
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 
 Public Class ReportsList
 
-    Dim sys_ownr As New SystemOwnerService()
+    Dim _systemOwnerService As SystemOwnerService
 
-    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
+    Private curr_sys_owner_name As String
 
     Private Const ActualDescription As String = "(Actual)"
 
+    Private ReadOnly _adjustmentService As AdjustmentService
+
+    Private ReadOnly _cinemaTardinessReportDataService As CinemaTardinessReportDataService
+
+    Private ReadOnly _filedLeaveReportDataService As FiledLeaveReportDataService
+
+    Private ReadOnly _leaveLedgerReportDataService As LeaveLedgerReportDataService
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _paystubPayslipModelDataService As PaystubPayslipModelDataService
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Sub New(adjustmentService As AdjustmentService,
+            cinemaTardinessReportDataService As CinemaTardinessReportDataService,
+            filedLeaveReportDataService As FiledLeaveReportDataService,
+            leaveLedgerReportDataService As LeaveLedgerReportDataService,
+            listOfValueService As ListOfValueService,
+            PayPeriodService As PayPeriodService,
+            paystubPayslipModelDataService As PaystubPayslipModelDataService,
+            systemOwnerService As SystemOwnerService,
+            employeeRepository As EmployeeRepository,
+            payPeriodRepository As PayPeriodRepository)
+
+        InitializeComponent()
+        _adjustmentService = adjustmentService
+
+        _cinemaTardinessReportDataService = cinemaTardinessReportDataService
+
+        _filedLeaveReportDataService = filedLeaveReportDataService
+
+        _leaveLedgerReportDataService = leaveLedgerReportDataService
+
+        _listOfValueService = listOfValueService
+
+        _payPeriodService = PayPeriodService
+
+        _paystubPayslipModelDataService = paystubPayslipModelDataService
+
+        _systemOwnerService = systemOwnerService
+
+        _employeeRepository = employeeRepository
+
+        _payPeriodRepository = payPeriodRepository
+
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+    End Sub
+
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim providers = New Collection(Of IReportProvider) From {
-            New SalaryIncreaseHistoryReportProvider(),
+            New SalaryIncreaseHistoryReportProvider(_payPeriodService),
             New EmploymentRecordReportProvider(),
             New EmployeeProfilesReportProvider(),
             New PostEmploymentClearanceReportProvider(),
             New EmployeeIdentificationNumberReportProvider(),
-            New EmployeeOffenseReportProvider(),
-            New LeaveLedgerReportProvider() With {.IsNewReport = True},
-            New FiledLeaveReportProvider(),
-            New LoanSummaryByEmployeeReportProvider(),
-            New LoanSummaryByTypeReportProvider(),
+            New EmployeeOffenseReportProvider(_payPeriodService),
+            New LeaveLedgerReportProvider(_employeeRepository, _leaveLedgerReportDataService, _payPeriodService) With {.IsNewReport = True},
+            New FiledLeaveReportProvider(_filedLeaveReportDataService, _payPeriodService),
+            New LoanSummaryByEmployeeReportProvider(_payPeriodService),
+            New LoanSummaryByTypeReportProvider(_payPeriodService),
             New SSSMonthlyReportProvider(),
             New PhilHealthReportProvider(),
             New PagIBIGMonthlyReportProvider(),
-            New TaxReportProvider(),
-            New ThirteenthMonthPayReportProvider(),
-            New ThirteenthMonthSummaryReportProvider(),
-            New AttendanceSheetReportProvider(),
-            New LateUTAbsentSummaryReportProvider(),
+            New TaxReportProvider(_payPeriodRepository),
+            New ThirteenthMonthPayReportProvider(_payPeriodService),
+            New ThirteenthMonthSummaryReportProvider(_payPeriodService),
+            New AttendanceSheetReportProvider(_payPeriodService),
+            New LateUTAbsentSummaryReportProvider(_payPeriodService),
             New AgencyFeeReportProvider(),
-            New PayrollLedgerExcelFormatReportProvider(),
-            New LoanLedgerReportProvider(),
-            New Cinema2000TardinessReportProvider()
+            New PayrollLedgerExcelFormatReportProvider(_payPeriodService),
+            New LoanLedgerReportProvider(_payPeriodService),
+            New Cinema2000TardinessReportProvider(_cinemaTardinessReportDataService)
         }
         'New PayrollLedgerReportProvider(),
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             providers = GetBenchmarkReports()
         End If
 
@@ -64,20 +118,26 @@ Public Class ReportsList
             End If
         Next
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
 
             'Payslip
-            Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider()
+            Dim payslipProvider As New DefaultPayslipFullOvertimeBreakdownProvider(_payPeriodRepository,
+                                                                                   _payPeriodService,
+                                                                                   _paystubPayslipModelDataService)
             lvMainMenu.Items.Add(CreateNewListViewItem(payslipProvider, payslipProvider.Name))
         End If
     End Sub
 
-    Private Shared Function CreatePayrollSummaryListViewItem(suffix As String) As ListViewItem
+    Private Function CreatePayrollSummaryListViewItem(suffix As String) As ListViewItem
 
-        Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider()
+        Dim summaryProvider As New PayrollSummaryExcelFormatReportProvider(_payPeriodRepository,
+                                                                           _adjustmentService,
+                                                                           _listOfValueService,
+                                                                           _payPeriodService,
+                                                                           _systemOwnerService)
 
         Dim reportName = summaryProvider.Name & " " & suffix
         Return CreateNewListViewItem(summaryProvider, reportName)
@@ -92,20 +152,24 @@ Public Class ReportsList
         Return listItem
     End Function
 
-    Private Shared Function GetBenchmarkReports() As Collection(Of IReportProvider)
+    Private Function GetBenchmarkReports() As Collection(Of IReportProvider)
         Return New Collection(Of IReportProvider) From {
-                    New SalaryIncreaseHistoryReportProvider(),
+                    New SalaryIncreaseHistoryReportProvider(_payPeriodService),
                     New EmployeeProfilesReportProvider(),
                     New EmployeeIdentificationNumberReportProvider(),
-                    New LoanSummaryByEmployeeReportProvider(),
-                    New LoanSummaryByTypeReportProvider(),
+                    New LoanSummaryByEmployeeReportProvider(_payPeriodService),
+                    New LoanSummaryByTypeReportProvider(_payPeriodService),
                     New SSSMonthlyReportProvider(),
                     New PhilHealthReportProvider(),
                     New PagIBIGMonthlyReportProvider(),
-                    New TaxReportProvider(),
-                    New ThirteenthMonthSummaryReportProvider(),
-                    New LoanLedgerReportProvider(),
-                    New PayrollSummaryExcelFormatReportProvider()
+                    New TaxReportProvider(_payPeriodRepository),
+                    New ThirteenthMonthSummaryReportProvider(_payPeriodService),
+                    New LoanLedgerReportProvider(_payPeriodService),
+                    New PayrollSummaryExcelFormatReportProvider(_payPeriodRepository,
+                                                                _adjustmentService,
+                                                                _listOfValueService,
+                                                                _payPeriodService,
+                                                                _systemOwnerService)
                 }
     End Function
 
@@ -137,7 +201,7 @@ Public Class ReportsList
             Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
 
             Try
-                If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
+                If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
                     TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
 
                     Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)

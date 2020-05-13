@@ -59,7 +59,7 @@ Public Class PayslipCreator
     End Function
 
     Public Function CreateReportDocument(
-                        orgztnID As Integer,
+                        organizationId As Integer,
                         payPeriodId As Integer,
                         isActual As SByte,
                         Optional employeeIds As Integer() = Nothing) As PayslipCreator
@@ -70,7 +70,7 @@ Public Class PayslipCreator
         'test this before deploying
         Dim rptdoc As Object = Nothing
 
-        Dim organization = _organizationRepository.GetById(orgztnID)
+        Dim organization = _organizationRepository.GetById(organizationId)
         Dim payperiod = _payPeriodRepository.GetById(payPeriodId)
         Dim address As Address = If(organization?.PrimaryAddressId Is Nothing,
                                                 Nothing,
@@ -83,7 +83,7 @@ Public Class PayslipCreator
 
         If SystemOwnerService.Goldwings = current_system_owner Then
 
-            Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & payPeriodId & "," & _isActual & ");")
+            Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & organizationId & "," & payPeriodId & "," & _isActual & ");")
             _payslipDatatable = query.ResultTable
 
             rptdoc = New OfficialPaySlipFormat
@@ -114,7 +114,7 @@ Public Class PayslipCreator
 
         ElseIf SystemOwnerService.Cinema2000 = current_system_owner Then
 
-            Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & orgztnID & "," & payPeriodId & ", TRUE, NULL);")
+            Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & organizationId & "," & payPeriodId & ", TRUE, NULL);")
             _payslipDatatable = query.ResultTable
 
             If employeeIds IsNot Nothing AndAlso employeeIds.Count > 0 Then
@@ -150,7 +150,7 @@ Public Class PayslipCreator
         Else
 
             Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & payPeriodId & "," & _isActual & ");")
+            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & organizationId & "," & payPeriodId & "," & _isActual & ");")
 
             _payslipDatatable = n_SQLQueryToDatatable.ResultTable
 

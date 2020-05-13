@@ -12,13 +12,11 @@ Public Class SelectPayPeriodSimple
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New()
+    Sub New(payPeriodRepository As PayPeriodRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = payPeriodRepository
     End Sub
 
     Private Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load

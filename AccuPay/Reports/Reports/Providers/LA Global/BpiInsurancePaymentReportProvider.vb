@@ -1,13 +1,8 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
-Imports log4net
-Imports Microsoft.EntityFrameworkCore
 
 Public Class BpiInsurancePaymentReportProvider
     Implements ILaGlobalEmployeeReport
@@ -17,8 +12,13 @@ Public Class BpiInsurancePaymentReportProvider
 
     Private _reportDocument As BpiInsuranceAmountReport
 
-    Sub New()
+    Private ReadOnly _dataService As BpiInsuranceAmountReportDataService
+
+    Sub New(dataService As BpiInsuranceAmountReportDataService)
+
         _reportDocument = New BpiInsuranceAmountReport()
+
+        _dataService = dataService
     End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
@@ -46,12 +46,11 @@ Public Class BpiInsurancePaymentReportProvider
         ' function above because of the way these report providers were poorly structured.
         ' The one who coded these report providers could have just use the pattern on how the
         ' main report providers were created but chose not to for some reason. (*scratches head)
-        Dim dataService As New BpiInsuranceAmountReportDataService(z_OrganizationID,
-                                                                    z_User,
-                                                                    _selectedDate)
-
         Dim source As New List(Of BpiInsuranceAmountReportDataService.BpiInsuranceDataSource)
-        source = (Await dataService.GetData()).ToList()
+        source = (Await _dataService.GetData(z_OrganizationID,
+                                            z_User,
+                                            _selectedDate)).
+                ToList()
 
         If source.Any() = False Then
 

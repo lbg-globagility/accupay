@@ -20,18 +20,21 @@ Public Class ImportSalaryForm
 
     Private _salaryRepository As SalaryRepository
 
-    Sub New()
+    Private _userActivityRepository As UserActivityRepository
 
-        ' This call is required by the designer.
+    Sub New(employeeRepository As EmployeeRepository,
+            salaryRepository As SalaryRepository,
+            userActivityRepository As UserActivityRepository)
+
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         Me.IsSaved = False
 
-        _employeeRepository = New EmployeeRepository()
+        _employeeRepository = employeeRepository
 
-        _salaryRepository = New SalaryRepository()
+        _salaryRepository = salaryRepository
+
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -195,8 +198,7 @@ Public Class ImportSalaryForm
                         })
             Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             Me.IsSaved = True
         Catch ex As Exception

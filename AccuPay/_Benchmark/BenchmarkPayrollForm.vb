@@ -20,10 +20,14 @@ Public Class BenchmarkPayrollForm
 
     Private ReadOnly _benchmarkPayrollHelper As BenchmarkPayrollHelper
     Private ReadOnly _payrollResources As PayrollResources
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+    Private ReadOnly _overtimeRateService As OvertimeRateService
     Private ReadOnly _payPeriodService As PayPeriodService
 
     Private ReadOnly _employeeRepository As EmployeeRepository
     Private ReadOnly _loanScheduleRepository As LoanScheduleRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
     Private ReadOnly _salaryRepository As SalaryRepository
 
     Private _currentPayPeriod As IPayPeriod
@@ -60,9 +64,13 @@ Public Class BenchmarkPayrollForm
 
     Sub New(benchmarkPayrollHelper As BenchmarkPayrollHelper,
             payrollResources As PayrollResources,
-            PayPeriodService As PayPeriodService,
+            payrollGenerator As PayrollGeneration,
+            listOfValueService As ListOfValueService,
+            overtimeRateService As OvertimeRateService,
+            payPeriodService As PayPeriodService,
             employeeRepository As EmployeeRepository,
             loanScheduleRepository As LoanScheduleRepository,
+            payPeriodRepository As PayPeriodRepository,
             salaryRepository As SalaryRepository)
 
         ' This call is required by the designer.
@@ -71,9 +79,15 @@ Public Class BenchmarkPayrollForm
         ' Add any initialization after the InitializeComponent() call.
         _benchmarkPayrollHelper = benchmarkPayrollHelper
         _payrollResources = payrollResources
+        _payrollGenerator = payrollGenerator
+
+        _listOfValueService = listOfValueService
+        _overtimeRateService = overtimeRateService
+        _payPeriodService = payPeriodService
 
         _employeeRepository = employeeRepository
         _loanScheduleRepository = loanScheduleRepository
+        _payPeriodRepository = payPeriodRepository
         _salaryRepository = salaryRepository
 
         _salaries = New List(Of Salary)
@@ -141,9 +155,9 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function LoadPayrollResourcesAsync() As Task
 
-        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+        _overtimeRate = Await _overtimeRateService.GetOvertimeRates()
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         _actualSalaryPolicy = New ActualTimeEntryPolicy(settings)
 
@@ -221,7 +235,8 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value)
+            _leaveBalance = Await _employeeRepository.
+                                    GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -337,7 +352,7 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function GetCutOffPeriod() As Task
         _currentPayPeriod = Await _payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function
@@ -408,8 +423,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
+        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then
@@ -473,6 +487,7 @@ Public Class BenchmarkPayrollForm
         End If
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
+                                                _payrollGenerator,
                                                 employee,
                                                 _payrollResources,
                                                 _currentPayPeriod,
@@ -500,7 +515,6 @@ Public Class BenchmarkPayrollForm
         '#2. Payslip
 
         _currentPaystub = output.Paystub
-        _payrollGenerator = output.PayrollGenerator
 
         'Get loans data
         _loanTransanctions = output.LoanTransanctions.CloneListJson()

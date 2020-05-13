@@ -6,6 +6,16 @@ Public Class PayRateForm
 
     Dim _now
 
+    Private _overtimeRateService As OvertimeRateService
+
+    Sub New(overtimeRateService As OvertimeRateService)
+
+        InitializeComponent()
+
+        _overtimeRateService = overtimeRateService
+
+    End Sub
+
     Private Sub Payrate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         If previousForm IsNot Nothing Then
@@ -888,7 +898,7 @@ Public Class PayRateForm
 
         'Dim ratevalues = Split(holidaypayrate, ",")
 
-        Dim overtimeRates = Await OvertimeRateService.GetOvertimeRates()
+        Dim overtimeRates = Await _overtimeRateService.GetOvertimeRates()
 
         Dim overtimeRate As New OvertimeRate.RateGroup
 

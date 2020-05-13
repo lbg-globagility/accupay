@@ -38,10 +38,8 @@ Public Class EmployeeAllowanceForm
             productRepository As ProductRepository,
             userActivityRepository As UserActivityRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _employees = New List(Of Employee)
 
         _allEmployees = New List(Of Employee)
@@ -57,7 +55,7 @@ Public Class EmployeeAllowanceForm
         _employeeRepository = employeeRepository
 
         _productRepository = productRepository
-        
+
         _userActivityRepository = userActivityRepository
 
     End Sub
@@ -135,7 +133,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm
+        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
 
         With n_ProductControlForm
 
@@ -245,7 +243,8 @@ Public Class EmployeeAllowanceForm
 
         Dim form As New AddAllowanceForm(employee,
                                         _productRepository,
-                                        _allowanceRepository)
+                                        _allowanceRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -390,7 +389,10 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportAllowanceForm()
+        Using form = New ImportAllowanceForm(_allowanceRepository,
+                                             _employeeRepository,
+                                             _productRepository,
+                                             _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -682,7 +684,7 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

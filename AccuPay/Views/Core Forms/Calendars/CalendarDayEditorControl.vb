@@ -18,8 +18,8 @@ Public Class CalendarDayEditorControl
 
     Private ReadOnly _repository As DayTypeRepository
 
-    Public Sub New()
-        _repository = New DayTypeRepository()
+    Public Sub New(repository As DayTypeRepository)
+        _repository = repository
         InitializeComponent()
     End Sub
 

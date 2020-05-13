@@ -9,6 +9,14 @@ Public Class Cinema2000TardinessReportProvider
     Public Property Name As String = "Tardiness Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _dataService As CinemaTardinessReportDataService
+
+    Sub New(dataService As CinemaTardinessReportDataService)
+
+        _dataService = dataService
+
+    End Sub
+
     Public Async Sub Run() Implements IReportProvider.Run
 
         Dim n_selectMonth As New selectMonth
@@ -43,11 +51,9 @@ Public Class Cinema2000TardinessReportProvider
 
             txtAddress.Text = PayrollTools.GetOrganizationAddress()
 
-            Dim dataService As New CinemaTardinessReportDataService(z_OrganizationID,
+            Dim tardinessReportModels = Await _dataService.GetData(z_OrganizationID,
                                                                     firstDate,
                                                                     isLimitedReport)
-
-            Dim tardinessReportModels = Await dataService.GetData()
 
             report.SetDataSource(tardinessReportModels)
 

@@ -1,12 +1,23 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
 Public Class SelectBranchForm
 
+    Public Property SelectedBranch As Branch
+
     Private _branches As List(Of Branch)
 
-    Public Property SelectedBranch As Branch
+    Private ReadOnly _branchRepository As BranchRepository
+
+    Sub New(branchRepository As BranchRepository)
+
+        InitializeComponent()
+
+        _branchRepository = branchRepository
+    End Sub
 
     Private Async Sub SelectBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -18,7 +29,7 @@ Public Class SelectBranchForm
 
     Private Async Function LoadBranch() As Task
 
-        _branches = Await New BranchRepository().GetAllAsync()
+        _branches = (Await _branchRepository.GetAllAsync()).ToList()
 
         BranchComboBox.DisplayMember = "Name"
         BranchComboBox.DataSource = _branches

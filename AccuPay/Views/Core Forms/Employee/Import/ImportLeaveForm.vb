@@ -3,12 +3,11 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Microsoft.EntityFrameworkCore
 Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
@@ -19,21 +18,31 @@ Public Class ImportLeaveForm
     Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-    Private _categoryRepository As CategoryRepository
+
     Private _employeeRepository As EmployeeRepository
     Private _leaveRepository As LeaveRepository
     Private _productRepository As ProductRepository
+    Private _userActivityRepository As UserActivityRepository
+    Private _leaveService As LeaveService
 
-    Sub New()
+    Sub New(employeeRepository As EmployeeRepository,
+            leaveRepository As LeaveRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository,
+            leaveService As LeaveService)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _categoryRepository = New CategoryRepository()
-        _employeeRepository = New EmployeeRepository()
-        _leaveRepository = New LeaveRepository()
-        _productRepository = New ProductRepository()
+        _employeeRepository = employeeRepository
+
+        _leaveRepository = leaveRepository
+
+        _productRepository = productRepository
+
+        _userActivityRepository = userActivityRepository
+
+        _leaveService = leaveService
+
     End Sub
 
 #Region "Properties"
@@ -150,7 +159,7 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                         Async Function() As Task(Of Boolean)
 
-                            Await _leaveRepository.SaveManyAsync(leaves,
+                            Await _leaveService.SaveManyAsync(leaves,
                                                                 organizationId:=z_OrganizationID)
 
                             Dim importList = New List(Of UserActivityItem)
@@ -174,8 +183,7 @@ Public Class ImportLeaveForm
 
                             Next
 
-                            Dim repo = New UserActivityRepository
-                            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                             Return True
                         End Function)
@@ -469,7 +477,8 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave,
+                                                                        _employeeRepository)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

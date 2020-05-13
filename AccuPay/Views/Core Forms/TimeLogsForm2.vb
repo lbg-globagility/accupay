@@ -3,6 +3,7 @@
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
@@ -32,6 +33,12 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
+    Private _listOfValueService As ListOfValueService
+
+    Private _payPeriodService As PayPeriodService
+
+    Private _branchRepository As BranchRepository
+
     Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
     Private _employeeRepository As EmployeeRepository
@@ -42,6 +49,8 @@ Public Class TimeLogsForm2
 
     Private _timeLogRepository As TimeLogRepository
 
+    Private _userActivityRepository As UserActivityRepository
+
     Public Enum TimeLogsFormat
         Optimized = 0
         Conventional = 1
@@ -49,25 +58,37 @@ Public Class TimeLogsForm2
 
 #End Region
 
-    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
-            employeeRepository As EmployeeRepository
-            overtimeRepository As OvertimeRepository
-            shiftScheduleRepository As ShiftScheduleRepository
-            timeLogRepository As TimeLogRepository)
+    Sub New(listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            branchRepository As BranchRepository,
+            employeeDutyScheduleRepository As EmployeeDutyScheduleRepository,
+            employeeRepository As EmployeeRepository,
+            overtimeRepository As OvertimeRepository,
+            shiftScheduleRepository As ShiftScheduleRepository,
+            timeLogRepository As TimeLogRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _employeeDutyScheduleRepository =  employeeDutyScheduleRepository
+        ' Add any initialization after the InitializeComponent() call
+        _listOfValueService = listOfValueService
 
-        _employeeRepository =  employeeRepository
+        _payPeriodService = payPeriodService
 
-        _overtimeRepository =  overtimeRepository
+        _branchRepository = branchRepository
 
-        _shiftScheduleRepository =  shiftScheduleRepository
+        _employeeDutyScheduleRepository = employeeDutyScheduleRepository
 
-        _timeLogRepository =  timeLogRepository
+        _employeeRepository = employeeRepository
+
+        _overtimeRepository = overtimeRepository
+
+        _shiftScheduleRepository = shiftScheduleRepository
+
+        _timeLogRepository = timeLogRepository
+
+        _userActivityRepository = userActivityRepository
     End Sub
 
 #Region "Methods"
@@ -247,7 +268,7 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Function GetShiftSchedulePolicy() As Boolean
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
         Dim policy = New TimeEntryPolicy(settings)
         Return policy.UseShiftSchedule
     End Function
@@ -343,8 +364,7 @@ Public Class TimeLogsForm2
                     })
             Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
         Catch ex As Exception
 
             logger.Error("NewTimeEntryAlternateLineImport", ex)
@@ -782,8 +802,8 @@ Public Class TimeLogsForm2
 
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
-        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodService.
+                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 
@@ -801,8 +821,7 @@ Public Class TimeLogsForm2
         colBranchID.ValueMember = "RowID"
         colBranchID.DisplayMember = "Name"
 
-        Dim branchRepository As New BranchRepository()
-        colBranchID.DataSource = Await branchRepository.GetAllAsync
+        colBranchID.DataSource = Await _branchRepository.GetAllAsync
 
     End Function
 

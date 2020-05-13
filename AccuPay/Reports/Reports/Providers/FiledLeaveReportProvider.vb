@@ -7,12 +7,22 @@ Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class FiledLeaveReportProvider
     Implements IReportProvider
-
     Public Property Name As String = "Filed Leave" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _dataService As FiledLeaveReportDataService
+
+    Private ReadOnly _payPeriodServive As PayPeriodService
+
+    Sub New(dataService As FiledLeaveReportDataService, payPeriodServive As PayPeriodService)
+
+        _dataService = dataService
+
+        _payPeriodServive = payPeriodServive
+    End Sub
+
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection()
+        Dim dateSelector As New PayrollSummaDateSelection(_payPeriodServive)
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
@@ -58,8 +68,7 @@ Public Class FiledLeaveReportProvider
         datatable.Columns.Add("DatCol15")
         datatable.Columns.Add("DatCol16")
 
-        Dim dataService As New FiledLeaveReportDataService(z_OrganizationID, timePeriod)
-        Dim leaveTransactions = Await dataService.GetData()
+        Dim leaveTransactions = Await _dataService.GetData(z_OrganizationID, timePeriod)
 
         For Each transaction In leaveTransactions
 

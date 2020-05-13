@@ -2,6 +2,8 @@ Option Strict On
 
 Imports System.ComponentModel
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 
 Public Class PaystubView
 
@@ -19,14 +21,39 @@ Public Class PaystubView
 
     Private WithEvents _adjustmentSource As BindingSource
 
-    Public Sub New()
-        ' This call is required by the designer.
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _paystubRepository As PaystubRepository
+
+    Private ReadOnly _adjustmentService As AdjustmentService
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Sub New(payPeriodRepository As PayPeriodRepository,
+            adjustmentService As AdjustmentService,
+            paystubRepository As PaystubRepository,
+            listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            systemOwnerService As SystemOwnerService,
+            repository As PaystubPresenter.Repository)
+
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.
-        Dim presenter = New PaystubPresenter(Me)
+        Dim presenter = New PaystubPresenter(Me, repository)
         _adjustmentSource = New BindingSource With {
             .AllowNew = True
         }
+
+        _payPeriodRepository = payPeriodRepository
+        _paystubRepository = paystubRepository
+
+        _adjustmentService = adjustmentService
+        _listOfValueService = listOfValueService
+        _payPeriodService = payPeriodService
+        _systemOwnerService = systemOwnerService
     End Sub
 
     Public Sub SetAdjustmentTypes(adjustmentTypes As ICollection(Of String))
@@ -291,19 +318,27 @@ Public Class PaystubView
         Dim dateFrom As Date = New Date(2017, 1, 1)
         Dim dateTo As Date = New Date(2017, 1, 15)
 
-        Dim exporter = New ExportBankFile(dateFrom, dateTo)
-        Await exporter.Extract()
+        Dim exporter = New ExportBankFile(_paystubRepository)
+        Await exporter.Extract(dateFrom, dateTo)
     End Sub
 
     Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+        Dim report = New PayrollSummaryExcelFormatReportProvider(_payPeriodRepository,
+                                                                _adjustmentService,
+                                                                _listOfValueService,
+                                                                _payPeriodService,
+                                                                _systemOwnerService) With {
             .IsActual = False
         }
         report.Run()
     End Sub
 
     Private Sub ActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ActualToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+        Dim report = New PayrollSummaryExcelFormatReportProvider(_payPeriodRepository,
+                                                                _adjustmentService,
+                                                                _listOfValueService,
+                                                                _payPeriodService,
+                                                                _systemOwnerService) With {
             .IsActual = True
         }
         report.Run()

@@ -1,15 +1,23 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class EmployeeOffenseReportProvider
     Implements IReportProvider
-
     Public Property Name As String = "Employee Offenses" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Sub New(payPeriodService As PayPeriodService)
+
+        _payPeriodService = payPeriodService
+
+    End Sub
+
     Public Sub Run() Implements IReportProvider.Run
-        Dim payperiodSelector = New PayrollSummaDateSelection()
+        Dim payperiodSelector = New PayrollSummaDateSelection(_payPeriodService)
 
         If Not payperiodSelector.ShowDialog() = DialogResult.OK Then
             Return

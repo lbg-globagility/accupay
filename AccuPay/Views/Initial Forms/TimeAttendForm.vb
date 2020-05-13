@@ -2,6 +2,7 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeAttendForm
 
@@ -9,23 +10,30 @@ Public Class TimeAttendForm
 
     Public listTimeAttendForm As New List(Of String)
 
-    Private lRepo As ListOfValueRepository
+    Private _listOfValueRepository As ListOfValueRepository
 
     Private _policyHelper As PolicyHelper
 
     Private _userRepository As UserRepository
 
-    Sub New()
+    Private _listOfValueService As ListOfValueService
+
+    Sub New(listOfValueRepository As ListOfValueRepository,
+            policyHelper As PolicyHelper,
+            userRepository As UserRepository,
+            listOfValueService As ListOfValueService)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        lRepo = New ListOfValueRepository()
+        _listOfValueRepository = listOfValueRepository
 
-        _policyHelper = New PolicyHelper()
+        _policyHelper = policyHelper
 
-        _userRepository = New UserRepository()
+        _userRepository = userRepository
+
+        _listOfValueService = listOfValueService
 
     End Sub
 
@@ -101,13 +109,6 @@ Public Class TimeAttendForm
         End Try
     End Sub
 
-    Private Sub TimeEntToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntToolStripMenuItem.Click
-        'ChangeForm(AttendanceTimeEntryForm)
-        'EmployeeShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.None
-        ChangeForm(EmployeeShiftEntryForm, "Employee Shift")
-        previousForm = EmployeeShiftEntryForm
-    End Sub
-
     Private Sub TimeAttendForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         For Each objctrl As Control In PanelTimeAttend.Controls
@@ -129,13 +130,13 @@ Public Class TimeAttendForm
     End Sub
 
     Private Async Sub LoadShiftSchedulePolicyAsync()
-        Dim shiftPolicies = Await lRepo.GetShiftPoliciesAsync()
+        Dim shiftPolicies = Await _listOfValueRepository.GetShiftPoliciesAsync()
 
         If Not shiftPolicies.Any() Then
             ShiftScheduleToolStripMenuItem.Visible = False
             Return
         End If
-        Dim settings = ListOfValueCollection.Create(shiftPolicies)
+        Dim settings = _listOfValueService.Create(shiftPolicies)
         Dim _policy = New TimeEntryPolicy(settings)
 
         Dim _bool = _policy.UseShiftSchedule
@@ -152,7 +153,7 @@ Public Class TimeAttendForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -204,9 +205,26 @@ Public Class TimeAttendForm
         Next
     End Sub
 
+    Private Sub TimeEntToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TimeEntToolStripMenuItem.Click
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeShiftEntryForm)()
+
+            ChangeForm(form, "Employee Shift")
+            previousForm = form
+
+        End Using
+    End Sub
+
     Private Sub SummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SummaryToolStripMenuItem.Click
-        ChangeForm(TimeEntrySummaryForm, "Employee Time Entry logs")
-        previousForm = TimeEntrySummaryForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of TimeEntrySummaryForm)()
+
+            ChangeForm(form, "Employee Time Entry Logs")
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub MassOvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MassOvertimeToolStripMenuItem.Click
@@ -215,28 +233,58 @@ Public Class TimeAttendForm
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles ShiftScheduleToolStripMenuItem.Click
-        ChangeForm(ShiftScheduleForm, "Employee Time Entry Logs")
-        previousForm = ShiftScheduleForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of ShiftScheduleForm)()
+
+            ChangeForm(form, "Employee Time Entry Logs")
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub ToolStripMenuItem1_Click_1(sender As Object, e As EventArgs) Handles TimeLogsToolStripMenuItem.Click
-        ChangeForm(TimeLogsForm2, "Employee Time Entry logs")
-        previousForm = TimeLogsForm2
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of TimeLogsForm2)()
+
+            ChangeForm(form, "Employee Time Entry logs")
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub LeaveToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LeaveToolStripMenuItem.Click
-        ChangeForm(EmployeeLeavesForm, "Employee Leave")
-        previousForm = EmployeeLeavesForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeLeavesForm)()
+
+            ChangeForm(form, "Employee Leave")
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub OfficialBusinessToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OfficialBusinessToolStripMenuItem.Click
-        ChangeForm(OfficialBusinessForm, "Official Business filing")
-        previousForm = OfficialBusinessForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of OfficialBusinessForm)()
+
+            ChangeForm(form, "Official Business filing")
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub OvertimeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OvertimeToolStripMenuItem.Click
-        ChangeForm(EmployeeOvertimeForm, "Employee Overtime")
-        previousForm = EmployeeOvertimeForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeOvertimeForm)()
+
+            ChangeForm(form, "Employee Overtime")
+            previousForm = form
+
+        End Using
     End Sub
 
 End Class

@@ -36,6 +36,8 @@ Public Class EmployeeLoansForm
 
     Private loanInterestPercentageBeforeTextChange As Decimal
 
+    Private _systemOwnerService As SystemOwnerService
+
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
@@ -46,12 +48,12 @@ Public Class EmployeeLoansForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employeeRepository As EmployeeRepository,
+    Sub New(systemOwnerService As SystemOwnerService,
+            employeeRepository As EmployeeRepository,
             productRepository As ProductRepository,
             listOfValueRepository As ListOfValueRepository,
             loanScheduleRepository As LoanScheduleRepository,
-            userActivityRepository As UserActivityRepository,
-            systemOwnerService As SystemOwnerService)
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -69,6 +71,8 @@ Public Class EmployeeLoansForm
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
+        _systemOwnerService = systemOwnerService
+
         _employeeRepository = employeeRepository
 
         _productRepository = productRepository
@@ -79,9 +83,7 @@ Public Class EmployeeLoansForm
 
         _userActivityRepository = userActivityRepository
 
-        _systemOwnerService = systemOwnerService
-
-        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
     End Sub
 
@@ -228,7 +230,7 @@ Public Class EmployeeLoansForm
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
 
-        Dim form As New AddLoanTypeForm()
+        Dim form As New AddLoanTypeForm(_productRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -505,7 +507,11 @@ Public Class EmployeeLoansForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportLoansForm()
+        Using form = New ImportLoansForm(_employeeRepository,
+                                         _loanScheduleRepository,
+                                         _listOfValueRepository,
+                                         _productRepository,
+                                         _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -1003,7 +1009,7 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

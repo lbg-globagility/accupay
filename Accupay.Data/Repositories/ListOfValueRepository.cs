@@ -34,14 +34,14 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
-        {
-            return await GetListOfValuesAsync("DutyShift");
-        }
-
         public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("ShiftPolicy");
+        }
+
+        public IEnumerable<ListOfValue> GetDutyShiftPolicies()
+        {
+            return GetListOfValues("DutyShift");
         }
 
         public IEnumerable<ListOfValue> GetListOfValues(string type)

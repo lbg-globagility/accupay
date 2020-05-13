@@ -10,12 +10,6 @@ Public Class AddDivisionForm
 
     Private Const FormEntityName As String = "Division"
 
-    Private _divisionRepository As New DivisionRepository()
-
-    Private _positionRepository As New PositionRepository()
-
-    Private _payFrequencyRepository As New PayFrequencyRepository()
-
     Private _parentDivisions As List(Of Division)
 
     Private _newDivision As Division
@@ -28,20 +22,41 @@ Public Class AddDivisionForm
 
     Private _deductionSchedules As List(Of String)
 
-    Private _listOfValueRepository As New ListOfValueRepository
-
     Public Property IsSaved As Boolean
 
     Public Property ShowBalloonSuccess As Boolean
 
     Public Property LastDivisionAdded As Division
 
-    Sub New()
+    Private _divisionRepository As DivisionRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _positionRepository As PositionRepository
+
+    Private _payFrequencyRepository As PayFrequencyRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(divisionRepository As DivisionRepository,
+            listOfValueRepository As ListOfValueRepository,
+            positionRepository As PositionRepository,
+            payFrequencyRepository As PayFrequencyRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        _divisionRepository = divisionRepository
+
+        _listOfValueRepository = listOfValueRepository
+
+        _positionRepository = positionRepository
+
+        _payFrequencyRepository = payFrequencyRepository
+
+        _userActivityRepository = userActivityRepository
 
         Me.IsSaved = False
 
@@ -146,8 +161,7 @@ Public Class AddDivisionForm
 
         Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
 
-        Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
+        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

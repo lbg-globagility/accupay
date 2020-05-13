@@ -15,19 +15,44 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New EmployeeRepository
+    Private _employeeRepository As EmployeeRepository
 
-    Private _productRepository As New ProductRepository
+    Private _loanScheduleRepository As LoanScheduleRepository
 
-    Private _loanScheduleRepository As New LoanScheduleRepository
+    Private _listOfValueRepository As ListOfValueRepository
 
-    Private _listOfValueRepository As New ListOfValueRepository
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
 
     Private _deductionSchedulesList As List(Of String)
 
     Private _loanTypeList As List(Of Product)
 
     Public IsSaved As Boolean
+
+    Sub New(employeeRepository As EmployeeRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            listOfValueRepository As ListOfValueRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+
+        _employeeRepository = employeeRepository
+
+        _loanScheduleRepository = loanScheduleRepository
+
+        _listOfValueRepository = listOfValueRepository
+
+        _productRepository = productRepository
+
+        _userActivityRepository = userActivityRepository
+
+    End Sub
 
     Private Async Sub ImportLoansForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -255,8 +280,7 @@ Public Class ImportLoansForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 
@@ -269,7 +293,8 @@ Public Class ImportLoansForm
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan,
+                                                                        _employeeRepository)
 
         If fileInfo Is Nothing Then Return
 

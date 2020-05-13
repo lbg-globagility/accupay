@@ -3,8 +3,10 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Utils
 
 Public Class DateRangePickerDialog
 
@@ -30,7 +32,12 @@ Public Class DateRangePickerDialog
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
+    Private _payPeriodService As PayPeriodService
+
+    Sub New(payPeriodRepository As PayPeriodRepository,
+            payPeriodService As PayPeriodService,
+            Optional passedPayPeriod As IPayPeriod = Nothing,
+            Optional removePayPeriodValidation As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -40,7 +47,9 @@ Public Class DateRangePickerDialog
 
         _removePayPeriodValidation = removePayPeriodValidation
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = payPeriodRepository
+
+        _payPeriodService = payPeriodService
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -82,9 +91,10 @@ Public Class DateRangePickerDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            currentPayPeriod = Await Data.Helpers.PayrollTools.GetCurrentlyWorkedOnPayPeriodByCurrentYear(
-                                                                z_OrganizationID,
-                                                                New List(Of IPayPeriod)(_payperiods))
+            currentPayPeriod = Await _payPeriodService.
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(
+                                                z_OrganizationID,
+                                                New List(Of IPayPeriod)(_payperiods))
         Else
             currentPayPeriod = _passedPayPeriod
 
@@ -121,8 +131,8 @@ Public Class DateRangePickerDialog
                                                 year:=Me.Year)).
                     ToList()
 
-        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
-                                        GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
+                                GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         _payperiodModels = _payperiods.Select(Function(p) New PayperiodModel(p)).ToList()
 
@@ -172,8 +182,14 @@ Public Class DateRangePickerDialog
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        If _removePayPeriodValidation = False AndAlso Await PayrollTools.
-                    ValidatePayPeriodAction(_currentPayperiod.RowID) = False Then Return
+        Dim validate = Await _payPeriodService.
+                        ValidatePayPeriodAction(_currentPayperiod.RowID, z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
 
         DialogResult = DialogResult.OK
     End Sub

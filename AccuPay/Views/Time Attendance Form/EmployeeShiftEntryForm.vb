@@ -38,17 +38,17 @@ Public Class EmployeeShiftEntryForm
 
     Dim ArrayWeekFormat() As String
 
-    Private sys_ownr As New SystemOwnerService()
+    Private _systemOwnerService As SystemOwnerService
 
     Private _shiftRepository As ShiftRepository
 
-    Sub New()
+    Sub New(systemOwnerService As SystemOwnerService, shiftRepository As ShiftRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _shiftRepository = New ShiftRepository()
+        _systemOwnerService = systemOwnerService
+
+        _shiftRepository = shiftRepository
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -1285,7 +1285,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub CustomColoredTabControl1_SelectingTabPage(sender As Object, e As TabControlCancelEventArgs)
 
         e.Cancel =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
             And CustomColoredTabControl1.SelectedIndex = 1)
 
     End Sub
@@ -1293,7 +1293,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub setProperInterfaceBaseOnSystemOwner()
 
         Dim _bool As Boolean =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
         If _bool Then
             TabPage2.Text = String.Empty

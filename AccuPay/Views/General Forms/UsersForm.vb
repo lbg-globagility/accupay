@@ -1,17 +1,26 @@
-﻿Imports AccuPay.Data.Enums
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
 
 Public Class UsersForm
     Private isNew As Boolean = False
     Dim rowid As Integer
 
-    Private userRepo As New UserRepository
-
     Private dataSource As List(Of UserBoundItem)
+
+    Private ReadOnly _userRepository As UserRepository
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+
+    Sub New(userRepository As UserRepository, listOfValueService As ListOfValueService)
+
+        InitializeComponent()
+
+        _userRepository = userRepository
+        _listOfValueService = listOfValueService
+    End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
 
@@ -24,7 +33,7 @@ Public Class UsersForm
     End Sub
 
     Private Async Sub FillUsers()
-        Dim users = Await userRepo.GetAllActiveWithPositionAsync()
+        Dim users = Await _userRepository.GetAllActiveWithPositionAsync()
 
         Dim source = users.Select(Function(u) New UserBoundItem(u))
         dataSource = source.ToList()
@@ -315,7 +324,7 @@ Public Class UsersForm
         End If
 
         If isNew Then
-            Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
+            Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
                 usernameExistsAlready()
                 Return
@@ -324,7 +333,7 @@ Public Class UsersForm
             Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
             ApplyChanges(newUser)
-            Await userRepo.SaveAsync(newUser)
+            Await _userRepository.SaveAsync(newUser)
 
             myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
 
@@ -336,10 +345,10 @@ Public Class UsersForm
             Dim userBoundItem = GetUserBoundItem()
             If userBoundItem Is Nothing Then Return
 
-            Dim user = Await userRepo.GetByIdWithPositionAsync(userBoundItem.RowID)
+            Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
 
             If username <> user.Username Then
-                Dim usernameExists = (Await userRepo.GetByUsernameAsync(username)) IsNot Nothing
+                Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
                 If usernameExists Then
                     usernameExistsAlready()
                     Return
@@ -347,7 +356,7 @@ Public Class UsersForm
             End If
 
             ApplyChanges(user)
-            Await userRepo.SaveAsync(user)
+            Await _userRepository.SaveAsync(user)
 
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
         End If
@@ -415,15 +424,6 @@ Public Class UsersForm
             End If
         End If
 
-        'If FormLeft.Contains("Users") Then
-        '    FormLeft.Remove("Users")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
         GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
@@ -432,7 +432,7 @@ Public Class UsersForm
 
     Private Sub FillUserLevel()
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) Then
 
@@ -549,7 +549,7 @@ Public Class UsersForm
             btnDelete.Enabled = False
 
             Dim user = GetUserBoundItem()
-            Await userRepo.SoftDeleteAsync(user.RowID)
+            Await _userRepository.SoftDeleteAsync(user.RowID)
 
             dgvUserList.ClearSelection()
 

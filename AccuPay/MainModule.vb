@@ -24,7 +24,7 @@ Module MainModule
 
         Using MainServiceProvider
 
-            Dim form1 = MainServiceProvider.GetRequiredService(Of Form1)()
+            Dim form1 = MainServiceProvider.GetRequiredService(Of MetroLogin)()
             Application.Run(form1)
 
         End Using
@@ -46,7 +46,7 @@ Module MainModule
         services.AddScoped(Of PayslipCreator)
 
         services.AddScoped(Of PaystubEmailRepository)
-        services.AddScoped(Of Form1)
+        services.AddScoped(Of MetroLogin)
     End Sub
 
 End Module

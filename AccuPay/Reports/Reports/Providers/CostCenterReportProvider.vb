@@ -3,6 +3,7 @@
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
@@ -25,9 +26,7 @@ Public Class CostCenterReportProvider
     Public Property Name As String = "Cost Center Report" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
-
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ExcelReportColumn) = GetReportColumns()
-
     Private Const EmployeeIdKey As String = "EmployeeId"
     Private Const EmployeeNameKey As String = "EmployeeName"
     Private Const TotalDaysKey As String = "TotalDays"
@@ -98,6 +97,26 @@ Public Class CostCenterReportProvider
         Return New ReadOnlyCollection(Of ExcelReportColumn)(reportColumns)
     End Function
 
+    Private ReadOnly _dataService As CostCenterReportDataService
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Private ReadOnly _branchRepository As BranchRepository
+
+    Sub New(dataService As CostCenterReportDataService,
+            payPeriodService As PayPeriodService,
+            systemOwnerService As SystemOwnerService,
+            branchRepository As BranchRepository)
+
+        MyBase.New(payPeriodService)
+
+        _dataService = dataService
+
+        _systemOwnerService = systemOwnerService
+
+        _branchRepository = branchRepository
+    End Sub
+
     Public Sub Run() Implements IReportProvider.Run
 
         Try
@@ -121,11 +140,9 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim dataService As New CostCenterReportDataService(selectedMonth,
-                                                                selectedBranch,
-                                                                userId:=z_User)
-
-            Dim payPeriodModels = dataService.GetData()
+            Dim payPeriodModels = _dataService.GetData(selectedMonth,
+                                                        selectedBranch,
+                                                        userId:=z_User)
 
             If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
 
@@ -149,9 +166,9 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Shared Function GetSelectedBranch() As Branch
+    Private Function GetSelectedBranch() As Branch
 
-        Dim selectBranchDialog As New SelectBranchForm
+        Dim selectBranchDialog As New SelectBranchForm(_branchRepository)
 
         If Not selectBranchDialog.ShowDialog <> DialogResult.OK Then
             Return Nothing
@@ -228,9 +245,7 @@ Public Class CostCenterReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwnerService()
-
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

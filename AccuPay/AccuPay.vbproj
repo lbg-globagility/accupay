@@ -350,6 +350,7 @@
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
+    <Compile Include="MainModule.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
       <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
     </Compile>
@@ -608,6 +609,7 @@
     <Compile Include="Views\Time Attendance Form\EmployeeOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\IMassOvertimeForm.vb" />
     <Compile Include="Views\Time Attendance Form\OfficialBusinessForm.Designer.vb">
       <DependentUpon>OfficialBusinessForm.vb</DependentUpon>
     </Compile>
@@ -1211,24 +1213,6 @@
     <Compile Include="Views\Core Forms\Josh_CrysRepForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\newEmpStat.Designer.vb">
-      <DependentUpon>newEmpStat.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\newEmpStat.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\newEmpType.Designer.vb">
-      <DependentUpon>newEmpType.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\newEmpType.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\newPostion.Designer.vb">
-      <DependentUpon>newPostion.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\newPostion.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\newProdBonus.Designer.vb">
       <DependentUpon>newProdBonus.vb</DependentUpon>
     </Compile>
@@ -1659,7 +1643,6 @@
     <Compile Include="Domain\Commons\CountDownExpiration.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelWriter.vb" />
     <Compile Include="Domain\Commons\FileObserver.vb" />
-    <Compile Include="Domain\Commons\KillAppCatcher.vb" />
     <Compile Include="Domain\Commons\myModule.vb" />
     <Compile Include="Domain\Commons\TrapDecimalKey.vb" />
     <Compile Include="Domain\Commons\UserAccessRights.vb" />
@@ -2267,15 +2250,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Josh_CrysRepForm.resx">
       <DependentUpon>Josh_CrysRepForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\newEmpStat.resx">
-      <DependentUpon>newEmpStat.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\newEmpType.resx">
-      <DependentUpon>newEmpType.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\newPostion.resx">
-      <DependentUpon>newPostion.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\newProdBonus.resx">
       <DependentUpon>newProdBonus.vb</DependentUpon>

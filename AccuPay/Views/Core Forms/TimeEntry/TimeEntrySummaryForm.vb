@@ -58,7 +58,13 @@ Public Class TimeEntrySummaryForm
 
     Private _policy As PolicyHelper
 
+    Private _generator As TimeEntryGenerator
+
     Private _calendarService As CalendarService
+
+    Private _listOfValueService As ListOfValueService
+
+    Private _payPeriodService As PayPeriodService
 
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
 
@@ -70,7 +76,11 @@ Public Class TimeEntrySummaryForm
 
     Private _userRepository As UserRepository
 
-    Sub New(calendarService As CalendarService,
+    Sub New(policy As PolicyHelper,
+            generator As TimeEntryGenerator,
+            calendarService As CalendarService,
+            listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
             breakTimeBracketRepository As BreakTimeBracketRepository,
             EmployeeRepository As EmployeeRepository,
             PayPeriodRepository As PayPeriodRepository,
@@ -81,7 +91,12 @@ Public Class TimeEntrySummaryForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        _policy = policy
+        _generator = generator
+
         _calendarService = calendarService
+        _listOfValueService = listOfValueService
+        _payPeriodService = payPeriodService
 
         _breakTimeBracketRepository = breakTimeBracketRepository
         _employeeRepository = EmployeeRepository
@@ -103,8 +118,6 @@ Public Class TimeEntrySummaryForm
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
         regenerateTimeEntryButton.Visible = False
-
-        _policy = New PolicyHelper
 
         Await LoadEmployees()
         Await LoadPayPeriods()
@@ -234,8 +247,8 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.
-                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID,
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodService.
+                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID,
                                                                     New List(Of IPayPeriod)(_payPeriods))
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
@@ -269,8 +282,8 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriods = New Collection(Of PayPeriod)
 
-        Dim payPeriodsWithPaystubCount = _payPeriodRepository.
-                                            GetPeriodsWithPaystubCount(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
+                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -899,7 +912,7 @@ Public Class TimeEntrySummaryForm
         Dim endDate As Date
         Dim result As DialogResult
 
-        Using dialog = New DateRangePickerDialog(_selectedPayPeriod)
+        Using dialog = New DateRangePickerDialog(_payPeriodRepository, _payPeriodService, _selectedPayPeriod)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -916,13 +929,12 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
-        Dim generator = New TimeEntryGenerator(z_OrganizationID, startDate, endDate)
-        Dim progressDialog = New TimeEntryProgressDialog(generator)
+        Dim progressDialog = New TimeEntryProgressDialog(_generator)
         progressDialog.Show()
 
-        Await Task.Run(Sub() generator.Start()).
+        Await Task.Run(Sub() _generator.Start(z_OrganizationID, startDate, endDate)).
             ContinueWith(
-                Sub() DoneGenerating(progressDialog, generator),
+                Sub() DoneGenerating(progressDialog),
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnRanToCompletion,
                 TaskScheduler.FromCurrentSynchronizationContext)
@@ -930,21 +942,28 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
 
-        If Await PayrollTools.ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+        Dim validate = Await _payPeriodService.
+                        ValidatePayPeriodAction(_selectedPayPeriod.RowID, z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
 
         Await GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
         LoadTimeEntries()
     End Sub
 
-    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
+    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog)
         dialog.Close()
         dialog.Dispose()
 
         Dim msgBoxText As String = "Done"
 
-        If generator.ErrorCount > 0 Then
-            Dim errorCount = generator.ErrorCount
+        If _generator.ErrorCount > 0 Then
+            Dim errorCount = _generator.ErrorCount
             msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
         End If
 
@@ -1484,14 +1503,23 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
-        Dim form As New PreviewLeaveBalanceForm
+        Dim form As New PreviewLeaveBalanceForm(_employeeRepository,
+                                                _payPeriodRepository,
+                                                _listOfValueService,
+                                                _payPeriodService)
         form.ShowDialog()
     End Sub
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-        If Await PayrollTools.
-                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+        Dim validate = Await _payPeriodService.
+                        ValidatePayPeriodAction(_selectedPayPeriod.RowID, z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
 
         Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
                                 " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")

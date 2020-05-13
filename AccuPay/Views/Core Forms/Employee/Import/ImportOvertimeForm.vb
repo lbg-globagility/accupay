@@ -12,11 +12,25 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private overtimeRepository As New OvertimeRepository()
-
     Public IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _overtimeRepository As OvertimeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employeeRepository As EmployeeRepository,
+            overtimeRepository As OvertimeRepository,
+            userActivityRepository As UserActivityRepository)
+
+        InitializeComponent()
+
+        _employeeRepository = employeeRepository
+        _overtimeRepository = overtimeRepository
+        _userActivityRepository = userActivityRepository
+
+    End Sub
 
     Private Sub ImportOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -184,7 +198,7 @@ Public Class ImportOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Await overtimeRepository.SaveManyAsync(_overtimes)
+                Await _overtimeRepository.SaveManyAsync(_overtimes)
 
                 Dim importlist = New List(Of UserActivityItem)
 
@@ -196,8 +210,7 @@ Public Class ImportOvertimeForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

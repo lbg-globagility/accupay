@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeTreeView
 
@@ -229,13 +230,23 @@ Public Class EmployeeTreeView
         Private _divisions As IList(Of Division)
 
         Private _view As EmployeeTreeView
-
         Private _models As List(Of OvertimeModel)
 
         Private _organizationId As Integer
 
+        Private ReadOnly _divisionRepository As DivisionRepository
+
+        Private ReadOnly _employeeRepository As EmployeeRepository
+
         Public Sub New(view As EmployeeTreeView)
             _view = view
+
+            Using MainServiceProvider
+                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)()
+                _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
+
+            End Using
+
             _organizationId = view.OrganizationID
         End Sub
 
@@ -259,16 +270,16 @@ Public Class EmployeeTreeView
 
         Private Function LoadDivisions() As IList(Of Division)
 
-            Return New DivisionRepository().GetAll(z_OrganizationID).
+            Return _divisionRepository.GetAll(z_OrganizationID).
                                 OrderBy(Function(d) d.Name).
                                 ToList()
         End Function
 
         Private Function LoadEmployees() As IList(Of Employee)
 
-            Dim employees = New EmployeeRepository().
-                                    GetAllWithDivisionAndPosition(z_OrganizationID).
-                                    ToList
+            Dim employees = _employeeRepository.
+                                GetAllWithDivisionAndPosition(z_OrganizationID).
+                                ToList
 
             Return employees.
                         OrderBy(Function(e) e.LastName).

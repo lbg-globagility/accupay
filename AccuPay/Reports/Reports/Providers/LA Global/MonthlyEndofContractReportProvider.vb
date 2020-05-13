@@ -1,4 +1,5 @@
-﻿Imports AccuPay.Data.Entities
+﻿Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
 Public Class MonthlyEndofContractReportProvider
@@ -12,9 +13,15 @@ Public Class MonthlyEndofContractReportProvider
 
     Private _endDate As Date
 
-    Private employeeRepo As New EmployeeRepository()
+    Private ReadOnly _context As PayrollContext
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
+
+    Sub New(context As PayrollContext)
+
+        _context = context
+
+    End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim monthSelector = New selectMonth()
@@ -41,12 +48,12 @@ Public Class MonthlyEndofContractReportProvider
 
         Dim fetchAll As New List(Of Employee)
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder(_context)
 
             fetchAll = Await employeeBuilder.
                             IsActive().
                             IncludeBranch().
-                            ToListAsync()
+                            ToListAsync(z_OrganizationID)
         End Using
 
         Dim employees = fetchAll.

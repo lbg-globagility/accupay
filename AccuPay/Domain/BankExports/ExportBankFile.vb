@@ -13,17 +13,15 @@ Public Class ExportBankFile
 
     Private ReadOnly _paystubRepository As PaystubRepository
 
-    Public Sub New(cutoffStart As Date, cutoffEnd As Date)
-        _cutoffStart = cutoffStart
-        _cutoffEnd = cutoffEnd
-        _paystubRepository = New PaystubRepository()
+    Public Sub New(paystubRepository As PaystubRepository)
+        _paystubRepository = paystubRepository
     End Sub
 
-    Public Async Function Extract() As Task
+    Public Async Function Extract(cutoffStart As Date, cutoffEnd As Date) As Task
 
         Dim paystubDateKey = New PaystubRepository.DateCompositeKey(z_OrganizationID,
-                                                                    payFromDate:=_cutoffStart,
-                                                                    payToDate:=_cutoffEnd)
+                                                                    payFromDate:=cutoffStart,
+                                                                    payToDate:=cutoffEnd)
         Dim paystubs = Await _paystubRepository.GetAllWithEmployeeAsync(paystubDateKey)
 
         Dim sortedPaystubs = paystubs.
@@ -65,7 +63,7 @@ Public Class ExportBankFile
         Dim random = Guid.NewGuid.ToString()
         Dim directory = $"{Path.GetTempPath()}/{random}"
 
-        System.IO.Directory.CreateDirectory(directory)
+        IO.Directory.CreateDirectory(directory)
 
         Return directory
     End Function

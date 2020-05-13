@@ -11,13 +11,11 @@ Public Class ProductControlForm
 
     Private ReadOnly _allowanceRepository As AllowanceRepository
 
-    Sub New()
+    Sub New(allowanceRepository As AllowanceRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _allowanceRepository = New AllowanceRepository()
+        _allowanceRepository = allowanceRepository
     End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult

@@ -12,11 +12,27 @@ Public Class ImportOBForm
 
     Private _officialBusinesses As List(Of OfficialBusiness)
 
-    Private _employeeRepository As New EmployeeRepository()
-
-    Private _officialBusinessRepository As New OfficialBusinessRepository()
-
     Public IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _officialBusinessRepository As OfficialBusinessRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employeeRepository As EmployeeRepository,
+            officialBusinessRepository As OfficialBusinessRepository,
+            userActivityRepository As UserActivityRepository)
+
+        InitializeComponent()
+
+        _employeeRepository = employeeRepository
+
+        _officialBusinessRepository = officialBusinessRepository
+
+        _userActivityRepository = userActivityRepository
+
+    End Sub
 
     Private Sub ImportOBForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -167,8 +183,7 @@ Public Class ImportOBForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

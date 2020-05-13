@@ -8,8 +8,8 @@ Public Class NewCalendarDialog
 
     Private ReadOnly _repository As CalendarRepository
 
-    Public Sub New()
-        _repository = New CalendarRepository()
+    Public Sub New(repository As CalendarRepository)
+        _repository = repository
 
         InitializeComponent()
     End Sub

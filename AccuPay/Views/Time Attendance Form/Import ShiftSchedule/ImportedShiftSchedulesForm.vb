@@ -25,15 +25,19 @@ Public Class ImportedShiftSchedulesForm
 
     Private _shiftScheduleRowRecords As IList(Of ShiftScheduleRowRecord)
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
-
     Private _employees As IList(Of Employee)
 
     Public IsSaved As Boolean
 
-    Sub New()
+    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository,
+            employeeRepository As EmployeeRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -43,9 +47,11 @@ Public Class ImportedShiftSchedulesForm
 
         _dataSourceFailed = New List(Of ShiftScheduleModel)
 
-        _employeeRepository = New EmployeeRepository()
+        _employeeDutyScheduleRepository = employeeDutyScheduleRepository
 
-        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+        _employeeRepository = employeeRepository
+
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -492,8 +498,7 @@ Public Class ImportedShiftSchedulesForm
                             })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK

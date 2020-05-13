@@ -31,20 +31,40 @@ Public Class NewDivisionPositionForm
     Private _currentDivision As New Division
 
     Private _currentPosition As New Position
-
-    Private _jobLevelRepository As New JobLevelRepository
-
-    Private _positionRepository As New PositionRepository
-
-    Private _divisionRepository As New DivisionRepository
-
-    Private _payFrequencyRepository As New PayFrequencyRepository
-
-    Private _listOfValueRepository As New ListOfValueRepository
-
-    Private _employeeRepository As New EmployeeRepository
-
     Public Property _currentTreeNodes As TreeNode()
+
+    Private _divisionRepository As DivisionRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _jobLevelRepository As JobLevelRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _payFrequencyRepository As PayFrequencyRepository
+
+    Private _positionRepository As PositionRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(divisionRepository As DivisionRepository,
+            employeeRepository As EmployeeRepository,
+            jobLevelRepository As JobLevelRepository,
+            listOfValueRepository As ListOfValueRepository,
+            payFrequencyRepository As PayFrequencyRepository,
+            positionRepository As PositionRepository,
+            userActivityRepository As UserActivityRepository)
+
+        InitializeComponent()
+
+        _divisionRepository = divisionRepository
+        _employeeRepository = employeeRepository
+        _jobLevelRepository = jobLevelRepository
+        _listOfValueRepository = listOfValueRepository
+        _payFrequencyRepository = payFrequencyRepository
+        _positionRepository = positionRepository
+        _userActivityRepository = userActivityRepository
+    End Sub
 
     Private Async Sub NewEmployeePositionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -269,7 +289,7 @@ Public Class NewDivisionPositionForm
     End Sub
 
     Private Async Function InsertDivisionLocation() As Task
-        Dim form As New AddDivisionLocationForm()
+        Dim form As New AddDivisionLocationForm(_divisionRepository, _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -288,7 +308,11 @@ Public Class NewDivisionPositionForm
     End Function
 
     Private Async Function InsertDivision() As Task
-        Dim form As New AddDivisionForm()
+        Dim form As New AddDivisionForm(_divisionRepository,
+                                        _listOfValueRepository,
+                                        _positionRepository,
+                                        _payFrequencyRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -312,7 +336,10 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub NewPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles AddPositionToolStripMenuItem.Click
 
-        Dim form As New AddPositionForm
+        Dim form As New AddPositionForm(_divisionRepository,
+                                        _positionRepository,
+                                        _jobLevelRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -795,8 +822,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -824,8 +850,7 @@ Public Class NewDivisionPositionForm
 
         Await _positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
 
-        Dim repo As New UserActivityRepository
-        repo.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
+        _userActivityRepository.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
 
         Await RefreshTreeView()
 
@@ -841,12 +866,10 @@ Public Class NewDivisionPositionForm
 
         If Me._currentDivision.IsRoot Then
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DivisionLocationEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
+            _userActivityRepository.RecordDelete(z_User, DivisionLocationEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
         Else
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DivisionEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
+            _userActivityRepository.RecordDelete(z_User, DivisionEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
 
         End If
 
@@ -910,8 +933,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1158,8 +1180,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1236,17 +1257,17 @@ Public Class NewDivisionPositionForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName)
+            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, _userActivityRepository)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName)
+            Dim userActivity As New UserActivityForm(DivisionEntityName, _userActivityRepository)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName)
+        Dim userActivity As New UserActivityForm(PositionEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

@@ -1,5 +1,6 @@
 ﻿Imports System.Collections.ObjectModel
 Imports System.IO
+Imports AccuPay.Data.Services
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -79,24 +80,18 @@ Public Class PayrollLedgerExcelFormatReportProvider
 
     Public Property IsActual As Boolean
 
-    Public Sub New()
+    Private ReadOnly _payPeriodService As PayPeriodService
 
-    End Sub
+    Sub New(payPeriodService As PayPeriodService)
 
-    Public Sub New(FromPayPeriodId As Integer, ToPayPeriodId As Integer, IsActual As Boolean, PayDateFrom As Date, PayDateTo As Date)
-        fromPeriodId = FromPayPeriodId
-        toPeriodId = ToPayPeriodId
+        _payPeriodService = payPeriodService
 
-        actualSwitch = IsActual
-
-        dateFrom = PayDateFrom
-        dateTo = PayDateTo
     End Sub
 
     Private Function ParameterAssignment() As Boolean
         Dim boolResult As Boolean = True
 
-        Dim periodSelector As New PayrollSummaDateSelection()
+        Dim periodSelector As New PayrollSummaDateSelection(_payPeriodService)
 
         periodSelector.Panel3.Visible = False
         periodSelector.panelSalarySwitch.Visible = True

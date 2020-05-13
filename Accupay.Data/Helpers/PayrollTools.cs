@@ -196,52 +196,6 @@ namespace AccuPay.Data.Helpers
         //    n_ExecSQLProcedure.ExecuteQuery();
         //}
 
-        // TODO
-        //public static async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)
-        //{
-        //    var systemOwner = new SystemOwnerService();
-
-        //    if (systemOwner.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
-        //    {
-        //        // Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
-        //        return FunctionResult.Success();
-        //    }
-
-        //    using (PayrollContext context = new PayrollContext())
-        //    {
-        //        if (payPeriodId == null)
-        //        {
-        //            return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
-        //        }
-
-        //        var payPeriod = await context.PayPeriods.
-        //                        FirstOrDefaultAsync(p => p.RowID == payPeriodId);
-
-        //        if (payPeriod == null)
-        //        {
-        //            return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
-        //        }
-
-        //        var otherProcessingPayPeriod = await context.Paystubs.
-        //                                                    Include(p => p.PayPeriod).
-        //                                                    Where(p => p.PayPeriod.RowID != payPeriodId).
-        //                                                    Where(p => p.PayPeriod.IsClosed == false).
-        //                                                    Where(p => p.PayPeriod.OrganizationID == organizationId).
-        //                                                    FirstOrDefaultAsync();
-
-        //        if (payPeriod.IsClosed)
-        //        {
-        //            return FunctionResult.Failed("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are \"Processing\" pay periods, make sure to close them first.");
-        //        }
-        //        else if (!payPeriod.IsClosed && otherProcessingPayPeriod != null)
-        //        {
-        //            return FunctionResult.Failed("There is currently a pay period with \"PROCESSING\" status. Please finish that pay period first then close it to process other open pay periods.");
-        //        }
-        //    }
-
-        //    return FunctionResult.Success();
-        //}
-
         // TODO: GetOrganizationAddress
         //public static string GetOrganizationAddress()
         //{

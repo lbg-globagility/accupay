@@ -1,8 +1,11 @@
 Option Strict On
 
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Views.Employees
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SalaryTab2
 
@@ -102,8 +105,29 @@ Public Class SalaryTab2
         End Set
     End Property
 
+    Private _employeeRepository As EmployeeRepository
+
+    Private _salaryRepository As SalaryRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Public Sub New()
-        Dim presenter = New SalaryPresenter(Me)
+
+        Using MainServiceProvider
+            Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)()
+            Dim philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of PhilHealthBracketRepository)()
+            Dim socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of SocialSecurityBracketRepository)()
+
+            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
+            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
+            _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+
+            Dim presenter = New SalaryPresenter(Me,
+                                                listOfValueService,
+                                                philHealthBracketRepository,
+                                                _salaryRepository,
+                                                socialSecurityBracketRepository)
+        End Using
         InitializeComponent()
         DataGridView1.AutoGenerateColumns = False
     End Sub
@@ -265,7 +289,9 @@ Public Class SalaryTab2
     End Sub
 
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
-        Using dialog = New ImportSalaryForm()
+        Using dialog = New ImportSalaryForm(_employeeRepository,
+                                            _salaryRepository,
+                                            _userActivityRepository)
             dialog.ShowDialog()
         End Using
     End Sub

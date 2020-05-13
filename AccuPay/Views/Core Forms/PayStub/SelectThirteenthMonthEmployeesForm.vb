@@ -17,7 +17,11 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
+    Private ReadOnly _listOfValueService As ListOfValueService
+
     Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
 
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
@@ -25,11 +29,16 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private ReadOnly _timeEntryRepository As TimeEntryRepository
 
-    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
-
     Private ReadOnly _salaryRepository As SalaryRepository
 
-    Sub New(currentPayPeriodId As Integer, systemOwnerService As SystemOwnerService)
+    Sub New(currentPayPeriodId As Integer,
+            listOfValueService As ListOfValueService,
+            systemOwnerService As SystemOwnerService,
+            actualTimeEntryRepository As ActualTimeEntryRepository,
+            payPeriodRepository As PayPeriodRepository,
+            paystubRepository As PaystubRepository,
+            salaryRepository As SalaryRepository,
+            timeEntryRepository As TimeEntryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -39,17 +48,19 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         _employeeModels = New List(Of EmployeeModel)
 
+        _listOfValueService = listOfValueService
+
         _systemOwnerService = systemOwnerService
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _actualTimeEntryRepository = actualTimeEntryRepository
 
-        _paystubRepository = New PaystubRepository()
+        _payPeriodRepository = payPeriodRepository
 
-        _timeEntryRepository = New TimeEntryRepository()
+        _paystubRepository = paystubRepository
 
-        _actualTimeEntryRepository = New ActualTimeEntryRepository()
+        _salaryRepository = salaryRepository
 
-        _salaryRepository = New SalaryRepository()
+        _timeEntryRepository = timeEntryRepository
 
     End Sub
 
@@ -87,7 +98,7 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         Try
 
-            Dim settings = ListOfValueCollection.Create()
+            Dim settings = _listOfValueService.Create()
 
             Dim datePeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
 

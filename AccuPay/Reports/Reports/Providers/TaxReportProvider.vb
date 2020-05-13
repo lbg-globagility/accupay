@@ -11,8 +11,8 @@ Public Class TaxReportProvider
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New()
-        _payPeriodRepository = New PayPeriodRepository()
+    Sub New(payPeriodRepository As PayPeriodRepository)
+        _payPeriodRepository = payPeriodRepository
     End Sub
 
     Public Sub Run() Implements IReportProvider.Run

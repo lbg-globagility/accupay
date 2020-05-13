@@ -4,11 +4,17 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 
 Public Class UserActivityForm
-    Public Property type As String
+    Public Property _type As String
 
-    Public Sub New(type As String)
+    Dim _userActivityRepository As UserActivityRepository
+
+    Public Sub New(type As String, userActivityRepository As UserActivityRepository
+                   )
         InitializeComponent()
-        Me.type = type
+
+        _type = type
+
+        _userActivityRepository = userActivityRepository
     End Sub
 
     Private Class ActivityItem
@@ -28,15 +34,14 @@ Public Class UserActivityForm
     Private Sub UserActivityForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         DataGridView1.AutoGenerateColumns = False
-        Me.Text = type + " " + Me.Text
+        Me.Text = _type + " " + Me.Text
         populateDataGrid()
 
     End Sub
 
     Public Sub populateDataGrid()
 
-        Dim repo As New UserActivityRepository
-        Dim userActivities = repo.GetAll(z_OrganizationID, type)
+        Dim userActivities = _userActivityRepository.GetAll(z_OrganizationID, _type)
         Dim list As New List(Of ActivityItem)
 
         For Each activity In userActivities

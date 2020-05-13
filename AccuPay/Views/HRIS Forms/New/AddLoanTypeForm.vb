@@ -6,11 +6,19 @@ Imports AccuPay.Utils
 
 Public Class AddLoanTypeForm
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As ProductRepository
 
     Public Property NewLoanType As Product
 
     Public Property IsSaved As Boolean
+
+    Sub New(productRepository As ProductRepository)
+
+        InitializeComponent()
+
+        _productRepository = productRepository
+
+    End Sub
 
     Private Sub AddLoanTypeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 

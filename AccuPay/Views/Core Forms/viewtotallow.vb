@@ -10,13 +10,11 @@ Public Class viewtotallow
 
     Private _productRepository As ProductRepository
 
-    Sub New()
+    Sub New(productRepository As ProductRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _productRepository = New ProductRepository()
+        _productRepository = productRepository
     End Sub
 
     Private Sub viewtotallow_Load(sender As Object, e As EventArgs) Handles MyBase.Load

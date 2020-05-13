@@ -37,7 +37,7 @@ Public Class EmployeeLeavesForm
             employeeRepository As EmployeeRepository,
             productRepository As ProductRepository,
             userActivityRepository As UserActivityRepository,
-            leaveService As LeaveService))
+            leaveService As LeaveService)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -61,6 +61,8 @@ Public Class EmployeeLeavesForm
         _productRepository = productRepository
 
         _userActivityRepository = userActivityRepository
+
+        _leaveService = leaveService
 
     End Sub
 
@@ -97,7 +99,11 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Dim importForm As New ImportLeaveForm()
+        Dim importForm As New ImportLeaveForm(_employeeRepository,
+                                              _leaveRepository,
+                                              _productRepository,
+                                              _userActivityRepository,
+                                              _leaveService)
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()
@@ -278,10 +284,10 @@ Public Class EmployeeLeavesForm
         VacationLeaveAllowanceTextBox.Text = currentEmployee.VacationLeaveAllowance.ToString()
         SickLeaveAllowanceTextBox.Text = currentEmployee.SickLeaveAllowance.ToString()
 
-        VacationLeaveBalanceTextBox.Text = (Await EmployeeData.
+        VacationLeaveBalanceTextBox.Text = (Await _employeeRepository.
                                             GetVacationLeaveBalance(currentEmployee.RowID.Value)).
                                             ToString()
-        SickLeaveBalanceTextBox.Text = (Await EmployeeData.
+        SickLeaveBalanceTextBox.Text = (Await _employeeRepository.
                                             GetSickLeaveBalance(currentEmployee.RowID.Value)).
                                             ToString()
 
@@ -665,7 +671,7 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _leaveRepository.
+                                            Await _leaveService.
                                             SaveManyAsync(changedLeaves,
                                                         organizationId:=z_OrganizationID)
 
@@ -694,7 +700,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

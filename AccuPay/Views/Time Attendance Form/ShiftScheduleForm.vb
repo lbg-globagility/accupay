@@ -1,11 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Data.Entities
 Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -34,16 +33,38 @@ Public Class ShiftScheduleForm
 
     Private _originalDates As TimePeriod
 
-    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+    Private ReadOnly _listOfValueService As ListOfValueService
 
-    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository)
+    Private ReadOnly _payPeriodService As PayPeriodService
 
-        ' This call is required by the designer.
+    Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+
+    Private ReadOnly _userActivityRepository As UserActivityRepository
+
+    Sub New(listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            employeeDutyScheduleRepository As EmployeeDutyScheduleRepository,
+            employeeRepository As EmployeeRepository,
+            listOfValueRepository As ListOfValueRepository,
+            userActivityRepository As UserActivityRepository)
+
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _listOfValueService = listOfValueService
+
+        _payPeriodService = payPeriodService
 
         _employeeDutyScheduleRepository = employeeDutyScheduleRepository
+
+        _employeeRepository = employeeRepository
+
+        _listOfValueRepository = listOfValueRepository
+
+        _userActivityRepository = userActivityRepository
     End Sub
 
     Private WriteOnly Property ChangesCount As Integer
@@ -62,8 +83,8 @@ Public Class ShiftScheduleForm
 
 #Region "Methods"
 
-    Public Async Sub LoadShiftScheduleConfigurablePolicy()
-        _dutyShiftPolicy = Await DutyShiftPolicy.Load1
+    Public Sub LoadShiftScheduleConfigurablePolicy()
+        _dutyShiftPolicy = New DutyShiftPolicy(_listOfValueService, _listOfValueRepository)
 
         txtBreakLength.Value = _dutyShiftPolicy.BreakHour
     End Sub
@@ -326,7 +347,7 @@ Public Class ShiftScheduleForm
         Return dateTimeValue.ToString("HH\:mm")
     End Function
 
-    Public Function MilitarDateTime(dateTimeValue As TimeSpan) As String
+    Public Shared Function MilitarDateTime(dateTimeValue As TimeSpan) As String
         Return dateTimeValue.ToString("hh\:mm")
     End Function
 
@@ -725,30 +746,29 @@ Public Class ShiftScheduleForm
 
         Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As New ListOfValueRepository
+        Private _listOfValueService As ListOfValueService
+
+        Private _listOfValueRepository As ListOfValueRepository
 
         Private settings As ListOfValueCollection = Nothing
 
         Private _defaultWorkHour, _breakHour As Decimal
 
-        Private Sub New()
+        Public Sub New(listOfValueService As ListOfValueService,
+                        ListOfValueRepository As ListOfValueRepository)
 
-        End Sub
+            _listOfValueService = listOfValueService
 
-        Public Shared Async Function Load1() As Task(Of DutyShiftPolicy)
-            Dim policy = New DutyShiftPolicy
-            Await policy.Load()
-            Return policy
-        End Function
+            _listOfValueRepository = ListOfValueRepository
 
-        Private Async Function Load() As Task
-            _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
+            _dutyShiftPolicy = _listOfValueRepository.GetDutyShiftPolicies()
 
-            settings = ListOfValueCollection.Create(_dutyShiftPolicy.ToList)
+            settings = _listOfValueService.Create(_dutyShiftPolicy.ToList)
 
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)
-        End Function
+
+        End Sub
 
         Public ReadOnly Property DefaultWorkHour() As Decimal
             Get
@@ -931,8 +951,8 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
-        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodService.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 
@@ -1295,7 +1315,9 @@ Public Class ShiftScheduleForm
 
     Private Async Sub tsBtnImport_Click(sender As Object, e As EventArgs) Handles tsBtnImport.Click
 
-        Using form = New ImportedShiftSchedulesForm()
+        Using form = New ImportedShiftSchedulesForm(_employeeDutyScheduleRepository,
+                                                    _employeeRepository,
+                                                    _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then

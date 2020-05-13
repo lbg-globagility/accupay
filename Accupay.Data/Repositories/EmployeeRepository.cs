@@ -2,7 +2,6 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -118,13 +117,13 @@ namespace AccuPay.Data.Repositories
 
             #endregion Builder Methods
 
-            public IEnumerable<Employee> ToList(int organizationId)
+            public List<Employee> ToList(int organizationId)
             {
                 ResolveOrganizationIdQuery(organizationId);
                 return _query.ToList();
             }
 
-            public async Task<IEnumerable<Employee>> ToListAsync(int? organizationId)
+            public async Task<List<Employee>> ToListAsync(int? organizationId)
             {
                 ResolveOrganizationIdQuery(organizationId);
                 return await _query.ToListAsync();

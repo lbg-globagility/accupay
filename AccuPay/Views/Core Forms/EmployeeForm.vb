@@ -6,6 +6,8 @@
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.Benchmark
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
@@ -27,8 +29,6 @@ Public Class EmployeeForm
         String.Concat("Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|",
                       "Microsoft Excel Documents 97-2003 (*.xls)|*.xls")
 
-    Dim sys_ownr As New SystemOwnerService
-
     Private if_sysowner_is_benchmark As Boolean
 
     Private if_sysowner_is_laglobal As Boolean
@@ -39,19 +39,66 @@ Public Class EmployeeForm
 
     Private _payFrequencies As New List(Of PayFrequency)
 
-    Private _policy As PolicyHelper
+    Private ReadOnly _context As PayrollContext
 
-    Private _branchRepository As BranchRepository
+    Private ReadOnly _policy As PolicyHelper
 
-    Private _leaveRepository As LeaveRepository
+    Private ReadOnly _benchmarkPayrollHelper As BenchmarkPayrollHelper
 
-    Private _listOfValueRepository As ListOfValueRepository
+    Private ReadOnly _bpiInsuranceAmountReportDataService As BpiInsuranceAmountReportDataService
 
-    Private _positionRepository As PositionRepository
+    Private ReadOnly _leaveService As LeaveService
 
-    Private _userRepository As UserRepository
+    Private ReadOnly _listOfValueService As ListOfValueService
 
-    Sub New()
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Private ReadOnly _allowanceRepository As AllowanceRepository
+
+    Private ReadOnly _branchRepository As BranchRepository
+
+    Private ReadOnly _calendarRepository As CalendarRepository
+
+    Private ReadOnly _divisionRepository As DivisionRepository
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+
+    Private ReadOnly _listOfValueRepository As ListOfValueRepository
+
+    Private ReadOnly _positionRepository As PositionRepository
+
+    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _salaryRepository As SalaryRepository
+
+    Private ReadOnly _userRepository As UserRepository
+
+    Private ReadOnly _userActivityRepository As UserActivityRepository
+
+    Sub New(context As PayrollContext,
+            policy As PolicyHelper,
+            benchmarkPayrollHelper As BenchmarkPayrollHelper,
+            bpiInsuranceAmountReportDataService As BpiInsuranceAmountReportDataService,
+            leaveService As LeaveService,
+            listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            systemOwnerService As SystemOwnerService,
+            branchRepository As BranchRepository,
+            allowanceRepository As AllowanceRepository,
+            calendarRepository As CalendarRepository,
+            divisionRepository As DivisionRepository,
+            employeeRepository As EmployeeRepository,
+            listOfValueRepository As ListOfValueRepository,
+            payFrequencyRepository As PayFrequencyRepository,
+            payPeriodRepository As PayPeriodRepository,
+            positionRepository As PositionRepository,
+            salaryRepository As SalaryRepository,
+            userRepository As UserRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -62,12 +109,29 @@ Public Class EmployeeForm
         'since form events can trigger without the form being loaded by VB
         'Still, VB can bypass the constructor on the order of call
         'since it allows calling its form methods by outside code statically
-        _policy = New PolicyHelper
-        _branchRepository = New BranchRepository()
-        _leaveRepository = New LeaveRepository()
-        _listOfValueRepository = New ListOfValueRepository()
-        _positionRepository = New PositionRepository()
-        _userRepository = New UserRepository()
+        _context = context
+        _policy = policy
+        _benchmarkPayrollHelper = benchmarkPayrollHelper
+        _bpiInsuranceAmountReportDataService = bpiInsuranceAmountReportDataService
+
+        _leaveService = leaveService
+        _listOfValueService = listOfValueService
+        _payPeriodService = payPeriodService
+        _systemOwnerService = systemOwnerService
+
+        _allowanceRepository = allowanceRepository
+        _branchRepository = branchRepository
+        _calendarRepository = calendarRepository
+        _divisionRepository = divisionRepository
+        _employeeRepository = employeeRepository
+        _listOfValueRepository = listOfValueRepository
+        _payFrequencyRepository = payFrequencyRepository
+        _payPeriodRepository = payPeriodRepository
+        _positionRepository = positionRepository
+        _salaryRepository = salaryRepository
+        _userRepository = userRepository
+        _userActivityRepository = userActivityRepository
+
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -922,12 +986,12 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim newleaveBalance = Await _leaveRepository.
+                Dim newleaveBalance = Await _leaveService.
                                             ForceUpdateLeaveAllowanceAsync(
                                                         employeeId:=employeeId,
                                                         organizationId:=z_OrganizationID,
                                                         userId:=z_User,
-                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
+                                                        selectedLeaveType:=LeaveType.Vacation,
                                                         newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
@@ -958,8 +1022,7 @@ Public Class EmployeeForm
             dgvEmp_RowIndex = 0
             If succeed Then
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, EmployeeEntityName, employee_RowID, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, EmployeeEntityName, employee_RowID, z_OrganizationID)
                 InfoBalloon("Employee ID '" & txtEmpID.Text & "' has been created successfully.", "New Employee successfully created", lblforballoon, 0, -69, , 5000)
 
             End If
@@ -1084,17 +1147,17 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
-    Private Shared Function GetOldEmployee(employee_RowID As Integer?) As Employee
+    Private Function GetOldEmployee(employee_RowID As Integer?) As Employee
 
         If employee_RowID.HasValue = False Then Return Nothing
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder(_context)
 
             Return employeeBuilder.
                     IncludePayFrequency().
                     IncludePosition().
                     IncludeBranch().
-                    GetById(employee_RowID.Value)
+                    GetById(employee_RowID.Value, z_OrganizationID)
 
         End Using
 
@@ -1554,8 +1617,7 @@ Public Class EmployeeForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, EmployeeEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
             Return True
         End If
 
@@ -1748,9 +1810,6 @@ Public Class EmployeeForm
         cboEmpStat.Enabled = True
         tsbtnNewEmp.Enabled = True : loadPositName()
 
-        newEmpType.Close()
-        newEmpStat.Close()
-        newPostion.Close()
     End Sub
 
     Private Sub Employee_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -1795,10 +1854,6 @@ Public Class EmployeeForm
 
             myBalloon(, , lblforballoon, , , 1)
             InfoBalloon(, , Label235, , , 1)
-
-            newPostion.Close()
-            newEmpStat.Close()
-            newEmpType.Close()
 
             showAuditTrail.Close()
 
@@ -1903,8 +1958,8 @@ Public Class EmployeeForm
 
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_laglobal = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_laglobal = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
 
         If if_sysowner_is_benchmark Then
 
@@ -2473,14 +2528,14 @@ Public Class EmployeeForm
         listofEditDepen.Clear()
     End Sub
 
-    Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
+    Private Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder(_context)
 
             Return employeeBuilder.
                     IncludePayFrequency().
                     IncludePosition().
-                    GetById(employeeID)
+                    GetById(employeeID, z_OrganizationID)
 
         End Using
     End Function
@@ -2606,12 +2661,6 @@ Public Class EmployeeForm
             End If
         End If
 
-    End Sub
-
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-        newPostion.Close()
-        newEmpType.Close()
-        newEmpStat.Show() : newEmpStat.BringToFront()
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
@@ -2772,12 +2821,6 @@ Public Class EmployeeForm
         Else
             txtCell.Visible = False
         End If
-    End Sub
-
-    Private Sub Button5_Click(sender As Object, e As EventArgs) Handles Button5.Click
-        'Regular Exempt, Regular Non Exempt, Contractor
-        newPostion.Close() : newEmpStat.Close()
-        newEmpType.Show() : newEmpType.BringToFront()
     End Sub
 
     Dim curr_empColm As String
@@ -3512,9 +3555,6 @@ Public Class EmployeeForm
         Finally
             conn.Close()
             listofEditDepen.Clear()
-            newEmpType.Close()
-            newEmpStat.Close()
-            newPostion.Close()
 
             'EXECQUER("")
 
@@ -3808,7 +3848,7 @@ Public Class EmployeeForm
             enlistTheLists("SELECT DisplayValue FROM listofval WHERE Type='Employee Relationship' ORDER BY OrderBy;",
                            emp_ralation)
 
-            Dim payFrequencies = Await (New PayFrequencyRepository()).GetAllAsync()
+            Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
             _payFrequencies = payFrequencies.
                                 Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
                                     p.RowID = PayFrequencyType.Weekly).ToList
@@ -3870,7 +3910,7 @@ Public Class EmployeeForm
             AddHandler dgvDepen.SelectionChanged, AddressOf dgvDepen_SelectionChanged
 
             Panel1.Visible =
-                (Panel1.AccessibleDescription = sys_ownr.GetCurrentSystemOwner())
+                (Panel1.AccessibleDescription = _systemOwnerService.GetCurrentSystemOwner())
 
         End If
 
@@ -4680,8 +4720,7 @@ Public Class EmployeeForm
                 fillempdisciplinary()
                 fillempdisciplinaryselected(dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, DisciplinaryActionEntityName, dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, DisciplinaryActionEntityName, dgvDisciplinaryList.CurrentRow.Cells(c_rowid.Index).Value, z_OrganizationID)
 
                 myBalloon("Successfully Save", "Saving...", lblforballoon, , -100)
             End If
@@ -4743,8 +4782,7 @@ Public Class EmployeeForm
             Dim sql As New SQL(str_quer)
             sql.ExecuteQuery()
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DisciplinaryActionEntityName, selected_rowids.First, z_OrganizationID)
+            _userActivityRepository.RecordDelete(z_User, DisciplinaryActionEntityName, selected_rowids.First, z_OrganizationID)
 
             If sql.HasError = False Then
 
@@ -5366,8 +5404,7 @@ Public Class EmployeeForm
                                       paramValues(8),
                                       paramValues(10))
 
-            Dim repo As New UserActivityRepository
-            repo.RecordAdd(z_User, PromotionEntityName, paramValues(0), z_OrganizationID)
+            _userActivityRepository.RecordAdd(z_User, PromotionEntityName, paramValues(0), z_OrganizationID)
         Else
             With dgvPromotionList.CurrentRow
 
@@ -6253,7 +6290,10 @@ Public Class EmployeeForm
 
     Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
-        Dim form As New AddBranchForm
+        Dim form As New AddBranchForm(_branchRepository,
+                                      _calendarRepository,
+                                      _employeeRepository,
+                                      _listOfValueService)
         form.ShowDialog()
 
         If form.HasChanges Then
@@ -6303,7 +6343,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
-        Using importForm = New ImportEmployeeForm()
+        Using importForm = New ImportEmployeeForm(_employeeRepository,
+                                                _divisionRepository,
+                                                _positionRepository,
+                                                _userActivityRepository)
             If Not importForm.ShowDialog() = DialogResult.OK Then
                 Return
             End If
@@ -6351,17 +6394,17 @@ Public Class EmployeeForm
     End Sub
 
     Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
-        Dim userActivity As New UserActivityForm(EmployeeEntityName)
+        Dim userActivity As New UserActivityForm(EmployeeEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 
     Private Sub UserActivityPromotionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPromotionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PromotionEntityName)
+        Dim userActivity As New UserActivityForm(PromotionEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 
     Private Sub UserActivityDisciplinaryActionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityDisciplinaryActionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(DisciplinaryActionEntityName)
+        Dim userActivity As New UserActivityForm(DisciplinaryActionEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 
@@ -6613,17 +6656,21 @@ Public Class EmployeeForm
         Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
 
         Dim employee As Employee
-        Using builder = New EmployeeRepository.EmployeeBuilder(z_OrganizationID)
+        Using builder = New EmployeeRepository.EmployeeBuilder(_context)
 
             employee = Await builder.IncludePosition().
                                         IncludeBranch().
                                         ByEmployeeNumber(employeeNumber).
-                                        FirstOrDefaultAsync()
+                                        FirstOrDefaultAsync(z_OrganizationID)
         End Using
 
         Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
 
-        Dim report = New LaGlobalEmployeeReports(employee)
+        Dim report = New LaGlobalEmployeeReports(_context,
+                                                 _bpiInsuranceAmountReportDataService,
+                                                 _employeeRepository,
+                                                 _payPeriodRepository,
+                                                 employee)
         report.Print(selectedReport)
     End Sub
 

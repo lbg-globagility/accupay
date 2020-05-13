@@ -20,9 +20,15 @@ Public Class BenchmarkPaystubForm
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
+    Private _overtimeRateService As OvertimeRateService
+
+    Private _payPeriodService As PayPeriodService
+
     Private _adjustmentRepository As AdjustmentRepository
 
     Private _employeeRepository As EmployeeRepository
+
+    Private _payPeriodRepository As PayPeriodRepository
 
     Private _paystubRepository As PaystubRepository
 
@@ -36,21 +42,25 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Sub New(payPeriodService As PayPeriodService,
+    Sub New(overtimeRateService As OvertimeRateService,
+            payPeriodService As PayPeriodService,
             adjustmentRepository As AdjustmentRepository,
             employeeRepository As EmployeeRepository,
-            salaryRepository As SalaryRepository,
+            payPeriodRepository As PayPeriodRepository,
             paystubRepository As PaystubRepository,
-            productRepository As ProductRepository)
+            productRepository As ProductRepository,
+            salaryRepository As SalaryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
+        _overtimeRateService = overtimeRateService
         _payPeriodService = payPeriodService
         _adjustmentRepository = adjustmentRepository
         _employeeRepository = employeeRepository
         _salaryRepository = salaryRepository
+        _payPeriodRepository = payPeriodRepository
         _paystubRepository = paystubRepository
         _productRepository = productRepository
         _salaries = New List(Of Salary)
@@ -102,7 +112,7 @@ Public Class BenchmarkPaystubForm
             Return
         End If
 
-        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+        _overtimeRate = Await _overtimeRateService.GetOvertimeRates()
 
         Await LoadPayrollDetails()
     End Function
@@ -130,7 +140,7 @@ Public Class BenchmarkPaystubForm
 
     Private Async Function GetCutOffPeriod() As Task
         _currentPayPeriod = Await _payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function
@@ -278,7 +288,9 @@ Public Class BenchmarkPaystubForm
 
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value))).ToString
+
+        Dim leaveBalanceInHours = (Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value))
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays(leaveBalanceInHours).ToString
 
         GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
@@ -765,8 +777,7 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
+        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then

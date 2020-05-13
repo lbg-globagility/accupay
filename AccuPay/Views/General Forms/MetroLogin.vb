@@ -3,17 +3,33 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
-    Private _userRepository As UserRepository
+
+    Private _listOfValueService As ListOfValueService
 
     Private _organizationRepository As OrganizationRepository
+
+    Private _userRepository As UserRepository
+
     Private err_count As Integer
     Private freq As String
 
+    Sub New(listOfValueService As ListOfValueService,
+            organizationRepository As OrganizationRepository,
+            userRepository As UserRepository)
+
+        InitializeComponent()
+
+        _listOfValueService = listOfValueService
+
+        _organizationRepository = organizationRepository
+
+        _userRepository = userRepository
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
-        _userRepository = New UserRepository()
-        _organizationRepository = New OrganizationRepository
 
         ReloadOrganization()
 
@@ -175,7 +191,14 @@ Public Class MetroLogin
         If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
 
         If Await CheckIfAuthorizedByUserLevel() Then
-            MDIPrimaryForm.Show()
+
+            Using MainServiceProvider
+                Dim form = MainServiceProvider.GetRequiredService(Of MDIPrimaryForm)()
+
+                form.Show()
+
+            End Using
+
         End If
 
         enableButton()
@@ -190,7 +213,7 @@ Public Class MetroLogin
             Return False
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
             Return True

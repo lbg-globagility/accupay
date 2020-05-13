@@ -5,11 +5,12 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class MDIPrimaryForm
 
-    Dim DefaultFontStyle = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim DefaultFontStyle = New Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Dim ExemptedForms As New List(Of String)
 
@@ -32,17 +33,24 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
-    Private sys_ownr As New SystemOwnerService()
-
+    Private _listOfValueService As ListOfValueService
+    Private _systemOwnerService As SystemOwnerService
     Private _userRepository As UserRepository
 
-    Sub New()
-        ' This call is required by the designer.
+    Sub New(listOfValueService As ListOfValueService,
+            systemOwnerService As SystemOwnerService,
+            userRepository As UserRepository)
+
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_cinema2k = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
-        if_sysowner_is_hyundai = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+
+        _listOfValueService = listOfValueService
+        _systemOwnerService = systemOwnerService
+        _userRepository = userRepository
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_cinema2k = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
+        if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+
         PrepareFormForBenchmark()
     End Sub
 
@@ -230,26 +238,31 @@ Public Class MDIPrimaryForm
                     Thread.Sleep(1175)
                 End If
 
-                With MetroLogin
+                Using MainServiceProvider
+                    Dim form = MainServiceProvider.GetRequiredService(Of MetroLogin)()
 
-                    .Show()
+                    With form
 
-                    .txtbxUserID.Clear()
+                        .Show()
 
-                    .txtbxPword.Clear()
+                        .txtbxUserID.Clear()
 
-                    .txtbxUserID.Focus()
+                        .txtbxPword.Clear()
 
-                    .PhotoImages.Image = Nothing
+                        .txtbxUserID.Focus()
 
-                    .cbxorganiz.SelectedIndex = -1
+                        .PhotoImages.Image = Nothing
 
-                    .ReloadOrganization()
+                        .cbxorganiz.SelectedIndex = -1
 
-                    If Debugger.IsAttached Then
-                        .AssignDefaultCredentials()
-                    End If
-                End With
+                        .ReloadOrganization()
+
+                        If Debugger.IsAttached Then
+                            .AssignDefaultCredentials()
+                        End If
+                    End With
+
+                End Using
 
             ElseIf prompt = MsgBoxResult.No Then
                 e.Cancel = True
@@ -262,8 +275,6 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _userRepository = New UserRepository()
-
         Try
             PrepareForm(sender, e)
         Catch ex As Exception
@@ -304,7 +315,7 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -346,9 +357,9 @@ Public Class MDIPrimaryForm
     'Trebuchet MS
     'Segoe UI
 
-    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim isHome As SByte = 0
 
@@ -396,7 +407,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(GeneralForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of GeneralForm)()
+            ChangeForm(form)
+        End Using
 
         HRISForm.Hide()
         PayrollForm.Hide()
@@ -420,7 +434,6 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(0, sender, e)
     End Sub
 
     Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles TimeToolStripButton.Click
@@ -429,7 +442,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(TimeAttendForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of TimeAttendForm)()
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -453,111 +469,9 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(2, sender, e)
     End Sub
 
     Dim theemployeetable As New DataTable
-
-    Sub refresh_previousForm(Optional groupindex As Object = 0,
-                             Optional sndr As Object = 0,
-                             Optional ee As EventArgs = Nothing)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            'once = 1
-
-            Exit Sub
-
-        End If
-
-        Static countchanges As Integer = -1
-
-        If previousForm IsNot Nothing Then
-
-            If groupindex = 0 Then 'General
-
-                If previousForm.Name = "UsersFrom" Then
-
-                ElseIf previousForm.Name = "ListOfValueForm" Then
-
-                ElseIf previousForm.Name = "OrganizatinoForm" Then
-
-                ElseIf previousForm.Name = "UserPrivilegeForm" Then
-
-                ElseIf previousForm.Name = "PhilHealht" Then
-
-                ElseIf previousForm.Name = "SSSCntrib" Then
-
-                ElseIf previousForm.Name = "Payrate" Then
-
-                ElseIf previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "userprivil" Then
-
-                ElseIf previousForm.Name = "Revised_Withholding_Tax_Tables" Then
-
-                End If
-
-            ElseIf groupindex = 1 Then 'HRIS
-
-                If previousForm.Name = "Employee" Then
-
-                    With EmployeeForm
-
-                        Select Case .tabIndx
-
-                            Case .GetEmployeeProfileTabPageIndex
-                                If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetAttachmentTabPageIndex
-                                If .listofEditRoweatt.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                        End Select
-
-                    End With
-
-                ElseIf previousForm.Name = "Positn" Then
-
-                ElseIf previousForm.Name = "EmpPosition" Then
-
-                ElseIf previousForm.Name = "DivisionForm" Then
-
-                End If
-
-            ElseIf groupindex = 2 Then 'Time Attendance
-
-                If previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "EmployeeShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "Payrate" Then 'ShiftEntryForm
-
-                ElseIf previousForm.Name = "EmpTimeDetail" Then
-
-                ElseIf previousForm.Name = "EmpTimeEntry" Then
-
-                End If
-
-            ElseIf groupindex = 3 Then 'Payroll
-                If previousForm.Name = "Paystub" Then
-                    With PayStubForm
-                        .btnrefresh_Click(sndr, ee)
-                    End With
-                End If
-            End If
-
-            countchanges = theemployeetable.Rows.Count
-        End If
-    End Sub
 
     Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
@@ -565,7 +479,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(PayrollForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of PayrollForm)()
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -589,8 +506,6 @@ Public Class MDIPrimaryForm
         TimeToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(3, sender, e)
-
     End Sub
 
     Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
@@ -599,7 +514,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(HRISForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of HRISForm)()
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         PayrollForm.Hide()
@@ -622,8 +540,6 @@ Public Class MDIPrimaryForm
         TimeToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
-
-        refresh_previousForm(1, sender, e)
     End Sub
 
     'Toggling pin status
@@ -911,7 +827,7 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 

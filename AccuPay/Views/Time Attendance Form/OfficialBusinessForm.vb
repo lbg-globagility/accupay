@@ -86,7 +86,9 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Using form = New ImportOBForm()
+        Using form = New ImportOBForm(_employeeRepository,
+                                      _officialBusinessRepository,
+                                      _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -642,7 +644,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 
