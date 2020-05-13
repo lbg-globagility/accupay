@@ -14,6 +14,8 @@ Public Class AwardTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _awards As IEnumerable(Of Award)
 
     Private _currentAward As Award
@@ -37,9 +39,13 @@ Public Class AwardTab
         End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         pbEmployee.Focus()
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -123,7 +129,7 @@ Public Class AwardTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click

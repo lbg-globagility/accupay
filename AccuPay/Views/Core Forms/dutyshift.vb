@@ -41,22 +41,6 @@
 
     Private Sub tsbtnNewShift_Click(sender As Object, e As EventArgs) Handles tsbtnNewShift.Click
 
-        'dgvshift.EndEdit(True)
-
-        'For Each dgvrow As DataGridViewRow In dgvshift.Rows
-        '    If dgvrow.IsNewRow Then
-        '        dgvrow.Cells("shf_TimeFrom").Selected = True
-        '        dgvleaveRowindx = dgvrow.Index
-        '        Exit For
-        '    End If
-        'Next
-
-        'mtxtTimeFrom.Text = ""
-
-        'mtxtTimeTo.Text = ""
-
-        'dtpTimeFrom.Focus()
-
         MDIPrimaryForm.ToolStripButton1_Click(sender, e)
 
         GeneralForm.ChangeForm(ShiftEntryForm)

@@ -14,6 +14,8 @@ Public Class AttachmentTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _attachments As IEnumerable(Of Attachment)
 
     Private _currentAttachment As Attachment
@@ -40,8 +42,11 @@ Public Class AttachmentTab
         End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -121,7 +126,7 @@ Public Class AttachmentTab
     End Sub
 
     Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles ToolStripButton16.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click

@@ -14,6 +14,8 @@ Public Class EducationalBackgroundTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _educationalBackgrounds As IEnumerable(Of EducationalBackground)
 
     Private _currentEducBg As EducationalBackground
@@ -37,8 +39,11 @@ Public Class EducationalBackgroundTab
         End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = _employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
@@ -135,7 +140,7 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Sub Date_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged

@@ -2379,74 +2379,49 @@ Public Class EmployeeForm
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await AwardTab.SetEmployee(employee)
+                    Await AwardTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpCertifications Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await CertificationTab.SetEmployee(employee)
+                    Await CertificationTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpDiscipAct Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await DisciplinaryActionTab.SetEmployee(employee)
+                    Await DisciplinaryActionTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpEducBG Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await EducationalBackgroundTab.SetEmployee(employee)
+                    Await EducationalBackgroundTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpPrevEmp Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await PreviousEmployerTab.SetEmployee(employee)
+                    Await PreviousEmployerTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpPromotion Then 'Promotion
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await PromotionTab.SetEmployee(employee)
-
-                    ''controlfalsePromot()
-                    'fillpromotions()
-                    ''fillselectedpromotions()
-                    'txtFNamePromot.Text = employeefullname
-                    'txtEmpIDPromot.Text = subdetails '"ID# " & .Cells("Column1").Value
-
-                    'pbEmpPicPromot.Image = Nothing
-                    'pbEmpPicPromot.Image = EmployeeImage
-                    'txtpositfrompromot.Text = ""
-                    'cmbto.Text = ""
-                    'txtempcurrbasicpay.Text = "0"
-                    'txtReasonPromot.Text = ""
-                    'cmbfrom.Text = txtpositfrompromot.Text
-                    'cmbfrom_SelectedIndexChanged(sender, e)
-
-                    'cmbto.Enabled = 0
-                    'dtpEffectivityDate.Enabled = 0
-                    'cmbflg.Enabled = 0
-
-                    'Label82.Visible = False
-                    'lblpeso.Visible = False
-                    'txtbasicpay.Visible = False
-                    'RemoveHandler cmbflg.SelectedIndexChanged, AddressOf cmbflg_SelectedIndexChanged
-                    'Label142.Text = "Current salary"
+                    Await PromotionTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpBonus Then 'Bonus
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await BonusTab.SetEmployee(employee)
+                    Await BonusTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await AttachmentTab.SetEmployee(employee)
+                    Await AttachmentTab.SetEmployee(employee, Me)
 
                 ElseIf selectedTab Is tbpNewSalary Then
 
@@ -2455,7 +2430,7 @@ Public Class EmployeeForm
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await SalaryTab.SetEmployee(employee)
+                    Await SalaryTab.SetEmployee(employee, Me)
                 End If
 
                 If txtdgvDepen IsNot Nothing Then

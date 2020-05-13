@@ -12,6 +12,8 @@ Public Class PreviousEmployerTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _previousEmployers As IEnumerable(Of PreviousEmployer)
 
     Private _currentPrevEmployer As PreviousEmployer
@@ -34,9 +36,13 @@ Public Class PreviousEmployerTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         pbEmployee.Focus()
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -147,7 +153,7 @@ Public Class PreviousEmployerTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click

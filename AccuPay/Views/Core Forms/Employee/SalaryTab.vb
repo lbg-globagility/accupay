@@ -20,6 +20,8 @@ Public Class SalaryTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _salaries As List(Of Salary)
 
     Private _currentSalary As Salary
@@ -90,9 +92,11 @@ Public Class SalaryTab
         End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
 
         _employee = employee
+
+        _parentForm = parentForm
 
         If Await InitializeBenchmarkData() = False Then
             Return
@@ -624,7 +628,7 @@ Public Class SalaryTab
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 
-        EmployeeForm.Close()
+        _parentForm.Close()
 
     End Sub
 
