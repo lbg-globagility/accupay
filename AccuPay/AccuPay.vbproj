@@ -495,10 +495,22 @@
     <Compile Include="Views\Core Forms\Calendars\NewCalendarDialog.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAttachmentForm.Designer.vb">
+      <DependentUpon>AddAttachmentForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddAttachmentForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\AddAwardForm.Designer.vb">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddAwardForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddDisciplinaryAction.Designer.vb">
+      <DependentUpon>AddDisciplinaryAction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddDisciplinaryAction.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.Designer.vb">
@@ -513,10 +525,46 @@
     <Compile Include="Views\Core Forms\Employee\AddPreviousEmployerForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.Designer.vb">
+      <DependentUpon>AddPromotionForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddPromotionForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AttachmentTab.Designer.vb">
+      <DependentUpon>AttachmentTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AttachmentTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\DisciplinaryActionTab.Designer.vb">
+      <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\DisciplinaryActionTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.Designer.vb">
+      <DependentUpon>NewListOfValDisciplinaryPenaltyForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.Designer.vb">
+      <DependentUpon>NewProductDisciplinaryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.Designer.vb">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PromotionTab.Designer.vb">
+      <DependentUpon>PromotionTab.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\PromotionTab.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.Designer.vb">
@@ -1903,8 +1951,14 @@
     <EmbeddedResource Include="Views\Core Forms\Calendars\NewCalendarDialog.resx">
       <DependentUpon>NewCalendarDialog.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddAttachmentForm.resx">
+      <DependentUpon>AddAttachmentForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddAwardForm.resx">
       <DependentUpon>AddAwardForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddDisciplinaryAction.resx">
+      <DependentUpon>AddDisciplinaryAction.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddEducationalBackgroundForm.resx">
       <DependentUpon>AddEducationalBackgroundForm.vb</DependentUpon>
@@ -1912,8 +1966,26 @@
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPreviousEmployerForm.resx">
       <DependentUpon>AddPreviousEmployerForm.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddPromotionForm.resx">
+      <DependentUpon>AddPromotionForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AttachmentTab.resx">
+      <DependentUpon>AttachmentTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\DisciplinaryActionTab.resx">
+      <DependentUpon>DisciplinaryActionTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\NewListOfValDisciplinaryPenaltyForm.resx">
+      <DependentUpon>NewListOfValDisciplinaryPenaltyForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\NewProductDisciplinaryForm.resx">
+      <DependentUpon>NewProductDisciplinaryForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\PromotionTab.resx">
+      <DependentUpon>PromotionTab.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\PayStub\SelectPayPeriodSimple.resx">
       <DependentUpon>SelectPayPeriodSimple.vb</DependentUpon>

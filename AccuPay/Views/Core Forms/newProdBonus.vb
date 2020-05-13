@@ -16,6 +16,8 @@ Public Class newProdBonus
 
     End Sub
 
+    Private _productRepo As New ProductRepository
+
     Private Sub newProdBonus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()
 

@@ -14,9 +14,17 @@ Public Class AddCertificationForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
+    Private _certificationRepo As CertificationRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _certificationRepo = New CertificationRepository()
+
+        _userActivityRepo = New UserActivityRepository()
     End Sub
 
     Private Sub AddCertificationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -54,11 +62,9 @@ Public Class AddCertificationForm
                     .CreatedBy = z_User
                 End With
 
-                Dim awardRepo = New CertificationRepository
-                Await awardRepo.CreateAsync(_newCertification)
+                Await _certificationRepo.CreateAsync(_newCertification)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -99,7 +105,7 @@ Public Class AddCertificationForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

@@ -20,9 +20,21 @@ Public Class AddBonusForm
 
     Private _newBonus As New Bonus()
 
+    Private _bonusRepo As BonusRepository
+
+    Private _productRepo As ProductRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _bonusRepo = New BonusRepository
+
+        _productRepo = New ProductRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Async Sub AddBonusForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -30,11 +42,9 @@ Public Class AddBonusForm
         EmployeeNumberTextbox.Text = _employee.EmployeeIdWithPositionAndEmployeeType
         EmployeePictureBox.Image = ConvByteToImage(_employee.Image)
 
-        Dim productRepo = New ProductRepository
-        _products = Await productRepo.GetBonusTypesAsync(z_OrganizationID)
+        _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
-        Dim bonusRepo = New BonusRepository
-        _frequencies = bonusRepo.GetFrequencyList
+        _frequencies = _bonusRepo.GetFrequencyList
 
         BindDataSource()
         ClearForm()
@@ -55,7 +65,7 @@ Public Class AddBonusForm
         dtpbonenddate.Value = Today
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
@@ -110,11 +120,9 @@ Public Class AddBonusForm
                 .TaxableFlag = product.Status
             End With
 
-            Dim bonusRepo = New BonusRepository
-            Await bonusRepo.CreateAsync(_newBonus)
+            Await _bonusRepo.CreateAsync(_newBonus)
 
-            Dim userActivityRepo = New UserActivityRepository
-            userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
+            _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
             succeed = True
         End Function)
 

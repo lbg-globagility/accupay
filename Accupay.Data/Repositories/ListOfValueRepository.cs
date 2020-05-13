@@ -34,7 +34,17 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeChecklistsAsync()
+        {
+            return await GetListOfValuesAsync("Employee Checklist");
+        }
+
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeDisciplinaryPenalties()
+        {
+            return await GetListOfValuesAsync("Employee Disciplinary Penalty");
+        }
+
+        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("ShiftPolicy");
         }
@@ -84,6 +94,24 @@ namespace AccuPay.Data.Repositories
             }
 
             return stringList;
+        }
+
+        public async Task DeleteAsync(ListOfValue value)
+        {
+            _context.ListOfValues.Remove(value);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(ListOfValue value)
+        {
+            _context.Entry(value).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(ListOfValue value)
+        {
+            _context.ListOfValues.Add(value);
+            await _context.SaveChangesAsync();
         }
     }
 }

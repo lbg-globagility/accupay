@@ -3,6 +3,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddPreviousEmployerForm
+
+    Private Const FormEntityName As String = "Previous Employer"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
@@ -10,9 +12,17 @@ Public Class AddPreviousEmployerForm
 
     Private _newPreviousEmployer As PreviousEmployer
 
+    Private _previousEmployerRepo As PreviousEmployerRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _previousEmployerRepo = New PreviousEmployerRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub AddAwardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -34,7 +44,7 @@ Public Class AddPreviousEmployerForm
             messageBody = "Contact Name is empty."
         ElseIf String.IsNullOrWhiteSpace(txtMainPhone.Text) Then
             messageBody = "Main Phone is empty."
-        ElseIf String.IsNullOrWhiteSpace(txtEmailAdd.text) Then
+        ElseIf String.IsNullOrWhiteSpace(txtEmailAdd.Text) Then
             messageBody = "Email Address is empty."
         ElseIf String.IsNullOrWhiteSpace(txtCompAddr.Text) Then
             messageBody = "Company Address is empty."
@@ -70,11 +80,9 @@ Public Class AddPreviousEmployerForm
                     .CreatedBy = z_User
                 End With
 
-                Dim prevEmployerRepo = New PreviousEmployerRepository
-                Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
+                Await _previousEmployerRepo.CreateAsync(_newPreviousEmployer)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Previous Employer", CInt(_newPreviousEmployer.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -115,7 +123,7 @@ Public Class AddPreviousEmployerForm
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

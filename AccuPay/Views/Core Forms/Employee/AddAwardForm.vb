@@ -14,9 +14,17 @@ Public Class AddAwardForm
 
     Private _newAward As Award
 
+    Private _awardRepo As AwardRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _awardRepo = New AwardRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub AddAwardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -49,11 +57,9 @@ Public Class AddAwardForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim awardRepo = New AwardRepository
-                Await awardRepo.CreateAsync(_newAward)
+                Await _awardRepo.CreateAsync(_newAward)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -81,7 +87,7 @@ Public Class AddAwardForm
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

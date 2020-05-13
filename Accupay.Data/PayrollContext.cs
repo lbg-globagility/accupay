@@ -22,6 +22,7 @@ namespace AccuPay.Data
         internal virtual DbSet<AgencyFee> AgencyFees { get; set; }
         internal virtual DbSet<Allowance> Allowances { get; set; }
         internal virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
+        internal virtual DbSet<Attachment> Attachments { get; set; }
         internal virtual DbSet<Award> Awards { get; set; }
         internal virtual DbSet<Bonus> Bonuses { get; set; }
         internal virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
@@ -31,6 +32,7 @@ namespace AccuPay.Data
         internal virtual DbSet<Category> Categories { get; set; }
         internal virtual DbSet<Certification> Certifications { get; set; }
         internal virtual DbSet<DayType> DayTypes { get; set; }
+        internal virtual DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
         internal virtual DbSet<Division> Divisions { get; set; }
         internal virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
         internal virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
@@ -62,6 +64,7 @@ namespace AccuPay.Data
         internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
         internal virtual DbSet<Privilege> Privileges { get; set; }
         internal virtual DbSet<Product> Products { get; set; }
+        internal virtual DbSet<Promotion> Promotions { get; set; }
         internal virtual DbSet<Salary> Salaries { get; set; }
         internal virtual DbSet<Shift> Shifts { get; set; }
         internal virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }

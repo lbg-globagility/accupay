@@ -19,10 +19,17 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _awardRepo As AwardRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New()
         InitializeComponent()
         dgvAwards.AutoGenerateColumns = False
 
+        _awardRepo = New AwardRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -39,8 +46,8 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim awardRepo = New AwardRepository
-        _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _awards = Await _awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _awards = _awards.OrderByDescending(Function(x) x.AwardDate).ToList()
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
         dgvAwards.DataSource = _awards
@@ -144,11 +151,10 @@ Public Class AwardTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-                    Dim repo = New AwardRepository
-                    Await repo.DeleteAsync(_currentAward)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
+                    Await _awardRepo.DeleteAsync(_currentAward)
+
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
 
                     Await LoadAwards()
                 End Function)
@@ -208,8 +214,7 @@ Public Class AwardTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim awardRepo = New AwardRepository
-                    Await awardRepo.UpdateAsync(_currentAward)
+                    Await _awardRepo.UpdateAsync(_currentAward)
 
                     RecordUpdateAward(oldAward)
 
@@ -221,7 +226,7 @@ Public Class AwardTab
             End Function)
 
         If succeed Then
-            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            ShowBalloonInfo("Award successfuly saved.", messageTitle)
             Return True
         End If
         Return False
@@ -268,8 +273,7 @@ Public Class AwardTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
 End Class

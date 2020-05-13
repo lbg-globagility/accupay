@@ -1,7 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Utilities
-
 Public Class Overtime
 
     Public Property OvertimeDate As Date

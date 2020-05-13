@@ -4,35 +4,31 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
-    [Table("listofval")]
-    public class ListOfValue
+    [Table("employeeattachments")]
+    public class Attachment
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
-
+        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
-        public int? CreatedBy { get; set; }
+        public int CreatedBy { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
 
-        public int? OrganizationID { get; set; }
-
-        public string LIC { get; set; }
-
-        public string DisplayValue { get; set; }
+        public int EmployeeID { get; set; }
 
         public string Type { get; set; }
 
-        public string ParentLIC { get; set; }
+        public byte[] AttachedFile { get; set; }
 
-        public string Active { get; set; }
+        public string FileType { get; set; }
 
-        public string Description { get; set; }
-
-        public int? OrderBy { get; set; }
-    }
+        public string FileName { get; set; }
+        }
 }

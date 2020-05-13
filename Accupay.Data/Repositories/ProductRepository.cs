@@ -40,6 +40,18 @@ namespace AccuPay.Data.Repositories
             return await AddProductAsync(loanName, product, organizationId, userId, isTaxable);
         }
 
+        public async Task<Product> AddDecipilinaryTypeAsync(string name, int organizationId, int userId, string description)
+        {
+            Product product = new Product
+            {
+                Category = ProductConstant.EMPLOYEE_DISCIPLINARY_CATEGORY,
+                Description = description,
+                ActiveData = true
+            };
+
+            return await AddProductAsync(name, product, organizationId, userId);
+        }
+
         public async Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId)
         {
             Product product = new Product
@@ -54,7 +66,8 @@ namespace AccuPay.Data.Repositories
         {
             Product product = new Product
             {
-                Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY
+                Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY,
+                
             };
 
             return await AddProductAsync(allowanceName, product, organizationId, userId);
@@ -119,6 +132,27 @@ namespace AccuPay.Data.Repositories
 
             return newProduct;
         }
+        
+        public async Task<Product> UpdateDisciplinaryTypeAsync(int id, int userId, string adjustmentName, string description)
+        {
+            using (var context = new PayrollContext())
+            {
+                var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+
+                if (product == null) return null;
+
+                product.PartNo = adjustmentName.Trim();
+                product.Name = adjustmentName.Trim();
+                product.Description = description;
+                product.LastUpdBy = userId;
+
+                await context.SaveChangesAsync();
+
+                var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+
+                return newProduct;
+            }
+        }
 
         #endregion CRUD
 
@@ -180,6 +214,14 @@ namespace AccuPay.Data.Repositories
         public async Task<IEnumerable<Product>> GetBonusTypesAsync(int organizationId)
         {
             var categoryName = ProductConstant.BONUS_TYPE_CATEGORY;
+
+            var category = await GetOrCreateCategoryByName(categoryName, organizationId);
+            return await GetProductsByCategory(category.RowID, organizationId);
+        }
+
+        public async Task<IEnumerable<Product>> GetDisciplinaryTypesAsync(int organizationId)
+        {
+            var categoryName = ProductConstant.EMPLOYEE_DISCIPLINARY_CATEGORY;
 
             var category = await GetOrCreateCategoryByName(categoryName, organizationId);
             return await GetProductsByCategory(category.RowID, organizationId);

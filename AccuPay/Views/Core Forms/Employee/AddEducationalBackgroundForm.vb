@@ -3,6 +3,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 
 Public Class AddEducationalBackgroundForm
+
+    Private Const FormEntityName As String = "Educational Background"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
@@ -10,9 +12,17 @@ Public Class AddEducationalBackgroundForm
 
     Private _newEducBg As EducationalBackground
 
+    Private _educBgRepo As EducationalBackgroundRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _educBgRepo = New EducationalBackgroundRepository
+
+        _userActivityRepo = New UserActivityRepository
     End Sub
 
     Private Sub AddEducationalBackgroundForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -68,11 +78,9 @@ Public Class AddEducationalBackgroundForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim educBGRepo = New EducationalBackgroundRepository
-                Await educBGRepo.CreateAsync(_newEducBg)
+                Await _educBgRepo.CreateAsync(_newEducBg)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, "Educational Background", CInt(_newEducBg.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -89,7 +97,7 @@ Public Class AddEducationalBackgroundForm
         End If
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 
