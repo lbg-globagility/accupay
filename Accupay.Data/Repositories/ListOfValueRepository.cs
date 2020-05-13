@@ -44,9 +44,14 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Employee Disciplinary Penalty");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("ShiftPolicy");
+        }
+
+        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        {
+            return await GetListOfValuesAsync("DutyShift");
         }
 
         public IEnumerable<ListOfValue> GetDutyShiftPolicies()

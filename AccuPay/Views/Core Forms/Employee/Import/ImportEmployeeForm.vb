@@ -26,14 +26,14 @@ Public Class ImportEmployeeForm
 
 #End Region
 
-    Sub New(employeeRepositor As EmployeeRepository,
+    Sub New(employeeRepository As EmployeeRepository,
             divisionRepository As DivisionRepository,
             positionRepository As PositionRepository,
             userActivityRepository As UserActivityRepository)
 
         InitializeComponent()
 
-        _employeeRepository = employeeRepositor
+        _employeeRepository = employeeRepository
         _divisionRepository = divisionRepository
         _positionRepository = positionRepository
         _userActivityRepository = userActivityRepository

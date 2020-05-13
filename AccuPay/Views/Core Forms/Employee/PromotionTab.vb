@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Text.RegularExpressions
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -6,6 +7,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PromotionTab
 
@@ -21,26 +23,30 @@ Public Class PromotionTab
 
     Private _currentPromotion As Promotion
 
+    Private _positionRepo As PositionRepository
+
     Private _promotionRepo As PromotionRepository
 
     Private _salaryRepo As SalaryRepository
 
-    Private _positionRepo As PositionRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvPromotions.AutoGenerateColumns = False
 
-        _promotionRepo = New PromotionRepository
+        Using MainServiceProvider
+            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
+            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _salaryRepo = New SalaryRepository
+        End Using
 
-        _positionRepo = New PositionRepository
-
-        _userActivityRepo = New UserActivityRepository
     End Sub
+
     Friend Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
         _employee = employee
@@ -160,7 +166,11 @@ Public Class PromotionTab
             Return
         End If
 
-        Dim form As New AddPromotionForm(_employee)
+        Dim form As New AddPromotionForm(_employee,
+                                         _positionRepo,
+                                         _promotionRepo,
+                                         _salaryRepo,
+                                         _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -196,7 +206,7 @@ Public Class PromotionTab
         ElseIf CompensationToString10() = "1" Then
             If String.IsNullOrWhiteSpace(txtNewSalary.Text) Then
                 messageBody = "New Salary is empty."
-            ElseIf Not Regex.IsMatch(txtNewSalary.text, "^(\d*\.)?\d+$") Then
+            ElseIf Not Regex.IsMatch(txtNewSalary.Text, "^(\d*\.)?\d+$") Then
                 messageBody = "New Salary is invalid."
             End If
         End If
@@ -205,7 +215,6 @@ Public Class PromotionTab
             ShowBalloonInfo(messageBody, "Invalid Input")
             Return False
         End If
-
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Promotion",
             Async Function()
@@ -340,7 +349,7 @@ Public Class PromotionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 
@@ -357,4 +366,5 @@ Public Class PromotionTab
             ChangeMode(FormMode.Editing)
         End If
     End Sub
+
 End Class

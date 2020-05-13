@@ -1,10 +1,12 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EducationalBackgroundTab
 
@@ -23,12 +25,16 @@ Public Class EducationalBackgroundTab
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvEducBgs.AutoGenerateColumns = False
 
-        _educBgRepo = New EducationalBackgroundRepository
+        Using MainServiceProvider
+            _educBgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _userActivityRepo = New UserActivityRepository
+        End Using
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -175,7 +181,7 @@ Public Class EducationalBackgroundTab
             Return
         End If
 
-        Dim form As New AddEducationalBackgroundForm(_employee)
+        Dim form As New AddEducationalBackgroundForm(_employee, _educBgRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -193,7 +199,7 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 
@@ -331,4 +337,5 @@ Public Class EducationalBackgroundTab
         End With
         Return False
     End Function
+
 End Class

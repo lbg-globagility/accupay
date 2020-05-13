@@ -4,6 +4,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviousEmployerTab
 
@@ -25,10 +26,14 @@ Public Class PreviousEmployerTab
         InitializeComponent()
         dgvPrevEmployers.AutoGenerateColumns = False
 
-        _previousEmployerRepo = New PreviousEmployerRepository
+        Using MainServiceProvider
+            _previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _userActivityRepo = New UserActivityRepository
+        End Using
+
     End Sub
+
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
         _employee = employee
@@ -82,7 +87,6 @@ Public Class PreviousEmployerTab
                 txtCompAddr.Text = .BusinessAddress
 
             End With
-
         Else
             ClearForm()
         End If
@@ -183,7 +187,7 @@ Public Class PreviousEmployerTab
             Return
         End If
 
-        Dim form As New AddPreviousEmployerForm(_employee)
+        Dim form As New AddPreviousEmployerForm(_employee, _previousEmployerRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -401,7 +405,7 @@ Public Class PreviousEmployerTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 

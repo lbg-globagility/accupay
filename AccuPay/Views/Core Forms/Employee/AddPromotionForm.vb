@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Text.RegularExpressions
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -22,27 +23,30 @@ Public Class AddPromotionForm
 
     Private _latestPromotion As Promotion
 
-    Private _promotionRepo As PromotionRepository
-
     Private _positionRepo As PositionRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private _promotionRepo As PromotionRepository
 
     Private _salaryRepo As SalaryRepository
 
-    Public Sub New(employee As Employee)
+    Private _userActivityRepo As UserActivityRepository
+
+    Public Sub New(employee As Employee,
+                   positionRepo As PositionRepository,
+                   promotionRepo As PromotionRepository,
+                   salaryRepo As SalaryRepository,
+                   userActivityRepo As UserActivityRepository)
         InitializeComponent()
         _employee = employee
 
-        _promotionRepo = New PromotionRepository
+        _positionRepo = positionRepo
 
-        _salaryRepo = New SalaryRepository
+        _promotionRepo = promotionRepo
 
-        _positionRepo = New PositionRepository
+        _salaryRepo = salaryRepo
 
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = userActivityRepo
     End Sub
-
 
     Private Async Sub AddPromotionForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         txtFullName.Text = _employee.FullNameWithMiddleInitial
@@ -115,7 +119,6 @@ Public Class AddPromotionForm
                     Await _salaryRepo.SaveAsync(_newSalary)
                 End If
 
-
                 _newPromotion = New Promotion
                 With _newPromotion
                     .PositionFrom = lblPositionFrom.Text
@@ -135,9 +138,7 @@ Public Class AddPromotionForm
                     End If
                 End With
 
-
                 Await _promotionRepo.CreateAsync(_newPromotion)
-
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPromotion.RowID), z_OrganizationID)
                 succeed = True
@@ -165,7 +166,6 @@ Public Class AddPromotionForm
         End If
 
     End Function
-
 
     Private Function CompensationToString10() As String
         If cboCompensationChange.Text = "Yes" Then
@@ -209,4 +209,5 @@ Public Class AddPromotionForm
             lblReqAsterisk.Visible = False
         End If
     End Sub
+
 End Class

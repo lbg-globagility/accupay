@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace AccuPay.Data.Entities
 {
@@ -30,7 +28,7 @@ namespace AccuPay.Data.Entities
         public DateTime DateFrom { get; set; }
 
         public DateTime DateTo { get; set; }
-        
+
         public int FindingID { get; set; }
 
         [ForeignKey("FindingID")]

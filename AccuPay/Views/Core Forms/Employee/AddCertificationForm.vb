@@ -18,13 +18,17 @@ Public Class AddCertificationForm
 
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee)
+    Public Sub New(employee As Employee,
+                   certificationRepo As CertificationRepository,
+                   userActivityRepo As UserActivityRepository)
+
         InitializeComponent()
+
         _employee = employee
 
-        _certificationRepo = New CertificationRepository()
+        _certificationRepo = certificationRepo
 
-        _userActivityRepo = New UserActivityRepository()
+        _userActivityRepo = userActivityRepo
     End Sub
 
     Private Sub AddCertificationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

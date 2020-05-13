@@ -16,13 +16,17 @@ Public Class AddEducationalBackgroundForm
 
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee)
+    Public Sub New(employee As Employee,
+                   educBgRepo As EducationalBackgroundRepository,
+                   userActivityRepo As UserActivityRepository)
+
         InitializeComponent()
+
         _employee = employee
 
-        _educBgRepo = New EducationalBackgroundRepository
+        _educBgRepo = educBgRepo
 
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = userActivityRepo
     End Sub
 
     Private Sub AddEducationalBackgroundForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -42,6 +46,7 @@ Public Class AddEducationalBackgroundForm
         dtpDateTo.Value = Today
         txtRemarks.Text = ""
     End Sub
+
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
@@ -106,4 +111,5 @@ Public Class AddEducationalBackgroundForm
             dtpDateTo.Value = dtpDateFrom.Value
         End If
     End Sub
+
 End Class

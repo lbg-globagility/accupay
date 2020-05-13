@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Text;
 
 namespace AccuPay.Data.Entities
 {
@@ -28,7 +26,7 @@ namespace AccuPay.Data.Entities
         public int EmployeeID { get; set; }
 
         public string PositionFrom { get; set; }
-        
+
         public string PositionTo { get; set; }
 
         public DateTime? EffectiveDate { get; set; }

@@ -8,15 +8,11 @@ Public Class newProdBonus
 
     Sub New(productRepo As ProductRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
+
         _productRepo = productRepo
 
-        ' Add any initialization after the InitializeComponent() call.
-
     End Sub
-
-    Private _productRepo As New ProductRepository
 
     Private Sub newProdBonus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()

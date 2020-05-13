@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BonusTab
 
@@ -30,14 +31,17 @@ Public Class BonusTab
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvempbon.AutoGenerateColumns = False
 
-        _bonusRepo = New BonusRepository
+        Using MainServiceProvider
+            _bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)()
+            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _productRepo = New ProductRepository
-
-        _userActivityRepo = New UserActivityRepository
+        End Using
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -177,7 +181,7 @@ Public Class BonusTab
             Return
         End If
 
-        Dim form As New AddBonusForm(_employee)
+        Dim form As New AddBonusForm(_employee, _bonusRepo, _productRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -299,7 +303,9 @@ Public Class BonusTab
     End Sub
 
     Private Async Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-        With newProdBonus
+
+        Dim form As New newProdBonus(_productRepo)
+        With form
             .ShowDialog()
         End With
         Await LoadBonuses()
@@ -387,7 +393,7 @@ Public Class BonusTab
     End Sub
 
     Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 

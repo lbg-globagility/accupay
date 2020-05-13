@@ -18,13 +18,17 @@ Public Class AddAwardForm
 
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee)
+    Public Sub New(employee As Employee,
+                   awardRepo As AwardRepository,
+                   userActivityRepo As UserActivityRepository)
+
         InitializeComponent()
+
         _employee = employee
 
-        _awardRepo = New AwardRepository
+        _awardRepo = awardRepo
 
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = userActivityRepo
     End Sub
 
     Private Sub AddAwardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

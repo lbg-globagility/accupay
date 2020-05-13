@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AwardTab
 
@@ -24,12 +25,16 @@ Public Class AwardTab
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvAwards.AutoGenerateColumns = False
 
-        _awardRepo = New AwardRepository
+        Using MainServiceProvider
+            _awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _userActivityRepo = New UserActivityRepository
+        End Using
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -168,7 +173,7 @@ Public Class AwardTab
             Return
         End If
 
-        Dim form As New AddAwardForm(_employee)
+        Dim form As New AddAwardForm(_employee, _awardRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -242,7 +247,7 @@ Public Class AwardTab
     End Function
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 

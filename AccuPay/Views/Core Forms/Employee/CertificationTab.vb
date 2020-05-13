@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
     Private Const FormEntityName As String = "Certification"
@@ -22,12 +23,17 @@ Public Class CertificationTab
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvCertifications.AutoGenerateColumns = False
 
-        _certificationRepo = New CertificationRepository()
+        Using MainServiceProvider
+            _certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        _userActivityRepo = New UserActivityRepository()
+        End Using
+
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -151,7 +157,7 @@ Public Class CertificationTab
             Return
         End If
 
-        Dim form As New AddCertificationForm(_employee)
+        Dim form As New AddCertificationForm(_employee, _certificationRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -317,7 +323,7 @@ Public Class CertificationTab
     End Sub
 
     Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 

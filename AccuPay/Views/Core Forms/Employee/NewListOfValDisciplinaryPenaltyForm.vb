@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -14,13 +15,18 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _listOfValRepo As New ListOfValueRepository
+    Private _listOfValRepo As ListOfValueRepository
 
-    Public Sub New()
+    Public Sub New(listOfValRepo As ListOfValueRepository)
+
         InitializeComponent()
+
         dgvActions.AutoGenerateColumns = False
 
+        _listOfValRepo = listOfValRepo
+
     End Sub
+
     Private Async Sub NewListOfValDisciplinaryPenalty_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await LoadActions()
     End Sub
@@ -58,7 +64,6 @@ Public Class NewListOfValDisciplinaryPenaltyForm
                 txtName.Text = .DisplayValue
                 txtDescription.Text = .Description
             End With
-
         Else
             ClearForm()
         End If
@@ -218,4 +223,5 @@ Public Class NewListOfValDisciplinaryPenaltyForm
 
         _currentAction = New ListOfValue
     End Sub
+
 End Class

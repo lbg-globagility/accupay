@@ -4408,7 +4408,10 @@ Public Class EmployeeForm
 
     Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
-        Dim form As New AddBranchForm
+        Dim form As New AddBranchForm(_branchRepository,
+                                      _calendarRepository,
+                                      _employeeRepository,
+                                      _listOfValueService)
         form.ShowDialog()
 
         If form.HasChanges Then
@@ -4439,7 +4442,10 @@ Public Class EmployeeForm
     End Sub
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
-        Using importForm = New ImportEmployeeForm()
+        Using importForm = New ImportEmployeeForm(_employeeRepository,
+                                                  _divisionRepository,
+                                                  _positionRepository,
+                                                  _userActivityRepository)
             If Not importForm.ShowDialog() = DialogResult.OK Then
                 Return
             End If
@@ -4484,21 +4490,6 @@ Public Class EmployeeForm
         'e.Handled = TrapNumKey(Asc(e.KeyChar))
         e.Handled = New TrapDecimalKey(Asc(e.KeyChar), txtWorkDaysPerYear.Text).ResultTrap
 
-    End Sub
-
-    Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
-        Dim userActivity As New UserActivityForm(EmployeeEntityName)
-        userActivity.ShowDialog()
-    End Sub
-
-    Private Sub UserActivityPromotionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPromotionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PromotionEntityName)
-        userActivity.ShowDialog()
-    End Sub
-
-    Private Sub UserActivityDisciplinaryActionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityDisciplinaryActionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(DisciplinaryActionEntityName)
-        userActivity.ShowDialog()
     End Sub
 
     Private Sub rdbDirectDepo_CheckedChanged(sender As Object, e As EventArgs) Handles rdbDirectDepo.CheckedChanged

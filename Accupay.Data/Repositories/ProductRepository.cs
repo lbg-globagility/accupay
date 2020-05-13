@@ -12,22 +12,22 @@ namespace AccuPay.Data.Repositories
 {
     public class ProductRepository
     {
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
 
         public ProductRepository(PayrollContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         #region CRUD
 
         public async Task DeleteAsync(int id)
         {
-            var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.RowID == id);
 
-            context.Products.Remove(product);
+            _context.Products.Remove(product);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         public async Task<Product> AddBonusTypeAsync(string loanName, int organizationId, int userId, bool isTaxable = false)
@@ -67,7 +67,6 @@ namespace AccuPay.Data.Repositories
             Product product = new Product
             {
                 Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY,
-                
             };
 
             return await AddProductAsync(allowanceName, product, organizationId, userId);
@@ -105,18 +104,18 @@ namespace AccuPay.Data.Repositories
             product.CreatedBy = userId;
             product.OrganizationID = organizationId;
 
-            context.Products.Add(product);
+            _context.Products.Add(product);
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await _context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
             return newProduct;
         }
 
         public async Task<Product> UpdateAdjustmentTypeAsync(int id, int userId, string adjustmentName, string code)
         {
-            var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.RowID == id);
 
             if (product == null) return null;
 
@@ -126,32 +125,29 @@ namespace AccuPay.Data.Repositories
             product.Comments = code;
             product.LastUpdBy = userId;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-            var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await _context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
             return newProduct;
         }
-        
+
         public async Task<Product> UpdateDisciplinaryTypeAsync(int id, int userId, string adjustmentName, string description)
         {
-            using (var context = new PayrollContext())
-            {
-                var product = await context.Products.FirstOrDefaultAsync(p => p.RowID == id);
+            var product = await _context.Products.FirstOrDefaultAsync(p => p.RowID == id);
 
-                if (product == null) return null;
+            if (product == null) return null;
 
-                product.PartNo = adjustmentName.Trim();
-                product.Name = adjustmentName.Trim();
-                product.Description = description;
-                product.LastUpdBy = userId;
+            product.PartNo = adjustmentName.Trim();
+            product.Name = adjustmentName.Trim();
+            product.Description = description;
+            product.LastUpdBy = userId;
 
-                await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
-                var newProduct = await context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
+            var newProduct = await _context.Products.FirstOrDefaultAsync(p => p.RowID == product.RowID);
 
-                return newProduct;
-            }
+            return newProduct;
         }
 
         #endregion CRUD
@@ -331,7 +327,7 @@ namespace AccuPay.Data.Repositories
         // this may only apply to "Loan Type" use with caution
         private async Task<Category> GetOrCreateCategoryByName(string categoryName, int organizationId)
         {
-            var categoryProduct = await context.Categories.
+            var categoryProduct = await _context.Categories.
                                     Where(c => c.OrganizationID == organizationId).
                                     Where(c => c.CategoryName.Trim().ToLower() == categoryName.ToTrimmedLowerCase()).
                                     FirstOrDefaultAsync();
@@ -341,7 +337,7 @@ namespace AccuPay.Data.Repositories
                 // get the existing category with same name to use as CategoryID
                 // this is due to the design of the database wanting the category to have a CategoryID
                 // to maybe group them across different organization but never used them in the application ever
-                var existingCategoryProduct = await context.Categories.
+                var existingCategoryProduct = await _context.Categories.
                                                 Where(c => c.CategoryName == categoryName).
                                                 FirstOrDefaultAsync();
 
@@ -356,8 +352,8 @@ namespace AccuPay.Data.Repositories
                     LastUpd = DateTime.Now
                 };
 
-                context.Categories.Add(categoryProduct);
-                await context.SaveChangesAsync();
+                _context.Categories.Add(categoryProduct);
+                await _context.SaveChangesAsync();
 
                 // if there is no existing category with same name,
                 // use the newly added category's RowID as its CategoryID
@@ -367,14 +363,14 @@ namespace AccuPay.Data.Repositories
                     try
                     {
                         categoryProduct.CategoryID = categoryProduct.RowID;
-                        await context.SaveChangesAsync();
+                        await _context.SaveChangesAsync();
                     }
                     catch (Exception ex)
                     {
                         // if for some reason hindi na update, we can't let that row
                         // to have no CategoryID so dapat i-delete rin yung added category
-                        context.Categories.Remove(categoryProduct);
-                        await context.SaveChangesAsync();
+                        _context.Categories.Remove(categoryProduct);
+                        await _context.SaveChangesAsync();
 
                         throw ex;
                     }
@@ -416,7 +412,7 @@ namespace AccuPay.Data.Repositories
 
         private IQueryable<Product> CreateBaseQueryByCategory(int categoryId, int organizationId)
         {
-            return context.Products.
+            return _context.Products.
                             Where(p => p.OrganizationID == organizationId).
                             Where(p => p.CategoryID == categoryId);
         }

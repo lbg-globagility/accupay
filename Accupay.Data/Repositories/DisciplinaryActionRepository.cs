@@ -10,39 +10,37 @@ namespace AccuPay.Data.Repositories
 {
     public class DisciplinaryActionRepository
     {
+        private readonly PayrollContext _context;
+
+        public DisciplinaryActionRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<DisciplinaryAction>> GetListByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.DisciplinaryActions.Include(x => x.Finding).Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.DisciplinaryActions.
+                                Include(x => x.Finding).
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
 
         public async Task DeleteAsync(DisciplinaryAction disciplinaryAction)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.DisciplinaryActions.Remove(disciplinaryAction);
-                await context.SaveChangesAsync();
-            }
+            _context.DisciplinaryActions.Remove(disciplinaryAction);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(DisciplinaryAction disciplinaryAction)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.DisciplinaryActions.Add(disciplinaryAction);
-                await context.SaveChangesAsync();
-            }
+            _context.DisciplinaryActions.Add(disciplinaryAction);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(DisciplinaryAction disciplinaryAction)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(disciplinaryAction).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(disciplinaryAction).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }
