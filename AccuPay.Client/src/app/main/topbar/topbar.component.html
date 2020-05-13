@@ -1,0 +1,18 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <!-- Logo -->
+    <img src="assets/notisphere-blue.png" height="45" />
+
+    <span class="__spacer"></span>
+
+    <img appImgFallback class="__organization-logo" />
+
+    <mat-menu #accountMenu="matMenu">
+      <button mat-menu-item routerLink="/myaccount">My Account</button>
+      <button mat-menu-item (click)="logout()">Log Out</button>
+    </mat-menu>
+    <button mat-icon-button color="accent" (click)="onToggleMenu()">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </mat-toolbar-row>
+</mat-toolbar>

@@ -1,0 +1,21 @@
+@import 'styles/variables';
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: app-color(primary);
+}
+
+.oauth {
+  min-width: 560px;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+mat-spinner {
+  margin: $app-space-3 0;
+}
