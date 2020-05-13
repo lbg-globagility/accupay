@@ -12,55 +12,9 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    label: 'Dashboard',
-    route: '/dashboard',
-    icon: 'dashboard',
-    permission: 'dashboard.ViewDashboard',
-  },
-  {
-    label: 'Recalls',
-    icon: 'drafts',
-    items: [
-      {
-        label: 'List',
-        route: '/recalls',
-      },
-      {
-        label: 'New',
-        route: '/recalls/new',
-        permission: 'recalls.CreateRecall',
-      },
-    ],
-  },
-  {
-    label: 'Suppliers',
-    route: '/suppliers',
-    icon: 'local_shipping',
-    permission: 'suppliers.ListSuppliers',
-  },
-  {
-    label: 'Providers',
-    route: '/providers',
-    icon: 'local_hospital',
-    permission: 'providers.ListProviders',
-  },
-  {
-    label: 'Workflow Groups',
-    route: '/workflow-groups',
-    icon: 'supervised_user_circle',
-    permission: 'recalls.CreateWorkflowGroups',
-  },
-  {
-    label: 'Users',
-    route: '/users',
+    label: 'Employees',
+    route: '/employees',
     icon: 'person',
-    permission: 'users.ListUsers',
-  },
-  {
-    label: 'Roles',
-    route: '/roles',
-    icon: 'verified_user',
-    permission: 'users.ListRoles',
   },
 ];
 
