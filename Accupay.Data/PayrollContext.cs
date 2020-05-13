@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging.Console;
 
 namespace AccuPay.Data
 {
-    internal class PayrollContext : DbContext
+    public class PayrollContext : DbContext
     {
         private readonly ILoggerFactory _loggerFactory;
 

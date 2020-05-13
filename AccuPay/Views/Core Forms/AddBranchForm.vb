@@ -8,10 +8,9 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBranchForm
-
-    Private _branchRepository As BranchRepository
 
     Private _calendarRepository As CalendarRepository
 
@@ -36,8 +35,6 @@ Public Class AddBranchForm
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _branchRepository = New BranchRepository()
-
         _calendarRepository = New CalendarRepository()
 
         _employeeRepository = New EmployeeRepository()
@@ -71,6 +68,8 @@ Public Class AddBranchForm
     End Sub
 
     Private Async Function RefreshForm() As Task
+
+        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         _branches = Await _branchRepository.GetAllAsync()
 
@@ -200,6 +199,7 @@ Public Class AddBranchForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Branch",
                 Async Function()
 
+                    Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
                     Await _branchRepository.DeleteAsync(branch)
 
                     Await RefreshForm()
@@ -265,6 +265,8 @@ Public Class AddBranchForm
     End Sub
 
     Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
+
+        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then
