@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
             public UserBuilder(PayrollContext context)
             {
                 _context = context;
-                _query = _context.Users;
+                _query = _context.OldUsers;
             }
 
             #region Builder Methods
@@ -180,7 +180,7 @@ namespace AccuPay.Data.Repositories
                 // this adds a value to RowID (int minimum value)
                 // so if there is a code checking for null to RowID
                 // it will always be false
-                _context.Users.AddRange(added);
+                _context.OldUsers.AddRange(added);
             }
             await _context.SaveChangesAsync();
         }

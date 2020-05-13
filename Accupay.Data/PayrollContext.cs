@@ -1,11 +1,12 @@
 ﻿using AccuPay.Data.Entities;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 
 namespace AccuPay.Data
 {
-    public class PayrollContext : DbContext
+    public class PayrollContext : IdentityDbContext
     {
         //private readonly ILoggerFactory _loggerFactory;
 
@@ -74,7 +75,7 @@ namespace AccuPay.Data
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
         internal virtual DbSet<TimeAttendanceLog> TimeAttendanceLogs { get; set; }
         internal virtual DbSet<TimeLog> TimeLogs { get; set; }
-        internal virtual DbSet<User> Users { get; set; }
+        internal virtual DbSet<User> OldUsers { get; set; }
         internal virtual DbSet<UserActivity> UserActivities { get; set; }
         internal virtual DbSet<UserActivityItem> UserActivityItems { get; set; }
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
