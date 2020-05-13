@@ -1,3 +1,4 @@
+using AccuPay.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -19,6 +20,9 @@ namespace AccuPay.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            services.AddDatabase(Configuration);
+            // better if put this in another extension file
+            services.AddScoped<BranchRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
