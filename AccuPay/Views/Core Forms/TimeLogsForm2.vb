@@ -826,7 +826,7 @@ Public Class TimeLogsForm2
     End Function
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
         InfoBalloon(, , lblFormTitle, , , 1)
     End Sub
 

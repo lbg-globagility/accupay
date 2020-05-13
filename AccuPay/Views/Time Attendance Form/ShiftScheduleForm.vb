@@ -926,7 +926,7 @@ Public Class ShiftScheduleForm
     End Sub
 
     Private Sub ShiftScheduleForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
     Private Async Sub ShiftScheduleForm_Load(sender As Object, e As EventArgs) Handles Me.Load

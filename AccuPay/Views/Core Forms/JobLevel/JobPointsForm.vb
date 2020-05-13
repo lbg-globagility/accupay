@@ -72,7 +72,7 @@ Public Class JobPointsForm
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        HRISForm.listHRISForm.Remove(Me.Name)
+        'HRISForm.listHRISForm.Remove(Me.Name)
         Close()
     End Sub
 

@@ -33,6 +33,13 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
+    Private GeneralForm As GeneralForm
+    Private HRISForm As HRISForm
+    Private PayrollForm As PayrollForm
+    Private BenchmarkPayrollForm As BenchmarkPayrollForm
+    Private TimeAttendForm As TimeAttendForm
+    Private MetroLogin As MetroLogin
+
     Private _listOfValueService As ListOfValueService
     Private _systemOwnerService As SystemOwnerService
     Private _userRepository As UserRepository
@@ -52,6 +59,11 @@ Public Class MDIPrimaryForm
         if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
 
         PrepareFormForBenchmark()
+    End Sub
+
+    Public Sub SetParentForms(metroLogin As MetroLogin)
+        Me.MetroLogin = metroLogin
+
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -155,114 +167,113 @@ Public Class MDIPrimaryForm
 
                 ''Close all forms that remains open
 
-                Dim listofExtraFrm As Form()
+                'Dim listofExtraFrm As Form()
 
-                Dim listofExtraForm As New List(Of String)
+                'Dim listofExtraForm As New List(Of String)
 
-                listofExtraForm.Add("CrysVwr")
-                listofExtraForm.Add("dutyshift")
-                listofExtraForm.Add("leavtyp")
-                listofExtraForm.Add("LoanType")
-                listofExtraForm.Add("newEmpStat")
-                listofExtraForm.Add("newEmpType")
-                listofExtraForm.Add("newPostion")
-                listofExtraForm.Add("newProdAllowa")
-                listofExtraForm.Add("newProdBonus")
-                listofExtraForm.Add("SelectFromEmployee")
-                listofExtraForm.Add("selectPayPeriod")
-                listofExtraForm.Add("viewtotallow")
-                listofExtraForm.Add("viewtotbon")
-                listofExtraForm.Add("viewtotloan")
-                listofExtraForm.Add("FindingForm")
+                'listofExtraForm.Add("CrysVwr")
+                'listofExtraForm.Add("leavtyp")
+                'listofExtraForm.Add("LoanType")
+                'listofExtraForm.Add("newEmpStat")
+                'listofExtraForm.Add("newEmpType")
+                'listofExtraForm.Add("newPostion")
+                'listofExtraForm.Add("newProdAllowa")
+                'listofExtraForm.Add("newProdBonus")
+                'listofExtraForm.Add("SelectFromEmployee")
+                'listofExtraForm.Add("selectPayPeriod")
+                'listofExtraForm.Add("viewtotallow")
+                'listofExtraForm.Add("viewtotbon")
+                'listofExtraForm.Add("viewtotloan")
+                'listofExtraForm.Add("FindingForm")
 
-                listofExtraForm.Add("AddListOfValueForm")
-                listofExtraForm.Add("AddPostionForm")
+                'listofExtraForm.Add("AddListOfValueForm")
+                'listofExtraForm.Add("AddPostionForm")
 
-                listofExtraForm.Add("GeneralForm")
-                listofExtraForm.Add("HRISForm")
-                listofExtraForm.Add("PayrollForm")
-                listofExtraForm.Add("TimeAttendForm")
+                'listofExtraForm.Add("GeneralForm")
+                'listofExtraForm.Add("HRISForm")
+                'listofExtraForm.Add("PayrollForm")
+                'listofExtraForm.Add("TimeAttendForm")
 
-                ReDim listofExtraFrm(My.Application.OpenForms.Count - 1)
+                'ReDim listofExtraFrm(My.Application.OpenForms.Count - 1)
 
-                Dim itemindex = 0
+                'Dim itemindex = 0
 
-                Dim open_forms = My.Application.OpenForms
+                'Dim open_forms = My.Application.OpenForms
 
-                For Each f As Form In open_forms
+                'For Each f As Form In open_forms
 
-                    Dim frmName = f.Name
+                '    Dim frmName = f.Name
 
-                    If ExemptedForms.Contains(frmName) Then
-                        Continue For
-                    Else
+                '    If ExemptedForms.Contains(frmName) Then
+                '        Continue For
+                '    Else
 
-                        If listofExtraForm.Contains(frmName) Then
-                            Continue For
-                        Else
-                            If frmName.Trim.Length > 0 Then
-                                listofExtraFrm(itemindex) = f
-                                itemindex += 1
+                '        If listofExtraForm.Contains(frmName) Then
+                '            Continue For
+                '        Else
+                '            If frmName.Trim.Length > 0 Then
+                '                listofExtraFrm(itemindex) = f
+                '                itemindex += 1
 
-                            End If
+                '            End If
 
-                        End If
+                '        End If
 
-                    End If
-                Next
+                '    End If
+                'Next
 
-                Dim openform_count = listofExtraFrm.GetUpperBound(0)
+                'Dim openform_count = listofExtraFrm.GetUpperBound(0)
 
-                For ii = 0 To openform_count
+                'For ii = 0 To openform_count
 
-                    If listofExtraFrm(ii) Is Nothing Then
-                        Continue For
-                    Else
+                '    If listofExtraFrm(ii) Is Nothing Then
+                '        Continue For
+                '    Else
 
-                        ClosingForm = listofExtraFrm(ii)
+                '        ClosingForm = listofExtraFrm(ii)
 
-                        ClosingForm.Close()
+                '        ClosingForm.Close()
 
-                    End If
+                '    End If
 
-                Next
+                'Next
 
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("UPDATE user" &
-                                     " SET InSession='0'" &
-                                     ",LastUpd=CURRENT_TIMESTAMP()" &
-                                     ",LastUpdBy='" & z_User & "'" &
-                                     " WHERE RowID='" & z_User & "';")
+                'Dim n_ExecuteQuery As _
+                '    New ExecuteQuery("UPDATE user" &
+                '                     " SET InSession='0'" &
+                '                     ",LastUpd=CURRENT_TIMESTAMP()" &
+                '                     ",LastUpdBy='" & z_User & "'" &
+                '                     " WHERE RowID='" & z_User & "';")
 
-                If openform_count >= 5 Then
-                    Thread.Sleep(1175)
-                End If
+                'If openform_count >= 5 Then
+                '    Thread.Sleep(1175)
+                'End If
 
-                Using MainServiceProvider
-                    Dim form = MainServiceProvider.GetRequiredService(Of MetroLogin)()
+                'Using MainServiceProvider
+                '    Dim form = MainServiceProvider.GetRequiredService(Of MetroLogin)()
 
-                    With form
+                '    With form
 
-                        .Show()
+                '        .Show()
 
-                        .txtbxUserID.Clear()
+                '        .txtbxUserID.Clear()
 
-                        .txtbxPword.Clear()
+                '        .txtbxPword.Clear()
 
-                        .txtbxUserID.Focus()
+                '        .txtbxUserID.Focus()
 
-                        .PhotoImages.Image = Nothing
+                '        .PhotoImages.Image = Nothing
 
-                        .cbxorganiz.SelectedIndex = -1
+                '        .cbxorganiz.SelectedIndex = -1
 
-                        .ReloadOrganization()
+                '        .ReloadOrganization()
 
-                        If Debugger.IsAttached Then
-                            .AssignDefaultCredentials()
-                        End If
-                    End With
+                '        If Debugger.IsAttached Then
+                '            .AssignDefaultCredentials()
+                '        End If
+                '    End With
 
-                End Using
+                'End Using
 
             ElseIf prompt = MsgBoxResult.No Then
                 e.Cancel = True
@@ -409,6 +420,7 @@ Public Class MDIPrimaryForm
 
         Using MainServiceProvider
             Dim form = MainServiceProvider.GetRequiredService(Of GeneralForm)()
+            form.SetParentForms(Me)
             ChangeForm(form)
         End Using
 
@@ -444,6 +456,7 @@ Public Class MDIPrimaryForm
 
         Using MainServiceProvider
             Dim form = MainServiceProvider.GetRequiredService(Of TimeAttendForm)()
+            form.SetParentForms(Me)
             ChangeForm(form)
         End Using
 

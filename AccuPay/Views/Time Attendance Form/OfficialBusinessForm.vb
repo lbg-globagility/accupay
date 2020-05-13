@@ -77,7 +77,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub OfficialBusinessForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 

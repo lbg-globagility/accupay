@@ -1855,15 +1855,13 @@ Public Class EmployeeForm
             myBalloon(, , lblforballoon, , , 1)
             InfoBalloon(, , Label235, , , 1)
 
-            showAuditTrail.Close()
-
             If previousForm IsNot Nothing Then
                 If previousForm.Name = Me.Name Then
                     previousForm = Nothing
                 End If
             End If
 
-            HRISForm.listHRISForm.Remove(Me.Name)
+            'HRISForm.listHRISForm.Remove(Me.Name)
 
         End If
 

@@ -359,7 +359,7 @@ Public Class ListOfValueForm
         '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
         'End If
 
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
@@ -445,15 +445,6 @@ Public Class ListOfValueForm
             'filllistofvalues()
 
         End If
-    End Sub
-
-    Private Sub tsAudittrail_Click(sender As Object, e As EventArgs) Handles tsAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
     End Sub
 
     Dim pagination As Integer = 0

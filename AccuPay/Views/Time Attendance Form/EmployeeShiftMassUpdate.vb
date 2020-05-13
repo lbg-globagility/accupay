@@ -18,6 +18,15 @@ Public Class EmployeeShiftMassUpdate
 
     Dim ChiledDiv As New DataTable
 
+    Private TimeAttendForm As TimeAttendForm
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(timeAttendForm As TimeAttendForm, mDIPrimaryForm As MDIPrimaryForm)
+        Me.TimeAttendForm = timeAttendForm
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Private Sub fillemployeelist()
         'If dgvEmplist.Rows.Count = 0 Then
         'ElseCOALESCE(StreetAddress1,' ')
@@ -139,8 +148,6 @@ Public Class EmployeeShiftMassUpdate
         '        previousForm = Nothing
         '    End If
         'End If
-
-        'dutyshift.Close()
 
         'TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
@@ -359,13 +366,6 @@ Public Class EmployeeShiftMassUpdate
     End Sub
 
     Private Sub lblShiftEntry_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblShiftEntry.LinkClicked
-        'ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-        'ShiftEntryForm.Close()
-        'ShiftEntryForm.ShowDialog()
-
-        'dutyshift.Show()
-        'dutyshift.BringToFront()
-
         Dim n_ShiftEntryForm As New ShiftEntryForm
 
         n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
@@ -409,15 +409,6 @@ Public Class EmployeeShiftMassUpdate
         chkbxNewShiftByDay.Checked = False
 
         includedEmployees.Clear()
-
-    End Sub
-
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs)
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
 
     End Sub
 

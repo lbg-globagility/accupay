@@ -39,14 +39,17 @@ Module MainModule
                 options.EnableSensitiveDataLogging()
             End Sub)
 
-        services.AddScoped(Of OrganizationRepository)
-        services.AddScoped(Of PayPeriodRepository)
-        services.AddScoped(Of AddressRepository)
-        services.AddScoped(Of SystemOwnerService)
-        services.AddScoped(Of PayslipCreator)
+        'services.AddScoped(Of OrganizationRepository)
+        'services.AddScoped(Of PayPeriodRepository)
+        'services.AddScoped(Of AddressRepository)
+        'services.AddScoped(Of SystemOwnerService)
+        'services.AddScoped(Of PayslipCreator)
 
-        services.AddScoped(Of PaystubEmailRepository)
-        services.AddScoped(Of MetroLogin)
+        'services.AddScoped(Of PaystubEmailRepository)
+        services.AddScoped(Of ListOfValueService)
+        services.AddScoped(Of OrganizationRepository)
+        services.AddScoped(Of UserRepository)
+        services.AddTransient(Of MetroLogin)
     End Sub
 
 End Module

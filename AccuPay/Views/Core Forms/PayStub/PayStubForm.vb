@@ -151,6 +151,14 @@ Public Class PayStubForm
         _timeEntryRepository = timeEntryRepository
     End Sub
 
+    Private PayrollForm As PayrollForm
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(payrollForm As PayrollForm, mDIPrimaryForm As MDIPrimaryForm)
+        Me.PayrollForm = payrollForm
+        Me.MDIPrimaryForm = mDIPrimaryForm
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
 
         SplitContainer1.SplitterWidth = 6
@@ -908,7 +916,7 @@ Public Class PayStubForm
 
         Await RefreshForm()
 
-        Await TimeEntrySummaryForm.LoadPayPeriods()
+        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
         Me.Enabled = True
         dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
@@ -955,7 +963,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
-        viewtotallow.Close()
         viewtotloan.Close()
 
         With viewtotbon
@@ -981,19 +988,17 @@ Public Class PayStubForm
             End If
         End If
 
-        showAuditTrail.Close()
-        Dim open_forms = My.Application.OpenForms.Cast(Of Form).Where(Function(i) i.Name = "CrysVwr")
-        If open_forms.Count > 0 Then
-            Dim array_open_forms = open_forms.ToArray
-            For Each frm In array_open_forms
-                frm.Close()
-            Next
-        End If
-        viewtotallow.Close()
+        'Dim open_forms = My.Application.OpenForms.Cast(Of Form).Where(Function(i) i.Name = "CrysVwr")
+        'If open_forms.Count > 0 Then
+        '    Dim array_open_forms = open_forms.ToArray
+        '    For Each frm In array_open_forms
+        '        frm.Close()
+        '    Next
+        'End If
         viewtotloan.Close()
         viewtotbon.Close()
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
@@ -1081,12 +1086,6 @@ Public Class PayStubForm
 
             dgvpayper.Width = pointX
         End If
-    End Sub
-
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(viewID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
@@ -1320,8 +1319,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
-        viewtotallow.Close()
-        viewtotbon.Close()
 
         With viewtotloan
             .Show()
@@ -1847,7 +1844,7 @@ Public Class PayStubForm
 
                         Await RefreshForm()
 
-                        Await TimeEntrySummaryForm.LoadPayPeriods()
+                        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
                         MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeNumber} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
                     End Function)
@@ -1959,7 +1956,7 @@ Public Class PayStubForm
 
         Await RefreshForm()
 
-        Await TimeEntrySummaryForm.LoadPayPeriods()
+        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
         If close Then
 
@@ -2064,7 +2061,7 @@ Public Class PayStubForm
 
                       Await RefreshForm()
 
-                      Await TimeEntrySummaryForm.LoadPayPeriods()
+                      'Await TimeEntrySummaryForm.LoadPayPeriods()
 
                       MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' were successfully deleted.")
                   End Function)

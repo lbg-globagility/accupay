@@ -51,6 +51,15 @@ Public Class EmployeeShiftEntryForm
         _shiftRepository = shiftRepository
     End Sub
 
+    Private TimeAttendForm As TimeAttendForm
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(timeAttendForm As TimeAttendForm, mDIPrimaryForm As MDIPrimaryForm)
+        Me.TimeAttendForm = timeAttendForm
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim n_SQLQueryToDatatable As _
             New SQLQueryToDatatable("CALL `MACHINE_WEEKFORMAT`(@@default_week_format);")
@@ -254,9 +263,7 @@ Public Class EmployeeShiftEntryForm
             End If
         End If
 
-        dutyshift.Close()
-
-        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
         ShiftList.Close()
         ShiftList.Dispose()
@@ -657,12 +664,6 @@ Public Class EmployeeShiftEntryForm
         dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
         CustomColoredTabControlActivateSelecting(True)
         chkbxNewShiftByDay.Checked = False
-    End Sub
-
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs) Handles btnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub dgvEmpList_GotFocus(sender As Object, e As EventArgs) Handles dgvEmpList.GotFocus
@@ -1264,8 +1265,10 @@ Public Class EmployeeShiftEntryForm
             .MinimizeBox = False
             .MaximizeBox = .MinimizeBox
             .StartPosition = FormStartPosition.CenterScreen
-            .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
+            .FormBorderStyle = FormBorderStyle.FixedDialog
         End With
+
+        n_EmployeeShiftMassUpdate.SetParentForms(TimeAttendForm, MDIPrimaryForm)
 
         n_EmployeeShiftMassUpdate.ShowDialog("")
     End Sub

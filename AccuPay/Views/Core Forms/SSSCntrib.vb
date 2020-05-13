@@ -4,6 +4,7 @@ Imports MySql.Data.MySqlClient
 'Imports Microsoft.Office.Interop
 
 Public Class SSSCntrib
+
     Public q_paysocialsecurity As String = "SELECT sss.RowID," &
     "COALESCE(sss.RangeFromAmount,0) 'Range of Compensation'," &
     "COALESCE(sss.RangeToAmount,0)," &
@@ -27,6 +28,7 @@ Public Class SSSCntrib
     Dim _editRowID As New List(Of String)
     Dim e_rindx, e_cindx, charcnt, SS_rcount As Integer
     Dim _cellVal, _now, u_nem As String
+
     Sub loadSSSCntrib()
         dgvPaySSS.Rows.Clear()
         For Each r As DataRow In retAsDatTbl(q_paysocialsecurity & " ORDER BY sss.MonthlySalaryCredit").Rows 'ORDER BY sss.MonthlySalaryCredit
@@ -44,19 +46,7 @@ Public Class SSSCntrib
             End If
         End If
 
-        'If FormLeft.Contains("SSS Contribution Table") Then
-        '    FormLeft.Remove("SSS Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-        showAuditTrail.Close()
-
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Dim view_ID As Integer = Nothing
@@ -122,6 +112,7 @@ Public Class SSSCntrib
         End If
 
     End Sub
+
     Private Sub dgvPaySSS_CellKeyPress(sender As Object, e As KeyPressEventArgs)
         Dim e_asc As String = Asc(e.KeyChar)
         e.Handled = TrapDecimKey(e_asc)
@@ -141,7 +132,9 @@ Public Class SSSCntrib
             MsgBox(ex.Message & vbNewLine & "Please input an appropriate value.", MsgBoxStyle.Exclamation, "Too much Numeric Value")
         End Try
     End Sub
+
     Dim _txtCell As New TextBox
+
     Private Sub dgvPaySSS_TextChanged(sender As Object, e As EventArgs)
         _txtCell = DirectCast(sender, TextBox)
         Try
@@ -169,7 +162,6 @@ Public Class SSSCntrib
                 End If
             End With
         Catch ex As Exception
-
         Finally
 
         End Try
@@ -204,8 +196,10 @@ Public Class SSSCntrib
     Private Sub dgvPaySSS_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) 'Handles dgvPaySSS.CellValueChanged
 
     End Sub
+
     Dim _curCol As Integer
     Dim dgvTxtBx As New TextBox
+
     Private Sub dgvPaySSS_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) 'Handles dgvPaySSS.EditingControlShowing
 
         e.Control.ContextMenu = New ContextMenu
@@ -262,15 +256,15 @@ Public Class SSSCntrib
 
                 With dgvPaySSS.Rows(Val(_indx))
 
-                    EXECQUER("UPDATE paysocialsecurity SET " & _
-                    "RangeFromAmount=" & Val(.Cells("Column2").Value) & _
-                    ",RangeToAmount=" & Val(.Cells("Column14").Value) & _
-                    ",MonthlySalaryCredit=" & Val(.Cells("Column3").Value) & _
-                    ",EmployeeContributionAmount=" & Val(.Cells("Column5").Value) & _
-                    ",EmployerContributionAmount=" & Val(.Cells("Column4").Value) & _
-                    ",EmployeeECAmount=" & Val(.Cells("Column6").Value) & _
-                    ",LastUpd=CURRENT_TIMESTAMP()" & _
-                    ",LastUpdBy=" & z_User & _
+                    EXECQUER("UPDATE paysocialsecurity SET " &
+                    "RangeFromAmount=" & Val(.Cells("Column2").Value) &
+                    ",RangeToAmount=" & Val(.Cells("Column14").Value) &
+                    ",MonthlySalaryCredit=" & Val(.Cells("Column3").Value) &
+                    ",EmployeeContributionAmount=" & Val(.Cells("Column5").Value) &
+                    ",EmployerContributionAmount=" & Val(.Cells("Column4").Value) &
+                    ",EmployeeECAmount=" & Val(.Cells("Column6").Value) &
+                    ",LastUpd=CURRENT_TIMESTAMP()" &
+                    ",LastUpdBy=" & z_User &
                     " WHERE RowID='" & _rID & "';")
 
                     .Cells("Column12").Value = _now
@@ -289,7 +283,6 @@ Public Class SSSCntrib
             Next
 
             If dontUpdate = 1 Then
-
             Else
                 InfoBalloon(, , lblforballoon, , , 1)
                 'InfoBalloon("SSS Contribution were successfully updated.", "Update Successful", lblforballoon, lblforballoon.Width - 16, -69)
@@ -301,11 +294,11 @@ Public Class SSSCntrib
                 For Each row As DataGridViewRow In dgvPaySSS.Rows
                     With row
                         If .Cells("Column1").Value = Nothing And .IsNewRow = False Then
-                            Dim _RowID = INS_paysocialsecurity(Val(.Cells("Column2").Value), _
+                            Dim _RowID = INS_paysocialsecurity(Val(.Cells("Column2").Value),
                                                               Val(.Cells("Column14").Value),
-                                                              Val(.Cells("Column3").Value), _
-                                                              Val(.Cells("Column5").Value), _
-                                                              Val(.Cells("Column4").Value), _
+                                                              Val(.Cells("Column3").Value),
+                                                              Val(.Cells("Column5").Value),
+                                                              Val(.Cells("Column4").Value),
                                                               Val(.Cells("Column6").Value))
 
                             .Cells("Column10").Value = _now
@@ -354,12 +347,12 @@ Public Class SSSCntrib
 
             dgvPaySSS.Item(cIndx, rIndx).Selected = True
 
-            Dim min_range = _
+            Dim min_range =
                 EXECQUER("SELECT MIN(RangeFromAmount) FROM paysocialsecurity;")
 
             min_range = ValNoComma(min_range)
 
-            EXECQUER("INSERT INTO paysocialsecurity (Created,CreatedBy,LastUpdBy,RangeFromAmount,RangeToAmount,MonthlySalaryCredit,EmployeeContributionAmount,EmployerContributionAmount,EmployeeECAmount) VALUES " & _
+            EXECQUER("INSERT INTO paysocialsecurity (Created,CreatedBy,LastUpdBy,RangeFromAmount,RangeToAmount,MonthlySalaryCredit,EmployeeContributionAmount,EmployerContributionAmount,EmployeeECAmount) VALUES " &
                                                 "(CURRENT_TIMESTAMP(),'" & z_User & "','" & z_User & "',0,(" & min_range & " - 1),0,0,0,0) ON DUPLICATE KEY UPDATE LastUpd=CURRENT_TIMESTAMP(),LastUpdBy='" & z_User & "',RangeFromAmount=0,RangeToAmount=(" & min_range & " - 1),MonthlySalaryCredit=0,EmployeeContributionAmount=0,EmployerContributionAmount=0,EmployeeECAmount=0;")
 
         End If
@@ -396,42 +389,41 @@ Public Class SSSCntrib
                 With dgvPaySSS.CurrentRow
                     If .Cells("Column1").Value <> "" Then
 
-                        INS_audittrail("RangeFromAmount", _
-                                        .Cells("Column1").Value, _
-                                        .Cells("Column2").Value, _
-                                       "", _
+                        INS_audittrail("RangeFromAmount",
+                                        .Cells("Column1").Value,
+                                        .Cells("Column2").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("RangeToAmount", _
-                                        .Cells("Column1").Value, _
-                                        .Cells("Column14").Value, _
-                                       "", _
+                        INS_audittrail("RangeToAmount",
+                                        .Cells("Column1").Value,
+                                        .Cells("Column14").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("MonthlySalaryCredit", _
-                                        .Cells("Column1").Value, _
-                                        .Cells("Column3").Value, _
-                                       "", _
+                        INS_audittrail("MonthlySalaryCredit",
+                                        .Cells("Column1").Value,
+                                        .Cells("Column3").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("EmployeeContributionAmount", _
-                                        .Cells("Column1").Value, _
-                                        .Cells("Column5").Value, _
-                                       "", _
+                        INS_audittrail("EmployeeContributionAmount",
+                                        .Cells("Column1").Value,
+                                        .Cells("Column5").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("EmployerContributionAmount", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column4").Value, _
-                                       "", _
+                        INS_audittrail("EmployerContributionAmount",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column4").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("EmployeeECAmount", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column6").Value, _
-                                       "", _
+                        INS_audittrail("EmployeeECAmount",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column6").Value,
+                                       "",
                                        "Delete")
-
 
                         EXECQUER("DELETE FROM paysocialsecurity WHERE RowID=" & .Cells("Column1").Value)
 
@@ -465,23 +457,6 @@ Public Class SSSCntrib
 
     End Sub
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-
-        'Dim promptAuditTrail As New showAuditTrail
-
-        'promptAuditTrail.ShowDialog()
-
-        'promptAuditTrail.loadAudTrail(view_ID)
-
-
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Dim dt_importcatcher As New DataTable
 
     Dim filepath As String = Nothing
@@ -494,7 +469,7 @@ Public Class SSSCntrib
 
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -509,15 +484,14 @@ Public Class SSSCntrib
 
         End If
 
-
     End Sub
 
-    Function INSUPD_paysocialsecurity(Optional sss_RowID = Nothing, _
-                                      Optional sss_RangeFromAmount = Nothing, _
-                                      Optional sss_RangeToAmount = Nothing, _
-                                      Optional sss_MonthlySalaryCredit = Nothing, _
-                                      Optional sss_EmployeeContributionAmount = Nothing, _
-                                      Optional sss_EmployerContributionAmount = Nothing, _
+    Function INSUPD_paysocialsecurity(Optional sss_RowID = Nothing,
+                                      Optional sss_RangeFromAmount = Nothing,
+                                      Optional sss_RangeToAmount = Nothing,
+                                      Optional sss_MonthlySalaryCredit = Nothing,
+                                      Optional sss_EmployeeContributionAmount = Nothing,
+                                      Optional sss_EmployerContributionAmount = Nothing,
                                       Optional sss_EmployeeECAmount = Nothing) As Object
 
         Dim returnval = Nothing
@@ -544,16 +518,16 @@ Public Class SSSCntrib
         params(7, 1) = Val(sss_EmployerContributionAmount)
         params(8, 1) = Val(sss_EmployeeECAmount)
 
-        returnval = _
-        EXEC_INSUPD_PROCEDURE(params, _
-                               "INSUPD_paysocialsecurity", _
+        returnval =
+        EXEC_INSUPD_PROCEDURE(params,
+                               "INSUPD_paysocialsecurity",
                                "returnval")
 
         Return returnval
 
     End Function
 
-    Function ExcelToCVS(ByVal opfiledir As String, _
+    Function ExcelToCVS(ByVal opfiledir As String,
                         ByVal arrlist As ArrayList) As Object
 
         Dim StrConn As String
@@ -571,8 +545,8 @@ Public Class SSSCntrib
         '                          "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
         '                          "OpenDocument Spreadsheet (*.ods)|*.ods"
 
-        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
+        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" &
                                   "OpenDocument Spreadsheet (*.ods)|*.ods"
 
         'D_CanteenDed("Delete All", z_divno, Z_YYYY, Z_PayNo, Z_PayrollType, Z_YYYYMM, 0, 0)
@@ -593,13 +567,11 @@ Public Class SSSCntrib
             If objConn.State = ConnectionState.Closed Then
 
                 Console.Write("Connection cannot be opened")
-
             Else
 
                 Console.Write("Welcome")
 
             End If
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -609,7 +581,6 @@ Public Class SSSCntrib
 
         objCmd.CommandType = CommandType.Text
 
-
         Dim Count As Integer
 
         Count = 0
@@ -618,7 +589,6 @@ Public Class SSSCntrib
             DA.SelectCommand = objCmd
 
             DA.Fill(DS, "XLData")
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -647,12 +617,10 @@ Public Class SSSCntrib
             'Next
 
             returnvalue = DS.Tables(0)
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
             returnvalue = Nothing
-
         Finally
 
             objCmd.Dispose()
@@ -667,10 +635,10 @@ Public Class SSSCntrib
 
     End Function
 
-    Sub INS_audittrail(Optional au_FieldChanged = Nothing, _
-                       Optional au_ChangedRowID = Nothing, _
-                       Optional au_OldValue = Nothing, _
-                       Optional au_NewValue = Nothing, _
+    Sub INS_audittrail(Optional au_FieldChanged = Nothing,
+                       Optional au_ChangedRowID = Nothing,
+                       Optional au_OldValue = Nothing,
+                       Optional au_NewValue = Nothing,
                        Optional au_ActionPerformed = Nothing)
 
         Try
@@ -712,7 +680,6 @@ Public Class SSSCntrib
                 datread = .ExecuteReader()
 
             End With
-
         Catch ex As Exception
             MsgBox(ex.Message & " " & "INS_audittrail", , "Error")
         Finally
@@ -793,16 +760,15 @@ Public Class SSSCntrib
 
         Dim arrayrow As New ArrayList
 
-        dt_importcatcher = _
+        dt_importcatcher =
         ExcelToCVS(filepath, arrayrow)
 
         Dim rowindx As Integer = 0
 
         If dt_importcatcher Is Nothing Then
-
         Else
 
-            Dim lastbound = dt_importcatcher.Rows.Count 'dgvPaySSS.RowCount + 
+            Dim lastbound = dt_importcatcher.Rows.Count 'dgvPaySSS.RowCount +
 
             For Each drow As DataRow In dt_importcatcher.Rows
 
@@ -812,13 +778,13 @@ Public Class SSSCntrib
 
                 '    MsgBox(dataval.ToString)
 
-                Dim sssrowid = _
-                INSUPD_paysocialsecurity(, _
-                                        Val(drow(0)), _
-                                        Val(drow(1)), _
-                                        Val(drow(2)), _
-                                        Val(drow(4)), _
-                                        Val(drow(3)), _
+                Dim sssrowid =
+                INSUPD_paysocialsecurity(,
+                                        Val(drow(0)),
+                                        Val(drow(1)),
+                                        Val(drow(2)),
+                                        Val(drow(4)),
+                                        Val(drow(3)),
                                         Val(drow(5)))
 
                 'Next

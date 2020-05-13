@@ -37,6 +37,13 @@ Public Class TimeAttendForm
 
     End Sub
 
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(mDIPrimaryForm As MDIPrimaryForm)
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -209,6 +216,8 @@ Public Class TimeAttendForm
 
         Using MainServiceProvider
             Dim form = MainServiceProvider.GetRequiredService(Of EmployeeShiftEntryForm)()
+
+            form.SetParentForms(Me, MDIPrimaryForm)
 
             ChangeForm(form, "Employee Shift")
             previousForm = form

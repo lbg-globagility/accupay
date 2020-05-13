@@ -180,7 +180,7 @@ Public Class CalendarsForm
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
         Close()
     End Sub
 

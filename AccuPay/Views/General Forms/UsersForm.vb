@@ -424,7 +424,7 @@ Public Class UsersForm
             End If
         End If
 
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
@@ -565,15 +565,6 @@ Public Class UsersForm
 
     Private Sub dgvUserList_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvUserList.DataError
         e.ThrowException = False
-
-    End Sub
-
-    Private Sub tsAuditTrail_Click(sender As Object, e As EventArgs) Handles tsAuditTrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
 
     End Sub
 

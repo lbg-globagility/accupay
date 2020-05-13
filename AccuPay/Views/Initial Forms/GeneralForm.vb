@@ -29,6 +29,13 @@ Public Class GeneralForm
         _userRepository = userRepository
     End Sub
 
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(mDIPrimaryForm As MDIPrimaryForm)
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -174,8 +181,11 @@ Public Class GeneralForm
 
     Private Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
 
-        ChangeForm(OrganizationForm, "Organization")
-        previousForm = OrganizationForm
+        Dim form As New OrganizationForm
+        form.SetParentForms(MDIPrimaryForm)
+
+        ChangeForm(form, "Organization")
+        previousForm = form
 
     End Sub
 

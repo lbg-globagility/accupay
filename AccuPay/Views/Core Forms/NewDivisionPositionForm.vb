@@ -1245,7 +1245,7 @@ Public Class NewDivisionPositionForm
             End If
         End If
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        'HRISForm.listHRISForm.Remove(Me.Name)
     End Sub
 
     Private Sub SearchToolStripTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchToolStripTextBox.TextChanged

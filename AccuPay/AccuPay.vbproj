@@ -7,11 +7,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{81373C7B-F3B6-4E8B-A202-869962273BA8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>AccuPay.My.MyApplication</StartupObject>
+    <StartupObject>Sub Main</StartupObject>
     <RootNamespace>AccuPay</RootNamespace>
     <AssemblyName>AccuPay</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsForms</MyType>
+    <MyType>WindowsFormsWithCustomSubMain</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -1079,12 +1079,6 @@
       <DependentUpon>PayrollSumma.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Views\General Forms\ImproperLogOut.Designer.vb">
-      <DependentUpon>ImproperLogOut.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\General Forms\ImproperLogOut.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\Alphalist\AlphalistGeneration.vb" />
     <Compile Include="Views\Core Forms\Alphalist\TaxYearDialog.Designer.vb">
       <DependentUpon>TaxYearDialog.vb</DependentUpon>
@@ -1241,12 +1235,6 @@
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\EmployeeSelection.vb">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\Core Forms\dutyshift.Designer.vb">
-      <DependentUpon>dutyshift.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\dutyshift.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\importWithholdingTax.Designer.vb">
@@ -1628,12 +1616,6 @@
     <Compile Include="Views\Core Forms\ShiftTemplater.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Views\Core Forms\showAuditTrail.Designer.vb">
-      <DependentUpon>showAuditTrail.vb</DependentUpon>
-    </Compile>
-    <Compile Include="Views\Core Forms\showAuditTrail.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Views\Core Forms\SSSCntrib.Designer.vb">
       <DependentUpon>SSSCntrib.vb</DependentUpon>
     </Compile>
@@ -1766,6 +1748,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -2230,9 +2213,6 @@
     <EmbeddedResource Include="Views\Employees\SalaryTab2.resx">
       <DependentUpon>SalaryTab2.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Views\General Forms\ImproperLogOut.resx">
-      <DependentUpon>ImproperLogOut.vb</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Alphalist\TaxYearDialog.resx">
       <DependentUpon>TaxYearDialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -2313,9 +2293,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\EmployeeSelection.resx">
       <DependentUpon>EmployeeSelection.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\dutyshift.resx">
-      <DependentUpon>dutyshift.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\importWithholdingTax.resx">
       <DependentUpon>importWithholdingTax.vb</DependentUpon>
@@ -2551,9 +2528,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\ShiftTemplater.resx">
       <DependentUpon>ShiftTemplater.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\Core Forms\showAuditTrail.resx">
-      <DependentUpon>showAuditTrail.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SSSCntrib.resx">
       <DependentUpon>SSSCntrib.vb</DependentUpon>

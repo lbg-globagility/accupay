@@ -24,9 +24,7 @@ Public Class PayRateForm
             End If
         End If
 
-        showAuditTrail.Close()
-
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
@@ -1140,12 +1138,6 @@ Public Class PayRateForm
         Else
             dgvisLlostfocus = 0
         End If
-    End Sub
-
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click

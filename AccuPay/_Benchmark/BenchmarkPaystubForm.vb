@@ -77,7 +77,7 @@ Public Class BenchmarkPaystubForm
 
     Private Sub BenchmarkPaystubForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load

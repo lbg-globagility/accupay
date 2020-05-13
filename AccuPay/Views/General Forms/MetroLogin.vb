@@ -298,7 +298,7 @@ Public Class MetroLogin
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
-
+        n_ForgotPasswordForm.SetParentForms(Me)
         n_ForgotPasswordForm.ShowDialog()
         '# ####################################### #
         'ForgotPasswordForm.Show()

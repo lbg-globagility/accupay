@@ -102,7 +102,7 @@
             End If
         End If
 
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -484,12 +484,6 @@
 
     Private Sub tsbtnCloseShift_Click(sender As Object, e As EventArgs) Handles tsbtnCloseShift.Click
         Me.Close()
-    End Sub
-
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub dgvshiftentry_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvshiftentry.KeyDown

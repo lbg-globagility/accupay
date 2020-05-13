@@ -1008,7 +1008,7 @@ Public Class TimeEntrySummaryForm
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
         Close()
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged

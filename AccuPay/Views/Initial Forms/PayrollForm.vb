@@ -20,6 +20,13 @@ Public Class PayrollForm
         _systemOwnerService = systemOwnerService
     End Sub
 
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(mDIPrimaryForm As MDIPrimaryForm)
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
 
         reloadViewPrivilege()
@@ -101,6 +108,7 @@ Public Class PayrollForm
             Else
 
                 Dim form = MainServiceProvider.GetRequiredService(Of PayStubForm)()
+                form.SetParentForms(Me, Me.MDIPrimaryForm)
                 ChangeForm(form, "Employee Pay Slip")
                 previousForm = form
 
