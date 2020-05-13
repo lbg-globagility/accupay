@@ -18,42 +18,45 @@ namespace AccuPay.Data.Repositories
         public const string STATUS_CANCELLED = "Cancelled";
         public const string STATUS_COMPLETE = "Complete";
 
+        private readonly PayrollContext _context;
+        private readonly SystemOwnerService _systemOwnerService;
+
+        public LoanScheduleRepository(PayrollContext context, SystemOwnerService systemOwnerService)
+        {
+            _context = context;
+            _systemOwnerService = systemOwnerService;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int loanScheduleId)
         {
-            using (var context = new PayrollContext())
-            {
-                var loanSchedule = await GetByIdAsync(loanScheduleId);
+            var loanSchedule = await GetByIdAsync(loanScheduleId);
 
-                context.Remove(loanSchedule);
+            _context.Remove(loanSchedule);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         // TODO: move this to service, shouldn't pass loanTypes in repository
         public async Task SaveManyAsync(List<LoanSchedule> loanSchedules, IEnumerable<Product> loanTypes)
         {
-            using (PayrollContext context = new PayrollContext())
+            foreach (var loanSchedule in loanSchedules)
             {
-                foreach (var loanSchedule in loanSchedules)
-                {
-                    await SaveWithContextAsync(loanSchedule, loanTypes, context);
+                await SaveWithContextAsync(loanSchedule, loanTypes);
 
-                    await context.SaveChangesAsync();
-                }
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task SaveAsync(LoanSchedule loanSchedule, IEnumerable<Product> loanTypes)
         {
-            await SaveWithContextAsync(loanSchedule, loanTypes);
+            await SaveWithContextAsync(loanSchedule, loanTypes, deferSave: false);
         }
 
         private async Task SaveWithContextAsync(LoanSchedule loanSchedule,
                                             IEnumerable<Product> loanTypes,
-                                            PayrollContext passedContext = null)
+                                            bool deferSave = true)
         {
             // if completed yung loan, hindi pwede ma i-insert or update
             if (loanSchedule.Status == STATUS_COMPLETE)
@@ -85,34 +88,31 @@ namespace AccuPay.Data.Repositories
             newLoanSchedule.Employee = null;
 
             // add or update the loanSchedule
-            if (passedContext == null)
+            if (deferSave == false)
             {
-                using (PayrollContext newContext = new PayrollContext())
-                {
-                    // this is the only entity that is checking for int.MinValue,
-                    // maybe rethink this and check what is causing this
-                    await SaveAsyncFunction(newLoanSchedule, newContext);
-                    await newContext.SaveChangesAsync();
-                }
+                // this is the only entity that is checking for int.MinValue,
+                // maybe rethink this and check what is causing this
+                await SaveAsyncFunction(newLoanSchedule);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                await SaveAsyncFunction(newLoanSchedule, passedContext);
+                await SaveAsyncFunction(newLoanSchedule);
             }
 
             // while import loans does not use ViewModel, do this to avoid errors
             loanSchedule.RowID = newLoanSchedule.RowID;
         }
 
-        private async Task SaveAsyncFunction(LoanSchedule loanSchedule, PayrollContext context)
+        private async Task SaveAsyncFunction(LoanSchedule loanSchedule)
         {
             if (loanSchedule.RowID == null || loanSchedule.RowID == int.MinValue)
-                Insert(loanSchedule, context);
+                Insert(loanSchedule);
             else
-                await UpdateAsync(loanSchedule, context);
+                await UpdateAsync(loanSchedule);
         }
 
-        private void Insert(LoanSchedule loanSchedule, PayrollContext context)
+        private void Insert(LoanSchedule loanSchedule)
         {
             loanSchedule.LoanPayPeriodLeft = ComputeNumberOfPayPeriod(loanSchedule.TotalBalanceLeft,
                                                                     loanSchedule.DeductionAmount);
@@ -125,13 +125,13 @@ namespace AccuPay.Data.Repositories
 
             loanSchedule.Created = DateTime.Now;
 
-            context.LoanSchedules.Add(loanSchedule);
+            _context.LoanSchedules.Add(loanSchedule);
         }
 
-        private async Task UpdateAsync(LoanSchedule newLoanSchedule, PayrollContext context)
+        private async Task UpdateAsync(LoanSchedule newLoanSchedule)
         {
             var oldLoanSchedule = await GetByIdAsync(newLoanSchedule.RowID.Value);
-            var loanTransactionsCount = await context.LoanTransactions.
+            var loanTransactionsCount = await _context.LoanTransactions.
                                             CountAsync(l => l.LoanScheduleID == newLoanSchedule.RowID);
 
             // if cancelled na yung loan, hindi pwede ma update
@@ -161,8 +161,8 @@ namespace AccuPay.Data.Repositories
                 newLoanSchedule.LoanPayPeriodLeft = ComputeNumberOfPayPeriod(newLoanSchedule.TotalBalanceLeft, newLoanSchedule.DeductionAmount);
             }
 
-            context.LoanSchedules.Attach(newLoanSchedule);
-            context.Entry(newLoanSchedule).State = EntityState.Modified;
+            _context.LoanSchedules.Attach(newLoanSchedule);
+            _context.Entry(newLoanSchedule).State = EntityState.Modified;
         }
 
         /// <summary>
@@ -176,16 +176,13 @@ namespace AccuPay.Data.Repositories
                                                                 int pagibigLoanId,
                                                                 int ssLoanId)
         {
-            using (var context = new PayrollContext())
-            {
-                context.LoanSchedules.
-                        RemoveRange(context.LoanSchedules.
-                                            Where(x => x.EmployeeID == employeeId).
-                                            Where(x => x.LoanTypeID != pagibigLoanId).
-                                            Where(x => x.LoanTypeID != ssLoanId));
+            _context.LoanSchedules.
+                    RemoveRange(_context.LoanSchedules.
+                                        Where(x => x.EmployeeID == employeeId).
+                                        Where(x => x.LoanTypeID != pagibigLoanId).
+                                        Where(x => x.LoanTypeID != ssLoanId));
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         #endregion CRUD
@@ -196,11 +193,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<LoanSchedule> GetByIdAsync(int loanScheduleId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LoanSchedules.
-                                FirstOrDefaultAsync(l => l.RowID == loanScheduleId);
-            }
+            return await _context.LoanSchedules.
+                            FirstOrDefaultAsync(l => l.RowID == loanScheduleId);
         }
 
         #endregion Single entity
@@ -209,53 +203,41 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<LoanSchedule>> GetByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LoanSchedules.
-                            Where(l => l.EmployeeID == employeeId).
-                            ToListAsync();
-            }
+            return await _context.LoanSchedules.
+                        Where(l => l.EmployeeID == employeeId).
+                        ToListAsync();
         }
 
         public async Task<IEnumerable<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName,
                                                                                     int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LoanSchedules.
-                    Include(l => l.LoanType).
-                    Include(l => l.LoanType.CategoryEntity).
-                    Where(l => l.LoanType.CategoryEntity.CategoryName.Trim().ToUpper() == ProductConstant.LOAN_TYPE_CATEGORY.Trim().ToUpper()).
-                    Where(l => l.LoanType.PartNo.Trim().ToUpper() == loanName.Trim().ToUpper()).
-                    Where(l => l.Status.Trim().ToUpper() == STATUS_IN_PROGRESS.Trim().ToUpper()).
-                    Where(l => l.EmployeeID == employeeId).
-                    ToListAsync();
-            }
+            return await _context.LoanSchedules.
+                Include(l => l.LoanType).
+                Include(l => l.LoanType.CategoryEntity).
+                Where(l => l.LoanType.CategoryEntity.CategoryName.Trim().ToUpper() == ProductConstant.LOAN_TYPE_CATEGORY.Trim().ToUpper()).
+                Where(l => l.LoanType.PartNo.Trim().ToUpper() == loanName.Trim().ToUpper()).
+                Where(l => l.Status.Trim().ToUpper() == STATUS_IN_PROGRESS.Trim().ToUpper()).
+                Where(l => l.EmployeeID == employeeId).
+                ToListAsync();
         }
 
         public async Task<IEnumerable<LoanTransaction>> GetLoanTransactionsWithPayPeriodAsync(int loanScheduleId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LoanTransactions.
-                                Include(l => l.PayPeriod).
-                                Where(l => l.LoanScheduleID == loanScheduleId).
-                                ToListAsync();
-            }
+            return await _context.LoanTransactions.
+                            Include(l => l.PayPeriod).
+                            Where(l => l.LoanScheduleID == loanScheduleId).
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<LoanSchedule>> GetCurrentPayrollLoansAsync(int organizationId,
                                                                                 DateTime payPeriodDateTo)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LoanSchedules.
-                            Where(l => l.OrganizationID == organizationId).
-                            Where(l => l.DedEffectiveDateFrom <= payPeriodDateTo).
-                            Where(l => l.Status.Trim().ToUpper() == STATUS_IN_PROGRESS.Trim().ToUpper()).
-                            Where(l => l.BonusID == null).
-                            ToListAsync();
-            }
+            return await _context.LoanSchedules.
+                        Where(l => l.OrganizationID == organizationId).
+                        Where(l => l.DedEffectiveDateFrom <= payPeriodDateTo).
+                        Where(l => l.Status.Trim().ToUpper() == STATUS_IN_PROGRESS.Trim().ToUpper()).
+                        Where(l => l.BonusID == null).
+                        ToListAsync();
         }
 
         #endregion List of entities
@@ -295,8 +277,7 @@ namespace AccuPay.Data.Repositories
             if (loanSchedule == null)
                 throw new ArgumentException("Invalid loan.");
 
-            var sys_ownr = new SystemOwnerService();
-            if (sys_ownr.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
+            if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {
                 if (loanSchedule.EmployeeID == null)
                     throw new ArgumentException("Employee does not exists.");

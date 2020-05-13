@@ -11,12 +11,10 @@ namespace AccuPay.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime Created { get; set; }
 
         public int? CreatedBy { get; set; }
 
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
 
         public int? LastUpdBy { get; set; }
@@ -34,5 +32,7 @@ namespace AccuPay.Data.Entities
         public string Active { get; set; }
 
         public string Description { get; set; }
+
+        public int? OrderBy { get; set; }
     }
 }

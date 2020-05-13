@@ -7,12 +7,16 @@ namespace AccuPay.Data.Repositories
 {
     public class WithholdingTaxBracketRepository
     {
+        private readonly PayrollContext _context;
+
+        public WithholdingTaxBracketRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<WithholdingTaxBracket>> GetAllAsync()
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.WithholdingTaxBrackets.ToListAsync();
-            }
+            return await _context.WithholdingTaxBrackets.ToListAsync();
         }
     }
 }

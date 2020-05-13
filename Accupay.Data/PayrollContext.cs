@@ -1,5 +1,4 @@
-﻿using Accupay.DB;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
@@ -8,65 +7,68 @@ namespace AccuPay.Data
 {
     public class PayrollContext : DbContext
     {
-        private readonly ILoggerFactory _loggerFactory;
+        //private readonly ILoggerFactory _loggerFactory;
 
-        public static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(new[] {
-            new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name &&
-                                                    level == LogLevel.Information, true)
-        });
+        //internal static readonly LoggerFactory DbCommandConsoleLoggerFactory = new LoggerFactory(new[] {
+        //    new ConsoleLoggerProvider((category, level) => category == DbLoggerCategory.Database.Command.Name &&
+        //                                            level == LogLevel.Information, true)
+        //});
 
-        public virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
-        public virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
-        public virtual DbSet<Address> Addresses { get; set; }
-        public virtual DbSet<Adjustment> Adjustments { get; set; }
-        public virtual DbSet<Agency> Agencies { get; set; }
-        public virtual DbSet<AgencyFee> AgencyFees { get; set; }
-        public virtual DbSet<Allowance> Allowances { get; set; }
-        public virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
-        public virtual DbSet<Award> Awards { get; set; }
-        public virtual DbSet<Bonus> Bonuses { get; set; }
-        public virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
-        public virtual DbSet<Branch> Branches { get; set; }
-        public virtual DbSet<PayCalendar> Calendars { get; set; }
-        public virtual DbSet<CalendarDay> CalendarDays { get; set; }
-        public virtual DbSet<Category> Categories { get; set; }
-        public virtual DbSet<Certification> Certifications { get; set; }
-        public virtual DbSet<DayType> DayTypes { get; set; }
-        public virtual DbSet<Division> Divisions { get; set; }
-        public virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
-        public virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
-        public virtual DbSet<Employee> Employees { get; set; }
-        public virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
+        internal virtual DbSet<ActualAdjustment> ActualAdjustments { get; set; }
+        internal virtual DbSet<ActualTimeEntry> ActualTimeEntries { get; set; }
+        internal virtual DbSet<Address> Addresses { get; set; }
+        internal virtual DbSet<Adjustment> Adjustments { get; set; }
+        internal virtual DbSet<Agency> Agencies { get; set; }
+        internal virtual DbSet<AgencyFee> AgencyFees { get; set; }
+        internal virtual DbSet<Allowance> Allowances { get; set; }
+        internal virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
+        internal virtual DbSet<Attachment> Attachments { get; set; }
+        internal virtual DbSet<Award> Awards { get; set; }
+        internal virtual DbSet<Bonus> Bonuses { get; set; }
+        internal virtual DbSet<BreakTimeBracket> BreakTimeBrackets { get; set; }
+        internal virtual DbSet<Branch> Branches { get; set; }
+        internal virtual DbSet<PayCalendar> Calendars { get; set; }
+        internal virtual DbSet<CalendarDay> CalendarDays { get; set; }
+        internal virtual DbSet<Category> Categories { get; set; }
+        internal virtual DbSet<Certification> Certifications { get; set; }
+        internal virtual DbSet<DayType> DayTypes { get; set; }
+        internal virtual DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
+        internal virtual DbSet<Division> Divisions { get; set; }
+        internal virtual DbSet<DivisionMinimumWage> DivisionMinimumWages { get; set; }
+        internal virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
+        internal virtual DbSet<Employee> Employees { get; set; }
+        internal virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
         internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
-        public virtual DbSet<JobCategory> JobCategories { get; set; }
-        public virtual DbSet<JobLevel> JobLevels { get; set; }
-        public virtual DbSet<Leave> Leaves { get; set; }
-        public virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
-        public virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
-        public virtual DbSet<ListOfValue> ListOfValues { get; set; }
-        public virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
-        public virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
-        public virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
-        public virtual DbSet<Organization> Organizations { get; set; }
-        public virtual DbSet<Overtime> Overtimes { get; set; }
-        public virtual DbSet<PayFrequency> PayFrequencies { get; set; }
-        public virtual DbSet<PayPeriod> PayPeriods { get; set; }
-        public virtual DbSet<PayRate> PayRates { get; set; }
-        public virtual DbSet<Paystub> Paystubs { get; set; }
-        public virtual DbSet<PaystubActual> PaystubActuals { get; set; }
-        public virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
-        public virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
-        public virtual DbSet<PaystubItem> PaystubItems { get; set; }
-        public virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
-        public virtual DbSet<Position> Positions { get; set; }
-        public virtual DbSet<PositionView> PositionViews { get; set; }
-        public virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
-        public virtual DbSet<Privilege> Privileges { get; set; }
-        public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Salary> Salaries { get; set; }
-        public virtual DbSet<Shift> Shifts { get; set; }
-        public virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
-        public virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
+        internal virtual DbSet<JobCategory> JobCategories { get; set; }
+        internal virtual DbSet<JobLevel> JobLevels { get; set; }
+        internal virtual DbSet<Leave> Leaves { get; set; }
+        internal virtual DbSet<LeaveLedger> LeaveLedgers { get; set; }
+        internal virtual DbSet<LeaveTransaction> LeaveTransactions { get; set; }
+        internal virtual DbSet<ListOfValue> ListOfValues { get; set; }
+        internal virtual DbSet<LoanSchedule> LoanSchedules { get; set; }
+        internal virtual DbSet<LoanTransaction> LoanTransactions { get; set; }
+        internal virtual DbSet<OfficialBusiness> OfficialBusinesses { get; set; }
+        internal virtual DbSet<Organization> Organizations { get; set; }
+        internal virtual DbSet<Overtime> Overtimes { get; set; }
+        internal virtual DbSet<PayFrequency> PayFrequencies { get; set; }
+        internal virtual DbSet<PayPeriod> PayPeriods { get; set; }
+        internal virtual DbSet<PayRate> PayRates { get; set; }
+        internal virtual DbSet<Paystub> Paystubs { get; set; }
+        internal virtual DbSet<PaystubActual> PaystubActuals { get; set; }
+        internal virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
+        internal virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
+        internal virtual DbSet<PaystubItem> PaystubItems { get; set; }
+        internal virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
+        internal virtual DbSet<Position> Positions { get; set; }
+        internal virtual DbSet<PositionView> PositionViews { get; set; }
+        internal virtual DbSet<PreviousEmployer> PreviousEmployers { get; set; }
+        internal virtual DbSet<Privilege> Privileges { get; set; }
+        internal virtual DbSet<Product> Products { get; set; }
+        internal virtual DbSet<Promotion> Promotions { get; set; }
+        internal virtual DbSet<Salary> Salaries { get; set; }
+        internal virtual DbSet<Shift> Shifts { get; set; }
+        internal virtual DbSet<ShiftSchedule> ShiftSchedules { get; set; }
+        internal virtual DbSet<SocialSecurityBracket> SocialSecurityBrackets { get; set; }
         internal virtual DbSet<SystemOwner> SystemOwners { get; set; }
         internal virtual DbSet<TardinessRecord> TardinessRecords { get; set; }
         internal virtual DbSet<TimeEntry> TimeEntries { get; set; }
@@ -78,21 +80,26 @@ namespace AccuPay.Data
         internal virtual DbSet<ThirteenthMonthPay> ThirteenthMonthPays { get; set; }
         internal virtual DbSet<WithholdingTaxBracket> WithholdingTaxBrackets { get; set; }
 
-        public PayrollContext()
+        public PayrollContext(DbContextOptions options)
+            : base(options)
         {
         }
 
-        public PayrollContext(ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory;
-        }
+        //public PayrollContext()
+        //{
+        //}
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
-                            UseLoggerFactory(_loggerFactory).
-                            EnableSensitiveDataLogging();
-        }
+        //public PayrollContext(ILoggerFactory loggerFactory)
+        //{
+        //    _loggerFactory = loggerFactory;
+        //}
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    optionsBuilder.UseMySql(new DataBaseConnection().GetStringMySQLConnectionString()).
+        //                    UseLoggerFactory(_loggerFactory).
+        //                    EnableSensitiveDataLogging();
+        //}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

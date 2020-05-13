@@ -8,33 +8,31 @@ namespace AccuPay.Data.Repositories
 {
     public class JobLevelRepository
     {
+        private readonly PayrollContext _context;
+
+        public JobLevelRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public void Delete(JobLevel jobLevel)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.JobLevels.Remove(jobLevel);
-                context.SaveChanges();
-            }
+            _context.JobLevels.Remove(jobLevel);
+            _context.SaveChanges();
         }
 
         public IEnumerable<JobLevel> GetAll(int organizationId)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.JobLevels.
-                                Where(x => x.OrganizationID == organizationId).
-                                ToList();
-            }
+            return _context.JobLevels.
+                            Where(x => x.OrganizationID == organizationId).
+                            ToList();
         }
 
         public async Task<IEnumerable<JobLevel>> GetAllAsync(int organizationId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.JobLevels.
-                                        Where(x => x.OrganizationID == organizationId).
-                                        ToListAsync();
-            }
+            return await _context.JobLevels.
+                                Where(x => x.OrganizationID == organizationId).
+                                ToListAsync();
         }
     }
 }

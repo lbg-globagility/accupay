@@ -7,13 +7,16 @@ namespace AccuPay.Data.Repositories
 {
     public class PayFrequencyRepository
     {
-        public async Task<IEnumerable<PayFrequency>> GetAllAsync()
+        private readonly PayrollContext _context;
 
+        public PayFrequencyRepository(PayrollContext context)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.PayFrequencies.ToListAsync();
-            }
+            this._context = context;
+        }
+
+        public async Task<IEnumerable<PayFrequency>> GetAllAsync()
+        {
+            return await _context.PayFrequencies.ToListAsync();
         }
     }
 }

@@ -13,67 +13,64 @@ namespace AccuPay.Data.Services
 {
     public class LeaveLedgerReportDataService
     {
-        private readonly int _organizationId;
-        private readonly DateTime _startDate;
-        private readonly DateTime _endDate;
-
         private readonly EmployeeRepository _employeeRepository;
+        private readonly PayrollContext context;
 
-        public LeaveLedgerReportDataService(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public LeaveLedgerReportDataService(PayrollContext context,
+                                            EmployeeRepository employeeRepository)
         {
-            this._organizationId = organizationId;
-            this._startDate = dateFrom.ToMinimumHourValue();
-            this._endDate = dateTo.ToMinimumHourValue();
-
-            _employeeRepository = new EmployeeRepository();
+            this.context = context;
+            _employeeRepository = employeeRepository;
         }
 
-        public async Task<List<LeaveLedgerReportModel>> GetData()
+        public async Task<List<LeaveLedgerReportModel>> GetData(int organizationId,
+                                                                DateTime startDate,
+                                                                DateTime endDate)
         {
+            startDate = startDate.ToMinimumHourValue();
+            endDate = endDate.ToMinimumHourValue();
+
             var leaveLedgerReportModels = new List<LeaveLedgerReportModel>();
 
-            var dayBeforeReport = _startDate.AddDays(-1).ToMaximumHourValue();
+            var dayBeforeReport = startDate.AddDays(-1).ToMaximumHourValue();
 
-            var employees = await _employeeRepository.GetAllActiveAsync(_organizationId);
+            var employees = await _employeeRepository.GetAllActiveAsync(organizationId);
             var employeeIds = employees.Select(e => e.RowID).ToArray();
 
-            using (PayrollContext context = new PayrollContext())
+            var oldLeaveTransactions = await context.LeaveTransactions.
+                                                Include(l => l.LeaveLedger).
+                                                Include(l => l.LeaveLedger.Product).
+                                                Where(l => l.TransactionDate <= dayBeforeReport).
+                                                Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
+                                                Where(l => employeeIds.Contains(l.EmployeeID)).
+                                                OrderBy(l => l.TransactionDate).
+                                                ToListAsync();
+
+            var currentLeaveTransactions = await context.LeaveTransactions.
+                                                Include(l => l.LeaveLedger).
+                                                Include(l => l.LeaveLedger.Product).
+                                                Where(l => l.TransactionDate >= startDate).
+                                                Where(l => l.TransactionDate <= endDate).
+                                                Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
+                                                Where(l => employeeIds.Contains(l.EmployeeID)).
+                                                OrderBy(l => l.TransactionDate).
+                                                ToListAsync();
+
+            var timeEntries = await context.TimeEntries.
+                                        Where(t => t.Date >= startDate).
+                                        Where(t => t.Date <= endDate).
+                                        Where(t => employeeIds.Contains(t.EmployeeID)).
+                                        OrderBy(l => l.Date).ToListAsync();
+
+            foreach (var employee in employees)
             {
-                var oldLeaveTransactions = await context.LeaveTransactions.
-                                                    Include(l => l.LeaveLedger).
-                                                    Include(l => l.LeaveLedger.Product).
-                                                    Where(l => l.TransactionDate <= dayBeforeReport).
-                                                    Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
-                                                    Where(l => employeeIds.Contains(l.EmployeeID)).
-                                                    OrderBy(l => l.TransactionDate).
-                                                    ToListAsync();
+                var vacationLeave = GetVacationLeave(oldLeaveTransactions, currentLeaveTransactions, timeEntries, employee);
 
-                var currentLeaveTransactions = await context.LeaveTransactions.
-                                                    Include(l => l.LeaveLedger).
-                                                    Include(l => l.LeaveLedger.Product).
-                                                    Where(l => l.TransactionDate >= _startDate).
-                                                    Where(l => l.TransactionDate <= _endDate).
-                                                    Where(l => l.LeaveLedger.Product.IsVacationOrSickLeave).
-                                                    Where(l => employeeIds.Contains(l.EmployeeID)).
-                                                    OrderBy(l => l.TransactionDate).
-                                                    ToListAsync();
+                var sickLeave = GetSickLeave(oldLeaveTransactions, currentLeaveTransactions, timeEntries, employee);
 
-                var timeEntries = await context.TimeEntries.
-                                            Where(t => t.Date >= _startDate).
-                                            Where(t => t.Date <= _endDate).
-                                            Where(t => employeeIds.Contains(t.EmployeeID)).
-                                            OrderBy(l => l.Date).ToListAsync();
+                leaveLedgerReportModels.Add(vacationLeave);
 
-                foreach (var employee in employees)
-                {
-                    var vacationLeave = GetVacationLeave(oldLeaveTransactions, currentLeaveTransactions, timeEntries, employee);
-
-                    var sickLeave = GetSickLeave(oldLeaveTransactions, currentLeaveTransactions, timeEntries, employee);
-
-                    leaveLedgerReportModels.Add(vacationLeave);
-
-                    leaveLedgerReportModels.Add(sickLeave);
-                }
+                leaveLedgerReportModels.Add(sickLeave);
             }
 
             return leaveLedgerReportModels;

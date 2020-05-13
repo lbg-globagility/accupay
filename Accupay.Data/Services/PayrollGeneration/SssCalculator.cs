@@ -18,7 +18,12 @@ namespace AccuPay.Data.Services
             _socialSecurityBrackets = socialSecurityBrackets;
         }
 
-        public void Calculate(Paystub paystub, Paystub previousPaystub, Salary salary, Employee employee, PayPeriod payperiod)
+        public void Calculate(Paystub paystub,
+                            Paystub previousPaystub,
+                            Salary salary,
+                            Employee employee,
+                            PayPeriod payperiod,
+                            SystemOwnerService systemOwnerService)
         {
             // Reset SSS values to zero
             paystub.SssEmployeeShare = 0;
@@ -29,7 +34,11 @@ namespace AccuPay.Data.Services
                 return;
 
             // Get the social security bracket based on the amount earned.
-            var amount = GetSocialSecurityAmount(paystub, previousPaystub, salary, employee);
+            var amount = GetSocialSecurityAmount(paystub,
+                                                previousPaystub,
+                                                salary,
+                                                employee,
+                                                systemOwnerService);
             var socialSecurityBracket = FindMatchingBracket(amount);
 
             // If no bracket was matched/found, then there's nothing to compute.
@@ -75,7 +84,11 @@ namespace AccuPay.Data.Services
                                                                 s.RangeToAmount >= amount);
         }
 
-        private decimal GetSocialSecurityAmount(Paystub paystub, Paystub previousPaystub, Salary salary, Employee employee)
+        private decimal GetSocialSecurityAmount(Paystub paystub,
+                                                Paystub previousPaystub,
+                                                Salary salary,
+                                                Employee employee,
+                                                SystemOwnerService systemOwnerService)
         {
             var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
 
@@ -100,7 +113,7 @@ namespace AccuPay.Data.Services
                     var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
                                         paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                    if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
                         totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                         paystub.RegularHoursAndTotalRestDay;
 

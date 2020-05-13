@@ -8,9 +8,9 @@ namespace AccuPay.Data.Services
 
         private readonly ListOfValueCollection _settings;
 
-        public PolicyHelper()
+        public PolicyHelper(ListOfValueService listOfValueService)
         {
-            _settings = ListOfValueCollection.Create();
+            _settings = listOfValueService.Create();
 
             _policy = new TimeEntryPolicy(_settings);
         }

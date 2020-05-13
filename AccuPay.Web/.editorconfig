@@ -1,0 +1,18 @@
+root = true
+
+[*]
+charset = utf-8
+indent_style = space
+indent_size = 4
+insert_final_newline = true
+trim_trailing_whitespace = true
+end_of_line = lf
+
+# CS1591: Missing XML comment for publicly visible type or member
+dotnet_diagnostic.CS1591.severity = none
+
+# IDE0028: Simplify collection initialization
+dotnet_style_collection_initializer = false:suggestion
+
+[*.json]
+indent_size = 2

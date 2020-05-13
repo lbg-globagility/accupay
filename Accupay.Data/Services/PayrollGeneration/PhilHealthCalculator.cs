@@ -19,7 +19,13 @@ namespace AccuPay.Data.Services
             _philHealthBrackets = philHealthBrackets;
         }
 
-        public void Calculate(Salary salary, Paystub paystub, Paystub previousPaystub, Employee employee, PayPeriod payperiod, ICollection<Allowance> allowances)
+        public void Calculate(Salary salary,
+                            Paystub paystub,
+                            Paystub previousPaystub,
+                            Employee employee,
+                            PayPeriod payperiod,
+                            ICollection<Allowance> allowances,
+                            SystemOwnerService systemOwnerService)
         {
             // Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0;
@@ -30,7 +36,12 @@ namespace AccuPay.Data.Services
             // If auto compute the PhilHealth is true, then we use the available formulas to compute the total contribution.
             // Otherwise, we use whatever amount is set in the salary.
             if (salary.AutoComputePhilHealthContribution)
-                totalContribution = GetTotalContribution(salary, paystub, previousPaystub, employee, allowances);
+                totalContribution = GetTotalContribution(salary,
+                                                        paystub,
+                                                        previousPaystub,
+                                                        employee,
+                                                        allowances,
+                                                        systemOwnerService);
             else
                 totalContribution = salary.PhilHealthDeduction;
 
@@ -85,7 +96,12 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private decimal GetTotalContribution(Salary salary, Paystub paystub, Paystub previousPaystub, Employee employee, ICollection<Allowance> allowances)
+        private decimal GetTotalContribution(Salary salary,
+                                            Paystub paystub,
+                                            Paystub previousPaystub,
+                                            Employee employee,
+                                            ICollection<Allowance> allowances,
+                                            SystemOwnerService systemOwnerService)
         {
             var calculationBasis = _policy.CalculationBasis;
 
@@ -128,7 +144,7 @@ namespace AccuPay.Data.Services
                 var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
                                 paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                if ((new SystemOwnerService()).GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
                     totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                     paystub.RegularHoursAndTotalRestDay;
 

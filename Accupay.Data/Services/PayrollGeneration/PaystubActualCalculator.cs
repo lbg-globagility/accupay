@@ -7,11 +7,16 @@ namespace AccuPay.Data.Services
 {
     public class PaystubActualCalculator
     {
-        public void Compute(Employee employee, Salary salary, ListOfValueCollection settings, PayPeriod payperiod, Paystub paystub)
+        public void Compute(Employee employee,
+                            Salary salary,
+                            ListOfValueCollection settings,
+                            PayPeriod payperiod,
+                            Paystub paystub,
+                            SystemOwnerService systemOwnerService)
         {
             decimal totalEarnings = 0;
 
-            var currentSystemOwner = new SystemOwnerService().GetCurrentSystemOwner();
+            var currentSystemOwner = systemOwnerService.GetCurrentSystemOwner();
 
             if (employee.IsDaily || currentSystemOwner == SystemOwnerService.Benchmark)
             {
