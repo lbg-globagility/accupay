@@ -32,20 +32,19 @@ Partial Class AttachmentTab
         Me.ToolStrip21 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton16 = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton34 = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.dgvAttachments = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_FileExtension = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_ViewButton = New System.Windows.Forms.DataGridViewButtonColumn()
         Me.pbAttachment = New System.Windows.Forms.PictureBox()
         Me.btnattadl = New System.Windows.Forms.Button()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_FileName = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_FileExtension = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_ViewButton = New System.Windows.Forms.DataGridViewButtonColumn()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip21.SuspendLayout()
         CType(Me.dgvAttachments, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -92,7 +91,7 @@ Partial Class AttachmentTab
         '
         Me.ToolStrip21.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip21.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.ToolStripButton16, Me.ToolStripButton34, Me.btnDelete, Me.btnCancel, Me.btnUserActivity})
+        Me.ToolStrip21.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.ToolStripButton16, Me.btnDelete, Me.btnCancel, Me.btnUserActivity})
         Me.ToolStrip21.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip21.Name = "ToolStrip21"
         Me.ToolStrip21.Size = New System.Drawing.Size(856, 25)
@@ -115,17 +114,6 @@ Partial Class AttachmentTab
         Me.ToolStripButton16.Name = "ToolStripButton16"
         Me.ToolStripButton16.Size = New System.Drawing.Size(56, 22)
         Me.ToolStripButton16.Text = "Close"
-        '
-        'ToolStripButton34
-        '
-        Me.ToolStripButton34.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton34.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton34.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton34.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton34.Name = "ToolStripButton34"
-        Me.ToolStripButton34.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton34.Text = "ToolStripButton1"
-        Me.ToolStripButton34.ToolTipText = "Show audit trails"
         '
         'btnDelete
         '
@@ -193,6 +181,43 @@ Partial Class AttachmentTab
         Me.dgvAttachments.Size = New System.Drawing.Size(637, 386)
         Me.dgvAttachments.TabIndex = 353
         '
+        'c_Type
+        '
+        Me.c_Type.DataPropertyName = "Type"
+        Me.c_Type.HeaderText = "Type"
+        Me.c_Type.Name = "c_Type"
+        Me.c_Type.ReadOnly = True
+        Me.c_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_Type.Width = 200
+        '
+        'c_FileName
+        '
+        Me.c_FileName.DataPropertyName = "FileName"
+        Me.c_FileName.HeaderText = "File name"
+        Me.c_FileName.MaxInputLength = 200
+        Me.c_FileName.Name = "c_FileName"
+        Me.c_FileName.ReadOnly = True
+        Me.c_FileName.Width = 160
+        '
+        'c_FileExtension
+        '
+        Me.c_FileExtension.DataPropertyName = "FileType"
+        Me.c_FileExtension.HeaderText = "File extension"
+        Me.c_FileExtension.Name = "c_FileExtension"
+        Me.c_FileExtension.ReadOnly = True
+        Me.c_FileExtension.Width = 115
+        '
+        'c_ViewButton
+        '
+        Me.c_ViewButton.HeaderText = ""
+        Me.c_ViewButton.Name = "c_ViewButton"
+        Me.c_ViewButton.ReadOnly = True
+        Me.c_ViewButton.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.c_ViewButton.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
+        Me.c_ViewButton.Text = "VIEW"
+        Me.c_ViewButton.UseColumnTextForButtonValue = True
+        Me.c_ViewButton.Width = 120
+        '
         'pbAttachment
         '
         Me.pbAttachment.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
@@ -238,43 +263,6 @@ Partial Class AttachmentTab
         Me.DataGridViewTextBoxColumn3.ReadOnly = True
         Me.DataGridViewTextBoxColumn3.Width = 160
         '
-        'c_Type
-        '
-        Me.c_Type.DataPropertyName = "Type"
-        Me.c_Type.HeaderText = "Type"
-        Me.c_Type.Name = "c_Type"
-        Me.c_Type.ReadOnly = True
-        Me.c_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.c_Type.Width = 200
-        '
-        'c_FileName
-        '
-        Me.c_FileName.DataPropertyName = "FileName"
-        Me.c_FileName.HeaderText = "File name"
-        Me.c_FileName.MaxInputLength = 200
-        Me.c_FileName.Name = "c_FileName"
-        Me.c_FileName.ReadOnly = True
-        Me.c_FileName.Width = 160
-        '
-        'c_FileExtension
-        '
-        Me.c_FileExtension.DataPropertyName = "FileType"
-        Me.c_FileExtension.HeaderText = "File extension"
-        Me.c_FileExtension.Name = "c_FileExtension"
-        Me.c_FileExtension.ReadOnly = True
-        Me.c_FileExtension.Width = 115
-        '
-        'c_ViewButton
-        '
-        Me.c_ViewButton.HeaderText = ""
-        Me.c_ViewButton.Name = "c_ViewButton"
-        Me.c_ViewButton.ReadOnly = True
-        Me.c_ViewButton.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.c_ViewButton.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic
-        Me.c_ViewButton.Text = "VIEW"
-        Me.c_ViewButton.UseColumnTextForButtonValue = True
-        Me.c_ViewButton.Width = 120
-        '
         'AttachmentTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -306,7 +294,6 @@ Partial Class AttachmentTab
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents ToolStripButton16 As ToolStripButton
-    Friend WithEvents ToolStripButton34 As ToolStripButton
     Friend WithEvents dgvAttachments As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents pbAttachment As PictureBox
     Friend WithEvents btnattadl As Button

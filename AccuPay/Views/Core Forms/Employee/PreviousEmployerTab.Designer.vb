@@ -39,13 +39,11 @@ Partial Class PreviousEmployerTab
         Me.ToolStripSeparator6 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton21 = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grpDetails = New System.Windows.Forms.GroupBox()
         Me.dtpExTo = New System.Windows.Forms.DateTimePicker()
         Me.Label310 = New System.Windows.Forms.Label()
         Me.dtpExFrom = New System.Windows.Forms.DateTimePicker()
-        Me.Label64 = New System.Windows.Forms.Label()
         Me.Label65 = New System.Windows.Forms.Label()
         Me.Label66 = New System.Windows.Forms.Label()
         Me.Label67 = New System.Windows.Forms.Label()
@@ -80,7 +78,24 @@ Partial Class PreviousEmployerTab
         Me.Label62 = New System.Windows.Forms.Label()
         Me.Label61 = New System.Windows.Forms.Label()
         Me.Label56 = New System.Windows.Forms.Label()
+        Me.Label64 = New System.Windows.Forms.Label()
         Me.dgvPrevEmployers = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -98,22 +113,6 @@ Partial Class PreviousEmployerTab
         Me.DataGridViewTextBoxColumn15 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn16 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn17 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_trade = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_contname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_mainphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altphone = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_faxno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_altemailaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_url = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_tinno = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobtitle = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_jobfunction = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_orgtype = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_experience = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_expdateto = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_compaddr = New System.Windows.Forms.DataGridViewTextBoxColumn()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip10.SuspendLayout()
         Me.grpDetails.SuspendLayout()
@@ -161,7 +160,7 @@ Partial Class PreviousEmployerTab
         '
         Me.ToolStrip10.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip10.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip10.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel3, Me.ToolStripSeparator5, Me.btnDelete, Me.ToolStripSeparator6, Me.btnCancel, Me.btnClose, Me.ToolStripButton21, Me.btnUserActivity})
+        Me.ToolStrip10.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel3, Me.ToolStripSeparator5, Me.btnDelete, Me.ToolStripSeparator6, Me.btnCancel, Me.btnClose, Me.btnUserActivity})
         Me.ToolStrip10.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip10.Name = "ToolStrip10"
         Me.ToolStrip10.Size = New System.Drawing.Size(856, 25)
@@ -225,17 +224,6 @@ Partial Class PreviousEmployerTab
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
-        '
-        'ToolStripButton21
-        '
-        Me.ToolStripButton21.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton21.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton21.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton21.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton21.Name = "ToolStripButton21"
-        Me.ToolStripButton21.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton21.Text = "ToolStripButton1"
-        Me.ToolStripButton21.ToolTipText = "Show audit trails"
         '
         'btnUserActivity
         '
@@ -316,17 +304,6 @@ Partial Class PreviousEmployerTab
         Me.dtpExFrom.Name = "dtpExFrom"
         Me.dtpExFrom.Size = New System.Drawing.Size(163, 20)
         Me.dtpExFrom.TabIndex = 213
-        '
-        'Label64
-        '
-        Me.Label64.AutoSize = True
-        Me.Label64.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label64.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label64.Location = New System.Drawing.Point(86, 25)
-        Me.Label64.Name = "Label64"
-        Me.Label64.Size = New System.Drawing.Size(18, 24)
-        Me.Label64.TabIndex = 34
-        Me.Label64.Text = "*"
         '
         'Label65
         '
@@ -647,6 +624,17 @@ Partial Class PreviousEmployerTab
         Me.Label56.TabIndex = 39
         Me.Label56.Text = "*"
         '
+        'Label64
+        '
+        Me.Label64.AutoSize = True
+        Me.Label64.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label64.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label64.Location = New System.Drawing.Point(86, 25)
+        Me.Label64.Name = "Label64"
+        Me.Label64.Size = New System.Drawing.Size(18, 24)
+        Me.Label64.TabIndex = 34
+        Me.Label64.Text = "*"
+        '
         'dgvPrevEmployers
         '
         Me.dgvPrevEmployers.AllowUserToAddRows = False
@@ -679,92 +667,6 @@ Partial Class PreviousEmployerTab
         Me.dgvPrevEmployers.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvPrevEmployers.Size = New System.Drawing.Size(822, 221)
         Me.dgvPrevEmployers.TabIndex = 322
-        '
-        'DataGridViewTextBoxColumn1
-        '
-        Me.DataGridViewTextBoxColumn1.HeaderText = "Company Name"
-        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
-        '
-        'DataGridViewTextBoxColumn2
-        '
-        Me.DataGridViewTextBoxColumn2.HeaderText = "Trade Name"
-        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
-        '
-        'DataGridViewTextBoxColumn3
-        '
-        Me.DataGridViewTextBoxColumn3.HeaderText = "Contact Name"
-        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
-        '
-        'DataGridViewTextBoxColumn4
-        '
-        Me.DataGridViewTextBoxColumn4.HeaderText = "Main Phone"
-        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
-        '
-        'DataGridViewTextBoxColumn5
-        '
-        Me.DataGridViewTextBoxColumn5.HeaderText = "Alt Phone"
-        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
-        '
-        'DataGridViewTextBoxColumn6
-        '
-        Me.DataGridViewTextBoxColumn6.HeaderText = "Fax No."
-        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
-        '
-        'DataGridViewTextBoxColumn7
-        '
-        Me.DataGridViewTextBoxColumn7.HeaderText = "Email Address"
-        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
-        '
-        'DataGridViewTextBoxColumn8
-        '
-        Me.DataGridViewTextBoxColumn8.HeaderText = "Alt Email Address"
-        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
-        '
-        'DataGridViewTextBoxColumn9
-        '
-        Me.DataGridViewTextBoxColumn9.HeaderText = "URL"
-        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
-        '
-        'DataGridViewTextBoxColumn10
-        '
-        Me.DataGridViewTextBoxColumn10.HeaderText = "TIN No."
-        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
-        '
-        'DataGridViewTextBoxColumn11
-        '
-        Me.DataGridViewTextBoxColumn11.HeaderText = "Job Title"
-        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
-        '
-        'DataGridViewTextBoxColumn12
-        '
-        Me.DataGridViewTextBoxColumn12.HeaderText = "Job Function"
-        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
-        '
-        'DataGridViewTextBoxColumn13
-        '
-        Me.DataGridViewTextBoxColumn13.HeaderText = "Organization Type"
-        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
-        '
-        'DataGridViewTextBoxColumn14
-        '
-        Me.DataGridViewTextBoxColumn14.HeaderText = "Experience From date"
-        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
-        '
-        'DataGridViewTextBoxColumn15
-        '
-        Me.DataGridViewTextBoxColumn15.HeaderText = "Experience To date"
-        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
-        '
-        'DataGridViewTextBoxColumn16
-        '
-        Me.DataGridViewTextBoxColumn16.HeaderText = "Company Address"
-        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
-        '
-        'DataGridViewTextBoxColumn17
-        '
-        Me.DataGridViewTextBoxColumn17.HeaderText = "RowiD"
-        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
-        Me.DataGridViewTextBoxColumn17.Visible = False
         '
         'c_compname
         '
@@ -886,6 +788,92 @@ Partial Class PreviousEmployerTab
         Me.c_compaddr.ReadOnly = True
         Me.c_compaddr.Width = 107
         '
+        'DataGridViewTextBoxColumn1
+        '
+        Me.DataGridViewTextBoxColumn1.HeaderText = "Company Name"
+        Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
+        '
+        'DataGridViewTextBoxColumn2
+        '
+        Me.DataGridViewTextBoxColumn2.HeaderText = "Trade Name"
+        Me.DataGridViewTextBoxColumn2.Name = "DataGridViewTextBoxColumn2"
+        '
+        'DataGridViewTextBoxColumn3
+        '
+        Me.DataGridViewTextBoxColumn3.HeaderText = "Contact Name"
+        Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
+        '
+        'DataGridViewTextBoxColumn4
+        '
+        Me.DataGridViewTextBoxColumn4.HeaderText = "Main Phone"
+        Me.DataGridViewTextBoxColumn4.Name = "DataGridViewTextBoxColumn4"
+        '
+        'DataGridViewTextBoxColumn5
+        '
+        Me.DataGridViewTextBoxColumn5.HeaderText = "Alt Phone"
+        Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
+        '
+        'DataGridViewTextBoxColumn6
+        '
+        Me.DataGridViewTextBoxColumn6.HeaderText = "Fax No."
+        Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
+        '
+        'DataGridViewTextBoxColumn7
+        '
+        Me.DataGridViewTextBoxColumn7.HeaderText = "Email Address"
+        Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
+        '
+        'DataGridViewTextBoxColumn8
+        '
+        Me.DataGridViewTextBoxColumn8.HeaderText = "Alt Email Address"
+        Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
+        '
+        'DataGridViewTextBoxColumn9
+        '
+        Me.DataGridViewTextBoxColumn9.HeaderText = "URL"
+        Me.DataGridViewTextBoxColumn9.Name = "DataGridViewTextBoxColumn9"
+        '
+        'DataGridViewTextBoxColumn10
+        '
+        Me.DataGridViewTextBoxColumn10.HeaderText = "TIN No."
+        Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
+        '
+        'DataGridViewTextBoxColumn11
+        '
+        Me.DataGridViewTextBoxColumn11.HeaderText = "Job Title"
+        Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        '
+        'DataGridViewTextBoxColumn12
+        '
+        Me.DataGridViewTextBoxColumn12.HeaderText = "Job Function"
+        Me.DataGridViewTextBoxColumn12.Name = "DataGridViewTextBoxColumn12"
+        '
+        'DataGridViewTextBoxColumn13
+        '
+        Me.DataGridViewTextBoxColumn13.HeaderText = "Organization Type"
+        Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
+        '
+        'DataGridViewTextBoxColumn14
+        '
+        Me.DataGridViewTextBoxColumn14.HeaderText = "Experience From date"
+        Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
+        '
+        'DataGridViewTextBoxColumn15
+        '
+        Me.DataGridViewTextBoxColumn15.HeaderText = "Experience To date"
+        Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
+        '
+        'DataGridViewTextBoxColumn16
+        '
+        Me.DataGridViewTextBoxColumn16.HeaderText = "Company Address"
+        Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
+        '
+        'DataGridViewTextBoxColumn17
+        '
+        Me.DataGridViewTextBoxColumn17.HeaderText = "RowiD"
+        Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
+        Me.DataGridViewTextBoxColumn17.Visible = False
+        '
         'PreviousEmployerTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -923,7 +911,6 @@ Partial Class PreviousEmployerTab
     Friend WithEvents ToolStripSeparator6 As ToolStripSeparator
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
-    Friend WithEvents ToolStripButton21 As ToolStripButton
     Friend WithEvents grpDetails As GroupBox
     Friend WithEvents dtpExTo As DateTimePicker
     Friend WithEvents Label310 As Label

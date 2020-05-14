@@ -35,7 +35,6 @@ Partial Class DisciplinaryActionTab
         Me.btnPrintMemo = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.btnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
@@ -78,7 +77,7 @@ Partial Class DisciplinaryActionTab
         '
         Me.ToolStrip8.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip8.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnAudittrail, Me.btnUserActivity})
+        Me.ToolStrip8.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel1, Me.ToolStripSeparator1, Me.btnDelete, Me.ToolStripSeparator2, Me.btnPrintMemo, Me.btnCancel, Me.btnClose, Me.btnUserActivity})
         Me.ToolStrip8.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip8.Name = "ToolStrip8"
         Me.ToolStrip8.Size = New System.Drawing.Size(825, 25)
@@ -150,17 +149,6 @@ Partial Class DisciplinaryActionTab
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
-        '
-        'btnAudittrail
-        '
-        Me.btnAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.btnAudittrail.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.btnAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.btnAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.btnAudittrail.Name = "btnAudittrail"
-        Me.btnAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.btnAudittrail.Text = "ToolStripButton1"
-        Me.btnAudittrail.ToolTipText = "Show audit trails"
         '
         'btnUserActivity
         '
@@ -531,7 +519,6 @@ Partial Class DisciplinaryActionTab
     Friend WithEvents btnPrintMemo As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
-    Friend WithEvents btnAudittrail As ToolStripButton
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtEmployeeID As TextBox
     Public WithEvents txtFullname As TextBox

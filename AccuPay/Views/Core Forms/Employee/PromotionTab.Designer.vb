@@ -23,8 +23,8 @@ Partial Class PromotionTab
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(PromotionTab))
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip11 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
@@ -34,7 +34,6 @@ Partial Class PromotionTab
         Me.ToolStripSeparator8 = New System.Windows.Forms.ToolStripSeparator()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnCloseForm = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton19 = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtReason = New System.Windows.Forms.TextBox()
         Me.Label57 = New System.Windows.Forms.Label()
@@ -74,7 +73,7 @@ Partial Class PromotionTab
         '
         Me.ToolStrip11.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip11.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip11.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel4, Me.ToolStripSeparator7, Me.btnDelete, Me.ToolStripSeparator8, Me.btnCancel, Me.btnCloseForm, Me.ToolStripButton19, Me.btnUserActivity})
+        Me.ToolStrip11.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.ToolStripLabel4, Me.ToolStripSeparator7, Me.btnDelete, Me.ToolStripSeparator8, Me.btnCancel, Me.btnCloseForm, Me.btnUserActivity})
         Me.ToolStrip11.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip11.Name = "ToolStrip11"
         Me.ToolStrip11.Size = New System.Drawing.Size(905, 25)
@@ -137,17 +136,6 @@ Partial Class PromotionTab
         Me.btnCloseForm.Name = "btnCloseForm"
         Me.btnCloseForm.Size = New System.Drawing.Size(56, 22)
         Me.btnCloseForm.Text = "Close"
-        '
-        'ToolStripButton19
-        '
-        Me.ToolStripButton19.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton19.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton19.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton19.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton19.Name = "ToolStripButton19"
-        Me.ToolStripButton19.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton19.Text = "ToolStripButton1"
-        Me.ToolStripButton19.ToolTipText = "Show audit trails"
         '
         'btnUserActivity
         '
@@ -349,24 +337,24 @@ Partial Class PromotionTab
         Me.dgvPromotions.AllowUserToAddRows = False
         Me.dgvPromotions.AllowUserToDeleteRows = False
         Me.dgvPromotions.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvPromotions.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvPromotions.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvPromotions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvPromotions.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_PostionFrom, Me.c_PositionTo, Me.c_EffectiveDate, Me.c_Compensation, Me.c_BasicPay, Me.c_Reason})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvPromotions.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvPromotions.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvPromotions.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvPromotions.Location = New System.Drawing.Point(15, 278)
         Me.dgvPromotions.MultiSelect = False
@@ -503,7 +491,6 @@ Partial Class PromotionTab
     Friend WithEvents ToolStripSeparator8 As ToolStripSeparator
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnCloseForm As ToolStripButton
-    Friend WithEvents ToolStripButton19 As ToolStripButton
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtReason As TextBox
     Friend WithEvents Label57 As Label

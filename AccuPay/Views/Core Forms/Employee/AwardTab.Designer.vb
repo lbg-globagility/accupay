@@ -24,21 +24,21 @@ Partial Class AwardTab
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(AwardTab))
-        Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip5 = New System.Windows.Forms.ToolStrip()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton31 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar2 = New System.Windows.Forms.ToolStripProgressBar()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
+        Me.Label3 = New System.Windows.Forms.Label()
         Me.lblAwardDate = New System.Windows.Forms.Label()
         Me.lblDescription = New System.Windows.Forms.Label()
         Me.lblAwardType = New System.Windows.Forms.Label()
@@ -51,7 +51,6 @@ Partial Class AwardTab
         Me.c_AwardType = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Description = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Date = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label3 = New System.Windows.Forms.Label()
         Me.ToolStrip5.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -62,7 +61,7 @@ Partial Class AwardTab
         '
         Me.ToolStrip5.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip5.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripButton31, Me.ToolStripProgressBar2, Me.btnUserActivity})
+        Me.ToolStrip5.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnSave, Me.btnDelete, Me.btnCancel, Me.btnClose, Me.ToolStripProgressBar2, Me.btnUserActivity})
         Me.ToolStrip5.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip5.Name = "ToolStrip5"
         Me.ToolStrip5.Size = New System.Drawing.Size(856, 25)
@@ -109,17 +108,6 @@ Partial Class AwardTab
         Me.btnClose.Name = "btnClose"
         Me.btnClose.Size = New System.Drawing.Size(56, 22)
         Me.btnClose.Text = "Close"
-        '
-        'ToolStripButton31
-        '
-        Me.ToolStripButton31.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton31.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton31.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton31.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton31.Name = "ToolStripButton31"
-        Me.ToolStripButton31.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton31.Text = "ToolStripButton1"
-        Me.ToolStripButton31.ToolTipText = "Show audit trails"
         '
         'ToolStripProgressBar2
         '
@@ -190,6 +178,16 @@ Partial Class AwardTab
         Me.grpSalary.TabStop = False
         Me.grpSalary.Text = "Award"
         '
+        'Label3
+        '
+        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label3.Location = New System.Drawing.Point(183, 32)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(13, 13)
+        Me.Label3.TabIndex = 508
+        Me.Label3.Text = "*"
+        '
         'lblAwardDate
         '
         Me.lblAwardDate.AutoSize = True
@@ -259,24 +257,24 @@ Partial Class AwardTab
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvAwards.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle7.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle7.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle7.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle7.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle7.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle7.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvAwards.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle7
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvAwards.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvAwards.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvAwards.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_AwardType, Me.c_Description, Me.c_Date})
-        DataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle8.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvAwards.DefaultCellStyle = DataGridViewCellStyle8
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvAwards.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvAwards.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvAwards.Location = New System.Drawing.Point(8, 320)
         Me.dgvAwards.MultiSelect = False
@@ -312,16 +310,6 @@ Partial Class AwardTab
         Me.c_Date.Name = "c_Date"
         Me.c_Date.ReadOnly = True
         '
-        'Label3
-        '
-        Me.Label3.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label3.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label3.Location = New System.Drawing.Point(183, 32)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(13, 13)
-        Me.Label3.TabIndex = 508
-        Me.Label3.Text = "*"
-        '
         'AwardTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -352,7 +340,6 @@ Partial Class AwardTab
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
     Friend WithEvents btnClose As ToolStripButton
-    Friend WithEvents ToolStripButton31 As ToolStripButton
     Friend WithEvents ToolStripProgressBar2 As ToolStripProgressBar
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtEmployeeID As TextBox

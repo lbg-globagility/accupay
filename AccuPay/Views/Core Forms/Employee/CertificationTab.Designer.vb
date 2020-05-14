@@ -23,14 +23,13 @@ Partial Class CertificationTab
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CertificationTab))
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.btnNew = New System.Windows.Forms.ToolStripButton()
         Me.btnSave = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton29 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.UserActivity = New System.Windows.Forms.ToolStripButton()
@@ -75,7 +74,7 @@ Partial Class CertificationTab
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.btnNew, Me.btnSave, Me.btnCancel, Me.ToolStripButton29, Me.ToolStripLabel8, Me.btnDelete, Me.UserActivity})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.btnNew, Me.btnSave, Me.btnCancel, Me.ToolStripLabel8, Me.btnDelete, Me.UserActivity})
         Me.ToolStrip20.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(856, 25)
@@ -114,17 +113,6 @@ Partial Class CertificationTab
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "Cancel"
-        '
-        'ToolStripButton29
-        '
-        Me.ToolStripButton29.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton29.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton29.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton29.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton29.Name = "ToolStripButton29"
-        Me.ToolStripButton29.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton29.Text = "ToolStripButton1"
-        Me.ToolStripButton29.ToolTipText = "Show audit trails"
         '
         'ToolStripLabel8
         '
@@ -338,24 +326,24 @@ Partial Class CertificationTab
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.dgvCertifications.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.dgvCertifications.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.dgvCertifications.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.dgvCertifications.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.dgvCertifications.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.CertificationType, Me.IssuingAuthority, Me.CertificationNo, Me.IssueDate, Me.ExpirationDate, Me.Comments})
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvCertifications.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvCertifications.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvCertifications.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.dgvCertifications.Location = New System.Drawing.Point(11, 303)
         Me.dgvCertifications.MultiSelect = False
@@ -507,7 +495,6 @@ Partial Class CertificationTab
     Friend WithEvents btnNew As ToolStripButton
     Friend WithEvents btnSave As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
-    Friend WithEvents ToolStripButton29 As ToolStripButton
     Friend WithEvents ToolStripLabel8 As ToolStripLabel
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents UserActivity As ToolStripButton
