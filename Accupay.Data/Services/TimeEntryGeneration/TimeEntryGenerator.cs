@@ -222,7 +222,7 @@ namespace AccuPay.Data.Services
                 {
                     CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // can error if employee type is null
                     //logger.Error(ex.Message, ex);

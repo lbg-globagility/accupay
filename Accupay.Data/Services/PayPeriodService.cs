@@ -54,7 +54,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public async Task<FunctionResult> ValidatePayPeriodAction(int? payPeriodId, int organizationId)
+        public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId, int organizationId)
         {
             if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {

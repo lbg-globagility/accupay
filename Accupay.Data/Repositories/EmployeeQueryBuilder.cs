@@ -121,7 +121,7 @@ namespace AccuPay.Data.Repositories
         {
             if (organizationId != null)
             {
-                _query = _context.Employees.Where(e => e.OrganizationID == organizationId);
+                _query = _query.Where(e => e.OrganizationID == organizationId);
             }
 
             return this;

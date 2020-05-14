@@ -4,6 +4,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviousEmployerTab
 
@@ -15,11 +16,18 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New()
+
         InitializeComponent()
+
         dgvPrevEmployers.AutoGenerateColumns = False
 
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
+
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
         _employee = employee
@@ -34,7 +42,7 @@ Public Class PreviousEmployerTab
     Private Async Function LoadPrevEmployers() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim previousEmployerRepo = New PreviousEmployerRepository
+        Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
         _previousEmployers = Await previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvPrevEmployers.SelectionChanged, AddressOf dgvPrevEmployers_SelectionChanged
@@ -74,7 +82,6 @@ Public Class PreviousEmployerTab
                 txtCompAddr.Text = .BusinessAddress
 
             End With
-
         Else
             ClearForm()
         End If
@@ -158,11 +165,10 @@ Public Class PreviousEmployerTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Previous Employer",
                 Async Function()
-                    Dim repo = New PreviousEmployerRepository
-                    Await repo.DeleteAsync(_currentPrevEmployer)
+                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+                    Await previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Previous Employer", CInt(_currentPrevEmployer.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, "Previous Employer", CInt(_currentPrevEmployer.RowID), z_OrganizationID)
 
                     Await LoadPrevEmployers()
                 End Function)
@@ -253,8 +259,8 @@ Public Class PreviousEmployerTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim prevEmployerRepo = New PreviousEmployerRepository
-                    Await prevEmployerRepo.UpdateAsync(_currentPrevEmployer)
+                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+                    Await previousEmployerRepo.UpdateAsync(_currentPrevEmployer)
 
                     RecordUpdatePrevEmployer(oldPrevEmployer)
 
@@ -388,8 +394,7 @@ Public Class PreviousEmployerTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Previous Employer", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, "Previous Employer", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 

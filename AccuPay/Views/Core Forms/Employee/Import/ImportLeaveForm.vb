@@ -3,12 +3,12 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
-Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
@@ -21,19 +21,18 @@ Public Class ImportLeaveForm
     Private _failModels As List(Of LeaveModel)
     Private _categoryRepository As CategoryRepository
     Private _employeeRepository As EmployeeRepository
-    Private _leaveRepository As LeaveRepository
     Private _productRepository As ProductRepository
+    Private _userActivityRepository As UserActivityRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _categoryRepository = New CategoryRepository()
-        _employeeRepository = New EmployeeRepository()
-        _leaveRepository = New LeaveRepository()
-        _productRepository = New ProductRepository()
+        _categoryRepository = MainServiceProvider.GetRequiredService(Of CategoryRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
 
 #Region "Properties"
@@ -150,8 +149,9 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                         Async Function() As Task(Of Boolean)
 
-                            Await _leaveRepository.SaveManyAsync(leaves,
-                                                                organizationId:=z_OrganizationID)
+                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                            Await leaveService.SaveManyAsync(leaves,
+                                                             z_OrganizationID)
 
                             Dim importList = New List(Of UserActivityItem)
                             Dim entityName = FormEntityName.ToLower()
@@ -174,8 +174,7 @@ Public Class ImportLeaveForm
 
                             Next
 
-                            Dim repo = New UserActivityRepository
-                            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                             Return True
                         End Function)
@@ -191,7 +190,8 @@ Public Class ImportLeaveForm
         Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
         Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
 
-        Dim currentLeaves = Await _leaveRepository.
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim currentLeaves = Await leaveRepository.
                     GetFilteredAllAsync(Function(lv) lv.OrganizationID.Value = z_OrganizationID AndAlso
                                         employeeIDs.Contains(lv.EmployeeID.Value) AndAlso
                                         lv.StartDate >= minDate)

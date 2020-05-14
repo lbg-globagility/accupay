@@ -11,6 +11,7 @@ Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class TimeLogsForm2
@@ -40,7 +41,7 @@ Public Class TimeLogsForm2
 
     Private _shiftScheduleRepository As ShiftScheduleRepository
 
-    Private _timeLogRepository As TimeLogRepository
+    Private _userActivityRepository As UserActivityRepository
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -55,15 +56,15 @@ Public Class TimeLogsForm2
         InitializeComponent()
 
         ' Add any initialization after the InitializeComponent() call.
-        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
+        _employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
 
-        _employeeRepository = New EmployeeRepository()
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _overtimeRepository = New OvertimeRepository()
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
 
-        _shiftScheduleRepository = New ShiftScheduleRepository()
+        _shiftScheduleRepository = MainServiceProvider.GetRequiredService(Of ShiftScheduleRepository)
 
-        _timeLogRepository = New TimeLogRepository()
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
 #Region "Methods"
@@ -116,7 +117,9 @@ Public Class TimeLogsForm2
 
         Dim models = CreatedResults(employees, startDate, endDate)
 
-        Dim timeLogs = Await _timeLogRepository.
+        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+
+        Dim timeLogs = Await timeLogRepository.
                             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIDs, datePeriod)
 
         For Each model In models
@@ -243,7 +246,8 @@ Public Class TimeLogsForm2
     End Sub
 
     Private Function GetShiftSchedulePolicy() As Boolean
-        Dim settings = ListOfValueCollection.Create()
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        Dim settings = listOfValueService.Create()
         Dim policy = New TimeEntryPolicy(settings)
         Return policy.UseShiftSchedule
     End Function
@@ -328,7 +332,8 @@ Public Class TimeLogsForm2
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-            Await _timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs)
+            Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+            Await timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs)
 
             Dim importList = New List(Of Entities.UserActivityItem)
             For Each log In timeLogs
@@ -339,8 +344,7 @@ Public Class TimeLogsForm2
                     })
             Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
         Catch ex As Exception
 
             logger.Error("NewTimeEntryAlternateLineImport", ex)
@@ -778,8 +782,9 @@ Public Class TimeLogsForm2
 
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
-        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        Dim currentlyWorkedOnPayPeriod = Await payPeriodService.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 
@@ -797,7 +802,7 @@ Public Class TimeLogsForm2
         colBranchID.ValueMember = "RowID"
         colBranchID.DisplayMember = "Name"
 
-        Dim branchRepository As New BranchRepository()
+        Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
         colBranchID.DataSource = Await branchRepository.GetAllAsync
 
     End Function
@@ -820,7 +825,8 @@ Public Class TimeLogsForm2
 
         Dim datePeriod = New TimePeriod(dtpDateFrom.Value.Date, dtpDateTo.Value.Date)
 
-        Dim existingRecords = Await _timeLogRepository.
+        Dim timeLogRepositoryQuery = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+        Dim existingRecords = Await timeLogRepositoryQuery.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(toSaveListEmployeeIDs, datePeriod)
 
         Dim addedTimeLogs As New List(Of Entities.TimeLog)
@@ -840,7 +846,7 @@ Public Class TimeLogsForm2
 
                 deletedTimeLogs.Add(timeLog)
 
-                Dim duplicateTimeLogs = Await _timeLogRepository.
+                Dim duplicateTimeLogs = Await timeLogRepositoryQuery.
                                         GetByEmployeeAndDateAsync(timeLog.EmployeeID.Value, timeLog.LogDate)
 
                 deletedTimeLogs.AddRange(duplicateTimeLogs)
@@ -872,7 +878,8 @@ Public Class TimeLogsForm2
         Next
 
         Try
-            Await _timeLogRepository.ChangeManyAsync(addedTimeLogs:=addedTimeLogs,
+            Dim timeLogRepositorySave = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+            Await timeLogRepositorySave.ChangeManyAsync(addedTimeLogs:=addedTimeLogs,
                                                      updatedTimeLogs:=updatedTimeLogs,
                                                      deletedTimeLogs:=deletedTimeLogs)
 
@@ -883,7 +890,7 @@ Public Class TimeLogsForm2
 
                 Dim addedTimeLogsDatePeriod = New TimePeriod(addedTimeLogMinDate, addedTimeLogMaxDate)
 
-                Dim newlyAdded = Await _timeLogRepository.
+                Dim newlyAdded = Await timeLogRepositoryQuery.
                     GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(addedTimeLogEmployeeIDs,
                                                                         addedTimeLogsDatePeriod)
 
@@ -1190,7 +1197,8 @@ Public Class TimeLogsForm2
             Next
         Next
 
-        Await _timeLogRepository.SaveImportAsync(timeLogs)
+        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
+        Await timeLogRepository.SaveImportAsync(timeLogs)
 
         Return
 

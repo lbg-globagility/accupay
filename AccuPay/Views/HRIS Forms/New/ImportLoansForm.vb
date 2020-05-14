@@ -7,6 +7,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLoansForm
@@ -15,19 +16,37 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
-
-    Private _loanScheduleRepository As New LoanScheduleRepository
-
-    Private _listOfValueRepository As New ListOfValueRepository
-
     Private _deductionSchedulesList As List(Of String)
 
     Private _loanTypeList As List(Of Product)
 
     Public IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Async Sub ImportLoansForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -255,8 +274,7 @@ Public Class ImportLoansForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

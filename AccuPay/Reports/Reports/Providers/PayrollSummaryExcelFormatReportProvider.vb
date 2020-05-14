@@ -3,17 +3,17 @@ Option Strict On
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports System.Threading.Tasks
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Data
-Imports AccuPay.Data.Entities
 Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -41,11 +41,11 @@ Public Class PayrollSummaryExcelFormatReportProvider
     Public Property IsActual As Boolean
 
     Sub New()
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _adjustmentService = New AdjustmentService()
+        _adjustmentService = MainServiceProvider.GetRequiredService(Of AdjustmentService)
 
-        _settings = ListOfValueCollection.Create()
+        _settings = MainServiceProvider.GetRequiredService(Of ListOfValueService).Create()
     End Sub
 
     Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
@@ -130,9 +130,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
                 New ExcelReportColumn("Total", "Total")
             })
 
-        Dim sys_ownr As New SystemOwnerService()
-
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             Dim allowanceColumn = reportColumns.Where(Function(r) r.Name = allowanceColumnName).FirstOrDefault
 
@@ -259,9 +258,9 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwnerService()
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 
@@ -280,8 +279,8 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
             attendancePeriodCell.Value = $"Attendance Period: {short_dates(0)} to {short_dates(1)}"
 
-            Dim payFromNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
-            Dim payToNextCutOff = Data.Helpers.PayrollTools.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
+            Dim payFromNextCutOff = _payPeriodRepository.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodFromID.Value)
+            Dim payToNextCutOff = _payPeriodRepository.GetNextPayPeriod(PayrollSummaDateSelection.PayPeriodToID.Value)
 
             Dim payrollPeriodCell = worksheet.Cells(3, 1)
             Dim payrollPeriodDescription = $"Payroll Period: {If(payFromNextCutOff?.PayFromDate Is Nothing, "", payFromNextCutOff.PayFromDate.ToShortDateString)} to {If(payToNextCutOff?.PayToDate Is Nothing, "", payToNextCutOff.PayToDate.ToShortDateString)}"
@@ -530,7 +529,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
 #Region "Adjustment Breakdown"
 
-    Private _adjustments As List(Of Data.IAdjustment)
+    Private _adjustments As List(Of IAdjustment)
 
     Private Function GetPayrollSummaryAdjustmentBreakdownPolicy() As PayrollSummaryAdjustmentBreakdownPolicy
         Return _settings.GetEnum("Payroll Summary Policy.AdjustmentBreakdown", PayrollSummaryAdjustmentBreakdownPolicy.TotalOnly)

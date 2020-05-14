@@ -1,5 +1,6 @@
 ﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MonthlyBirthdayCelebrantsReportProvider
     Implements ILaGlobalEmployeeReport
@@ -9,8 +10,6 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
     Private _selectedDate As Date
 
     Private recordFound As Boolean
-
-    Private employeeRepo As New EmployeeRepository()
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
 
@@ -38,13 +37,12 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
 
         Dim fetchAll As New List(Of Employee)
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder()
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-            fetchAll = Await employeeBuilder.
-                            IsActive().
-                            IncludeBranch().
-                            ToListAsync()
-        End Using
+        fetchAll = Await employeeBuilder.
+                        IsActive().
+                        IncludeBranch().
+                        ToListAsync(z_OrganizationID)
 
         Dim employees = fetchAll.
                 Where(Function(e) _selectedDate.Month = e.BirthDate.Month).

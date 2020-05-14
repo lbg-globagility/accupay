@@ -2,12 +2,13 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _policyHelper As PolicyHelper
 
@@ -15,15 +16,14 @@ Public Class GeneralForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _policyHelper = New PolicyHelper()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        sys_ownr = New SystemOwnerService()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _userRepository = New UserRepository()
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
     End Sub
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
@@ -401,7 +401,7 @@ Public Class GeneralForm
             Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
 
         AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.GetCurrentSystemOwner())
+            ownr.Contains(_systemOwnerService.GetCurrentSystemOwner())
 
         MyBase.OnLoad(e)
 

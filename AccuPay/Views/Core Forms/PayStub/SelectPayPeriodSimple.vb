@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectPayPeriodSimple
 
@@ -14,11 +15,9 @@ Public Class SelectPayPeriodSimple
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
     End Sub
 
     Private Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load

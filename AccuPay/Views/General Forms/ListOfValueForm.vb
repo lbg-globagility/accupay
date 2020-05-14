@@ -447,15 +447,6 @@ Public Class ListOfValueForm
         End If
     End Sub
 
-    Private Sub tsAudittrail_Click(sender As Object, e As EventArgs) Handles tsAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Dim pagination As Integer = 0
 
     Private Sub pagination_handler(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked,

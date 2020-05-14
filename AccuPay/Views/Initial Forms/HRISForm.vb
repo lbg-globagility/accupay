@@ -2,6 +2,7 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class HRISForm
 
@@ -13,26 +14,22 @@ Public Class HRISForm
 
     Private _policyHelper As PolicyHelper
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _userRepository As UserRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        sys_ownr = New SystemOwnerService()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        curr_sys_owner_name = sys_ownr.GetCurrentSystemOwner()
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
-        _policyHelper = New PolicyHelper()
-
-        _userRepository = New UserRepository()
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         PrepareFormForBenchmark()
     End Sub
@@ -281,7 +278,7 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If sys_ownr.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
+        If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False

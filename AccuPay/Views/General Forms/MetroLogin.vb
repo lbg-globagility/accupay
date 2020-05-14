@@ -7,17 +7,32 @@ Imports Microsoft.Extensions.DependencyInjection
 Imports AccuPay.Benchmark
 Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Data
+Imports AccuPay.Payslip
 
 Public Class MetroLogin
-    Private _userRepository As UserRepository
-
-    Private _organizationRepository As OrganizationRepository
     Private err_count As Integer
     Private freq As String
 
+    Private _policyHelper As PolicyHelper
+
+    Private _userRepository As UserRepository
+
+    Private _organizationRepository As OrganizationRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        ConfigureDependencyInjection()
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
-        _userRepository = New UserRepository()
-        _organizationRepository = New OrganizationRepository
 
         ReloadOrganization()
 
@@ -53,8 +68,6 @@ Public Class MetroLogin
             AssignDefaultCredentials()
 
         End If
-
-        ConfigureDependencyInjection()
     End Sub
 
     Private Sub ConfigureDependencyInjection()
@@ -71,24 +84,16 @@ Public Class MetroLogin
             Sub(options As DbContextOptionsBuilder)
                 options.UseMySql("server=localhost;user id=root;password=globagility;database=accupaydb_cinema2k;")
                 options.EnableSensitiveDataLogging()
-            End Sub,
-            ServiceLifetime.Transient)
+            End Sub, ServiceLifetime.Transient)
 
-        'services.AddScoped(Of OrganizationRepository)
-        'services.AddScoped(Of PayPeriodRepository)
-        'services.AddScoped(Of AddressRepository)
-        'services.AddScoped(Of SystemOwnerService)
-        'services.AddScoped(Of PayslipCreator)
-
-        'services.AddScoped(Of PaystubEmailRepository)
         services.AddTransient(Of BenchmarkPayrollHelper)
         services.AddTransient(Of OvertimeRateService)
 
         services.AddTransient(Of PayrollResources)
         services.AddTransient(Of PayrollGeneration)
         services.AddTransient(Of PolicyHelper)
-        'services.AddTransient(Of ListOfValueService)
-        'services.AddTransient(Of PayPeriodService)
+        services.AddTransient(Of ListOfValueService)
+        services.AddTransient(Of PayPeriodService)
         services.AddTransient(Of SystemOwnerService)
 
         services.AddTransient(Of ActualTimeEntryRepository)
@@ -97,7 +102,7 @@ Public Class MetroLogin
         services.AddTransient(Of AgencyFeeRepository)
         services.AddTransient(Of AgencyRepository)
         services.AddTransient(Of AllowanceRepository)
-        'services.AddTransient(Of AttachmentRepository)
+        services.AddTransient(Of AttachmentRepository)
         services.AddTransient(Of AwardRepository)
         services.AddTransient(Of BonusRepository)
         services.AddTransient(Of BranchRepository)
@@ -106,12 +111,12 @@ Public Class MetroLogin
         services.AddTransient(Of CategoryRepository)
         services.AddTransient(Of CertificationRepository)
         services.AddTransient(Of DayTypeRepository)
-        'services.AddTransient(Of DisciplinaryActionRepository)
+        services.AddTransient(Of DisciplinaryActionRepository)
         services.AddTransient(Of DivisionMinimumWageRepository)
         services.AddTransient(Of DivisionRepository)
         services.AddTransient(Of EducationalBackgroundRepository)
         services.AddTransient(Of EmployeeDutyScheduleRepository)
-        'services.AddTransient(Of EmployeeQueryBuilder)
+        services.AddTransient(Of EmployeeQueryBuilder)
         services.AddTransient(Of EmployeeRepository)
         services.AddTransient(Of FilingStatusTypeRepository)
         services.AddTransient(Of JobCategoryRepository)
@@ -131,10 +136,11 @@ Public Class MetroLogin
         services.AddTransient(Of PaystubRepository)
         services.AddTransient(Of PhilHealthBracketRepository)
         services.AddTransient(Of PositionRepository)
+        services.AddTransient(Of PositionViewQueryBuilder)
         services.AddTransient(Of PositionViewRepository)
         services.AddTransient(Of PreviousEmployerRepository)
         services.AddTransient(Of ProductRepository)
-        'services.AddTransient(Of PromotionRepository)
+        services.AddTransient(Of PromotionRepository)
         services.AddTransient(Of SalaryRepository)
         services.AddTransient(Of ShiftRepository)
         services.AddTransient(Of ShiftScheduleRepository)
@@ -143,12 +149,12 @@ Public Class MetroLogin
         services.AddTransient(Of TimeEntryRepository)
         services.AddTransient(Of TimeLogRepository)
         services.AddTransient(Of UserActivityRepository)
-        'services.AddTransient(Of UserQueryBuilder)
+        services.AddTransient(Of UserQueryBuilder)
         services.AddTransient(Of UserRepository)
         services.AddTransient(Of WithholdingTaxBracketRepository)
 
-        'services.AddTransient(Of CalendarService)
-        'services.AddTransient(Of ListOfValueService)
+        services.AddTransient(Of CalendarService)
+        services.AddTransient(Of ListOfValueService)
 
         services.AddTransient(Of PayrollGeneration)
         services.AddTransient(Of PayrollResources)
@@ -170,21 +176,23 @@ Public Class MetroLogin
         services.AddTransient(Of TimeEntryGenerator)
 
         services.AddTransient(Of AdjustmentService)
-        'services.AddTransient(Of LeaveService)
+        services.AddTransient(Of LeaveService)
         services.AddTransient(Of OvertimeRateService)
-        'services.AddTransient(Of PayPeriodService)
-        'services.AddTransient(Of ProductService)
+        services.AddTransient(Of PayPeriodService)
+        services.AddTransient(Of ProductService)
         services.AddTransient(Of SystemOwnerService)
 
-        services.AddTransient(Of MetroLogin)
-        services.AddTransient(Of MDIPrimaryForm)
-        services.AddTransient(Of GeneralForm)
-        services.AddTransient(Of HRISForm)
-        services.AddTransient(Of PayrollForm)
-        services.AddTransient(Of BenchmarkPayrollForm)
-        services.AddTransient(Of TimeAttendForm)
+        services.AddTransient(Of PayslipCreator)
 
-        services.AddTransient(Of AddBranchForm)
+        'services.AddTransient(Of MetroLogin)
+        'services.AddTransient(Of MDIPrimaryForm)
+        'services.AddTransient(Of GeneralForm)
+        'services.AddTransient(Of HRISForm)
+        'services.AddTransient(Of PayrollForm)
+        'services.AddTransient(Of BenchmarkPayrollForm)
+        'services.AddTransient(Of TimeAttendForm)
+
+        'services.AddTransient(Of AddBranchForm)
     End Sub
 
     Public Sub AssignDefaultCredentials()
@@ -326,9 +334,7 @@ Public Class MetroLogin
             Return False
         End If
 
-        Dim settings = ListOfValueCollection.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        If _policyHelper.UseUserLevel = False Then
             Return True
         End If
 

@@ -8,6 +8,7 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectThirteenthMonthEmployeesForm
 
@@ -16,6 +17,10 @@ Public Class SelectThirteenthMonthEmployeesForm
     Private _employeeModels As List(Of EmployeeModel)
 
     Private _currentPayPeriod As PayPeriod
+
+    Private _listOfValueService As ListOfValueService
+
+    Private _systemOwnerService As SystemOwnerService
 
     Private _payPeriodRepository As PayPeriodRepository
 
@@ -37,15 +42,19 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         _employeeModels = New List(Of EmployeeModel)
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _paystubRepository = New PaystubRepository()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _timeEntryRepository = New TimeEntryRepository()
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _actualTimeEntryRepository = New ActualTimeEntryRepository()
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
-        _salaryRepository = New SalaryRepository()
+        _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+
+        _actualTimeEntryRepository = MainServiceProvider.GetRequiredService(Of ActualTimeEntryRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
     End Sub
 
@@ -83,7 +92,7 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         Try
 
-            Dim settings = ListOfValueCollection.Create()
+            Dim settings = _listOfValueService.Create()
 
             Dim datePeriod = New TimePeriod(_currentPayPeriod.PayFromDate, _currentPayPeriod.PayToDate)
 
@@ -125,7 +134,8 @@ Public Class SelectThirteenthMonthEmployeesForm
                                                                           employeeActualTimeEntries,
                                                                           salary,
                                                                           settings,
-                                                                          employee.PaystubObject.AllowanceItems)
+                                                                          employee.PaystubObject.AllowanceItems,
+                                                                          _systemOwnerService)
 
                 employee.UpdateNewThirteenthMonthPayAmount(amount:=newPaystubThirteenthMonthPay.Amount,
                                                         basicPay:=newPaystubThirteenthMonthPay.BasicPay)

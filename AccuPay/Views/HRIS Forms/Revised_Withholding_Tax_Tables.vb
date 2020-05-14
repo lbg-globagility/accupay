@@ -10,6 +10,7 @@ Public Class Revised_Withholding_Tax_Tables
         cmbPayType.Items.AddRange(CType(SQL_ArrayList(strQuery2).ToArray(GetType(String)), String()))
         cmbPayType.SelectedIndex = 0
     End Sub
+
     Private Sub fillFilingStatus()
         Dim dt As New DataTable
         dt = getDataTableForSQL("select * from filingstatus")
@@ -44,7 +45,6 @@ Public Class Revised_Withholding_Tax_Tables
                     dgvlisttaxableamt.Rows.Item(n).Cells(c_rowID.Index).Value = .Item("RowID").ToString
                 End With
             Next
-
         Else
             dgvlisttaxableamt.Rows.Clear()
 
@@ -132,13 +132,12 @@ Public Class Revised_Withholding_Tax_Tables
 
     End Sub
 
-
     Private Sub dgvfilingstatus_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvfilingstatus.CellContentClick
 
     End Sub
 
     Private Sub dgvfilingstatus_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvfilingstatus.CellClick
-        If cmbPayType.SelectedIndex = -1 Or _
+        If cmbPayType.SelectedIndex = -1 Or
             cmbPayType.SelectedIndex = 0 Then
 
             InfoBalloon("Please select a pay frequency.", "No pay frequency is selected", cmbPayType, 128, -69)
@@ -155,9 +154,8 @@ Public Class Revised_Withholding_Tax_Tables
         Dim pf As String = getStringItem("select RoWID from payfrequency where PayFrequencyType = '" & cmbPayType.Text & "'")
         getpf = Val(pf)
 
-        If cmbPayType.SelectedIndex = -1 Or _
+        If cmbPayType.SelectedIndex = -1 Or
             cmbPayType.SelectedIndex = 0 Then
-
         Else
 
             selectfilingstatus()
@@ -165,9 +163,6 @@ Public Class Revised_Withholding_Tax_Tables
         End If
 
     End Sub
-
-
-
 
     Private Sub tsbtnNewTax_Click(sender As Object, e As EventArgs) Handles tsbtnNewTax.Click
 
@@ -195,12 +190,8 @@ Public Class Revised_Withholding_Tax_Tables
             If Not (Double.TryParse(excessamt, dbl)) Then Exit Sub
             ' Successfully converted
 
-
             ' divide by 100 to get percent
             dbl = dbl / 100
-
-
-
 
             If Double.TryParse(examt, getexamt) Then
                 getexamt = CDec(examt)
@@ -220,11 +211,11 @@ Public Class Revised_Withholding_Tax_Tables
                 gettaxto = 0
             End If
 
-            DirectCommand("UPDATE paywithholdingtax SET " & _
-                          "ExemptionAmount = '" & getexamt & "', " & _
-                          "ExemptioninExcessAmount = '" & dbl & "', " & _
-                          "Taxableincomefromamount = '" & gettaxfrom & "', " & _
-                          "Taxableincometoamount = '" & gettaxto & "' " & _
+            DirectCommand("UPDATE paywithholdingtax SET " &
+                          "ExemptionAmount = '" & getexamt & "', " &
+                          "ExemptioninExcessAmount = '" & dbl & "', " &
+                          "Taxableincomefromamount = '" & gettaxfrom & "', " &
+                          "Taxableincometoamount = '" & gettaxto & "' " &
                           "WHERE RowID = '" & drow.Cells(c_rowID.Index).Value & "'")
         Next
         MsgBox("Save Successfully!", MsgBoxStyle.Information, "Saved.")
@@ -247,15 +238,6 @@ Public Class Revised_Withholding_Tax_Tables
         Me.Close()
     End Sub
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Private Sub dgvlisttaxableamt_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvlisttaxableamt.CellContentClick
 
     End Sub
@@ -270,8 +252,6 @@ Public Class Revised_Withholding_Tax_Tables
     Dim imp_FilingstatID = Nothing
 
     Dim imp_FilePath = Nothing
-
-
 
     Private Sub tsbtnimportwtax_Click(sender As Object, e As EventArgs) Handles tsbtnimportwtax.Click
 
@@ -297,7 +277,6 @@ Public Class Revised_Withholding_Tax_Tables
 
             imp_FilePath = n_importWithholdingTax.ImportFilePath
 
-
             ToolStrip1.Enabled = False
 
             ToolStripProgressBar1.Value = 0
@@ -314,23 +293,22 @@ Public Class Revised_Withholding_Tax_Tables
 
         Dim dtimporttax As DataTable
 
-        dtimporttax = _
+        dtimporttax =
             ExcelToCVS(imp_FilePath)
 
         Dim indx = 1
 
         If dtimporttax Is Nothing Then
-
         Else
 
             Dim importrecordcount = dtimporttax.Rows.Count
 
             For Each drow As DataRow In dtimporttax.Rows
 
-                INSUPD_paywithholdingtax(, _
-                                         drow(2), _
-                                         drow(3), _
-                                         drow(0), _
+                INSUPD_paywithholdingtax(,
+                                         drow(2),
+                                         drow(3),
+                                         drow(0),
                                          drow(1))
 
                 bgworkimporttax.ReportProgress(CInt(100 * indx / importrecordcount), "")
@@ -355,7 +333,6 @@ Public Class Revised_Withholding_Tax_Tables
             MsgBox("Error: " & vbNewLine & e.Error.Message)
 
         ElseIf e.Cancelled Then
-
         Else
 
             If dgvfilingstatus.RowCount <> 0 Then
@@ -374,10 +351,10 @@ Public Class Revised_Withholding_Tax_Tables
 
     End Sub
 
-    Sub INSUPD_paywithholdingtax(Optional wtx_RowID = Nothing, _
-                                 Optional wtx_ExemptionAmount = Nothing, _
-                                 Optional wtx_ExemptionInExcessAmount = Nothing, _
-                                 Optional wtx_TaxableIncomeFromAmount = Nothing, _
+    Sub INSUPD_paywithholdingtax(Optional wtx_RowID = Nothing,
+                                 Optional wtx_ExemptionAmount = Nothing,
+                                 Optional wtx_ExemptionInExcessAmount = Nothing,
+                                 Optional wtx_TaxableIncomeFromAmount = Nothing,
                                  Optional wtx_TaxableIncomeToAmount = Nothing)
 
         Dim params(10, 2) As Object
@@ -406,8 +383,8 @@ Public Class Revised_Withholding_Tax_Tables
         params(9, 1) = ValNoComma(wtx_TaxableIncomeFromAmount)
         params(10, 1) = ValNoComma(wtx_TaxableIncomeToAmount)
 
-        EXEC_INSUPD_PROCEDURE(params, _
-                               "INSUPD_paywithholdingtax", _
+        EXEC_INSUPD_PROCEDURE(params,
+                               "INSUPD_paywithholdingtax",
                                "returnval")
 
     End Sub
@@ -429,8 +406,8 @@ Public Class Revised_Withholding_Tax_Tables
         '                          "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
         '                          "OpenDocument Spreadsheet (*.ods)|*.ods"
 
-        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
+        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" &
                                   "OpenDocument Spreadsheet (*.ods)|*.ods"
 
         'D_CanteenDed("Delete All", z_divno, Z_YYYY, Z_PayNo, Z_PayrollType, Z_YYYYMM, 0, 0)
@@ -451,13 +428,11 @@ Public Class Revised_Withholding_Tax_Tables
             If objConn.State = ConnectionState.Closed Then
 
                 Console.Write("Connection cannot be opened")
-
             Else
 
                 Console.Write("Welcome")
 
             End If
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -467,7 +442,6 @@ Public Class Revised_Withholding_Tax_Tables
 
         objCmd.CommandType = CommandType.Text
 
-
         Dim Count As Integer
 
         Count = 0
@@ -476,7 +450,6 @@ Public Class Revised_Withholding_Tax_Tables
             DA.SelectCommand = objCmd
 
             DA.Fill(DS, "XLData")
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -487,12 +460,10 @@ Public Class Revised_Withholding_Tax_Tables
         Try
 
             returnvalue = DS.Tables(0)
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
             returnvalue = Nothing
-
         Finally
 
             objCmd.Dispose()

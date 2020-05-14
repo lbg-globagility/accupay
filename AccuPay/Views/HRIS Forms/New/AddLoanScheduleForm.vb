@@ -6,12 +6,11 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanScheduleForm
 
     Private Const FormEntityName As String = "Loan"
-
-    Dim sys_ownr As New SystemOwnerService()
 
     Private if_sysowner_is_benchmark As Boolean
 
@@ -19,11 +18,7 @@ Public Class AddLoanScheduleForm
 
     Private _newLoanSchedule As New LoanSchedule()
 
-    Private _productRepository As New ProductRepository()
-
-    Private _listOfValueRepository As New ListOfValueRepository()
-
-    Private _loanScheduleRepository As New LoanScheduleRepository()
+    Private _systemOwnerService As SystemOwnerService
 
     Private _loanTypeList As List(Of Product)
 
@@ -47,7 +42,9 @@ Public Class AddLoanScheduleForm
 
         Me.NewLoanTypes = New List(Of Product)
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
     End Sub
 
@@ -184,10 +181,13 @@ Public Class AddLoanScheduleForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
+                Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+                Await loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
+
+                userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -257,9 +257,11 @@ Public Class AddLoanScheduleForm
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
 
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
         Me._newLoanSchedule.TotalBalanceLeft = totalLoanAmount
 
-        Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
+        Dim numberOfPayPeriod = loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
 
         Me._newLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
 
@@ -297,7 +299,8 @@ Public Class AddLoanScheduleForm
 
     Private Sub LoadLoanStatus()
 
-        Dim statusList = _loanScheduleRepository.GetStatusList()
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim statusList = loanScheduleRepository.GetStatusList()
 
         statusList.Remove(LoanScheduleRepository.STATUS_CANCELLED)
         statusList.Remove(LoanScheduleRepository.STATUS_COMPLETE)
@@ -307,11 +310,13 @@ Public Class AddLoanScheduleForm
 
     Private Async Function LoadLoanTypes() As Task
 
+        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
         If if_sysowner_is_benchmark Then
 
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await productRepository.GetGovernmentLoanTypesAsync(z_OrganizationID))
         Else
-            Me._loanTypeList = New List(Of Product)(Await _productRepository.GetLoanTypesAsync(z_OrganizationID))
+            Me._loanTypeList = New List(Of Product)(Await productRepository.GetLoanTypesAsync(z_OrganizationID))
 
         End If
 
@@ -320,15 +325,19 @@ Public Class AddLoanScheduleForm
     End Function
 
     Private Sub PopulateLoanTypeCombobox()
-        Dim loanTypes = _productRepository.ConvertToStringList(Me._loanTypeList)
+        Dim productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        Dim loanTypes = productRepository.ConvertToStringList(Me._loanTypeList)
 
         cboLoanType.DataSource = loanTypes
     End Sub
 
     Private Async Function LoadDeductionSchedules() As Task
 
-        Me._deductionSchedulesList = _listOfValueRepository.
-            ConvertToStringList(Await _listOfValueRepository.GetDeductionSchedulesAsync())
+        Dim listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        Me._deductionSchedulesList = listOfValueRepository.
+            ConvertToStringList(Await listOfValueRepository.GetDeductionSchedulesAsync())
 
         cmbDeductionSchedule.DataSource = Me._deductionSchedulesList
 

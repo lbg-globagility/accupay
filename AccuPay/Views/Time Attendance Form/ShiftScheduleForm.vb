@@ -10,6 +10,7 @@ Imports AccuPay.Tools
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ShiftScheduleForm
 
@@ -33,18 +34,6 @@ Public Class ShiftScheduleForm
     Private _balloonToolTips As IList(Of ToolTip)
 
     Private _originalDates As TimePeriod
-
-    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
-
-    Sub New()
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-
-        _employeeDutyScheduleRepository = New EmployeeDutyScheduleRepository()
-    End Sub
 
     Private WriteOnly Property ChangesCount As Integer
         Set(value As Integer)
@@ -416,7 +405,8 @@ Public Class ShiftScheduleForm
         Dim employees = EmployeeTreeView1.GetTickedEmployees
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
-        Dim empShiftScheds = Await _employeeDutyScheduleRepository.
+        Dim employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim empShiftScheds = Await employeeDutyScheduleRepository.
                 GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(z_OrganizationID,
                                                                     employeeIds,
                                                                     datePeriod)
@@ -725,7 +715,9 @@ Public Class ShiftScheduleForm
 
         Private _dutyShiftPolicy As IEnumerable(Of ListOfValue)
 
-        Private _listOfValueRepository As New ListOfValueRepository
+        Private _listOfValueRepository As ListOfValueRepository
+
+        Private _listOfValueService As ListOfValueService
 
         Private settings As ListOfValueCollection = Nothing
 
@@ -733,6 +725,9 @@ Public Class ShiftScheduleForm
 
         Private Sub New()
 
+            _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         End Sub
 
         Public Shared Async Function Load1() As Task(Of DutyShiftPolicy)
@@ -744,7 +739,7 @@ Public Class ShiftScheduleForm
         Private Async Function Load() As Task
             _dutyShiftPolicy = Await _listOfValueRepository.GetDutyShiftPoliciesAsync()
 
-            settings = ListOfValueCollection.Create(_dutyShiftPolicy.ToList)
+            settings = _listOfValueService.Create(_dutyShiftPolicy.ToList)
 
             _defaultWorkHour = settings.GetDecimal("DefaultShiftHour", DEFAULT_SHIFT_HOUR)
             _breakHour = settings.GetDecimal("BreakHour", DEFAULT_BREAK_HOUR)
@@ -881,7 +876,8 @@ Public Class ShiftScheduleForm
         Next
 
         Try
-            Await _employeeDutyScheduleRepository.ChangeManyAsync(addedShifts:=addedShiftSchedules,
+            Dim employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+            Await employeeDutyScheduleRepository.ChangeManyAsync(addedShifts:=addedShiftSchedules,
                                                                 updatedShifts:=updatedShiftSchedules,
                                                                 deletedShifts:=deletedShiftSchedules)
             ShowSuccessBalloon()
@@ -931,8 +927,9 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
-        Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        Dim currentlyWorkedOnPayPeriod = Await payPeriodService.
+                                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

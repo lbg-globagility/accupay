@@ -1,4 +1,5 @@
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayrollForm
 
@@ -6,19 +7,17 @@ Public Class PayrollForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _policyHelper As PolicyHelper
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _policyHelper = New PolicyHelper()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        sys_ownr = New SystemOwnerService()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
@@ -172,7 +171,7 @@ Public Class PayrollForm
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
 
         Dim showBonusForm As Boolean =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Goldwings)
 
         ' no AccuPay clients are using bonus and other features are outdated and might be buggy
         ' just like deleting Paystub should also delete it's bonuses
@@ -180,7 +179,7 @@ Public Class PayrollForm
 
         BonusToolStripMenuItem.Visible = showBonusForm
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         If if_sysowner_is_benchmark Then
 

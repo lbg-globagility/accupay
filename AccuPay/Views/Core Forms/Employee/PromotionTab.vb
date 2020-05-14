@@ -39,13 +39,10 @@ Public Class PromotionTab
 
         dgvPromotions.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
-            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
-            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
-
-        End Using
+        _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
+        _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
+        _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
     End Sub
 
@@ -355,7 +352,7 @@ Public Class PromotionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

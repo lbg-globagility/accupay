@@ -10,6 +10,7 @@ Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -121,11 +122,10 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim dataService As New CostCenterReportDataService(selectedMonth,
-                                                                selectedBranch,
-                                                                userId:=z_User)
-
-            Dim payPeriodModels = dataService.GetData()
+            Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
+            Dim payPeriodModels = dataService.GetData(selectedMonth,
+                                                    selectedBranch,
+                                                    userId:=z_User)
 
             If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
 
@@ -228,9 +228,9 @@ Public Class CostCenterReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwnerService()
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

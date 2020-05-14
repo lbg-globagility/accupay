@@ -1,6 +1,7 @@
 ﻿Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class ProductControlForm
@@ -13,11 +14,9 @@ Public Class ProductControlForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _allowanceRepository = New AllowanceRepository()
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
     End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult

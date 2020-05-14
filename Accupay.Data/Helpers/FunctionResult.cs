@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace AccuPay.Data.Helpers
 {
@@ -20,7 +21,7 @@ namespace AccuPay.Data.Helpers
 
         public static FunctionResult Failed(string message = null)
         {
-            return new FunctionResult(true, message);
+            return new FunctionResult(false, message);
         }
 
         public static implicit operator bool(FunctionResult result)
@@ -30,14 +31,20 @@ namespace AccuPay.Data.Helpers
 
         public static bool operator ==(FunctionResult result, FunctionResult result2)
         {
-            if (result == null && result2 == null)
-                return true;
+            // Check for null on left side.
+            if (Object.ReferenceEquals(result, null))
+            {
+                if (Object.ReferenceEquals(result2, null))
+                {
+                    // null == null = true.
+                    return true;
+                }
 
-            if (result == null || result2 == null)
+                // Only the left side is null.
                 return false;
-
-            return (result.IsSuccess && result2.IsSuccess) ||
-                    (!result.IsSuccess && !result2.IsSuccess);
+            }
+            // Equals handles case of null on right side.
+            return result.Equals(result2);
         }
 
         public static bool operator !=(FunctionResult result, FunctionResult result2)
@@ -47,9 +54,8 @@ namespace AccuPay.Data.Helpers
 
         public override bool Equals(object obj)
         {
-            return obj is FunctionResult result &&
-                   IsSuccess == result.IsSuccess &&
-                   Message == result.Message;
+            return obj is FunctionResult result && 
+                    IsSuccess == result.IsSuccess;
         }
 
         public override int GetHashCode()

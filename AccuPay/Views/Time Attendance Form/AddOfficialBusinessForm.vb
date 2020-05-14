@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOfficialBusinessForm
     Public Property IsSaved As Boolean
@@ -10,19 +11,23 @@ Public Class AddOfficialBusinessForm
 
     Private Const FormEntityName As String = "Official Business"
 
-    Private _officialBusinessRepository As New OfficialBusinessRepository()
-
     Private _currentEmployee As Employee
 
     Private _newOfficialBusiness As New OfficialBusiness()
 
+    Private _officialBusinessRepository As OfficialBusinessRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -154,8 +159,7 @@ Public Class AddOfficialBusinessForm
             Async Function()
                 Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

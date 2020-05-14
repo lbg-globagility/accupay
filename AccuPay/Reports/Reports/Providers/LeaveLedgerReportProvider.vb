@@ -5,6 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class LeaveLedgerReportProvider
     Implements IReportProvider
@@ -13,8 +14,6 @@ Public Class LeaveLedgerReportProvider
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
     Public Property IsNewReport As Boolean = True
-
-    Private _employeeRepository As New EmployeeRepository
 
     Public Async Sub Run() Implements IReportProvider.Run
         Dim dateSelector As New PayrollSummaDateSelection()
@@ -44,14 +43,14 @@ Public Class LeaveLedgerReportProvider
 
         If dateFrom Is Nothing Or dateTo Is Nothing Then Throw New ArgumentException("Date From or Date To cannot be null")
 
-        Dim dataService As New LeaveLedgerReportDataService(z_OrganizationID,
-                                                            dateFrom.Value,
-                                                            dateTo.Value)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of LeaveLedgerReportDataService)
 
         ' Note: There is actually no need to create and interface.
         ' As long as the models have the same name, crystal report can still map the data.
         ' The interface can create a contract though that the 2 models should adhere to.
-        Dim leaveLedgerReportModels = Await dataService.GetData()
+        Dim leaveLedgerReportModels = Await dataService.GetData(z_OrganizationID,
+                                                                startDate:=dateFrom.Value,
+                                                                endDate:=dateTo.Value)
 
         Dim report As New New_Employee_Leave_Ledger()
         report.SetDataSource(leaveLedgerReportModels)

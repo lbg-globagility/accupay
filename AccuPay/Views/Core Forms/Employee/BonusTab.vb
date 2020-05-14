@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BonusTab
 
@@ -23,9 +24,19 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
+    Private _productRepo As ProductRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New()
+
         InitializeComponent()
+
         dgvempbon.AutoGenerateColumns = False
+
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -51,12 +62,11 @@ Public Class BonusTab
             Return
         End If
 
-        Dim bonusRepo = New BonusRepository
+        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
         _bonuses = Await bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
         _frequencies = bonusRepo.GetFrequencyList
 
-        Dim productRepo = New ProductRepository
-        _products = Await productRepo.GetBonusTypesAsync(z_OrganizationID)
+        _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
         RemoveHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
         BindDataSource()
@@ -144,11 +154,10 @@ Public Class BonusTab
             If result = MsgBoxResult.Yes Then
                 Await FunctionUtils.TryCatchFunctionAsync("Delete Bonus",
                 Async Function()
-                    Dim repo = New BonusRepository
-                    Await repo.DeleteAsync(_currentBonus)
+                    Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+                    Await bonusRepo.DeleteAsync(_currentBonus)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
 
                     Await LoadBonuses()
                 End Function)
@@ -225,7 +234,7 @@ Public Class BonusTab
                         .TaxableFlag = product.Status
                     End With
 
-                    Dim repo = New BonusRepository
+                    Dim repo = MainServiceProvider.GetRequiredService(Of BonusRepository)
 
                     _currentBonus.LastUpdBy = z_User
                     Await repo.UpdateAsync(_currentBonus)
@@ -371,8 +380,7 @@ Public Class BonusTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 

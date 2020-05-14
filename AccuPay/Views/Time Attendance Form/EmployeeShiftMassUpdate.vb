@@ -412,15 +412,6 @@ Public Class EmployeeShiftMassUpdate
 
     End Sub
 
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs)
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Private Sub dgvEmpList_GotFocus(sender As Object, e As EventArgs) Handles dgvEmpList.GotFocus
 
     End Sub

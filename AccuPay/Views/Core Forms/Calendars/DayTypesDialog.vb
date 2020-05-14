@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DayTypesDialog
 
@@ -10,7 +11,7 @@ Public Class DayTypesDialog
     Private _dayTypes As ICollection(Of DayType)
 
     Public Sub New()
-        _repository = New DayTypeRepository()
+        _repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
 
         InitializeComponent()
         InitializeView()

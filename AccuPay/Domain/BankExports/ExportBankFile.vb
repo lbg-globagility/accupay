@@ -4,6 +4,7 @@ Imports System.IO
 Imports System.IO.Compression
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ExportBankFile
 
@@ -16,7 +17,7 @@ Public Class ExportBankFile
     Public Sub New(cutoffStart As Date, cutoffEnd As Date)
         _cutoffStart = cutoffStart
         _cutoffEnd = cutoffEnd
-        _paystubRepository = New PaystubRepository()
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
     End Sub
 
     Public Async Function Extract() As Task

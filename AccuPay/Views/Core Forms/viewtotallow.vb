@@ -1,4 +1,5 @@
 ﻿Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class viewtotallow
     Dim categallowID As Object = Nothing
@@ -12,11 +13,9 @@ Public Class viewtotallow
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _productRepository = New ProductRepository()
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
     End Sub
 
     Private Sub viewtotallow_Load(sender As Object, e As EventArgs) Handles MyBase.Load

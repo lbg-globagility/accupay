@@ -4,6 +4,7 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Benchmark
 
@@ -111,12 +112,12 @@ Namespace Benchmark
                                     overtimes:=overtimes,
                                     ecola:=ecola)
 
-            Dim payrollGeneration = New PayrollGeneration(
-                                organizationId:=z_OrganizationID,
-                                userId:=z_User,
-                                employee:=generator._employee,
-                                resources:=generator._payrollResources
-                            )
+            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
+
+            'organizationId:=z_OrganizationID,
+            '                    userId:=z_User,
+            '                    employee:=generator._employee,
+            '                    resources:=generator._payrollResources
 
             Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
 

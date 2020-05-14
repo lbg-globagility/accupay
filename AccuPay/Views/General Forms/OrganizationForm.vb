@@ -1137,15 +1137,6 @@ Public Class OrganizationForm
 
     End Function
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Private Sub txtmindayperyear_KeyDown(sender As Object, e As KeyEventArgs) Handles txtmindayperyear.KeyDown
         If e.KeyCode = Keys.Up Then
             txtmindayperyear.Text = Val(txtmindayperyear.Text) + 1

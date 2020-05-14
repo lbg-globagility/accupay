@@ -3,6 +3,7 @@ Imports System.IO
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
@@ -38,17 +39,17 @@ Public Class EmployeeShiftEntryForm
 
     Dim ArrayWeekFormat() As String
 
-    Private sys_ownr As New SystemOwnerService()
+    Private _systemOwnerService As SystemOwnerService
 
     Private _shiftRepository As ShiftRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _shiftRepository = New ShiftRepository()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -253,8 +254,6 @@ Public Class EmployeeShiftEntryForm
                 previousForm = Nothing
             End If
         End If
-
-        dutyshift.Close()
 
         TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
@@ -657,12 +656,6 @@ Public Class EmployeeShiftEntryForm
         dtpDateFrom.MinDate = CDate("1/1/1753").ToShortDateString
         CustomColoredTabControlActivateSelecting(True)
         chkbxNewShiftByDay.Checked = False
-    End Sub
-
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs) Handles btnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub dgvEmpList_GotFocus(sender As Object, e As EventArgs) Handles dgvEmpList.GotFocus
@@ -1285,7 +1278,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub CustomColoredTabControl1_SelectingTabPage(sender As Object, e As TabControlCancelEventArgs)
 
         e.Cancel =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 _
             And CustomColoredTabControl1.SelectedIndex = 1)
 
     End Sub
@@ -1293,7 +1286,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub setProperInterfaceBaseOnSystemOwner()
 
         Dim _bool As Boolean =
-            (sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
+            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
         If _bool Then
             TabPage2.Text = String.Empty

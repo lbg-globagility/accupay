@@ -51,8 +51,8 @@ Namespace My
                 'Using context = New PayrollContext()
                 'End Using
 
-                Dim repository As New Data.Repositories.BranchRepository()
-                Dim list = repository.GetAll(z_OrganizationID)
+                'Dim repository As New Data.Repositories.BranchRepository()
+                'Dim list = repository.GetAll(z_OrganizationID)
             Catch ex As Exception
                 MsgBox("A serious error occured while trying to initializing the database.", MsgBoxStyle.OkOnly, "Database Error")
                 Throw

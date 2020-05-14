@@ -5,6 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OfficialBusinessForm
 
@@ -19,8 +20,6 @@ Public Class OfficialBusinessForm
     Private _currentOfficialBusinesses As List(Of OfficialBusiness)
 
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
-
-    Private _officialBusinessRepository As OfficialBusinessRepository
 
     Private _employeeRepository As EmployeeRepository
 
@@ -43,11 +42,9 @@ Public Class OfficialBusinessForm
 
         _changedOfficialBusinesses = New List(Of OfficialBusiness)
 
-        _officialBusinessRepository = New OfficialBusinessRepository()
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _employeeRepository = New EmployeeRepository()
-
-        _userActivityRepository = New UserActivityRepository()
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
@@ -111,7 +108,8 @@ Public Class OfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _officialBusinessRepository.GetStatusList()
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        StatusComboBox.DataSource = officialBusinessRepository.GetStatusList()
 
     End Sub
 
@@ -223,7 +221,8 @@ Public Class OfficialBusinessForm
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentOfficialBusinesses = (Await _officialBusinessRepository.
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Me._currentOfficialBusinesses = (Await officialBusinessRepository.
                                 GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
@@ -403,7 +402,8 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _officialBusinessRepository.
+                                                Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+                                                Await officialBusinessRepository.
                                                     DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
@@ -555,7 +555,8 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim currentOfficialBusiness = Await _officialBusinessRepository.
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim currentOfficialBusiness = Await officialBusinessRepository.
                                         GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
 
         If currentOfficialBusiness Is Nothing Then
@@ -610,7 +611,8 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _officialBusinessRepository.
+                                            Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+                                            Await officialBusinessRepository.
                                                         SaveManyAsync(changedOfficialBusinesses)
 
                                             For Each item In changedOfficialBusinesses

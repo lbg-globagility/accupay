@@ -506,12 +506,6 @@
         Me.Close()
     End Sub
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
-    End Sub
-
     Private Sub dgvshiftentry_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvshiftentry.KeyDown
         If e.KeyCode = Keys.Up Then
             UpKey = 1

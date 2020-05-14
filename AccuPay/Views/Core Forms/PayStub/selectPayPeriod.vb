@@ -1,7 +1,12 @@
+Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
+Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class selectPayPeriod
 
@@ -24,8 +29,9 @@ Public Class selectPayPeriod
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        _currentlyWorkedOnPayPeriod = Await payPeriodService.
+                                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         Dim payfrqncy As New AutoCompleteStringCollection
 
@@ -95,15 +101,15 @@ Public Class selectPayPeriod
 
     Dim quer_empPayFreq = ""
 
-    Sub PayFreq_Changed(sender As Object, e As EventArgs)
+    Async Sub PayFreq_Changed(sender As Object, e As EventArgs)
 
         quer_empPayFreq = ""
 
         Dim senderObj As New ToolStripButton
 
-        Static prevObj As New ToolStripButton
+        Dim prevObj As New ToolStripButton
 
-        Static once As SByte = 0
+        Dim once As SByte = 0
 
         senderObj = DirectCast(sender, ToolStripButton)
 
@@ -119,7 +125,7 @@ Public Class selectPayPeriod
 
             quer_empPayFreq = senderObj.Text
 
-            VIEW_payp(Nothing, senderObj.Text)
+            Await VIEW_payp(Nothing, senderObj.Text)
 
             dgvpaypers_SelectionChanged(sender, e)
 
@@ -148,14 +154,14 @@ Public Class selectPayPeriod
 
         quer_empPayFreq = senderObj.Text
 
-        VIEW_payp(Nothing, senderObj.Text)
+        Await VIEW_payp(Nothing, senderObj.Text)
 
         dgvpaypers_SelectionChanged(sender, e)
 
     End Sub
 
-    Sub VIEW_payp(Optional param_Date As Object = Nothing,
-                  Optional PayFreqType As Object = Nothing)
+    Async Function VIEW_payp(Optional param_Date As Object = Nothing,
+                  Optional PayFreqType As Object = Nothing) As Task
         Dim params = New Object() {
             orgztnID,
             If(param_Date = Nothing, DBNull.Value, param_Date & "-01-01"),
@@ -167,8 +173,9 @@ Public Class selectPayPeriod
         Dim sql As New SQL("CALL VIEW_payp(?og_rowid, ?param_date, ?isotherformat, ?payfreqtype);", params)
         Dim dt = sql.GetFoundRows.Tables(0)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.
-                                            GetPeriodsWithPaystubCount(z_OrganizationID, PayFreqType)
+        Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
+                                GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID) 'PayFreqType
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0
@@ -202,7 +209,7 @@ Public Class selectPayPeriod
 
         dgvpaypers.Rows(currentlyWorkedOnPayPeriodIndex).Cells(Column15.Index).Selected = True
 
-    End Sub
+    End Function
 
     Private Function CreatePayPeriodData(payPeriodsWithPaystubCount As List(Of PayPeriod),
                                          index As Integer,
@@ -236,22 +243,22 @@ Public Class selectPayPeriod
         Return payPeriodData
     End Function
 
-    Private Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
+    Private Async Sub linkNxt_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkNxt.LinkClicked
         _currentYear += 1
-        UpdatePages()
+        Await UpdatePages()
     End Sub
 
-    Private Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
+    Private Async Sub linkPrev_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles linkPrev.LinkClicked
         _currentYear -= 1
-        UpdatePages()
+        Await UpdatePages()
     End Sub
 
-    Private Sub UpdatePages()
+    Private Async Function UpdatePages() As Task
         Panel2.Enabled = False
         linkNxt.Text = (_currentYear + 1) & " →"
         linkPrev.Text = "← " & (_currentYear - 1)
 
-        VIEW_payp(_currentYear, quer_empPayFreq)
+        Await VIEW_payp(_currentYear, quer_empPayFreq)
         If dgvpaypers.RowCount <> 0 Then
             dgvpaypers_SelectionChanged(Nothing, Nothing)
         Else
@@ -259,7 +266,7 @@ Public Class selectPayPeriod
             ResetPayPeriodStatusLabel()
         End If
         Panel2.Enabled = True
-    End Sub
+    End Function
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         dgvpaypers.EndEdit()
@@ -278,8 +285,17 @@ Public Class selectPayPeriod
 
             With dgvpaypers.CurrentRow
 
-                If Await PayrollTools.
-                    ValidatePayPeriodAction(ObjectUtils.ToNullableInteger(.Cells("Column1").Value)) = False Then Return
+                Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+                Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
+                                            ObjectUtils.ToNullableInteger(.Cells("Column1").Value),
+                                            z_OrganizationID)
+
+                If validate = FunctionResult.Failed Then
+
+                    MessageBoxHelper.Warning(validate.Message)
+                    Return
+                End If
 
                 id_value = dgvpaypers.Item("Column1", 0).Value
 

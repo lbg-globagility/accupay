@@ -1,10 +1,12 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EducationalBackgroundTab
 
@@ -16,9 +18,15 @@ Public Class EducationalBackgroundTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New()
+
         InitializeComponent()
+
         dgvEducBgs.AutoGenerateColumns = False
+
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -36,7 +44,7 @@ Public Class EducationalBackgroundTab
     Private Async Function LoadEducationalBackgrounds() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim educbgRepo = New EducationalBackgroundRepository
+        Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
         _educationalBackgrounds = Await educbgRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged
@@ -135,11 +143,10 @@ Public Class EducationalBackgroundTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Educational Background",
                 Async Function()
-                    Dim repo = New EducationalBackgroundRepository
-                    Await repo.DeleteAsync(_currentEducBg)
+                    Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
+                    Await educbgRepo.DeleteAsync(_currentEducBg)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, "Educational Background", CInt(_currentEducBg.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, "Educational Background", CInt(_currentEducBg.RowID), z_OrganizationID)
 
                     Await LoadEducationalBackgrounds()
                 End Function)
@@ -225,8 +232,8 @@ Public Class EducationalBackgroundTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim educBgRepo = New EducationalBackgroundRepository
-                    Await educBgRepo.UpdateAsync(_currentEducBg)
+                    Dim educbgRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
+                    Await educbgRepo.UpdateAsync(_currentEducBg)
 
                     RecordUpdateEducBg(oldEducBg)
 
@@ -303,8 +310,7 @@ Public Class EducationalBackgroundTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, "Educational Background", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, "Educational Background", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
     Private Function isChanged() As Boolean
@@ -323,4 +329,5 @@ Public Class EducationalBackgroundTab
         End With
         Return False
     End Function
+
 End Class

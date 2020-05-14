@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarsForm
 
@@ -33,7 +34,7 @@ Public Class CalendarsForm
 
     Public Sub New()
         Editor = New CalendarDayEditorControl()
-        _repository = New CalendarRepository()
+        _repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
         _changeTracker = New Collection(Of CalendarDay)
 
         InitializeComponent()

@@ -15,11 +15,13 @@ namespace AccuPay.Data.Repositories
         private readonly PayrollContext _context;
         private readonly UserQueryBuilder _builder;
 
-        public UserRepository(PayrollContext context, UserQueryBuilder builder)
+        public UserRepository(PayrollContext context,
+                            UserQueryBuilder userQueryBuilder,
+                            PositionViewQueryBuilder positionViewQueryBuilder)
         {
-            positionViewRepository = new PositionViewRepository(context);
+            positionViewRepository = new PositionViewRepository(context, positionViewQueryBuilder);
             _context = context;
-            _builder = builder;
+            _builder = userQueryBuilder;
         }
 
         #region User List

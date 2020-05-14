@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAwardForm
     Public Property isSaved As Boolean
@@ -10,13 +11,18 @@ Public Class AddAwardForm
 
     Private Const FormEntityName As String = "Award"
 
+    Private _newAward As Award
+
     Private _employee As Employee
 
-    Private _newAward As Award
+    Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
         InitializeComponent()
         _employee = employee
+
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
 
     Private Sub AddAwardForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -49,11 +55,10 @@ Public Class AddAwardForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Dim awardRepo = New AwardRepository
+                Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                 Await awardRepo.CreateAsync(_newAward)
 
-                Dim userActiityRepo = New UserActivityRepository
-                userActiityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 
@@ -81,7 +86,7 @@ Public Class AddAwardForm
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
 
-    Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelButton.Click
+    Private Sub CancelDialogButtonn_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

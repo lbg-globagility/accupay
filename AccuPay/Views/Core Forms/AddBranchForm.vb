@@ -12,10 +12,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBranchForm
 
-    Private _calendarRepository As CalendarRepository
-
-    Private _employeeRepository As EmployeeRepository
-
     Private _branches As IEnumerable(Of Branch)
 
     Private _calendars As IEnumerable(Of PayCalendar)
@@ -29,15 +25,21 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
+    Private _policyHelper As PolicyHelper
+
+    Private _calendarRepository As CalendarRepository
+
+    Private _employeeRepository As EmployeeRepository
+
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _calendarRepository = New CalendarRepository()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _employeeRepository = New EmployeeRepository()
+        _calendarRepository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
 
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -54,10 +56,7 @@ Public Class AddBranchForm
 
     Private Sub ShowCalendar()
 
-        Dim settings = ListOfValueCollection.Create()
-
-        _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            PayRateCalculationBasis.Organization)
+        _payrateCalculationBasis = _policyHelper.PayRateCalculationBasis
 
         If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
