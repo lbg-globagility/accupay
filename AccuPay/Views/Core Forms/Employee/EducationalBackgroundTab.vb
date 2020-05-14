@@ -54,14 +54,27 @@ Public Class EducationalBackgroundTab
         If _educationalBackgrounds.Count > 0 Then
             SelectEducationBackground(DirectCast(dgvEducBgs.CurrentRow?.DataBoundItem, EducationalBackground))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectEducationBackground(Nothing)
             _currentEducBg = New EducationalBackground
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvEducBgs.SelectionChanged, AddressOf dgvEducBgs_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        cboType.Enabled = control
+        txtSchool.Enabled = control
+        txtDegree.Enabled = control
+        txtCourse.Enabled = control
+        txtMajor.Enabled = control
+        dtpDateFrom.Enabled = control
+        dtpDateTo.Enabled = control
+        txtRemarks.Enabled = control
+    End Sub
 
     Private Sub SelectEducationBackground(educBg As EducationalBackground)
         If educBg IsNot Nothing Then

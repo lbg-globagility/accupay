@@ -72,14 +72,24 @@ Public Class PromotionTab
         If _promotions.Count > 0 Then
             SelectPromotion(DirectCast(dgvPromotions.CurrentRow?.DataBoundItem, Promotion))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectPromotion(Nothing)
             _currentPromotion = New Promotion
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvPromotions.SelectionChanged, AddressOf dgvPromotions_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        cboPositionTo.Enabled = control
+        dtpEffectivityDate.Enabled = control
+        cboCompensationChange.Enabled = control
+        txtNewSalary.Enabled = control
+        txtReason.Enabled = control
+    End Sub
 
     Private Sub SelectPromotion(promotion As Promotion)
         If promotion IsNot Nothing Then

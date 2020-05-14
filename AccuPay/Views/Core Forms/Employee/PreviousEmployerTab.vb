@@ -51,14 +51,35 @@ Public Class PreviousEmployerTab
         If _previousEmployers.Count > 0 Then
             SelectPrevEmployer(DirectCast(dgvPrevEmployers.CurrentRow?.DataBoundItem, PreviousEmployer))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectPrevEmployer(Nothing)
             _currentPrevEmployer = New PreviousEmployer
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvPrevEmployers.SelectionChanged, AddressOf dgvPrevEmployers_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        txtName.Enabled = control
+        txtTradeName.Enabled = control
+        txtContactName.Enabled = control
+        txtMainPhone.Enabled = control
+        txtAltPhone.Enabled = control
+        txtFaxNo.Enabled = control
+        txtEmailAdd.Enabled = control
+        txtAltEmailAdd.Enabled = control
+        txtUrl.Enabled = control
+        txtTinNo.Enabled = control
+        txtJobFunction.Enabled = control
+        txtJobTitle.Enabled = control
+        txtOrganizationType.Enabled = control
+        dtpExFrom.Enabled = control
+        dtpExTo.Enabled = control
+        txtCompAddr.Enabled = control
+    End Sub
 
     Private Sub SelectPrevEmployer(previousEmployer As PreviousEmployer)
         If previousEmployer IsNot Nothing Then

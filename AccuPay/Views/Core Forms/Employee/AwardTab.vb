@@ -55,14 +55,22 @@ Public Class AwardTab
         If _awards.Count > 0 Then
             SelectAward(DirectCast(dgvAwards.CurrentRow?.DataBoundItem, Award))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectAward(Nothing)
             _currentAward = New Award
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        txtAwardType.Enabled = control
+        txtDescription.Enabled = control
+        dtpAwardDate.Enabled = control
+    End Sub
 
     Private Sub SelectAward(award As Award)
         If award IsNot Nothing Then

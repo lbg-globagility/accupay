@@ -75,14 +75,25 @@ Public Class DisciplinaryActionTab
         If _disciplinaryActions.Count > 0 Then
             SelectDisciplinaryAction(DirectCast(dgvDisciplinaryList.CurrentRow?.DataBoundItem, DisciplinaryAction))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectDisciplinaryAction(Nothing)
             _currentDiscAction = New DisciplinaryAction
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvDisciplinaryList.SelectionChanged, AddressOf dgvDisciplinaryList_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        cboFinding.Enabled = control
+        cboAction.Enabled = control
+        dtpEffectiveFrom.Enabled = control
+        dtpEffectiveTo.Enabled = control
+        txtDescription.Enabled = control
+        txtComments.Enabled = control
+    End Sub
 
     Private Sub SelectDisciplinaryAction(disciplinaryAction As DisciplinaryAction)
         If disciplinaryAction IsNot Nothing Then

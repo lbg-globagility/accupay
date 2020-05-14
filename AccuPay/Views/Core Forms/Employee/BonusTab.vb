@@ -73,14 +73,24 @@ Public Class BonusTab
         If _bonuses.Count > 0 Then
             SelectBonus(DirectCast(dgvempbon.CurrentRow?.DataBoundItem, Bonus))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectBonus(Nothing)
             _currentBonus = New Bonus
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvempbon.SelectionChanged, AddressOf dgvempbon_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        cbobontype.Enabled = control
+        cbobonfreq.Enabled = control
+        dtpbonstartdate.Enabled = control
+        dtpbonenddate.Enabled = control
+        txtbonamt.Enabled = control
+    End Sub
 
     Private Sub BindDataSource()
 

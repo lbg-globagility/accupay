@@ -53,14 +53,25 @@ Public Class CertificationTab
         If _certifications.Count > 0 Then
             SelectCertification(DirectCast(dgvCertifications.CurrentRow?.DataBoundItem, Certification))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectCertification(Nothing)
             _currentCertification = New Certification
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        txtCertificationType.Enabled = control
+        txtIssuingAuthority.Enabled = control
+        txtCertificationNo.Enabled = control
+        dtpIssueDate.Enabled = control
+        dtpExpirationDate.Enabled = control
+        txtComments.Enabled = control
+    End Sub
 
     Private Sub SelectCertification(certification As Certification)
         If certification IsNot Nothing Then
