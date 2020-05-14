@@ -1,3 +1,4 @@
+using AccuPay.Data.Repositories;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -10,10 +11,12 @@ namespace AccuPay.Web.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _service;
+        private readonly AspNetUserRepository _repository;
 
-        public UsersController(UserService service)
+        public UsersController(UserService service, AspNetUserRepository repository)
         {
             _service = service;
+            _repository = repository;
         }
 
         [HttpPost]
@@ -25,9 +28,18 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetById()
+        public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
-            throw new NotImplementedException();
+            var user = await _repository.GetById(id);
+            var dto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+
+            return dto;
         }
 
         [HttpPost("{id}")]
