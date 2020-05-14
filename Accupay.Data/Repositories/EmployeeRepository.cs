@@ -14,6 +14,22 @@ namespace AccuPay.Data.Repositories
     {
         #region CRUD
 
+        public async Task SaveAsync(Employee employee)
+        {
+            using (PayrollContext context = new PayrollContext())
+            {
+                if (employee.RowID.HasValue)
+                {
+                    context.Entry(employee).State = EntityState.Modified;
+                }
+                else
+                {
+                    context.Employees.AddRange(employee);
+                }
+                await context.SaveChangesAsync();
+            }
+        }
+
         public async Task SaveManyAsync(List<Employee> employees)
         {
             using (PayrollContext context = new PayrollContext())

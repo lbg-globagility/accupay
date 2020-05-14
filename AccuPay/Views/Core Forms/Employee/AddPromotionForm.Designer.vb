@@ -140,6 +140,7 @@ Partial Class AddPromotionForm
         'cboPositionTo
         '
         Me.cboPositionTo.DisplayMember = "Name"
+        Me.cboPositionTo.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPositionTo.FormattingEnabled = True
         Me.cboPositionTo.Location = New System.Drawing.Point(165, 137)
         Me.cboPositionTo.Name = "cboPositionTo"

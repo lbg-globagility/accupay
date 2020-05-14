@@ -59,11 +59,11 @@ namespace AccuPay.Data.Entities
             }
         }
 
-        public decimal BasicPay
+        public decimal? BasicPay
         {
             get
             {
-                return SalaryEntity.BasicSalary;
+                return SalaryEntity?.BasicSalary;
             }
         }
     }

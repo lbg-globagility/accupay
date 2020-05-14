@@ -16,13 +16,15 @@ Public Class AddPromotionForm
 
     Private _newSalary As Salary
 
-    Private _latestSalary As Salary
+    Private _currentSalary As Salary
 
     Private _employee As Employee
 
     Private _latestPromotion As Promotion
 
     Private _promotionRepo As PromotionRepository
+
+    Private _employeeRepo As EmployeeRepository
 
     Private _positionRepo As PositionRepository
 
@@ -35,6 +37,8 @@ Public Class AddPromotionForm
         _employee = employee
 
         _promotionRepo = New PromotionRepository
+
+        _employeeRepo = New EmployeeRepository
 
         _salaryRepo = New SalaryRepository
 
@@ -56,10 +60,10 @@ Public Class AddPromotionForm
         _positions = _positions.OrderBy(Function(x) x.Name).ToList()
         cboPositionTo.DataSource = _positions
 
-        _latestSalary = _salaryRepo.GetByEmployee(_employee.RowID.Value).LastOrDefault()
+        _currentSalary = Await _employeeRepo.GetCurrentSalaryAsync(_employee.RowID.Value)
 
-        If _latestSalary IsNot Nothing Then
-            lblCurrentSalary.Text = _latestSalary.BasicSalary.ToString
+        If _currentSalary IsNot Nothing Then
+            lblCurrentSalary.Text = _currentSalary.BasicSalary.ToString
         End If
 
         ClearForm()
@@ -90,19 +94,15 @@ Public Class AddPromotionForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Promotion",
             Async Function()
-                If CompensationToString10() = "0" AndAlso _latestSalary Is Nothing Then
-
-                    Dim positionTo As Position = CType(cboPositionTo.SelectedValue, Position)
+                If CompensationToString10() = "1" Then
                     _newSalary = New Salary
+
                     With _newSalary
-                        '.FilingStatusID = .FilingStatusID
-                        '.PhilHealthDeduction = 0
-                        '.HDMFAmount = 0
-                        .BasicSalary = CDec(lblCurrentSalary.Text)
+                        .BasicSalary = CDec(txtNewSalary.Text)
                         .AllowanceSalary = 0
                         .TotalSalary = .BasicSalary + .AllowanceSalary
                         .MaritalStatus = _employee.MaritalStatus
-                        .PositionID = positionTo.RowID
+                        .PositionID = CType(cboPositionTo.SelectedValue, Position).RowID.Value
                         .EffectiveFrom = dtpEffectivityDate.Value
                         .DoPaySSSContribution = True
                         .AutoComputeHDMFContribution = True
@@ -128,18 +128,25 @@ Public Class AddPromotionForm
                     .EmployeeID = _employee.RowID.Value
                     .OrganizationID = z_OrganizationID
                     .CreatedBy = z_User
-                    If CompensationToString10() = "0" AndAlso _latestSalary Is Nothing Then
+
+                    If CompensationToString10() = "1" Then
                         .EmployeeSalaryID = _newSalary.RowID.Value
-                    ElseIf CompensationToString10() = "0" Then
-                        .EmployeeSalaryID = _latestSalary.RowID.Value
+                    ElseIf CompensationToString10() = "0" And _currentSalary IsNot Nothing Then
+                        .EmployeeSalaryID = _currentSalary.RowID.Value
                     End If
                 End With
 
-
                 Await _promotionRepo.CreateAsync(_newPromotion)
 
-
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPromotion.RowID), z_OrganizationID)
+
+                With _employee
+                    .Position = CType(cboPositionTo.SelectedItem, Position)
+                    .PositionID = .Position.RowID.Value
+                End With
+
+                Await _employeeRepo.SaveAsync(_employee)
+
                 succeed = True
             End Function)
 
@@ -158,7 +165,7 @@ Public Class AddPromotionForm
     End Sub
 
     Private Function CompensationChange() As Decimal
-        If CompensationToString10() = "1" Then
+        If cboCompensationChange.Text = "Yes" Then
             Return CDec(txtNewSalary.Text)
         Else
             Return CDec(lblCurrentSalary.Text)

@@ -27,6 +27,8 @@ Public Class PromotionTab
 
     Private _positionRepo As PositionRepository
 
+    Private _employeeRepo As EmployeeRepository
+
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
@@ -38,6 +40,8 @@ Public Class PromotionTab
         _salaryRepo = New SalaryRepository
 
         _positionRepo = New PositionRepository
+
+        _employeeRepo = New EmployeeRepository
 
         _userActivityRepo = New UserActivityRepository
     End Sub
@@ -86,8 +90,15 @@ Public Class PromotionTab
                 cboPositionTo.Text = .PositionTo
                 dtpEffectivityDate.Value = .EffectiveDate.Value
                 cboCompensationChange.Text = .CompensationToYesNo
-                lblCurrentSalary.Text = .SalaryEntity.BasicSalary.ToString
-                txtNewSalary.Text = .SalaryEntity.BasicSalary.ToString
+
+                If .SalaryEntity IsNot Nothing Then
+                    lblCurrentSalary.Text = .SalaryEntity.BasicSalary.ToString
+                    txtNewSalary.Text = .SalaryEntity.BasicSalary.ToString
+                Else
+                    lblCurrentSalary.Text = "0"
+                    txtNewSalary.Text = "0"
+                End If
+
                 txtReason.Text = .Reason
             End With
         Else
@@ -165,7 +176,7 @@ Public Class PromotionTab
 
         If form.isSaved Then
             Await LoadPromotions()
-
+            txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
             If form.showBalloon Then
                 ShowBalloonInfo("Promotion successfuly added.", "Saved")
             End If
@@ -211,13 +222,6 @@ Public Class PromotionTab
             Async Function()
                 If isChanged() Then
                     Dim oldPromotion = _currentPromotion.CloneJson()
-                    Dim currentPromotionSalary = _currentPromotion.SalaryEntity
-
-                    With currentPromotionSalary
-                        .BasicSalary = CompensationChange()
-                        .TotalSalary = .BasicSalary + .AllowanceSalary
-                        .LastUpdBy = z_User
-                    End With
 
                     With _currentPromotion
                         .PositionFrom = lblPositionFrom.Text
@@ -229,8 +233,15 @@ Public Class PromotionTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _salaryRepo.SaveAsync(currentPromotionSalary)
+                    With _employee
+                        .Position = CType(cboPositionTo.SelectedItem, Position)
+                        .PositionID = .Position.RowID.Value
+                    End With
+
+                    Await SavePromotionSalary(oldPromotion)
+
                     Await _promotionRepo.UpdateAsync(_currentPromotion)
+                    Await _employeeRepo.SaveAsync(_employee)
 
                     RecordUpdateAward(oldPromotion)
 
@@ -243,9 +254,61 @@ Public Class PromotionTab
 
         If succeed Then
             ShowBalloonInfo("Promotion successfuly saved.", messageTitle)
+            txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
             Return True
         End If
         Return False
+    End Function
+
+    Private Async Function SavePromotionSalary(oldPromotion As Promotion) As Task
+
+        Dim promotionSalary = New Salary
+
+        If oldPromotion.CompensationToYesNo = "Yes" And
+            _currentPromotion.CompensationToYesNo = "No" Then
+
+            Await _salaryRepo.DeleteAsync(_currentPromotion.EmployeeSalaryID.Value)
+
+            Return
+
+        ElseIf oldPromotion.CompensationToYesNo = "No" And
+            _currentPromotion.CompensationToYesNo = "Yes" Then
+
+            With promotionSalary
+                .BasicSalary = CDec(txtNewSalary.Text)
+                .AllowanceSalary = 0
+                .TotalSalary = .BasicSalary + .AllowanceSalary
+                .MaritalStatus = _employee.MaritalStatus
+                .PositionID = _employee.PositionID
+                .EffectiveFrom = dtpEffectivityDate.Value
+                .DoPaySSSContribution = True
+                .AutoComputeHDMFContribution = True
+                .AutoComputePhilHealthContribution = True
+                .EmployeeID = _employee.RowID.Value
+                .CreatedBy = z_User
+                .OrganizationID = z_OrganizationID
+            End With
+
+        ElseIf oldPromotion.CompensationToYesNo = "Yes" And
+            _currentPromotion.CompensationToYesNo = "Yes" Then
+
+            promotionSalary = _currentPromotion.SalaryEntity
+
+            With promotionSalary
+                .BasicSalary = CDec(txtNewSalary.Text)
+                .TotalSalary = .BasicSalary + .AllowanceSalary
+                .EffectiveFrom = dtpEffectivityDate.Value
+                .LastUpdBy = z_User
+            End With
+
+        End If
+
+        Await _salaryRepo.SaveAsync(promotionSalary)
+
+        With _currentPromotion
+            .EmployeeSalaryID = promotionSalary.RowID.Value
+        End With
+
     End Function
 
     Private Function CompensationChange() As Decimal
@@ -291,11 +354,11 @@ Public Class PromotionTab
                         .Description = $"Updated {entityName} compensation change from '{oldPromotion.CompensationToYesNo}' to '{_currentPromotion.CompensationToYesNo}'."
                         })
         End If
-        If _currentPromotion.SalaryEntity.BasicSalary <> oldPromotion.SalaryEntity.BasicSalary Then
+        If _currentPromotion.BasicPay <> oldPromotion.BasicPay Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = CInt(oldPromotion.RowID),
-                        .Description = $"Updated {entityName} new salary from '{oldPromotion.SalaryEntity.BasicSalary}' to '{_currentPromotion.SalaryEntity.BasicSalary}'."
+                        .Description = $"Updated {entityName} new salary from '{oldPromotion.BasicPay}' to '{_currentPromotion.BasicPay}'."
                         })
         End If
         If _currentPromotion.Reason <> oldPromotion.Reason Then
@@ -310,11 +373,12 @@ Public Class PromotionTab
     End Sub
 
     Private Function isChanged() As Boolean
+
         With _currentPromotion
             If .PositionTo <> cboPositionTo.Text OrElse
                     .EffectiveDate <> dtpEffectivityDate.Value OrElse
                     .CompensationToYesNo <> cboCompensationChange.Text OrElse
-                    .SalaryEntity.BasicSalary <> CDec(txtNewSalary.Text) OrElse
+                    .BasicPay <> CDec(txtNewSalary.Text) OrElse
                     .Reason <> txtReason.Text Then
                 Return True
             End If
@@ -356,5 +420,9 @@ Public Class PromotionTab
         Else
             ChangeMode(FormMode.Editing)
         End If
+    End Sub
+
+    Private Sub btnCloseForm_Click(sender As Object, e As EventArgs) Handles btnCloseForm.Click
+        EmployeeForm.Close()
     End Sub
 End Class
