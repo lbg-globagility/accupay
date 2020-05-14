@@ -2,10 +2,10 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Utils
-Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeAllowanceForm
@@ -24,20 +24,15 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Private _allowanceRepository As AllowanceRepository
-
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(allowanceRepository As AllowanceRepository,
-            employeeRepository As EmployeeRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
 
         InitializeComponent()
 
@@ -55,7 +50,7 @@ Public Class EmployeeAllowanceForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _userActivityRepository = userActivityRepository
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
     End Sub
 
@@ -132,7 +127,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
+        Dim n_ProductControlForm As New ProductControlForm
 
         With n_ProductControlForm
 
@@ -242,10 +237,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim form As New AddAllowanceForm(employee,
-                                        _productRepository,
-                                        _allowanceRepository,
-                                        _userActivityRepository)
+        Dim form As New AddAllowanceForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -393,10 +385,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportAllowanceForm(_allowanceRepository,
-                                             _employeeRepository,
-                                             _productRepository,
-                                             _userActivityRepository)
+        Using form = New ImportAllowanceForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -418,7 +407,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
         myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
@@ -690,7 +679,7 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

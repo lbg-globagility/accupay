@@ -81,7 +81,8 @@ Public Class AddEducationalBackgroundForm
                 Dim educBGRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
                 Await educBGRepo.CreateAsync(_newEducBg)
 
-                _userActivityRepo.RecordAdd(z_User, "Educational Background", CInt(_newEducBg.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
+
                 succeed = True
             End Function)
 

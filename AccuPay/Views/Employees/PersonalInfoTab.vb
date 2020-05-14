@@ -7,18 +7,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PersonalInfoTab
 
-    Private _positionRepository As PositionRepository
-
-    Sub New()
-
-        InitializeComponent()
-
-        Using MainServiceProvider
-            _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)()
-        End Using
-
-    End Sub
-
     Private Sub PersonalInfoTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return

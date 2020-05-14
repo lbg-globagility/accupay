@@ -3,7 +3,6 @@
 Imports System.Collections.ObjectModel
 Imports System.IO
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.CostCenterReportDataService
 Imports AccuPay.Data.ValueObjects
@@ -27,7 +26,9 @@ Public Class CostCenterReportProvider
     Public Property Name As String = "Cost Center Report" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
+
     Private ReadOnly _reportColumns As IReadOnlyCollection(Of ExcelReportColumn) = GetReportColumns()
+
     Private Const EmployeeIdKey As String = "EmployeeId"
     Private Const EmployeeNameKey As String = "EmployeeName"
     Private Const TotalDaysKey As String = "TotalDays"
@@ -98,26 +99,6 @@ Public Class CostCenterReportProvider
         Return New ReadOnlyCollection(Of ExcelReportColumn)(reportColumns)
     End Function
 
-    Private ReadOnly _dataService As CostCenterReportDataService
-
-    Private ReadOnly _systemOwnerService As SystemOwnerService
-
-    Private ReadOnly _branchRepository As BranchRepository
-
-    Sub New(dataService As CostCenterReportDataService,
-            payPeriodService As PayPeriodService,
-            systemOwnerService As SystemOwnerService,
-            branchRepository As BranchRepository)
-
-        MyBase.New(payPeriodService)
-
-        _dataService = dataService
-
-        _systemOwnerService = systemOwnerService
-
-        _branchRepository = branchRepository
-    End Sub
-
     Public Sub Run() Implements IReportProvider.Run
 
         Try
@@ -168,9 +149,9 @@ Public Class CostCenterReportProvider
 
     End Sub
 
-    Private Function GetSelectedBranch() As Branch
+    Private Shared Function GetSelectedBranch() As Branch
 
-        Dim selectBranchDialog As New SelectBranchForm(_branchRepository)
+        Dim selectBranchDialog As New SelectBranchForm
 
         If Not selectBranchDialog.ShowDialog <> DialogResult.OK Then
             Return Nothing

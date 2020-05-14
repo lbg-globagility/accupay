@@ -7,18 +7,9 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectBranchForm
 
-    Public Property SelectedBranch As Branch
-
     Private _branches As List(Of Branch)
 
-    Private ReadOnly _branchRepository As BranchRepository
-
-    Sub New(branchRepository As BranchRepository)
-
-        InitializeComponent()
-
-        _branchRepository = branchRepository
-    End Sub
+    Public Property SelectedBranch As Branch
 
     Private _branchRepository As BranchRepository
 
@@ -40,7 +31,7 @@ Public Class SelectBranchForm
 
     Private Async Function LoadBranch() As Task
 
-        _branches = Await _branchRepository.GetAllAsync()
+        _branches = (Await _branchRepository.GetAllAsync()).ToList()
 
         BranchComboBox.DisplayMember = "Name"
         BranchComboBox.DataSource = _branches

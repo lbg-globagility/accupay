@@ -33,12 +33,7 @@ Public Class DateRangePickerDialog
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Private _payPeriodService As PayPeriodService
-
-    Sub New(payPeriodRepository As PayPeriodRepository,
-            payPeriodService As PayPeriodService,
-            Optional passedPayPeriod As IPayPeriod = Nothing,
-            Optional removePayPeriodValidation As Boolean = False)
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()

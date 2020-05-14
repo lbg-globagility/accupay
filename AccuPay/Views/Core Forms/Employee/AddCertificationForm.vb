@@ -66,6 +66,7 @@ Public Class AddCertificationForm
                 Await awardRepo.CreateAsync(_newCertification)
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
+
                 succeed = True
             End Function)
 

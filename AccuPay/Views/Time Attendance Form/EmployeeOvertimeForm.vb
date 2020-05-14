@@ -44,7 +44,7 @@ Public Class EmployeeOvertimeForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _userActivityRepository = userActivityRepository
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
     End Sub
 
@@ -71,7 +71,7 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Sub EmployeeOvertimeForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
@@ -80,9 +80,7 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Using form = New ImportOvertimeForm(_employeeRepository,
-                                            _overtimeRepository,
-                                            _userActivityRepository)
+        Using form = New ImportOvertimeForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -461,7 +459,7 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim form As New AddOvertimeForm(employee, _overtimeRepository, _userActivityRepository)
+        Dim form As New AddOvertimeForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -734,7 +732,7 @@ Public Class EmployeeOvertimeForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

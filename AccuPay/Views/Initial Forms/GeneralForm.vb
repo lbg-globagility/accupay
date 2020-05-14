@@ -14,9 +14,7 @@ Public Class GeneralForm
 
     Private _userRepository As UserRepository
 
-    Sub New(systemOwnerService As SystemOwnerService,
-            policyHelper As PolicyHelper,
-            userRepository As UserRepository)
+    Sub New()
 
         InitializeComponent()
 
@@ -154,13 +152,8 @@ Public Class GeneralForm
 
     Private Sub UserToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles UserToolStripMenuItem.Click
 
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of UsersForm)()
-
-            ChangeForm(form, "Users")
-            previousForm = form
-
-        End Using
+        ChangeForm(UsersForm, "Users")
+        previousForm = UsersForm
 
     End Sub
 
@@ -173,11 +166,8 @@ Public Class GeneralForm
 
     Private Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
 
-        Dim form As New OrganizationForm
-        form.SetParentForms(MDIPrimaryForm)
-
-        ChangeForm(form, "Organization")
-        previousForm = form
+        ChangeForm(OrganizationForm, "Organization")
+        previousForm = OrganizationForm
 
     End Sub
 
@@ -187,6 +177,7 @@ Public Class GeneralForm
         ChangeForm(userprivil, "User Privilege")
 
         previousForm = userprivil
+
     End Sub
 
     Private Sub PhilHealthTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PhilHealthTableToolStripMenuItem.Click
@@ -218,25 +209,14 @@ Public Class GeneralForm
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of PayRateForm)()
+        ChangeForm(PayRateForm, "Pay rate")
+        previousForm = PayRateForm
 
-            ChangeForm(form, "Pay rate")
-            previousForm = form
-
-        End Using
     End Sub
 
     Private Sub CalendarsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CalendarsToolStripMenuItem.Click
-
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of CalendarsForm)()
-
-            ChangeForm(form, "Calendars")
-
-            previousForm = form
-
-        End Using
+        ChangeForm(CalendarsForm, "Calendars")
+        previousForm = CalendarsForm
     End Sub
 
     Sub reloadViewPrivilege()
@@ -274,12 +254,8 @@ Public Class GeneralForm
 
     Private Sub BranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BranchToolStripMenuItem.Click
 
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of AddBranchForm)()
-
-            form.ShowDialog()
-
-        End Using
+        Dim form As New AddBranchForm
+        form.ShowDialog()
 
     End Sub
 

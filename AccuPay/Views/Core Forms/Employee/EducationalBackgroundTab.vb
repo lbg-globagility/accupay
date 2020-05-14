@@ -11,10 +11,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class EducationalBackgroundTab
 
     Private Const FormEntityName As String = "Educational Background"
-
     Private _employee As Employee
-
-    Private _parentForm As Form
 
     Private _educationalBackgrounds As IEnumerable(Of EducationalBackground)
 
@@ -34,11 +31,8 @@ Public Class EducationalBackgroundTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
-
+    Public Async Function SetEmployee(employee As Employee) As Task
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = _employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = _employee.EmployeeIdWithPositionAndEmployeeType
@@ -135,7 +129,7 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Sub Date_ValueChanged(sender As Object, e As EventArgs) Handles dtpDateFrom.ValueChanged, dtpDateTo.ValueChanged
@@ -181,7 +175,7 @@ Public Class EducationalBackgroundTab
             Return
         End If
 
-        Dim form As New AddEducationalBackgroundForm(_employee, _educBgRepo, _userActivityRepo)
+        Dim form As New AddEducationalBackgroundForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -199,7 +193,7 @@ Public Class EducationalBackgroundTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
@@ -319,7 +313,8 @@ Public Class EducationalBackgroundTab
                         })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, "Educational Background", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
     Private Function isChanged() As Boolean

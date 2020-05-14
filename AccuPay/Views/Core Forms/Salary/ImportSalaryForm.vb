@@ -21,7 +21,7 @@ Public Class ImportSalaryForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _userActivityRepository As UserActivityRepository
+    Sub New()
 
         InitializeComponent()
 

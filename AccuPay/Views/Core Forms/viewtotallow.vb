@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class viewtotallow
@@ -11,11 +13,12 @@ Public Class viewtotallow
 
     Private _productRepository As ProductRepository
 
-    Sub New(productRepository As ProductRepository)
+    Sub New()
 
         InitializeComponent()
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
     End Sub
 
     Private Sub viewtotallow_Load(sender As Object, e As EventArgs) Handles MyBase.Load

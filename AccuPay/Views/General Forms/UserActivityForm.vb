@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 

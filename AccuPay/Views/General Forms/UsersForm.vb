@@ -3,7 +3,6 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UsersForm
@@ -428,7 +427,7 @@ Public Class UsersForm
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 

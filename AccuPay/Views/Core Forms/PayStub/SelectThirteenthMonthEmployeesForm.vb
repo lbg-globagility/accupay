@@ -6,7 +6,6 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -24,26 +23,15 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private _paystubRepository As PaystubRepository
 
-    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
+    Private _timeEntryRepository As TimeEntryRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private _actualTimeEntryRepository As ActualTimeEntryRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private _salaryRepository As SalaryRepository
 
-    Private ReadOnly _timeEntryRepository As TimeEntryRepository
-
-    Private ReadOnly _salaryRepository As SalaryRepository
-
-    Sub New(currentPayPeriodId As Integer,
-            listOfValueService As ListOfValueService,
-            systemOwnerService As SystemOwnerService,
-            actualTimeEntryRepository As ActualTimeEntryRepository,
-            payPeriodRepository As PayPeriodRepository,
-            paystubRepository As PaystubRepository,
-            salaryRepository As SalaryRepository,
-            timeEntryRepository As TimeEntryRepository)
+    Sub New(currentPayPeriodId As Integer)
 
         ' This call is required by the designer.
         InitializeComponent()

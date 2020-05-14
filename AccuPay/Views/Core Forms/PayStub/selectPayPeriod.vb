@@ -12,32 +12,17 @@ Public Class selectPayPeriod
 
     Public Property PayPeriod As IPayPeriod
 
-    Private ReadOnly selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Private ReadOnly unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim m_PayFreqType As String = ""
+    Dim m_PayFreqType = ""
 
-    Private _currentYear As Integer = Date.Now.Year
+    Private _currentYear = Date.Now.Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
-
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Sub New(payPeriodService As PayPeriodService, payPeriodRepository As PayPeriodRepository)
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-        _payPeriodService = payPeriodService
-
-        _payPeriodRepository = payPeriodRepository
-    End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (_currentYear - 1)
@@ -299,6 +284,7 @@ Public Class selectPayPeriod
 
                 Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
 
+                Dim payPeriodId = ObjectUtils.ToNullableInteger(.Cells("Column1").Value)
                 Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
                                             ObjectUtils.ToNullableInteger(.Cells("Column1").Value),
                                             z_OrganizationID)
@@ -309,21 +295,10 @@ Public Class selectPayPeriod
                     Return
                 End If
 
-                Dim validate = Await _payPeriodService.
-                        ValidatePayPeriodAction(payPeriodId, z_OrganizationID)
-
-                If validate = FunctionResult.Failed Then
-
-                    MessageBoxHelper.Warning(validate.Message)
-                    Return
-                End If
-
                 PayPeriod = New PayPeriod
-
                 PayPeriod.RowID = payPeriodId.Value
                 PayPeriod.PayFromDate = CDate(.Cells("Column2").Value)
                 PayPeriod.PayToDate = CDate(.Cells("Column3").Value)
-
             End With
 
         End If

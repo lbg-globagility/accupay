@@ -1,4 +1,6 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
@@ -9,10 +11,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class PreviousEmployerTab
 
     Private Const FormEntityName As String = "Previous Employer"
-
     Private _employee As Employee
-
-    Private _parentForm As Form
 
     Private _previousEmployers As IEnumerable(Of PreviousEmployer)
 
@@ -34,10 +33,7 @@ Public Class PreviousEmployerTab
 
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -149,7 +145,7 @@ Public Class PreviousEmployerTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -189,7 +185,7 @@ Public Class PreviousEmployerTab
             Return
         End If
 
-        Dim form As New AddPreviousEmployerForm(_employee, _previousEmployerRepo, _userActivityRepo)
+        Dim form As New AddPreviousEmployerForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -403,12 +399,12 @@ Public Class PreviousEmployerTab
                         })
         End If
 
-        _userActivityRepo.CreateRecord(z_User, "Previous Employer", z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

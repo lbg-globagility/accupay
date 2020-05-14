@@ -125,6 +125,7 @@ Public Class AddBonusForm
             Await bonusRepo.CreateAsync(_newBonus)
 
             _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
+
             succeed = True
         End Function)
 

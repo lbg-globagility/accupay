@@ -30,6 +30,7 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevelRepo As JobLevelRepository
 
+        Public Sub New(view As IJobPointsView)
             _view = view
 
             _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
@@ -92,8 +93,8 @@ Namespace Global.AccuPay.JobLevels
 
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))
 
-            Dim fetchEmployees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
-            Dim salaries = Await _salaryRepository.GetAll(z_OrganizationID)
+            Dim fetchEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+            Dim salaries = Await _salaryRepo.GetAll(z_OrganizationID)
 
             Dim employees =
                 (From e In fetchEmployees

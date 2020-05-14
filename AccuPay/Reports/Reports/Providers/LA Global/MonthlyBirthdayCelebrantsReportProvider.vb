@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
@@ -15,12 +14,6 @@ Public Class MonthlyBirthdayCelebrantsReportProvider
     Private recordFound As Boolean
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
-
-    Sub New(context As PayrollContext)
-
-        _context = context
-
-    End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim monthSelector = New selectMonth()

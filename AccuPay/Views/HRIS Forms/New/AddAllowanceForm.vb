@@ -45,12 +45,6 @@ Public Class AddAllowanceForm
 
         Me.NewAllowanceTypes = New List(Of Product)
 
-        _productRepository = productRepository
-
-        _allowanceRepository = allowanceRepository
-
-        _userActivityRepository = userActivityRepository
-
     End Sub
 
     Private Async Sub AddAllowanceForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -226,7 +220,7 @@ Public Class AddAllowanceForm
 
     Private Async Sub lnklbaddallowtype_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
+        Dim n_ProductControlForm As New ProductControlForm
 
         With n_ProductControlForm
 

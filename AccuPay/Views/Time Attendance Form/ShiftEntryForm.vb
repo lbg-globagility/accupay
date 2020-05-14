@@ -102,7 +102,7 @@
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

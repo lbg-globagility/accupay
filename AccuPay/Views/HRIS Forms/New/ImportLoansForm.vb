@@ -48,29 +48,6 @@ Public Class ImportLoansForm
 
     End Sub
 
-    Sub New(employeeRepository As EmployeeRepository,
-            loanScheduleRepository As LoanScheduleRepository,
-            listOfValueRepository As ListOfValueRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
-
-        ' This call is required by the designer.
-        InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
-
-        _employeeRepository = employeeRepository
-
-        _loanScheduleRepository = loanScheduleRepository
-
-        _listOfValueRepository = listOfValueRepository
-
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
-
-    End Sub
-
     Private Async Sub ImportLoansForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         Me.IsSaved = False
@@ -310,8 +287,7 @@ Public Class ImportLoansForm
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan)
 
         If fileInfo Is Nothing Then Return
 

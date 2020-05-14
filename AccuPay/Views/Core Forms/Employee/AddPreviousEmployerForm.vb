@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
@@ -83,7 +85,7 @@ Public Class AddPreviousEmployerForm
                 Dim prevEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
                 Await prevEmployerRepo.CreateAsync(_newPreviousEmployer)
 
-                _userActivityRepo.RecordAdd(z_User, "Previous Employer", CInt(_newPreviousEmployer.RowID), z_OrganizationID)
+                _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newPreviousEmployer.RowID), z_OrganizationID)
                 succeed = True
             End Function)
 

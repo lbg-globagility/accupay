@@ -54,7 +54,7 @@ namespace AccuPay.Data.Helpers
 
         public override bool Equals(object obj)
         {
-            return obj is FunctionResult result && 
+            return obj is FunctionResult result &&
                     IsSuccess == result.IsSuccess;
         }
 

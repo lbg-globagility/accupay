@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
@@ -28,7 +27,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private _employees As IList(Of Employee)
 
-    Private _userActivityRepository As UserActivityRepository
+    Public IsSaved As Boolean
 
     Private _employeeRepository As EmployeeRepository
 

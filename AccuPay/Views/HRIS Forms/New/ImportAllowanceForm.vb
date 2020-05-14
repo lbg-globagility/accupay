@@ -6,8 +6,8 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
-Imports OfficeOpenXml
 Imports Microsoft.Extensions.DependencyInjection
+Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
 
@@ -245,8 +245,7 @@ Public Class ImportAllowanceForm
     End Sub
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

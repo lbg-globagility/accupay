@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
@@ -16,7 +15,7 @@ Public Class LeaveLedgerReportProvider
     Public Property IsNewReport As Boolean = True
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection(_payPeriodServive)
+        Dim dateSelector As New PayrollSummaDateSelection()
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

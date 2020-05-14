@@ -9,7 +9,6 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BenchmarkPaystubForm
@@ -28,8 +27,6 @@ Public Class BenchmarkPaystubForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _payPeriodRepository As PayPeriodRepository
-
     Private _paystubRepository As PaystubRepository
 
     Private _productRepository As ProductRepository
@@ -42,14 +39,7 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Sub New(overtimeRateService As OvertimeRateService,
-            payPeriodService As PayPeriodService,
-            adjustmentRepository As AdjustmentRepository,
-            employeeRepository As EmployeeRepository,
-            payPeriodRepository As PayPeriodRepository,
-            paystubRepository As PaystubRepository,
-            productRepository As ProductRepository,
-            salaryRepository As SalaryRepository)
+    Sub New()
 
         InitializeComponent()
 
@@ -79,7 +69,7 @@ Public Class BenchmarkPaystubForm
 
     Private Sub BenchmarkPaystubForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -782,7 +772,7 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
+        Dim form As New selectPayPeriod()
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then

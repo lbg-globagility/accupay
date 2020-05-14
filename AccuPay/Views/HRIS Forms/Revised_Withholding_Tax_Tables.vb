@@ -62,17 +62,7 @@ Public Class Revised_Withholding_Tax_Tables
             End If
         End If
 
-        'If FormLeft.Contains("Withholding tax table") Then
-        '    FormLeft.Remove("Withholding tax table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Dim view_ID As Object

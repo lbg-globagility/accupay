@@ -3,11 +3,11 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Entities
-Imports MySql.Data.MySqlClient
-Imports Microsoft.Extensions.DependencyInjection
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
+Imports MySql.Data.MySqlClient
 
 Public Class PayrollSummaDateSelection
 
@@ -28,14 +28,6 @@ Public Class PayrollSummaDateSelection
     Dim paypTo As Object = Nothing
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
-
-    Sub New(payPeriodService As PayPeriodService)
-
-        InitializeComponent()
-
-        _payPeriodService = payPeriodService
-
-    End Sub
 
     Public ReadOnly Property PayPeriodFromID As Integer?
         Get
@@ -90,7 +82,6 @@ Public Class PayrollSummaDateSelection
     Private _payPeriodFrom As PayPeriod
 
     Private _payPeriodTo As PayPeriod
-    Private ReadOnly _payPeriodService As PayPeriodService
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim boolResult = True

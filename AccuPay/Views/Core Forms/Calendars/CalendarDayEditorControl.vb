@@ -3,7 +3,6 @@
 Imports System.Globalization
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports CrystalDecisions.Windows.Forms
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarDayEditorControl

@@ -14,8 +14,6 @@ Public Class AwardTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _awards As IEnumerable(Of Award)
 
     Private _currentAward As Award
@@ -34,13 +32,9 @@ Public Class AwardTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
-
+    Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -124,7 +118,7 @@ Public Class AwardTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -174,7 +168,7 @@ Public Class AwardTab
             Return
         End If
 
-        Dim form As New AddAwardForm(_employee, _awardRepo, _userActivityRepo)
+        Dim form As New AddAwardForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -249,7 +243,7 @@ Public Class AwardTab
     End Function
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
@@ -281,6 +275,7 @@ Public Class AwardTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
 End Class

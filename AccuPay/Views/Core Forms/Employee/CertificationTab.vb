@@ -10,10 +10,7 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
     Private Const FormEntityName As String = "Certification"
-
     Private _employee As Employee
-
-    Private _parentForm As Form
 
     Private _certifications As IEnumerable(Of Certification)
 
@@ -33,13 +30,9 @@ Public Class CertificationTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
-
+    Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -158,7 +151,7 @@ Public Class CertificationTab
             Return
         End If
 
-        Dim form As New AddCertificationForm(_employee, _certificationRepo, _userActivityRepo)
+        Dim form As New AddCertificationForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -289,6 +282,7 @@ Public Class CertificationTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
     Private Function isChanged() As Boolean
@@ -307,7 +301,7 @@ Public Class CertificationTab
     End Function
 
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -325,7 +319,7 @@ Public Class CertificationTab
     End Sub
 
     Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

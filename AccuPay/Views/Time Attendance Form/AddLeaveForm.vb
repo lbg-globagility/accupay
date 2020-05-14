@@ -15,7 +15,9 @@ Public Class AddLeaveForm
 
     Private _currentEmployee As Employee
 
-    Private _newLeave As Leave
+    Private _newLeave As New Leave
+
+    Private _leaveService As LeaveService
 
     Private _leaveRepository As LeaveRepository
 
@@ -28,6 +30,8 @@ Public Class AddLeaveForm
         InitializeComponent()
 
         _currentEmployee = employee
+
+        _leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
 
         _leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
 

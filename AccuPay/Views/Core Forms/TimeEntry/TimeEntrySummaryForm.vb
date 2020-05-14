@@ -899,7 +899,7 @@ Public Class TimeEntrySummaryForm
         Dim endDate As Date
         Dim result As DialogResult
 
-        Using dialog = New DateRangePickerDialog(_payPeriodRepository, _payPeriodService, _selectedPayPeriod)
+        Using dialog = New DateRangePickerDialog(_selectedPayPeriod)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -922,7 +922,7 @@ Public Class TimeEntrySummaryForm
 
         Await Task.Run(Sub() generator.Start(z_OrganizationID, startDate, endDate)).
             ContinueWith(
-                Sub() DoneGenerating(progressDialog),
+                Sub() DoneGenerating(progressDialog, generator),
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnRanToCompletion,
                 TaskScheduler.FromCurrentSynchronizationContext)
@@ -945,14 +945,14 @@ Public Class TimeEntrySummaryForm
         LoadTimeEntries()
     End Sub
 
-    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog)
+    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
         dialog.Close()
         dialog.Dispose()
 
         Dim msgBoxText As String = "Done"
 
-        If _generator.ErrorCount > 0 Then
-            Dim errorCount = _generator.ErrorCount
+        If generator.ErrorCount > 0 Then
+            Dim errorCount = generator.ErrorCount
             msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
         End If
 
@@ -997,7 +997,7 @@ Public Class TimeEntrySummaryForm
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
         Close()
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
@@ -1492,10 +1492,7 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
-        Dim form As New PreviewLeaveBalanceForm(_employeeRepository,
-                                                _payPeriodRepository,
-                                                _listOfValueService,
-                                                _payPeriodService)
+        Dim form As New PreviewLeaveBalanceForm
         form.ShowDialog()
     End Sub
 

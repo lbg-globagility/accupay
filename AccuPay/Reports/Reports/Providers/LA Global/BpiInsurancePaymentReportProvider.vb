@@ -3,8 +3,6 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
-Imports log4net
-Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BpiInsurancePaymentReportProvider
@@ -15,13 +13,8 @@ Public Class BpiInsurancePaymentReportProvider
 
     Private _reportDocument As BpiInsuranceAmountReport
 
-    Private ReadOnly _dataService As BpiInsuranceAmountReportDataService
-
-    Sub New(dataService As BpiInsuranceAmountReportDataService)
-
+    Sub New()
         _reportDocument = New BpiInsuranceAmountReport()
-
-        _dataService = dataService
     End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output

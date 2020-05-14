@@ -20,11 +20,11 @@ Public Class ExportBankFile
         _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
     End Sub
 
-    Public Async Function Extract(cutoffStart As Date, cutoffEnd As Date) As Task
+    Public Async Function Extract() As Task
 
         Dim paystubDateKey = New PaystubRepository.DateCompositeKey(z_OrganizationID,
-                                                                    payFromDate:=cutoffStart,
-                                                                    payToDate:=cutoffEnd)
+                                                                    payFromDate:=_cutoffStart,
+                                                                    payToDate:=_cutoffEnd)
         Dim paystubs = Await _paystubRepository.GetAllWithEmployeeAsync(paystubDateKey)
 
         Dim sortedPaystubs = paystubs.
@@ -59,7 +59,7 @@ Public Class ExportBankFile
             ZipFile.CreateFromDirectory(directory, saveDialog.FileName)
         End If
 
-        System.IO.Directory.Delete(directory, True)
+        IO.Directory.Delete(directory, True)
     End Function
 
     Private Function CreateRandomDirectory() As String

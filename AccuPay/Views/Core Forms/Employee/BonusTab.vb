@@ -14,8 +14,6 @@ Public Class BonusTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _bonuses As IEnumerable(Of Bonus)
 
     Private _products As IEnumerable(Of Product)
@@ -47,12 +45,9 @@ Public Class BonusTab
         dtpbonenddate.Enabled = False
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Public Async Function SetEmployee(employee As Employee) As Task
         Me.cbobontype.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFNameBon.Text = _employee.FullNameWithMiddleInitialLastNameFirst
         txtEmpIDBon.Text = _employee.EmployeeIdWithPositionAndEmployeeType
@@ -98,7 +93,7 @@ Public Class BonusTab
     End Sub
 
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub tsbtnCancelBon_Click(sender As Object, e As EventArgs) Handles tsbtnCancelBon.Click
@@ -184,7 +179,7 @@ Public Class BonusTab
             Return
         End If
 
-        Dim form As New AddBonusForm(_employee, _bonusRepo, _productRepo, _userActivityRepo)
+        Dim form As New AddBonusForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -309,9 +304,7 @@ Public Class BonusTab
     End Sub
 
     Private Async Sub LinkLabel1_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel1.LinkClicked
-
-        Dim form As New newProdBonus(_productRepo)
-        With form
+        With newProdBonus
             .ShowDialog()
         End With
         Await LoadBonuses()
@@ -399,7 +392,7 @@ Public Class BonusTab
     End Sub
 
     Private Sub ToolStripButton1_Click_1(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

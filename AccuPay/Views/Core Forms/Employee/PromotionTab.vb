@@ -17,8 +17,6 @@ Public Class PromotionTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _promotions As IEnumerable(Of Promotion)
 
     Private _positions As IEnumerable(Of Position)
@@ -46,13 +44,11 @@ Public Class PromotionTab
 
     End Sub
 
-    Friend Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Friend Async Function SetEmployee(employee As Employee) As Task
 
         pbEmployee.Focus()
 
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType

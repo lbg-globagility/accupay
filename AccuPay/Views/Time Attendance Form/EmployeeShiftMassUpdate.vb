@@ -18,15 +18,6 @@ Public Class EmployeeShiftMassUpdate
 
     Dim ChiledDiv As New DataTable
 
-    Private TimeAttendForm As TimeAttendForm
-    Private MDIPrimaryForm As MDIPrimaryForm
-
-    Public Sub SetParentForms(timeAttendForm As TimeAttendForm, mDIPrimaryForm As MDIPrimaryForm)
-        Me.TimeAttendForm = timeAttendForm
-        Me.MDIPrimaryForm = mDIPrimaryForm
-
-    End Sub
-
     Private Sub fillemployeelist()
         'If dgvEmplist.Rows.Count = 0 Then
         'ElseCOALESCE(StreetAddress1,' ')
@@ -149,7 +140,7 @@ Public Class EmployeeShiftMassUpdate
         '    End If
         'End If
 
-        'TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
         'ShiftList.Close()
         'ShiftList.Dispose()

@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
@@ -25,14 +25,11 @@ Public Class OfficialBusinessForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(officialBusinessRepository As OfficialBusinessRepository,
-            employeeRepository As EmployeeRepository,
-            userActivityRepository As UserActivityRepository)
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
-        ' This call is required by the designer.
+    Sub New()
+
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _employees = New List(Of Employee)
 
@@ -46,7 +43,7 @@ Public Class OfficialBusinessForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _userActivityRepository = userActivityRepository
+        _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -72,7 +69,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub OfficialBusinessForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
@@ -81,9 +78,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Using form = New ImportOBForm(_employeeRepository,
-                                      _officialBusinessRepository,
-                                      _userActivityRepository)
+        Using form = New ImportOBForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -468,9 +463,7 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim form As New AddOfficialBusinessForm(employee,
-                                                _officialBusinessRepository,
-                                                _userActivityRepository)
+        Dim form As New AddOfficialBusinessForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -644,7 +637,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

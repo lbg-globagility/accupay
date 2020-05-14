@@ -14,8 +14,6 @@ Public Class DisciplinaryActionTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _disciplinaryActions As IEnumerable(Of DisciplinaryAction)
 
     Private _currentDiscAction As DisciplinaryAction
@@ -49,13 +47,11 @@ Public Class DisciplinaryActionTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Public Async Function SetEmployee(employee As Employee) As Task
 
         pbEmployee.Focus()
 
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -154,7 +150,7 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click

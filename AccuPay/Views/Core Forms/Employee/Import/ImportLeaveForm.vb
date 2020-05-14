@@ -19,16 +19,13 @@ Public Class ImportLeaveForm
     Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-
+    Private _categoryRepository As CategoryRepository
     Private _employeeRepository As EmployeeRepository
+
     Private _productRepository As ProductRepository
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employeeRepository As EmployeeRepository,
-            leaveRepository As LeaveRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository,
-            leaveService As LeaveService)
+    Sub New()
 
         InitializeComponent()
 
@@ -473,8 +470,7 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

@@ -12,11 +12,12 @@ Public Class ProductControlForm
 
     Private ReadOnly _allowanceRepository As AllowanceRepository
 
-    Sub New(allowanceRepository As AllowanceRepository)
+    Sub New()
 
         InitializeComponent()
 
         _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
     End Sub
 
     Public Overloads Function ShowDialog(ByVal someValue As String) As DialogResult

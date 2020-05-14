@@ -17,16 +17,8 @@ Public Class AddAwardForm
 
     Private _userActivityRepo As UserActivityRepository
 
-    Private _awardRepo As AwardRepository
-
-    Private _userActivityRepo As UserActivityRepository
-
-    Public Sub New(employee As Employee,
-                   awardRepo As AwardRepository,
-                   userActivityRepo As UserActivityRepository)
-
+    Public Sub New(employee As Employee)
         InitializeComponent()
-
         _employee = employee
 
         _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
@@ -67,6 +59,7 @@ Public Class AddAwardForm
                 Await awardRepo.CreateAsync(_newAward)
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newAward.RowID), z_OrganizationID)
+
                 succeed = True
             End Function)
 

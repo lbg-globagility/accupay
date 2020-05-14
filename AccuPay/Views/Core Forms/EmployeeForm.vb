@@ -1,13 +1,6 @@
-'Imports Emgu.Util
-'Imports Emgu.CV
-'Imports Emgu.CV.OCR
-'Imports Emgu.CV.
-'Imports Tesseract.Interop
 Imports System.IO
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.Benchmark
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
@@ -40,63 +33,17 @@ Public Class EmployeeForm
 
     Private _payFrequencies As New List(Of PayFrequency)
 
-    Private ReadOnly _context As PayrollContext
-
-    Private ReadOnly _policy As PolicyHelper
-
-    Private ReadOnly _benchmarkPayrollHelper As BenchmarkPayrollHelper
-
-    Private ReadOnly _bpiInsuranceAmountReportDataService As BpiInsuranceAmountReportDataService
-
-    Private ReadOnly _leaveService As LeaveService
-
-    Private ReadOnly _listOfValueService As ListOfValueService
-
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private _policy As PolicyHelper
 
     Private _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _listOfValueRepository As ListOfValueRepository
-
-    Private ReadOnly _positionRepository As PositionRepository
-
-    Private ReadOnly _payFrequencyRepository As PayFrequencyRepository
-
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Private ReadOnly _salaryRepository As SalaryRepository
-
-    Private ReadOnly _userRepository As UserRepository
-
-    Private ReadOnly _userActivityRepository As UserActivityRepository
-
-    Sub New(context As PayrollContext,
-            policy As PolicyHelper,
-            benchmarkPayrollHelper As BenchmarkPayrollHelper,
-            bpiInsuranceAmountReportDataService As BpiInsuranceAmountReportDataService,
-            leaveService As LeaveService,
-            listOfValueService As ListOfValueService,
-            payPeriodService As PayPeriodService,
-            systemOwnerService As SystemOwnerService,
-            branchRepository As BranchRepository,
-            allowanceRepository As AllowanceRepository,
-            calendarRepository As CalendarRepository,
-            divisionRepository As DivisionRepository,
-            employeeRepository As EmployeeRepository,
-            listOfValueRepository As ListOfValueRepository,
-            payFrequencyRepository As PayFrequencyRepository,
-            payPeriodRepository As PayPeriodRepository,
-            positionRepository As PositionRepository,
-            salaryRepository As SalaryRepository,
-            userRepository As UserRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
         InitializeComponent()
 
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -267,13 +214,14 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Performance appraisal"
-                    'dgvempatta.Item("Column38", indx).Value = "Performance appraisal"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Performance appraisal"
+                    ' dgvempatta.Item("Column38", indx).Value = "Performance appraisal"
                 End If
             ElseIf .Name = "chklistlinklbl_1" Then 'BIR TIN = 4
                 tabctrlemp.SelectedIndex = GetEmployeeProfileTabPageIndex()
@@ -286,27 +234,29 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Diploma"
-                    'dgvempatta.Item("Column38", indx).Value = "Diploma"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Diploma"
+                    ' dgvempatta.Item("Column38", indx).Value = "Diploma"
                 End If
             ElseIf .Name = "chklistlinklbl_3" Then 'ID Info slip = 8
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "ID Info slip"
-                    'dgvempatta.Item("Column38", indx).Value = "ID Info slip"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "ID Info slip"
+                    ' dgvempatta.Item("Column38", indx).Value = "ID Info slip"
                 End If
             ElseIf .Name = "chklistlinklbl_4" Then 'Philhealth ID = 10
                 tabctrlemp.SelectedIndex = GetEmployeeProfileTabPageIndex()
@@ -330,158 +280,170 @@ Public Class EmployeeForm
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Transcript of record"
-                    'dgvempatta.Item("Column38", indx).Value = "Transcript of record"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Transcript of record"
+                    ' dgvempatta.Item("Column38", indx).Value = "Transcript of record"
                 End If
             ElseIf .Name = "chklistlinklbl_8" Then 'Birth certificate = 18
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Birth certificate"
-                    'dgvempatta.Item("Column38", indx).Value = "Birth certificate"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Birth certificate"
+                    ' dgvempatta.Item("Column38", indx).Value = "Birth certificate"
                 End If
             ElseIf .Name = "chklistlinklbl_9" Then 'Employee contract = 20
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Employee contract"
-                    'dgvempatta.Item("Column38", indx).Value = "Employee contract"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Employee contract"
+                    ' dgvempatta.Item("Column38", indx).Value = "Employee contract"
                 End If
             ElseIf .Name = "chklistlinklbl_10" Then 'Medical exam = 22
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Medical exam"
-                    'dgvempatta.Item("Column38", indx).Value = "Medical exam"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Medical exam"
+                    ' dgvempatta.Item("Column38", indx).Value = "Medical exam"
                 End If
             ElseIf .Name = "chklistlinklbl_11" Then 'NBI clearance = 24
 
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "NBI clearance"
-                    'dgvempatta.Item("Column38", indx).Value = "NBI clearance"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "NBI clearance"
+                    ' dgvempatta.Item("Column38", indx).Value = "NBI clearance"
                 End If
             ElseIf .Name = "chklistlinklbl_12" Then 'COE employer = 26
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "COE employer"
-                    'dgvempatta.Item("Column38", indx).Value = "COE employer"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "COE employer"
+                    ' dgvempatta.Item("Column38", indx).Value = "COE employer"
                 End If
             ElseIf .Name = "chklistlinklbl_13" Then 'Marriage contract = 28
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Marriage contract"
-                    'dgvempatta.Item("Column38", indx).Value = "Marriage contract"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Marriage contract"
+                    ' dgvempatta.Item("Column38", indx).Value = "Marriage contract"
                 End If
             ElseIf .Name = "chklistlinklbl_14" Then 'House sketch = 30
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "House sketch"
-                    'dgvempatta.Item("Column38", indx).Value = "House sketch"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "House sketch"
+                    ' dgvempatta.Item("Column38", indx).Value = "House sketch"
                 End If
             ElseIf .Name = "chklistlinklbl_15" Then '2305 = 32 'Training agreement = 32
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "2305" '"Training agreement"
-                    'dgvempatta.Item("Column38", indx).Value = "2305"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "2305" '"Training agreement"
+                    ' dgvempatta.Item("Column38", indx).Value = "2305"
                 End If
             ElseIf .Name = "chklistlinklbl_16" Then 'Health permit = 34
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Health permit"
-                    'dgvempatta.Item("Column38", indx).Value = "Health permit"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Health permit"
+                    ' dgvempatta.Item("Column38", indx).Value = "Health permit"
                 End If
             ElseIf .Name = "chklistlinklbl_17" Then 'SSS loan certificate = 36 'Valid ID = 36
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "SSS loan certificate" '"Valid ID"
-                    'dgvempatta.Item("Column38", indx).Value = "SSS loan certificate"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "SSS loan certificate" '"Valid ID"
+                    ' dgvempatta.Item("Column38", indx).Value = "SSS loan certificate"
                 End If
             ElseIf .Name = "chklistlinklbl_18" Then 'Resume = 38
                 tabctrlemp.SelectedIndex = GetAttachmentTabPageIndex()
                 tbpAttachment.Focus()
                 If .ImageIndex = 0 Then
-                    'tsbtnNewAtta_Click(sender, e)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(sender, e)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = "Resume"
-                    'dgvempatta.Item("Column38", indx).Value = "Resume"
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = "Resume"
+                    ' dgvempatta.Item("Column38", indx).Value = "Resume"
                 End If
             Else
                 ctrlAttachment(link_lablesender)
@@ -544,14 +506,15 @@ Public Class EmployeeForm
 
                 If .ImageIndex = 0 Then
 
-                    'tsbtnNewAtta_Click(lnk_lablesender, New EventArgs)
+                    'TODO: check this
+                    ' tsbtnNewAtta_Click(lnk_lablesender, New EventArgs)
 
-                    'Dim indx = dgvempatta.CurrentRow.Index
+                    ' Dim indx = dgvempatta.CurrentRow.Index
 
-                    'dgvempatta.Rows.Add()
-                    'dgvempatta.Item("eatt_Type", indx).Selected = True
-                    'dgvempatta.Item("eatt_Type", indx).Value = .Text.Trim
-                    'dgvempatta.Item("Column38", indx).Value = .Text.Trim
+                    ' dgvempatta.Rows.Add()
+                    ' dgvempatta.Item("eatt_Type", indx).Selected = True
+                    ' dgvempatta.Item("eatt_Type", indx).Value = .Text.Trim
+                    ' dgvempatta.Item("Column38", indx).Value = .Text.Trim
                 End If
             End With
         End If
@@ -665,24 +628,6 @@ Public Class EmployeeForm
     Dim employeepix As New DataTable
 
     Sub loademployee(Optional q_empsearch As String = Nothing)
-        'If q_empsearch = Nothing Then
-
-        '    dgvRowAdder(q_employee & " ORDER BY e.LastName, e.FirstName " &
-        '                ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
-        '                ",FIELD(e.RevealInPayroll,'1','0') LIMIT " & pagination & ",100;", dgvEmp)
-        '    ''e.RowID DESC
-        'Else
-        '    dgvRowAdder(q_employee & q_empsearch & " ORDER BY e.LastName, e.FirstName DESC" &
-        '                ",FIELD(e.EmploymentStatus,'Resigned','Terminated')" &
-        '                ",FIELD(e.RevealInPayroll,'1','0')", dgvEmp) ', Simple)
-        '    ''e.RowID DESC
-        'End If
-
-        'Dim q_search = searchCommon(ComboBox7, TextBox1,
-        '                                ComboBox8, TextBox15,
-        '                                ComboBox9, TextBox16,
-        '                                ComboBox10, TextBox17)
-
         PopulateEmployeeGrid()
 
         emp_rcount = dgvEmp.RowCount
@@ -957,7 +902,7 @@ Public Class EmployeeForm
                                                         employeeId:=employeeId,
                                                         organizationId:=z_OrganizationID,
                                                         userId:=z_User,
-                                                        selectedLeaveType:=LeaveType.Vacation,
+                                                        selectedLeaveType:=Data.Enums.LeaveType.Vacation,
                                                         newAllowance:=LeaveAllowanceTextBox.Text.ToDecimal)
 
                 LeaveBalanceTextBox.Text = newleaveBalance.ToString("#0.00")
@@ -1114,7 +1059,7 @@ Public Class EmployeeForm
         tsbtnSaveEmp.Enabled = True
     End Sub
 
-    Private Function GetOldEmployee(employee_RowID As Integer?) As Employee
+    Private Shared Function GetOldEmployee(employee_RowID As Integer?) As Employee
 
         If employee_RowID.HasValue = False Then Return Nothing
 
@@ -1775,6 +1720,7 @@ Public Class EmployeeForm
 
         cboEmpStat.Enabled = True
         tsbtnNewEmp.Enabled = True : loadPositName()
+
     End Sub
 
     Private Sub Employee_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -1826,7 +1772,7 @@ Public Class EmployeeForm
                 End If
             End If
 
-            'HRISForm.listHRISForm.Remove(Me.Name)
+            HRISForm.listHRISForm.Remove(Me.Name)
 
         End If
 
@@ -2345,43 +2291,43 @@ Public Class EmployeeForm
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await AwardTab.SetEmployee(employee, Me)
+                    Await AwardTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpCertifications Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await CertificationTab.SetEmployee(employee, Me)
+                    Await CertificationTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpDiscipAct Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await DisciplinaryActionTab.SetEmployee(employee, Me)
+                    Await DisciplinaryActionTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpEducBG Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await EducationalBackgroundTab.SetEmployee(employee, Me)
+                    Await EducationalBackgroundTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpPrevEmp Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await PreviousEmployerTab.SetEmployee(employee, Me)
+                    Await PreviousEmployerTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpPromotion Then 'Promotion
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await PromotionTab.SetEmployee(employee, Me)
+                    Await PromotionTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpBonus Then 'Bonus
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await BonusTab.SetEmployee(employee, Me)
+                    Await BonusTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpAttachment Then 'Attachment
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
@@ -2396,7 +2342,7 @@ Public Class EmployeeForm
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
                     Dim employee = GetCurrentEmployeeEntity(employeeID)
 
-                    Await SalaryTab.SetEmployee(employee, Me)
+                    Await SalaryTab.SetEmployee(employee)
                 End If
 
                 If txtdgvDepen IsNot Nothing Then
@@ -2433,7 +2379,7 @@ Public Class EmployeeForm
         listofEditDepen.Clear()
     End Sub
 
-    Private Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
+    Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
 
         Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
@@ -4348,10 +4294,7 @@ Public Class EmployeeForm
 
     Private Sub AddBranchLinkButton_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles AddBranchLinkButton.LinkClicked
 
-        Dim form As New AddBranchForm(_branchRepository,
-                                      _calendarRepository,
-                                      _employeeRepository,
-                                      _listOfValueService)
+        Dim form As New AddBranchForm
         form.ShowDialog()
 
         If form.HasChanges Then
@@ -4364,7 +4307,8 @@ Public Class EmployeeForm
 
             End If
 
-            _branches = _branchRepository.GetAll
+            Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+            _branches = branchRepository.GetAll()
             BranchComboBox.DataSource = _branches
 
             Dim currentBranch = _branches.Where(Function(b) Nullable.Equals(b.RowID, branchId)).FirstOrDefault
@@ -4382,10 +4326,7 @@ Public Class EmployeeForm
     End Sub
 
     Private Async Sub ToolStripButton35_ClickAsync(sender As Object, e As EventArgs) Handles tsbtnImport.Click
-        Using importForm = New ImportEmployeeForm(_employeeRepository,
-                                                  _divisionRepository,
-                                                  _positionRepository,
-                                                  _userActivityRepository)
+        Using importForm = New ImportEmployeeForm()
             If Not importForm.ShowDialog() = DialogResult.OK Then
                 Return
             End If
@@ -4520,26 +4461,6 @@ Public Class EmployeeForm
         End If
 
     End Sub
-
-    'Private Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
-
-    '    Dim n_DiscipAction As New DiscipAction
-
-    '    'n_DiscipAction.call_asdialog = 1
-
-    '    If n_DiscipAction.ShowDialog() = Windows.Forms.DialogResult.OK Then
-
-    '        cboAction.Items.Clear()
-
-    '        empdiscippenal = retAsDatTbl("SELECT * FROM listofval WHERE Type='Employee Disciplinary Penalty' AND Active='Yes' ORDER BY OrderBy;")
-
-    '        For Each drow As DataRow In empdiscippenal.Rows
-    '            cboAction.Items.Add(Trim(drow("DisplayValue").ToString))
-    '        Next
-
-    '    End If
-
-    'End Sub
 
     Private Sub Gender_CheckedChanged(sender As RadioButton, e As EventArgs) Handles rdMale.CheckedChanged,
                                                                                 rdFMale.CheckedChanged
@@ -4690,11 +4611,7 @@ Public Class EmployeeForm
 
         Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
 
-        Dim report = New LaGlobalEmployeeReports(_context,
-                                                 _bpiInsuranceAmountReportDataService,
-                                                 _employeeRepository,
-                                                 _payPeriodRepository,
-                                                 employee)
+        Dim report = New LaGlobalEmployeeReports(employee)
         report.Print(selectedReport)
     End Sub
 

@@ -34,11 +34,10 @@ Public Class PayrollSummaryExcelFormatReportProvider
 
     Private _settings As ListOfValueCollection
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private _payPeriodRepository As PayPeriodRepository
 
-    Private ReadOnly _adjustmentService As AdjustmentService
+    Private _adjustmentService As AdjustmentService
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
     Public Property IsActual As Boolean
 
     Sub New()
@@ -49,7 +48,7 @@ Public Class PayrollSummaryExcelFormatReportProvider
         _settings = MainServiceProvider.GetRequiredService(Of ListOfValueService).Create()
     End Sub
 
-    Private Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
+    Private Shared Function GetReportColumns() As ReadOnlyCollection(Of ExcelReportColumn)
 
         Dim allowanceColumnName = "Allowance"
 
