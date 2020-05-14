@@ -28,7 +28,11 @@ Public Class AwardTab
 
         dgvAwards.AutoGenerateColumns = False
 
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        'for issues in designer and also defensive programming
+        If MainServiceProvider IsNot Nothing Then
+
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

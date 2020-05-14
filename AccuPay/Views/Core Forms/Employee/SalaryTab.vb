@@ -61,7 +61,10 @@ Public Class SalaryTab
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        If MainServiceProvider IsNot Nothing Then
+
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        End If
 
     End Sub
 

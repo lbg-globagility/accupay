@@ -243,9 +243,13 @@ Public Class EmployeeTreeView
             _view = view
             _organizationId = view.OrganizationID
 
-            _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+            If MainServiceProvider IsNot Nothing Then
 
-            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+                _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            End If
+
         End Sub
 
         Public Sub Load()

@@ -27,7 +27,10 @@ Public Class PreviousEmployerTab
 
         dgvPrevEmployers.AutoGenerateColumns = False
 
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        If MainServiceProvider IsNot Nothing Then
+
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

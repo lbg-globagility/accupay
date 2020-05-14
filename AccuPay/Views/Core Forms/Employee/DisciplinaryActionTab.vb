@@ -40,10 +40,13 @@ Public Class DisciplinaryActionTab
 
         dgvDisciplinaryList.AutoGenerateColumns = False
 
-        _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)()
-        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
-        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)()
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        If MainServiceProvider IsNot Nothing Then
+
+            _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

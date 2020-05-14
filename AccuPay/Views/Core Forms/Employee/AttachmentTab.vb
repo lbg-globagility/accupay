@@ -34,9 +34,12 @@ Public Class AttachmentTab
 
         dgvAttachments.AutoGenerateColumns = False
 
-        _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)()
-        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        If MainServiceProvider IsNot Nothing Then
+
+            _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

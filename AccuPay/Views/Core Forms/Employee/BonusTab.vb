@@ -34,9 +34,12 @@ Public Class BonusTab
 
         dgvempbon.AutoGenerateColumns = False
 
-        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        If MainServiceProvider IsNot Nothing Then
 
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

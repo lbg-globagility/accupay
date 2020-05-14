@@ -37,10 +37,13 @@ Public Class PromotionTab
 
         dgvPromotions.AutoGenerateColumns = False
 
-        _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
-        _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
-        _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
-        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        If MainServiceProvider IsNot Nothing Then
+
+            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)
+            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 

@@ -4488,6 +4488,11 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
+        Dim userActivity As New UserActivityForm(EmployeeEntityName)
+        userActivity.ShowDialog()
+    End Sub
+
     Private Sub Print201ReportToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Print201ReportToolStripMenuItem.Click
         Print201Report()
     End Sub
