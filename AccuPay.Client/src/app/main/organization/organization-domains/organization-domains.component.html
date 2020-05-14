@@ -1,0 +1,29 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-title>
+      Domains
+    </mat-card-title>
+
+    <mat-card-content>
+      <div class="row">
+        <div class="col-lg-4 col-md-6">
+          <mat-list formArrayName="domains">
+            <h3 matSubheader>List of valid email address domains</h3>
+            <mat-list-item *ngFor="let domain of domains.controls; let i = index">
+              <mat-form-field matLine [formGroupName]="i" color="accent">
+                <input type="hidden" formControlName="id" />
+                <input matInput formControlName="name" />
+              </mat-form-field>
+              <button mat-icon-button (click)="removeDomain(i)"><mat-icon>clear</mat-icon></button>
+            </mat-list-item>
+          </mat-list>
+          <button mat-stroked-button color="accent" type="button" (click)="addDomain()">ADD DOMAIN</button>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions>
+      <button mat-raised-button color="accent" type="submit">SAVE</button>
+    </mat-card-actions>
+  </mat-card>
+</form>
