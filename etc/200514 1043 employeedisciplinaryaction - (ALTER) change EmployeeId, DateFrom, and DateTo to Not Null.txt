@@ -1,0 +1,8 @@
+ALTER TABLE `employeedisciplinaryaction`
+	ALTER `EmployeeID` DROP DEFAULT,
+	ALTER `DateFrom` DROP DEFAULT,
+	ALTER `DateTo` DROP DEFAULT;
+ALTER TABLE `employeedisciplinaryaction`
+	CHANGE COLUMN `EmployeeID` `EmployeeID` INT(10) NOT NULL AFTER `LastUpdBy`,
+	CHANGE COLUMN `DateFrom` `DateFrom` DATE NOT NULL AFTER `EmployeeID`,
+	CHANGE COLUMN `DateTo` `DateTo` DATE NOT NULL AFTER `DateFrom`;
