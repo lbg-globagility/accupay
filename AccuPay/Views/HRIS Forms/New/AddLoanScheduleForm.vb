@@ -30,12 +30,27 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
-    Sub New(employee As Employee)
+    Private _newLoanSchedule As LoanSchedule
 
-        ' This call is required by the designer.
+    Private _productRepository As ProductRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Private _systemOwnerService As SystemOwnerService
+
+    Sub New(employee As Employee,
+            productRepository As ProductRepository,
+            listOfValueRepository As ListOfValueRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            userActivityRepository As UserActivityRepository,
+            systemOwnerService As SystemOwnerService)
+
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
         Me.IsSaved = False
@@ -269,7 +284,7 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
-        Dim form As New AddLoanTypeForm()
+        Dim form As New AddLoanTypeForm(_productRepository)
         form.ShowDialog()
 
         If form.IsSaved Then

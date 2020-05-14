@@ -1,13 +1,24 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectBranchForm
 
+    Public Property SelectedBranch As Branch
+
     Private _branches As List(Of Branch)
 
-    Public Property SelectedBranch As Branch
+    Private ReadOnly _branchRepository As BranchRepository
+
+    Sub New(branchRepository As BranchRepository)
+
+        InitializeComponent()
+
+        _branchRepository = branchRepository
+    End Sub
 
     Private _branchRepository As BranchRepository
 

@@ -28,7 +28,7 @@ Public Class ImportedShiftSchedulesForm
 
     Private _employees As IList(Of Employee)
 
-    Public IsSaved As Boolean
+    Private _userActivityRepository As UserActivityRepository
 
     Private _employeeRepository As EmployeeRepository
 

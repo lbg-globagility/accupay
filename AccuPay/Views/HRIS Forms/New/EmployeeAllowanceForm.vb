@@ -24,15 +24,20 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Private _allowanceRepository As AllowanceRepository
+
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Sub New()
+    Sub New(allowanceRepository As AllowanceRepository,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository)
 
         InitializeComponent()
 
@@ -50,7 +55,7 @@ Public Class EmployeeAllowanceForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -127,7 +132,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm
+        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
 
         With n_ProductControlForm
 
@@ -237,7 +242,10 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim form As New AddAllowanceForm(employee)
+        Dim form As New AddAllowanceForm(employee,
+                                        _productRepository,
+                                        _allowanceRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -385,7 +393,10 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportAllowanceForm()
+        Using form = New ImportAllowanceForm(_allowanceRepository,
+                                             _employeeRepository,
+                                             _productRepository,
+                                             _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -407,7 +418,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
         myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
@@ -679,7 +690,7 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

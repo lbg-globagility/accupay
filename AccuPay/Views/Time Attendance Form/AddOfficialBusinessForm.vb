@@ -13,7 +13,11 @@ Public Class AddOfficialBusinessForm
 
     Private _currentEmployee As Employee
 
-    Private _newOfficialBusiness As New OfficialBusiness()
+    Private _newOfficialBusiness As OfficialBusiness
+
+    Private _officialBusinessRepository As OfficialBusinessRepository
+
+    Private _userActivityRepository As UserActivityRepository
 
     Private _officialBusinessRepository As OfficialBusinessRepository
 

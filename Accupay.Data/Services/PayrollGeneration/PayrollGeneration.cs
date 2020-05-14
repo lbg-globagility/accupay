@@ -213,6 +213,7 @@ namespace AccuPay.Data.Services
                 _context.Paystubs.Add(_paystub);
 
             if (EligibleForNewBPIInsurance())
+            {
                 _context.Adjustments.Add(new Adjustment()
                 {
                     OrganizationID = _organizationId,
@@ -222,6 +223,7 @@ namespace AccuPay.Data.Services
                     ProductID = _bpiInsuranceProduct.RowID,
                     Amount = -_employee.BPIInsurance
                 });
+            }
 
             _context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
 

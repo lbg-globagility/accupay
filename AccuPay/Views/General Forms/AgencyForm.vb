@@ -30,7 +30,7 @@ Public Class AgencyForm
             End If
         End If
 
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 

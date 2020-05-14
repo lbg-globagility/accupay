@@ -57,7 +57,7 @@ Namespace Global.AccuPay.Helpers
                 'Import employee numbers
                 Using package As New ExcelPackage(fileInfo)
                     Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
-                    Dim allEmployees = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
+                    Dim allEmployees = Await employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
                     Dim allEmployed = allEmployees.
                         Where(Function(emp) emp.IsActive).
                         Select(Function(emp) emp.EmployeeNo).

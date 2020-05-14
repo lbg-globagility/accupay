@@ -43,7 +43,7 @@ Public Class EmployeeShiftEntryForm
 
     Private _shiftRepository As ShiftRepository
 
-    Sub New()
+    Sub New(systemOwnerService As SystemOwnerService, shiftRepository As ShiftRepository)
 
         InitializeComponent()
 
@@ -1257,8 +1257,10 @@ Public Class EmployeeShiftEntryForm
             .MinimizeBox = False
             .MaximizeBox = .MinimizeBox
             .StartPosition = FormStartPosition.CenterScreen
-            .FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
+            .FormBorderStyle = FormBorderStyle.FixedDialog
         End With
+
+        n_EmployeeShiftMassUpdate.SetParentForms(TimeAttendForm, MDIPrimaryForm)
 
         n_EmployeeShiftMassUpdate.ShowDialog("")
     End Sub

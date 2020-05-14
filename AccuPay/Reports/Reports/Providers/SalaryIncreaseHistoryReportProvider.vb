@@ -1,13 +1,23 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
+
 Public Class SalaryIncreaseHistoryReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Salary Increase History" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Sub New(payPeriodService As PayPeriodService)
+
+        _payPeriodService = payPeriodService
+
+    End Sub
+
     Public Sub Run() Implements IReportProvider.Run
-        Dim payPeriodSelector As New PayrollSummaDateSelection()
+        Dim payPeriodSelector As New PayrollSummaDateSelection(_payPeriodService)
 
         If Not payPeriodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

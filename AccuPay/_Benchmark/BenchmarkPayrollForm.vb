@@ -35,11 +35,7 @@ Public Class BenchmarkPayrollForm
 
     Public _loanTransanctions As List(Of LoanTransaction)
 
-    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
-
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
-
-    Private _payrollResources As PayrollResources
 
     Private _employeeRate As BenchmarkPaystubRate
 
@@ -97,16 +93,6 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function RefreshForm(Optional refreshPayPeriod As Boolean = True) As Task
         InitializeControls()
-
-        _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
-
-        If _benchmarkPayrollHelper Is Nothing Then
-
-            MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
-
-            Return
-
-        End If
 
         DeductionComboBox.DataSource = _benchmarkPayrollHelper.DeductionList
         DeductionComboBox.SelectedIndex = -1
@@ -180,13 +166,8 @@ Public Class BenchmarkPayrollForm
                                                      payDateFrom:=paypFrom,
                                                      payDateTo:=paypTo)
                 resourcesTask.Wait()
-
-                Return resources
-            End Function,
-            0
+            End Sub
         )
-
-        _payrollResources = loadTask.Result
 
     End Function
 
@@ -273,8 +254,8 @@ Public Class BenchmarkPayrollForm
     End Function
 
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
-        _ecola = Await BenchmarkPayrollHelper.GetEcola(
-                                                        employeeId.Value,
+
+        _ecola = Await _benchmarkPayrollHelper.GetEcola(employeeId.Value,
                                                         payDateFrom:=_currentPayPeriod.PayFromDate,
                                                         payDateTo:=_currentPayPeriod.PayToDate)
 
@@ -428,8 +409,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
+        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then
@@ -493,6 +473,7 @@ Public Class BenchmarkPayrollForm
         End If
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
+                                                _payrollGenerator,
                                                 employee,
                                                 _payrollResources,
                                                 _currentPayPeriod,
@@ -520,7 +501,6 @@ Public Class BenchmarkPayrollForm
         '#2. Payslip
 
         _currentPaystub = output.Paystub
-        _payrollGenerator = output.PayrollGenerator
 
         'Get loans data
         _loanTransanctions = output.LoanTransanctions.CloneListJson()
@@ -832,7 +812,7 @@ Public Class BenchmarkPayrollForm
 
     Private Sub BenchmarkPayrollForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 

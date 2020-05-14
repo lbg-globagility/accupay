@@ -32,6 +32,7 @@ Public Class NewDivisionPositionForm
     Private _currentDivision As New Division
 
     Private _currentPosition As New Position
+    Public Property _currentTreeNodes As TreeNode()
 
     Public Property _currentTreeNodes As TreeNode()
 
@@ -284,7 +285,7 @@ Public Class NewDivisionPositionForm
     End Sub
 
     Private Async Function InsertDivisionLocation() As Task
-        Dim form As New AddDivisionLocationForm()
+        Dim form As New AddDivisionLocationForm(_divisionRepository, _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -303,7 +304,11 @@ Public Class NewDivisionPositionForm
     End Function
 
     Private Async Function InsertDivision() As Task
-        Dim form As New AddDivisionForm()
+        Dim form As New AddDivisionForm(_divisionRepository,
+                                        _listOfValueRepository,
+                                        _positionRepository,
+                                        _payFrequencyRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -327,7 +332,10 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub NewPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles AddPositionToolStripMenuItem.Click
 
-        Dim form As New AddPositionForm
+        Dim form As New AddPositionForm(_divisionRepository,
+                                        _positionRepository,
+                                        _jobLevelRepository,
+                                        _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -1241,7 +1249,7 @@ Public Class NewDivisionPositionForm
             End If
         End If
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        'HRISForm.listHRISForm.Remove(Me.Name)
     End Sub
 
     Private Sub SearchToolStripTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchToolStripTextBox.TextChanged
@@ -1253,17 +1261,17 @@ Public Class NewDivisionPositionForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName)
+            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, _userActivityRepository)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName)
+            Dim userActivity As New UserActivityForm(DivisionEntityName, _userActivityRepository)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName)
+        Dim userActivity As New UserActivityForm(PositionEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

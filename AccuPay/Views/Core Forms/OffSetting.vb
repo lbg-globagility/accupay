@@ -19,7 +19,7 @@ Public Class OffSetting
 
         InfoBalloon(, , lblforballoon, , , 1)
 
-        HRISForm.listHRISForm.Remove(Me.Name)
+        'HRISForm.listHRISForm.Remove(Me.Name)
 
     End Sub
 

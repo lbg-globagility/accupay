@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -8,6 +9,14 @@ Public Class ExcelFormatReport
     Private ReadOnly MarginSize() As Decimal = New Decimal() {0.25D, 0.75D, 0.3D}
 
     Protected Const FontSize As Single = 8
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Sub New(payPeriodService As PayPeriodService)
+
+        _payPeriodService = payPeriodService
+
+    End Sub
 
     Protected Sub RenderColumnHeaders(worksheet As ExcelWorksheet,
                                       rowIndex As Integer,
@@ -56,9 +65,9 @@ Public Class ExcelFormatReport
         End While
     End Function
 
-    Protected Shared Function GetPayrollSelector() As PayrollSummaDateSelection
+    Protected Function GetPayrollSelector() As PayrollSummaDateSelection
 
-        Dim payrollSelector = New PayrollSummaDateSelection With {
+        Dim payrollSelector = New PayrollSummaDateSelection(_payPeriodService) With {
             .ReportIndex = 6
         }
 

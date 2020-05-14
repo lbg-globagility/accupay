@@ -284,6 +284,7 @@ Partial Class PayStubForm
         Me.PayrollSummaryDeclaredToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PayrollSummaryActualToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CostCenterReportToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.DeletePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ClosePayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ReopenPayrollToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -332,7 +333,6 @@ Partial Class PayStubForm
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn28 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ProgressTimer = New System.Windows.Forms.Timer(Me.components)
-        Me.RecalculateThirteenthMonthPayToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.dgvpayper, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvemployees, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.TabControl1.SuspendLayout()
@@ -3117,6 +3117,13 @@ Partial Class PayStubForm
         Me.CostCenterReportToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
         Me.CostCenterReportToolStripMenuItem.Text = "Cost Center Report"
         '
+        'RecalculateThirteenthMonthPayToolStripMenuItem
+        '
+        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.cash_register
+        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Name = "RecalculateThirteenthMonthPayToolStripMenuItem"
+        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
+        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Text = "Recalculate 13th Month Pay"
+        '
         'DeletePayrollToolStripMenuItem
         '
         Me.DeletePayrollToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
@@ -3480,13 +3487,6 @@ Partial Class PayStubForm
         '
         'ProgressTimer
         '
-        '
-        'RecalculateThirteenthMonthPayToolStripMenuItem
-        '
-        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Image = Global.AccuPay.My.Resources.Resources.cash_register
-        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Name = "RecalculateThirteenthMonthPayToolStripMenuItem"
-        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Size = New System.Drawing.Size(221, 22)
-        Me.RecalculateThirteenthMonthPayToolStripMenuItem.Text = "Recalculate 13th Month Pay"
         '
         'PayStubForm
         '

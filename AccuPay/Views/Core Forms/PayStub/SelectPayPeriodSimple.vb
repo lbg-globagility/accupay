@@ -13,7 +13,7 @@ Public Class SelectPayPeriodSimple
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New()
+    Sub New(payPeriodRepository As PayPeriodRepository)
 
         InitializeComponent()
 

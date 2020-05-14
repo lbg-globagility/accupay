@@ -4,6 +4,8 @@ Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddPreviousEmployerForm
+
+    Private Const FormEntityName As String = "Previous Employer"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 

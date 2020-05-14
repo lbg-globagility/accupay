@@ -1,6 +1,6 @@
-﻿Imports AccuPay.Data.Enums
+﻿Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
@@ -428,16 +428,7 @@ Public Class UsersForm
             End If
         End If
 
-        'If FormLeft.Contains("Users") Then
-        '    FormLeft.Remove("Users")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 

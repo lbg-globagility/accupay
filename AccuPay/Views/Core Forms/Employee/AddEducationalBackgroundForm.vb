@@ -4,6 +4,8 @@ Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddEducationalBackgroundForm
+
+    Private Const FormEntityName As String = "Educational Background"
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 

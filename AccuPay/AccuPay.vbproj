@@ -657,6 +657,7 @@
     <Compile Include="Views\Time Attendance Form\EmployeeOvertimeForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Time Attendance Form\IMassOvertimeForm.vb" />
     <Compile Include="Views\Time Attendance Form\OfficialBusinessForm.Designer.vb">
       <DependentUpon>OfficialBusinessForm.vb</DependentUpon>
     </Compile>
@@ -1747,6 +1748,7 @@
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
       <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
       <AutoGen>True</AutoGen>

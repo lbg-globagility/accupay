@@ -17,8 +17,16 @@ Public Class AddAwardForm
 
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee)
+    Private _awardRepo As AwardRepository
+
+    Private _userActivityRepo As UserActivityRepository
+
+    Public Sub New(employee As Employee,
+                   awardRepo As AwardRepository,
+                   userActivityRepo As UserActivityRepository)
+
         InitializeComponent()
+
         _employee = employee
 
         _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
@@ -86,7 +94,7 @@ Public Class AddAwardForm
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
 
-    Private Sub CancelDialogButtonn_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
+    Private Sub CancelDialogButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
 

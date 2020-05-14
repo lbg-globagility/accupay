@@ -1,4 +1,7 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -13,9 +16,20 @@ Public Class ActiveEmployeeChecklistReportProvider
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
 
+    Private ReadOnly _context As PayrollContext
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Sub New(context As PayrollContext, payPeriodRepository As PayPeriodRepository)
+
+        _context = context
+
+        _payPeriodRepository = payPeriodRepository
+    End Sub
+
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim succeed = False
-        Dim form As New SelectPayPeriodSimple
+        Dim form As New SelectPayPeriodSimple(_payPeriodRepository)
 
         succeed = form.ShowDialog = DialogResult.OK
         If Not succeed Then Return False

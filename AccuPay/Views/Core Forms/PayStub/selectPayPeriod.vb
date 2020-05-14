@@ -11,19 +11,33 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class selectPayPeriod
 
     Public Property PayPeriod As IPayPeriod
-    Public Property GeneratePayroll As Boolean = True
 
-    Private ReadOnly selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly selectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Private ReadOnly unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
+    Private ReadOnly unselectedButtonFont As New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim m_PayFreqType = ""
+    Dim m_PayFreqType As String = ""
 
-    Private _currentYear = Date.Now.Year
+    Private _currentYear As Integer = Date.Now.Year
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Sub New(payPeriodService As PayPeriodService, payPeriodRepository As PayPeriodRepository)
+
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        ' Add any initialization after the InitializeComponent() call.
+        _payPeriodService = payPeriodService
+
+        _payPeriodRepository = payPeriodRepository
+    End Sub
 
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (_currentYear - 1)
@@ -271,8 +285,6 @@ Public Class selectPayPeriod
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         dgvpaypers.EndEdit()
 
-        Dim id_value As Object = Nothing
-
         If dgvpaypers.RowCount <> 0 Then
 
             Dim currentIndex = dgvpaypers.CurrentRow.Index
@@ -297,26 +309,22 @@ Public Class selectPayPeriod
                     Return
                 End If
 
-                id_value = dgvpaypers.Item("Column1", 0).Value
+                Dim validate = Await _payPeriodService.
+                        ValidatePayPeriodAction(payPeriodId, z_OrganizationID)
 
-                PayStubForm.paypRowID = .Cells("Column1").Value
-                PayStubForm.paypFrom = Format(CDate(.Cells("Column2").Value), "yyyy-MM-dd")
-                PayStubForm.paypTo = Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
-                PayStubForm.isEndOfMonth = Trim(.Cells("Column14").Value)
+                If validate = FunctionResult.Failed Then
+
+                    MessageBoxHelper.Warning(validate.Message)
+                    Return
+                End If
 
                 PayPeriod = New PayPeriod
 
-                PayPeriod.RowID = .Cells("Column1").Value
+                PayPeriod.RowID = payPeriodId.Value
                 PayPeriod.PayFromDate = CDate(.Cells("Column2").Value)
                 PayPeriod.PayToDate = CDate(.Cells("Column3").Value)
+
             End With
-
-            Dim PayFreqRowID = EXECQUER("SELECT RowID FROM payfrequency WHERE PayFrequencyType='" & quer_empPayFreq & "';")
-
-            If GeneratePayroll Then
-                PayStubForm.genpayroll(PayFreqRowID)
-
-            End If
 
         End If
 

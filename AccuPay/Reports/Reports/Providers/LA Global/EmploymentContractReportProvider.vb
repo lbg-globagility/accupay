@@ -6,8 +6,15 @@ Public Class EmploymentContractReportProvider
     Implements ILaGlobalEmployeeReport
 
     Private _reportDocument As EmploymentContract
-
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+
+    Sub New(employeeRepository As EmployeeRepository)
+
+        _employeeRepository = employeeRepository
+
+    End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim succeed = False

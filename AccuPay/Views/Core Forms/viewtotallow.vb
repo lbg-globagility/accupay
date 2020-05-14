@@ -11,7 +11,7 @@ Public Class viewtotallow
 
     Private _productRepository As ProductRepository
 
-    Sub New()
+    Sub New(productRepository As ProductRepository)
 
         InitializeComponent()
 

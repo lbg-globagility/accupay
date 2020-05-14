@@ -38,7 +38,14 @@ Public Class SelectPayslipEmployeesForm
 
     Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
 
-    Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
+    Sub New(currentPayPeriodId As Integer,
+            isEmail As Boolean,
+            payslipCreator As PayslipCreator,
+            listOfValueService As ListOfValueService,
+            payPeriodRepository As PayPeriodRepository,
+            paystubRepository As PaystubRepository,
+            paystubEmailRepository As PaystubEmailRepository,
+            paystubEmailHistoryRepository As PaystubEmailHistoryRepository)
 
         InitializeComponent()
 

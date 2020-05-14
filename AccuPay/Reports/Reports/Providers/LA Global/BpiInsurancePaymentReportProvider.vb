@@ -1,9 +1,6 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports log4net
@@ -18,8 +15,13 @@ Public Class BpiInsurancePaymentReportProvider
 
     Private _reportDocument As BpiInsuranceAmountReport
 
-    Sub New()
+    Private ReadOnly _dataService As BpiInsuranceAmountReportDataService
+
+    Sub New(dataService As BpiInsuranceAmountReportDataService)
+
         _reportDocument = New BpiInsuranceAmountReport()
+
+        _dataService = dataService
     End Sub
 
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output

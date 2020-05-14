@@ -8,6 +8,7 @@ Imports AccuPay.Tools
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MassOvertimeForm
+    Implements IMassOvertimeForm
 
     Private _presenter As MassOvertimePresenter
 
@@ -44,10 +45,14 @@ Public Class MassOvertimeForm
     Public Sub New()
         InitializeComponent()
         OvertimeDataGridView.AutoGenerateColumns = False
-        _presenter = New MassOvertimePresenter(Me)
+
+        Using MainServiceProvider
+            Dim presenter = MainServiceProvider.GetRequiredService(Of MassOvertimePresenter)()
+
+        End Using
     End Sub
 
-    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee))
+    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee)) Implements IMassOvertimeForm.ShowEmployees
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
 
@@ -98,7 +103,7 @@ Public Class MassOvertimeForm
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Public Function GetActiveEmployees() As IList(Of Employee)
+    Public Function GetActiveEmployees() As IList(Of Employee) Implements IMassOvertimeForm.GetActiveEmployees
         Dim list = New List(Of Employee)
         For Each node As TreeNode In EmployeeTreeView.Nodes
             TraverseNodes(node, list)
@@ -152,11 +157,11 @@ Public Class MassOvertimeForm
         AddHandler EmployeeSearchTextBox.TextChanged, AddressOf EmployeeSearchTextBox_TextChanged
     End Sub
 
-    Public Sub ShowOvertimes(overtimes As DataTable)
+    Public Sub ShowOvertimes(overtimes As DataTable) Implements IMassOvertimeForm.ShowOvertimes
         OvertimeDataGridView.DataSource = overtimes
     End Sub
 
-    Public Sub ShowOvertimes(overtimes As List(Of OvertimeModel))
+    Public Sub ShowOvertimes(overtimes As List(Of OvertimeModel)) Implements IMassOvertimeForm.ShowOvertimes
         OvertimeDataGridView.DataSource = overtimes
     End Sub
 
@@ -168,7 +173,7 @@ Public Class MassOvertimeForm
         _presenter.RefreshOvertime()
     End Sub
 
-    Public Sub RefreshDataGrid()
+    Public Sub RefreshDataGrid() Implements IMassOvertimeForm.RefreshDataGrid
         OvertimeDataGridView.Refresh()
     End Sub
 
@@ -203,7 +208,6 @@ Public Class MassOvertimePresenter
 
     Private _employeeRepository As EmployeeRepository
 
-    Public Sub New(view As MassOvertimeForm)
         _view = view
 
         _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)

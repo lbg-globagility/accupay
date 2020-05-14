@@ -4,6 +4,13 @@ Public Class OrganizationForm
     Dim payFreq As New AutoCompleteStringCollection
     Dim isNew As Integer = 0
 
+    Private MDIPrimaryForm As MDIPrimaryForm
+
+    Public Sub SetParentForms(mDIPrimaryForm As MDIPrimaryForm)
+        Me.MDIPrimaryForm = mDIPrimaryForm
+
+    End Sub
+
     Private Sub cleartextbox()
         txtcompAltEmailTxt.Clear()
         txtcompAltPhoneTxt.Clear()
@@ -630,7 +637,7 @@ Public Class OrganizationForm
         '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
         'End If
 
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 

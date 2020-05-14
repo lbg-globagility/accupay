@@ -93,16 +93,6 @@
             End With
         Next
 
-        'SecondSelector = 0
-        'maxid = 0
-
-        'If Selector = Nothing Then
-
-        'Else
-        '    dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Selected = True
-        '    dgvshiftentry.CurrentCell = dgvshiftentry.Rows(Convert.ToUInt32(Selector)).Cells(0)
-        'End If
-
     End Sub
 
     Private Sub ShiftEntryForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -112,17 +102,7 @@
             End If
         End If
 
-        'If FormLeft.Contains("Duty shifting") Then
-        '    FormLeft.Remove("Duty shifting")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-        GeneralForm.listGeneralForm.Remove(Me.Name)
+        'GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Private Sub ShiftEntryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

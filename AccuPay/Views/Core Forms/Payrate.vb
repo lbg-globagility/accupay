@@ -7,6 +7,16 @@ Public Class PayRateForm
 
     Dim _now
 
+    Private _overtimeRateService As OvertimeRateService
+
+    Sub New(overtimeRateService As OvertimeRateService)
+
+        InitializeComponent()
+
+        _overtimeRateService = overtimeRateService
+
+    End Sub
+
     Private Sub Payrate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
         If previousForm IsNot Nothing Then

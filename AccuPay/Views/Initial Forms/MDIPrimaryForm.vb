@@ -10,7 +10,7 @@ Imports MySql.Data.MySqlClient
 
 Public Class MDIPrimaryForm
 
-    Dim DefaultFontStyle = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim DefaultFontStyle = New Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
 
     Dim ExemptedForms As New List(Of String)
 
@@ -37,6 +37,8 @@ Public Class MDIPrimaryForm
 
     Private _systemOwnerService As SystemOwnerService
 
+    Private _listOfValueService As ListOfValueService
+    Private _systemOwnerService As SystemOwnerService
     Private _userRepository As UserRepository
 
     Sub New()
@@ -54,6 +56,11 @@ Public Class MDIPrimaryForm
         if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
 
         PrepareFormForBenchmark()
+    End Sub
+
+    Public Sub SetParentForms(metroLogin As MetroLogin)
+        Me.MetroLogin = metroLogin
+
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -157,109 +164,113 @@ Public Class MDIPrimaryForm
 
                 ''Close all forms that remains open
 
-                Dim listofExtraFrm As Form()
+                'Dim listofExtraFrm As Form()
 
-                Dim listofExtraForm As New List(Of String)
+                'Dim listofExtraForm As New List(Of String)
 
-                listofExtraForm.Add("CrysVwr")
-                listofExtraForm.Add("dutyshift")
-                listofExtraForm.Add("leavtyp")
-                listofExtraForm.Add("LoanType")
-                listofExtraForm.Add("newEmpStat")
-                listofExtraForm.Add("newEmpType")
-                listofExtraForm.Add("newPostion")
-                listofExtraForm.Add("newProdAllowa")
-                listofExtraForm.Add("newProdBonus")
-                listofExtraForm.Add("SelectFromEmployee")
-                listofExtraForm.Add("selectPayPeriod")
-                listofExtraForm.Add("viewtotallow")
-                listofExtraForm.Add("viewtotbon")
-                listofExtraForm.Add("viewtotloan")
-                listofExtraForm.Add("FindingForm")
+                'listofExtraForm.Add("CrysVwr")
+                'listofExtraForm.Add("leavtyp")
+                'listofExtraForm.Add("LoanType")
+                'listofExtraForm.Add("newEmpStat")
+                'listofExtraForm.Add("newEmpType")
+                'listofExtraForm.Add("newPostion")
+                'listofExtraForm.Add("newProdAllowa")
+                'listofExtraForm.Add("newProdBonus")
+                'listofExtraForm.Add("SelectFromEmployee")
+                'listofExtraForm.Add("selectPayPeriod")
+                'listofExtraForm.Add("viewtotallow")
+                'listofExtraForm.Add("viewtotbon")
+                'listofExtraForm.Add("viewtotloan")
+                'listofExtraForm.Add("FindingForm")
 
-                listofExtraForm.Add("AddListOfValueForm")
-                listofExtraForm.Add("AddPostionForm")
+                'listofExtraForm.Add("AddListOfValueForm")
+                'listofExtraForm.Add("AddPostionForm")
 
-                listofExtraForm.Add("GeneralForm")
-                listofExtraForm.Add("HRISForm")
-                listofExtraForm.Add("PayrollForm")
-                listofExtraForm.Add("TimeAttendForm")
+                'listofExtraForm.Add("GeneralForm")
+                'listofExtraForm.Add("HRISForm")
+                'listofExtraForm.Add("PayrollForm")
+                'listofExtraForm.Add("TimeAttendForm")
 
-                ReDim listofExtraFrm(My.Application.OpenForms.Count - 1)
+                'ReDim listofExtraFrm(My.Application.OpenForms.Count - 1)
 
-                Dim itemindex = 0
+                'Dim itemindex = 0
 
-                Dim open_forms = My.Application.OpenForms
+                'Dim open_forms = My.Application.OpenForms
 
-                For Each f As Form In open_forms
+                'For Each f As Form In open_forms
 
-                    Dim frmName = f.Name
+                '    Dim frmName = f.Name
 
-                    If ExemptedForms.Contains(frmName) Then
-                        Continue For
-                    Else
+                '    If ExemptedForms.Contains(frmName) Then
+                '        Continue For
+                '    Else
 
-                        If listofExtraForm.Contains(frmName) Then
-                            Continue For
-                        Else
-                            If frmName.Trim.Length > 0 Then
-                                listofExtraFrm(itemindex) = f
-                                itemindex += 1
+                '        If listofExtraForm.Contains(frmName) Then
+                '            Continue For
+                '        Else
+                '            If frmName.Trim.Length > 0 Then
+                '                listofExtraFrm(itemindex) = f
+                '                itemindex += 1
 
-                            End If
+                '            End If
 
-                        End If
+                '        End If
 
-                    End If
-                Next
+                '    End If
+                'Next
 
-                Dim openform_count = listofExtraFrm.GetUpperBound(0)
+                'Dim openform_count = listofExtraFrm.GetUpperBound(0)
 
-                For ii = 0 To openform_count
+                'For ii = 0 To openform_count
 
-                    If listofExtraFrm(ii) Is Nothing Then
-                        Continue For
-                    Else
+                '    If listofExtraFrm(ii) Is Nothing Then
+                '        Continue For
+                '    Else
 
-                        ClosingForm = listofExtraFrm(ii)
+                '        ClosingForm = listofExtraFrm(ii)
 
-                        ClosingForm.Close()
+                '        ClosingForm.Close()
 
-                    End If
+                '    End If
 
-                Next
+                'Next
 
-                Dim n_ExecuteQuery As _
-                    New ExecuteQuery("UPDATE user" &
-                                     " SET InSession='0'" &
-                                     ",LastUpd=CURRENT_TIMESTAMP()" &
-                                     ",LastUpdBy='" & z_User & "'" &
-                                     " WHERE RowID='" & z_User & "';")
+                'Dim n_ExecuteQuery As _
+                '    New ExecuteQuery("UPDATE user" &
+                '                     " SET InSession='0'" &
+                '                     ",LastUpd=CURRENT_TIMESTAMP()" &
+                '                     ",LastUpdBy='" & z_User & "'" &
+                '                     " WHERE RowID='" & z_User & "';")
 
-                If openform_count >= 5 Then
-                    Thread.Sleep(1175)
-                End If
+                'If openform_count >= 5 Then
+                '    Thread.Sleep(1175)
+                'End If
 
-                With MetroLogin
+                'Using MainServiceProvider
+                '    Dim form = MainServiceProvider.GetRequiredService(Of MetroLogin)()
 
-                    .Show()
+                '    With form
 
-                    .txtbxUserID.Clear()
+                '        .Show()
 
-                    .txtbxPword.Clear()
+                '        .txtbxUserID.Clear()
 
-                    .txtbxUserID.Focus()
+                '        .txtbxPword.Clear()
 
-                    .PhotoImages.Image = Nothing
+                '        .txtbxUserID.Focus()
 
-                    .cbxorganiz.SelectedIndex = -1
+                '        .PhotoImages.Image = Nothing
 
-                    .ReloadOrganization()
+                '        .cbxorganiz.SelectedIndex = -1
 
-                    If Debugger.IsAttached Then
-                        .AssignDefaultCredentials()
-                    End If
-                End With
+                '        .ReloadOrganization()
+
+                '        If Debugger.IsAttached Then
+                '            .AssignDefaultCredentials()
+                '        End If
+                '    End With
+
+                'End Using
 
             ElseIf prompt = MsgBoxResult.No Then
                 e.Cancel = True
@@ -354,9 +365,9 @@ Public Class MDIPrimaryForm
     'Trebuchet MS
     'Segoe UI
 
-    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim isHome As SByte = 0
 
@@ -404,7 +415,11 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(GeneralForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of GeneralForm)()
+            form.SetParentForms(Me)
+            ChangeForm(form)
+        End Using
 
         HRISForm.Hide()
         PayrollForm.Hide()
@@ -428,7 +443,6 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(0, sender, e)
     End Sub
 
     Sub ToolStripButton3_Click(sender As Object, e As EventArgs) Handles TimeToolStripButton.Click
@@ -437,7 +451,11 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(TimeAttendForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of TimeAttendForm)()
+            form.SetParentForms(Me)
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -461,111 +479,9 @@ Public Class MDIPrimaryForm
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(2, sender, e)
     End Sub
 
     Dim theemployeetable As New DataTable
-
-    Sub refresh_previousForm(Optional groupindex As Object = 0,
-                             Optional sndr As Object = 0,
-                             Optional ee As EventArgs = Nothing)
-
-        Static once As SByte = 0
-
-        If once = 0 Then
-            'once = 1
-
-            Exit Sub
-
-        End If
-
-        Static countchanges As Integer = -1
-
-        If previousForm IsNot Nothing Then
-
-            If groupindex = 0 Then 'General
-
-                If previousForm.Name = "UsersFrom" Then
-
-                ElseIf previousForm.Name = "ListOfValueForm" Then
-
-                ElseIf previousForm.Name = "OrganizatinoForm" Then
-
-                ElseIf previousForm.Name = "UserPrivilegeForm" Then
-
-                ElseIf previousForm.Name = "PhilHealht" Then
-
-                ElseIf previousForm.Name = "SSSCntrib" Then
-
-                ElseIf previousForm.Name = "Payrate" Then
-
-                ElseIf previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "userprivil" Then
-
-                ElseIf previousForm.Name = "Revised_Withholding_Tax_Tables" Then
-
-                End If
-
-            ElseIf groupindex = 1 Then 'HRIS
-
-                If previousForm.Name = "Employee" Then
-
-                    With EmployeeForm
-
-                        Select Case .tabIndx
-
-                            Case .GetEmployeeProfileTabPageIndex
-                                If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetAttachmentTabPageIndex
-                                If .listofEditRoweatt.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                        End Select
-
-                    End With
-
-                ElseIf previousForm.Name = "Positn" Then
-
-                ElseIf previousForm.Name = "EmpPosition" Then
-
-                ElseIf previousForm.Name = "DivisionForm" Then
-
-                End If
-
-            ElseIf groupindex = 2 Then 'Time Attendance
-
-                If previousForm.Name = "ShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "EmployeeShiftEntryForm" Then
-
-                ElseIf previousForm.Name = "Payrate" Then 'ShiftEntryForm
-
-                ElseIf previousForm.Name = "EmpTimeDetail" Then
-
-                ElseIf previousForm.Name = "EmpTimeEntry" Then
-
-                End If
-
-            ElseIf groupindex = 3 Then 'Payroll
-                If previousForm.Name = "Paystub" Then
-                    With PayStubForm
-                        .btnrefresh_Click(sndr, ee)
-                    End With
-                End If
-            End If
-
-            countchanges = theemployeetable.Rows.Count
-        End If
-    End Sub
 
     Sub ToolStripButton5_Click(sender As Object, e As EventArgs) Handles PayrollToolStripButton.Click
 
@@ -573,7 +489,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(PayrollForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of PayrollForm)()
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         HRISForm.Hide()
@@ -597,8 +516,6 @@ Public Class MDIPrimaryForm
         TimeToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
 
-        refresh_previousForm(3, sender, e)
-
     End Sub
 
     Private Sub tsbtnHRIS_Click(sender As Object, e As EventArgs) Handles HrisToolStripButton.Click
@@ -607,7 +524,10 @@ Public Class MDIPrimaryForm
 
         LockTime()
 
-        ChangeForm(HRISForm)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of HRISForm)()
+            ChangeForm(form)
+        End Using
 
         GeneralForm.Hide()
         PayrollForm.Hide()
@@ -630,8 +550,6 @@ Public Class MDIPrimaryForm
         TimeToolStripButton.Font = unselectedButtonFont
         PayrollToolStripButton.Font = unselectedButtonFont
         ReportsToolStripButton.Font = unselectedButtonFont
-
-        refresh_previousForm(1, sender, e)
     End Sub
 
     'Toggling pin status

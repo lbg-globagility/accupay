@@ -28,9 +28,13 @@ Public Class EmployeeLeavesForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+    Private _leaveService As LeaveService
 
-    Sub New()
+    Sub New(leaveRepository As LeaveRepository,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            userActivityRepository As UserActivityRepository,
+            leaveService As LeaveService)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -51,7 +55,9 @@ Public Class EmployeeLeavesForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _textBoxDelayedAction = New DelayedAction(Of Boolean)
+        _userActivityRepository = userActivityRepository
+
+        _leaveService = leaveService
 
     End Sub
 
@@ -79,7 +85,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
@@ -88,7 +94,11 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Dim importForm As New ImportLeaveForm()
+        Dim importForm As New ImportLeaveForm(_employeeRepository,
+                                              _leaveRepository,
+                                              _productRepository,
+                                              _userActivityRepository,
+                                              _leaveService)
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()
@@ -511,7 +521,11 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        Dim form As New AddLeaveForm(employee)
+        Dim form As New AddLeaveForm(employee,
+                                    _leaveService,
+                                    _leaveRepository,
+                                    _productRepository,
+                                    _userActivityRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -685,7 +699,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

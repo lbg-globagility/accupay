@@ -20,7 +20,7 @@ Public Class AdjustmentForm
 
     Private _currentFormType As FormMode
 
-    Sub New(Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
+    Sub New(productRepository As ProductRepository, Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
 
         InitializeComponent()
 

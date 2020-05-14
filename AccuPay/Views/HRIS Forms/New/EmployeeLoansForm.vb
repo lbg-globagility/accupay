@@ -47,7 +47,24 @@ Public Class EmployeeLoansForm
 
     Private loanInterestPercentageBeforeTextChange As Decimal
 
-    Sub New()
+    Private _systemOwnerService As SystemOwnerService
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New(systemOwnerService As SystemOwnerService,
+            employeeRepository As EmployeeRepository,
+            productRepository As ProductRepository,
+            listOfValueRepository As ListOfValueRepository,
+            loanScheduleRepository As LoanScheduleRepository,
+            userActivityRepository As UserActivityRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -73,7 +90,6 @@ Public Class EmployeeLoansForm
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -221,7 +237,7 @@ Public Class EmployeeLoansForm
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
 
-        Dim form As New AddLoanTypeForm()
+        Dim form As New AddLoanTypeForm(_productRepository)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -322,7 +338,12 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim form As New AddLoanScheduleForm(employee)
+        Dim form As New AddLoanScheduleForm(employee,
+                                            _productRepository,
+                                            _listOfValueRepository,
+                                            _loanScheduleRepository,
+                                            _userActivityRepository,
+                                            _systemOwnerService)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -496,7 +517,11 @@ Public Class EmployeeLoansForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportLoansForm()
+        Using form = New ImportLoansForm(_employeeRepository,
+                                         _loanScheduleRepository,
+                                         _listOfValueRepository,
+                                         _productRepository,
+                                         _userActivityRepository)
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -518,7 +543,7 @@ Public Class EmployeeLoansForm
 
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
         myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
@@ -997,7 +1022,7 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

@@ -319,7 +319,14 @@ Public Class MetroLogin
         If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
 
         If Await CheckIfAuthorizedByUserLevel() Then
-            MDIPrimaryForm.Show()
+
+            Using MainServiceProvider
+                Dim form = MainServiceProvider.GetRequiredService(Of MDIPrimaryForm)()
+
+                form.Show()
+
+            End Using
+
         End If
 
         enableButton()
@@ -417,7 +424,7 @@ Public Class MetroLogin
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
-
+        n_ForgotPasswordForm.SetParentForms(Me)
         n_ForgotPasswordForm.ShowDialog()
         '# ####################################### #
         'ForgotPasswordForm.Show()

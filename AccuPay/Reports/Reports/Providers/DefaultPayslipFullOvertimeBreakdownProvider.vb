@@ -1,20 +1,36 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Implements IReportProvider
-
     Public Property Name As String = "Payslip" Implements IReportProvider.Name
 
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _paystubPayslipModelDataService As PaystubPayslipModelDataService
+
+    Sub New(payPeriodRepository As PayPeriodRepository,
+            payPeriodService As PayPeriodService,
+            paystubPayslipModelDataService As PaystubPayslipModelDataService)
+
+        _payPeriodRepository = payPeriodRepository
+
+        _payPeriodService = payPeriodService
+
+        _paystubPayslipModelDataService = paystubPayslipModelDataService
+    End Sub
+
     Public Async Sub Run() Implements IReportProvider.Run
 
-        Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
+        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
         form.ShowDialog()
 
         Dim payPeriod = form.PayPeriod

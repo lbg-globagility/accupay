@@ -14,6 +14,8 @@ Public Class AwardTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _awards As IEnumerable(Of Award)
 
     Private _currentAward As Award
@@ -32,9 +34,13 @@ Public Class AwardTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         pbEmployee.Focus()
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -118,7 +124,7 @@ Public Class AwardTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -168,7 +174,7 @@ Public Class AwardTab
             Return
         End If
 
-        Dim form As New AddAwardForm(_employee)
+        Dim form As New AddAwardForm(_employee, _awardRepo, _userActivityRepo)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -227,7 +233,7 @@ Public Class AwardTab
             End Function)
 
         If succeed Then
-            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            ShowBalloonInfo("Award successfuly saved.", messageTitle)
             Return True
         End If
         Return False
@@ -243,7 +249,7 @@ Public Class AwardTab
     End Function
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
         userActivity.ShowDialog()
     End Sub
 

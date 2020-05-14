@@ -58,7 +58,9 @@ Public Class PreviewLeaveBalanceForm
         Dim result As DialogResult
         Dim isOk As Boolean = False
 
-        Using dialog = New DateRangePickerDialog(removePayPeriodValidation:=True)
+        Using dialog = New DateRangePickerDialog(_payPeriodRepository,
+                                                 _payPeriodService,
+                                                 removePayPeriodValidation:=True)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then

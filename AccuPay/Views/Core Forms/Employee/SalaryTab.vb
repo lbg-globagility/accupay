@@ -20,6 +20,8 @@ Public Class SalaryTab
 
     Private _employee As Employee
 
+    Private _parentForm As Form
+
     Private _salaries As List(Of Salary)
 
     Private _currentSalary As Salary
@@ -64,9 +66,11 @@ Public Class SalaryTab
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee) As Task
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
 
         _employee = employee
+
+        _parentForm = parentForm
 
         If Await InitializeBenchmarkData() = False Then
             Return
@@ -113,7 +117,7 @@ Public Class SalaryTab
             'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
             'If _employee.IsDaily Then
             'End If
-            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
+            _ecolaAllowance = Await _benchmarkPayrollHelper.GetEcola(
                                                 employeeId.Value,
                                                 payDateFrom:=currentPayPeriod.PayFromDate,
                                                 payDateTo:=currentPayPeriod.PayToDate)
@@ -593,7 +597,9 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
-        Using dialog = New ImportSalaryForm()
+        Using dialog = New ImportSalaryForm(_employeeRepository,
+                                            _salaryRepository,
+                                            _userActivityRepository)
             dialog.ShowDialog()
 
             If dialog.IsSaved Then
@@ -608,7 +614,7 @@ Public Class SalaryTab
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 
-        EmployeeForm.Close()
+        _parentForm.Close()
 
     End Sub
 
@@ -617,7 +623,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UserActivitySalaryToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivitySalaryToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName)
+        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
         userActivity.ShowDialog()
     End Sub
 

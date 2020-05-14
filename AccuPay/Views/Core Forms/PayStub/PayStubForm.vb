@@ -34,7 +34,6 @@ Public Class PayStubForm
     Public paypTo As String = Nothing
     Public paypRowID As String = Nothing
     Public paypPayFreqID As String = Nothing
-    Public isEndOfMonth As String = 0
 
     Private _totalPaystubs As Integer = 0
     Private _finishedPaystubs As Integer = 0
@@ -58,11 +57,41 @@ Public Class PayStubForm
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
+    Private _payrollResources As PayrollResources
+
+    Private _payrollGenerator As PayrollGeneration
+
+    Private _payrollSummaryExcelFormatReportProvider As PayrollSummaryExcelFormatReportProvider
+
     Private _policy As PolicyHelper
 
     Private _systemOwnerService As SystemOwnerService
 
-    Sub New()
+    Private _paystubRepository As PaystubRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _salaryRepository As SalaryRepository
+
+    Private _timeEntryRepository As TimeEntryRepository
+
+    Sub New(payrollResources As PayrollResources,
+            payrollGenerator As PayrollGeneration,
+            payrollSummaryExcelFormatReportProvider As PayrollSummaryExcelFormatReportProvider,
+            policy As PolicyHelper,
+            payslipCreator As PayslipCreator,
+            costCenterReportProvider As CostCenterReportProvider,
+            payPeriodService As PayPeriodService,
+            systemOwnerService As SystemOwnerService,
+            listOfValueService As ListOfValueService,
+            actualTimeEntryRepository As ActualTimeEntryRepository,
+            paystubEmailRepository As PaystubEmailRepository,
+            paystubEmailHistoryRepository As PaystubEmailHistoryRepository,
+            payPeriodRepository As PayPeriodRepository,
+            paystubRepository As PaystubRepository,
+            productRepository As ProductRepository,
+            salaryRepository As SalaryRepository,
+            timeEntryRepository As TimeEntryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -371,8 +400,6 @@ Public Class PayStubForm
 
                 paypTo = MYSQLDateFormat(CDate(.Cells("Column3").Value)) 'Format(CDate(.Cells("Column3").Value), "yyyy-MM-dd")
 
-                isEndOfMonth = Trim(.Cells("Column14").Value)
-
                 Dim str_sched_payfreq As String = Convert.ToString(.Cells("Column12").Value)
 
                 str_pay_freq_sched = str_sched_payfreq
@@ -400,7 +427,6 @@ Public Class PayStubForm
             paypRowID = Nothing
             paypFrom = Nothing
             paypTo = Nothing
-            isEndOfMonth = 0
             paypPayFreqID = String.Empty
 
             ShowPayrollActions(False)
@@ -752,9 +778,7 @@ Public Class PayStubForm
                                                      payDateTo:=CDate(paypTo))
                 resourcesTask.Wait()
 
-                Return resources
-            End Function,
-            0
+            End Sub
         )
 
         loadTask.ContinueWith(
@@ -846,7 +870,7 @@ Public Class PayStubForm
 
         Await RefreshForm()
 
-        Await TimeEntrySummaryForm.LoadPayPeriods()
+        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
         Me.Enabled = True
         dgvpayper_SelectionChanged(dgvpayper, New EventArgs)
@@ -876,7 +900,9 @@ Public Class PayStubForm
         viewtotloan.Close()
         viewtotbon.Close()
 
-        With viewtotallow
+        Dim form As New viewtotallow(_productRepository)
+
+        With form
             .Show()
             .BringToFront()
             If dgvemployees.RowCount > 0 Then
@@ -891,7 +917,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotbon_Click(sender As Object, e As EventArgs) Handles btntotbon.Click
-        viewtotallow.Close()
         viewtotloan.Close()
 
         With viewtotbon
@@ -929,7 +954,7 @@ Public Class PayStubForm
         viewtotloan.Close()
         viewtotbon.Close()
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Sub tsSearch_KeyPress(sender As Object, e As KeyPressEventArgs) Handles tsSearch.KeyPress
@@ -1021,13 +1046,11 @@ Public Class PayStubForm
 
     Private Sub ActualToolStripMenuItem2_Click(sender As Object, e As EventArgs) Handles PayrollSummaryDeclaredToolStripMenuItem.Click, PayrollSummaryActualToolStripMenuItem.Click
 
-        Dim psefr As New PayrollSummaryExcelFormatReportProvider
-
         Dim is_actual = Convert.ToInt16(DirectCast(sender, ToolStripMenuItem).Tag)
 
-        psefr.IsActual = is_actual
+        _payrollSummaryExcelFormatReportProvider.IsActual = is_actual
 
-        psefr.Run()
+        _payrollSummaryExcelFormatReportProvider.Run()
 
     End Sub
 
@@ -1065,14 +1088,14 @@ Public Class PayStubForm
 
                     .AutoSize = False
                     .BackColor = Color.FromArgb(255, 255, 255)
-                    .ImageTransparentColor = System.Drawing.Color.Magenta
-                    .Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+                    .ImageTransparentColor = Color.Magenta
+                    .Margin = New Padding(0, 1, 0, 1)
                     .Name = String.Concat("tsbtn" & strval)
-                    .Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-                    .Size = New System.Drawing.Size(110, 30)
+                    .Overflow = ToolStripItemOverflow.Never
+                    .Size = New Size(110, 30)
                     .Text = strval
-                    .TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-                    .TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+                    .TextAlign = ContentAlignment.MiddleLeft
+                    .TextImageRelation = TextImageRelation.ImageBeforeText
                     .ToolTipText = strval
 
                 End With
@@ -1252,8 +1275,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub btntotloan_Click(sender As Object, e As EventArgs) Handles btntotloan.Click
-        viewtotallow.Close()
-        viewtotbon.Close()
 
         With viewtotloan
             .Show()
@@ -1781,7 +1802,7 @@ Public Class PayStubForm
 
                         Await RefreshForm()
 
-                        Await TimeEntrySummaryForm.LoadPayPeriods()
+                        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
                         MessageBoxHelper.Information($"Paystub of employee {toBeDeletedEmployeeNumber} for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' was successfully deleted.")
                     End Function)
@@ -1895,7 +1916,7 @@ Public Class PayStubForm
 
         Await RefreshForm()
 
-        Await TimeEntrySummaryForm.LoadPayPeriods()
+        'Await TimeEntrySummaryForm.LoadPayPeriods()
 
         If close Then
 
@@ -1916,16 +1937,24 @@ Public Class PayStubForm
 
     Private Sub GeneratePayrollToolStripButton_Click(sender As Object, e As EventArgs) Handles GeneratePayrollToolStripButton.Click
 
-        With selectPayPeriod
+        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
+
+        With form
             .Show()
             .BringToFront()
             .dgvpaypers.Focus()
         End With
 
+        paypRowID = form.PayPeriod.RowID
+        paypFrom = form.PayPeriod.PayFromDate
+        paypTo = form.PayPeriod.PayToDate
+
+        GeneratePayroll()
+
     End Sub
 
     Private Sub Include13thMonthPayToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles Include13thMonthPayToolStripMenuItem.Click
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
+        Dim payPeriodSelector = New PayrollSummaDateSelection(_payPeriodService)
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return
@@ -1944,7 +1973,7 @@ Public Class PayStubForm
             Return
         End If
 
-        Dim payPeriodSelector = New PayrollSummaDateSelection()
+        Dim payPeriodSelector = New PayrollSummaDateSelection(_payPeriodService)
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return
@@ -1993,7 +2022,7 @@ Public Class PayStubForm
 
                       Await RefreshForm()
 
-                      Await TimeEntrySummaryForm.LoadPayPeriods()
+                      'Await TimeEntrySummaryForm.LoadPayPeriods()
 
                       MessageBoxHelper.Information($"All paystubs for payroll '{CDate(toBeDeletedPaypFrom).ToShortDateString}' to '{CDate(toBeDeletedPaypTo).ToShortDateString}' were successfully deleted.")
                   End Function)
@@ -2036,11 +2065,9 @@ Public Class PayStubForm
 
         If _policy.ShowActual = False Then
 
-            Dim psefr As New PayrollSummaryExcelFormatReportProvider
+            _payrollSummaryExcelFormatReportProvider.IsActual = False
 
-            psefr.IsActual = False
-
-            psefr.Run()
+            _payrollSummaryExcelFormatReportProvider.Run()
 
         End If
 
@@ -2055,9 +2082,23 @@ Public Class PayStubForm
         Dim payPeriodId = ValNoComma(paypRowID)
 
         If sender Is ManageEmailPayslipsToolStripMenuItem Then
-            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=True)
+            form = New SelectPayslipEmployeesForm(payPeriodId,
+                                                isEmail:=True,
+                                                _payslipCreator,
+                                                _listOfValueService,
+                                                _payPeriodRepository,
+                                                _paystubRepository,
+                                                _paystubEmailRepository,
+                                                _paystubEmailHistoryRepository)
         Else
-            form = New SelectPayslipEmployeesForm(payPeriodId, isEmail:=False)
+            form = New SelectPayslipEmployeesForm(payPeriodId,
+                                                isEmail:=False,
+                                                _payslipCreator,
+                                                _listOfValueService,
+                                                _payPeriodRepository,
+                                                _paystubRepository,
+                                                _paystubEmailRepository,
+                                                _paystubEmailHistoryRepository)
         End If
 
         form.ShowDialog()
@@ -2066,9 +2107,7 @@ Public Class PayStubForm
 
     Private Sub PayrollSummaryByBranchToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CostCenterReportToolStripMenuItem.Click
 
-        Dim provider = New CostCenterReportProvider()
-
-        provider.Run()
+        _costCenterReportProvider.Run()
 
     End Sub
 
@@ -2076,7 +2115,14 @@ Public Class PayStubForm
 
         Dim payPeriodId = ValNoComma(paypRowID)
 
-        Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId)
+        Dim form As New SelectThirteenthMonthEmployeesForm(payPeriodId,
+                                                            _listOfValueService,
+                                                            _systemOwnerService,
+                                                            _actualTimeEntryRepository,
+                                                            _payPeriodRepository,
+                                                            _paystubRepository,
+                                                            _salaryRepository,
+                                                            _timeEntryRepository)
 
         form.ShowDialog()
 

@@ -17,10 +17,11 @@ Public Class PaystubPresenter
     Private _isActual As Boolean
 
     Private WithEvents _view As PaystubView
+    Private ReadOnly _repository As Repository
 
-    Public Sub New(view As PaystubView)
+    Public Sub New(view As PaystubView, repository As Repository)
         _view = view
-
+        _repository = repository
     End Sub
 
     Private Async Sub OnInit() Handles _view.Init
@@ -31,27 +32,21 @@ Public Class PaystubPresenter
     Private Async Function LoadPayperiods() As Task
         Dim payperiods As IList(Of PayPeriod) = Nothing
 
-        Using repository = New Repository()
-            payperiods = Await repository.GetPayperiods()
-        End Using
+        payperiods = Await _repository.GetPayperiods()
 
         _view.ShowPayperiods(payperiods)
     End Function
 
     Private Async Function LoadAdjustmentTypes() As Task
-        Using repository = New Repository()
-            Dim adjustmentTypes = Await repository.GetAdjustmentTypes()
+        Dim adjustmentTypes = Await _repository.GetAdjustmentTypes()
 
-            _view.SetAdjustmentTypes(adjustmentTypes.Select(Function(a) a.PartNo).ToList())
-        End Using
+        _view.SetAdjustmentTypes(adjustmentTypes.Select(Function(a) a.PartNo).ToList())
     End Function
 
     Private Async Sub OnPayperiodSelected(payperiod As PayPeriod) Handles _view.SelectPayperiod
         _currentPayperiod = payperiod
 
-        Using repository = New Repository()
-            _paystubs = Await repository.GetPaystubs(_currentPayperiod)
-        End Using
+        _paystubs = Await _repository.GetPaystubs(_currentPayperiod)
 
         _view.ShowPaystubs(_paystubs)
     End Sub
@@ -65,13 +60,11 @@ Public Class PaystubPresenter
         Dim allowanceItems As ICollection(Of AllowanceItem) = Nothing
         Dim loanTransactions As ICollection(Of LoanTransaction) = Nothing
 
-        Using repository = New Repository()
-            salary = Await repository.GetSalary(_currentPaystub)
-            paystubActual = Await repository.GetPaystubActual(_currentPaystub.RowID)
-            adjustments = Await repository.GetAdjustments(_currentPaystub.RowID)
-            allowanceItems = Await repository.GetAllowanceItems(_currentPaystub.RowID)
-            loanTransactions = Await repository.GetLoanTransactions(_currentPaystub.RowID)
-        End Using
+        salary = Await _repository.GetSalary(_currentPaystub)
+        paystubActual = Await _repository.GetPaystubActual(_currentPaystub.RowID)
+        adjustments = Await _repository.GetAdjustments(_currentPaystub.RowID)
+        allowanceItems = Await _repository.GetAllowanceItems(_currentPaystub.RowID)
+        loanTransactions = Await _repository.GetLoanTransactions(_currentPaystub.RowID)
 
         _view.ShowSalary(_currentPaystub.Employee, salary, _isActual)
         _view.ShowPaystub(_currentPaystub, paystubActual, _isActual)
@@ -112,7 +105,7 @@ Public Class PaystubPresenter
     ''' <summary>
     ''' Repository
     ''' </summary>
-    Private Class Repository
+    Public Class Repository
         Inherits DbRepository
 
         Private _adjustmentRepository As AdjustmentRepository
@@ -129,7 +122,13 @@ Public Class PaystubPresenter
 
         Private _timeEntryRepository As TimeEntryRepository
 
-        Sub New()
+        Sub New(adjustmentRepository As AdjustmentRepository,
+                employeeRepository As EmployeeRepository,
+                payPeriodRepository As PayPeriodRepository,
+                paystubRepository As PaystubRepository,
+                paystubActualRepository As PaystubActualRepository,
+                productRepository As ProductRepository,
+                timeEntryRepository As TimeEntryRepository)
 
             _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
 

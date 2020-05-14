@@ -12,7 +12,7 @@ Public Class ProductControlForm
 
     Private ReadOnly _allowanceRepository As AllowanceRepository
 
-    Sub New()
+    Sub New(allowanceRepository As AllowanceRepository)
 
         InitializeComponent()
 

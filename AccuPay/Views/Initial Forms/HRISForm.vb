@@ -12,13 +12,18 @@ Public Class HRISForm
 
     Private if_sysowner_is_benchmark As Boolean
 
-    Private _policyHelper As PolicyHelper
+    Private ReadOnly _policyHelper As PolicyHelper
 
     Dim _systemOwnerService As SystemOwnerService
 
-    Private _userRepository As UserRepository
+    Private ReadOnly _productRepository As ProductRepository
 
-    Sub New()
+    Private ReadOnly _userRepository As UserRepository
+
+    Sub New(policyHelper As PolicyHelper,
+            systemOwnerService As SystemOwnerService,
+            productRepository As ProductRepository,
+            userRepository As UserRepository)
 
         InitializeComponent()
 
@@ -131,135 +136,169 @@ Public Class HRISForm
     End Sub
 
     Private Sub ToolStripMenuItem1_Click(sender As Object, e As EventArgs) Handles DivisionToolStripMenuItem.Click
-        ChangeForm(NewDivisionPositionForm, "Division")
 
-        previousForm = NewDivisionPositionForm
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of NewDivisionPositionForm)()
+
+            ChangeForm(form, "Division")
+
+            previousForm = form
+
+        End Using
     End Sub
 
     Private Sub ToolStripMenuItem6_Click(sender As Object, e As EventArgs) Handles CheckListToolStripMenuItem.Click
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        Dim index = EmployeeForm.GetCheckListTabPageIndex
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpempchklist)
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        'TODO: this should be 'Employee Check List' but there is a bug on user priviledge.
-        'this is needed to be fixed!
-        ChangeForm(EmployeeForm, "Employee Personal Profile")
-        EmployeeForm.tbpempchklist.Focus()
-        'Employee.tbpempchklist_Enter(sender, e)
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Personal Profile")
+            form.tbpempchklist.Focus()
+        End Using
     End Sub
 
     Private Sub PersonalinfoToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PersonalinfoToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Personal Profile")
-        EmployeeForm.tbpEmployee.Focus()
-        '    File.AppendAllText(Path.GetTempPath() & "dgvetent.txt", c.Name & "@" & c.HeaderText & "&" & c.Visible.ToString & Environment.NewLine)
-        'Next
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpEmployee)
 
-        'Employee.tbpEmployee_Enter(sender, e)
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Personal Profile")
+            form.tbpEmployee.Focus()
+        End Using
     End Sub
 
     Private Sub EmpSalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmpSalToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetSalaryTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Salary")
-        EmployeeForm.tbpNewSalary.Focus()
-        'Employee.tbpSalary_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpNewSalary)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Salary")
+            form.tbpNewSalary.Focus()
+        End Using
     End Sub
 
     Private Sub AwardsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AwardsToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetAwardsTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Award")
-        EmployeeForm.tbpAwards.Focus()
-        'Employee.tbpAwards_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpAwards)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Award")
+            form.tbpAwards.Focus()
+        End Using
     End Sub
 
     Private Sub CertificatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CertificatesToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetCertificationTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Certification")
-        EmployeeForm.tbpCertifications.Focus()
-        'Employee.tbpCertifications_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpCertifications)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Certification")
+            form.tbpCertifications.Focus()
+        End Using
     End Sub
 
     Private Sub DisciplinaryActionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DisciplinaryActionToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetDisciplinaryActionTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Disciplinary Action")
-        EmployeeForm.tbpDiscipAct.Focus()
-        'Employee.tbpDiscipAct_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpDiscipAct)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Disciplinary Action")
+            form.tbpDiscipAct.Focus()
+        End Using
     End Sub
 
     Private Sub EducBGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EducBGToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetEducationalBackgroundTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Educational Background")
-        EmployeeForm.tbpEducBG.Focus()
-        'Employee.tbpEducBG_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpEducBG)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Educational Background")
+            form.tbpEducBG.Focus()
+        End Using
     End Sub
 
     Private Sub PrevEmplyrToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrevEmplyrToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetPreviousEmployerTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Previous Employer")
-        EmployeeForm.tbpPrevEmp.Focus()
-        'Employee.tbpPrevEmp_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpPrevEmp)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Previous Employer")
+            form.tbpPrevEmp.Focus()
+        End Using
     End Sub
 
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles PromotionToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetPromotionTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Promotion")
-        EmployeeForm.tbpPromotion.Focus()
-        'Employee.tbpPromotion_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpPromotion)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Promotion")
+            form.tbpPromotion.Focus()
+        End Using
     End Sub
 
     Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.GetBonusTabPageIndex
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Bonus")
-        EmployeeForm.tbpBonus.Focus()
-        'Employee.tbpBonus_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpBonus)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Bonus")
+            form.tbpBonus.Focus()
+        End Using
+
     End Sub
 
     Private Sub AttachmentToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AttachmentToolStripMenuItem.Click
 
-        Dim index = EmployeeForm.tabctrlemp.TabPages.IndexOf(EmployeeForm.tbpAttachment)
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeForm)()
 
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Attachment")
-        EmployeeForm.tbpAttachment.Focus()
-        'Employee.tbpAttachment_Enter(sender, e)
+            Dim index = form.tabctrlemp.TabPages.IndexOf(form.tbpAttachment)
+
+            form.tabctrlemp.SelectedIndex = index
+            form.tabIndx = index
+            ChangeForm(form, "Employee Attachment")
+            form.tbpAttachment.Focus()
+        End Using
     End Sub
 
     Private Sub HRISForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -371,8 +410,13 @@ Public Class HRISForm
     End Sub
 
     Private Sub JobCategoryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles JobCategoryToolStripMenuItem.Click
-        ChangeForm(JobLevelForm, "Position")
-        previousForm = JobLevelForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of JobLevelForm)()
+
+            ChangeForm(form, "Position")
+            previousForm = form
+        End Using
     End Sub
 
     Private Sub PointsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PointsToolStripMenuItem.Click
@@ -381,20 +425,25 @@ Public Class HRISForm
     End Sub
 
     Private Sub EmployeeExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmployeeExperimentalToolStripMenuItem.Click
-        ChangeForm(NewEmployeeForm, "Position")
-        previousForm = NewEmployeeForm
+
+        Using MainServiceProvider
+            Dim form = MainServiceProvider.GetRequiredService(Of NewEmployeeForm)()
+
+            ChangeForm(form, "Position")
+            previousForm = form
+        End Using
     End Sub
 
     Private Sub DeductionsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeductionsToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentType.Deduction)
+        Dim form As New AdjustmentForm(_productRepository, AdjustmentType.Deduction)
         form.ShowDialog()
 
     End Sub
 
     Private Sub OtherIncomeToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OtherIncomeToolStripMenuItem.Click
 
-        Dim form As New AdjustmentForm(AdjustmentType.OtherIncome)
+        Dim form As New AdjustmentForm(_productRepository, AdjustmentType.OtherIncome)
         form.ShowDialog()
 
     End Sub

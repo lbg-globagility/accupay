@@ -29,6 +29,14 @@ Public Class PayrollSummaDateSelection
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
 
+    Sub New(payPeriodService As PayPeriodService)
+
+        InitializeComponent()
+
+        _payPeriodService = payPeriodService
+
+    End Sub
+
     Public ReadOnly Property PayPeriodFromID As Integer?
         Get
             Return If(_payPeriodFrom Is Nothing, _payPeriodTo?.RowID, _payPeriodFrom.RowID)
@@ -82,6 +90,7 @@ Public Class PayrollSummaDateSelection
     Private _payPeriodFrom As PayPeriod
 
     Private _payPeriodTo As PayPeriod
+    Private ReadOnly _payPeriodService As PayPeriodService
 
     Protected Overrides Sub OnLoad(e As EventArgs)
         Dim boolResult = True

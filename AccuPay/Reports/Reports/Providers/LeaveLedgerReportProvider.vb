@@ -16,7 +16,7 @@ Public Class LeaveLedgerReportProvider
     Public Property IsNewReport As Boolean = True
 
     Public Async Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection()
+        Dim dateSelector As New PayrollSummaDateSelection(_payPeriodServive)
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

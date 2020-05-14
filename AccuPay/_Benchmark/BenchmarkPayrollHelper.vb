@@ -38,7 +38,9 @@ Namespace Benchmark
 
 #End Region
 
-        Private Sub New()
+        Private Sub New(productService As ProductService,
+                        productRepository As ProductRepository,
+                        loanScheduleRepository As LoanScheduleRepository)
 
             _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
 
@@ -46,7 +48,7 @@ Namespace Benchmark
 
         End Sub
 
-        Public Shared Async Function GetEcola(
+        Public Async Function GetEcola(
                                         employeeId As Integer,
                                         payDateFrom As Date,
                                         payDateTo As Date) As Task(Of Allowance)
@@ -61,20 +63,6 @@ Namespace Benchmark
                                             timePeriod:=timePeriod,
                                             allowanceFrequency:=Allowance.FREQUENCY_DAILY,
                                             amount:=0)
-
-        End Function
-
-        Public Shared Async Function GetInstance(logger As ILog) As Task(Of BenchmarkPayrollHelper)
-
-            Dim helper = New BenchmarkPayrollHelper()
-
-            If Await helper.Initialize(logger) = False Then
-
-                Return Nothing
-
-            End If
-
-            Return helper
 
         End Function
 

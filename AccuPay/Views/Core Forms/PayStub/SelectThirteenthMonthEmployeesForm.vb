@@ -24,15 +24,26 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Private _paystubRepository As PaystubRepository
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
-    Private _timeEntryRepository As TimeEntryRepository
+    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
 
-    Private _actualTimeEntryRepository As ActualTimeEntryRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private ReadOnly _paystubRepository As PaystubRepository
 
-    Sub New(currentPayPeriodId As Integer)
+    Private ReadOnly _timeEntryRepository As TimeEntryRepository
+
+    Private ReadOnly _salaryRepository As SalaryRepository
+
+    Sub New(currentPayPeriodId As Integer,
+            listOfValueService As ListOfValueService,
+            systemOwnerService As SystemOwnerService,
+            actualTimeEntryRepository As ActualTimeEntryRepository,
+            payPeriodRepository As PayPeriodRepository,
+            paystubRepository As PaystubRepository,
+            salaryRepository As SalaryRepository,
+            timeEntryRepository As TimeEntryRepository)
 
         ' This call is required by the designer.
         InitializeComponent()

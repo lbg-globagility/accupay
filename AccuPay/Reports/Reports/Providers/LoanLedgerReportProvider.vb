@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class LoanLedgerReportProvider
@@ -35,8 +36,16 @@ Public Class LoanLedgerReportProvider
 			        FROM address) a ON a.RowID=og.PrimaryAddressID
         WHERE og.RowID = ?ogId;"
 
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Sub New(payPeriodService As PayPeriodService)
+
+        _payPeriodService = payPeriodService
+
+    End Sub
+
     Public Sub Run() Implements IReportProvider.Run
-        Dim payPeriodSelector = New PayrollSummaDateSelection() With {.ShowLoanType = True}
+        Dim payPeriodSelector = New PayrollSummaDateSelection(_payPeriodService) With {.ShowLoanType = True}
 
         If payPeriodSelector.ShowDialog() <> DialogResult.OK Then
             Return

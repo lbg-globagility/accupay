@@ -3,6 +3,7 @@
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
@@ -33,6 +34,12 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
+    Private _listOfValueService As ListOfValueService
+
+    Private _payPeriodService As PayPeriodService
+
+    Private _branchRepository As BranchRepository
+
     Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
     Private _employeeRepository As EmployeeRepository
@@ -43,6 +50,8 @@ Public Class TimeLogsForm2
 
     Private _userActivityRepository As UserActivityRepository
 
+    Private _userActivityRepository As UserActivityRepository
+
     Public Enum TimeLogsFormat
         Optimized = 0
         Conventional = 1
@@ -50,12 +59,18 @@ Public Class TimeLogsForm2
 
 #End Region
 
-    Sub New()
+    Sub New(listOfValueService As ListOfValueService,
+            payPeriodService As PayPeriodService,
+            branchRepository As BranchRepository,
+            employeeDutyScheduleRepository As EmployeeDutyScheduleRepository,
+            employeeRepository As EmployeeRepository,
+            overtimeRepository As OvertimeRepository,
+            shiftScheduleRepository As ShiftScheduleRepository,
+            timeLogRepository As TimeLogRepository,
+            userActivityRepository As UserActivityRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
@@ -808,7 +823,7 @@ Public Class TimeLogsForm2
     End Function
 
     Private Sub TimeLogsForm2_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        TimeAttendForm.listTimeAttendForm.Remove(Name)
+        'TimeAttendForm.listTimeAttendForm.Remove(Name)
         InfoBalloon(, , lblFormTitle, , , 1)
     End Sub
 

@@ -230,7 +230,6 @@ Public Class EmployeeTreeView
         Private _divisions As IList(Of Division)
 
         Private _view As EmployeeTreeView
-
         Private _models As List(Of OvertimeModel)
 
         Private _organizationId As Integer
@@ -241,6 +240,13 @@ Public Class EmployeeTreeView
 
         Public Sub New(view As EmployeeTreeView)
             _view = view
+
+            Using MainServiceProvider
+                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)()
+                _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
+
+            End Using
+
             _organizationId = view.OrganizationID
 
             _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)

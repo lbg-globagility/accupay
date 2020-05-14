@@ -20,6 +20,8 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
+        Private _listOfValueService As ListOfValueService
+
         Private _philHealthBracketRepository As PhilHealthBracketRepository
 
         Private _salaryRepository As SalaryRepository
@@ -32,7 +34,12 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _currentSalary As Salary
 
-        Public Sub New(view As SalaryTab2)
+        Public Sub New(view As SalaryTab2,
+                        listOfValueService As ListOfValueService,
+                        philHealthBracketRepository As PhilHealthBracketRepository,
+                        salaryRepository As SalaryRepository,
+                        socialSecurityBracketRepository As SocialSecurityBracketRepository)
+
             _view = view
 
             _philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of PhilHealthBracketRepository)

@@ -13,7 +13,11 @@ Public Class AddOvertimeForm
 
     Private _currentEmployee As Employee
 
-    Private _newOvertime As New Overtime()
+    Private _newOvertime As Overtime
+
+    Private _overtimeRepository As OvertimeRepository
+
+    Private _userActivityRepository As UserActivityRepository
 
     Private _overtimeRepository As OvertimeRepository
 

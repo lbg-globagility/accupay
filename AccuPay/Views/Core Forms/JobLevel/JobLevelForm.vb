@@ -17,6 +17,16 @@ Public Class JobLevelForm
 
     Private WithEvents _jobLevelsSource As BindingSource
 
+    Sub New(jobLevelRepository As JobLevelRepository,
+            jobCategoryRepository As JobCategoryRepository)
+
+        InitializeComponent()
+
+        _jobLevelRepository = jobLevelRepository
+        _jobCategoryRepository = jobCategoryRepository
+
+    End Sub
+
     Private Sub JobLevelForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitializeComponents()
         LoadJobCategories()

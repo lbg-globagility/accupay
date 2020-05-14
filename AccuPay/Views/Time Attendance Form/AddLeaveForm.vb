@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -14,7 +15,7 @@ Public Class AddLeaveForm
 
     Private _currentEmployee As Employee
 
-    Private _newLeave As New Leave
+    Private _newLeave As Leave
 
     Private _leaveRepository As LeaveRepository
 
@@ -193,7 +194,12 @@ Public Class AddLeaveForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Await _leaveRepository.SaveAsync(Me._newLeave)
+                Dim list As New List(Of Leave)
+                list.Add(Me._newLeave)
+
+                'Temporarily use SaveMany to validate the leave
+                'TODO: use SaveAsync
+                Await _leaveService.SaveManyAsync(list, z_OrganizationID)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
 

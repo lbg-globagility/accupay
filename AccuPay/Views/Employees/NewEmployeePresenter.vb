@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
@@ -12,8 +13,11 @@ Public Class NewEmployeePresenter
     Private _employees As IList(Of Employee)
 
     Private WithEvents _view As NewEmployeeForm
+    Private ReadOnly _context As PayrollContext
 
-    Public Sub New(view As NewEmployeeForm)
+    'TODO: create a Presenter that does know the view
+    Public Sub New(context As PayrollContext, view As NewEmployeeForm)
+        _context = context
         _view = view
     End Sub
 
