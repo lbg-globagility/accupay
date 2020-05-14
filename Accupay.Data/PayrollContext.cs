@@ -1,12 +1,22 @@
-﻿using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Data.EntityFrameworkCore;
+using AccuPay.Data.Entities;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using System;
 
 namespace AccuPay.Data
 {
-    public class PayrollContext : IdentityDbContext
+    public class PayrollContext
+        : IdentityDbContext<
+            AspNetUser,
+            AspNetRole,
+            Guid,
+            IdentityUserClaim<Guid>,
+            IdentityUserRole<Guid>,
+            IdentityUserLogin<Guid>,
+            IdentityRoleClaim<Guid>,
+            IdentityUserToken<Guid>>
     {
         //private readonly ILoggerFactory _loggerFactory;
 
@@ -127,6 +137,14 @@ namespace AccuPay.Data
 
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });
+
+            modelBuilder.Entity<AspNetUser>()
+                .Property(t => t.Id)
+                .HasConversion(new GuidToBigEndianBytesConverter());
+
+            modelBuilder.Entity<AspNetRole>()
+                .Property(t => t.Id)
+                .HasConversion(new GuidToBigEndianBytesConverter());
         }
     }
 }

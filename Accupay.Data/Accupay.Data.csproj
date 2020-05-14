@@ -15,4 +15,8 @@
     <ProjectReference Include="..\Accupay.DB\AccuPay.DB.vbproj" />
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Data\EntityFrameworkCore\Converters\" />
+  </ItemGroup>
 </Project>
