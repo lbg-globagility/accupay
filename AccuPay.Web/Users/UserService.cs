@@ -41,5 +41,30 @@ namespace AccuPay.Web.Users
                 throw new Exception();
             }
         }
+
+        public async Task<UserDto> Update(Guid id, UpdateUserDto dto)
+        {
+            var user = await _users.FindByIdAsync(id.ToString());
+
+            user.FirstName = dto.FirstName;
+            user.LastName = dto.LastName;
+
+            var result = await _users.UpdateAsync(user);
+            if (result.Succeeded)
+            {
+                return new UserDto()
+                {
+                    Id = user.Id,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Email = user.Email
+                };
+            }
+            else
+            {
+                // Probably not the best way to return errors
+                throw new Exception();
+            }
+        }
     }
 }

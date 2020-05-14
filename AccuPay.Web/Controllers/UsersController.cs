@@ -43,9 +43,11 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult> Update()
+        public async Task<ActionResult<UserDto>> Update(Guid id, [FromBody] UpdateUserDto dto)
         {
-            throw new NotImplementedException();
+            var userDto = await _service.Update(id, dto);
+
+            return userDto;
         }
     }
 }
