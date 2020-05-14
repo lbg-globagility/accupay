@@ -1,7 +1,9 @@
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -48,6 +50,24 @@ namespace AccuPay.Web.Controllers
             var userDto = await _service.Update(id, dto);
 
             return userDto;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<UserDto>>> List([FromBody] PageOptions options)
+        {
+            var (users, count) = await _repository.List(options);
+
+            var dtos = users.Select(t =>
+                new UserDto()
+                {
+                    Id = t.Id,
+                    FirstName = t.FirstName,
+                    LastName = t.LastName,
+                    Email = t.Email
+                }
+            );
+
+            return new PaginatedList<UserDto>(dtos, count, 1, 1);
         }
     }
 }
