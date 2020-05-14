@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class ThirteenthMonthPayReportProvider
@@ -9,17 +8,9 @@ Public Class ThirteenthMonthPayReportProvider
     Public Property Name As String = "Thirteenth Month Pay (Detailed)" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Sub New(payPeriodService As PayPeriodService)
-
-        _payPeriodService = payPeriodService
-
-    End Sub
-
     Public Sub Run() Implements IReportProvider.Run
 
-        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection(_payPeriodService)
+        Dim n_PayrollSummaDateSelection As New PayrollSummaDateSelection
 
         If n_PayrollSummaDateSelection.ShowDialog = Windows.Forms.DialogResult.OK Then
 

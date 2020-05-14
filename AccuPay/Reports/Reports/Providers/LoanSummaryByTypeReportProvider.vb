@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
 
 Public Class LoanSummaryByTypeReportProvider
@@ -9,16 +8,8 @@ Public Class LoanSummaryByTypeReportProvider
     Public Property Name As String = "Loan Summary by Type" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Sub New(payPeriodService As PayPeriodService)
-
-        _payPeriodService = payPeriodService
-
-    End Sub
-
     Public Sub Run() Implements IReportProvider.Run
-        Dim dateSelector As New PayrollSummaDateSelection(_payPeriodService)
+        Dim dateSelector As New PayrollSummaDateSelection
 
         If Not dateSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return
