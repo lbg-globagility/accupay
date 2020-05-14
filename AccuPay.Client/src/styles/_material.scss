@@ -1,0 +1,49 @@
+@import 'styles/variables';
+@import 'styles/material/mat-button-toggle';
+@import 'styles/material/mat-button';
+@import 'styles/material/mat-card';
+@import 'styles/material/mat-form-field';
+@import 'styles/material/mat-icon';
+@import 'styles/material/mat-list';
+@import 'styles/material/mat-progress-bar';
+@import 'styles/material/mat-select';
+@import 'styles/material/mat-table';
+@import 'styles/material/mat-tabs';
+@import 'styles/material/mat-typography';
+
+.loading-spinner {
+  display: flex;
+  justify-content: center;
+}
+
+.app-empty-table {
+  width: 100%;
+  padding: 48px;
+  box-sizing: border-box;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.54);
+  background: white;
+  border-bottom: $app-border;
+}
+
+.app-page-header {
+  display: flex;
+  justify-content: space-between;
+
+  &__actions {
+    button {
+      margin-left: $app-space-1;
+    }
+  }
+}
+
+.app-ellipsis {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.chart {
+  display: block;
+  width: 100%;
+}

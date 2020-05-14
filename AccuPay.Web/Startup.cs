@@ -21,8 +21,7 @@ namespace AccuPay.Web
         {
             services.AddControllers();
             services.AddDatabase(Configuration);
-            // better if put this in another extension file
-            services.AddScoped<BranchRepository>();
+            services.AddAccuPayCoreServices();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

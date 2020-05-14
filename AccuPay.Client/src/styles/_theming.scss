@@ -1,0 +1,35 @@
+$light-primary-text: white;
+$dark-primary-text: black;
+
+$mat-slate-blue: (
+  50: #eceff1,
+  100: #cfd8dc,
+  200: #afbec5,
+  300: #8ea3ae,
+  400: #76909c,
+  500: #5e7c8b,
+  600: #567483,
+  700: #4c6978,
+  800: #425f6e,
+  900: #314c5b,
+  A100: #a9e0ff,
+  A200: #76cdff,
+  A400: #43baff,
+  A700: #2ab1ff,
+  contrast: (
+    50: $dark-primary-text,
+    100: $dark-primary-text,
+    200: $dark-primary-text,
+    300: $dark-primary-text,
+    400: $dark-primary-text,
+    500: $light-primary-text,
+    600: $light-primary-text,
+    700: $light-primary-text,
+    800: $light-primary-text,
+    900: $light-primary-text,
+    A100: $dark-primary-text,
+    A200: $dark-primary-text,
+    A400: $dark-primary-text,
+    A700: $dark-primary-text
+  )
+);

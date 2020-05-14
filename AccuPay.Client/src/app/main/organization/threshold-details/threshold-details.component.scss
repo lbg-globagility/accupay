@@ -1,0 +1,28 @@
+@import 'styles/variables';
+
+:host {
+  display: block;
+}
+
+mat-card {
+  margin-bottom: $app-space-2;
+}
+
+.color-column {
+  padding: 0 app-space(4);
+  text-align: center;
+}
+
+.color-input {
+  width: 100px;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.mat-error {
+  font-size: x-small;
+}

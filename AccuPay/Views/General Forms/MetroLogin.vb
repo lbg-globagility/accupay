@@ -89,13 +89,6 @@ Public Class MetroLogin
         services.AddTransient(Of BenchmarkPayrollHelper)
         services.AddTransient(Of OvertimeRateService)
 
-        services.AddTransient(Of PayrollResources)
-        services.AddTransient(Of PayrollGeneration)
-        services.AddTransient(Of PolicyHelper)
-        services.AddTransient(Of ListOfValueService)
-        services.AddTransient(Of PayPeriodService)
-        services.AddTransient(Of SystemOwnerService)
-
         services.AddTransient(Of ActualTimeEntryRepository)
         services.AddTransient(Of AddressRepository)
         services.AddTransient(Of AdjustmentRepository)
@@ -159,12 +152,12 @@ Public Class MetroLogin
         services.AddTransient(Of PayrollGeneration)
         services.AddTransient(Of PayrollResources)
 
-        services.AddTransient(Of ActualTimeEntryPolicy)
-        services.AddTransient(Of AllowancePolicy)
-        services.AddTransient(Of PhilHealthPolicy)
         services.AddTransient(Of PolicyHelper)
-        services.AddTransient(Of RenewLeaveBalancePolicy)
-        services.AddTransient(Of TimeEntryPolicy)
+        'services.AddTransient(Of ActualTimeEntryPolicy)
+        'services.AddTransient(Of AllowancePolicy)
+        'services.AddTransient(Of PhilHealthPolicy)
+        'services.AddTransient(Of RenewLeaveBalancePolicy)
+        'services.AddTransient(Of TimeEntryPolicy)
 
         services.AddTransient(Of BpiInsuranceAmountReportDataService)
         services.AddTransient(Of CinemaTardinessReportDataService)
