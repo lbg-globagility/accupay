@@ -1,20 +1,11 @@
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayRateForm
     Dim view_ID As Integer = Nothing
 
     Dim _now
-
-    Private _overtimeRateService As OvertimeRateService
-
-    Sub New(overtimeRateService As OvertimeRateService)
-
-        InitializeComponent()
-
-        _overtimeRateService = overtimeRateService
-
-    End Sub
 
     Private Sub Payrate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
@@ -24,7 +15,7 @@ Public Class PayRateForm
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
@@ -896,7 +887,8 @@ Public Class PayRateForm
 
         'Dim ratevalues = Split(holidaypayrate, ",")
 
-        Dim overtimeRates = Await _overtimeRateService.GetOvertimeRates()
+        Dim overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+        Dim overtimeRates = Await overtimeRateService.GetOvertimeRates()
 
         Dim overtimeRate As New OvertimeRate.RateGroup
 

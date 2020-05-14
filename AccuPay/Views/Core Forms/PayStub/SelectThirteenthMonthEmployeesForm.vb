@@ -6,8 +6,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectThirteenthMonthEmployeesForm
 
@@ -17,28 +17,21 @@ Public Class SelectThirteenthMonthEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private ReadOnly _listOfValueService As ListOfValueService
+    Private _listOfValueService As ListOfValueService
 
-    Private ReadOnly _systemOwnerService As SystemOwnerService
+    Private _systemOwnerService As SystemOwnerService
 
-    Private ReadOnly _actualTimeEntryRepository As ActualTimeEntryRepository
+    Private _payPeriodRepository As PayPeriodRepository
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+    Private _paystubRepository As PaystubRepository
 
-    Private ReadOnly _paystubRepository As PaystubRepository
+    Private _timeEntryRepository As TimeEntryRepository
 
-    Private ReadOnly _timeEntryRepository As TimeEntryRepository
+    Private _actualTimeEntryRepository As ActualTimeEntryRepository
 
-    Private ReadOnly _salaryRepository As SalaryRepository
+    Private _salaryRepository As SalaryRepository
 
-    Sub New(currentPayPeriodId As Integer,
-            listOfValueService As ListOfValueService,
-            systemOwnerService As SystemOwnerService,
-            actualTimeEntryRepository As ActualTimeEntryRepository,
-            payPeriodRepository As PayPeriodRepository,
-            paystubRepository As PaystubRepository,
-            salaryRepository As SalaryRepository,
-            timeEntryRepository As TimeEntryRepository)
+    Sub New(currentPayPeriodId As Integer)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -48,19 +41,19 @@ Public Class SelectThirteenthMonthEmployeesForm
 
         _employeeModels = New List(Of EmployeeModel)
 
-        _listOfValueService = listOfValueService
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _systemOwnerService = systemOwnerService
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _actualTimeEntryRepository = actualTimeEntryRepository
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _payPeriodRepository = payPeriodRepository
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
-        _paystubRepository = paystubRepository
+        _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
 
-        _salaryRepository = salaryRepository
+        _actualTimeEntryRepository = MainServiceProvider.GetRequiredService(Of ActualTimeEntryRepository)
 
-        _timeEntryRepository = timeEntryRepository
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
     End Sub
 
@@ -141,7 +134,7 @@ Public Class SelectThirteenthMonthEmployeesForm
                                                                           salary,
                                                                           settings,
                                                                           employee.PaystubObject.AllowanceItems,
-                                                                        _systemOwnerService)
+                                                                          _systemOwnerService)
 
                 employee.UpdateNewThirteenthMonthPayAmount(amount:=newPaystubThirteenthMonthPay.Amount,
                                                         basicPay:=newPaystubThirteenthMonthPay.BasicPay)

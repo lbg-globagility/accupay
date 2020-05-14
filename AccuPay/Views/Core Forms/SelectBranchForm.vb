@@ -3,20 +3,22 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectBranchForm
 
-    Public Property SelectedBranch As Branch
-
     Private _branches As List(Of Branch)
 
-    Private ReadOnly _branchRepository As BranchRepository
+    Public Property SelectedBranch As Branch
 
-    Sub New(branchRepository As BranchRepository)
+    Private _branchRepository As BranchRepository
+
+    Sub New()
 
         InitializeComponent()
 
-        _branchRepository = branchRepository
+        _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
+
     End Sub
 
     Private Async Sub SelectBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

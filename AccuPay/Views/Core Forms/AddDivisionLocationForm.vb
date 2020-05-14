@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionLocationForm
 
@@ -12,19 +13,13 @@ Public Class AddDivisionLocationForm
 
     Public Property IsSaved As Boolean
 
-    Private _divisionRepository As DivisionRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(divisionRepository As DivisionRepository, userActivityRepository As UserActivityRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _divisionRepository = divisionRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -53,7 +48,9 @@ Public Class AddDivisionLocationForm
         Try
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
-            Me.NewDivision = Await _divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
+            Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+            Me.NewDivision = Await divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
 
             _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
 

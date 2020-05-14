@@ -230,24 +230,22 @@ Public Class EmployeeTreeView
         Private _divisions As IList(Of Division)
 
         Private _view As EmployeeTreeView
+
         Private _models As List(Of OvertimeModel)
 
         Private _organizationId As Integer
 
-        Private ReadOnly _divisionRepository As DivisionRepository
+        Private _divisionRepository As DivisionRepository
 
-        Private ReadOnly _employeeRepository As EmployeeRepository
+        Private _employeeRepository As EmployeeRepository
 
         Public Sub New(view As EmployeeTreeView)
             _view = view
-
-            Using MainServiceProvider
-                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)()
-                _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
-
-            End Using
-
             _organizationId = view.OrganizationID
+
+            _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
         End Sub
 
         Public Sub Load()
@@ -271,15 +269,15 @@ Public Class EmployeeTreeView
         Private Function LoadDivisions() As IList(Of Division)
 
             Return _divisionRepository.GetAll(z_OrganizationID).
-                                OrderBy(Function(d) d.Name).
-                                ToList()
+                                        OrderBy(Function(d) d.Name).
+                                        ToList()
         End Function
 
         Private Function LoadEmployees() As IList(Of Employee)
 
             Dim employees = _employeeRepository.
-                                GetAllWithDivisionAndPosition(z_OrganizationID).
-                                ToList
+                                    GetAllWithDivisionAndPosition(z_OrganizationID).
+                                    ToList
 
             Return employees.
                         OrderBy(Function(e) e.LastName).

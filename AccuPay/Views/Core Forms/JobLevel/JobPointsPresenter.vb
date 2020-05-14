@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay.JobLevels
 
@@ -23,24 +24,20 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
-        Private _employeeRepository As EmployeeRepository
+        Private _employeeRepo As EmployeeRepository
 
-        Private _salaryRepository As SalaryRepository
+        Private _salaryRepo As SalaryRepository
 
-        Private _jobLevelRepository As JobLevelRepository
+        Private _jobLevelRepo As JobLevelRepository
 
-        Public Sub New(view As IJobPointsView,
-                       employeeRepository As EmployeeRepository,
-                       salaryRepository As SalaryRepository,
-                       jobLevelRepository As JobLevelRepository)
-
+        Public Sub New(view As IJobPointsView)
             _view = view
 
-            _employeeRepository = employeeRepository
+            _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-            _salaryRepository = salaryRepository
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
-            _jobLevelRepository = jobLevelRepository
+            _jobLevelRepo = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
 
         End Sub
 
@@ -91,13 +88,13 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Function GetJobLevels() As ICollection(Of JobLevel)
-            Return _jobLevelRepository.GetAll(z_OrganizationID).ToList
+            Return _jobLevelRepo.GetAll(z_OrganizationID).ToList
         End Function
 
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))
 
-            Dim fetchEmployees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
-            Dim salaries = Await _salaryRepository.GetAll(z_OrganizationID)
+            Dim fetchEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+            Dim salaries = Await _salaryRepo.GetAll(z_OrganizationID)
 
             Dim employees =
                 (From e In fetchEmployees

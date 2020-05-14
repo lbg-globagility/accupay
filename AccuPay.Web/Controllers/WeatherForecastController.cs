@@ -5,6 +5,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
 {
@@ -19,18 +20,56 @@ namespace AccuPay.Web.Controllers
 
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly BranchRepository _branchRepository;
+        private readonly EmployeeRepository _employeeRepository;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
-                                        BranchRepository branchRepository)
+                                        BranchRepository branchRepository,
+                                        EmployeeRepository employeeRepository)
         {
             _logger = logger;
             _branchRepository = branchRepository;
+            this._employeeRepository = employeeRepository;
         }
 
         [HttpGet]
         public IEnumerable<Branch> Get()
         {
             return _branchRepository.GetAll();
+        }
+
+        [HttpGet("employees")]
+        public async Task<IEnumerable<Employee>> Employees()
+        {
+            int organizationId = 2;
+            return await _employeeRepository.GetAllActiveAsync(organizationId);
+        }
+
+        [HttpGet("employees/{employeeNumber}")]
+        public async Task<Employee> GetEmployee(string employeeNumber)
+        {
+            int organizationId = 2;
+            return await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber, organizationId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Branch branch)
+        {
+            await _branchRepository.CreateAsync(branch);
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, Branch branch)
+        {
+            await _branchRepository.UpdateAsync(branch);
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id, Branch branch)
+        {
+            await _branchRepository.DeleteAsync(branch);
+            return Ok();
         }
 
         //[HttpGet]

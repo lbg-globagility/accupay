@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOvertimeForm
     Public Property IsSaved As Boolean
@@ -12,25 +13,21 @@ Public Class AddOvertimeForm
 
     Private _currentEmployee As Employee
 
-    Private _newOvertime As Overtime
+    Private _newOvertime As New Overtime()
 
     Private _overtimeRepository As OvertimeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employee As Employee,
-            overtimeRepository As OvertimeRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
-        _overtimeRepository = overtimeRepository
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
 
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 

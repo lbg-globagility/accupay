@@ -1,4 +1,7 @@
-﻿Imports AccuPay.Data.Repositories
+﻿Option Strict On
+
+Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SelectPayPeriodSimple
 
@@ -12,11 +15,12 @@ Public Class SelectPayPeriodSimple
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Sub New(payPeriodRepository As PayPeriodRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _payPeriodRepository = payPeriodRepository
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
     End Sub
 
     Private Sub SelectPayPeriodSimple_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -30,7 +34,7 @@ Public Class SelectPayPeriodSimple
     End Sub
 
     Private Sub UpdateDetails()
-        labelCurrentYear.Text = _currentYear
+        labelCurrentYear.Text = _currentYear.ToString()
 
         linkPreviousYear.Text = $"← {_currentYear - 1}"
         linkNextYear.Text = $"{_currentYear + 1} →"
@@ -58,11 +62,14 @@ Public Class SelectPayPeriodSimple
         gridPeriods.DataSource = source
     End Sub
 
-    Private Sub MoveYear(sender As LinkLabel, e As EventArgs) Handles linkPreviousYear.Click, linkNextYear.Click
+    Private Sub MoveYear(sender As Object, e As EventArgs) Handles linkPreviousYear.Click, linkNextYear.Click
+
+        Dim linkLabel = CType(sender, LinkLabel)
+
         Dim addend = 0
-        If sender.Name = linkPreviousYear.Name Then
+        If linkLabel.Name = linkPreviousYear.Name Then
             addend = -1
-        ElseIf sender.Name = linkNextYear.Name Then
+        ElseIf linkLabel.Name = linkNextYear.Name Then
             addend = 1
         End If
 

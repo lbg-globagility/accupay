@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Services
 Imports AccuPay.Data.Entities
-Imports AccuPay.Utils
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviewLeaveBalanceForm
 
@@ -18,28 +18,17 @@ Public Class PreviewLeaveBalanceForm
 
     Private policy As New RenewLeaveBalancePolicy
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _payPeriodRepository As PayPeriodRepository
-
     Private _listOfValueService As ListOfValueService
 
-    Private _payPeriodService As PayPeriodService
+    Private _employeeRepository As EmployeeRepository
 
-    Sub New(employeeRepository As EmployeeRepository,
-            payPeriodRepository As PayPeriodRepository,
-            listOfValueService As ListOfValueService,
-            payPeriodService As PayPeriodService)
+    Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = employeeRepository
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _payPeriodRepository = payPeriodRepository
-
-        _listOfValueService = listOfValueService
-
-        _payPeriodService = payPeriodService
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -69,9 +58,7 @@ Public Class PreviewLeaveBalanceForm
         Dim result As DialogResult
         Dim isOk As Boolean = False
 
-        Using dialog = New DateRangePickerDialog(_payPeriodRepository,
-                                                 _payPeriodService,
-                                                 removePayPeriodValidation:=True)
+        Using dialog = New DateRangePickerDialog(removePayPeriodValidation:=True)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then

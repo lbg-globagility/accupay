@@ -4,6 +4,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay.Views.Employees
 
@@ -19,33 +20,29 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityPolicy As SocialSecurityPolicy
 
-        Private _listOfValueService As ListOfValueService
-
         Private _philHealthBracketRepository As PhilHealthBracketRepository
 
         Private _salaryRepository As SalaryRepository
 
         Private _socialSecurityBracketRepository As SocialSecurityBracketRepository
 
+        Private _listOfValueService As ListOfValueService
+
         Private _salaries As IList(Of Salary)
 
         Private _currentSalary As Salary
 
-        Public Sub New(view As SalaryTab2,
-                        listOfValueService As ListOfValueService,
-                        philHealthBracketRepository As PhilHealthBracketRepository,
-                        salaryRepository As SalaryRepository,
-                        socialSecurityBracketRepository As SocialSecurityBracketRepository)
-
+        Public Sub New(view As SalaryTab2)
             _view = view
 
-            _listOfValueService = listOfValueService
+            _philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of PhilHealthBracketRepository)
 
-            _philHealthBracketRepository = philHealthBracketRepository
+            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
-            _salaryRepository = salaryRepository
+            _socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of SocialSecurityBracketRepository)
 
-            _socialSecurityBracketRepository = socialSecurityBracketRepository
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
         End Sub
 
         Private Sub OnLoad() Handles _view.Init

@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports System.Threading.Tasks
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Namespace Global.AccuPay.Helpers
@@ -38,9 +38,8 @@ Namespace Global.AccuPay.Helpers
 
         End Sub
 
-        Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates,
-                                                           employeeRepository As EmployeeRepository) _
-                                                           As Task(Of FileInfo)
+        Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 

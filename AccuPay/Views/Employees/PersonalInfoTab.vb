@@ -7,18 +7,6 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PersonalInfoTab
 
-    Private _positionRepository As PositionRepository
-
-    Sub New()
-
-        InitializeComponent()
-
-        Using MainServiceProvider
-            _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)()
-        End Using
-
-    End Sub
-
     Private Sub PersonalInfoTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If DesignMode Then
             Return
@@ -80,7 +68,8 @@ Public Class PersonalInfoTab
         Dim positionDtos = New List(Of PositionDto) From {
             New PositionDto(Nothing)}
 
-        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
         positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
 

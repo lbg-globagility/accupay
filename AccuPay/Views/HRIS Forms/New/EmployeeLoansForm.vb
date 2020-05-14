@@ -7,8 +7,11 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLoansForm
+
+    Private _systemOwnerService As SystemOwnerService
 
     Private sysowner_is_benchmark As Boolean
 
@@ -26,6 +29,14 @@ Public Class EmployeeLoansForm
 
     Private _currentLoanTransactions As List(Of LoanTransaction)
 
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private Const LOAN_HISTORY_TAB_TEXT As String = "Loan History"
@@ -36,24 +47,7 @@ Public Class EmployeeLoansForm
 
     Private loanInterestPercentageBeforeTextChange As Decimal
 
-    Private _systemOwnerService As SystemOwnerService
-
-    Private _employeeRepository As EmployeeRepository
-
-    Private _productRepository As ProductRepository
-
-    Private _listOfValueRepository As ListOfValueRepository
-
-    Private _loanScheduleRepository As LoanScheduleRepository
-
-    Private _userActivityRepository As UserActivityRepository
-
-    Sub New(systemOwnerService As SystemOwnerService,
-            employeeRepository As EmployeeRepository,
-            productRepository As ProductRepository,
-            listOfValueRepository As ListOfValueRepository,
-            loanScheduleRepository As LoanScheduleRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -69,22 +63,17 @@ Public Class EmployeeLoansForm
 
         _currentLoanTransactions = New List(Of LoanTransaction)
 
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
-
-        _systemOwnerService = systemOwnerService
-
-        _employeeRepository = employeeRepository
-
-        _productRepository = productRepository
-
-        _listOfValueRepository = listOfValueRepository
-
-        _loanScheduleRepository = loanScheduleRepository
-
-        _userActivityRepository = userActivityRepository
-
-        sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
     End Sub
 
     Private Async Sub EmployeeLoansForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -212,11 +201,13 @@ Public Class EmployeeLoansForm
         Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoan.TotalLoanAmount)
         Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoan.DeductionAmount)
 
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
         If Me._currentLoanTransactions.Count = 0 AndAlso
             (Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
             Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_COMPLETE) Then
 
-            Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
+            Dim numberOfPayPeriod = loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
 
             Me._currentLoan.TotalBalanceLeft = totalLoanAmount
             Me._currentLoan.NoOfPayPeriod = numberOfPayPeriod
@@ -225,12 +216,12 @@ Public Class EmployeeLoansForm
 
         Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoan.TotalBalanceLeft)
 
-        Me._currentLoan.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
+        Me._currentLoan.LoanPayPeriodLeft = loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
 
-        Dim form As New AddLoanTypeForm(_productRepository)
+        Dim form As New AddLoanTypeForm()
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -284,7 +275,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
-                Await _loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
+                Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+                Await loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -330,12 +322,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim form As New AddLoanScheduleForm(employee,
-                                            _productRepository,
-                                            _listOfValueRepository,
-                                            _loanScheduleRepository,
-                                            _userActivityRepository,
-                                            _systemOwnerService)
+        Dim form As New AddLoanScheduleForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -430,7 +417,8 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim currentLoanSchedule = Await _loanScheduleRepository.
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim currentLoanSchedule = Await loanScheduleRepository.
                                             GetByIdAsync(Me._currentLoan.RowID.Value)
 
         If currentLoanSchedule Is Nothing Then
@@ -460,7 +448,7 @@ Public Class EmployeeLoansForm
             End If
         Else
 
-            Dim loanTransactions = Await _loanScheduleRepository.
+            Dim loanTransactions = Await loanScheduleRepository.
                 GetLoanTransactionsWithPayPeriodAsync(Me._currentLoan.RowID.Value)
 
             If loanTransactions.Count > 0 Then
@@ -492,7 +480,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                     Async Function()
-                                        Await _loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
+                                        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+                                        Await loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
 
                                         _userActivityRepository.RecordDelete(z_User,
                                                                              FormEntityName,
@@ -507,11 +496,7 @@ Public Class EmployeeLoansForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportLoansForm(_employeeRepository,
-                                         _loanScheduleRepository,
-                                         _listOfValueRepository,
-                                         _productRepository,
-                                         _userActivityRepository)
+        Using form = New ImportLoansForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -533,7 +518,7 @@ Public Class EmployeeLoansForm
 
     Private Sub EmployeeLoansForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
         myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
@@ -575,7 +560,8 @@ Public Class EmployeeLoansForm
 
     Private Sub LoadLoanStatus()
 
-        Dim statusList = _loanScheduleRepository.GetStatusList()
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim statusList = loanScheduleRepository.GetStatusList()
 
         statusList.Remove(LoanScheduleRepository.STATUS_COMPLETE)
 
@@ -613,7 +599,8 @@ Public Class EmployeeLoansForm
         Dim cancelledChecked = chkCancelledFilter.Checked
         Dim completeChecked = chkCompleteFilter.Checked
 
-        Dim loanSchedules = Await _loanScheduleRepository.
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim loanSchedules = Await loanScheduleRepository.
                                     GetByEmployeeAsync(currentEmployee.RowID.Value)
 
         Dim statusFilter = CreateStatusFilter()
@@ -667,8 +654,9 @@ Public Class EmployeeLoansForm
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoan()
         If currentLoanSchedule Is Nothing Then Return
 
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
-            (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
+            (Await loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
 
         LoanHistoryGridView.DataSource = Me._currentLoanTransactions
 
@@ -1009,7 +997,7 @@ Public Class EmployeeLoansForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

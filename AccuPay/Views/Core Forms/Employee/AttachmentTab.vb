@@ -34,12 +34,10 @@ Public Class AttachmentTab
 
         dgvAttachments.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)()
-            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)()
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        End Using
     End Sub
 
     Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
@@ -209,7 +207,7 @@ Public Class AttachmentTab
     End Sub
 
     Private Sub ToolStripButton1_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

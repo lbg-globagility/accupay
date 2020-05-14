@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddPositionForm
 
@@ -23,28 +24,19 @@ Public Class AddPositionForm
 
     Private _divisionRepository As DivisionRepository
 
-    Private _positionRepository As PositionRepository
-
     Private _jobLevelRepository As JobLevelRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(divisionRepository As DivisionRepository,
-            positionRepository As PositionRepository,
-            jobLevelRepository As JobLevelRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _divisionRepository = divisionRepository
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
 
-        _positionRepository = positionRepository
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
 
-        _jobLevelRepository = jobLevelRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -135,7 +127,8 @@ Public Class AddPositionForm
 
     Private Async Function SavePosition(sender As Object) As Task
 
-        Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition,
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Me.LastPositionAdded = Await positionRepository.SaveAsync(Me._newPosition,
                                                                    organizationId:=z_OrganizationID,
                                                                     divisionId:=Me._newPosition.DivisionID.Value)
 

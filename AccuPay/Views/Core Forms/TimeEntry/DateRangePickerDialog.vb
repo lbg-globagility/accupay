@@ -7,6 +7,7 @@ Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DateRangePickerDialog
 
@@ -32,12 +33,7 @@ Public Class DateRangePickerDialog
 
     Private _payPeriodRepository As PayPeriodRepository
 
-    Private _payPeriodService As PayPeriodService
-
-    Sub New(payPeriodRepository As PayPeriodRepository,
-            payPeriodService As PayPeriodService,
-            Optional passedPayPeriod As IPayPeriod = Nothing,
-            Optional removePayPeriodValidation As Boolean = False)
+    Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -47,9 +43,7 @@ Public Class DateRangePickerDialog
 
         _removePayPeriodValidation = removePayPeriodValidation
 
-        _payPeriodRepository = payPeriodRepository
-
-        _payPeriodService = payPeriodService
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -91,10 +85,10 @@ Public Class DateRangePickerDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            currentPayPeriod = Await _payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(
-                                                z_OrganizationID,
-                                                New List(Of IPayPeriod)(_payperiods))
+            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+            currentPayPeriod = Await payPeriodService.GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(
+                                                                z_OrganizationID,
+                                                                New List(Of IPayPeriod)(_payperiods))
         Else
             currentPayPeriod = _passedPayPeriod
 
@@ -182,10 +176,13 @@ Public Class DateRangePickerDialog
 
     Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
-        Dim validate = Await _payPeriodService.
-                        ValidatePayPeriodAction(_currentPayperiod.RowID, z_OrganizationID)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
 
-        If validate = FunctionResult.Failed Then
+        Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
+                                            _currentPayperiod.RowID,
+                                            z_OrganizationID)
+
+        If _removePayPeriodValidation = False AndAlso validate = FunctionResult.Failed Then
 
             MessageBoxHelper.Warning(validate.Message)
             Return

@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLeavesForm
 
@@ -21,23 +22,15 @@ Public Class EmployeeLeavesForm
 
     Private _changedLeaves As List(Of Leave)
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Private _leaveRepository As LeaveRepository
-
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _leaveService As LeaveService
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
-    Sub New(leaveRepository As LeaveRepository,
-            employeeRepository As EmployeeRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository,
-            leaveService As LeaveService)
+    Sub New()
 
         ' This call is required by the designer.
         InitializeComponent()
@@ -52,17 +45,13 @@ Public Class EmployeeLeavesForm
 
         _changedLeaves = New List(Of Leave)
 
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
-
-        _leaveRepository = leaveRepository
-
-        _employeeRepository = employeeRepository
-
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
-
-        _leaveService = leaveService
 
     End Sub
 
@@ -90,7 +79,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub EmployeeLeavesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
@@ -99,11 +88,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Dim importForm As New ImportLeaveForm(_employeeRepository,
-                                              _leaveRepository,
-                                              _productRepository,
-                                              _userActivityRepository,
-                                              _leaveService)
+        Dim importForm As New ImportLeaveForm()
         If Not importForm.ShowDialog() = DialogResult.OK Then Return
 
         Dim succeed = Await importForm.SaveAsync()
@@ -131,7 +116,8 @@ Public Class EmployeeLeavesForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _leaveRepository.GetStatusList()
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        StatusComboBox.DataSource = leaveRepository.GetStatusList()
 
     End Sub
 
@@ -246,7 +232,8 @@ Public Class EmployeeLeavesForm
     Private Async Function LoadLeaves(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentLeaves = (Await _leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Me._currentLeaves = (Await leaveRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
 
@@ -463,7 +450,8 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
+                                                Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+                                                Await leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
@@ -523,11 +511,7 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        Dim form As New AddLeaveForm(employee,
-                                    _leaveService,
-                                    _leaveRepository,
-                                    _productRepository,
-                                    _userActivityRepository)
+        Dim form As New AddLeaveForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -617,7 +601,8 @@ Public Class EmployeeLeavesForm
             Return
         End If
 
-        Dim currentLeave = Await _leaveRepository.GetByIdAsync(Me._currentLeave.RowID.Value)
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim currentLeave = Await leaveRepository.GetByIdAsync(Me._currentLeave.RowID.Value)
 
         If currentLeave Is Nothing Then
 
@@ -671,9 +656,9 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _leaveService.
-                                            SaveManyAsync(changedLeaves,
-                                                        organizationId:=z_OrganizationID)
+                                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                                            Await leaveService.SaveManyAsync(changedLeaves,
+                                                                            z_OrganizationID)
 
                                             For Each item In changedLeaves
                                                 RecordUpdate(item)
@@ -700,7 +685,7 @@ Public Class EmployeeLeavesForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

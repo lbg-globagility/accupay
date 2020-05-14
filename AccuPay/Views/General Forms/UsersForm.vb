@@ -3,23 +3,22 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UsersForm
     Private isNew As Boolean = False
     Dim rowid As Integer
 
+    Private _policyHelper As PolicyHelper
+
     Private dataSource As List(Of UserBoundItem)
 
-    Private ReadOnly _userRepository As UserRepository
-
-    Private ReadOnly _listOfValueService As ListOfValueService
-
-    Sub New(userRepository As UserRepository, listOfValueService As ListOfValueService)
+    Sub New()
 
         InitializeComponent()
 
-        _userRepository = userRepository
-        _listOfValueService = listOfValueService
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -33,7 +32,8 @@ Public Class UsersForm
     End Sub
 
     Private Async Sub FillUsers()
-        Dim users = Await _userRepository.GetAllActiveWithPositionAsync()
+        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim users = Await userRepository.GetAllActiveWithPositionAsync()
 
         Dim source = users.Select(Function(u) New UserBoundItem(u))
         dataSource = source.ToList()
@@ -323,8 +323,11 @@ Public Class UsersForm
             Return
         End If
 
+        Dim userRepositoryQuery = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim userRepositorySave = MainServiceProvider.GetRequiredService(Of UserRepository)
+
         If isNew Then
-            Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
+            Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
                 usernameExistsAlready()
                 Return
@@ -333,7 +336,7 @@ Public Class UsersForm
             Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
             ApplyChanges(newUser)
-            Await _userRepository.SaveAsync(newUser)
+            Await userRepositorySave.SaveAsync(newUser)
 
             myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
 
@@ -345,10 +348,10 @@ Public Class UsersForm
             Dim userBoundItem = GetUserBoundItem()
             If userBoundItem Is Nothing Then Return
 
-            Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
+            Dim user = Await userRepositoryQuery.GetByIdWithPositionAsync(userBoundItem.RowID)
 
             If username <> user.Username Then
-                Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
+                Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
                 If usernameExists Then
                     usernameExistsAlready()
                     Return
@@ -356,7 +359,7 @@ Public Class UsersForm
             End If
 
             ApplyChanges(user)
-            Await _userRepository.SaveAsync(user)
+            Await userRepositorySave.SaveAsync(user)
 
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
         End If
@@ -424,7 +427,7 @@ Public Class UsersForm
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
 
@@ -432,9 +435,7 @@ Public Class UsersForm
 
     Private Sub FillUserLevel()
 
-        Dim settings = _listOfValueService.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) Then
+        If _policyHelper.UseUserLevel Then
 
             UserLevelLabel.Visible = True
             UserLevelComboBox.Visible = True
@@ -549,7 +550,8 @@ Public Class UsersForm
             btnDelete.Enabled = False
 
             Dim user = GetUserBoundItem()
-            Await _userRepository.SoftDeleteAsync(user.RowID)
+            Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+            Await userRepository.SoftDeleteAsync(user.RowID)
 
             dgvUserList.ClearSelection()
 

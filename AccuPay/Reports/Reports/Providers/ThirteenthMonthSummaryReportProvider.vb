@@ -1,23 +1,13 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Services
-
 Public Class ThirteenthMonthSummaryReportProvider
     Implements IReportProvider
 
     Public Property Name As String = "Thirteenth Month Pay (Summary)" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
 
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Sub New(payPeriodService As PayPeriodService)
-
-        _payPeriodService = payPeriodService
-
-    End Sub
-
     Public Sub Run() Implements IReportProvider.Run
-        Dim payperiodSelector As New PayrollSummaDateSelection(_payPeriodService)
+        Dim payperiodSelector As New PayrollSummaDateSelection()
 
         If Not payperiodSelector.ShowDialog = Windows.Forms.DialogResult.OK Then
             Return

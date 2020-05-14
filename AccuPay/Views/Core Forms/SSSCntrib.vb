@@ -46,7 +46,7 @@ Public Class SSSCntrib
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Dim view_ID As Integer = Nothing

@@ -6,6 +6,7 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AdjustmentForm
 
@@ -19,15 +20,13 @@ Public Class AdjustmentForm
 
     Private _currentFormType As FormMode
 
-    Sub New(productRepository As ProductRepository, Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
+    Sub New(Optional adjustmentType As AdjustmentType = AdjustmentType.Blank)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-
-        _productRepository = productRepository
         _adjustmentType = adjustmentType
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
     End Sub
 

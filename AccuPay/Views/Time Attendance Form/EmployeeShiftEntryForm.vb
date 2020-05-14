@@ -3,6 +3,7 @@ Imports System.IO
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports OfficeOpenXml
@@ -42,22 +43,13 @@ Public Class EmployeeShiftEntryForm
 
     Private _shiftRepository As ShiftRepository
 
-    Sub New(systemOwnerService As SystemOwnerService, shiftRepository As ShiftRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _systemOwnerService = systemOwnerService
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _shiftRepository = shiftRepository
-    End Sub
-
-    Private TimeAttendForm As TimeAttendForm
-    Private MDIPrimaryForm As MDIPrimaryForm
-
-    Public Sub SetParentForms(timeAttendForm As TimeAttendForm, mDIPrimaryForm As MDIPrimaryForm)
-        Me.TimeAttendForm = timeAttendForm
-        Me.MDIPrimaryForm = mDIPrimaryForm
-
+        _shiftRepository = MainServiceProvider.GetRequiredService(Of ShiftRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -196,7 +188,7 @@ Public Class EmployeeShiftEntryForm
     End Sub
 
     Private Sub fillemployeeshift()
-        Dim new_link = New System.Windows.Forms.LinkLabel.Link()
+        Dim new_link = New LinkLabel.Link()
 
         new_link.Name = "First"
 
@@ -263,7 +255,7 @@ Public Class EmployeeShiftEntryForm
             End If
         End If
 
-        'TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
         ShiftList.Close()
         ShiftList.Dispose()
@@ -618,10 +610,10 @@ Public Class EmployeeShiftEntryForm
 
     Private Sub lblShiftEntry_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblShiftEntry.LinkClicked
         Dim n_ShiftEntryForm As New ShiftEntryForm
-        n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
+        n_ShiftEntryForm.FormBorderStyle = FormBorderStyle.FixedDialog
         n_ShiftEntryForm.StartPosition = FormStartPosition.CenterScreen
 
-        If n_ShiftEntryForm.ShowDialog = Windows.Forms.DialogResult.OK Then
+        If n_ShiftEntryForm.ShowDialog = DialogResult.OK Then
             If n_ShiftEntryForm.ShiftRowID <> Nothing Then
 
                 LoadShifts()
@@ -639,7 +631,7 @@ Public Class EmployeeShiftEntryForm
 
             Dim prompt = MessageBox.Show("Do you want to delete this employee shift ?", "Confirm deleting shift", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
 
-            If prompt = Windows.Forms.DialogResult.Yes Then
+            If prompt = DialogResult.Yes Then
                 Dim n_ExecSQLProcedure As New _
                     ExecSQLProcedure("DEL_employeeshift",
                                      Convert.ToInt32(dgvEmpShiftList.CurrentRow.Cells("c_RowIDShift").Value),
@@ -697,7 +689,7 @@ Public Class EmployeeShiftEntryForm
         browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
-        If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
+        If browsefile.ShowDialog() = DialogResult.OK Then
 
             filepath = IO.Path.GetFullPath(browsefile.FileName)
 
@@ -1026,7 +1018,7 @@ Public Class EmployeeShiftEntryForm
     Dim n_ShiftList As New ShiftList
 
     Private Sub dgvWeek_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvWeek.CellMouseDown
-        If e.Button = Windows.Forms.MouseButtons.Right _
+        If e.Button = MouseButtons.Right _
             And e.RowIndex > -1 Then
 
             dgvWeek.Item(e.ColumnIndex, e.RowIndex).Selected = True
@@ -1055,7 +1047,7 @@ Public Class EmployeeShiftEntryForm
                 n_ShiftList.Location = New Point(ptX,
                                                  ptY)
 
-                If n_ShiftList.ShowDialog("") = Windows.Forms.DialogResult.OK Then
+                If n_ShiftList.ShowDialog("") = DialogResult.OK Then
 
                     Dim i1 = Nothing
                     Dim i2 = Nothing
@@ -1091,7 +1083,7 @@ Public Class EmployeeShiftEntryForm
 
                 End If
             End If
-        ElseIf e.Button = Windows.Forms.MouseButtons.Left Then
+        ElseIf e.Button = MouseButtons.Left Then
         End If
     End Sub
 
@@ -1222,7 +1214,7 @@ Public Class EmployeeShiftEntryForm
     End Sub
 
     Private Sub dgvEmpShiftList_CellMouseDown(sender As Object, e As DataGridViewCellMouseEventArgs) Handles dgvEmpShiftList.CellMouseDown
-        If e.Button = Windows.Forms.MouseButtons.Right _
+        If e.Button = MouseButtons.Right _
             And btnDelete.Visible Then
 
             If e.ColumnIndex > -1 And e.RowIndex > -1 Then
@@ -1237,7 +1229,7 @@ Public Class EmployeeShiftEntryForm
     Private Sub DeleteSelectedShiftToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeleteSelectedShiftToolStripMenuItem.Click
         Dim prompt = MessageBox.Show("Do you want to delete this employee shift ?", "Confirm deleting shift", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question)
 
-        If prompt = Windows.Forms.DialogResult.Yes Then
+        If prompt = DialogResult.Yes Then
             Dim selected_dgvcells As DataGridViewSelectedRowCollection = dgvEmpShiftList.SelectedRows
             Dim empshiftRowIDs As New List(Of String)
             Dim row_index As New List(Of String)
@@ -1267,8 +1259,6 @@ Public Class EmployeeShiftEntryForm
             .StartPosition = FormStartPosition.CenterScreen
             .FormBorderStyle = FormBorderStyle.FixedDialog
         End With
-
-        n_EmployeeShiftMassUpdate.SetParentForms(TimeAttendForm, MDIPrimaryForm)
 
         n_EmployeeShiftMassUpdate.ShowDialog("")
     End Sub

@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
@@ -10,6 +9,7 @@ Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.ShiftSchedules
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportedShiftSchedulesForm
 
@@ -29,30 +29,21 @@ Public Class ImportedShiftSchedulesForm
 
     Public IsSaved As Boolean
 
-    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
-
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employeeDutyScheduleRepository As EmployeeDutyScheduleRepository,
-            employeeRepository As EmployeeRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _shiftScheduleRowRecords = New List(Of ShiftScheduleRowRecord)
 
         _dataSourceFailed = New List(Of ShiftScheduleModel)
 
-        _employeeDutyScheduleRepository = employeeDutyScheduleRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _employeeRepository = employeeRepository
-
-        _userActivityRepository = userActivityRepository
-
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
 #End Region
@@ -438,7 +429,8 @@ Public Class ImportedShiftSchedulesForm
                                             Distinct().
                                             ToArray()
 
-        Dim eDutyScheds = Await _employeeDutyScheduleRepository.
+        Dim employeeDutyScheduleRepositoryQuery = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+        Dim eDutyScheds = Await employeeDutyScheduleRepositoryQuery.
                             GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID,
                                                                     employeeIDs,
                                                                     datePeriod)
@@ -476,7 +468,8 @@ Public Class ImportedShiftSchedulesForm
         Await FunctionUtils.TryCatchFunctionAsync("Import Shift Schedule",
             Async Function()
 
-                Await _employeeDutyScheduleRepository.ChangeManyAsync(
+                Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
+                Await employeeDutyScheduleRepositorySave.ChangeManyAsync(
                                                         addedShifts:=addedShiftSchedules,
                                                          updatedShifts:=updatedShiftSchedules)
 

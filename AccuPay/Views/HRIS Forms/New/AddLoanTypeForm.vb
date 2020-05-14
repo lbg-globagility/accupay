@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanTypeForm
 
@@ -12,12 +13,11 @@ Public Class AddLoanTypeForm
 
     Public Property IsSaved As Boolean
 
-    Sub New(productRepository As ProductRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _productRepository = productRepository
-
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
     End Sub
 
     Private Sub AddLoanTypeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

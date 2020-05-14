@@ -1,20 +1,20 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UserActivityForm
     Public Property _type As String
+    Public Property _userActivityRepository As UserActivityRepository
 
-    Dim _userActivityRepository As UserActivityRepository
+    Public Sub New(type As String)
 
-    Public Sub New(type As String, userActivityRepository As UserActivityRepository
-                   )
         InitializeComponent()
 
         _type = type
 
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
 
     Private Class ActivityItem

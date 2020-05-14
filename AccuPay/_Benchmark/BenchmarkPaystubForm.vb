@@ -9,6 +9,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BenchmarkPaystubForm
 
@@ -22,13 +23,9 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRateService As OvertimeRateService
 
-    Private _payPeriodService As PayPeriodService
-
     Private _adjustmentRepository As AdjustmentRepository
 
     Private _employeeRepository As EmployeeRepository
-
-    Private _payPeriodRepository As PayPeriodRepository
 
     Private _paystubRepository As PaystubRepository
 
@@ -42,27 +39,22 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Sub New(overtimeRateService As OvertimeRateService,
-            payPeriodService As PayPeriodService,
-            adjustmentRepository As AdjustmentRepository,
-            employeeRepository As EmployeeRepository,
-            payPeriodRepository As PayPeriodRepository,
-            paystubRepository As PaystubRepository,
-            productRepository As ProductRepository,
-            salaryRepository As SalaryRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _overtimeRateService = overtimeRateService
-        _payPeriodService = payPeriodService
-        _adjustmentRepository = adjustmentRepository
-        _employeeRepository = employeeRepository
-        _salaryRepository = salaryRepository
-        _payPeriodRepository = payPeriodRepository
-        _paystubRepository = paystubRepository
-        _productRepository = productRepository
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+
+        _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -77,7 +69,7 @@ Public Class BenchmarkPaystubForm
 
     Private Sub BenchmarkPaystubForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
     End Sub
 
     Private Async Sub BenchmarkPaystubForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -139,7 +131,10 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await _payPeriodService.
+
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+        _currentPayPeriod = Await payPeriodService.
                                     GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
@@ -289,8 +284,8 @@ Public Class BenchmarkPaystubForm
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
 
-        Dim leaveBalanceInHours = (Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value))
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays(leaveBalanceInHours).ToString
+        Dim employeeLeave = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays(employeeLeave).ToString
 
         GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
@@ -777,7 +772,7 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
+        Dim form As New selectPayPeriod()
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then

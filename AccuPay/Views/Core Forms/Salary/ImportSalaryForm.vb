@@ -7,6 +7,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Salaries
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportSalaryForm
 
@@ -18,24 +19,17 @@ Public Class ImportSalaryForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _salaryRepository As SalaryRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employeeRepository As EmployeeRepository,
-            salaryRepository As SalaryRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
         InitializeComponent()
 
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
         Me.IsSaved = False
-
-        _employeeRepository = employeeRepository
-
-        _salaryRepository = salaryRepository
-
-        _userActivityRepository = userActivityRepository
-
     End Sub
 
     Private Async Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
@@ -187,7 +181,8 @@ Public Class ImportSalaryForm
 
         Try
 
-            Await _salaryRepository.SaveManyAsync(_salaries.ToList())
+            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            Await salaryRepository.SaveManyAsync(_salaries.ToList())
 
             Dim importList = New List(Of UserActivityItem)
             For Each item In _salaries

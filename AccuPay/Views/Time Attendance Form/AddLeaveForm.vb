@@ -5,12 +5,17 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLeaveForm
     Public Property IsSaved As Boolean
     Public Property ShowBalloonSuccess As Boolean
 
     Private Const FormEntityName As String = "Leave"
+
+    Private _currentEmployee As Employee
+
+    Private _newLeave As New Leave
 
     Private _leaveService As LeaveService
 
@@ -20,29 +25,19 @@ Public Class AddLeaveForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _currentEmployee As Employee
+    Sub New(employee As Employee)
 
-    Private _newLeave As Leave
-
-    Sub New(employee As Employee,
-            leaveService As LeaveService,
-            leaveRepository As LeaveRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
-
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
-        _leaveService = leaveService
+        _leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
 
-        _leaveRepository = leaveRepository
+        _leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
 
-        _productRepository = productRepository
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 

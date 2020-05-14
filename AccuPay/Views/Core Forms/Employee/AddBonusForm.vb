@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBonusForm
 
@@ -20,26 +21,19 @@ Public Class AddBonusForm
 
     Private _newBonus As New Bonus()
 
-    Private _bonusRepo As BonusRepository
-
     Private _productRepo As ProductRepository
 
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee,
-                   bonusRepo As BonusRepository,
-                   productRepo As ProductRepository,
-                   userActivityRepo As UserActivityRepository)
+    Public Sub New(employee As Employee)
 
         InitializeComponent()
 
         _employee = employee
 
-        _bonusRepo = bonusRepo
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _productRepo = productRepo
-
-        _userActivityRepo = userActivityRepo
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -50,7 +44,8 @@ Public Class AddBonusForm
 
         _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
-        _frequencies = _bonusRepo.GetFrequencyList
+        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _frequencies = bonusRepo.GetFrequencyList()
 
         BindDataSource()
         ClearForm()
@@ -126,9 +121,11 @@ Public Class AddBonusForm
                 .TaxableFlag = product.Status
             End With
 
-            Await _bonusRepo.CreateAsync(_newBonus)
+            Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+            Await bonusRepo.CreateAsync(_newBonus)
 
             _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newBonus.RowID), z_OrganizationID)
+
             succeed = True
         End Function)
 

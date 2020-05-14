@@ -13,22 +13,11 @@ Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BenchmarkPayrollForm
 
     Private Shared ReadOnly logger As ILog = LogManager.GetLogger("BenchmarkPayrollLogger")
-
-    Private ReadOnly _benchmarkPayrollHelper As BenchmarkPayrollHelper
-    Private ReadOnly _payrollResources As PayrollResources
-
-    Private ReadOnly _listOfValueService As ListOfValueService
-    Private ReadOnly _overtimeRateService As OvertimeRateService
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Private ReadOnly _employeeRepository As EmployeeRepository
-    Private ReadOnly _loanScheduleRepository As LoanScheduleRepository
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
-    Private ReadOnly _salaryRepository As SalaryRepository
 
     Private _currentPayPeriod As IPayPeriod
     Private _salaries As List(Of Salary)
@@ -46,7 +35,11 @@ Public Class BenchmarkPayrollForm
 
     Public _loanTransanctions As List(Of LoanTransaction)
 
+    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
+
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+
+    Private _payrollResources As PayrollResources
 
     Private _employeeRate As BenchmarkPaystubRate
 
@@ -62,33 +55,29 @@ Public Class BenchmarkPayrollForm
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
-    Sub New(benchmarkPayrollHelper As BenchmarkPayrollHelper,
-            payrollResources As PayrollResources,
-            payrollGenerator As PayrollGeneration,
-            listOfValueService As ListOfValueService,
-            overtimeRateService As OvertimeRateService,
-            payPeriodService As PayPeriodService,
-            employeeRepository As EmployeeRepository,
-            loanScheduleRepository As LoanScheduleRepository,
-            payPeriodRepository As PayPeriodRepository,
-            salaryRepository As SalaryRepository)
+    Private _listOfValueService As ListOfValueService
 
-        ' This call is required by the designer.
+    Private _overtimeRateService As OvertimeRateService
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _salaryRepository As SalaryRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Sub New()
+
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _benchmarkPayrollHelper = benchmarkPayrollHelper
-        _payrollResources = payrollResources
-        _payrollGenerator = payrollGenerator
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _listOfValueService = listOfValueService
-        _overtimeRateService = overtimeRateService
-        _payPeriodService = payPeriodService
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
-        _employeeRepository = employeeRepository
-        _loanScheduleRepository = loanScheduleRepository
-        _payPeriodRepository = payPeriodRepository
-        _salaryRepository = salaryRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -108,6 +97,16 @@ Public Class BenchmarkPayrollForm
 
     Private Async Function RefreshForm(Optional refreshPayPeriod As Boolean = True) As Task
         InitializeControls()
+
+        _benchmarkPayrollHelper = Await BenchmarkPayrollHelper.GetInstance(logger)
+
+        If _benchmarkPayrollHelper Is Nothing Then
+
+            MessageBoxHelper.ErrorMessage("Cannot initialize the payroll form properly. Please contact Globagility Inc.")
+
+            Return
+
+        End If
 
         DeductionComboBox.DataSource = _benchmarkPayrollHelper.DeductionList
         DeductionComboBox.SelectedIndex = -1
@@ -167,21 +166,28 @@ Public Class BenchmarkPayrollForm
         Dim paypFrom = _currentPayPeriod.PayFromDate
         Dim paypTo = _currentPayPeriod.PayToDate
 
-        If paypFrom = Nothing And paypTo = Nothing Then
-            Return
-        End If
+        Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
 
-        Dim loadTask = Task.Run(
-            Sub()
+        Dim loadTask = Task.Factory.StartNew(
+            Function()
+                If paypFrom = Nothing And paypTo = Nothing Then
+                    Return Nothing
+                End If
 
-                Dim resourcesTask = _payrollResources.Load(payPeriodId:=payPeriodId,
+                Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
                                                      organizationId:=z_OrganizationID,
                                                      userId:=z_User,
                                                      payDateFrom:=paypFrom,
                                                      payDateTo:=paypTo)
+
                 resourcesTask.Wait()
-            End Sub
+
+                Return resources
+            End Function,
+            0
         )
+
+        _payrollResources = loadTask.Result
 
     End Function
 
@@ -235,8 +241,7 @@ Public Class BenchmarkPayrollForm
 
             _employeeRate = New BenchmarkPaystubRate(employee, salary)
 
-            _leaveBalance = Await _employeeRepository.
-                                    GetVacationLeaveBalance(employee.RowID.Value)
+            _leaveBalance = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
 
             If _employeeRate.IsInvalid Then Return
 
@@ -269,8 +274,8 @@ Public Class BenchmarkPayrollForm
     End Function
 
     Private Async Function FetchOtherPayrollData(employeeId As Integer?) As Task(Of Boolean)
-
-        _ecola = Await _benchmarkPayrollHelper.GetEcola(employeeId.Value,
+        _ecola = Await BenchmarkPayrollHelper.GetEcola(
+                                                        employeeId.Value,
                                                         payDateFrom:=_currentPayPeriod.PayFromDate,
                                                         payDateTo:=_currentPayPeriod.PayToDate)
 
@@ -351,7 +356,8 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await _payPeriodService.
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        _currentPayPeriod = Await payPeriodService.
                                     GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
@@ -423,7 +429,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
-        Dim form As New selectPayPeriod(_payPeriodService, _payPeriodRepository)
+        Dim form As New selectPayPeriod()
         form.ShowDialog()
 
         If form.PayPeriod IsNot Nothing Then
@@ -487,7 +493,6 @@ Public Class BenchmarkPayrollForm
         End If
 
         Dim output = BenchmarkPayrollGeneration.DoProcess(
-                                                _payrollGenerator,
                                                 employee,
                                                 _payrollResources,
                                                 _currentPayPeriod,
@@ -515,6 +520,7 @@ Public Class BenchmarkPayrollForm
         '#2. Payslip
 
         _currentPaystub = output.Paystub
+        _payrollGenerator = output.PayrollGenerator
 
         'Get loans data
         _loanTransanctions = output.LoanTransanctions.CloneListJson()
@@ -826,7 +832,7 @@ Public Class BenchmarkPayrollForm
 
     Private Sub BenchmarkPayrollForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 

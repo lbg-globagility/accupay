@@ -7,6 +7,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLoansForm
@@ -15,42 +16,35 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As EmployeeRepository
-
-    Private _loanScheduleRepository As LoanScheduleRepository
-
-    Private _listOfValueRepository As ListOfValueRepository
-
-    Private _productRepository As ProductRepository
-
-    Private _userActivityRepository As UserActivityRepository
-
     Private _deductionSchedulesList As List(Of String)
 
     Private _loanTypeList As List(Of Product)
 
     Public IsSaved As Boolean
 
-    Sub New(employeeRepository As EmployeeRepository,
-            loanScheduleRepository As LoanScheduleRepository,
-            listOfValueRepository As ListOfValueRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
+    Private _employeeRepository As EmployeeRepository
 
-        ' This call is required by the designer.
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _employeeRepository = employeeRepository
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _loanScheduleRepository = loanScheduleRepository
+        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
 
-        _listOfValueRepository = listOfValueRepository
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -293,8 +287,7 @@ Public Class ImportLoansForm
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
 
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Loan)
 
         If fileInfo Is Nothing Then Return
 

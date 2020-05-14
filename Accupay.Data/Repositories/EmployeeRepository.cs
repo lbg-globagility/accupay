@@ -1,11 +1,9 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
@@ -14,9 +12,13 @@ namespace AccuPay.Data.Repositories
     {
         private readonly PayrollContext _context;
 
-        public EmployeeRepository(PayrollContext context)
+        private readonly EmployeeQueryBuilder builder;
+
+        public EmployeeRepository(PayrollContext context, EmployeeQueryBuilder builder)
         {
             _context = context;
+
+            this.builder = builder;
         }
 
         #region CRUD
@@ -44,253 +46,94 @@ namespace AccuPay.Data.Repositories
 
         #region Queries
 
-        public class EmployeeBuilder : IDisposable
-        {
-            private readonly PayrollContext _context;
-
-            private IQueryable<Employee> _query;
-
-            public EmployeeBuilder(PayrollContext context)
-            {
-                _context = context;
-                _query = _context.Employees;
-            }
-
-            #region Builder Methods
-
-            public EmployeeBuilder IsActive()
-            {
-                _query = _query.Where(x => x.IsActive);
-                return this;
-            }
-
-            public EmployeeBuilder ByEmployeeNumber(string employeeNumber)
-            {
-                _query = _query.Where(x => x.EmployeeNo.Trim().ToLower() ==
-                                            employeeNumber.ToTrimmedLowerCase());
-                return this;
-            }
-
-            public EmployeeBuilder Filter(Expression<Func<Employee, bool>> filter)
-            {
-                _query = _query.Where(filter);
-                return this;
-            }
-
-            public EmployeeBuilder HasPaystubs(int payPeriodId)
-            {
-                _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: true));
-                return this;
-            }
-
-            public EmployeeBuilder HasNoPaystubs(int payPeriodId)
-            {
-                _query = _query.Where(CheckIfEmployeeHasPaystub(payPeriodId: payPeriodId, expected: false));
-                return this;
-            }
-
-            public EmployeeBuilder IncludePayFrequency()
-            {
-                _query = _query.Include(x => x.PayFrequency);
-                return this;
-            }
-
-            public EmployeeBuilder IncludePosition()
-            {
-                // Note: No need to call WithPosition if WithDivision is already called.
-                _query = _query.Include(x => x.Position);
-                return this;
-            }
-
-            public EmployeeBuilder IncludeDivision()
-            {
-                // Note: If needed division, position will also be queried automatically
-                _query = _query.Include(x => x.Position.Division);
-                return this;
-            }
-
-            public EmployeeBuilder IncludeBranch()
-            {
-                _query = _query.Include(x => x.Branch);
-                return this;
-            }
-
-            #endregion Builder Methods
-
-            public List<Employee> ToList(int organizationId)
-            {
-                ResolveOrganizationIdQuery(organizationId);
-                return _query.ToList();
-            }
-
-            public async Task<List<Employee>> ToListAsync(int? organizationId)
-            {
-                ResolveOrganizationIdQuery(organizationId);
-                return await _query.ToListAsync();
-            }
-
-            public Employee GetById(int employeeId, int? organizationId)
-            {
-                ResolveOrganizationIdQuery(organizationId);
-                return _query.Where(x => x.RowID == employeeId).FirstOrDefault();
-            }
-
-            public async Task<Employee> GetByIdAsync(int employeeId, int? organizationId)
-            {
-                ResolveOrganizationIdQuery(organizationId);
-                return await _query.Where(x => x.RowID == employeeId).FirstOrDefaultAsync();
-            }
-
-            public Employee FirstOrDefault(int? organizationId)
-            {
-                ResolveOrganizationIdQuery(organizationId);
-                return _query.FirstOrDefault();
-            }
-
-            public async Task<Employee> FirstOrDefaultAsync(int organizationId)
-            {
-                return await _query.FirstOrDefaultAsync();
-            }
-
-            private EmployeeBuilder ResolveOrganizationIdQuery(int? organizationId)
-            {
-                if (organizationId != null)
-                {
-                    _query = _context.Employees.Where(e => e.OrganizationID == organizationId);
-                }
-
-                return this;
-            }
-
-            public void Dispose()
-            {
-                // TODO: use a standard code from the internet for disposing IDisposable objects
-                // and to other repository with builder pattern like User
-                _context.Dispose();
-            }
-
-            private Expression<Func<Employee, bool>> CheckIfEmployeeHasPaystub(int payPeriodId, bool expected)
-            {
-                return e => _context.Paystubs.
-                                        Any(p => p.EmployeeID == e.RowID &&
-                                            p.PayPeriodID == payPeriodId) == expected;
-            }
-        }
-
         #region List of entities
 
         public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.ToListAsync(organizationId);
-            }
+            return await builder.
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllActiveAsync(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.IsActive().
-                                        ToListAsync(organizationId);
-            }
+            return await builder.
+                            IsActive().
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId,
                                                                     int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.HasPaystubs(payPeriodId).
-                                        ToListAsync(organizationId);
-            }
+            return await builder.
+                            HasPaystubs(payPeriodId).
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.HasNoPaystubs(payPeriodId).
-                                        IsActive().
-                                        ToListAsync(organizationId);
-            }
+            return await builder.
+                            HasNoPaystubs(payPeriodId).
+                            IsActive().
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.IncludePosition().ToListAsync(organizationId);
-            }
+            return await builder.
+                            IncludePosition().
+                            ToListAsync(organizationId);
         }
 
         public IEnumerable<Employee> GetAllActiveWithPosition(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return builder.IncludePosition().
-                                IsActive().
-                                ToList(organizationId);
-            }
+            return builder.
+                        IncludePosition().
+                        IsActive().
+                        ToList(organizationId);
         }
 
         public IEnumerable<Employee> GetAllWithDivisionAndPosition(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return builder.IncludeDivision().ToList(organizationId);
-            }
+            return builder.
+                        IncludeDivision().
+                        ToList(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllActiveWithDivisionAndPositionAsync(int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.IncludeDivision().
-                                        IsActive().
-                                        ToListAsync(organizationId);
-            }
+            return await builder.
+                            IncludeDivision().
+                            IsActive().
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers,
                                                                                 int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.
-                    Filter(x => employeeNumbers.Contains(x.EmployeeNo)).
-                    ToListAsync(organizationId);
-            }
+            return await builder.
+                            Filter(x => employeeNumbers.Contains(x.EmployeeNo)).
+                            ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.
-                    Filter(x => employeeIdList.Contains(x.RowID.Value)).
-                    ToListAsync(null);
-            }
+            return await builder.
+                            Filter(x => employeeIdList.Contains(x.RowID.Value)).
+                            ToListAsync(null);
         }
 
         public async Task<IEnumerable<Employee>> GetByPositionAsync(int positionId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.
-                                Filter(x => x.PositionID == positionId).
-                                ToListAsync(null);
-            }
+            return await builder.
+                            Filter(x => x.PositionID == positionId).
+                            ToListAsync(null);
         }
 
         public async Task<IEnumerable<Employee>> GetByBranchAsync(int branchId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.
-                                Filter(x => x.BranchID == branchId).
-                                ToListAsync(null);
-            }
+            return await builder.
+                            Filter(x => x.BranchID == branchId).
+                            ToListAsync(null);
         }
 
         #endregion List of entities
@@ -299,29 +142,23 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.GetByIdAsync(employeeId, null);
-            }
+            return await builder.
+                            GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.IncludeDivision().
-                                    IsActive().
-                                    GetByIdAsync(employeeId, null);
-            }
+            return await builder.
+                            IncludeDivision().
+                            IsActive().
+                            GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
-            using (var builder = new EmployeeBuilder(_context))
-            {
-                return await builder.ByEmployeeNumber(employeeNumber).
-                                    FirstOrDefaultAsync(organizationId);
-            }
+            return await builder.
+                            ByEmployeeNumber(employeeNumber).
+                            FirstOrDefaultAsync(organizationId);
         }
 
         #endregion Single entity

@@ -17,8 +17,6 @@ Public Class PromotionTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _promotions As IEnumerable(Of Promotion)
 
     Private _positions As IEnumerable(Of Position)
@@ -39,23 +37,18 @@ Public Class PromotionTab
 
         dgvPromotions.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
-            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
-            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
-
-        End Using
+        _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)()
+        _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)()
+        _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
     End Sub
 
-    Friend Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Friend Async Function SetEmployee(employee As Employee) As Task
 
         pbEmployee.Focus()
 
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -355,7 +348,7 @@ Public Class PromotionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

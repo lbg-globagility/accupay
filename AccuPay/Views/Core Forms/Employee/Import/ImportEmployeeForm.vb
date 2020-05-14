@@ -8,6 +8,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportEmployeeForm
 
@@ -19,24 +20,22 @@ Public Class ImportEmployeeForm
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
 
-    Private ReadOnly _employeeRepository As EmployeeRepository
-    Private ReadOnly _divisionRepository As DivisionRepository
-    Private ReadOnly _positionRepository As PositionRepository
-    Private ReadOnly _userActivityRepository As UserActivityRepository
+    Private _divisionRepository As DivisionRepository
+    Private _positionRepository As PositionRepository
+    Private _userActivityRepository As UserActivityRepository
 
 #End Region
 
-    Sub New(employeeRepository As EmployeeRepository,
-            divisionRepository As DivisionRepository,
-            positionRepository As PositionRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = employeeRepository
-        _divisionRepository = divisionRepository
-        _positionRepository = positionRepository
-        _userActivityRepository = userActivityRepository
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
 
     Private Class EmployeeModel
@@ -211,7 +210,8 @@ Public Class ImportEmployeeForm
 
         Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
 
-        Dim employees1 = Await _employeeRepository.GetAllAsync(z_OrganizationID)
+        Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
 
         Dim employees = employees1.
             Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
@@ -268,7 +268,8 @@ Public Class ImportEmployeeForm
 
         If importedEmployees.Any Then
 
-            Await _employeeRepository.SaveManyAsync(importedEmployees)
+            Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            Await employeeRepo.SaveManyAsync(importedEmployees)
 
             Dim importList = New List(Of UserActivityItem)
             Dim entityName = FormEntityName.ToLower()

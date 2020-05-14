@@ -8,7 +8,6 @@ Imports AccuPay.Tools
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MassOvertimeForm
-    Implements IMassOvertimeForm
 
     Private _presenter As MassOvertimePresenter
 
@@ -45,14 +44,10 @@ Public Class MassOvertimeForm
     Public Sub New()
         InitializeComponent()
         OvertimeDataGridView.AutoGenerateColumns = False
-
-        Using MainServiceProvider
-            Dim presenter = MainServiceProvider.GetRequiredService(Of MassOvertimePresenter)()
-
-        End Using
+        _presenter = New MassOvertimePresenter(Me)
     End Sub
 
-    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee)) Implements IMassOvertimeForm.ShowEmployees
+    Public Sub ShowEmployees(divisions As IEnumerable(Of Division), employees As IEnumerable(Of Employee))
         EmployeeTreeView.BeginUpdate()
         EmployeeTreeView.Nodes.Clear()
 
@@ -103,7 +98,7 @@ Public Class MassOvertimeForm
         AddHandler EmployeeTreeView.AfterCheck, AddressOf EmployeeTreeView_AfterCheck
     End Sub
 
-    Public Function GetActiveEmployees() As IList(Of Employee) Implements IMassOvertimeForm.GetActiveEmployees
+    Public Function GetActiveEmployees() As IList(Of Employee)
         Dim list = New List(Of Employee)
         For Each node As TreeNode In EmployeeTreeView.Nodes
             TraverseNodes(node, list)
@@ -157,11 +152,11 @@ Public Class MassOvertimeForm
         AddHandler EmployeeSearchTextBox.TextChanged, AddressOf EmployeeSearchTextBox_TextChanged
     End Sub
 
-    Public Sub ShowOvertimes(overtimes As DataTable) Implements IMassOvertimeForm.ShowOvertimes
+    Public Sub ShowOvertimes(overtimes As DataTable)
         OvertimeDataGridView.DataSource = overtimes
     End Sub
 
-    Public Sub ShowOvertimes(overtimes As List(Of OvertimeModel)) Implements IMassOvertimeForm.ShowOvertimes
+    Public Sub ShowOvertimes(overtimes As List(Of OvertimeModel))
         OvertimeDataGridView.DataSource = overtimes
     End Sub
 
@@ -173,7 +168,7 @@ Public Class MassOvertimeForm
         _presenter.RefreshOvertime()
     End Sub
 
-    Public Sub RefreshDataGrid() Implements IMassOvertimeForm.RefreshDataGrid
+    Public Sub RefreshDataGrid()
         OvertimeDataGridView.Refresh()
     End Sub
 
@@ -208,20 +203,12 @@ Public Class MassOvertimePresenter
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _overtimeRepository As OvertimeRepository
-
-    Public Sub New(view As MassOvertimeForm,
-                   divisionRepository As DivisionRepository,
-                   employeeRepository As EmployeeRepository,
-                   overtimeRepository As OvertimeRepository)
-
+    Public Sub New(view As MassOvertimeForm)
         _view = view
 
-        _divisionRepository = divisionRepository
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
 
-        _employeeRepository = employeeRepository
-
-        _overtimeRepository = overtimeRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
 
     Public Sub Load()
@@ -246,7 +233,8 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
-        Dim overtimes = _overtimeRepository.
+        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim overtimes = overtimeRepository.
                             GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
                                                             New TimePeriod(dateFrom, dateTo),
                                                             employeeIds)
@@ -330,7 +318,8 @@ Public Class MassOvertimePresenter
         If changedOvertimes.Any Then
 
             changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
-            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
+            Dim overtimeRepositorySave = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+            Await overtimeRepositorySave.SaveManyAsync(changedOvertimes)
 
         End If
 
@@ -339,7 +328,12 @@ Public Class MassOvertimePresenter
             Select(Function(ot) ot.Overtime.RowID).
             ToList()
 
-        If deletableOvertimeIDs.Any Then Await _overtimeRepository.DeleteManyAsync(deletableOvertimeIDs)
+        If deletableOvertimeIDs.Any Then
+
+            Dim overtimeRepositoryDelete = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+            Await overtimeRepositoryDelete.DeleteManyAsync(deletableOvertimeIDs)
+
+        End If
     End Function
 
     Private Shared Function ConverToOvertime(model As OvertimeModel) As Overtime

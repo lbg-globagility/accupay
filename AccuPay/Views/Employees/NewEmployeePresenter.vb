@@ -1,9 +1,9 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewEmployeePresenter
 
@@ -12,11 +12,8 @@ Public Class NewEmployeePresenter
     Private _employees As IList(Of Employee)
 
     Private WithEvents _view As NewEmployeeForm
-    Private ReadOnly _context As PayrollContext
 
-    'TODO: create a Presenter that does know the view
-    Public Sub New(context As PayrollContext, view As NewEmployeeForm)
-        _context = context
+    Public Sub New(view As NewEmployeeForm)
         _view = view
     End Sub
 
@@ -55,12 +52,11 @@ Public Class NewEmployeePresenter
 
         End If
 
-        Using builder = New EmployeeRepository.EmployeeBuilder(_context)
+        Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-            _currentEmployee = Await builder.IncludePosition().
+        _currentEmployee = Await builder.IncludePosition().
                                         IncludePayFrequency().
                                         GetByIdAsync(employeeID.Value, z_OrganizationID)
-        End Using
 
         If _currentEmployee IsNot Nothing Then
             _view.SetEmployee(_currentEmployee)
@@ -100,22 +96,21 @@ Public Class NewEmployeePresenter
         Return Await Task.Run(
             Function()
 
-                Using builder As New EmployeeRepository.EmployeeBuilder(_context)
+                Dim builder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-                    Dim employees As IEnumerable(Of Employee)
+                Dim employees As IEnumerable(Of Employee)
 
-                    If _view.IsActive Then
-                        employees = builder.IsActive().ToList(z_OrganizationID)
-                    Else
-                        employees = builder.ToList(z_OrganizationID)
+                If _view.IsActive Then
+                    employees = builder.IsActive().ToList(z_OrganizationID)
+                Else
+                    employees = builder.ToList(z_OrganizationID)
 
-                    End If
+                End If
 
-                    Return employees.
-                        OrderBy(Function(e) e.LastName).
-                        ThenBy(Function(e) e.FirstName).ToList()
+                Return employees.
+                    OrderBy(Function(e) e.LastName).
+                    ThenBy(Function(e) e.FirstName).ToList()
 
-                End Using
             End Function)
     End Function
 

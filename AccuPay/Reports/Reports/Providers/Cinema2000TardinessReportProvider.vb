@@ -3,19 +3,12 @@
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class Cinema2000TardinessReportProvider
     Implements IReportProvider
     Public Property Name As String = "Tardiness Report" Implements IReportProvider.Name
     Public Property IsHidden As Boolean = False Implements IReportProvider.IsHidden
-
-    Private ReadOnly _dataService As CinemaTardinessReportDataService
-
-    Sub New(dataService As CinemaTardinessReportDataService)
-
-        _dataService = dataService
-
-    End Sub
 
     Public Async Sub Run() Implements IReportProvider.Run
 
@@ -51,7 +44,8 @@ Public Class Cinema2000TardinessReportProvider
 
             txtAddress.Text = PayrollTools.GetOrganizationAddress()
 
-            Dim tardinessReportModels = Await _dataService.GetData(z_OrganizationID,
+            Dim dataService = MainServiceProvider.GetRequiredService(Of CinemaTardinessReportDataService)
+            Dim tardinessReportModels = Await dataService.GetData(z_OrganizationID,
                                                                     firstDate,
                                                                     isLimitedReport)
 

@@ -2,7 +2,6 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
-using log4net;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -12,8 +11,6 @@ namespace AccuPay.Data.Services
 {
     public class PayrollGeneration
     {
-        private delegate void NotifyMainWindow(Result result);
-
         private PayrollContext _context;
 
         private SystemOwnerService _systemOwnerService;
@@ -216,6 +213,7 @@ namespace AccuPay.Data.Services
                 _context.Paystubs.Add(_paystub);
 
             if (EligibleForNewBPIInsurance())
+            {
                 _context.Adjustments.Add(new Adjustment()
                 {
                     OrganizationID = _organizationId,
@@ -225,6 +223,7 @@ namespace AccuPay.Data.Services
                     ProductID = _bpiInsuranceProduct.RowID,
                     Amount = -_employee.BPIInsurance
                 });
+            }
 
             _context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
 

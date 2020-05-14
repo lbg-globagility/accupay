@@ -10,18 +10,13 @@ Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
     Private Const FormEntityName As String = "Certification"
-
     Private _employee As Employee
-
-    Private _parentForm As Form
 
     Private _certifications As IEnumerable(Of Certification)
 
     Private _currentCertification As Certification
 
     Private _mode As FormMode = FormMode.Empty
-
-    Private _certificationRepo As CertificationRepository
 
     Private _userActivityRepo As UserActivityRepository
 
@@ -31,21 +26,13 @@ Public Class CertificationTab
 
         dgvCertifications.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
-
-        End Using
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
-
+    Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -57,8 +44,8 @@ Public Class CertificationTab
     Private Async Function LoadCertifications() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _certifications = Await _certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _certifications = _certifications.OrderByDescending(Function(x) x.IssueDate).ToList()
+        Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+        _certifications = Await certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged
         dgvCertifications.DataSource = _certifications
@@ -147,8 +134,8 @@ Public Class CertificationTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Certification",
                 Async Function()
-
-                    Await _certificationRepo.DeleteAsync(_currentCertification)
+                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+                    Await certificationRepo.DeleteAsync(_currentCertification)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
 
@@ -164,7 +151,7 @@ Public Class CertificationTab
             Return
         End If
 
-        Dim form As New AddCertificationForm(_employee, _certificationRepo, _userActivityRepo)
+        Dim form As New AddCertificationForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -227,7 +214,8 @@ Public Class CertificationTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _certificationRepo.UpdateAsync(_currentCertification)
+                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+                    Await certificationRepo.UpdateAsync(_currentCertification)
 
                     RecordUpdateCertification(oldCertification)
 
@@ -294,6 +282,7 @@ Public Class CertificationTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
     Private Function isChanged() As Boolean
@@ -312,7 +301,7 @@ Public Class CertificationTab
     End Function
 
     Private Sub ToolStripButton11_Click(sender As Object, e As EventArgs) Handles ToolStripButton11.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_Click(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -330,7 +319,7 @@ Public Class CertificationTab
     End Sub
 
     Private Sub UserActivity_Click(sender As Object, e As EventArgs) Handles UserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

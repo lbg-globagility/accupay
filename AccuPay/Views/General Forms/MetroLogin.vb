@@ -4,29 +4,32 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
+Imports AccuPay.Benchmark
+Imports Microsoft.EntityFrameworkCore
+Imports AccuPay.Data
+Imports AccuPay.Payslip
 
 Public Class MetroLogin
-
-    Private _listOfValueService As ListOfValueService
-
-    Private _organizationRepository As OrganizationRepository
-
-    Private _userRepository As UserRepository
-
     Private err_count As Integer
     Private freq As String
 
-    Sub New(listOfValueService As ListOfValueService,
-            organizationRepository As OrganizationRepository,
-            userRepository As UserRepository)
+    Private _policyHelper As PolicyHelper
+
+    Private _userRepository As UserRepository
+
+    Private _organizationRepository As OrganizationRepository
+
+    Sub New()
 
         InitializeComponent()
 
-        _listOfValueService = listOfValueService
+        ConfigureDependencyInjection()
 
-        _organizationRepository = organizationRepository
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _userRepository = userRepository
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -65,6 +68,124 @@ Public Class MetroLogin
             AssignDefaultCredentials()
 
         End If
+    End Sub
+
+    Private Sub ConfigureDependencyInjection()
+        Dim services = New ServiceCollection()
+
+        ConfigureServices(services)
+
+        MainServiceProvider = services.BuildServiceProvider()
+    End Sub
+
+    Private Sub ConfigureServices(services As ServiceCollection)
+
+        services.AddDbContext(Of PayrollContext)(
+            Sub(options As DbContextOptionsBuilder)
+                options.UseMySql("server=localhost;user id=root;password=globagility;database=accupaydb_cinema2k;")
+                options.EnableSensitiveDataLogging()
+            End Sub, ServiceLifetime.Transient)
+
+        services.AddTransient(Of BenchmarkPayrollHelper)
+        services.AddTransient(Of OvertimeRateService)
+
+        services.AddTransient(Of ActualTimeEntryRepository)
+        services.AddTransient(Of AddressRepository)
+        services.AddTransient(Of AdjustmentRepository)
+        services.AddTransient(Of AgencyFeeRepository)
+        services.AddTransient(Of AgencyRepository)
+        services.AddTransient(Of AllowanceRepository)
+        services.AddTransient(Of AttachmentRepository)
+        services.AddTransient(Of AwardRepository)
+        services.AddTransient(Of BonusRepository)
+        services.AddTransient(Of BranchRepository)
+        services.AddTransient(Of BreakTimeBracketRepository)
+        services.AddTransient(Of CalendarRepository)
+        services.AddTransient(Of CategoryRepository)
+        services.AddTransient(Of CertificationRepository)
+        services.AddTransient(Of DayTypeRepository)
+        services.AddTransient(Of DisciplinaryActionRepository)
+        services.AddTransient(Of DivisionMinimumWageRepository)
+        services.AddTransient(Of DivisionRepository)
+        services.AddTransient(Of EducationalBackgroundRepository)
+        services.AddTransient(Of EmployeeDutyScheduleRepository)
+        services.AddTransient(Of EmployeeQueryBuilder)
+        services.AddTransient(Of EmployeeRepository)
+        services.AddTransient(Of FilingStatusTypeRepository)
+        services.AddTransient(Of JobCategoryRepository)
+        services.AddTransient(Of JobLevelRepository)
+        services.AddTransient(Of LeaveRepository)
+        services.AddTransient(Of ListOfValueRepository)
+        services.AddTransient(Of LoanScheduleRepository)
+        services.AddTransient(Of LoanTransactionRepository)
+        services.AddTransient(Of OfficialBusinessRepository)
+        services.AddTransient(Of OrganizationRepository)
+        services.AddTransient(Of OvertimeRepository)
+        services.AddTransient(Of PayFrequencyRepository)
+        services.AddTransient(Of PayPeriodRepository)
+        services.AddTransient(Of PaystubActualRepository)
+        services.AddTransient(Of PaystubEmailHistoryRepository)
+        services.AddTransient(Of PaystubEmailRepository)
+        services.AddTransient(Of PaystubRepository)
+        services.AddTransient(Of PhilHealthBracketRepository)
+        services.AddTransient(Of PositionRepository)
+        services.AddTransient(Of PositionViewQueryBuilder)
+        services.AddTransient(Of PositionViewRepository)
+        services.AddTransient(Of PreviousEmployerRepository)
+        services.AddTransient(Of ProductRepository)
+        services.AddTransient(Of PromotionRepository)
+        services.AddTransient(Of SalaryRepository)
+        services.AddTransient(Of ShiftRepository)
+        services.AddTransient(Of ShiftScheduleRepository)
+        services.AddTransient(Of SocialSecurityBracketRepository)
+        services.AddTransient(Of TimeAttendanceLogRepository)
+        services.AddTransient(Of TimeEntryRepository)
+        services.AddTransient(Of TimeLogRepository)
+        services.AddTransient(Of UserActivityRepository)
+        services.AddTransient(Of UserQueryBuilder)
+        services.AddTransient(Of UserRepository)
+        services.AddTransient(Of WithholdingTaxBracketRepository)
+
+        services.AddTransient(Of CalendarService)
+        services.AddTransient(Of ListOfValueService)
+
+        services.AddTransient(Of PayrollGeneration)
+        services.AddTransient(Of PayrollResources)
+
+        services.AddTransient(Of PolicyHelper)
+        'services.AddTransient(Of ActualTimeEntryPolicy)
+        'services.AddTransient(Of AllowancePolicy)
+        'services.AddTransient(Of PhilHealthPolicy)
+        'services.AddTransient(Of RenewLeaveBalancePolicy)
+        'services.AddTransient(Of TimeEntryPolicy)
+
+        services.AddTransient(Of BpiInsuranceAmountReportDataService)
+        services.AddTransient(Of CinemaTardinessReportDataService)
+        services.AddTransient(Of CostCenterReportDataService)
+        services.AddTransient(Of FiledLeaveReportDataService)
+        services.AddTransient(Of LeaveLedgerReportDataService)
+        services.AddTransient(Of PaystubPayslipModelDataService)
+
+        services.AddTransient(Of TimeEntryGenerator)
+
+        services.AddTransient(Of AdjustmentService)
+        services.AddTransient(Of LeaveService)
+        services.AddTransient(Of OvertimeRateService)
+        services.AddTransient(Of PayPeriodService)
+        services.AddTransient(Of ProductService)
+        services.AddTransient(Of SystemOwnerService)
+
+        services.AddTransient(Of PayslipCreator)
+
+        'services.AddTransient(Of MetroLogin)
+        'services.AddTransient(Of MDIPrimaryForm)
+        'services.AddTransient(Of GeneralForm)
+        'services.AddTransient(Of HRISForm)
+        'services.AddTransient(Of PayrollForm)
+        'services.AddTransient(Of BenchmarkPayrollForm)
+        'services.AddTransient(Of TimeAttendForm)
+
+        'services.AddTransient(Of AddBranchForm)
     End Sub
 
     Public Sub AssignDefaultCredentials()
@@ -191,14 +312,7 @@ Public Class MetroLogin
         If numofdaysthisyear = 0 Then numofdaysthisyear = EXECQUER("SELECT DAYOFYEAR(LAST_DAY(CONCAT(YEAR(CURRENT_DATE()),'-12-01')));")
 
         If Await CheckIfAuthorizedByUserLevel() Then
-
-            Using MainServiceProvider
-                Dim form = MainServiceProvider.GetRequiredService(Of MDIPrimaryForm)()
-
-                form.Show()
-
-            End Using
-
+            MDIPrimaryForm.Show()
         End If
 
         enableButton()
@@ -213,9 +327,7 @@ Public Class MetroLogin
             Return False
         End If
 
-        Dim settings = _listOfValueService.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        If _policyHelper.UseUserLevel = False Then
             Return True
         End If
 
@@ -298,7 +410,7 @@ Public Class MetroLogin
     Private Sub MetroLink1_Click(sender As Object, e As EventArgs) Handles MetroLink1.Click
 
         Dim n_ForgotPasswordForm As New ForgotPasswordForm
-        n_ForgotPasswordForm.SetParentForms(Me)
+
         n_ForgotPasswordForm.ShowDialog()
         '# ####################################### #
         'ForgotPasswordForm.Show()

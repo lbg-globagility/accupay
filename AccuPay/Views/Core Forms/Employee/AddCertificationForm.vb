@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddCertificationForm
 
@@ -14,21 +15,16 @@ Public Class AddCertificationForm
     Public Property isSaved As Boolean
     Public Property showBalloon As Boolean
 
-    Private _certificationRepo As CertificationRepository
-
     Private _userActivityRepo As UserActivityRepository
 
-    Public Sub New(employee As Employee,
-                   certificationRepo As CertificationRepository,
-                   userActivityRepo As UserActivityRepository)
+    Public Sub New(employee As Employee)
 
         InitializeComponent()
 
         _employee = employee
 
-        _certificationRepo = certificationRepo
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        _userActivityRepo = userActivityRepo
     End Sub
 
     Private Sub AddCertificationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -66,9 +62,11 @@ Public Class AddCertificationForm
                     .CreatedBy = z_User
                 End With
 
-                Await _certificationRepo.CreateAsync(_newCertification)
+                Dim awardRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+                Await awardRepo.CreateAsync(_newCertification)
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newCertification.RowID), z_OrganizationID)
+
                 succeed = True
             End Function)
 

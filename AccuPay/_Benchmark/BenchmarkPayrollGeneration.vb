@@ -4,6 +4,7 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Benchmark
 
@@ -35,24 +36,21 @@ Namespace Benchmark
 
         Private ReadOnly _employeeRate As BenchmarkPaystubRate
 
-        Private ReadOnly _payrollGeneration As PayrollGeneration
+        Private Sub New(
+                employee As Entities.Employee,
+                payrollResources As PayrollResources,
+                currentPayPeriod As IPayPeriod,
+                employeeRate As BenchmarkPaystubRate,
+                regularDays As Decimal,
+                lateDays As Decimal,
+                leaveDays As Decimal,
+                overtimeRate As OvertimeRate,
+                actualSalaryPolicy As ActualTimeEntryPolicy,
+                selectedDeductions As List(Of AdjustmentInput),
+                selectedIncomes As List(Of AdjustmentInput),
+                overtimes As List(Of OvertimeInput),
+                ecola As Allowance)
 
-        Private Sub New(payrollGeneration As PayrollGeneration,
-                        employee As Employee,
-                        payrollResources As PayrollResources,
-                        currentPayPeriod As IPayPeriod,
-                        employeeRate As BenchmarkPaystubRate,
-                        regularDays As Decimal,
-                        lateDays As Decimal,
-                        leaveDays As Decimal,
-                        overtimeRate As OvertimeRate,
-                        actualSalaryPolicy As ActualTimeEntryPolicy,
-                        selectedDeductions As List(Of AdjustmentInput),
-                        selectedIncomes As List(Of AdjustmentInput),
-                        overtimes As List(Of OvertimeInput),
-                        ecola As Allowance)
-
-            _payrollGeneration = payrollGeneration
             _employee = employee
             _payrollResources = payrollResources
             _currentPayPeriod = currentPayPeriod
@@ -85,8 +83,7 @@ Namespace Benchmark
         End Class
 
         Public Shared Function DoProcess(
-                                    payrollGeneration As PayrollGeneration,
-                                    employee As Employee,
+                                    employee As Entities.Employee,
                                     payrollResources As PayrollResources,
                                     currentPayPeriod As IPayPeriod,
                                     employeeRate As BenchmarkPaystubRate,
@@ -101,7 +98,6 @@ Namespace Benchmark
                                     ecola As Allowance) As DoProcessOutput
 
             Dim generator As New BenchmarkPayrollGeneration(
-                                    payrollGeneration,
                                     employee,
                                     payrollResources,
                                     currentPayPeriod,
@@ -115,6 +111,8 @@ Namespace Benchmark
                                     selectedIncomes:=selectedIncomes,
                                     overtimes:=overtimes,
                                     ecola:=ecola)
+
+            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
 
             'organizationId:=z_OrganizationID,
             '                    userId:=z_User,
@@ -137,7 +135,7 @@ Namespace Benchmark
 
         End Sub
 
-        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
+        Private Function CreatePaystub(employee As Entities.Employee, generator As PayrollGeneration) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,

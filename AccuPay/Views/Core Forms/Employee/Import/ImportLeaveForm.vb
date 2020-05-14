@@ -8,6 +8,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLeaveForm
@@ -18,30 +19,20 @@ Public Class ImportLeaveForm
     Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
-
+    Private _categoryRepository As CategoryRepository
     Private _employeeRepository As EmployeeRepository
-    Private _leaveRepository As LeaveRepository
+
     Private _productRepository As ProductRepository
     Private _userActivityRepository As UserActivityRepository
-    Private _leaveService As LeaveService
 
-    Sub New(employeeRepository As EmployeeRepository,
-            leaveRepository As LeaveRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository,
-            leaveService As LeaveService)
+    Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = employeeRepository
-
-        _leaveRepository = leaveRepository
-
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
-
-        _leaveService = leaveService
+        _categoryRepository = MainServiceProvider.GetRequiredService(Of CategoryRepository)
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -159,8 +150,9 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                         Async Function() As Task(Of Boolean)
 
-                            Await _leaveService.SaveManyAsync(leaves,
-                                                                organizationId:=z_OrganizationID)
+                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                            Await leaveService.SaveManyAsync(leaves,
+                                                             z_OrganizationID)
 
                             Dim importList = New List(Of UserActivityItem)
                             Dim entityName = FormEntityName.ToLower()
@@ -199,7 +191,8 @@ Public Class ImportLeaveForm
         Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
         Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
 
-        Dim currentLeaves = Await _leaveRepository.
+        Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
+        Dim currentLeaves = Await leaveRepository.
                     GetFilteredAllAsync(Function(lv) lv.OrganizationID.Value = z_OrganizationID AndAlso
                                         employeeIDs.Contains(lv.EmployeeID.Value) AndAlso
                                         lv.StartDate >= minDate)
@@ -477,8 +470,7 @@ Public Class ImportLeaveForm
     End Sub
 
     Private Async Sub btnDownload_Click(sender As Object, e As EventArgs) Handles btnDownload.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Leave)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

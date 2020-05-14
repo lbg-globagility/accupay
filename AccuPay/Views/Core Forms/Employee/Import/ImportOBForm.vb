@@ -5,6 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOBForm
 
@@ -16,21 +17,15 @@ Public Class ImportOBForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _officialBusinessRepository As OfficialBusinessRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employeeRepository As EmployeeRepository,
-            officialBusinessRepository As OfficialBusinessRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _employeeRepository = employeeRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _officialBusinessRepository = officialBusinessRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -171,7 +166,8 @@ Public Class ImportOBForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Await _officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
+                Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+                Await officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
 
                 Dim importlist = New List(Of UserActivityItem)
 

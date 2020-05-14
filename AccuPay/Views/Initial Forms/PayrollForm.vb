@@ -11,20 +11,13 @@ Public Class PayrollForm
 
     Private _policyHelper As PolicyHelper
 
-    Sub New(systemOwnerService As SystemOwnerService, policyHelper As PolicyHelper)
+    Sub New()
 
         InitializeComponent()
 
-        _policyHelper = policyHelper
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _systemOwnerService = systemOwnerService
-    End Sub
-
-    Private MDIPrimaryForm As MDIPrimaryForm
-
-    Public Sub SetParentForms(mDIPrimaryForm As MDIPrimaryForm)
-        Me.MDIPrimaryForm = mDIPrimaryForm
-
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
     End Sub
 
     Private Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
@@ -98,23 +91,16 @@ Public Class PayrollForm
     Sub PayrollToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayrollToolStripMenuItem.Click
         'ChangeForm(PayrollGenerateForm)
 
-        Using MainServiceProvider
+        If if_sysowner_is_benchmark Then
 
-            If if_sysowner_is_benchmark Then
+            ChangeForm(BenchmarkPayrollForm, "Benchmark - Payroll Form")
+            previousForm = BenchmarkPayrollForm
+        Else
 
-                Dim form = MainServiceProvider.GetRequiredService(Of BenchmarkPayrollForm)()
-                ChangeForm(form, "Benchmark - Payroll Form")
-                previousForm = form
-            Else
+            ChangeForm(PayStubForm, "Employee Pay Slip")
+            previousForm = PayStubForm
 
-                Dim form = MainServiceProvider.GetRequiredService(Of PayStubForm)()
-                form.SetParentForms(Me, Me.MDIPrimaryForm)
-                ChangeForm(form, "Employee Pay Slip")
-                previousForm = form
-
-            End If
-
-        End Using
+        End If
 
     End Sub
 
@@ -210,50 +196,23 @@ Public Class PayrollForm
     End Sub
 
     Private Sub PaystubExperimentalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PaystubExperimentalToolStripMenuItem.Click
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of PaystubView)()
-
-            ChangeForm(form, "Employee Pay Slip")
-
-            previousForm = form
-
-        End Using
+        ChangeForm(PaystubView, "Employee Pay Slip")
+        previousForm = PaystubView
     End Sub
 
     Private Sub AllowanceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AllowanceToolStripMenuItem.Click
-
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeAllowanceForm)()
-
-            ChangeForm(form, "Employee Allowance")
-
-            previousForm = form
-
-        End Using
+        ChangeForm(EmployeeAllowanceForm, "Employee Allowance")
+        previousForm = EmployeeAllowanceForm
     End Sub
 
     Private Sub LoanToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles LoanToolStripMenuItem.Click
-
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of EmployeeLoansForm)()
-
-            ChangeForm(form, "Employee Loan Schedule")
-
-            previousForm = form
-
-        End Using
+        ChangeForm(EmployeeLoansForm, "Employee Loan Schedule")
+        previousForm = EmployeeLoansForm
     End Sub
 
     Private Sub BenchmarkPaystubToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles BenchmarkPaystubToolStripMenuItem.Click
-
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of BenchmarkPaystubForm)()
-
-            ChangeForm(form, "Benchmark - Paystub")
-
-            previousForm = form
-
-        End Using
+        ChangeForm(BenchmarkPaystubForm, "Benchmark - Paystub")
+        previousForm = BenchmarkPaystubForm
     End Sub
 
 End Class

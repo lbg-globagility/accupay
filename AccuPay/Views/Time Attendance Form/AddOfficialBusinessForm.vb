@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOfficialBusinessForm
     Public Property IsSaved As Boolean
@@ -12,25 +13,21 @@ Public Class AddOfficialBusinessForm
 
     Private _currentEmployee As Employee
 
-    Private _newOfficialBusiness As OfficialBusiness
+    Private _newOfficialBusiness As New OfficialBusiness()
 
     Private _officialBusinessRepository As OfficialBusinessRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employee As Employee,
-            officialBusinessRepository As OfficialBusinessRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
-        _officialBusinessRepository = officialBusinessRepository
+        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
 
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 

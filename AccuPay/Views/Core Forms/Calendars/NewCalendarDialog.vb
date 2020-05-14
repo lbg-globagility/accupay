@@ -3,13 +3,14 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewCalendarDialog
 
     Private ReadOnly _repository As CalendarRepository
 
-    Public Sub New(repository As CalendarRepository)
-        _repository = repository
+    Public Sub New()
+        _repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
 
         InitializeComponent()
     End Sub

@@ -7,6 +7,7 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewDivisionPositionForm
 
@@ -31,9 +32,8 @@ Public Class NewDivisionPositionForm
     Private _currentDivision As New Division
 
     Private _currentPosition As New Position
-    Public Property _currentTreeNodes As TreeNode()
 
-    Private _divisionRepository As DivisionRepository
+    Public Property _currentTreeNodes As TreeNode()
 
     Private _employeeRepository As EmployeeRepository
 
@@ -43,27 +43,22 @@ Public Class NewDivisionPositionForm
 
     Private _payFrequencyRepository As PayFrequencyRepository
 
-    Private _positionRepository As PositionRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(divisionRepository As DivisionRepository,
-            employeeRepository As EmployeeRepository,
-            jobLevelRepository As JobLevelRepository,
-            listOfValueRepository As ListOfValueRepository,
-            payFrequencyRepository As PayFrequencyRepository,
-            positionRepository As PositionRepository,
-            userActivityRepository As UserActivityRepository)
-
+    Sub New()
+        ' This call is required by the designer.
         InitializeComponent()
 
-        _divisionRepository = divisionRepository
-        _employeeRepository = employeeRepository
-        _jobLevelRepository = jobLevelRepository
-        _listOfValueRepository = listOfValueRepository
-        _payFrequencyRepository = payFrequencyRepository
-        _positionRepository = positionRepository
-        _userActivityRepository = userActivityRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
     End Sub
 
     Private Async Sub NewEmployeePositionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -289,7 +284,7 @@ Public Class NewDivisionPositionForm
     End Sub
 
     Private Async Function InsertDivisionLocation() As Task
-        Dim form As New AddDivisionLocationForm(_divisionRepository, _userActivityRepository)
+        Dim form As New AddDivisionLocationForm()
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -308,11 +303,7 @@ Public Class NewDivisionPositionForm
     End Function
 
     Private Async Function InsertDivision() As Task
-        Dim form As New AddDivisionForm(_divisionRepository,
-                                        _listOfValueRepository,
-                                        _positionRepository,
-                                        _payFrequencyRepository,
-                                        _userActivityRepository)
+        Dim form As New AddDivisionForm()
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -336,10 +327,7 @@ Public Class NewDivisionPositionForm
 
     Private Async Sub NewPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles AddPositionToolStripMenuItem.Click
 
-        Dim form As New AddPositionForm(_divisionRepository,
-                                        _positionRepository,
-                                        _jobLevelRepository,
-                                        _userActivityRepository)
+        Dim form As New AddPositionForm
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -549,7 +537,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadDivisions() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim divisions = Await divisionRepository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -557,7 +546,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -575,7 +565,8 @@ Public Class NewDivisionPositionForm
 
     Private Sub GetDivisionTypes()
 
-        _divisionTypes = _divisionRepository.GetDivisionTypeList
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionTypes = divisionRepository.GetDivisionTypeList
 
     End Sub
 
@@ -776,7 +767,9 @@ Public Class NewDivisionPositionForm
     Private Async Function SavePosition(messageTitle As String) As Task
 
         Me._currentPosition.LastUpdBy = z_User
-        Await _positionRepository.SaveAsync(Me._currentPosition,
+
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Await positionRepository.SaveAsync(Me._currentPosition,
                                             organizationId:=z_OrganizationID,
                                             divisionId:=Me._currentPosition.DivisionID.Value)
 
@@ -848,7 +841,8 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Await _positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Await positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
 
         _userActivityRepository.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
 
@@ -862,7 +856,8 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Await divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
 
         If Me._currentDivision.IsRoot Then
 
@@ -1192,9 +1187,10 @@ Public Class NewDivisionPositionForm
 
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
-
         division.LastUpdBy = z_User
-        Await _divisionRepository.SaveAsync(division, z_OrganizationID)
+
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Await divisionRepository.SaveAsync(division, z_OrganizationID)
 
         If isRoot Then
             RecordUpdateDivisionLocation()
@@ -1245,7 +1241,7 @@ Public Class NewDivisionPositionForm
             End If
         End If
 
-        'HRISForm.listHRISForm.Remove(Me.Name)
+        HRISForm.listHRISForm.Remove(Me.Name)
     End Sub
 
     Private Sub SearchToolStripTextBox_TextChanged(sender As Object, e As EventArgs) Handles SearchToolStripTextBox.TextChanged
@@ -1257,17 +1253,17 @@ Public Class NewDivisionPositionForm
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
 
         If Me._currentDivision.IsRoot Then
-            Dim userActivity As New UserActivityForm(DivisionLocationEntityName, _userActivityRepository)
+            Dim userActivity As New UserActivityForm(DivisionLocationEntityName)
             userActivity.ShowDialog()
         Else
-            Dim userActivity As New UserActivityForm(DivisionEntityName, _userActivityRepository)
+            Dim userActivity As New UserActivityForm(DivisionEntityName)
             userActivity.ShowDialog()
         End If
 
     End Sub
 
     Private Sub UserActivityPositionToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityPositionToolStripButton.Click
-        Dim userActivity As New UserActivityForm(PositionEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(PositionEntityName)
         userActivity.ShowDialog()
     End Sub
 

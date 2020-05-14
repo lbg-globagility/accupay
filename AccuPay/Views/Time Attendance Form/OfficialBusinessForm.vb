@@ -1,10 +1,11 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OfficialBusinessForm
 
@@ -20,22 +21,15 @@ Public Class OfficialBusinessForm
 
     Private _changedOfficialBusinesses As List(Of OfficialBusiness)
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Private _officialBusinessRepository As OfficialBusinessRepository
-
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(officialBusinessRepository As OfficialBusinessRepository,
-            employeeRepository As EmployeeRepository,
-            userActivityRepository As UserActivityRepository)
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
-        ' This call is required by the designer.
+    Sub New()
+
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _employees = New List(Of Employee)
 
@@ -45,13 +39,11 @@ Public Class OfficialBusinessForm
 
         _changedOfficialBusinesses = New List(Of OfficialBusiness)
 
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
-
-        _officialBusinessRepository = officialBusinessRepository
-
-        _employeeRepository = employeeRepository
-
-        _userActivityRepository = userActivityRepository
     End Sub
 
     Private Async Sub OfficialBusinessForm_Load(sender As Object, e As EventArgs) Handles Me.Load
@@ -77,7 +69,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub OfficialBusinessForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
         myBalloon(, , EmployeePictureBox, , , 1)
     End Sub
 
@@ -86,9 +78,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
-        Using form = New ImportOBForm(_employeeRepository,
-                                      _officialBusinessRepository,
-                                      _userActivityRepository)
+        Using form = New ImportOBForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -115,7 +105,8 @@ Public Class OfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _officialBusinessRepository.GetStatusList()
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        StatusComboBox.DataSource = officialBusinessRepository.GetStatusList()
 
     End Sub
 
@@ -227,7 +218,8 @@ Public Class OfficialBusinessForm
     Private Async Function LoadOfficialBusinesses(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentOfficialBusinesses = (Await _officialBusinessRepository.
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Me._currentOfficialBusinesses = (Await officialBusinessRepository.
                                 GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.StartDate).
                                 ToList
@@ -407,7 +399,8 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _officialBusinessRepository.
+                                                Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+                                                Await officialBusinessRepository.
                                                     DeleteAsync(Me._currentOfficialBusiness.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
@@ -470,9 +463,7 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim form As New AddOfficialBusinessForm(employee,
-                                                _officialBusinessRepository,
-                                                _userActivityRepository)
+        Dim form As New AddOfficialBusinessForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -561,7 +552,8 @@ Public Class OfficialBusinessForm
             Return
         End If
 
-        Dim currentOfficialBusiness = Await _officialBusinessRepository.
+        Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        Dim currentOfficialBusiness = Await officialBusinessRepository.
                                         GetByIdAsync(Me._currentOfficialBusiness.RowID.Value)
 
         If currentOfficialBusiness Is Nothing Then
@@ -616,7 +608,8 @@ Public Class OfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _officialBusinessRepository.
+                                            Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+                                            Await officialBusinessRepository.
                                                         SaveManyAsync(changedOfficialBusinesses)
 
                                             For Each item In changedOfficialBusinesses
@@ -644,7 +637,7 @@ Public Class OfficialBusinessForm
     End Sub
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

@@ -2,10 +2,11 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Utils
-Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Utilities.Extensions
+Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeAllowanceForm
 
@@ -23,20 +24,15 @@ Public Class EmployeeAllowanceForm
 
     Private _changedAllowances As List(Of Allowance)
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
-    Private _allowanceRepository As AllowanceRepository
-
     Private _employeeRepository As EmployeeRepository
 
     Private _productRepository As ProductRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(allowanceRepository As AllowanceRepository,
-            employeeRepository As EmployeeRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
+
+    Sub New()
 
         InitializeComponent()
 
@@ -48,15 +44,13 @@ Public Class EmployeeAllowanceForm
 
         _changedAllowances = New List(Of Allowance)
 
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
-
-        _allowanceRepository = allowanceRepository
-
-        _employeeRepository = employeeRepository
-
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -133,7 +127,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub lnlAddAllowanceType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
+        Dim n_ProductControlForm As New ProductControlForm
 
         With n_ProductControlForm
 
@@ -194,7 +188,9 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _allowanceRepository.SaveManyAsync(changedAllowances)
+
+                                            Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+                                            Await allowanceRepository.SaveManyAsync(changedAllowances)
 
                                             For Each item In changedAllowances
                                                 RecordUpdate(item)
@@ -241,10 +237,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim form As New AddAllowanceForm(employee,
-                                        _productRepository,
-                                        _allowanceRepository,
-                                        _userActivityRepository)
+        Dim form As New AddAllowanceForm(employee)
         form.ShowDialog()
 
         If form.IsSaved Then
@@ -337,7 +330,9 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim currentAllowance = Await _allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID.Value)
+        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+        Dim currentAllowance = Await allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID.Value)
 
         If currentAllowance Is Nothing Then
 
@@ -352,7 +347,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceIsAlreadyUsed = Await _allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID.Value)
+        Dim allowanceIsAlreadyUsed = Await allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID.Value)
 
         If allowanceIsAlreadyUsed Then
 
@@ -373,7 +368,8 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
+                                                Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+                                                Await allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
                                                                                      FormEntityName,
@@ -389,10 +385,7 @@ Public Class EmployeeAllowanceForm
 
     Private Async Sub ImportToolStripButton_Click(sender As Object, e As EventArgs) Handles ImportToolStripButton.Click
 
-        Using form = New ImportAllowanceForm(_allowanceRepository,
-                                             _employeeRepository,
-                                             _productRepository,
-                                             _userActivityRepository)
+        Using form = New ImportAllowanceForm()
             form.ShowDialog()
 
             If form.IsSaved Then
@@ -414,7 +407,7 @@ Public Class EmployeeAllowanceForm
 
     Private Sub EmployeeAllowancesForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        'PayrollForm.listPayrollForm.Remove(Me.Name)
+        PayrollForm.listPayrollForm.Remove(Me.Name)
         myBalloon(, , lblFormTitle, , , 1)
 
     End Sub
@@ -440,7 +433,8 @@ Public Class EmployeeAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        cboallowfreq.DataSource = _allowanceRepository.GetFrequencyList()
+        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        cboallowfreq.DataSource = allowanceRepository.GetFrequencyList()
 
     End Sub
 
@@ -464,7 +458,8 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim allowances = (Await _allowanceRepository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
+        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim allowances = (Await allowanceRepository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.EffectiveEndDate).
                                 ToList
 
@@ -684,7 +679,7 @@ Public Class EmployeeAllowanceForm
     End Function
 
     Private Sub UserActivityToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

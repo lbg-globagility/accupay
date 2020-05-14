@@ -7,11 +7,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{81373C7B-F3B6-4E8B-A202-869962273BA8}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <StartupObject>Sub Main</StartupObject>
+    <StartupObject>AccuPay.My.MyApplication</StartupObject>
     <RootNamespace>AccuPay</RootNamespace>
     <AssemblyName>AccuPay</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>WindowsFormsWithCustomSubMain</MyType>
+    <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <IsWebBootstrapper>false</IsWebBootstrapper>
@@ -347,10 +347,10 @@
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
     <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
+    <Compile Include="Domain\PayPeriod\PayPeriodStatusData.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
     <Compile Include="Domain\TimeLogs\Parser\TimelogRegexParser.vb" />
-    <Compile Include="MainModule.vb" />
     <Compile Include="Reports\Report Forms\LaGlobalEmployeeReportForm.Designer.vb">
       <DependentUpon>LaGlobalEmployeeReportForm.vb</DependentUpon>
     </Compile>

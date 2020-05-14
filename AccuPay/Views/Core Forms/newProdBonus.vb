@@ -1,16 +1,17 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class newProdBonus
 
-    Private ReadOnly _productRepo As ProductRepository
+    Private _productRepo As ProductRepository
 
-    Sub New(productRepo As ProductRepository)
+    Sub New()
 
         InitializeComponent()
 
-        _productRepo = productRepo
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
     End Sub
 

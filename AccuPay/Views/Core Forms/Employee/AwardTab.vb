@@ -14,15 +14,11 @@ Public Class AwardTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _awards As IEnumerable(Of Award)
 
     Private _currentAward As Award
 
     Private _mode As FormMode = FormMode.Empty
-
-    Private _awardRepo As AwardRepository
 
     Private _userActivityRepo As UserActivityRepository
 
@@ -32,20 +28,13 @@ Public Class AwardTab
 
         dgvAwards.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-        End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
-
+    Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
-
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -57,8 +46,8 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _awards = Await _awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _awards = _awards.OrderByDescending(Function(x) x.AwardDate).ToList()
+        Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+        _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
         dgvAwards.DataSource = _awards
@@ -129,7 +118,7 @@ Public Class AwardTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -162,8 +151,8 @@ Public Class AwardTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-
-                    Await _awardRepo.DeleteAsync(_currentAward)
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+                    Await awardRepo.DeleteAsync(_currentAward)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
 
@@ -179,7 +168,7 @@ Public Class AwardTab
             Return
         End If
 
-        Dim form As New AddAwardForm(_employee, _awardRepo, _userActivityRepo)
+        Dim form As New AddAwardForm(_employee)
         form.ShowDialog()
 
         If form.isSaved Then
@@ -225,7 +214,8 @@ Public Class AwardTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _awardRepo.UpdateAsync(_currentAward)
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+                    Await awardRepo.UpdateAsync(_currentAward)
 
                     RecordUpdateAward(oldAward)
 
@@ -253,7 +243,7 @@ Public Class AwardTab
     End Function
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 
@@ -285,6 +275,7 @@ Public Class AwardTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
 End Class

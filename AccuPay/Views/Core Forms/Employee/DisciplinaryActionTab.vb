@@ -14,8 +14,6 @@ Public Class DisciplinaryActionTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _disciplinaryActions As IEnumerable(Of DisciplinaryAction)
 
     Private _currentDiscAction As DisciplinaryAction
@@ -42,22 +40,18 @@ Public Class DisciplinaryActionTab
 
         dgvDisciplinaryList.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)()
-            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
-            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)()
-            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
+        _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)()
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)()
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)()
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
 
-        End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Public Async Function SetEmployee(employee As Employee) As Task
 
         pbEmployee.Focus()
 
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -156,7 +150,7 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnCancel_ClickAsync(sender As Object, e As EventArgs) Handles btnCancel.Click
@@ -339,7 +333,7 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Sub btnUserActivity_Click(sender As Object, e As EventArgs) Handles btnUserActivity.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepo)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

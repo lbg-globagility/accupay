@@ -14,6 +14,7 @@ Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class TimeEntrySummaryForm
@@ -58,12 +59,6 @@ Public Class TimeEntrySummaryForm
 
     Private _policy As PolicyHelper
 
-    Private _generator As TimeEntryGenerator
-
-    Private _calendarService As CalendarService
-
-    Private _listOfValueService As ListOfValueService
-
     Private _payPeriodService As PayPeriodService
 
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
@@ -76,33 +71,24 @@ Public Class TimeEntrySummaryForm
 
     Private _userRepository As UserRepository
 
-    Sub New(policy As PolicyHelper,
-            generator As TimeEntryGenerator,
-            calendarService As CalendarService,
-            listOfValueService As ListOfValueService,
-            payPeriodService As PayPeriodService,
-            breakTimeBracketRepository As BreakTimeBracketRepository,
-            EmployeeRepository As EmployeeRepository,
-            PayPeriodRepository As PayPeriodRepository,
-            timeAttendanceLogRepository As TimeAttendanceLogRepository,
-            userRepository As UserRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _policy = policy
-        _generator = generator
+        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _calendarService = calendarService
-        _listOfValueService = listOfValueService
-        _payPeriodService = payPeriodService
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
 
-        _breakTimeBracketRepository = breakTimeBracketRepository
-        _employeeRepository = EmployeeRepository
-        _payPeriodRepository = PayPeriodRepository
-        _timeAttendanceLogRepository = timeAttendanceLogRepository
-        _userRepository = userRepository
+        _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of BreakTimeBracketRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of TimeAttendanceLogRepository)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
     End Sub
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -171,10 +157,11 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Return _calendarService.
-                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
-                                                        _policy.PayRateCalculationBasis,
-                                                        z_OrganizationID)
+        Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
+
+        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
+                                                    _policy.PayRateCalculationBasis,
+                                                    z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -283,7 +270,7 @@ Public Class TimeEntrySummaryForm
         Dim payPeriods = New Collection(Of PayPeriod)
 
         Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
-                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -912,7 +899,7 @@ Public Class TimeEntrySummaryForm
         Dim endDate As Date
         Dim result As DialogResult
 
-        Using dialog = New DateRangePickerDialog(_payPeriodRepository, _payPeriodService, _selectedPayPeriod)
+        Using dialog = New DateRangePickerDialog(_selectedPayPeriod)
             result = dialog.ShowDialog()
 
             If result = DialogResult.OK Then
@@ -929,12 +916,13 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
-        Dim progressDialog = New TimeEntryProgressDialog(_generator)
+        Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
+        Dim progressDialog = New TimeEntryProgressDialog(generator)
         progressDialog.Show()
 
-        Await Task.Run(Sub() _generator.Start(z_OrganizationID, startDate, endDate)).
+        Await Task.Run(Sub() generator.Start(z_OrganizationID, startDate, endDate)).
             ContinueWith(
-                Sub() DoneGenerating(progressDialog),
+                Sub() DoneGenerating(progressDialog, generator),
                 CancellationToken.None,
                 TaskContinuationOptions.OnlyOnRanToCompletion,
                 TaskScheduler.FromCurrentSynchronizationContext)
@@ -942,8 +930,9 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
 
-        Dim validate = Await _payPeriodService.
-                        ValidatePayPeriodAction(_selectedPayPeriod.RowID, z_OrganizationID)
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
+                                                _selectedPayPeriod.RowID,
+                                                z_OrganizationID)
 
         If validate = FunctionResult.Failed Then
 
@@ -956,14 +945,14 @@ Public Class TimeEntrySummaryForm
         LoadTimeEntries()
     End Sub
 
-    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog)
+    Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
         dialog.Close()
         dialog.Dispose()
 
         Dim msgBoxText As String = "Done"
 
-        If _generator.ErrorCount > 0 Then
-            Dim errorCount = _generator.ErrorCount
+        If generator.ErrorCount > 0 Then
+            Dim errorCount = generator.ErrorCount
             msgBoxText = String.Concat("Done, with ", errorCount, If(errorCount = 1, " error", " errors."))
         End If
 
@@ -1008,7 +997,7 @@ Public Class TimeEntrySummaryForm
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
         Close()
-        'TimeAttendForm.listTimeAttendForm.Remove(Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Name)
     End Sub
 
     Private Sub searchTextBox_TextChanged(sender As Object, e As EventArgs) Handles searchTextBox.TextChanged
@@ -1503,17 +1492,15 @@ Public Class TimeEntrySummaryForm
     End Sub
 
     Private Sub tstbnResetLeaveBalance_Click(sender As Object, e As EventArgs) Handles tstbnResetLeaveBalance.Click
-        Dim form As New PreviewLeaveBalanceForm(_employeeRepository,
-                                                _payPeriodRepository,
-                                                _listOfValueService,
-                                                _payPeriodService)
+        Dim form As New PreviewLeaveBalanceForm
         form.ShowDialog()
     End Sub
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-        Dim validate = Await _payPeriodService.
-                        ValidatePayPeriodAction(_selectedPayPeriod.RowID, z_OrganizationID)
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
+                                                _selectedPayPeriod.RowID,
+                                                z_OrganizationID)
 
         If validate = FunctionResult.Failed Then
 

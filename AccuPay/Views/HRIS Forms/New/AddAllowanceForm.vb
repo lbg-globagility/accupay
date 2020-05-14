@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAllowanceForm
 
@@ -12,7 +13,7 @@ Public Class AddAllowanceForm
 
     Private _currentEmployee As Employee
 
-    Private _newAllowance As Allowance
+    Private _newAllowance As New Allowance()
 
     Private _allowanceTypeList As List(Of Product)
 
@@ -28,26 +29,21 @@ Public Class AddAllowanceForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(employee As Employee,
-            productRepository As ProductRepository,
-            allowanceRepository As AllowanceRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
         Me.NewAllowanceTypes = New List(Of Product)
-
-        _productRepository = productRepository
-
-        _allowanceRepository = allowanceRepository
-
-        _userActivityRepository = userActivityRepository
 
     End Sub
 
@@ -224,7 +220,7 @@ Public Class AddAllowanceForm
 
     Private Async Sub lnklbaddallowtype_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnklbaddallowtype.LinkClicked
 
-        Dim n_ProductControlForm As New ProductControlForm(_allowanceRepository)
+        Dim n_ProductControlForm As New ProductControlForm
 
         With n_ProductControlForm
 

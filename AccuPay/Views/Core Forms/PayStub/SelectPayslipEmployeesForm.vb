@@ -7,6 +7,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
@@ -27,7 +28,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private _payslipCreator As PayslipCreator
 
-    Private _listOfValueService As ListOfValueService
+    Private _policyHelper As PolicyHelper
 
     Private _payPeriodRepository As PayPeriodRepository
 
@@ -37,19 +38,10 @@ Public Class SelectPayslipEmployeesForm
 
     Private _paystubEmailHistoryRepository As PaystubEmailHistoryRepository
 
-    Sub New(currentPayPeriodId As Integer,
-            isEmail As Boolean,
-            payslipCreator As PayslipCreator,
-            listOfValueService As ListOfValueService,
-            payPeriodRepository As PayPeriodRepository,
-            paystubRepository As PaystubRepository,
-            paystubEmailRepository As PaystubEmailRepository,
-            paystubEmailHistoryRepository As PaystubEmailHistoryRepository)
+    Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _isEmail = isEmail
         _currentPayPeriodId = currentPayPeriodId
 
@@ -57,17 +49,17 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipTypes = New List(Of String) From {Declared, Actual}
 
-        _payslipCreator = payslipCreator
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
 
-        _listOfValueService = listOfValueService
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _payPeriodRepository = payPeriodRepository
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _paystubRepository = paystubRepository
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
-        _paystubEmailRepository = paystubEmailRepository
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
 
-        _paystubEmailHistoryRepository = paystubEmailHistoryRepository
+        _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailHistoryRepository)
 
     End Sub
 
@@ -89,9 +81,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Dim settings = _listOfValueService.Create()
-
-        Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+        Dim showActual = _policyHelper.ShowActual
 
         If showActual = False Then
 

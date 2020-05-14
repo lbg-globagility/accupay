@@ -597,7 +597,7 @@
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Private Sub dgvpositview_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles dgvpositview.DataError

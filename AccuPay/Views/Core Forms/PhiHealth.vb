@@ -41,7 +41,7 @@ Public Class PhiHealth
             End If
         End If
 
-        'GeneralForm.listGeneralForm.Remove(Me.Name)
+        GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
 
     Dim dontUpdate As SByte = 0

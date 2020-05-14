@@ -6,6 +6,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
@@ -28,23 +29,17 @@ Public Class ImportAllowanceForm
 
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(allowanceRepository As AllowanceRepository,
-            employeeRepository As EmployeeRepository,
-            productRepository As ProductRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
 
-        _allowanceRepository = allowanceRepository
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _employeeRepository = employeeRepository
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _productRepository = productRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
 
@@ -250,8 +245,7 @@ Public Class ImportAllowanceForm
     End Sub
 
     Private Async Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance,
-                                                                        _employeeRepository)
+        Dim fileInfo = Await DownloadTemplateHelper.DownloadExcelWithData(ExcelTemplates.Allowance)
 
         If fileInfo IsNot Nothing Then
             Using package As New ExcelPackage(fileInfo)

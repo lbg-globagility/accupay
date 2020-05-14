@@ -1,8 +1,8 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ActiveEmployeeChecklistReportProvider
     Implements ILaGlobalEmployeeReport
@@ -15,20 +15,9 @@ Public Class ActiveEmployeeChecklistReportProvider
 
     Public Property Employee As Employee Implements ILaGlobalEmployeeReport.Employee
 
-    Private ReadOnly _context As PayrollContext
-
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Sub New(context As PayrollContext, payPeriodRepository As PayPeriodRepository)
-
-        _context = context
-
-        _payPeriodRepository = payPeriodRepository
-    End Sub
-
     Public Function Output() As Boolean Implements ILaGlobalEmployeeReport.Output
         Dim succeed = False
-        Dim form As New SelectPayPeriodSimple(_payPeriodRepository)
+        Dim form As New SelectPayPeriodSimple
 
         succeed = form.ShowDialog = DialogResult.OK
         If Not succeed Then Return False
@@ -52,13 +41,12 @@ Public Class ActiveEmployeeChecklistReportProvider
 
         Dim employees As New List(Of Employee)
 
-        Using employeeBuilder = New EmployeeRepository.EmployeeBuilder(_context)
+        Dim employeeBuilder = MainServiceProvider.GetRequiredService(Of EmployeeQueryBuilder)
 
-            employees = employeeBuilder.
+        employees = employeeBuilder.
                             IsActive().
                             IncludeBranch().
                             ToList(z_OrganizationID)
-        End Using
 
         If Not employees.Any Then
             MessageBox.Show($"No record found.", "Active Employee Checklist Report", MessageBoxButtons.OK, MessageBoxIcon.Information)

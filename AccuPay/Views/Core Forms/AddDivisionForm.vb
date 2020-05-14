@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionForm
 
@@ -28,35 +29,25 @@ Public Class AddDivisionForm
 
     Public Property LastDivisionAdded As Division
 
-    Private _divisionRepository As DivisionRepository
+    Private _payFrequencyRepository As PayFrequencyRepository
 
     Private _listOfValueRepository As ListOfValueRepository
 
     Private _positionRepository As PositionRepository
 
-    Private _payFrequencyRepository As PayFrequencyRepository
-
     Private _userActivityRepository As UserActivityRepository
 
-    Sub New(divisionRepository As DivisionRepository,
-            listOfValueRepository As ListOfValueRepository,
-            positionRepository As PositionRepository,
-            payFrequencyRepository As PayFrequencyRepository,
-            userActivityRepository As UserActivityRepository)
+    Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _divisionRepository = divisionRepository
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _listOfValueRepository = listOfValueRepository
+        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
 
-        _positionRepository = positionRepository
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
 
-        _payFrequencyRepository = payFrequencyRepository
-
-        _userActivityRepository = userActivityRepository
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -82,7 +73,8 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllParentsAsync(z_OrganizationID)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim divisions = Await divisionRepository.GetAllParentsAsync(z_OrganizationID)
 
         _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -108,7 +100,8 @@ Public Class AddDivisionForm
 
     Private Sub GetDivisionTypes()
 
-        _divisionTypes = _divisionRepository.GetDivisionTypeList
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionTypes = divisionRepository.GetDivisionTypeList
 
     End Sub
 
@@ -159,7 +152,8 @@ Public Class AddDivisionForm
 
     Private Async Function SaveDivision(sender As Object) As Task
 
-        Me.LastDivisionAdded = Await _divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Me.LastDivisionAdded = Await divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
 
         _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 

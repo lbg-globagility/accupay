@@ -1,6 +1,5 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 
 Public Class NewEmployeeForm
@@ -17,14 +16,6 @@ Public Class NewEmployeeForm
 
     Public Event TabChanged()
 
-    Private ReadOnly _context As PayrollContext
-
-    Sub New(context As PayrollContext)
-
-        InitializeComponent()
-        _context = context
-    End Sub
-
     Public ReadOnly Property IsActive As Boolean
         Get
             Return ActiveCheckBox.Checked
@@ -39,7 +30,7 @@ Public Class NewEmployeeForm
 
     Private Sub NewEmployeeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         InitComponents()
-        Dim presenter = New NewEmployeePresenter(_context, Me)
+        Dim presenter = New NewEmployeePresenter(Me)
         RaiseEvent Init()
     End Sub
 

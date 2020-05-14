@@ -20,8 +20,6 @@ Public Class SalaryTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _salaries As List(Of Salary)
 
     Private _currentSalary As Salary
@@ -29,18 +27,6 @@ Public Class SalaryTab
     Private _isSystemOwnerBenchMark As Boolean
 
     Private _ecolaAllowance As Allowance
-
-    Private _benchmarkPayrollHelper As BenchmarkPayrollHelper
-
-    Private _payPeriodService As PayPeriodService
-
-    Private _allowanceRepository As AllowanceRepository
-
-    Private _employeeRepository As EmployeeRepository
-
-    Private _salaryRepository As SalaryRepository
-
-    Private _userActivityRepository As UserActivityRepository
 
     Public Property BasicSalary As Decimal
         Get
@@ -75,28 +61,13 @@ Public Class SalaryTab
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        Using MainServiceProvider
-            _benchmarkPayrollHelper = MainServiceProvider.GetRequiredService(Of BenchmarkPayrollHelper)()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-            _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)()
-
-            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)()
-
-            _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)()
-
-            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)()
-
-            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)()
-
-            _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)()
-        End Using
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Public Async Function SetEmployee(employee As Employee) As Task
 
         _employee = employee
-
-        _parentForm = parentForm
 
         If Await InitializeBenchmarkData() = False Then
             Return
@@ -127,8 +98,10 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim currentPayPeriod = Await _payPeriodService.
-                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+            Dim currentPayPeriod = Await payPeriodService.
+                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
@@ -141,7 +114,7 @@ Public Class SalaryTab
             'Else allowance frequency should be semi-monthly (for Fixed and Monthly)
             'If _employee.IsDaily Then
             'End If
-            _ecolaAllowance = Await _benchmarkPayrollHelper.GetEcola(
+            _ecolaAllowance = Await BenchmarkPayrollHelper.GetEcola(
                                                 employeeId.Value,
                                                 payDateFrom:=currentPayPeriod.PayFromDate,
                                                 payDateTo:=currentPayPeriod.PayToDate)
@@ -217,7 +190,9 @@ Public Class SalaryTab
             Return
         End If
 
-        _salaries = _salaryRepository.GetByEmployee(_employee.RowID.Value).
+        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _salaries = salaryRepository.GetByEmployee(_employee.RowID.Value).
                                         OrderByDescending(Function(s) s.EffectiveFrom).
                                         ToList()
 
@@ -368,6 +343,8 @@ Public Class SalaryTab
 
         Dim oldsalary As Salary = Nothing
 
+        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
         Try
             With _currentSalary
                 .EffectiveFrom = dtpEffectiveFrom.Value
@@ -384,12 +361,12 @@ Public Class SalaryTab
 
             If _currentSalary.RowID.HasValue Then
 
-                oldsalary = Await _salaryRepository.GetByIdAsync(_currentSalary.RowID.Value)
+                oldsalary = Await salaryRepository.GetByIdAsync(_currentSalary.RowID.Value)
                 _currentSalary.LastUpdBy = z_User
 
             End If
 
-            Await _salaryRepository.SaveAsync(_currentSalary)
+            Await salaryRepository.SaveAsync(_currentSalary)
 
             If _isSystemOwnerBenchMark Then
 
@@ -401,7 +378,8 @@ Public Class SalaryTab
             If _mode = FormMode.Creating Then
 
                 messageTitle = "New Salary"
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
             ElseIf _mode = FormMode.Editing Then
 
@@ -499,7 +477,8 @@ Public Class SalaryTab
         End If
 
         If changes.Count > 0 Then
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
         End If
 
         Return False
@@ -510,12 +489,14 @@ Public Class SalaryTab
 
         If _ecolaAllowanceId IsNot Nothing Then
 
-            Dim ecolaAllowance = Await _allowanceRepository.GetByIdAsync(_ecolaAllowanceId.Value)
+            Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+            Dim ecolaAllowance = Await allowanceRepository.GetByIdAsync(_ecolaAllowanceId.Value)
 
             ecolaAllowance.Amount = txtEcola.Text.ToDecimal
             ecolaAllowance.LastUpdBy = z_User
 
-            Await _allowanceRepository.SaveAsync(ecolaAllowance)
+            Await allowanceRepository.SaveAsync(ecolaAllowance)
 
         End If
     End Function
@@ -532,9 +513,11 @@ Public Class SalaryTab
 
         If result = MsgBoxResult.Yes Then
 
-            Await _salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
+            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            Await salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
 
-            _userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+            Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
             LoadSalaries()
         End If
@@ -611,9 +594,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnImport_Click(sender As Object, e As EventArgs) Handles btnImport.Click
-        Using dialog = New ImportSalaryForm(_employeeRepository,
-                                            _salaryRepository,
-                                            _userActivityRepository)
+        Using dialog = New ImportSalaryForm()
             dialog.ShowDialog()
 
             If dialog.IsSaved Then
@@ -628,7 +609,7 @@ Public Class SalaryTab
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
 
-        _parentForm.Close()
+        EmployeeForm.Close()
 
     End Sub
 
@@ -637,7 +618,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub UserActivitySalaryToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivitySalaryToolStripButton.Click
-        Dim userActivity As New UserActivityForm(FormEntityName, _userActivityRepository)
+        Dim userActivity As New UserActivityForm(FormEntityName)
         userActivity.ShowDialog()
     End Sub
 

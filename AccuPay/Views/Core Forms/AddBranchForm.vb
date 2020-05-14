@@ -8,16 +8,9 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBranchForm
-
-    Private _branchRepository As BranchRepository
-
-    Private _calendarRepository As CalendarRepository
-
-    Private _employeeRepository As EmployeeRepository
-
-    Private _listOfValueService As ListOfValueService
 
     Private _branches As IEnumerable(Of Branch)
 
@@ -32,22 +25,21 @@ Public Class AddBranchForm
 
     Public Property LastAddedBranchId As Integer?
 
-    Sub New(branchRepository As BranchRepository,
-            calendarRepository As CalendarRepository,
-            employeeRepository As EmployeeRepository,
-            listOfValueService As ListOfValueService)
+    Private _policyHelper As PolicyHelper
 
-        ' This call is required by the designer.
+    Private _calendarRepository As CalendarRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Sub New()
+
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _branchRepository = branchRepository
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _calendarRepository = calendarRepository
+        _calendarRepository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
 
-        _employeeRepository = employeeRepository
-
-        _listOfValueService = listOfValueService
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
 
     Private Async Sub AddBranchForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -64,10 +56,7 @@ Public Class AddBranchForm
 
     Private Sub ShowCalendar()
 
-        Dim settings = _listOfValueService.Create()
-
-        _payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis",
-                                            PayRateCalculationBasis.Organization)
+        _payrateCalculationBasis = _policyHelper.PayRateCalculationBasis
 
         If _payrateCalculationBasis <> PayRateCalculationBasis.Branch Then
 
@@ -78,6 +67,8 @@ Public Class AddBranchForm
     End Sub
 
     Private Async Function RefreshForm() As Task
+
+        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         _branches = Await _branchRepository.GetAllAsync()
 
@@ -207,6 +198,7 @@ Public Class AddBranchForm
         Await FunctionUtils.TryCatchFunctionAsync("Delete Branch",
                 Async Function()
 
+                    Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
                     Await _branchRepository.DeleteAsync(branch)
 
                     Await RefreshForm()
@@ -272,6 +264,8 @@ Public Class AddBranchForm
     End Sub
 
     Private Async Function SaveBranch(branchName As String, calendar As PayCalendar) As Task(Of Integer?)
+
+        Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         Dim branch As New Branch
         If _currentFormType = FormMode.Creating Then
