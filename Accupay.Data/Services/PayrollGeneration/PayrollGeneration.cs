@@ -11,9 +11,9 @@ namespace AccuPay.Data.Services
 {
     public class PayrollGeneration
     {
-        private PayrollContext _context;
-
         private SystemOwnerService _systemOwnerService;
+        
+        private readonly DbContextOptionsService _dbContextOptionsService;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
@@ -41,7 +41,7 @@ namespace AccuPay.Data.Services
 
         private ICollection<Allowance> _allowances;
 
-        private ICollection<AllowanceItem> _allowanceItems = new List<AllowanceItem>();
+        private ICollection<AllowanceItem> _allowanceItems;
 
         private ICollection<ActualTimeEntry> _actualtimeentries;
 
@@ -59,10 +59,11 @@ namespace AccuPay.Data.Services
 
         private Paystub _paystub;
 
-        public PayrollGeneration(PayrollContext context, SystemOwnerService systemOwnerService)
+        public PayrollGeneration(SystemOwnerService systemOwnerService,
+                                DbContextOptionsService dbContextOptionsService)
         {
-            this._context = context;
             _systemOwnerService = systemOwnerService;
+            _dbContextOptionsService = dbContextOptionsService;
         }
 
         public Result DoProcess(Employee employee,
@@ -70,6 +71,8 @@ namespace AccuPay.Data.Services
                                 int organizationId,
                                 int userId)
         {
+            _allowanceItems = new List<AllowanceItem>();
+
             _employee = employee;
 
             _organizationId = organizationId;
@@ -201,48 +204,53 @@ namespace AccuPay.Data.Services
 
         public void SavePayroll(List<LoanTransaction> newLoanTransactions)
         {
-            if (_paystub.RowID.HasValue)
+            using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
-                _context.Entry(_paystub).State = EntityState.Modified;
-                _context.Entry(_paystub.Actual).State = EntityState.Modified;
-
-                if (_paystub.ThirteenthMonthPay != null)
-                    _context.Entry(_paystub.ThirteenthMonthPay).State = EntityState.Modified;
-            }
-            else
-                _context.Paystubs.Add(_paystub);
-
-            if (EligibleForNewBPIInsurance())
-            {
-                _context.Adjustments.Add(new Adjustment()
+                if (_paystub.RowID.HasValue)
                 {
-                    OrganizationID = _organizationId,
-                    CreatedBy = _userId,
-                    Created = DateTime.Now,
-                    Paystub = _paystub,
-                    ProductID = _bpiInsuranceProduct.RowID,
-                    Amount = -_employee.BPIInsurance
-                });
+                    context.Entry(_paystub).State = EntityState.Modified;
+                    context.Entry(_paystub.Actual).State = EntityState.Modified;
+
+                    if (_paystub.ThirteenthMonthPay != null)
+                        context.Entry(_paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                }
+                else
+                {
+                    context.Paystubs.Add(_paystub);
+                }
+
+                if (EligibleForNewBPIInsurance())
+                {
+                    context.Adjustments.Add(new Adjustment()
+                    {
+                        OrganizationID = _organizationId,
+                        CreatedBy = _userId,
+                        Created = DateTime.Now,
+                        Paystub = _paystub,
+                        ProductID = _bpiInsuranceProduct.RowID,
+                        Amount = -_employee.BPIInsurance
+                    });
+                }
+
+                context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
+
+                _paystub.AllowanceItems = _allowanceItems;
+
+                foreach (var newLoanTransaction in newLoanTransactions)
+                {
+                    context.LoanTransactions.Add(newLoanTransaction);
+                }
+
+                if (_systemOwnerService.GetCurrentSystemOwner() != SystemOwnerService.Benchmark)
+                {
+                    UpdateLeaveLedger(context);
+                    UpdatePaystubItems(context);
+                }
+                else
+                    UpdateBenchmarkLeaveLedger(context);
+
+                context.SaveChanges();
             }
-
-            _context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
-
-            _paystub.AllowanceItems = _allowanceItems;
-
-            foreach (var newLoanTransaction in newLoanTransactions)
-            {
-                _context.LoanTransactions.Add(newLoanTransaction);
-            }
-
-            if (_systemOwnerService.GetCurrentSystemOwner() != SystemOwnerService.Benchmark)
-            {
-                UpdateLeaveLedger(_context);
-                UpdatePaystubItems(_context);
-            }
-            else
-                UpdateBenchmarkLeaveLedger(_context);
-
-            _context.SaveChanges();
         }
 
         public List<LoanTransaction> ComputePayroll(Paystub paystub = null,
@@ -309,28 +317,10 @@ namespace AccuPay.Data.Services
 
         private bool EligibleForNewBPIInsurance()
         {
-            return _settings.GetBoolean("Employee Policy.UseBPIInsurance", false) && IsFirstPaystub() && _employee.BPIInsurance > 0 && !_paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
-        }
-
-        private bool IsFirstPaystub()
-        {
-            var query = _context.Paystubs.Where(p => p.EmployeeID == _employee.RowID);
-
-            var paystubCount = query.Count();
-
-            if (paystubCount > 1)
-                return false;
-            else if (paystubCount == 0)
-                return true;
-            else
-            {
-                var firstPaystub = query.OrderBy(p => p.PayFromdate).FirstOrDefault();
-
-                if (firstPaystub == null || firstPaystub.PayPeriodID == _payPeriod.RowID)
-                    return true;
-
-                return false;
-            }
+            return _settings.GetBoolean("Employee Policy.UseBPIInsurance", false) &&
+                    IsFirstPay() &&
+                    _employee.BPIInsurance > 0 &&
+                    !_paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
         }
 
         private void ComputeTotalEarnings()
@@ -340,9 +330,7 @@ namespace AccuPay.Data.Services
             else if (_employee.IsMonthly)
             {
                 var isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
-
-                var isFirstPay = _payPeriod.PayFromDate <= _employee.StartDate &&
-                                    _employee.StartDate <= _payPeriod.PayToDate;
+                bool isFirstPay = IsFirstPay();
 
                 if (isFirstPay && isFirstPayAsDailyRule)
                 {
@@ -366,6 +354,13 @@ namespace AccuPay.Data.Services
                                         _paystub.LeavePay +
                                         _paystub.AdditionalPay;
             }
+        }
+
+        private bool IsFirstPay()
+        {
+            // start date is within current pay period
+            return _payPeriod.PayFromDate <= _employee.StartDate &&
+                                _employee.StartDate <= _payPeriod.PayToDate;
         }
 
         private void ComputeBasicHoursAndPay()

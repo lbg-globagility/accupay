@@ -121,6 +121,8 @@ Public Class PayStubForm
 
     Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        dgvAdjustments.AutoGenerateColumns = False
+
         viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
 
         Await VIEW_payperiodofyear()
@@ -163,8 +165,6 @@ Public Class PayStubForm
 
         cboProducts.DataSource = New SQLQueryToDatatable("SELECT RowID AS 'ProductID', Name AS 'ProductName', Category FROM product WHERE Category IN ('Allowance Type', 'Bonus', 'Adjustment Type')" &
                                                   " AND OrganizationID='" & orgztnID & "' ORDER BY Name;").ResultTable
-
-        dgvAdjustments.AutoGenerateColumns = False
 
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
@@ -850,6 +850,9 @@ Public Class PayStubForm
     End Sub
 
     Private Async Sub GeneratingPayrollOnSuccess()
+
+        PayrollTools.UpdateLoanSchedule(paypRowID)
+
         Dim dialog = New PayrollResultDialog(_results.ToList()) With {
                 .Owner = Me
             }

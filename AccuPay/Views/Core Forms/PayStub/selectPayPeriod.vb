@@ -393,4 +393,41 @@ Public Class selectPayPeriod
         dgvpaypers.Rows(e.RowIndex).DefaultCellStyle.BackColor = row_bg_color
     End Sub
 
+    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
+        Dim n_link As New LinkLabel.Link
+
+        If keyData = Keys.Enter Then
+
+            OkButton.PerformClick()
+
+            Return True
+
+        ElseIf keyData = Keys.Escape And dgvpaypers.IsCurrentCellInEditMode = False Then
+
+            CloseButton.PerformClick()
+
+            Return True
+
+        ElseIf keyData = Keys.Left Then
+
+            n_link.Name = "linkPrev"
+
+            linkPrev_LinkClicked(linkPrev, New LinkLabelLinkClickedEventArgs(n_link))
+
+            Return True
+
+        ElseIf keyData = Keys.Right Then
+
+            n_link.Name = "linkNxt"
+
+            linkNxt_LinkClicked(linkNxt, New LinkLabelLinkClickedEventArgs(n_link))
+
+            Return True
+        Else
+
+            Return MyBase.ProcessCmdKey(msg, keyData)
+
+        End If
+    End Function
+
 End Class
