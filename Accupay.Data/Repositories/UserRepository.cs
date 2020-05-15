@@ -21,6 +21,61 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        public class UserBuilder : IDisposable
+        {
+            private PayrollContext _context;
+            private IQueryable<User> _query;
+
+            public UserBuilder(PayrollContext context)
+            {
+                _context = context;
+                _query = _context.OldUsers;
+            }
+
+            #region Builder Methods
+
+            public UserBuilder ById(int rowId)
+            {
+                _query = _query.Where(u => u.RowID == rowId);
+                return this;
+            }
+
+            public UserBuilder ByUsername(string username)
+            {
+                _query = _query.Where(u => u.Username == username);
+                return this;
+            }
+
+            public UserBuilder IsActive()
+            {
+                _query = _query.Where(u => u.IsActive);
+                return this;
+            }
+
+            public UserBuilder IncludePosition()
+            {
+                _query = _query.Include(u => u.Position);
+                return this;
+            }
+
+            public async Task<IEnumerable<User>> ToListAsync()
+            {
+                return await _query.ToListAsync();
+            }
+
+            public async Task<User> FirstOrDefaultAsync()
+            {
+                return await _query.FirstOrDefaultAsync();
+            }
+
+            public void Dispose()
+            {
+                _context.Dispose();
+            }
+
+            #endregion Builder Methods
+        }
+
         #region User List
 
         public async Task<IEnumerable<User>> GetAllAsync()
@@ -124,7 +179,7 @@ namespace AccuPay.Data.Repositories
                 // this adds a value to RowID (int minimum value)
                 // so if there is a code checking for null to RowID
                 // it will always be false
-                _context.Users.AddRange(added);
+                _context.OldUsers.AddRange(added);
             }
             await _context.SaveChangesAsync();
         }

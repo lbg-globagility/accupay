@@ -14,7 +14,7 @@ namespace AccuPay.Data.Repositories
         public UserQueryBuilder(PayrollContext context)
         {
             _context = context;
-            _query = _context.Users;
+            _query = _context.OldUsers;
         }
 
         public UserQueryBuilder ById(int rowId)
