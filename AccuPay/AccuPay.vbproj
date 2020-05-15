@@ -621,6 +621,7 @@
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Views\General Forms\DependencyInjectionHelper.vb" />
     <Compile Include="Views\General Forms\UserActivityForm.Designer.vb">
       <DependentUpon>UserActivityForm.vb</DependentUpon>
     </Compile>

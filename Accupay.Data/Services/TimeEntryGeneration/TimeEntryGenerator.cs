@@ -33,8 +33,7 @@ namespace AccuPay.Data.Services
         private IList<EmployeeDutySchedule> _shiftSchedules;
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
-
-        private readonly PayrollContext _context;
+        private readonly DbContextOptionsService _dbContextOptionsService;
         private readonly CalendarService _calendarService;
         private readonly ListOfValueService _listOfValueService;
 
@@ -74,7 +73,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public TimeEntryGenerator(PayrollContext context,
+        public TimeEntryGenerator(DbContextOptionsService dbContextOptionsService,
                                 CalendarService calendarService,
                                 ListOfValueService listOfValueService,
                                 ActualTimeEntryRepository actualTimeEntryRepository,
@@ -93,7 +92,7 @@ namespace AccuPay.Data.Services
                                 TimeEntryRepository timeEntryRepository,
                                 TimeLogRepository timeLogRepository)
         {
-            _context = context;
+            _dbContextOptionsService = dbContextOptionsService;
             _calendarService = calendarService;
             _listOfValueService = listOfValueService;
 
@@ -365,17 +364,20 @@ namespace AccuPay.Data.Services
             var actualTimeEntryCalculator = new ActualTimeEntryCalculator(salary, actualTimeEntries, new ActualTimeEntryPolicy(settings));
             actualTimeEntries = actualTimeEntryCalculator.Compute(timeEntries);
 
-            AddTimeEntriesToContext(_context, timeEntries);
-            AddActualTimeEntriesToContext(_context, actualTimeEntries);
-            AddAgencyFeesToContext(_context, agencyFees);
-            _context.SaveChanges();
+            using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
+            {
+                AddTimeEntriesToContext(context, timeEntries);
+                AddActualTimeEntriesToContext(context, actualTimeEntries);
+                AddAgencyFeesToContext(context, agencyFees);
+                context.SaveChanges();
+            }
         }
 
         private void PostLegalHolidayCheck(Employee employee,
-                                        List<TimeEntry> timeEntries,
-                                        TimeEntryPolicy timeEntryPolicy,
-                                        List<DateTime> regularHolidaysList,
-                                        CalendarCollection calendarCollection)
+                                            List<TimeEntry> timeEntries,
+                                            TimeEntryPolicy timeEntryPolicy,
+                                            List<DateTime> regularHolidaysList,
+                                            CalendarCollection calendarCollection)
         {
             if (timeEntryPolicy.PostLegalHolidayCheck)
             {

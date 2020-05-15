@@ -796,35 +796,47 @@ Public Class PayStubForm
 
             Dim generator = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
 
-            Dim generationTask = Task.Run(
-                Sub()
-                    Parallel.ForEach(
-                            resources.Employees,
-                            Sub(employee)
+            resources.Employees.ToList().ForEach(
+                    Sub(employee)
 
-                                _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
-                                                                userId:=z_User,
-                                                                employee:=employee,
-                                                                resources:=resources))
+                        _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
+                                                        userId:=z_User,
+                                                        employee:=employee,
+                                                        resources:=resources))
+                        Interlocked.Increment(_finishedPaystubs)
+                    End Sub)
 
-                                Interlocked.Increment(_finishedPaystubs)
-                            End Sub)
-                End Sub
-            )
+            GeneratingPayrollOnSuccess()
 
-            generationTask.ContinueWith(
-                    AddressOf GeneratingPayrollOnSuccess,
-                    CancellationToken.None,
-                    TaskContinuationOptions.OnlyOnRanToCompletion,
-                    TaskScheduler.FromCurrentSynchronizationContext
-            )
+            'Dim generationTask = Task.Run(
+            '    Sub()
+            '        Parallel.ForEach(
+            '                resources.Employees,
+            '                Sub(employee)
 
-            generationTask.ContinueWith(
-                AddressOf GeneratingPayrollOnError,
-                CancellationToken.None,
-                TaskContinuationOptions.OnlyOnFaulted,
-                TaskScheduler.FromCurrentSynchronizationContext
-            )
+            '                    _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
+            '                                                    userId:=z_User,
+            '                                                    employee:=employee,
+            '                                                    resources:=resources))
+
+            '                    Interlocked.Increment(_finishedPaystubs)
+            '                End Sub)
+            '    End Sub
+            ')
+
+            'generationTask.ContinueWith(
+            '        AddressOf GeneratingPayrollOnSuccess,
+            '        CancellationToken.None,
+            '        TaskContinuationOptions.OnlyOnRanToCompletion,
+            '        TaskScheduler.FromCurrentSynchronizationContext
+            ')
+
+            'generationTask.ContinueWith(
+            '    AddressOf GeneratingPayrollOnError,
+            '    CancellationToken.None,
+            '    TaskContinuationOptions.OnlyOnFaulted,
+            '    TaskScheduler.FromCurrentSynchronizationContext
+            ')
         Catch ex As Exception
             _logger.Error("Error loading the employees", ex)
         End Try
@@ -1918,7 +1930,9 @@ Public Class PayStubForm
 
         Dim form As New selectPayPeriod
 
-        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
+        Dim result = form.ShowDialog()
+
+        If result <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
         paypRowID = form.PayPeriod.RowID
         paypFrom = form.PayPeriod.PayFromDate

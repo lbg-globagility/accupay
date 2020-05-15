@@ -303,12 +303,7 @@ Public Class selectPayPeriod
 
         End If
 
-        Me.Hide()
-        Me.Close()
-    End Sub
-
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        Me.Close()
+        DialogResult = DialogResult.OK
     End Sub
 
     Dim prior_value As Object = Nothing
@@ -335,15 +330,6 @@ Public Class selectPayPeriod
                                      ",LastUpdBy='" & z_User & "'" &
                                      " WHERE RowID='" & dgvpaypers.Item("Column1", e.RowIndex).Value & "';")
             End If
-        End If
-    End Sub
-
-    Private Sub dgvpaypers_KeyDown(sender As Object, e As KeyEventArgs) Handles dgvpaypers.KeyDown
-        If e.KeyCode = Keys.Escape Then
-            Me.Close()
-        ElseIf e.KeyCode = Keys.Enter Then
-            e.Handled = True
-            Button1_Click(sender, e)
         End If
     End Sub
 
@@ -390,37 +376,6 @@ Public Class selectPayPeriod
         PayPeriodStatusLabel.BackColor = Color.White
         PayPeriodStatusLabel.ResetText()
     End Sub
-
-    Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
-        Dim n_link As New LinkLabel.Link
-
-        If keyData = Keys.Escape And dgvpaypers.IsCurrentCellInEditMode = False Then
-
-            Button2_Click(CloseButton, New EventArgs)
-
-            Return True
-
-        ElseIf keyData = Keys.Left Then
-
-            n_link.Name = "linkPrev"
-
-            linkPrev_LinkClicked(linkPrev, New LinkLabelLinkClickedEventArgs(n_link))
-
-            Return True
-
-        ElseIf keyData = Keys.Right Then
-
-            n_link.Name = "linkNxt"
-
-            linkNxt_LinkClicked(linkNxt, New LinkLabelLinkClickedEventArgs(n_link))
-
-            Return True
-        Else
-
-            Return MyBase.ProcessCmdKey(msg, keyData)
-
-        End If
-    End Function
 
     Private Sub dgvpaypers_RowsAdded(sender As Object, e As DataGridViewRowsAddedEventArgs) Handles dgvpaypers.RowsAdded
         Dim month_column_name As String = Column5.Name

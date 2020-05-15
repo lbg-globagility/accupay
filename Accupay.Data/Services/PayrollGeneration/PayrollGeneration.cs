@@ -704,7 +704,10 @@ namespace AccuPay.Data.Services
             context.Entry(_paystub).Collection(p => p.PaystubItems).Load();
             context.Set<PaystubItem>().RemoveRange(_paystub.PaystubItems);
 
-            var vacationLeaveBalance = context.PaystubItems.Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE).Where(p => Convert.ToBoolean(p.Paystub.RowID == _paystub.RowID)).FirstOrDefault();
+            var vacationLeaveBalance = context.PaystubItems.
+                                Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE).
+                                Where(p => p.Paystub.RowID == _paystub.RowID).
+                                FirstOrDefault();
 
             var vacationLeaveUsed = _timeEntries.Sum(t => t.VacationLeaveHours);
             var newBalance = _employee.LeaveBalance - vacationLeaveUsed;
@@ -721,7 +724,10 @@ namespace AccuPay.Data.Services
 
             _paystub.PaystubItems.Add(vacationLeaveBalance);
 
-            var sickLeaveBalance = context.PaystubItems.Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE).Where(p => Convert.ToBoolean(p.Paystub.RowID == _paystub.RowID)).FirstOrDefault();
+            var sickLeaveBalance = context.PaystubItems.
+                                        Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE).
+                                        Where(p => p.Paystub.RowID == _paystub.RowID).
+                                        FirstOrDefault();
 
             var sickLeaveUsed = _timeEntries.Sum(t => t.SickLeaveHours);
             var newBalance2 = _employee.SickLeaveBalance - sickLeaveUsed;
