@@ -7,6 +7,11 @@ namespace AccuPay.Web.Users
 {
     public class UserService
     {
+        /// <summary>
+        /// Needs to be replaced later on with a real password
+        /// </summary>
+        private readonly string DEFAULT_PASSWORD = "password";
+
         private readonly UserManager<AspNetUser> _users;
 
         public UserService(UserManager<AspNetUser> users)
@@ -24,7 +29,7 @@ namespace AccuPay.Web.Users
                 UserName = dto.Email
             };
 
-            var result = await _users.CreateAsync(user);
+            var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);
             if (result.Succeeded)
             {
                 return new UserDto()

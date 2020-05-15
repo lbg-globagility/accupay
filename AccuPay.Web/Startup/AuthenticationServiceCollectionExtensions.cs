@@ -13,9 +13,9 @@ namespace AccuPay.Web
             services
                 .AddIdentity<AspNetUser, AspNetRole>(options =>
                 {
-                    options.Password.RequireDigit = true;
-                    options.Password.RequireUppercase = true;
-                    options.Password.RequireLowercase = true;
+                    options.Password.RequireDigit = false;
+                    options.Password.RequireUppercase = false;
+                    options.Password.RequireLowercase = false;
                     options.Password.RequiredLength = 8;
                     options.Password.RequireNonAlphanumeric = false;
                     options.User.RequireUniqueEmail = true;
