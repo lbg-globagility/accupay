@@ -90,8 +90,6 @@ namespace AccuPay.Data.Repositories
             // add or update the loanSchedule
             if (deferSave == false)
             {
-                // this is the only entity that is checking for int.MinValue,
-                // maybe rethink this and check what is causing this
                 await SaveAsyncFunction(newLoanSchedule);
                 await _context.SaveChangesAsync();
             }
@@ -106,6 +104,8 @@ namespace AccuPay.Data.Repositories
 
         private async Task SaveAsyncFunction(LoanSchedule loanSchedule)
         {
+            // this is the only entity that is checking for int.MinValue,
+            // maybe rethink this and check what is causing this
             if (loanSchedule.RowID == null || loanSchedule.RowID == int.MinValue)
                 Insert(loanSchedule);
             else
@@ -161,7 +161,7 @@ namespace AccuPay.Data.Repositories
                 newLoanSchedule.LoanPayPeriodLeft = ComputeNumberOfPayPeriod(newLoanSchedule.TotalBalanceLeft, newLoanSchedule.DeductionAmount);
             }
 
-            _context.LoanSchedules.Attach(newLoanSchedule);
+            _context.Entry(oldLoanSchedule).State = EntityState.Detached;
             _context.Entry(newLoanSchedule).State = EntityState.Modified;
         }
 

@@ -19,26 +19,23 @@ namespace AccuPay.Data.Services
             ProductConstant.VACATION_LEAVE
         };
 
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
         private readonly PolicyHelper _policy;
         private readonly PayPeriodService _payPeriodService;
 
         private readonly EmployeeRepository _employeeRepository;
-        private readonly LeaveRepository _leaveRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
 
         public LeaveService(PayrollContext context,
                             PolicyHelper policy,
                             PayPeriodService payPeriodService,
                             EmployeeRepository employeeRepository,
-                            LeaveRepository leaveRepository,
                             PayPeriodRepository payPeriodRepository)
         {
-            this.context = context;
+            _context = context;
             _policy = policy;
             _payPeriodService = payPeriodService;
             _employeeRepository = employeeRepository;
-            _leaveRepository = leaveRepository;
             _payPeriodRepository = payPeriodRepository;
         }
 
@@ -47,6 +44,10 @@ namespace AccuPay.Data.Services
         public async Task SaveManyAsync(List<Leave> leaves, int organizationId)
         {
             if (leaves.Any() == false) return;
+
+            // we want to share this service's context to LeaveRepository
+            // constructor injecting leaveRepository would give them separate context
+            LeaveRepository leaveRepository = new LeaveRepository(_context);
 
             List<ShiftSchedule> employeeShifts = new List<ShiftSchedule>();
             List<EmployeeDutySchedule> shiftSchedules = new List<EmployeeDutySchedule>();
@@ -67,11 +68,11 @@ namespace AccuPay.Data.Services
                 employees = await GetEmployees(notNullEmployeeIds);
             }
 
-            await context.Leaves.LoadAsync();
+            await _context.Leaves.LoadAsync();
 
             foreach (var leave in leaves)
             {
-                await _leaveRepository.SaveWithContextAsync(leave);
+                await leaveRepository.SaveWithContextAsync(leave);
 
                 if (_policy.ValidateLeaveBalance)
                 {
@@ -116,7 +117,7 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
         }
 
         private async Task<List<ShiftSchedule>> GetEmployeeShifts(int?[] employeeIds,
@@ -124,7 +125,7 @@ namespace AccuPay.Data.Services
                                                                 DateTime firstLeave,
                                                                 DateTime lastLeave)
         {
-            return await context.ShiftSchedules.
+            return await _context.ShiftSchedules.
                                     Include(s => s.Shift).Where(s => s.OrganizationID == organizationId).
                                     Where(s => s.EffectiveFrom <= lastLeave).
                                     Where(s => firstLeave <= s.EffectiveTo).
@@ -137,7 +138,7 @@ namespace AccuPay.Data.Services
                                                                         DateTime firstLeave,
                                                                         DateTime lastLeave)
         {
-            return await context.EmployeeDutySchedules.
+            return await _context.EmployeeDutySchedules.
                                     Where(es => es.OrganizationID == organizationId).
                                     Where(es => firstLeave <= es.DateSched).
                                     Where(es => es.DateSched <= lastLeave).
@@ -225,7 +226,7 @@ namespace AccuPay.Data.Services
                                                                     Leave leave,
                                                                     int organizationId)
         {
-            var currentPayPeriod = context.PayPeriods.
+            var currentPayPeriod = _context.PayPeriods.
                                             Where(p => p.OrganizationID == organizationId).
                                             Where(p => p.IsSemiMonthly).
                                             Where(p => p.IsBetween(leave.StartDate)).
@@ -237,7 +238,7 @@ namespace AccuPay.Data.Services
             DateTime? firstDayOfTheYear = await _payPeriodRepository.
                                       GetFirstDayOfTheYear(currentPayPeriod, organizationId);
 
-            var lastDayOfTheYear = context.PayPeriods.
+            var lastDayOfTheYear = _context.PayPeriods.
                                             Where(p => p.OrganizationID == organizationId).
                                             Where(p => p.IsSemiMonthly).
                                             Where(p => p.Year == currentPayPeriod.Year).
@@ -248,13 +249,13 @@ namespace AccuPay.Data.Services
             if (firstDayOfTheYear == null || lastDayOfTheYear == null)
                 return new List<Leave>();
 
-            return context.Leaves.Local.
+            return _context.Leaves.Local.
                             Where(l => l.EmployeeID == employeeId).
                             Where(l => l.Status.Trim().ToUpper() == Leave.StatusApproved.ToUpper()).
                             Where(l => l.LeaveType == leave.LeaveType).
                             Where(l => l.StartDate >= firstDayOfTheYear.Value).
                             Where(l => l.StartDate <= lastDayOfTheYear).
-                            Where(l => context.LeaveTransactions.
+                            Where(l => _context.LeaveTransactions.
                                                 Where(t => t.ReferenceID == l.RowID).
                                                 Count() == 0).
                            ToList();
@@ -294,7 +295,7 @@ namespace AccuPay.Data.Services
             // #1. Update employee's leave allowance
             // #2. Update employee's leave transactions
 
-            var leaveLedgerQuery = context.LeaveLedgers.
+            var leaveLedgerQuery = _context.LeaveLedgers.
                                             Include(l => l.Product).
                                             Where(l => l.EmployeeID == employeeId);
 
@@ -312,7 +313,7 @@ namespace AccuPay.Data.Services
 
             Console.WriteLine($"Leave ledger ID: {leaveLedgerId}");
 
-            var leaveTransactions = await context.LeaveTransactions.
+            var leaveTransactions = await _context.LeaveTransactions.
                                                 Where(l => l.EmployeeID == employeeId).
                                                 Where(l => l.TransactionDate >= firstDayOfTheWorkingYear.Value).
                                                 Where(l => l.LeaveLedgerID == leaveLedgerId).
@@ -342,7 +343,7 @@ namespace AccuPay.Data.Services
             beginningTransaction.Amount = newAllowance;
             beginningTransaction.Balance = newAllowance;
 
-            context.LeaveTransactions.Add(beginningTransaction);
+            _context.LeaveTransactions.Add(beginningTransaction);
 
             // -
             foreach (var leaveTransaction in leaveTransactions)
@@ -350,7 +351,7 @@ namespace AccuPay.Data.Services
                 if (leaveTransaction.IsCredit)
 
                     // #2.2
-                    context.Remove(leaveTransaction);
+                    _context.Remove(leaveTransaction);
                 else
                 {
                     // #2.3
@@ -368,7 +369,7 @@ namespace AccuPay.Data.Services
             leaveLedger.LastTransactionID = lastTransactionId;
             leaveLedger.LastUpdBy = userId;
 
-            await context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             // #2.5
             await ProcessIfEmployeeHasNotTakenAleaveThisYear(firstPayPeriodOfTheYear,
@@ -416,7 +417,7 @@ namespace AccuPay.Data.Services
                                                                             int leaveLedgerId,
                                                                             int userId)
         {
-            var updatedLeaveLedger = await context.LeaveLedgers.
+            var updatedLeaveLedger = await _context.LeaveLedgers.
                                             FirstOrDefaultAsync(l => l.RowID == leaveLedgerId);
 
             if (updatedLeaveLedger == null)
@@ -425,7 +426,7 @@ namespace AccuPay.Data.Services
             {
                 // get the beginning balance transaction geting it from the first payperiod of the year
                 // that we added earlier [using GUID as rowids would have made this easier]
-                var updatedBeginningTransaction = await context.LeaveTransactions.
+                var updatedBeginningTransaction = await _context.LeaveTransactions.
                                 Where(t => t.PayPeriodID == firstPayPeriodOfTheYear.RowID).
                                 Where(t => t.LeaveLedgerID == updatedLeaveLedger.RowID).
                                 Where(t => t.IsCredit).OrderByDescending(t => t.Amount).
@@ -436,7 +437,7 @@ namespace AccuPay.Data.Services
 
                 updatedLeaveLedger.LastTransactionID = updatedBeginningTransaction.RowID;
                 updatedLeaveLedger.LastUpdBy = userId;
-                await context.SaveChangesAsync();
+                await _context.SaveChangesAsync();
             }
         }
 

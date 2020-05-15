@@ -30,9 +30,6 @@ namespace AccuPay.Data.Services
             _listOfValueService = listOfValueService;
             _allowanceRepository = allowanceRepository;
             _context = context;
-
-            if (_selectedBranch?.RowID == null)
-                throw new Exception("Branch does not exists.");
         }
 
         public List<PayPeriodModel> GetData(DateTime selectedMonth,
@@ -42,6 +39,9 @@ namespace AccuPay.Data.Services
             _selectedMonth = selectedMonth;
             _selectedBranch = selectedBranch;
             _userId = userId;
+
+            if (_selectedBranch?.RowID == null)
+                throw new Exception("Branch does not exists.");
 
             List<PayPeriodModel> payPeriodModels = new List<PayPeriodModel>();
 

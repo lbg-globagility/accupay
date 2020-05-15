@@ -12,13 +12,9 @@ namespace AccuPay.Data.Repositories
     {
         private readonly PayrollContext _context;
 
-        private readonly EmployeeQueryBuilder builder;
-
-        public EmployeeRepository(PayrollContext context, EmployeeQueryBuilder builder)
+        public EmployeeRepository(PayrollContext context)
         {
             _context = context;
-
-            this.builder = builder;
         }
 
         #region CRUD
@@ -50,12 +46,17 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
         {
+            // builder's lifecycle should only span in each method
+            // that is why we did not inject this on the constructor
+            // and create a class variable of EmployeeQueryBuilder
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             ToListAsync(organizationId);
         }
 
         public async Task<IEnumerable<Employee>> GetAllActiveAsync(int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             IsActive().
                             ToListAsync(organizationId);
@@ -64,6 +65,7 @@ namespace AccuPay.Data.Repositories
         public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId,
                                                                     int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             HasPaystubs(payPeriodId).
                             ToListAsync(organizationId);
@@ -71,6 +73,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllActiveWithoutPayrollAsync(int payPeriodId, int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             HasNoPaystubs(payPeriodId).
                             IsActive().
@@ -79,6 +82,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllWithPositionAsync(int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             IncludePosition().
                             ToListAsync(organizationId);
@@ -86,6 +90,7 @@ namespace AccuPay.Data.Repositories
 
         public IEnumerable<Employee> GetAllActiveWithPosition(int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return builder.
                         IncludePosition().
                         IsActive().
@@ -94,6 +99,7 @@ namespace AccuPay.Data.Repositories
 
         public IEnumerable<Employee> GetAllWithDivisionAndPosition(int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return builder.
                         IncludeDivision().
                         ToList(organizationId);
@@ -101,6 +107,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetAllActiveWithDivisionAndPositionAsync(int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             IncludeDivision().
                             IsActive().
@@ -110,6 +117,7 @@ namespace AccuPay.Data.Repositories
         public async Task<IEnumerable<Employee>> GetByMultipleEmployeeNumberAsync(string[] employeeNumbers,
                                                                                 int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             Filter(x => employeeNumbers.Contains(x.EmployeeNo)).
                             ToListAsync(organizationId);
@@ -117,6 +125,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetByMultipleIdAsync(int[] employeeIdList)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             Filter(x => employeeIdList.Contains(x.RowID.Value)).
                             ToListAsync(null);
@@ -124,6 +133,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetByPositionAsync(int positionId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             Filter(x => x.PositionID == positionId).
                             ToListAsync(null);
@@ -131,6 +141,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Employee>> GetByBranchAsync(int branchId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             Filter(x => x.BranchID == branchId).
                             ToListAsync(null);
@@ -142,12 +153,14 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             GetByIdAsync(employeeId, null);
         }
 
         public async Task<Employee> GetActiveEmployeeWithDivisionAndPositionAsync(int employeeId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             IncludeDivision().
                             IsActive().
@@ -156,6 +169,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> GetByEmployeeNumberAsync(string employeeNumber, int organizationId)
         {
+            var builder = new EmployeeQueryBuilder(_context);
             return await builder.
                             ByEmployeeNumber(employeeNumber).
                             FirstOrDefaultAsync(organizationId);

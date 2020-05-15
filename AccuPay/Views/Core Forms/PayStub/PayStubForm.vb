@@ -918,7 +918,6 @@ Public Class PayStubForm
             End If
         End If
 
-        selectPayPeriod.Close()
         Dim open_forms = My.Application.OpenForms.Cast(Of Form).Where(Function(i) i.Name = "CrysVwr")
         If open_forms.Count > 0 Then
             Dim array_open_forms = open_forms.ToArray
@@ -1919,11 +1918,7 @@ Public Class PayStubForm
 
         Dim form As New selectPayPeriod
 
-        With selectPayPeriod
-            .Show()
-            .BringToFront()
-            .dgvpaypers.Focus()
-        End With
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
         paypRowID = form.PayPeriod.RowID
         paypFrom = form.PayPeriod.PayFromDate

@@ -346,58 +346,57 @@ Public Class SalaryTab
 
         Dim oldsalary As Salary = Nothing
 
-        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        Await FunctionUtils.TryCatchFunctionAsync("Save Salary",
+            Async Function()
 
-        Try
-            With _currentSalary
-                .EffectiveFrom = dtpEffectiveFrom.Value
-                .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
-                .BasicSalary = txtAmount.Text.ToDecimal
-                .AllowanceSalary = txtAllowance.Text.ToDecimal
-                .TotalSalary = (.BasicSalary + .AllowanceSalary)
-                .DoPaySSSContribution = chkPaySSS.Checked
-                .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
-                .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
-                .AutoComputeHDMFContribution = ChkPagIbig.Checked
-                .HDMFAmount = txtPagIbig.Text.ToDecimal
-            End With
+                With _currentSalary
+                    .EffectiveFrom = dtpEffectiveFrom.Value
+                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
+                    .BasicSalary = txtAmount.Text.ToDecimal
+                    .AllowanceSalary = txtAllowance.Text.ToDecimal
+                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
+                    .DoPaySSSContribution = chkPaySSS.Checked
+                    .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
+                    .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
+                    .AutoComputeHDMFContribution = ChkPagIbig.Checked
+                    .HDMFAmount = txtPagIbig.Text.ToDecimal
+                End With
 
-            If _currentSalary.RowID.HasValue Then
+                If _currentSalary.RowID.HasValue Then
 
-                oldsalary = Await salaryRepository.GetByIdAsync(_currentSalary.RowID.Value)
-                _currentSalary.LastUpdBy = z_User
+                    Dim salaryRepositoryQuery = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                    oldsalary = Await salaryRepositoryQuery.GetByIdAsync(_currentSalary.RowID.Value)
+                    _currentSalary.LastUpdBy = z_User
 
-            End If
+                End If
 
-            Await salaryRepository.SaveAsync(_currentSalary)
+                Dim salaryRepositorySave = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                Await salaryRepositorySave.SaveAsync(_currentSalary)
 
-            If _isSystemOwnerBenchMark Then
+                If _isSystemOwnerBenchMark Then
 
-                Await SaveEcola()
+                    Await SaveEcola()
 
-            End If
+                End If
 
-            Dim messageTitle = ""
-            If _mode = FormMode.Creating Then
+                Dim messageTitle = ""
+                If _mode = FormMode.Creating Then
 
-                messageTitle = "New Salary"
-                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
-                userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+                    messageTitle = "New Salary"
+                    Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                    userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
-            ElseIf _mode = FormMode.Editing Then
+                ElseIf _mode = FormMode.Editing Then
 
-                messageTitle = "Update Salary"
-                RecordUpdateSalary(oldsalary)
+                    messageTitle = "Update Salary"
+                    RecordUpdateSalary(oldsalary)
 
-            End If
+                End If
 
-            ShowBalloonInfo("Salary successfuly saved.", messageTitle)
-        Catch ex As Exception
-            MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
-            Throw
-        End Try
-        LoadSalaries()
-        ChangeMode(FormMode.Editing)
+                ShowBalloonInfo("Salary successfuly saved.", messageTitle)
+                LoadSalaries()
+                ChangeMode(FormMode.Editing)
+            End Function)
     End Sub
 
     Private Function RecordUpdateSalary(oldSalary As Salary) As Boolean

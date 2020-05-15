@@ -47,14 +47,9 @@ Public Class FormReports
 
     Private Sub tsbtnstartreport_Click(sender As Object, e As EventArgs) Handles tsbtnstartreport.Click
 
-        Using MainServiceProvider
-            Dim form = MainServiceProvider.GetRequiredService(Of ReportsList)()
+        ChangeForm(ReportsList)
 
-            ChangeForm(form)
-
-            previousForm = form
-
-        End Using
+        previousForm = ReportsList
 
     End Sub
 

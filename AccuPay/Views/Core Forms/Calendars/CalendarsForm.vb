@@ -16,8 +16,6 @@ Public Class CalendarsForm
 
     Private WithEvents Editor As CalendarDayEditorControl
 
-    Private ReadOnly _repository As CalendarRepository
-
     Private _calendars As ICollection(Of PayCalendar)
 
     Private _calendarDays As ICollection(Of CalendarDay)
@@ -34,7 +32,6 @@ Public Class CalendarsForm
 
     Public Sub New()
         Editor = New CalendarDayEditorControl()
-        _repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
         _changeTracker = New Collection(Of CalendarDay)
 
         InitializeComponent()
@@ -86,12 +83,14 @@ Public Class CalendarsForm
     End Sub
 
     Private Async Sub LoadCalendars()
-        _calendars = Await _repository.GetAllAsync()
+        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        _calendars = Await repository.GetAllAsync()
         CalendarsDataGridView.DataSource = _calendars
     End Sub
 
     Private Async Function LoadCalendarDays() As Task
-        _calendarDays = Await _repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
+        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        _calendarDays = Await repository.GetCalendarDays(_currentCalendar.RowID.Value, _currentYear)
         DisplayCalendarDays()
     End Function
 
@@ -133,7 +132,8 @@ Public Class CalendarsForm
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
 
-        Await _repository.UpdateManyAsync(_changeTracker)
+        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+        Await repository.UpdateManyAsync(_changeTracker)
 
         ClearChangeTracker()
 

@@ -267,7 +267,7 @@ Public Class selectPayPeriod
         Panel2.Enabled = True
     End Function
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles OkButton.Click
         dgvpaypers.EndEdit()
 
         If dgvpaypers.RowCount <> 0 Then
@@ -307,7 +307,7 @@ Public Class selectPayPeriod
         Me.Close()
     End Sub
 
-    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
         Me.Close()
     End Sub
 
@@ -396,7 +396,7 @@ Public Class selectPayPeriod
 
         If keyData = Keys.Escape And dgvpaypers.IsCurrentCellInEditMode = False Then
 
-            Button2_Click(Button2, New EventArgs)
+            Button2_Click(CloseButton, New EventArgs)
 
             Return True
 

@@ -14,14 +14,12 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Public Async Sub Run() Implements IReportProvider.Run
 
         Dim form As New selectPayPeriod()
-        form.ShowDialog()
+
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
         Dim payPeriod = form.PayPeriod
 
-        If payPeriod Is Nothing Then Return
-
         Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubPayslipModelDataService)
-
         Dim paystubModels = Await dataService.GetData(z_OrganizationID, payPeriod)
 
         Dim report As New Payslip.DefaulltPayslipFullOvertimeBreakdown

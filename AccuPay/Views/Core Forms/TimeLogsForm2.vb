@@ -3,6 +3,7 @@
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
@@ -371,7 +372,7 @@ Public Class TimeLogsForm2
 
 #Region "Functions"
 
-    Private Function CreatedResults(employees As List(Of Entities.Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
+    Private Function CreatedResults(employees As List(Of Employee), startDate As Date, endDate As Date) As List(Of TimeLogModel)
         Dim returnList As New List(Of TimeLogModel)
 
         Dim dateRanges = Calendar.EachDay(startDate, endDate)

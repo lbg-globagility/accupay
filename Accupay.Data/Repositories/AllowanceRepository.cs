@@ -55,6 +55,7 @@ namespace AccuPay.Data.Repositories
 
             if (deferSave == false)
             {
+                // TODO: refactor this code to always call SaveAsyncFunction
                 await SaveAsyncFunction(newAllowance);
                 await _context.SaveChangesAsync();
             }

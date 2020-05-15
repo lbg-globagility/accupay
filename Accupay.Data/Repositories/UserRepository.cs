@@ -13,37 +13,41 @@ namespace AccuPay.Data.Repositories
     {
         private readonly PositionViewRepository positionViewRepository;
         private readonly PayrollContext _context;
-        private readonly UserQueryBuilder _builder;
 
         public UserRepository(PayrollContext context,
-                            UserQueryBuilder userQueryBuilder,
                             PositionViewQueryBuilder positionViewQueryBuilder)
         {
             positionViewRepository = new PositionViewRepository(context, positionViewQueryBuilder);
             _context = context;
-            _builder = userQueryBuilder;
         }
 
         #region User List
 
         public async Task<IEnumerable<User>> GetAllAsync()
         {
-            return await _builder.ToListAsync();
+            // builder's lifecycle should only span in each method
+            // that is why we did not inject this on the constructor
+            // and create a class variable of EmployeeQueryBuilder
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllActiveAsync()
         {
-            return await _builder.
-                IsActive().
-                ToListAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        IsActive().
+                        ToListAsync();
         }
 
         public async Task<IEnumerable<User>> GetAllActiveWithPositionAsync()
         {
-            return await _builder.
-                IncludePosition().
-                IsActive().
-                ToListAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        IncludePosition().
+                        IsActive().
+                        ToListAsync();
         }
 
         #endregion User List
@@ -52,39 +56,44 @@ namespace AccuPay.Data.Repositories
 
         public User GetById(int id)
         {
-            return _builder.
-                    ById(id).
-                    FirstOrDefault();
+            var builder = new UserQueryBuilder(_context);
+            return builder.
+                        ById(id).
+                        FirstOrDefault();
         }
 
         public async Task<User> GetByIdAsync(int rowId)
         {
-            return await _builder.
-                ById(rowId).
-                FirstOrDefaultAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        ById(rowId).
+                        FirstOrDefaultAsync();
         }
 
         public async Task<User> GetByIdWithPositionAsync(int rowId)
         {
-            return await _builder.
-            IncludePosition().
-            ById(rowId).
-            FirstOrDefaultAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        IncludePosition().
+                        ById(rowId).
+                        FirstOrDefaultAsync();
         }
 
         public async Task<User> GetByUsernameAsync(string username)
         {
-            return await _builder.
-            ByUsername(username).
-            FirstOrDefaultAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        ByUsername(username).
+                        FirstOrDefaultAsync();
         }
 
         public async Task<User> GetByUsernameWithPositionAsync(string username)
         {
-            return await _builder.
-            IncludePosition().
-            ByUsername(username).
-            FirstOrDefaultAsync();
+            var builder = new UserQueryBuilder(_context);
+            return await builder.
+                        IncludePosition().
+                        ByUsername(username).
+                        FirstOrDefaultAsync();
         }
 
         #endregion By User

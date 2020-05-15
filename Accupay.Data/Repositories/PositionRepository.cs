@@ -33,20 +33,15 @@ namespace AccuPay.Data.Repositories
             // divisionId is passed as an additional check to have a divisionId that is not null
             position.DivisionID = divisionId;
 
-            Position existingPosition = await GetByNameAsync(organizationId, position.Name);
+            if (await GetByNameBaseQuery(organizationId, position.Name).AnyAsync())
+                throw new ArgumentException("Position name already exists!");
 
             if (position.RowID == null)
             {
-                if (existingPosition != null)
-                    throw new ArgumentException("Position name already exists!");
-
                 _context.Positions.Add(position);
             }
             else
             {
-                if (existingPosition != null && position.RowID != existingPosition.RowID)
-                    throw new ArgumentException("Position name already exists!");
-
                 _context.Entry(position).State = EntityState.Modified;
             }
 
@@ -84,10 +79,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Position> GetByNameAsync(int organizationId, string positionName)
         {
-            return await _context.Positions.
-                Where(p => p.OrganizationID == organizationId).
-                Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase()).
-                FirstOrDefaultAsync();
+            return await GetByNameBaseQuery(organizationId, positionName).
+                            FirstOrDefaultAsync();
+        }
+
+        private IQueryable<Position> GetByNameBaseQuery(int organizationId, string positionName)
+        {
+            return _context.Positions.
+                        Where(p => p.OrganizationID == organizationId).
+                        Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase());
         }
 
         public async Task<List<Position>> GetAllByNameAsync(string positionName)

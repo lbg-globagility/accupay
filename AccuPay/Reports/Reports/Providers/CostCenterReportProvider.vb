@@ -102,17 +102,13 @@ Public Class CostCenterReportProvider
     Public Sub Run() Implements IReportProvider.Run
 
         Try
-            Dim selectMonthForm As New selectMonth
-
-            If Not selectMonthForm.ShowDialog = Windows.Forms.DialogResult.OK Then
-                Return
-            End If
-            Dim selectedMonth As Date = CDate(selectMonthForm.MonthValue).ToMinimumDateValue
+            Dim selectedMonth = GetSelectedMonth()
+            If selectedMonth Is Nothing Then Return
 
             Dim selectedBranch = GetSelectedBranch()
-            If selectedBranch Is Nothing Then Return
+            If selectedBranch?.RowID Is Nothing Then Return
 
-            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth)
+            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth.Value)
 
             Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
@@ -123,7 +119,7 @@ Public Class CostCenterReportProvider
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
             Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
-            Dim payPeriodModels = dataService.GetData(selectedMonth,
+            Dim payPeriodModels = dataService.GetData(selectedMonth.Value,
                                                     selectedBranch,
                                                     userId:=z_User)
 
@@ -159,6 +155,16 @@ Public Class CostCenterReportProvider
 
         Return selectBranchDialog.SelectedBranch
 
+    End Function
+
+    Private Function GetSelectedMonth() As Date?
+        Dim selectMonthForm As New selectMonth
+
+        If Not selectMonthForm.ShowDialog = Windows.Forms.DialogResult.OK Then
+            Return Nothing
+        End If
+
+        Return CDate(selectMonthForm.MonthValue).ToMinimumDateValue
     End Function
 
     Protected Shared Function GetDefaultFileName(reportName As String,

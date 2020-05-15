@@ -22,7 +22,7 @@ Partial Class selectPayPeriod
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpaypers = New System.Windows.Forms.DataGridView()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -46,8 +46,8 @@ Partial Class selectPayPeriod
         Me.PayPeriodMinWageValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.linkNxt = New System.Windows.Forms.LinkLabel()
         Me.linkPrev = New System.Windows.Forms.LinkLabel()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.OkButton = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblpapyperiodval = New System.Windows.Forms.Label()
         Me.tstrip = New System.Windows.Forms.ToolStrip()
@@ -68,14 +68,14 @@ Partial Class selectPayPeriod
         Me.dgvpaypers.ColumnHeadersHeight = 38
         Me.dgvpaypers.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.dgvpaypers.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column15, Me.Column16, Me.Column4, Me.Column5, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.SSSContribSched, Me.PhHContribSched, Me.HDMFContribSched, Me.PayPeriodMinWageValue})
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.dgvpaypers.DefaultCellStyle = DataGridViewCellStyle1
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Segoe UI", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.dgvpaypers.DefaultCellStyle = DataGridViewCellStyle2
         Me.dgvpaypers.Location = New System.Drawing.Point(122, 43)
         Me.dgvpaypers.MultiSelect = False
         Me.dgvpaypers.Name = "dgvpaypers"
@@ -260,23 +260,23 @@ Partial Class selectPayPeriod
         Me.linkPrev.TabStop = True
         Me.linkPrev.Text = "<Prev"
         '
-        'Button1
+        'OkButton
         '
-        Me.Button1.Location = New System.Drawing.Point(383, 461)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 35)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "OK"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.OkButton.Location = New System.Drawing.Point(383, 461)
+        Me.OkButton.Name = "OkButton"
+        Me.OkButton.Size = New System.Drawing.Size(75, 35)
+        Me.OkButton.TabIndex = 3
+        Me.OkButton.Text = "OK"
+        Me.OkButton.UseVisualStyleBackColor = True
         '
-        'Button2
+        'CloseButton
         '
-        Me.Button2.Location = New System.Drawing.Point(464, 461)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 35)
-        Me.Button2.TabIndex = 4
-        Me.Button2.Text = "Close"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.CloseButton.Location = New System.Drawing.Point(464, 461)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 35)
+        Me.CloseButton.TabIndex = 4
+        Me.CloseButton.Text = "Close"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'Label2
         '
@@ -335,15 +335,17 @@ Partial Class selectPayPeriod
         '
         'selectPayPeriod
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.CloseButton
         Me.ClientSize = New System.Drawing.Size(548, 508)
         Me.Controls.Add(Me.PayPeriodStatusLabel)
         Me.Controls.Add(Me.tstrip)
         Me.Controls.Add(Me.lblpapyperiodval)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.CloseButton)
+        Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.dgvpaypers)
         Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -362,8 +364,8 @@ Partial Class selectPayPeriod
     Friend WithEvents dgvpaypers As System.Windows.Forms.DataGridView
     Friend WithEvents linkNxt As System.Windows.Forms.LinkLabel
     Friend WithEvents linkPrev As System.Windows.Forms.LinkLabel
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents OkButton As System.Windows.Forms.Button
+    Friend WithEvents CloseButton As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents lblpapyperiodval As System.Windows.Forms.Label
     Friend WithEvents tstrip As System.Windows.Forms.ToolStrip

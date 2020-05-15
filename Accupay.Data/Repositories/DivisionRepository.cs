@@ -50,22 +50,31 @@ namespace AccuPay.Data.Repositories
 
         private async Task<Division> SaveAsyncFunction(Division division, int organizationId, PayrollContext context)
         {
-            Division existingDivision = await GetByNameAndParentDivisionAsync(division.Name,
-                                                                            parentDivisionId: division.ParentDivisionID,
-                                                                            organizationId: organizationId);
+            if (await _context.Divisions.
+                            Include(d => d.ParentDivision).
+                            Where(l => division.RowID == null ? true : division.RowID != l.RowID).
+                            Where(d => d.Name.Trim().ToLower() ==
+                                        division.Name.ToTrimmedLowerCase()).
+                            Where(d => d.ParentDivisionID == division.ParentDivisionID).
+                            Where(d => d.OrganizationID == organizationId).
+                            AnyAsync())
+            {
+                if (division.IsRoot)
+                {
+                    throw new ArgumentException($"Division location already exists.");
+                }
+                else
+                {
+                    throw new ArgumentException($"Division name already exists under the selected division location.");
+                }
+            }
 
             if (division.RowID == null)
             {
-                if (existingDivision != null)
-                    throw new ArgumentException($"Division name already exists under {existingDivision.ParentDivision.Name }!");
-
                 context.Divisions.Add(division);
             }
             else
             {
-                if (existingDivision != null && division.RowID != existingDivision.RowID)
-                    throw new ArgumentException($"Division name already exists under {existingDivision.ParentDivision.Name }!");
-
                 context.Entry(division).State = EntityState.Modified;
             }
 
@@ -141,19 +150,6 @@ namespace AccuPay.Data.Repositories
                     throw;
                 }
             }
-        }
-
-        public async Task<Division> GetByNameAndParentDivisionAsync(string positionName,
-                                                                    int? parentDivisionId,
-                                                                    int organizationId)
-        {
-            return await _context.Divisions.
-                            Include(d => d.ParentDivision).
-                            Where(d => d.Name.Trim().ToLower() ==
-                                        positionName.ToTrimmedLowerCase()).
-                            Where(d => d.ParentDivisionID == parentDivisionId).
-                            Where(d => d.OrganizationID == organizationId).
-                            FirstOrDefaultAsync();
         }
 
         #endregion Single entity

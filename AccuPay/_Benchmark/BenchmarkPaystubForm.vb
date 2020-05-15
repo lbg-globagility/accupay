@@ -773,21 +773,19 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
         Dim form As New selectPayPeriod()
-        form.ShowDialog()
 
-        If form.PayPeriod IsNot Nothing Then
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
-            _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.PayPeriod
 
-            If _currentPayPeriod Is Nothing Then
-                MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-                Return
-            End If
-
-            UpdateCutOffLabel()
-
-            Await LoadPayrollDetails()
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
         End If
+
+        UpdateCutOffLabel()
+
+        Await LoadPayrollDetails()
     End Sub
 
     Private Class Adjustments

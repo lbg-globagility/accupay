@@ -8,6 +8,8 @@ Imports AccuPay.Benchmark
 Imports Microsoft.EntityFrameworkCore
 Imports AccuPay.Data
 Imports AccuPay.Payslip
+Imports Microsoft.Extensions.Logging
+Imports Microsoft.Extensions.Logging.Console
 
 Public Class MetroLogin
     Private err_count As Integer
@@ -80,9 +82,18 @@ Public Class MetroLogin
 
     Private Sub ConfigureServices(services As ServiceCollection)
 
+        Dim dbCommandConsoleLoggerFactory As LoggerFactory = New LoggerFactory({
+                         New ConsoleLoggerProvider(
+                               Function(category, level)
+                                   Return category = DbLoggerCategory.Database.Command.Name AndAlso
+                                        level = LogLevel.Information
+                               End Function, True)
+                         })
+
         services.AddDbContext(Of PayrollContext)(
             Sub(options As DbContextOptionsBuilder)
                 options.UseMySql("server=localhost;user id=root;password=globagility;database=accupaydb_cinema2k;")
+                options.UseLoggerFactory(dbCommandConsoleLoggerFactory)
                 options.EnableSensitiveDataLogging()
             End Sub, ServiceLifetime.Transient)
 

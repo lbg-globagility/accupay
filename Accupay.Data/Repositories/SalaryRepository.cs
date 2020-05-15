@@ -39,7 +39,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveAsync(Salary salary)
         {
-            await SaveWithContextAsync(salary);
+            await SaveWithContextAsync(salary, deferSave: false);
         }
 
         private async Task SaveWithContextAsync(Salary salary,

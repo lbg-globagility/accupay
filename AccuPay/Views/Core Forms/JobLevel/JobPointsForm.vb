@@ -17,13 +17,7 @@ Public Class JobPointsForm
     Public Sub New()
         InitializeComponent()
 
-        Using MainServiceProvider
-
-            Dim presenter = MainServiceProvider.GetRequiredService(Of JobPointsPresenter)()
-
-        End Using
-
-        'Dim presenter = New JobPointsPresenter(Me)
+        Dim presenter = New JobPointsPresenter(Me)
     End Sub
 
     Private Sub JobPointsForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load

@@ -21,20 +21,17 @@ namespace AccuPay.Web.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly BranchRepository _branchRepository;
         private readonly EmployeeRepository _employeeRepository;
+        private readonly DivisionRepository _divisionRepository;
 
         public WeatherForecastController(ILogger<WeatherForecastController> logger,
                                         BranchRepository branchRepository,
-                                        EmployeeRepository employeeRepository)
+                                        EmployeeRepository employeeRepository,
+                                        DivisionRepository divisionRepository)
         {
             _logger = logger;
             _branchRepository = branchRepository;
             this._employeeRepository = employeeRepository;
-        }
-
-        [HttpGet]
-        public IEnumerable<Branch> Get()
-        {
-            return _branchRepository.GetAll();
+            this._divisionRepository = divisionRepository;
         }
 
         [HttpGet("employees")]
@@ -51,18 +48,30 @@ namespace AccuPay.Web.Controllers
             return await _employeeRepository.GetByEmployeeNumberAsync(employeeNumber, organizationId);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Post(Branch branch)
+        [HttpGet]
+        public IEnumerable<Division> Get()
         {
-            await _branchRepository.CreateAsync(branch);
+            //return _branchRepository.GetAll();
+            int organizationId = 2;
+            return _divisionRepository.GetAll(organizationId);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Post(Division division)
+        {
+            //await _branchRepository.CreateAsync(branch);
+            int organizationId = 2;
+            await _divisionRepository.SaveAsync(division, organizationId);
             return Ok();
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Branch branch)
+        public async Task<IActionResult> Put(int id, Division division)
         {
-            await _branchRepository.UpdateAsync(branch);
+            int organizationId = 2;
+            await _divisionRepository.SaveAsync(division, organizationId);
             return Ok();
+            //await _branchRepository.UpdateAsync(branch);
         }
 
         [HttpDelete("{id}")]
