@@ -12,11 +12,9 @@ namespace AccuPay.Data.Services
                             ListOfValueCollection settings,
                             PayPeriod payperiod,
                             Paystub paystub,
-                            SystemOwnerService systemOwnerService)
+                            string currentSystemOwner)
         {
             decimal totalEarnings = 0;
-
-            var currentSystemOwner = systemOwnerService.GetCurrentSystemOwner();
 
             if (employee.IsDaily || currentSystemOwner == SystemOwnerService.Benchmark)
             {

@@ -239,7 +239,7 @@ namespace AccuPay.Data.Services
                                             TimeEntryPolicy timeEntryPolicy,
                                             CalendarCollection calendarCollection)
         {
-            IList<TimeEntry> previousTimeEntries = _timeEntries.
+            IReadOnlyCollection<TimeEntry> previousTimeEntries = _timeEntries.
                                                         Where(t => t.EmployeeID == employee.RowID).
                                                         ToList();
 

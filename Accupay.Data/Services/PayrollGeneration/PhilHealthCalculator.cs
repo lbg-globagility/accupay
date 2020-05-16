@@ -24,8 +24,8 @@ namespace AccuPay.Data.Services
                             Paystub previousPaystub,
                             Employee employee,
                             PayPeriod payperiod,
-                            ICollection<Allowance> allowances,
-                            SystemOwnerService systemOwnerService)
+                            IReadOnlyCollection<Allowance> allowances,
+                            string currentSystemOwner)
         {
             // Reset the PhilHealth to zero
             paystub.PhilHealthEmployeeShare = 0;
@@ -41,7 +41,7 @@ namespace AccuPay.Data.Services
                                                         previousPaystub,
                                                         employee,
                                                         allowances,
-                                                        systemOwnerService);
+                                                        currentSystemOwner);
             else
                 totalContribution = salary.PhilHealthDeduction;
 
@@ -100,8 +100,8 @@ namespace AccuPay.Data.Services
                                             Paystub paystub,
                                             Paystub previousPaystub,
                                             Employee employee,
-                                            ICollection<Allowance> allowances,
-                                            SystemOwnerService systemOwnerService)
+                                            IReadOnlyCollection<Allowance> allowances,
+                                            string currentSystemOwner)
         {
             var calculationBasis = _policy.CalculationBasis;
 
@@ -144,9 +144,11 @@ namespace AccuPay.Data.Services
                 var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
                                 paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                {
                     totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                     paystub.RegularHoursAndTotalRestDay;
+                }
 
                 var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
                 var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);

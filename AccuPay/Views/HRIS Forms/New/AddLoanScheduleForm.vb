@@ -69,7 +69,7 @@ Public Class AddLoanScheduleForm
         Me._newLoanSchedule.CreatedBy = z_User
 
         Me._newLoanSchedule.DedEffectiveDateFrom = Date.Now
-        Me._newLoanSchedule.Status = LoanScheduleRepository.STATUS_IN_PROGRESS
+        Me._newLoanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS
 
         Dim firstLoanType = Me._loanTypeList.FirstOrDefault()
 
@@ -254,18 +254,13 @@ Public Class AddLoanScheduleForm
     End Sub
 
     Private Sub UpdateBalanceAndNumberOfPayPeriod()
-        Dim totalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
-        Dim deductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
+        Me._newLoanSchedule.TotalLoanAmount = AccuMath.CommercialRound(Me._newLoanSchedule.TotalLoanAmount)
+        Me._newLoanSchedule.DeductionAmount = AccuMath.CommercialRound(Me._newLoanSchedule.DeductionAmount)
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Me._newLoanSchedule.TotalBalanceLeft = Me._newLoanSchedule.TotalLoanAmount
 
-        Me._newLoanSchedule.TotalBalanceLeft = totalLoanAmount
-
-        Dim numberOfPayPeriod = loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
-
-        Me._newLoanSchedule.NoOfPayPeriod = numberOfPayPeriod
-
-        Me._newLoanSchedule.LoanPayPeriodLeft = numberOfPayPeriod
+        Me._newLoanSchedule.RecomputeTotalPayPeriod()
+        Me._newLoanSchedule.RecomputePayPeriodLeft()
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
@@ -302,8 +297,8 @@ Public Class AddLoanScheduleForm
         Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
         Dim statusList = loanScheduleRepository.GetStatusList()
 
-        statusList.Remove(LoanScheduleRepository.STATUS_CANCELLED)
-        statusList.Remove(LoanScheduleRepository.STATUS_COMPLETE)
+        statusList.Remove(LoanSchedule.STATUS_CANCELLED)
+        statusList.Remove(LoanSchedule.STATUS_COMPLETE)
 
         cmbLoanStatus.DataSource = statusList
     End Sub

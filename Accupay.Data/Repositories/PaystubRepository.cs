@@ -380,8 +380,9 @@ namespace AccuPay.Data.Repositories
             foreach (var loanGroup in groupedLoans)
             {
                 var loan = loanGroup.Key;
+                var loanTransaction = loanGroup.Select(x => x);
 
-                loan.TotalBalanceLeft += loanGroup.Sum(x => x.Amount);
+                loan.RetractLoanTransactions(loanTransaction);
                 loan.LastUpdBy = userId;
             }
         }

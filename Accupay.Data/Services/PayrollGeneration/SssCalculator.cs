@@ -23,7 +23,7 @@ namespace AccuPay.Data.Services
                             Salary salary,
                             Employee employee,
                             PayPeriod payperiod,
-                            SystemOwnerService systemOwnerService)
+                            string currentSystemOwner)
         {
             // Reset SSS values to zero
             paystub.SssEmployeeShare = 0;
@@ -38,7 +38,7 @@ namespace AccuPay.Data.Services
                                                 previousPaystub,
                                                 salary,
                                                 employee,
-                                                systemOwnerService);
+                                                currentSystemOwner);
             var socialSecurityBracket = FindMatchingBracket(amount);
 
             // If no bracket was matched/found, then there's nothing to compute.
@@ -88,7 +88,7 @@ namespace AccuPay.Data.Services
                                                 Paystub previousPaystub,
                                                 Salary salary,
                                                 Employee employee,
-                                                SystemOwnerService systemOwnerService)
+                                                string currentSystemOwner)
         {
             var policyByOrganization = _settings.GetBoolean("Policy.ByOrganization", false);
 
@@ -113,9 +113,11 @@ namespace AccuPay.Data.Services
                     var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
                                         paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                    if (systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                    {
                         totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
                                         paystub.RegularHoursAndTotalRestDay;
+                    }
 
                     var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
                     var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);

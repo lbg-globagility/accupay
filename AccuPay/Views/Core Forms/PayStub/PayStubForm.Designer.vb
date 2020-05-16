@@ -2687,6 +2687,7 @@ Partial Class PayStubForm
         Me.btntotbon.Text = "..."
         Me.btntotbon.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotbon.UseVisualStyleBackColor = True
+        Me.btntotbon.Visible = False
         '
         'btntotloan
         '
@@ -2709,6 +2710,7 @@ Partial Class PayStubForm
         Me.btnTotalTaxabAllowance.Text = "..."
         Me.btnTotalTaxabAllowance.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btnTotalTaxabAllowance.UseVisualStyleBackColor = True
+        Me.btnTotalTaxabAllowance.Visible = False
         '
         'btntotallow
         '
@@ -2720,6 +2722,7 @@ Partial Class PayStubForm
         Me.btntotallow.Text = "..."
         Me.btntotallow.TextAlign = System.Drawing.ContentAlignment.TopLeft
         Me.btntotallow.UseVisualStyleBackColor = True
+        Me.btntotallow.Visible = False
         '
         'Label35
         '

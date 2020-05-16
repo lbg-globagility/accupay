@@ -260,7 +260,10 @@ namespace AccuPay.Data.Entities
             Adjustments = new List<Adjustment>();
             ActualAdjustments = new List<ActualAdjustment>();
             PaystubItems = new List<PaystubItem>();
+
             AllowanceItems = new List<AllowanceItem>();
+            LeaveTransactions = new List<LeaveTransaction>();
+            LoanTransactions = new List<LoanTransaction>();
         }
     }
 }

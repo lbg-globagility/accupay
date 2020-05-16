@@ -9,7 +9,7 @@ namespace AccuPay.Data.Services
     {
         private ListOfValueCollection _settings;
 
-        private ICollection<TimeEntry> _previousTimeEntries;
+        private IReadOnlyCollection<TimeEntry> _previousTimeEntries;
         private readonly CalendarCollection _calendarCollection;
 
         private readonly int _organizationId;
@@ -18,7 +18,7 @@ namespace AccuPay.Data.Services
 
         public DailyAllowanceCalculator(ListOfValueCollection settings,
                                         CalendarCollection calendarCollection,
-                                        ICollection<TimeEntry> previousTimeEntries,
+                                        IReadOnlyCollection<TimeEntry> previousTimeEntries,
                                         int organizationId,
                                         int userId)
         {
@@ -29,7 +29,11 @@ namespace AccuPay.Data.Services
             _userId = userId;
         }
 
-        public AllowanceItem Compute(PayPeriod payperiod, Allowance allowance, Employee employee, Paystub paystub, ICollection<TimeEntry> timeEntries)
+        public AllowanceItem Compute(PayPeriod payperiod,
+                                    Allowance allowance,
+                                    Employee employee,
+                                    Paystub paystub,
+                                    IReadOnlyCollection<TimeEntry> timeEntries)
         {
             var dailyRate = allowance.Amount;
 

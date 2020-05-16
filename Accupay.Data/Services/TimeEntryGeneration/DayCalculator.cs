@@ -39,7 +39,8 @@ namespace AccuPay.Data.Services
         }
 
         public TimeEntry Compute(DateTime currentDate,
-                                Salary salary, IList<TimeEntry> oldTimeEntries,
+                                Salary salary,
+                                IReadOnlyCollection<TimeEntry> oldTimeEntries,
                                 ShiftSchedule employeeShift,
                                 EmployeeDutySchedule shiftSched,
                                 TimeLog timeLog,

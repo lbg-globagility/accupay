@@ -127,6 +127,7 @@ Public Class SelectThirteenthMonthEmployeesForm
                                 Where(Function(s) s.EmployeeID.Value = employee.EmployeeId).
                                 FirstOrDefault()
 
+                Dim currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner()
                 Dim newPaystubThirteenthMonthPay = calculator.Calculate(employee.EmployeeObject,
                                                                           employee.PaystubObject,
                                                                           employeeTimeEntries,
@@ -134,7 +135,7 @@ Public Class SelectThirteenthMonthEmployeesForm
                                                                           salary,
                                                                           settings,
                                                                           employee.PaystubObject.AllowanceItems,
-                                                                          _systemOwnerService)
+                                                                          currentSystemOwner)
 
                 employee.UpdateNewThirteenthMonthPayAmount(amount:=newPaystubThirteenthMonthPay.Amount,
                                                         basicPay:=newPaystubThirteenthMonthPay.BasicPay)

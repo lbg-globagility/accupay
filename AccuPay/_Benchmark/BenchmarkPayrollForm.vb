@@ -666,7 +666,7 @@ Public Class BenchmarkPayrollForm
         Await FunctionUtils.TryCatchFunctionAsync($"Payroll Generation for employee {_employeeRate.Employee.FullNameLastNameFirst} [{_employeeRate.Employee.EmployeeNo}]",
             Async Function()
 
-                BenchmarkPayrollGeneration.Save(_payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
+                BenchmarkPayrollGeneration.Save(_currentPaystub, _payrollGenerator, _loanTransanctions, _currentPayPeriod.RowID.Value)
 
                 Await RefreshForm(refreshPayPeriod:=False)
 

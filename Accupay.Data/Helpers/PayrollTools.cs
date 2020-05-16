@@ -1,14 +1,8 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
-using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
-using AccuPay.Data.ValueObjects;
-using AccuPay.Utilities.Extensions;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace AccuPay.Data.Helpers
 {
@@ -95,7 +89,7 @@ namespace AccuPay.Data.Helpers
         }
 
         public static bool HasWorkedLastWorkingDay(DateTime currentDate,
-                                                    ICollection<TimeEntry> currentTimeEntries,
+                                                    IReadOnlyCollection<TimeEntry> currentTimeEntries,
                                                     CalendarCollection calendarCollection)
         {
             var lastPotentialEntry = currentDate.Date.AddDays(-PotentialLastWorkDay);
@@ -184,17 +178,6 @@ namespace AccuPay.Data.Helpers
 
             return false;
         }
-
-        // TODO: UpdateLoanSchedule
-        //public static void UpdateLoanSchedule(int paypRowID, int organizationId, int userId)
-        //{
-        //    var param_array = new object[] { organizationId, paypRowID, userId };
-
-        //    string strquery_recompute_13monthpay = "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
-
-        //    var n_ExecSQLProcedure = new SQL(strquery_recompute_13monthpay, param_array);
-        //    n_ExecSQLProcedure.ExecuteQuery();
-        //}
 
         // TODO: GetOrganizationAddress
         //public static string GetOrganizationAddress()

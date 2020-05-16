@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -36,10 +38,21 @@ namespace AccuPay.Data.Services
 
         public string GetCurrentSystemOwner()
         {
+            return GetCurrentSystemOwnerBaseQuery().
+                    FirstOrDefault();
+        }
+
+        public async Task<string> GetCurrentSystemOwnerAsync()
+        {
+            return await GetCurrentSystemOwnerBaseQuery().
+                            FirstOrDefaultAsync();
+        }
+
+        private IQueryable<string> GetCurrentSystemOwnerBaseQuery()
+        {
             return context.SystemOwners.
                     Where(x => x.IsCurrentOwner == "1").
-                    Select(x => x.Name).
-                    FirstOrDefault();
+                    Select(x => x.Name);
         }
     }
 }

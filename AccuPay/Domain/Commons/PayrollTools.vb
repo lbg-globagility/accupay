@@ -2,17 +2,6 @@
 
 Public Class PayrollTools
 
-    Public Shared Sub UpdateLoanSchedule(paypRowID As Integer)
-
-        Dim param_array = New Object() {orgztnID, paypRowID, z_User}
-
-        Static strquery_recompute_13monthpay As String =
-                        "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
-
-        Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
-        n_ExecSQLProcedure.ExecuteQuery()
-    End Sub
-
     Public Shared Function GetOrganizationAddress() As String
 
         Dim str_quer_address As String =

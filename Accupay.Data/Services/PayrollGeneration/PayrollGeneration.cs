@@ -11,58 +11,12 @@ namespace AccuPay.Data.Services
 {
     public class PayrollGeneration
     {
-        private SystemOwnerService _systemOwnerService;
-        
         private readonly DbContextOptionsService _dbContextOptionsService;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
-        private Employee _employee;
-
-        private PayrollResources _resources;
-
-        private int _organizationId;
-
-        private int _userId;
-
-        private Salary _salary;
-
-        private ICollection<LoanSchedule> _loanSchedules;
-
-        private ICollection<LoanTransaction> _loanTransactions;
-
-        private ICollection<TimeEntry> _previousTimeEntries;
-
-        private PayPeriod _payPeriod;
-
-        private ListOfValueCollection _settings;
-
-        private ICollection<TimeEntry> _timeEntries;
-
-        private ICollection<Allowance> _allowances;
-
-        private ICollection<AllowanceItem> _allowanceItems;
-
-        private ICollection<ActualTimeEntry> _actualtimeentries;
-
-        private IReadOnlyCollection<Leave> _leaves;
-
-        private Paystub _previousPaystub;
-
-        private Product _bpiInsuranceProduct;
-
-        private Product _sickLeaveProduct;
-
-        private Product _vacationLeaveProduct;
-
-        private CalendarCollection _calendarCollection;
-
-        private Paystub _paystub;
-
-        public PayrollGeneration(SystemOwnerService systemOwnerService,
-                                DbContextOptionsService dbContextOptionsService)
+        public PayrollGeneration(DbContextOptionsService dbContextOptionsService)
         {
-            _systemOwnerService = systemOwnerService;
             _dbContextOptionsService = dbContextOptionsService;
         }
 
@@ -71,70 +25,77 @@ namespace AccuPay.Data.Services
                                 int organizationId,
                                 int userId)
         {
-            _allowanceItems = new List<AllowanceItem>();
+            var currentSystemOwner = resources.CurrentSystemOwner;
 
-            _employee = employee;
+            var settings = resources.ListOfValueCollection;
 
-            _organizationId = organizationId;
+            var payPeriod = resources.PayPeriod;
 
-            _userId = userId;
+            var bpiInsuranceProduct = resources.BpiInsuranceProduct;
 
-            _resources = resources;
+            var sickLeaveProduct = resources.SickLeaveProduct;
 
-            _settings = resources.ListOfValueCollection;
+            var vacationLeaveProduct = resources.VacationLeaveProduct;
 
-            _payPeriod = resources.PayPeriod;
+            var calendarCollection = resources.CalendarCollection;
 
-            _bpiInsuranceProduct = resources.BpiInsuranceProduct;
+            var salary = resources.Salaries.FirstOrDefault(s => s.EmployeeID == employee.RowID);
 
-            _sickLeaveProduct = resources.SickLeaveProduct;
+            var paystub = resources.Paystubs.FirstOrDefault(p => p.EmployeeID == employee.RowID);
 
-            _vacationLeaveProduct = resources.VacationLeaveProduct;
+            var previousPaystub = resources.PreviousPaystubs.FirstOrDefault(p => p.EmployeeID == employee.RowID);
 
-            _calendarCollection = resources.CalendarCollection;
-
-            _salary = resources.Salaries.FirstOrDefault(s => s.EmployeeID == _employee.RowID);
-
-            _paystub = resources.Paystubs.FirstOrDefault(p => p.EmployeeID == _employee.RowID);
-
-            _previousPaystub = resources.PreviousPaystubs.FirstOrDefault(p => p.EmployeeID == _employee.RowID);
-
-            _loanSchedules = resources.LoanSchedules.
-                                        Where(l => l.EmployeeID == _employee.RowID).
+            var loanSchedules = resources.LoanSchedules.
+                                        Where(l => l.EmployeeID == employee.RowID).
                                         ToList();
 
-            _loanTransactions = resources.LoanTransactions.
-                                        Where(t => t.EmployeeID == _employee.RowID).
+            var previousTimeEntries = resources.TimeEntries.
+                                        Where(t => t.EmployeeID == employee.RowID).
                                         ToList();
 
-            _previousTimeEntries = resources.TimeEntries.
-                                        Where(t => t.EmployeeID == _employee.RowID).
-                                        ToList();
-
-            _timeEntries = resources.TimeEntries.
-                                        Where(t => t.EmployeeID == _employee.RowID).
-                                        Where(t => _payPeriod.PayFromDate <= t.Date).
-                                        Where(t => t.Date <= _payPeriod.PayToDate).
+            var timeEntries = resources.TimeEntries.
+                                        Where(t => t.EmployeeID == employee.RowID).
+                                        Where(t => payPeriod.PayFromDate <= t.Date).
+                                        Where(t => t.Date <= payPeriod.PayToDate).
                                         OrderBy(t => t.Date).
                                         ToList();
 
-            _actualtimeentries = resources.ActualTimeEntries.
-                                        Where(t => t.EmployeeID == _employee.RowID).
+            var actualTimeEntries = resources.ActualTimeEntries.
+                                        Where(t => t.EmployeeID == employee.RowID).
                                         ToList();
 
-            _allowances = resources.Allowances.
-                                        Where(a => a.EmployeeID == _employee.RowID).
+            var allowances = resources.Allowances.
+                                        Where(a => a.EmployeeID == employee.RowID).
                                         ToList();
 
-            _leaves = resources.Leaves.
-                                    Where(a => a.EmployeeID == _employee.RowID).
+            var leaves = resources.Leaves.
+                                    Where(a => a.EmployeeID == employee.RowID).
                                     ToList();
             try
             {
-                GeneratePayStub();
+                GeneratePayStub(resources,
+                                organizationId: organizationId,
+                                userId: userId,
+                                currentSystemOwner,
+                                settings,
+                                calendarCollection,
+                                payPeriod,
+                                paystub: paystub,
+                                employee: employee,
+                                salary: salary,
+                                previousPaystub: previousPaystub,
+                                bpiInsuranceProduct: bpiInsuranceProduct,
+                                sickLeaveProduct: sickLeaveProduct,
+                                vacationLeaveProduct: vacationLeaveProduct,
+                                loanSchedules: loanSchedules,
+                                previousTimeEntries: previousTimeEntries,
+                                timeEntries: timeEntries,
+                                actualTimeEntries: actualTimeEntries,
+                                allowances: allowances,
+                                leaves: leaves);
 
-                return new Result(_employee.EmployeeNo,
-                            _employee.FullNameWithMiddleInitialLastNameFirst,
+                return new Result(employee.EmployeeNo,
+                            employee.FullNameWithMiddleInitialLastNameFirst,
                             ResultStatus.Success,
                             "");
             }
@@ -142,257 +103,380 @@ namespace AccuPay.Data.Services
             {
                 //logger.Error("DoProcess", ex);
 
-                return new Result(_employee.EmployeeNo,
-                                _employee.FullNameWithMiddleInitialLastNameFirst,
+                return new Result(employee.EmployeeNo,
+                                employee.FullNameWithMiddleInitialLastNameFirst,
                                 ResultStatus.Error,
                                 ex.Message);
             }
         }
 
-        private void GeneratePayStub()
+        private void GeneratePayStub(PayrollResources resources,
+                                    int organizationId,
+                                    int userId,
+                                    string currentSystemOwner,
+                                    ListOfValueCollection settings,
+                                    CalendarCollection calendarCollection,
+                                    PayPeriod payPeriod,
+                                    Paystub paystub,
+                                    Employee employee,
+                                    Salary salary,
+                                    Paystub previousPaystub,
+                                    Product bpiInsuranceProduct,
+                                    Product sickLeaveProduct,
+                                    Product vacationLeaveProduct,
+                                    IReadOnlyCollection<LoanSchedule> loanSchedules,
+                                    IReadOnlyCollection<TimeEntry> previousTimeEntries,
+                                    IReadOnlyCollection<TimeEntry> timeEntries,
+                                    IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+                                    IReadOnlyCollection<Allowance> allowances,
+                                    IReadOnlyCollection<Leave> leaves)
         {
             try
             {
-                if (_salary == null)
+                if (salary == null)
                     throw new PayrollException("Employee has no salary for this cutoff.");
 
-                if ((!_timeEntries.Any()) && (_employee.IsDaily || _employee.IsMonthly))
+                if ((!timeEntries.Any()) && (employee.IsDaily || employee.IsMonthly))
                     throw new PayrollException("No time entries.");
 
-                if (_employee.Position == null)
+                if (employee.Position == null)
                     throw new PayrollException("Employee has no job position set.");
 
-                if (_paystub == null)
+                if (paystub == null)
                 {
-                    _paystub = new Paystub()
+                    paystub = new Paystub()
                     {
-                        OrganizationID = _organizationId,
+                        OrganizationID = organizationId,
                         Created = DateTime.Now,
-                        CreatedBy = _userId,
-                        LastUpdBy = _userId,
-                        EmployeeID = _employee.RowID,
-                        PayPeriodID = _payPeriod.RowID,
-                        PayFromdate = _payPeriod.PayFromDate,
-                        PayToDate = _payPeriod.PayToDate
+                        CreatedBy = userId,
+                        LastUpdBy = userId,
+                        EmployeeID = employee.RowID,
+                        PayPeriodID = payPeriod.RowID,
+                        PayFromdate = payPeriod.PayFromDate,
+                        PayToDate = payPeriod.PayToDate
                     };
 
-                    _paystub.Actual = new PaystubActual()
+                    paystub.Actual = new PaystubActual()
                     {
-                        OrganizationID = _organizationId,
-                        EmployeeID = _employee.RowID,
-                        PayPeriodID = _payPeriod.RowID,
-                        PayFromDate = _payPeriod.PayFromDate,
-                        PayToDate = _payPeriod.PayToDate
+                        OrganizationID = organizationId,
+                        EmployeeID = employee.RowID,
+                        PayPeriodID = payPeriod.RowID,
+                        PayFromDate = payPeriod.PayFromDate,
+                        PayToDate = payPeriod.PayToDate
                     };
                 }
 
-                _paystub.EmployeeID = _employee.RowID;
+                ResetLoanSchedules(loanSchedules, paystub, userId);
 
-                var newLoanTransactions = ComputePayroll();
+                var allowanceItems = CreateAllowanceItems(userId,
+                                                        settings,
+                                                        calendarCollection,
+                                                        payPeriod,
+                                                        paystub,
+                                                        employee,
+                                                        previousTimeEntries: previousTimeEntries,
+                                                        timeEntries: timeEntries,
+                                                        allowances);
 
-                SavePayroll(newLoanTransactions);
+                var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules);
+
+                ComputePayroll(resources,
+                                userId: userId,
+                                currentSystemOwner,
+                                settings,
+                                calendarCollection,
+                                payPeriod,
+                                paystub: paystub,
+                                employee: employee,
+                                salary: salary,
+                                previousPaystub: previousPaystub,
+                                loanTransactions: loanTransactions,
+                                timeEntries: timeEntries,
+                                actualTimeEntries: actualTimeEntries,
+                                allowances: allowances,
+                                allowanceItems: allowanceItems.ToList());
+
+                SavePayroll(userId: userId,
+                            currentSystemOwner,
+                            settings,
+                            payPeriod,
+                            paystub,
+                            employee,
+                            bpiInsuranceProduct: bpiInsuranceProduct,
+                            sickLeaveProduct: sickLeaveProduct,
+                            vacationLeaveProduct: vacationLeaveProduct,
+                            loanSchedules: loanSchedules,
+                            allowanceItems: allowanceItems,
+                            loanTransactions: loanTransactions,
+                            timeEntries: timeEntries,
+                            leaves: leaves);
             }
-            catch (PayrollException)
+            catch (PayrollException ex)
             {
                 throw;
             }
             catch (Exception ex)
             {
-                throw new Exception($"Failure to generate paystub for employee {_paystub.EmployeeID}", ex);
+                throw new Exception($"Failure to generate paystub for employee {paystub.EmployeeID}", ex);
             }
         }
 
-        public void SavePayroll(List<LoanTransaction> newLoanTransactions)
+        private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
+        {
+            if (paystub?.LoanTransactions == null || paystub.LoanTransactions.Count == 0) return;
+
+            foreach (var loan in loanSchedules)
+            {
+                var loanTransactions = paystub.LoanTransactions.Where(x => x.LoanScheduleID == loan.RowID);
+
+                if (loanTransactions.Any())
+                {
+                    loan.RetractLoanTransactions(loanTransactions);
+                    loan.LastUpdBy = userId;
+                }
+            }
+        }
+
+        public void SavePayroll(int userId,
+                                string currentSystemOwner,
+                                ListOfValueCollection settings,
+                                PayPeriod payPeriod,
+                                Paystub paystub,
+                                Employee employee,
+                                Product bpiInsuranceProduct,
+                                Product sickLeaveProduct,
+                                Product vacationLeaveProduct,
+                                IReadOnlyCollection<LoanSchedule> loanSchedules,
+                                ICollection<AllowanceItem> allowanceItems,
+                                ICollection<LoanTransaction> loanTransactions,
+                                IReadOnlyCollection<TimeEntry> timeEntries,
+                                IReadOnlyCollection<Leave> leaves)
         {
             using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
-                if (_paystub.RowID.HasValue)
+                foreach (var loan in loanSchedules)
                 {
-                    context.Entry(_paystub).State = EntityState.Modified;
-                    context.Entry(_paystub.Actual).State = EntityState.Modified;
+                    context.Entry(loan).State = EntityState.Modified;
+                }
 
-                    if (_paystub.ThirteenthMonthPay != null)
-                        context.Entry(_paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                if (paystub.RowID.HasValue)
+                {
+                    context.Entry(paystub).State = EntityState.Modified;
+                    context.Entry(paystub.Actual).State = EntityState.Modified;
+
+                    if (paystub.ThirteenthMonthPay != null)
+                    {
+                        context.Entry(paystub.ThirteenthMonthPay).State = EntityState.Modified;
+                    }
                 }
                 else
                 {
-                    context.Paystubs.Add(_paystub);
+                    context.Paystubs.Add(paystub);
                 }
 
-                if (EligibleForNewBPIInsurance())
+                if (EligibleForNewBPIInsurance(paystub, employee, settings, payPeriod))
                 {
                     context.Adjustments.Add(new Adjustment()
                     {
-                        OrganizationID = _organizationId,
-                        CreatedBy = _userId,
+                        OrganizationID = paystub.OrganizationID,
+                        CreatedBy = userId,
                         Created = DateTime.Now,
-                        Paystub = _paystub,
-                        ProductID = _bpiInsuranceProduct.RowID,
-                        Amount = -_employee.BPIInsurance
+                        Paystub = paystub,
+                        ProductID = bpiInsuranceProduct.RowID,
+                        Amount = -employee.BPIInsurance
                     });
                 }
 
-                context.Set<AllowanceItem>().RemoveRange(_paystub.AllowanceItems);
-
-                _paystub.AllowanceItems = _allowanceItems;
-
-                foreach (var newLoanTransaction in newLoanTransactions)
+                if (paystub.AllowanceItems != null)
                 {
-                    context.LoanTransactions.Add(newLoanTransaction);
+                    context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
                 }
+                paystub.AllowanceItems = allowanceItems;
 
-                if (_systemOwnerService.GetCurrentSystemOwner() != SystemOwnerService.Benchmark)
+                if (paystub.LoanTransactions != null)
                 {
-                    UpdateLeaveLedger(context);
-                    UpdatePaystubItems(context);
+                    context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+                }
+                paystub.LoanTransactions = loanTransactions;
+
+                if (currentSystemOwner != SystemOwnerService.Benchmark)
+                {
+                    UpdateLeaveLedger(context, paystub, employee, payPeriod, timeEntries, leaves);
+
+                    UpdatePaystubItems(context,
+                                        userId,
+                                        paystub,
+                                        employee,
+                                        sickLeaveProduct: sickLeaveProduct,
+                                        vacationLeaveProduct: vacationLeaveProduct,
+                                        timeEntries);
                 }
                 else
-                    UpdateBenchmarkLeaveLedger(context);
+                    UpdateBenchmarkLeaveLedger(context, paystub, employee, payPeriod);
 
                 context.SaveChanges();
             }
         }
 
-        public List<LoanTransaction> ComputePayroll(Paystub paystub = null,
-                                                    ICollection<AllowanceItem> allowanceItems = null)
+        public void ComputePayroll(PayrollResources resources,
+                                    int userId,
+                                    string currentSystemOwner,
+                                    ListOfValueCollection settings,
+                                    CalendarCollection calendarCollection,
+                                    PayPeriod payPeriod,
+                                    Paystub paystub,
+                                    Employee employee,
+                                    Salary salary,
+                                    Paystub previousPaystub,
+                                    ICollection<LoanTransaction> loanTransactions,
+                                    IReadOnlyCollection<TimeEntry> timeEntries,
+                                    IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+                                    IReadOnlyCollection<Allowance> allowances,
+                                    IReadOnlyCollection<AllowanceItem> allowanceItems)
         {
-            List<LoanTransaction> newLoanTransactions = new List<LoanTransaction>();
-
-            if (paystub != null)
-                _paystub = paystub;
-
-            if (_systemOwnerService.GetCurrentSystemOwner() != SystemOwnerService.Benchmark)
+            if (currentSystemOwner != SystemOwnerService.Benchmark)
             {
-                ComputeBasicHoursAndPay();
+                ComputeBasicHoursAndPay(paystub, employee, salary, calendarCollection, timeEntries);
 
-                ComputeHours();
+                ComputeHours(paystub,
+                            employee,
+                            salary,
+                            timeEntries: timeEntries,
+                            actualTimeEntries: actualTimeEntries);
 
-                ComputeTotalEarnings();
+                ComputeTotalEarnings(paystub, employee, settings, payPeriod);
             }
 
-            // Allowance
-            CalculateAllowances(allowanceItems);
-            var grandTotalAllowance = _paystub.TotalAllowance + _paystub.TotalTaxableAllowance;
+            // Allowances
+            paystub.TotalTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => a.IsTaxable).Sum(a => a.Amount));
+            paystub.TotalAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
+            var grandTotalAllowance = paystub.TotalAllowance + paystub.TotalTaxableAllowance;
 
             // Loans
-            newLoanTransactions = ComputeLoans();
+            paystub.TotalLoans = loanTransactions.Sum(t => t.Amount);
 
             // gross pay and total earnings should be higher than the goverment deduction calculators
             // since it is sometimes used in computing the basis pay for the deductions
             // depending on the organization's policy
-            if (_paystub.TotalEarnings < 0)
-                _paystub.TotalEarnings = 0;
+            if (paystub.TotalEarnings < 0)
+                paystub.TotalEarnings = 0;
 
-            _paystub.GrossPay = _paystub.TotalEarnings + _paystub.TotalBonus + grandTotalAllowance;
+            paystub.GrossPay = paystub.TotalEarnings + paystub.TotalBonus + grandTotalAllowance;
 
-            _paystub.TotalAdjustments = _paystub.Adjustments.Sum(a => a.Amount);
+            paystub.TotalAdjustments = paystub.Adjustments.Sum(a => a.Amount);
             // BPI Insurance feature, currently used by LA Global
-            if (EligibleForNewBPIInsurance())
-                _paystub.TotalAdjustments -= _employee.BPIInsurance;
+            if (EligibleForNewBPIInsurance(paystub, employee, settings, payPeriod))
+            {
+                paystub.TotalAdjustments -= employee.BPIInsurance;
+            }
 
-            var socialSecurityCalculator = new SssCalculator(_settings, _resources.SocialSecurityBrackets);
-            socialSecurityCalculator.Calculate(_paystub, _previousPaystub, _salary, _employee, _payPeriod, _systemOwnerService);
+            var socialSecurityCalculator = new SssCalculator(settings, resources.SocialSecurityBrackets);
+            socialSecurityCalculator.Calculate(paystub, previousPaystub, salary, employee, payPeriod, currentSystemOwner);
 
-            var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(_settings), _resources.PhilHealthBrackets);
-            philHealthCalculator.Calculate(_salary, _paystub, _previousPaystub, _employee, _payPeriod, _allowances, _systemOwnerService);
+            var philHealthCalculator = new PhilHealthCalculator(new PhilHealthPolicy(settings), resources.PhilHealthBrackets);
+            philHealthCalculator.Calculate(salary, paystub, previousPaystub, employee, payPeriod, allowances, currentSystemOwner);
 
             var hdmfCalculator = new HdmfCalculator();
-            hdmfCalculator.Calculate(_salary, _paystub, _employee, _payPeriod, _settings);
+            hdmfCalculator.Calculate(salary, paystub, employee, settings, payPeriod);
 
-            var withholdingTaxCalculator = new WithholdingTaxCalculator(_settings, _resources.FilingStatuses, _resources.WithholdingTaxBrackets, _resources.DivisionMinimumWages);
-            withholdingTaxCalculator.Calculate(_paystub, _previousPaystub, _employee, _payPeriod, _salary);
+            var withholdingTaxCalculator = new WithholdingTaxCalculator(settings, resources.FilingStatuses, resources.WithholdingTaxBrackets, resources.DivisionMinimumWages);
+            withholdingTaxCalculator.Calculate(paystub, previousPaystub, employee, payPeriod, salary);
 
-            _paystub.NetPay = AccuMath.CommercialRound(_paystub.GrossPay - _paystub.NetDeductions + _paystub.TotalAdjustments);
+            paystub.NetPay = AccuMath.CommercialRound(paystub.GrossPay - paystub.NetDeductions + paystub.TotalAdjustments);
 
             var actualCalculator = new PaystubActualCalculator();
-            actualCalculator.Compute(_employee, _salary, _settings, _payPeriod, _paystub, _systemOwnerService);
+            actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner);
 
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
-                                                        organizationId: _organizationId,
-                                                        userId: _userId);
-            thirteenthMonthPayCalculator.Calculate(_employee, _paystub, _timeEntries, _actualtimeentries, _salary, _settings, _allowanceItems, _systemOwnerService);
-
-            return newLoanTransactions;
+                                                        organizationId: paystub.OrganizationID.Value,
+                                                        userId: userId);
+            thirteenthMonthPayCalculator.Calculate(employee, paystub, timeEntries, actualTimeEntries, salary, settings, paystub.AllowanceItems, currentSystemOwner);
         }
 
-        private bool EligibleForNewBPIInsurance()
+        private bool EligibleForNewBPIInsurance(Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payPeriod)
         {
-            return _settings.GetBoolean("Employee Policy.UseBPIInsurance", false) &&
-                    IsFirstPay() &&
-                    _employee.BPIInsurance > 0 &&
-                    !_paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
+            return settings.GetBoolean("Employee Policy.UseBPIInsurance", false) &&
+                    IsFirstPay(employee, payPeriod) &&
+                    employee.BPIInsurance > 0 &&
+                    !paystub.Adjustments.Any(a => a.Product?.PartNo == ProductConstant.BPI_INSURANCE_ADJUSTMENT);
         }
 
-        private void ComputeTotalEarnings()
+        private void ComputeTotalEarnings(Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payPeriod)
         {
-            if (_employee.IsFixed)
-                _paystub.TotalEarnings = _paystub.BasicPay + _paystub.AdditionalPay;
-            else if (_employee.IsMonthly)
+            if (employee.IsFixed)
             {
-                var isFirstPayAsDailyRule = _settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
-                bool isFirstPay = IsFirstPay();
+                paystub.TotalEarnings = paystub.BasicPay + paystub.AdditionalPay;
+            }
+            else if (employee.IsMonthly)
+            {
+                var isFirstPayAsDailyRule = settings.GetBoolean("Payroll Policy", "isfirstsalarydaily");
+                bool isFirstPay = IsFirstPay(employee, payPeriod);
 
                 if (isFirstPay && isFirstPayAsDailyRule)
                 {
-                    _paystub.TotalEarnings = _paystub.RegularPay +
-                                            _paystub.LeavePay +
-                                            _paystub.AdditionalPay;
+                    paystub.TotalEarnings = paystub.RegularPay +
+                                            paystub.LeavePay +
+                                            paystub.AdditionalPay;
                 }
                 else
                 {
-                    _paystub.RegularHours = _paystub.BasicHours - _paystub.LeaveHours;
+                    paystub.RegularHours = paystub.BasicHours - paystub.LeaveHours;
 
-                    _paystub.RegularPay = _paystub.BasicPay - _paystub.LeavePay;
+                    paystub.RegularPay = paystub.BasicPay - paystub.LeavePay;
 
-                    _paystub.TotalEarnings = (_paystub.BasicPay + _paystub.AdditionalPay) -
-                                            _paystub.BasicDeductions;
+                    paystub.TotalEarnings = (paystub.BasicPay + paystub.AdditionalPay) -
+                                            paystub.BasicDeductions;
                 }
             }
-            else if (_employee.IsDaily)
+            else if (employee.IsDaily)
             {
-                _paystub.TotalEarnings = _paystub.RegularPay +
-                                        _paystub.LeavePay +
-                                        _paystub.AdditionalPay;
+                paystub.TotalEarnings = paystub.RegularPay +
+                                        paystub.LeavePay +
+                                        paystub.AdditionalPay;
             }
         }
 
-        private bool IsFirstPay()
+        private bool IsFirstPay(Employee employee, PayPeriod payPeriod)
         {
             // start date is within current pay period
-            return _payPeriod.PayFromDate <= _employee.StartDate &&
-                                _employee.StartDate <= _payPeriod.PayToDate;
+            return payPeriod.PayFromDate <= employee.StartDate &&
+                                employee.StartDate <= payPeriod.PayToDate;
         }
 
-        private void ComputeBasicHoursAndPay()
+        private void ComputeBasicHoursAndPay(Paystub paystub,
+                                            Employee employee,
+                                            Salary salary,
+                                            CalendarCollection calendarCollection,
+                                            IReadOnlyCollection<TimeEntry> timeEntries)
         {
-            if (_employee.IsMonthly || _employee.IsFixed)
+            if (employee.IsMonthly || employee.IsFixed)
             {
-                if (_employee.WorkDaysPerYear > 0)
+                if (employee.WorkDaysPerYear > 0)
                 {
-                    var workDaysPerPayPeriod = _employee.WorkDaysPerYear /
+                    var workDaysPerPayPeriod = employee.WorkDaysPerYear /
                                                 CalendarConstants.MonthsInAYear /
                                                 CalendarConstants.SemiMonthlyPayPeriodsPerMonth;
 
-                    _paystub.BasicHours = workDaysPerPayPeriod * 8;
+                    paystub.BasicHours = workDaysPerPayPeriod * 8;
                 }
 
-                _paystub.BasicPay = AccuMath.CommercialRound((_salary.BasicSalary / 2), 2);
+                paystub.BasicPay = AccuMath.CommercialRound(salary.BasicSalary / 2);
             }
-            else if (_employee.IsDaily)
+            else if (employee.IsDaily)
             {
-                ComputeBasicHoursForDay();
+                ComputeBasicHoursForDay(paystub, calendarCollection, timeEntries);
 
-                _paystub.BasicPay = _timeEntries.Sum(t => t.BasicDayPay);
+                paystub.BasicPay = timeEntries.Sum(t => t.BasicDayPay);
             }
         }
 
-        private void ComputeBasicHoursForDay()
+        private void ComputeBasicHoursForDay(Paystub paystub, CalendarCollection calendarCollection, IReadOnlyCollection<TimeEntry> timeEntries)
         {
             var basicHours = 0M;
 
-            foreach (var timeEntry in _timeEntries)
+            foreach (var timeEntry in timeEntries)
             {
-                var payrateCalendar = _calendarCollection.GetCalendar(timeEntry.BranchID);
+                var payrateCalendar = calendarCollection.GetCalendar(timeEntry.BranchID);
                 var payrate = payrateCalendar.Find(timeEntry.Date);
 
                 if (!(timeEntry.IsRestDay ||
@@ -403,114 +487,112 @@ namespace AccuPay.Data.Services
                     basicHours += timeEntry.WorkHours;
             }
 
-            _paystub.BasicHours = basicHours;
+            paystub.BasicHours = basicHours;
         }
 
-        private void ComputeHours()
+        private void ComputeHours(Paystub paystub,
+                                Employee employee,
+                                Salary salary,
+                                IReadOnlyCollection<TimeEntry> timeEntries,
+                                IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)
         {
             PaystubRate paystubRate = new PaystubRate();
-            paystubRate.Compute(_timeEntries, _salary, _employee, _actualtimeentries);
+            paystubRate.Compute(timeEntries, salary, employee, actualTimeEntries);
 
-            _paystub.RegularHours = paystubRate.RegularHours;
-            _paystub.RegularPay = paystubRate.RegularPay;
-            _paystub.Actual.RegularPay = paystubRate.ActualRegularPay;
+            paystub.RegularHours = paystubRate.RegularHours;
+            paystub.RegularPay = paystubRate.RegularPay;
+            paystub.Actual.RegularPay = paystubRate.ActualRegularPay;
 
-            _paystub.OvertimeHours = paystubRate.OvertimeHours;
-            _paystub.OvertimePay = paystubRate.OvertimePay;
-            _paystub.Actual.OvertimePay = paystubRate.ActualOvertimePay;
+            paystub.OvertimeHours = paystubRate.OvertimeHours;
+            paystub.OvertimePay = paystubRate.OvertimePay;
+            paystub.Actual.OvertimePay = paystubRate.ActualOvertimePay;
 
-            _paystub.NightDiffHours = paystubRate.NightDiffHours;
-            _paystub.NightDiffPay = paystubRate.NightDiffPay;
-            _paystub.Actual.NightDiffPay = paystubRate.ActualNightDiffPay;
+            paystub.NightDiffHours = paystubRate.NightDiffHours;
+            paystub.NightDiffPay = paystubRate.NightDiffPay;
+            paystub.Actual.NightDiffPay = paystubRate.ActualNightDiffPay;
 
-            _paystub.NightDiffOvertimeHours = paystubRate.NightDiffOvertimeHours;
-            _paystub.NightDiffOvertimePay = paystubRate.NightDiffOvertimePay;
-            _paystub.Actual.NightDiffOvertimePay = paystubRate.ActualNightDiffOvertimePay;
+            paystub.NightDiffOvertimeHours = paystubRate.NightDiffOvertimeHours;
+            paystub.NightDiffOvertimePay = paystubRate.NightDiffOvertimePay;
+            paystub.Actual.NightDiffOvertimePay = paystubRate.ActualNightDiffOvertimePay;
 
-            _paystub.RestDayHours = paystubRate.RestDayHours;
-            _paystub.RestDayPay = paystubRate.RestDayPay;
-            _paystub.Actual.RestDayPay = paystubRate.ActualRestDayPay;
+            paystub.RestDayHours = paystubRate.RestDayHours;
+            paystub.RestDayPay = paystubRate.RestDayPay;
+            paystub.Actual.RestDayPay = paystubRate.ActualRestDayPay;
 
-            _paystub.RestDayOTHours = paystubRate.RestDayOTHours;
-            _paystub.RestDayOTPay = paystubRate.RestDayOTPay;
-            _paystub.Actual.RestDayOTPay = paystubRate.ActualRestDayOTPay;
+            paystub.RestDayOTHours = paystubRate.RestDayOTHours;
+            paystub.RestDayOTPay = paystubRate.RestDayOTPay;
+            paystub.Actual.RestDayOTPay = paystubRate.ActualRestDayOTPay;
 
-            _paystub.SpecialHolidayHours = paystubRate.SpecialHolidayHours;
-            _paystub.SpecialHolidayPay = paystubRate.SpecialHolidayPay;
-            _paystub.Actual.SpecialHolidayPay = paystubRate.ActualSpecialHolidayPay;
+            paystub.SpecialHolidayHours = paystubRate.SpecialHolidayHours;
+            paystub.SpecialHolidayPay = paystubRate.SpecialHolidayPay;
+            paystub.Actual.SpecialHolidayPay = paystubRate.ActualSpecialHolidayPay;
 
-            _paystub.SpecialHolidayOTHours = paystubRate.SpecialHolidayOTHours;
-            _paystub.SpecialHolidayOTPay = paystubRate.SpecialHolidayOTPay;
-            _paystub.Actual.SpecialHolidayOTPay = paystubRate.ActualSpecialHolidayOTPay;
+            paystub.SpecialHolidayOTHours = paystubRate.SpecialHolidayOTHours;
+            paystub.SpecialHolidayOTPay = paystubRate.SpecialHolidayOTPay;
+            paystub.Actual.SpecialHolidayOTPay = paystubRate.ActualSpecialHolidayOTPay;
 
-            _paystub.RegularHolidayHours = paystubRate.RegularHolidayHours;
-            _paystub.RegularHolidayPay = paystubRate.RegularHolidayPay;
-            _paystub.Actual.RegularHolidayPay = paystubRate.ActualRegularHolidayPay;
+            paystub.RegularHolidayHours = paystubRate.RegularHolidayHours;
+            paystub.RegularHolidayPay = paystubRate.RegularHolidayPay;
+            paystub.Actual.RegularHolidayPay = paystubRate.ActualRegularHolidayPay;
 
-            _paystub.RegularHolidayOTHours = paystubRate.RegularHolidayOTHours;
-            _paystub.RegularHolidayOTPay = paystubRate.RegularHolidayOTPay;
-            _paystub.Actual.RegularHolidayOTPay = paystubRate.ActualRegularHolidayOTPay;
+            paystub.RegularHolidayOTHours = paystubRate.RegularHolidayOTHours;
+            paystub.RegularHolidayOTPay = paystubRate.RegularHolidayOTPay;
+            paystub.Actual.RegularHolidayOTPay = paystubRate.ActualRegularHolidayOTPay;
 
-            _paystub.LeaveHours = paystubRate.LeaveHours;
-            _paystub.LeavePay = paystubRate.LeavePay;
-            _paystub.Actual.LeavePay = paystubRate.ActualLeavePay;
+            paystub.LeaveHours = paystubRate.LeaveHours;
+            paystub.LeavePay = paystubRate.LeavePay;
+            paystub.Actual.LeavePay = paystubRate.ActualLeavePay;
 
-            _paystub.LateHours = paystubRate.LateHours;
-            _paystub.LateDeduction = paystubRate.LateDeduction;
-            _paystub.Actual.LateDeduction = paystubRate.ActualLateDeduction;
+            paystub.LateHours = paystubRate.LateHours;
+            paystub.LateDeduction = paystubRate.LateDeduction;
+            paystub.Actual.LateDeduction = paystubRate.ActualLateDeduction;
 
-            _paystub.UndertimeHours = paystubRate.UndertimeHours;
-            _paystub.UndertimeDeduction = paystubRate.UndertimeDeduction;
-            _paystub.Actual.UndertimeDeduction = paystubRate.ActualUndertimeDeduction;
+            paystub.UndertimeHours = paystubRate.UndertimeHours;
+            paystub.UndertimeDeduction = paystubRate.UndertimeDeduction;
+            paystub.Actual.UndertimeDeduction = paystubRate.ActualUndertimeDeduction;
 
-            _paystub.AbsentHours = paystubRate.AbsentHours;
-            _paystub.AbsenceDeduction = paystubRate.AbsenceDeduction;
-            _paystub.Actual.AbsenceDeduction = paystubRate.ActualAbsenceDeduction;
+            paystub.AbsentHours = paystubRate.AbsentHours;
+            paystub.AbsenceDeduction = paystubRate.AbsenceDeduction;
+            paystub.Actual.AbsenceDeduction = paystubRate.ActualAbsenceDeduction;
         }
 
-        private void CalculateAllowances(ICollection<AllowanceItem> allowanceItems = null)
-        {
-            if (allowanceItems == null)
-                CreateAllowanceItems();
-            else
-            {
-                _allowanceItems.Clear();
-
-                foreach (var item in allowanceItems)
-
-                    _allowanceItems.Add(item);
-            }
-
-            ComputeTotalAllowances();
-        }
-
-        private void CreateAllowanceItems()
+        private ICollection<AllowanceItem> CreateAllowanceItems(int userId,
+                                            ListOfValueCollection settings,
+                                            CalendarCollection calendarCollection,
+                                            PayPeriod payPeriod,
+                                            Paystub paystub,
+                                            Employee employee,
+                                            IReadOnlyCollection<TimeEntry> previousTimeEntries,
+                                            IReadOnlyCollection<TimeEntry> timeEntries,
+                                            IReadOnlyCollection<Allowance> allowances)
         {
             var dailyCalculator = new DailyAllowanceCalculator(
-                                                            _settings,
-                                                            _calendarCollection,
-                                                            _previousTimeEntries,
-                                                            organizationId: _organizationId,
-                                                            userId: _userId);
+                                                            settings,
+                                                            calendarCollection,
+                                                            previousTimeEntries,
+                                                            organizationId: paystub.OrganizationID.Value,
+                                                            userId: userId);
 
             var semiMonthlyCalculator = new SemiMonthlyAllowanceCalculator(
-                                                            new AllowancePolicy(_settings),
-                                                            _employee,
-                                                            _paystub,
-                                                            _payPeriod,
-                                                            _calendarCollection,
-                                                            _timeEntries,
-                                                            organizationId: _organizationId,
-                                                            userId: _userId);
+                                                            new AllowancePolicy(settings),
+                                                            employee,
+                                                            paystub,
+                                                            payPeriod,
+                                                            calendarCollection,
+                                                            timeEntries,
+                                                            organizationId: paystub.OrganizationID.Value,
+                                                            userId: userId);
 
-            foreach (var allowance in _allowances)
+            var allowanceItems = new List<AllowanceItem>();
+
+            foreach (var allowance in allowances)
             {
-                var item = AllowanceItem.Create(paystub: _paystub,
+                var item = AllowanceItem.Create(paystub: paystub,
                                                 product: allowance.Product,
-                                                payperiodId: _payPeriod.RowID.Value,
+                                                payperiodId: payPeriod.RowID.Value,
                                                 allowanceId: allowance.RowID.Value,
-                                                organizationId: _organizationId,
-                                                userId: _userId);
+                                                organizationId: paystub.OrganizationID.Value,
+                                                userId: userId);
 
                 if (allowance.IsOneTime)
                 {
@@ -518,7 +600,7 @@ namespace AccuPay.Data.Services
                 }
                 else if (allowance.IsDaily)
                 {
-                    item = dailyCalculator.Compute(_payPeriod, allowance, _employee, _paystub, _timeEntries);
+                    item = dailyCalculator.Compute(payPeriod, allowance, employee, paystub, timeEntries);
                 }
                 else if (allowance.IsSemiMonthly)
                 {
@@ -527,7 +609,7 @@ namespace AccuPay.Data.Services
                 else if (allowance.IsMonthly)
                 {
                     // TODO: monthly payrolls are only for Fixed allowances only.
-                    if (allowance.Product.Fixed && _payPeriod.IsEndOfTheMonth)
+                    if (allowance.Product.Fixed && payPeriod.IsEndOfTheMonth)
                     {
                         item.Amount = allowance.Amount;
                     }
@@ -537,52 +619,53 @@ namespace AccuPay.Data.Services
                     item = null;
                 }
 
-                _allowanceItems.Add(item);
+                allowanceItems.Add(item);
             }
+
+            return allowanceItems;
         }
 
-        private void ComputeTotalAllowances()
-        {
-            _paystub.TotalTaxableAllowance = AccuMath.CommercialRound(_allowanceItems.Where(a => a.IsTaxable).Sum(a => a.Amount));
-
-            _paystub.TotalAllowance = AccuMath.CommercialRound(_allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
-        }
-
-        private void UpdateBenchmarkLeaveLedger(PayrollContext context)
+        private void UpdateBenchmarkLeaveLedger(PayrollContext context, Paystub paystub, Employee employee, PayPeriod payPeriod)
         {
             var vacationLedger = context.LeaveLedgers.
                                         Include(l => l.Product).
                                         Include(l => l.LastTransaction).
-                                        Where(l => l.EmployeeID == _employee.RowID).
+                                        Where(l => l.EmployeeID == employee.RowID).
                                         Where(l => l.Product.IsVacationLeave).
                                         FirstOrDefault();
 
             vacationLedger.LeaveTransactions = new List<LeaveTransaction>();
 
             if (vacationLedger == null)
-                throw new Exception($"Vacation ledger for Employee No.: {_employee.EmployeeNo}");
+                throw new Exception($"Vacation ledger for Employee No.: {employee.EmployeeNo}");
 
-            UpdateLedgerTransaction(employeeId: _employee.RowID.Value,
+            UpdateLedgerTransaction(paystub: paystub,
+                                    payPeriod: payPeriod,
                                     leaveId: null, ledger:
                                     vacationLedger, totalLeaveHours:
-                                    _paystub.LeaveHours,
-                                    transactionDate: _payPeriod.PayToDate);
+                                    paystub.LeaveHours,
+                                    transactionDate: payPeriod.PayToDate);
         }
 
-        private void UpdateLeaveLedger(PayrollContext context)
+        private void UpdateLeaveLedger(PayrollContext context,
+                                        Paystub paystub,
+                                        Employee employee,
+                                        PayPeriod payPeriod,
+                                        IReadOnlyCollection<TimeEntry> timeEntries,
+                                        IReadOnlyCollection<Leave> leaves)
         {
-            var leaves = _leaves.
-                            Where(l => l.EmployeeID == _employee.RowID).
-                            OrderBy(l => l.StartDate).
-                            ToList();
+            var employeeLeaves = leaves.
+                                    Where(l => l.EmployeeID == employee.RowID).
+                                    OrderBy(l => l.StartDate).
+                                    ToList();
 
-            var leaveIds = leaves.Select(l => l.RowID);
+            var leaveIds = employeeLeaves.Select(l => l.RowID);
 
             var transactions = (from t in context.LeaveTransactions
                                 where leaveIds.Contains(t.ReferenceID)
                                 select t).ToList();
 
-            var employeeId = _employee.RowID;
+            var employeeId = employee.RowID;
             var ledgers = context.LeaveLedgers.
                                 Include(x => x.Product).
                                 Include(x => x.LeaveTransactions).
@@ -591,7 +674,7 @@ namespace AccuPay.Data.Services
                                 ToList();
 
             var newLeaveTransactions = new List<LeaveTransaction>();
-            foreach (var leave in leaves)
+            foreach (var leave in employeeLeaves)
             {
                 // If a transaction has already been made for the current leave, skip the current leave.
                 if (transactions.Any(t => t.ReferenceID == leave.RowID))
@@ -601,8 +684,7 @@ namespace AccuPay.Data.Services
                     var ledger = ledgers.FirstOrDefault(l => l.Product.PartNo == leave.LeaveType);
 
                     // retrieves the time entries within leave date range
-                    var timeEntry = _timeEntries.
-                                    Where(t => leave.StartDate == t.Date);
+                    var timeEntry = timeEntries.Where(t => leave.StartDate == t.Date);
 
                     if (timeEntry == null)
                         continue;
@@ -615,7 +697,8 @@ namespace AccuPay.Data.Services
 
                     var transactionDate = leave.EndDate ?? leave.StartDate;
 
-                    UpdateLedgerTransaction(employeeId: leave.EmployeeID.Value,
+                    UpdateLedgerTransaction(paystub: paystub,
+                                            payPeriod: payPeriod,
                                             leaveId: leave.RowID,
                                             ledger: ledger,
                                             totalLeaveHours: totalLeaveHours,
@@ -624,7 +707,8 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private void UpdateLedgerTransaction(int employeeId,
+        private void UpdateLedgerTransaction(Paystub paystub,
+                                            PayPeriod payPeriod,
                                             int? leaveId,
                                             LeaveLedger ledger,
                                             decimal totalLeaveHours,
@@ -632,15 +716,15 @@ namespace AccuPay.Data.Services
         {
             var newTransaction = new LeaveTransaction()
             {
-                OrganizationID = _organizationId,
+                OrganizationID = paystub.OrganizationID,
                 Created = DateTime.Now,
-                EmployeeID = employeeId,
-                PayPeriodID = _payPeriod.RowID,
+                EmployeeID = paystub.EmployeeID,
+                PayPeriodID = payPeriod.RowID,
                 ReferenceID = leaveId,
                 TransactionDate = transactionDate,
                 Type = LeaveTransactionType.Debit,
                 Amount = totalLeaveHours,
-                Paystub = _paystub,
+                Paystub = paystub,
                 Balance = (ledger?.LastTransaction?.Balance ?? 0) - totalLeaveHours
             };
 
@@ -648,107 +732,99 @@ namespace AccuPay.Data.Services
             ledger.LastTransaction = newTransaction;
         }
 
-        private List<LoanTransaction> ComputeLoans()
+        private List<LoanTransaction> CreateLoanTransactions(Paystub paystub,
+                                                            PayPeriod payPeriod,
+                                                            IReadOnlyCollection<LoanSchedule> loanSchedules)
         {
-            var newLoanTransactions = new List<LoanTransaction>();
+            var loanTransactions = new List<LoanTransaction>();
+            var currentLoanSchedules = loanSchedules.Where(x => x.Status == LoanSchedule.STATUS_IN_PROGRESS);
 
-            if (_loanTransactions.Count > 0)
-                _paystub.TotalLoans = _loanTransactions.Sum(t => t.Amount);
-            else
+            foreach (var loanSchedule in currentLoanSchedules)
             {
-                string[] acceptedLoans = new string[] { };
-                if (_payPeriod.IsFirstHalf)
-                    acceptedLoans = new[] { "Per pay period", "First half" };
-                else if (_payPeriod.IsEndOfTheMonth)
-                    acceptedLoans = new[] { "Per pay period", "End of the month" };
+                if (loanSchedule.LoanPayPeriodLeft == 0) continue;
 
-                var loanSchedules = _loanSchedules.Where(l => acceptedLoans.Contains(l.DeductionSchedule)).ToList();
+                decimal deductionAmount = 0;
 
-                foreach (var loanSchedule in loanSchedules)
+                if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
                 {
-                    var loanTransaction = new LoanTransaction()
-                    {
-                        Created = DateTime.Now,
-                        LastUpd = DateTime.Now,
-                        OrganizationID = _organizationId,
-                        EmployeeID = _paystub.EmployeeID,
-                        PayPeriodID = _payPeriod.RowID,
-                        LoanScheduleID = loanSchedule.RowID.Value,
-                        LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft == null ? 0 :
-                                                            (Convert.ToInt32(loanSchedule.LoanPayPeriodLeft) - 1)
-                    };
-
-                    if (loanSchedule.DeductionAmount > loanSchedule.TotalBalanceLeft)
-                        loanTransaction.Amount = loanSchedule.TotalBalanceLeft;
-                    else
-                        loanTransaction.Amount = loanSchedule.DeductionAmount;
-
-                    loanTransaction.TotalBalance = loanSchedule.TotalBalanceLeft - loanTransaction.Amount;
-
-                    newLoanTransactions.Add(loanTransaction);
+                    deductionAmount = loanSchedule.TotalBalanceLeft;
+                }
+                else
+                {
+                    deductionAmount = loanSchedule.DeductionAmount;
                 }
 
-                _paystub.TotalLoans = newLoanTransactions.Aggregate(0M, (total, x) => x.Amount + total);
+                loanSchedule.TotalBalanceLeft -= deductionAmount;
+                loanSchedule.RecomputePayPeriodLeft();
+
+                var loanTransaction = new LoanTransaction()
+                {
+                    Created = DateTime.Now,
+                    LastUpd = DateTime.Now,
+                    Paystub = paystub,
+                    OrganizationID = paystub.OrganizationID,
+                    EmployeeID = paystub.EmployeeID,
+                    PayPeriodID = payPeriod.RowID,
+                    LoanScheduleID = loanSchedule.RowID.Value,
+                    LoanPayPeriodLeft = loanSchedule.LoanPayPeriodLeft,
+                    TotalBalance = loanSchedule.TotalBalanceLeft,
+                    Amount = deductionAmount
+                };
+
+                loanTransactions.Add(loanTransaction);
             }
 
-            return newLoanTransactions;
+            return loanTransactions;
         }
 
-        private void UpdatePaystubItems(PayrollContext context)
+        private void UpdatePaystubItems(PayrollContext context,
+                                        int userId,
+                                        Paystub paystub,
+                                        Employee employee,
+                                        Product sickLeaveProduct,
+                                        Product vacationLeaveProduct,
+                                        IReadOnlyCollection<TimeEntry> timeEntries)
         {
-            context.Entry(_paystub).Collection(p => p.PaystubItems).Load();
-            context.Set<PaystubItem>().RemoveRange(_paystub.PaystubItems);
+            context.Entry(paystub).Collection(p => p.PaystubItems).Load();
+            context.Set<PaystubItem>().RemoveRange(paystub.PaystubItems);
 
             var vacationLeaveBalance = context.PaystubItems.
                                 Where(p => p.Product.PartNo == ProductConstant.VACATION_LEAVE).
-                                Where(p => p.Paystub.RowID == _paystub.RowID).
+                                Where(p => p.Paystub.RowID == paystub.RowID).
                                 FirstOrDefault();
 
-            var vacationLeaveUsed = _timeEntries.Sum(t => t.VacationLeaveHours);
-            var newBalance = _employee.LeaveBalance - vacationLeaveUsed;
+            var vacationLeaveUsed = timeEntries.Sum(t => t.VacationLeaveHours);
+            var newBalance = employee.LeaveBalance - vacationLeaveUsed;
 
             vacationLeaveBalance = new PaystubItem()
             {
-                OrganizationID = _organizationId,
+                OrganizationID = paystub.OrganizationID,
                 Created = DateTime.Now,
-                CreatedBy = _userId,
-                ProductID = _vacationLeaveProduct.RowID,
+                CreatedBy = userId,
+                ProductID = vacationLeaveProduct.RowID,
                 PayAmount = newBalance,
-                Paystub = _paystub
+                Paystub = paystub
             };
 
-            _paystub.PaystubItems.Add(vacationLeaveBalance);
+            paystub.PaystubItems.Add(vacationLeaveBalance);
 
             var sickLeaveBalance = context.PaystubItems.
                                         Where(p => p.Product.PartNo == ProductConstant.SICK_LEAVE).
-                                        Where(p => p.Paystub.RowID == _paystub.RowID).
+                                        Where(p => p.Paystub.RowID == paystub.RowID).
                                         FirstOrDefault();
 
-            var sickLeaveUsed = _timeEntries.Sum(t => t.SickLeaveHours);
-            var newBalance2 = _employee.SickLeaveBalance - sickLeaveUsed;
+            var sickLeaveUsed = timeEntries.Sum(t => t.SickLeaveHours);
+            var newBalance2 = employee.SickLeaveBalance - sickLeaveUsed;
 
             sickLeaveBalance = new PaystubItem()
             {
-                OrganizationID = _organizationId,
-                ProductID = _sickLeaveProduct.RowID,
+                OrganizationID = paystub.OrganizationID,
+                ProductID = sickLeaveProduct.RowID,
                 PayAmount = newBalance2,
-                Paystub = _paystub
+                Paystub = paystub
             };
 
-            _paystub.PaystubItems.Add(sickLeaveBalance);
-        }
-
-        private class PayFrequency
-        {
-            public const int SemiMonthly = 1;
-            public const int Monthly = 2;
-        }
-
-        private class SalaryType
-        {
-            public const string Fixed = "Fixed";
-            public const string Monthly = "Monthly";
-            public const string Daily = "Daily";
+            paystub.PaystubItems.Add(sickLeaveBalance);
         }
 
         public class Result
@@ -830,7 +906,10 @@ namespace AccuPay.Data.Services
             public decimal AbsenceDeduction { get; set; }
             public decimal ActualAbsenceDeduction { get; set; }
 
-            public void Compute(ICollection<TimeEntry> timeEntries, Salary salary, Employee employee, ICollection<ActualTimeEntry> actualtimeentries)
+            public void Compute(IReadOnlyCollection<TimeEntry> timeEntries,
+                                Salary salary,
+                                Employee employee,
+                                IReadOnlyCollection<ActualTimeEntry> actualtimeentries)
             {
                 var totalTimeEntries = TotalTimeEntryCalculator.Calculate(timeEntries, salary, employee, actualtimeentries);
 

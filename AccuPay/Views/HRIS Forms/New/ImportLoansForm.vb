@@ -150,7 +150,7 @@ Public Class ImportLoansForm
 
             'TODO: use a ViewModel instead of showing the entity to the gridview
             'problems with detaching Employee
-            Dim loanSchedule = New LoanSchedule With {
+            Dim newLoanSchedule = New LoanSchedule With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
@@ -165,13 +165,14 @@ Public Class ImportLoansForm
                 .DeductionPercentage = 0,
                 .LoanName = record.LoanName,
                 .LoanTypeID = loanType.RowID,
-                .Status = LoanScheduleRepository.STATUS_IN_PROGRESS,
-                .DeductionSchedule = deductionSchedule,
-                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount.Value, record.DeductionAmount.Value),
-                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft.Value, record.DeductionAmount.Value)
+                .Status = LoanSchedule.STATUS_IN_PROGRESS,
+                .DeductionSchedule = deductionSchedule
             }
 
-            _loans.Add(loanSchedule)
+            newLoanSchedule.RecomputeTotalPayPeriod()
+            newLoanSchedule.RecomputePayPeriodLeft()
+
+            _loans.Add(newLoanSchedule)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
