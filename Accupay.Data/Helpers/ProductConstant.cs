@@ -9,6 +9,7 @@
         public const string BPI_INSURANCE_ADJUSTMENT = "BPI Insurance";
         public const string BONUS_TYPE_CATEGORY = "Bonus";
         public const string ECOLA = "ecola";
+        public const string EMPLOYEE_DISCIPLINARY_CATEGORY = "Employee Disciplinary";
         public const string HMO_LOAN = "HMO";
         public const string LEAVE_TYPE_CATEGORY = "Leave Type";
         public const string LOAN_TYPE_CATEGORY = "Loan Type";

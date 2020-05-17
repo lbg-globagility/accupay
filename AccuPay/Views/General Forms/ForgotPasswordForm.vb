@@ -3,8 +3,14 @@ Imports System.Net.Mail
 
 Public Class ForgotPasswordForm
 
-    Private Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click
+    Private MetroLogin As MetroLogin
 
+    Public Sub SetParentForms(metroLogin As MetroLogin)
+        Me.MetroLogin = metroLogin
+
+    End Sub
+
+    Private Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click
 
         If txtUserID.Text = "" Then
             MsgBox("Please enter your User ID", MsgBoxStyle.Exclamation, "System message.")
@@ -33,8 +39,6 @@ Public Class ForgotPasswordForm
             MsgBox(ex.Message, MsgBoxStyle.Exclamation, "Sending password failed") 'No Internet Connection.
         End Try
 
-
-
     End Sub
 
     Private Shared Sub SendEmail(sendTo As String, getpw As String)
@@ -51,7 +55,6 @@ Public Class ForgotPasswordForm
         mail.[To].Add(sendTo)
         mail.Subject = subject
         mail.Body = body
-
 
         SmtpServer.Host = smtpHost
         SmtpServer.Port = smtpPort
@@ -78,7 +81,6 @@ Public Class ForgotPasswordForm
 
     End Sub
 
-
     Private Sub txtUserID_KeyPress(sender As Object, e As KeyPressEventArgs) Handles txtUserID.KeyPress
 
         Dim e_asc As String = Asc(e.KeyChar)
@@ -88,6 +90,7 @@ Public Class ForgotPasswordForm
         End If
 
     End Sub
+
     Protected Overrides Function ProcessCmdKey(ByRef msg As Message, keyData As Keys) As Boolean
 
         If keyData = Keys.Escape Then
@@ -95,7 +98,6 @@ Public Class ForgotPasswordForm
             Me.Close()
 
             Return True
-
         Else
 
             Return MyBase.ProcessCmdKey(msg, keyData)

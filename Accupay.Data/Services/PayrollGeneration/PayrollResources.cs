@@ -3,7 +3,6 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.ValueObjects;
-using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,59 +15,132 @@ namespace AccuPay.Data.Services
     /// </summary>
     public class PayrollResources
     {
-        private readonly int _payPeriodId;
-        private readonly int _organizationId;
-        private readonly int _userId;
+        private int _payPeriodId;
+        private int _organizationId;
+        private int _userId;
 
-        private readonly DateTime _payDateFrom;
-        private readonly DateTime _payDateTo;
-        private readonly TimePeriod _payPeriodSpan;
+        private DateTime _payDateFrom;
+        private DateTime _payDateTo;
+        private TimePeriod _payPeriodSpan;
 
-        public ListOfValueCollection ListOfValueCollection { get; private set; }
-
-        public ICollection<Employee> Employees { get; private set; }
-
-        public ICollection<TimeEntry> TimeEntries { get; private set; }
-
-        public ICollection<LoanSchedule> LoanSchedules { get; private set; }
-
-        public ICollection<LoanTransaction> LoanTransactions { get; private set; }
-
-        public ICollection<Salary> Salaries { get; private set; }
-
-        public ICollection<Paystub> Paystubs { get; private set; }
-
-        public ICollection<Paystub> PreviousPaystubs { get; private set; }
-
-        public IReadOnlyCollection<PhilHealthBracket> PhilHealthBrackets { get; private set; }
-
-        public IReadOnlyCollection<SocialSecurityBracket> SocialSecurityBrackets { get; private set; }
-
-        public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
-
-        public PayPeriod PayPeriod { get; private set; }
-
-        public ICollection<Allowance> Allowances { get; private set; }
-
-        public ICollection<ActualTimeEntry> ActualTimeEntries { get; private set; }
-
-        public IReadOnlyCollection<Leave> Leaves { get; private set; }
-
-        public IReadOnlyCollection<FilingStatusType> FilingStatuses { get; private set; }
-
-        public IReadOnlyCollection<DivisionMinimumWage> DivisionMinimumWages { get; private set; }
-
-        public SystemOwnerService SystemOwner { get; private set; }
+        public Product BpiInsuranceProduct { get; private set; }
 
         public CalendarCollection CalendarCollection { get; private set; }
 
-        public Product BpiInsuranceProduct { get; private set; }
+        public string CurrentSystemOwner { get; private set; }
+
+        public ListOfValueCollection ListOfValueCollection { get; private set; }
+
+        public PayPeriod PayPeriod { get; private set; }
 
         public Product SickLeaveProduct { get; private set; }
 
         public Product VacationLeaveProduct { get; private set; }
 
-        public PayrollResources(int payPeriodId,
+        public IReadOnlyCollection<ActualTimeEntry> ActualTimeEntries { get; private set; }
+
+        public IReadOnlyCollection<Allowance> Allowances { get; private set; }
+
+        public IReadOnlyCollection<DivisionMinimumWage> DivisionMinimumWages { get; private set; }
+
+        public IReadOnlyCollection<Employee> Employees { get; private set; }
+
+        public IReadOnlyCollection<FilingStatusType> FilingStatuses { get; private set; }
+
+        public IReadOnlyCollection<Leave> Leaves { get; private set; }
+
+        public IReadOnlyCollection<LoanSchedule> LoanSchedules { get; private set; }
+
+        public IReadOnlyCollection<Paystub> Paystubs { get; private set; }
+
+        public IReadOnlyCollection<PhilHealthBracket> PhilHealthBrackets { get; private set; }
+
+        public IReadOnlyCollection<Paystub> PreviousPaystubs { get; private set; }
+
+        public IReadOnlyCollection<Salary> Salaries { get; private set; }
+
+        public IReadOnlyCollection<SocialSecurityBracket> SocialSecurityBrackets { get; private set; }
+
+        public IReadOnlyCollection<TimeEntry> TimeEntries { get; private set; }
+
+        public IReadOnlyCollection<WithholdingTaxBracket> WithholdingTaxBrackets { get; private set; }
+
+        private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
+
+        private readonly AllowanceRepository _allowanceRepository;
+
+        private readonly CalendarService _calendarService;
+
+        private readonly DivisionMinimumWageRepository _divisionMinimumWageRepository;
+
+        private readonly EmployeeRepository _employeeRepository;
+
+        private readonly FilingStatusTypeRepository _filingStatusTypeRepository;
+
+        private readonly LeaveRepository _leaveRepository;
+
+        private readonly ListOfValueService _listOfValueService;
+
+        private readonly LoanScheduleRepository _loanScheduleRepository;
+
+        private readonly PayPeriodRepository _payPeriodRepository;
+
+        private readonly PaystubRepository _paystubRepository;
+
+        private readonly PhilHealthBracketRepository _philHealthBracketRepository;
+
+        private readonly ProductRepository _productRepository;
+
+        private readonly SalaryRepository _salaryRepository;
+
+        private readonly SocialSecurityBracketRepository _socialSecurityBracketRepository;
+
+        private readonly SystemOwnerService _systemOwnerService;
+
+        private readonly TimeEntryRepository _timeEntryRepository;
+
+        private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
+
+        public PayrollResources(CalendarService calendarService,
+                                ListOfValueService listOfValueService,
+                                SystemOwnerService systemOwnerService,
+                                ActualTimeEntryRepository actualTimeEntryRepository,
+                                AllowanceRepository allowanceRepository,
+                                DivisionMinimumWageRepository divisionMinimumWageRepository,
+                                EmployeeRepository employeeRepository,
+                                FilingStatusTypeRepository filingStatusTypeRepository,
+                                LeaveRepository leaveRepository,
+                                LoanScheduleRepository loanScheduleRepository,
+                                PayPeriodRepository payPeriodRepository,
+                                PaystubRepository paystubRepository,
+                                PhilHealthBracketRepository philHealthBracketRepository,
+                                ProductRepository productRepository,
+                                SalaryRepository salaryRepository,
+                                SocialSecurityBracketRepository socialSecurityBracketRepository,
+                                TimeEntryRepository timeEntryRepository,
+                                WithholdingTaxBracketRepository withholdingTaxBracketRepository)
+        {
+            _calendarService = calendarService;
+            _listOfValueService = listOfValueService;
+            _systemOwnerService = systemOwnerService;
+            _actualTimeEntryRepository = actualTimeEntryRepository;
+            _allowanceRepository = allowanceRepository;
+            _divisionMinimumWageRepository = divisionMinimumWageRepository;
+            _employeeRepository = employeeRepository;
+            _filingStatusTypeRepository = filingStatusTypeRepository;
+            _leaveRepository = leaveRepository;
+            _loanScheduleRepository = loanScheduleRepository;
+            _payPeriodRepository = payPeriodRepository;
+            _paystubRepository = paystubRepository;
+            _philHealthBracketRepository = philHealthBracketRepository;
+            _productRepository = productRepository;
+            _salaryRepository = salaryRepository;
+            _socialSecurityBracketRepository = socialSecurityBracketRepository;
+            _timeEntryRepository = timeEntryRepository;
+            _withholdingTaxBracketRepository = withholdingTaxBracketRepository;
+        }
+
+        public async Task Load(int payPeriodId,
                                 int organizationId,
                                 int userId,
                                 DateTime payDateFrom,
@@ -81,38 +153,198 @@ namespace AccuPay.Data.Services
             _payDateTo = payDateTo;
 
             _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
-        }
 
-        public async Task Load()
-        {
-            // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+            // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoanSchedules()
             await LoadPayPeriod();
 
-            // LoadSettings() should be executed before LoadCalendarCollection()
-            await LoadListOfValueCollection();
-
             await Task.WhenAll(new[] {
-                    LoadSystemOwner(),
-                    LoadEmployees(),
-                    LoadLoanSchedules(),
-                    LoadLoanTransactions(),
-                    LoadSalaries(),
-                    LoadPaystubs(),
-                    LoadPreviousPaystubs(),
-                    LoadSocialSecurityBrackets(),
-                    LoadPhilHealthBrackets(),
-                    LoadWithholdingTaxBrackets(),
-                    LoadAllowances(),
-                    LoadTimeEntries(),
                     LoadActualTimeEntries(),
-                    LoadFilingStatuses(),
-                    LoadDivisionMinimumWages(),
-                    LoadCalendarCollection(),
+                    LoadAllowances(),
                     LoadBpiInsuranceProduct(),
+                    LoadDivisionMinimumWages(),
+                    LoadEmployees(),
+                    LoadFilingStatuses(),
+                    LoadLeaves(),
+                    LoadListOfValueCollection().
+                            ContinueWith(async (x)=> { await LoadCalendarCollection(); }),
+                    LoadPaystubs().
+                            ContinueWith(async (x)=> { await LoadLoanSchedules(); }),
+                    LoadPhilHealthBrackets(),
+                    LoadPreviousPaystubs(),
+                    LoadSalaries(),
                     LoadSickLeaveProduct(),
+                    LoadSocialSecurityBrackets(),
+                    LoadSystemOwner(),
+                    LoadTimeEntries(),
                     LoadVacationLeaveProduct(),
-                    LoadLeaves()
+                    LoadWithholdingTaxBrackets()
                 });
+        }
+
+        private async Task LoadAllowances()
+        {
+            try
+            {
+                Allowances = (await _allowanceRepository.
+                                GetByPayPeriodWithProductAsync(organizationId: _organizationId,
+                                                                timePeriod: _payPeriodSpan)).
+                            ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Allowances", ex);
+            }
+        }
+
+        private async Task LoadBpiInsuranceProduct()
+        {
+            try
+            {
+                BpiInsuranceProduct = await _productRepository.
+                    GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
+                                                    organizationId: _organizationId,
+                                                    userId: _userId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
+            }
+        }
+
+        private async Task LoadActualTimeEntries()
+        {
+            try
+            {
+                var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
+                ActualTimeEntries = (await _actualTimeEntryRepository.
+                                        GetByDatePeriodAsync(_organizationId, datePeriod)).
+                                        ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("ActualTimeEntries", ex);
+            }
+        }
+
+        private async Task LoadCalendarCollection()
+        {
+            // LoadListOfValueCollection() should be executed before LoadCalendarCollection()
+
+            var previousCutoffDateForCheckingLastWorkingDay =
+                    PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom);
+
+            try
+            {
+                await Task.Run(() =>
+                {
+                    var calculationBasis = ListOfValueCollection.
+                        GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
+
+                    var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
+
+                    CalendarCollection = _calendarService.GetCalendarCollection(payPeriod,
+                                                                                calculationBasis,
+                                                                                _organizationId);
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("EmployeeDutySchedules", ex);
+            }
+        }
+
+        private async Task LoadDivisionMinimumWages()
+        {
+            try
+            {
+                DivisionMinimumWages = (await _divisionMinimumWageRepository.
+                                            GetByDateAsync(_organizationId, _payDateTo)).
+                                            ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("DivisionMinimumWage", ex);
+            }
+        }
+
+        public async Task LoadEmployees()
+        {
+            try
+            {
+                Employees = (await _employeeRepository.
+                                GetAllActiveWithDivisionAndPositionAsync(_organizationId)).
+                                ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Employees", ex);
+            }
+        }
+
+        private async Task LoadFilingStatuses()
+        {
+            try
+            {
+                FilingStatuses = (await _filingStatusTypeRepository.GetAllAsync()).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Filing Statuses", ex);
+            }
+        }
+
+        private async Task LoadLeaves()
+        {
+            try
+            {
+                Leaves = (await _leaveRepository.
+                        GetByTimePeriodAsync(organizationId: _organizationId,
+                                            timePeriod: _payPeriodSpan)).
+                        ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Allowances", ex);
+            }
+        }
+
+        public async Task LoadListOfValueCollection()
+        {
+            try
+            {
+                ListOfValueCollection = await _listOfValueService.CreateAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("ListOfValueCollection", ex);
+            }
+        }
+
+        private async Task LoadLoanSchedules()
+        {
+            try
+            {
+                // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+                LoanSchedules = (await _loanScheduleRepository.
+                                    GetCurrentPayrollLoansAsync(_organizationId, PayPeriod, Paystubs)).
+                                    ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("LoanSchedules", ex);
+            }
+        }
+
+        private async Task LoadPayPeriod()
+        {
+            try
+            {
+                PayPeriod = (await _payPeriodRepository.GetByIdAsync(_payPeriodId));
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("PayPeriod", ex);
+            }
         }
 
         /// <summary>
@@ -124,7 +356,7 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                Paystubs = (await new PaystubRepository().
+                Paystubs = (await _paystubRepository.
                                 GetByPayPeriodFullPaystubAsync(_payPeriodId)).
                                 ToList();
             }
@@ -134,56 +366,87 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task LoadPayPeriod()
+        private async Task LoadPhilHealthBrackets()
         {
             try
             {
-                PayPeriod = (await new PayPeriodRepository().GetByIdAsync(_payPeriodId));
+                PhilHealthBrackets = (await _philHealthBracketRepository.GetAllAsync()).ToList();
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("PayPeriod", ex);
+                throw new ResourceLoadingException("PhilHealthBrackets", ex);
             }
         }
 
-        public async Task LoadListOfValueCollection()
+        private async Task LoadPreviousPaystubs()
         {
             try
             {
-                ListOfValueCollection = await ListOfValueCollection.CreateAsync();
+                PreviousPaystubs = (await _paystubRepository.
+                                        GetPreviousCutOffPaystubsAsync(_payDateFrom, _organizationId)).
+                                        ToList();
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("ListOfValueCollection", ex);
+                throw new ResourceLoadingException("PreviousPaystubs", ex);
             }
         }
 
-        public async Task LoadSystemOwner()
+        private async Task LoadSalaries()
         {
             try
             {
-                await Task.Run(() =>
-                {
-                    SystemOwner = new SystemOwnerService();
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("SystemOwner", ex);
-            }
-        }
-
-        public async Task LoadEmployees()
-        {
-            try
-            {
-                Employees = (await new EmployeeRepository().
-                                GetAllActiveWithDivisionAndPositionAsync(_organizationId)).
+                Salaries = (await _salaryRepository.
+                                GetByCutOffAsync(_organizationId, _payDateFrom)).
                                 ToList();
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("Employees", ex);
+                throw new ResourceLoadingException("Salaries", ex);
+            }
+        }
+
+        private async Task LoadSickLeaveProduct()
+        {
+            try
+            {
+                SickLeaveProduct = await _productRepository.
+                    GetOrCreateLeaveTypeAsync(ProductConstant.SICK_LEAVE,
+                                                organizationId: _organizationId,
+                                                userId: _userId);
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Sick Leave Product", ex);
+            }
+        }
+
+        private async Task LoadSocialSecurityBrackets()
+        {
+            try
+            {
+                // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
+                var taxEffectivityDate = new DateTime(PayPeriod.Year, PayPeriod.Month, 1);
+
+                SocialSecurityBrackets = (await _socialSecurityBracketRepository.
+                                            GetByTimePeriodAsync(taxEffectivityDate)).
+                                            ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("SocialSecurityBrackets", ex);
+            }
+        }
+
+        private async Task LoadSystemOwner()
+        {
+            try
+            {
+                CurrentSystemOwner = await _systemOwnerService.GetCurrentSystemOwnerAsync();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Allowances", ex);
             }
         }
 
@@ -197,7 +460,7 @@ namespace AccuPay.Data.Services
                 var datePeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay,
                                                 _payDateTo);
 
-                TimeEntries = (await new TimeEntryRepository().
+                TimeEntries = (await _timeEntryRepository.
                                     GetByDatePeriodAsync(_organizationId, datePeriod)).
                                     ToList();
             }
@@ -207,222 +470,11 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task LoadCalendarCollection()
-        {
-            var previousCutoffDateForCheckingLastWorkingDay =
-                    PayrollTools.GetPreviousCutoffDateForCheckingLastWorkingDay(_payDateFrom);
-
-            try
-            {
-                await Task.Run(() =>
-                {
-                    var calculationBasis = ListOfValueCollection.
-                        GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
-
-                    var payPeriod = new TimePeriod(previousCutoffDateForCheckingLastWorkingDay, _payDateTo);
-
-                    CalendarCollection = PayrollTools.
-                            GetCalendarCollection(payPeriod, calculationBasis, _organizationId);
-                });
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("EmployeeDutySchedules", ex);
-            }
-        }
-
-        private async Task LoadActualTimeEntries()
-        {
-            try
-            {
-                var datePeriod = new TimePeriod(_payDateFrom, _payDateTo);
-                ActualTimeEntries = (await new ActualTimeEntryRepository().
-                                        GetByDatePeriodAsync(_organizationId, datePeriod)).
-                                        ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("ActualTimeEntries", ex);
-            }
-        }
-
-        private async Task LoadLoanSchedules()
-        {
-            try
-            {
-                LoanSchedules = (await new LoanScheduleRepository().
-                                    GetCurrentPayrollLoansAsync(_organizationId, _payDateTo)).
-                                    ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("LoanSchedules", ex);
-            }
-        }
-
-        private async Task LoadLoanTransactions()
-        {
-            try
-            {
-                // TODO: get this from paystub
-                LoanTransactions = (await new LoanTransactionRepository().
-                                        GetByPayPeriodAsync(_payPeriodId)).
-                                        ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("LoanTransactions", ex);
-            }
-        }
-
-        private async Task LoadSalaries()
-        {
-            try
-            {
-                Salaries = (await new SalaryRepository().
-                                GetByCutOffAsync(_organizationId, _payDateFrom)).
-                                ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("Salaries", ex);
-            }
-        }
-
-        private async Task LoadPreviousPaystubs()
-        {
-            try
-            {
-                PreviousPaystubs = (await new PaystubRepository().
-                                        GetPreviousCutOffPaystubsAsync(_payDateFrom, _organizationId)).
-                                        ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("PreviousPaystubs", ex);
-            }
-        }
-
-        private async Task LoadSocialSecurityBrackets()
-        {
-            try
-            {
-                // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets()
-                var taxEffectivityDate = new DateTime(PayPeriod.Year, PayPeriod.Month, 1);
-
-                SocialSecurityBrackets = (await new SocialSecurityBracketRepository().
-                                            GetByTimePeriodAsync(taxEffectivityDate)).
-                                            ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("SocialSecurityBrackets", ex);
-            }
-        }
-
-        private async Task LoadPhilHealthBrackets()
-        {
-            try
-            {
-                PhilHealthBrackets = (await new PhilHealthBracketRepository().GetAllAsync()).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("PhilHealthBrackets", ex);
-            }
-        }
-
-        private async Task LoadWithholdingTaxBrackets()
-        {
-            try
-            {
-                WithholdingTaxBrackets = (await new WithholdingTaxBracketRepository().
-                                            GetAllAsync()).
-                                            ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("WithholdingTaxBrackets", ex);
-            }
-        }
-
-        private async Task LoadAllowances()
-        {
-            try
-            {
-                var allowanceRepo = new AllowanceRepository();
-
-                Allowances = await (allowanceRepo.
-                                GetByPayPeriodWithProductAsync(organizationId: _organizationId,
-                                                                timePeriod: _payPeriodSpan));
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("Allowances", ex);
-            }
-        }
-
-        private async Task LoadFilingStatuses()
-        {
-            try
-            {
-                FilingStatuses = (await new FilingStatusTypeRepository().GetAllAsync()).ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("Filing Statuses", ex);
-            }
-        }
-
-        private async Task LoadDivisionMinimumWages()
-        {
-            try
-            {
-                DivisionMinimumWages = (await new DivisionMinimumWageRepository().
-                                            GetByDateAsync(_organizationId, _payDateTo)).
-                                            ToList();
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("DivisionMinimumWage", ex);
-            }
-        }
-
-        private async Task LoadBpiInsuranceProduct()
-        {
-            try
-            {
-                BpiInsuranceProduct = await new ProductRepository().
-                    GetOrCreateAdjustmentTypeAsync(ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                                    organizationId: _organizationId,
-                                                    userId: _userId);
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("BPI Insurance Adjustment Product", ex);
-            }
-        }
-
-        private async Task LoadSickLeaveProduct()
-        {
-            try
-            {
-                SickLeaveProduct = await new ProductRepository().
-                    GetOrCreateLeaveTypeAsync(ProductConstant.SICK_LEAVE,
-                                                organizationId: _organizationId,
-                                                userId: _userId);
-            }
-            catch (Exception ex)
-            {
-                throw new ResourceLoadingException("Sick Leave Product", ex);
-            }
-        }
-
         private async Task LoadVacationLeaveProduct()
         {
             try
             {
-                VacationLeaveProduct = await new ProductRepository().
+                VacationLeaveProduct = await _productRepository.
                     GetOrCreateLeaveTypeAsync(ProductConstant.VACATION_LEAVE,
                                                 organizationId: _organizationId,
                                                 userId: _userId);
@@ -433,18 +485,17 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task LoadLeaves()
+        private async Task LoadWithholdingTaxBrackets()
         {
             try
             {
-                Leaves = (await new LeaveRepository().
-                        GetByTimePeriodAsync(organizationId: _organizationId,
-                                            timePeriod: _payPeriodSpan)).
-                        ToList();
+                WithholdingTaxBrackets = (await _withholdingTaxBracketRepository.
+                                            GetAllAsync()).
+                                            ToList();
             }
             catch (Exception ex)
             {
-                throw new ResourceLoadingException("Allowances", ex);
+                throw new ResourceLoadingException("WithholdingTaxBrackets", ex);
             }
         }
     }

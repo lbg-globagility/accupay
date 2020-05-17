@@ -17,10 +17,10 @@ namespace AccuPay.Data.Services
     {
         //private static ILog logger = LogManager.GetLogger("TimeEntryLogger", "TimeEntryLogger");
 
-        private readonly int _organizationId;
-        private readonly DateTime _cutoffStart;
-        private readonly DateTime _cutoffEnd;
-        private readonly int _threeDays = 3;
+        private int _organizationId;
+        private DateTime _cutoffStart;
+        private DateTime _cutoffEnd;
+        private int _threeDays = 3;
         private IList<TimeEntry> _timeEntries;
         private IList<ActualTimeEntry> _actualTimeEntries;
         private IList<TimeLog> _timeLogs;
@@ -33,6 +33,9 @@ namespace AccuPay.Data.Services
         private IList<EmployeeDutySchedule> _shiftSchedules;
         private List<TimeAttendanceLog> _timeAttendanceLogs;
         private List<BreakTimeBracket> _breakTimeBrackets;
+        private readonly DbContextOptionsService _dbContextOptionsService;
+        private readonly CalendarService _calendarService;
+        private readonly ListOfValueService _listOfValueService;
 
         private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
         private readonly AgencyRepository _agencyRepository;
@@ -70,37 +73,58 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public TimeEntryGenerator(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
+        public TimeEntryGenerator(DbContextOptionsService dbContextOptionsService,
+                                CalendarService calendarService,
+                                ListOfValueService listOfValueService,
+                                ActualTimeEntryRepository actualTimeEntryRepository,
+                                AgencyRepository agencyRepository,
+                                AgencyFeeRepository agencyFeeRepository,
+                                BreakTimeBracketRepository breakTimeBracketRepository,
+                                EmployeeRepository employeeRepository,
+                                EmployeeDutyScheduleRepository employeeDutyScheduleRepository,
+                                LeaveRepository leaveRepository,
+                                OfficialBusinessRepository officialBusinessRepository,
+                                OrganizationRepository organizationRepository,
+                                OvertimeRepository overtimeRepository,
+                                SalaryRepository salaryRepository,
+                                ShiftScheduleRepository shiftScheduleRepository,
+                                TimeAttendanceLogRepository timeAttendanceLogRepository,
+                                TimeEntryRepository timeEntryRepository,
+                                TimeLogRepository timeLogRepository)
+        {
+            _dbContextOptionsService = dbContextOptionsService;
+            _calendarService = calendarService;
+            _listOfValueService = listOfValueService;
+
+            _actualTimeEntryRepository = actualTimeEntryRepository;
+            _agencyRepository = agencyRepository;
+            _agencyFeeRepository = agencyFeeRepository;
+            _breakTimeBracketRepository = breakTimeBracketRepository;
+            _employeeRepository = employeeRepository;
+            _employeeDutyScheduleRepository = employeeDutyScheduleRepository;
+            _leaveRepository = leaveRepository;
+            _officialBusinessRepository = officialBusinessRepository;
+            _organizationRepository = organizationRepository;
+            _overtimeRepository = overtimeRepository;
+            _salaryRepository = salaryRepository;
+            _shiftScheduleRepository = shiftScheduleRepository;
+            _timeAttendanceLogRepository = timeAttendanceLogRepository;
+            _timeEntryRepository = timeEntryRepository;
+            _timeLogRepository = timeLogRepository;
+        }
+
+        public void Start(int organizationId, DateTime cutoffStart, DateTime cutoffEnd)
         {
             _organizationId = organizationId;
             _cutoffStart = cutoffStart;
             _cutoffEnd = cutoffEnd;
 
-            _actualTimeEntryRepository = new ActualTimeEntryRepository();
-            _agencyRepository = new AgencyRepository();
-            _agencyFeeRepository = new AgencyFeeRepository();
-            _breakTimeBracketRepository = new BreakTimeBracketRepository();
-            _employeeRepository = new EmployeeRepository();
-            _employeeDutyScheduleRepository = new EmployeeDutyScheduleRepository();
-            _leaveRepository = new LeaveRepository();
-            _officialBusinessRepository = new OfficialBusinessRepository();
-            _organizationRepository = new OrganizationRepository();
-            _overtimeRepository = new OvertimeRepository();
-            _salaryRepository = new SalaryRepository();
-            _shiftScheduleRepository = new ShiftScheduleRepository();
-            _timeAttendanceLogRepository = new TimeAttendanceLogRepository();
-            _timeEntryRepository = new TimeEntryRepository();
-            _timeLogRepository = new TimeLogRepository();
-        }
-
-        public void Start()
-        {
             IList<Employee> employees = null;
             Organization organization = null;
             IList<Agency> agencies = null;
             CalendarCollection calendarCollection;
 
-            ListOfValueCollection settings = ListOfValueCollection.Create();
+            ListOfValueCollection settings = _listOfValueService.Create();
             TimeEntryPolicy timeEntryPolicy = new TimeEntryPolicy(settings);
 
             TimePeriod cuttOffPeriod = new TimePeriod(_cutoffStart, _cutoffEnd);
@@ -182,7 +206,7 @@ namespace AccuPay.Data.Services
 
             var payrateCalculationBasis = settings.GetEnum("Pay rate.CalculationBasis", PayRateCalculationBasis.Organization);
 
-            calendarCollection = PayrollTools.GetCalendarCollection(
+            calendarCollection = _calendarService.GetCalendarCollection(
                                                     new TimePeriod(previousCutoff, _cutoffEnd),
                                                     payrateCalculationBasis,
                                                     _organizationId);
@@ -197,7 +221,7 @@ namespace AccuPay.Data.Services
                 {
                     CalculateEmployeeEntries(employee, organization, settings, agencies, timeEntryPolicy, calendarCollection);
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
                     // can error if employee type is null
                     //logger.Error(ex.Message, ex);
@@ -314,6 +338,15 @@ namespace AccuPay.Data.Services
                         regularHolidaysList.Add(currentDate);
                     }
 
+                    // this is for the issue on hasWorkedLastDay on first time entry generation.
+                    // since there is no oldTimeEntries yet, hasWorkedLastDay will always be false.
+                    if (previousTimeEntries.Where(x => x.EmployeeID == employee.RowID).
+                                    Where(x => x.Date == currentDate).
+                                    Any() == false)
+                    {
+                        previousTimeEntries.Add(timeEntry);
+                    }
+
                     timeEntries.Add(timeEntry);
                 }
                 catch (Exception ex)
@@ -340,7 +373,7 @@ namespace AccuPay.Data.Services
             var actualTimeEntryCalculator = new ActualTimeEntryCalculator(salary, actualTimeEntries, new ActualTimeEntryPolicy(settings));
             actualTimeEntries = actualTimeEntryCalculator.Compute(timeEntries);
 
-            using (var context = new PayrollContext())
+            using (var context = new PayrollContext(_dbContextOptionsService.DbContextOptions))
             {
                 AddTimeEntriesToContext(context, timeEntries);
                 AddActualTimeEntriesToContext(context, actualTimeEntries);
@@ -350,10 +383,10 @@ namespace AccuPay.Data.Services
         }
 
         private void PostLegalHolidayCheck(Employee employee,
-                                        List<TimeEntry> timeEntries,
-                                        TimeEntryPolicy timeEntryPolicy,
-                                        List<DateTime> regularHolidaysList,
-                                        CalendarCollection calendarCollection)
+                                            List<TimeEntry> timeEntries,
+                                            TimeEntryPolicy timeEntryPolicy,
+                                            List<DateTime> regularHolidaysList,
+                                            CalendarCollection calendarCollection)
         {
             if (timeEntryPolicy.PostLegalHolidayCheck)
             {

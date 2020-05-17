@@ -8,25 +8,26 @@ namespace AccuPay.Data.Repositories
 {
     public class LeaveLedgerRepository
     {
+        private readonly PayrollContext context;
+
+        public LeaveLedgerRepository(PayrollContext context)
+        {
+            this.context = context;
+        }
+
         public async Task<ICollection<LeaveLedger>> GetAllByEmployee(int? employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LeaveLedgers
-                    .Where(t => t.EmployeeID == employeeId)
-                    .ToListAsync();
-            }
+            return await context.LeaveLedgers
+                .Where(t => t.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
         public async Task<ICollection<LeaveTransaction>> GetTransactionsByLedger(int? leaveLedgerId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.LeaveTransactions
-                    .Where(t => t.LeaveLedgerID == leaveLedgerId)
-                    .OrderByDescending(t => t.TransactionDate)
-                    .ToListAsync();
-            }
+            return await context.LeaveTransactions
+                .Where(t => t.LeaveLedgerID == leaveLedgerId)
+                .OrderByDescending(t => t.TransactionDate)
+                .ToListAsync();
         }
     }
 }

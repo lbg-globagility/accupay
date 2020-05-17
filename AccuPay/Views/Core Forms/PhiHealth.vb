@@ -2,19 +2,20 @@
 Imports MySql.Data.MySqlClient
 
 Public Class PhiHealth
-    Public q_payphhealth As String = "SELECT phh.RowID," & _
-    "COALESCE(phh.SalaryBracket,0) 'Salary Bracket'," & _
-    "COALESCE(phh.SalaryRangeFrom,0) 'Salary Range From'," & _
-    "COALESCE(phh.SalaryRangeTo,0) 'Salary Range To'," & _
-    "COALESCE(phh.SalaryBase,0) 'Salary Base'," & _
-    "COALESCE(phh.EmployeeShare,0) 'Employee Share'," & _
-    "COALESCE(phh.EmployerShare ,0) 'Employer Share'," & _
-    "IFNULL(TotalMonthlyPremium,COALESCE(phh.EmployeeShare ,0) + COALESCE(phh.EmployerShare ,0)) 'Total Monthly Premium'," & _
-    "DATE_FORMAT(phh.Created,'%m-%d-%Y') 'Creation Date'," & _
-    "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," & _
-    "COALESCE(DATE_FORMAT(phh.LastUpd,'%m-%d-%Y'),'') 'Last Update'," & _
-    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=phh.LastUpdBy) 'LastUpdate by'" & _
-    " FROM payphilhealth phh" & _
+
+    Public q_payphhealth As String = "SELECT phh.RowID," &
+    "COALESCE(phh.SalaryBracket,0) 'Salary Bracket'," &
+    "COALESCE(phh.SalaryRangeFrom,0) 'Salary Range From'," &
+    "COALESCE(phh.SalaryRangeTo,0) 'Salary Range To'," &
+    "COALESCE(phh.SalaryBase,0) 'Salary Base'," &
+    "COALESCE(phh.EmployeeShare,0) 'Employee Share'," &
+    "COALESCE(phh.EmployerShare ,0) 'Employer Share'," &
+    "IFNULL(TotalMonthlyPremium,COALESCE(phh.EmployeeShare ,0) + COALESCE(phh.EmployerShare ,0)) 'Total Monthly Premium'," &
+    "DATE_FORMAT(phh.Created,'%m-%d-%Y') 'Creation Date'," &
+    "CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2))) 'Created by'," &
+    "COALESCE(DATE_FORMAT(phh.LastUpd,'%m-%d-%Y'),'') 'Last Update'," &
+    "(SELECT CONCAT(CONCAT(UCASE(LEFT(u.FirstName, 1)), SUBSTRING(u.FirstName, 2)),' ',CONCAT(UCASE(LEFT(u.LastName, 1)), SUBSTRING(u.LastName, 2)))  FROM user WHERE RowID=phh.LastUpdBy) 'LastUpdate by'" &
+    " FROM payphilhealth phh" &
     " INNER JOIN user u ON phh.CreatedBy=u.RowID" &
     " WHERE phh.HiddenData='0'"
 
@@ -22,6 +23,7 @@ Public Class PhiHealth
     Dim e_rindx, e_cindx, charcnt, _curCol, PhHlth_rcount As Integer
     Dim _cellVal, _now, u_nem As String
     Dim view_ID As Object
+
     Sub loadPhiHealth()
         dgvPhHlth.Rows.Clear()
         For Each r As DataRow In retAsDatTbl(q_payphhealth & " ORDER BY phh.SalaryBase").Rows 'ORDER BY phh.SalaryBracket
@@ -38,18 +40,6 @@ Public Class PhiHealth
                 previousForm = Nothing
             End If
         End If
-
-        'If FormLeft.Contains("PhilHealth Contribution Table") Then
-        '    FormLeft.Remove("PhilHealth Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
-        showAuditTrail.Close()
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
     End Sub
@@ -115,6 +105,7 @@ Public Class PhiHealth
         End If
 
     End Sub
+
     Private Sub dgvPhHlth_CellKeyPress(sender As Object, e As KeyPressEventArgs)
         Dim e_asc As String = Asc(e.KeyChar)
         e.Handled = TrapDecimKey(e_asc)
@@ -134,7 +125,9 @@ Public Class PhiHealth
             MsgBox(ex.Message & vbNewLine & "Please input an appropriate value.", MsgBoxStyle.Exclamation, "Too much Numeric Value")
         End Try
     End Sub
+
     Dim _txtCell As New TextBox
+
     Private Sub dgvPhHlth_TextChanged(sender As Object, e As EventArgs)
         _txtCell = DirectCast(sender, TextBox)
         Try
@@ -149,7 +142,6 @@ Public Class PhiHealth
                 End If
             End With
         Catch ex As Exception
-
         Finally
 
         End Try
@@ -179,7 +171,9 @@ Public Class PhiHealth
     Private Sub dgvPhHlth_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles dgvPhHlth.CellContentClick
 
     End Sub
+
     Dim dgvTxtBx As New TextBox
+
     Private Sub dgvPhHlth_EditingControlShowing(sender As Object, e As DataGridViewEditingControlShowingEventArgs) 'Handles dgvPhHlth.EditingControlShowing
 
         e.Control.ContextMenu = New ContextMenu
@@ -200,11 +194,9 @@ Public Class PhiHealth
                 Else
                 End If
 
-
                 AddHandler .TextChanged, AddressOf dgvPhHlth_TextChanged
                 AddHandler .KeyPress, AddressOf dgvPhHlth_CellKeyPress
                 AddHandler .KeyDown, AddressOf dgvPhHlth_KeyDown
-
             Catch ex As Exception
                 MsgBox(getErrExcptn(ex, Me.Name), , "Unexpected Message")
             Finally
@@ -234,15 +226,15 @@ Public Class PhiHealth
                 _rID = getStrBetween(rID, "", "@")
                 _indx = StrReverse(getStrBetween(StrReverse(rID), "", "@"))
                 With dgvPhHlth.Rows(Val(_indx))
-                    EXECQUER("UPDATE payphilhealth SET " & _
-                    "SalaryBracket=" & Val(.Cells("Column2").Value) & _
-                    ",SalaryRangeFrom=" & Val(.Cells("Column3").Value) & _
-                    ",SalaryRangeTo=" & Val(.Cells("Column4").Value) & _
-                    ",SalaryBase=" & Val(.Cells("Column5").Value) & _
-                    ",EmployeeShare=" & Val(.Cells("Column6").Value) & _
-                    ",EmployerShare=" & Val(.Cells("Column7").Value) & _
-                    ",LastUpd=CURRENT_TIMESTAMP()" & _
-                    ",LastUpdBy=" & z_User & _
+                    EXECQUER("UPDATE payphilhealth SET " &
+                    "SalaryBracket=" & Val(.Cells("Column2").Value) &
+                    ",SalaryRangeFrom=" & Val(.Cells("Column3").Value) &
+                    ",SalaryRangeTo=" & Val(.Cells("Column4").Value) &
+                    ",SalaryBase=" & Val(.Cells("Column5").Value) &
+                    ",EmployeeShare=" & Val(.Cells("Column6").Value) &
+                    ",EmployerShare=" & Val(.Cells("Column7").Value) &
+                    ",LastUpd=CURRENT_TIMESTAMP()" &
+                    ",LastUpdBy=" & z_User &
                     " WHERE RowID='" & _rID & "'")
 
                     .Cells("Column11").Value = _now
@@ -256,9 +248,7 @@ Public Class PhiHealth
                 End With
             Next
 
-
             If dontUpdate = 1 Then
-
             Else
                 InfoBalloon(, , lblforballoon, , , 1)
                 InfoBalloon("PhilHealth Contribution were successfully updated.", "Update Successful", lblforballoon, lblforballoon.Width - 16, -69)
@@ -270,12 +260,12 @@ Public Class PhiHealth
                 For Each drow As DataGridViewRow In dgvPhHlth.Rows
                     With drow
                         If .Cells("Column1").Value = Nothing And .IsNewRow = False Then
-                            Dim _RowID = INS_payphilhealth(Val(.Cells("Column2").Value), _
+                            Dim _RowID = INS_payphilhealth(Val(.Cells("Column2").Value),
                                                            Val(.Cells("Column3").Value),
-                                                           Val(.Cells("Column4").Value), _
-                                                           Val(.Cells("Column5").Value), _
-                                                           , _
-                                                           Val(.Cells("Column6").Value), _
+                                                           Val(.Cells("Column4").Value),
+                                                           Val(.Cells("Column5").Value),
+                                                           ,
+                                                           Val(.Cells("Column6").Value),
                                                            Val(.Cells("Column7").Value))
 
                             .Cells("Column9").Value = _now
@@ -336,41 +326,41 @@ Public Class PhiHealth
                 dgvPhHlth.EndEdit(True)
                 With dgvPhHlth.CurrentRow
                     If .Cells("Column1").Value <> "" Then
-                        
-                        INS_audittrail("SalaryRangeFrom", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column3").Value, _
-                                       "", _
+
+                        INS_audittrail("SalaryRangeFrom",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column3").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("SalaryRangeTo", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column4").Value, _
-                                       "", _
+                        INS_audittrail("SalaryRangeTo",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column4").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("SalaryBase", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column5").Value, _
-                                       "", _
+                        INS_audittrail("SalaryBase",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column5").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("TotalMonthlyPremium", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column8").Value, _
-                                       "", _
+                        INS_audittrail("TotalMonthlyPremium",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column8").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("EmployeeShare", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column6").Value, _
-                                       "", _
+                        INS_audittrail("EmployeeShare",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column6").Value,
+                                       "",
                                        "Delete")
 
-                        INS_audittrail("EmployerShare", _
-                                       .Cells("Column1").Value, _
-                                       .Cells("Column7").Value, _
-                                       "", _
+                        INS_audittrail("EmployerShare",
+                                       .Cells("Column1").Value,
+                                       .Cells("Column7").Value,
+                                       "",
                                        "Delete")
 
                         EXECQUER("DELETE FROM payphilhealth WHERE RowID=" & .Cells("Column1").Value)
@@ -381,6 +371,7 @@ Public Class PhiHealth
             End If
         End If
     End Sub
+
     Private Sub ToolStripButton4_Click(sender As Object, e As EventArgs) Handles ToolStripButton4.Click
         Me.Close()
     End Sub
@@ -404,15 +395,6 @@ Public Class PhiHealth
 
     End Sub
 
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
-
     Dim dt_importcatcher As New DataTable
 
     Dim filepath As String = Nothing '= IO.Path.GetFullPath(browsefile.FileName) 'browsefile.FileName
@@ -430,10 +412,9 @@ Public Class PhiHealth
 
         'End If
 
-
         Dim browsefile As OpenFileDialog = New OpenFileDialog()
 
-        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
+        browsefile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
                                   "Microsoft Excel Documents 97-2003 (*.xls)|*.xls"
 
         If browsefile.ShowDialog() = Windows.Forms.DialogResult.OK Then
@@ -450,13 +431,13 @@ Public Class PhiHealth
 
     End Sub
 
-    Function INSUPD_payphilhealth(Optional phh_RowID = Nothing, _
-                                      Optional phh_SalaryRangeFrom = Nothing, _
-                                      Optional phh_SalaryRangeTo = Nothing, _
-                                      Optional phh_SalaryBase = Nothing, _
-                                      Optional phh_EmployeeShare = Nothing, _
-                                      Optional phh_EmployerShare = Nothing, _
-                                      Optional phh_TotalMonthlyPremium = Nothing, _
+    Function INSUPD_payphilhealth(Optional phh_RowID = Nothing,
+                                      Optional phh_SalaryRangeFrom = Nothing,
+                                      Optional phh_SalaryRangeTo = Nothing,
+                                      Optional phh_SalaryBase = Nothing,
+                                      Optional phh_EmployeeShare = Nothing,
+                                      Optional phh_EmployerShare = Nothing,
+                                      Optional phh_TotalMonthlyPremium = Nothing,
                                       Optional phh_SalaryBracket = Nothing) As Object
 
         Dim returnval = Nothing
@@ -481,17 +462,17 @@ Public Class PhiHealth
         params(4, 1) = Val(phh_SalaryRangeTo)
         params(5, 1) = Val(phh_SalaryBase)
 
-        params(6, 1) = If(Val(phh_TotalMonthlyPremium) = 0, _
-                          Val(phh_EmployeeShare) + Val(phh_EmployerShare), _
+        params(6, 1) = If(Val(phh_TotalMonthlyPremium) = 0,
+                          Val(phh_EmployeeShare) + Val(phh_EmployerShare),
                           Val(phh_TotalMonthlyPremium)) 'phh_TotalMonthlyPremium
 
         params(7, 1) = Val(phh_EmployeeShare)
         params(8, 1) = Val(phh_EmployerShare)
         params(9, 1) = Val(phh_SalaryBracket)
 
-        returnval = _
-        EXEC_INSUPD_PROCEDURE(params, _
-                               "INSUPD_payphilhealth", _
+        returnval =
+        EXEC_INSUPD_PROCEDURE(params,
+                               "INSUPD_payphilhealth",
                                "returnval")
 
         Return returnval
@@ -515,8 +496,8 @@ Public Class PhiHealth
         '                          "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
         '                          "OpenDocument Spreadsheet (*.ods)|*.ods"
 
-        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" & _
-                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" & _
+        opfile.Filter = "Microsoft Excel Workbook Documents 2007-13 (*.xlsx)|*.xlsx|" &
+                                  "Microsoft Excel Documents 97-2003 (*.xls)|*.xls|" &
                                   "OpenDocument Spreadsheet (*.ods)|*.ods"
 
         'D_CanteenDed("Delete All", z_divno, Z_YYYY, Z_PayNo, Z_PayrollType, Z_YYYYMM, 0, 0)
@@ -537,13 +518,11 @@ Public Class PhiHealth
             If objConn.State = ConnectionState.Closed Then
 
                 Console.Write("Connection cannot be opened")
-
             Else
 
                 Console.Write("Welcome")
 
             End If
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -553,7 +532,6 @@ Public Class PhiHealth
 
         objCmd.CommandType = CommandType.Text
 
-
         Dim Count As Integer
 
         Count = 0
@@ -562,7 +540,6 @@ Public Class PhiHealth
             DA.SelectCommand = objCmd
 
             DA.Fill(DS, "XLData")
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
@@ -591,12 +568,10 @@ Public Class PhiHealth
             'Next
 
             returnvalue = DS.Tables(0)
-
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
 
             returnvalue = Nothing
-
         Finally
 
             objCmd.Dispose()
@@ -611,10 +586,10 @@ Public Class PhiHealth
 
     End Function
 
-    Sub INS_audittrail(Optional au_FieldChanged = Nothing, _
-                       Optional au_ChangedRowID = Nothing, _
-                       Optional au_OldValue = Nothing, _
-                       Optional au_NewValue = Nothing, _
+    Sub INS_audittrail(Optional au_FieldChanged = Nothing,
+                       Optional au_ChangedRowID = Nothing,
+                       Optional au_OldValue = Nothing,
+                       Optional au_NewValue = Nothing,
                        Optional au_ActionPerformed = Nothing)
 
         Try
@@ -656,7 +631,6 @@ Public Class PhiHealth
                 datread = .ExecuteReader()
 
             End With
-
         Catch ex As Exception
             MsgBox(ex.Message & " " & "INS_audittrail", , "Error")
         Finally
@@ -731,13 +705,12 @@ Public Class PhiHealth
 
         Dim arrayrow As New ArrayList
 
-        dt_importcatcher = _
+        dt_importcatcher =
         ExcelToCVS(filepath) 'filepath
 
         Dim rowindx As Integer = 0
 
         If dt_importcatcher Is Nothing Then
-
         Else
 
             Dim lastbound = dt_importcatcher.Rows.Count 'dgvPhHlth.RowCount +
@@ -750,13 +723,13 @@ Public Class PhiHealth
 
                 '    MsgBox(dataval.ToString)
 
-                INSUPD_payphilhealth(, _
-                                        Val(drow(1)), _
-                                        Val(drow(2)), _
-                                        Val(drow(3)), _
-                                        Val(drow(5)), _
+                INSUPD_payphilhealth(,
+                                        Val(drow(1)),
+                                        Val(drow(2)),
+                                        Val(drow(3)),
+                                        Val(drow(5)),
                                         Val(drow(4)),
-                                        Val(drow(6)), _
+                                        Val(drow(6)),
                                         Val(drow(0))) 'Val(drow(5))
 
                 'Next
@@ -776,7 +749,6 @@ Public Class PhiHealth
             bgworkImportSSS.ReportProgress(100, "")
 
         End If
-
 
     End Sub
 

@@ -7,15 +7,19 @@ namespace AccuPay.Data.Repositories
 {
     public class BreakTimeBracketRepository
     {
+        private readonly PayrollContext _context;
+
+        public BreakTimeBracketRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<BreakTimeBracket> GetAll(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.BreakTimeBrackets.
-                                Include(x => x.Division).
-                                Where(x => x.Division.OrganizationID == organizationId).
-                                ToList();
-            }
+            return _context.BreakTimeBrackets.
+                            Include(x => x.Division).
+                            Where(x => x.Division.OrganizationID == organizationId).
+                            ToList();
         }
     }
 }

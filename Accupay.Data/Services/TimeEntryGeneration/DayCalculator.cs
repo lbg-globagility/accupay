@@ -39,7 +39,8 @@ namespace AccuPay.Data.Services
         }
 
         public TimeEntry Compute(DateTime currentDate,
-                                Salary salary, IList<TimeEntry> oldTimeEntries,
+                                Salary salary,
+                                IList<TimeEntry> oldTimeEntries,
                                 ShiftSchedule employeeShift,
                                 EmployeeDutySchedule shiftSched,
                                 TimeLog timeLog,
@@ -86,7 +87,7 @@ namespace AccuPay.Data.Services
                 timeEntry.ShiftHours = currentShift.ShiftHours;
             }
 
-            var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries, calendarCollection);
+            var hasWorkedLastDay = PayrollTools.HasWorkedLastWorkingDay(currentDate, oldTimeEntries.ToList(), calendarCollection);
 
             ComputeHours(currentDate, timeEntry, timeLog, officialBusiness, leaves, overtimes, timeAttendanceLogs, breakTimeBrackets, currentShift, hasWorkedLastDay, payrate);
             ComputePay(timeEntry, currentDate, currentShift, salary, payrate, hasWorkedLastDay);

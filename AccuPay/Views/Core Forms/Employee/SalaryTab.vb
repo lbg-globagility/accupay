@@ -8,12 +8,13 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class SalaryTab
 
     Private Const FormEntityName As String = "Salary"
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _mode As FormMode = FormMode.Empty
 
@@ -26,12 +27,6 @@ Public Class SalaryTab
     Private _isSystemOwnerBenchMark As Boolean
 
     Private _ecolaAllowance As Allowance
-
-    Private _allowanceRepository As AllowanceRepository
-
-    Private _salaryRepository As SalaryRepository
-
-    Private _userActivityRepository As UserActivityRepository
 
     Public Property BasicSalary As Decimal
         Get
@@ -66,13 +61,11 @@ Public Class SalaryTab
         InitializeComponent()
         dgvSalaries.AutoGenerateColumns = False
 
-        sys_ownr = New SystemOwnerService()
+        If MainServiceProvider IsNot Nothing Then
 
-        _allowanceRepository = New AllowanceRepository()
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        End If
 
-        _salaryRepository = New SalaryRepository()
-
-        _userActivityRepository = New UserActivityRepository()
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -108,8 +101,10 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim currentPayPeriod = Await Data.Helpers.PayrollTools.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+            Dim currentPayPeriod = Await payPeriodService.
+                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)
@@ -159,7 +154,7 @@ Public Class SalaryTab
         LoadSalaries()
 
         OverlapWarningLabel.Visible = False
-        _isSystemOwnerBenchMark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        _isSystemOwnerBenchMark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         ToggleBenchmarkEcola()
 
@@ -198,7 +193,9 @@ Public Class SalaryTab
             Return
         End If
 
-        _salaries = _salaryRepository.GetByEmployee(_employee.RowID.Value).
+        Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _salaries = salaryRepository.GetByEmployee(_employee.RowID.Value).
                                         OrderByDescending(Function(s) s.EffectiveFrom).
                                         ToList()
 
@@ -349,55 +346,57 @@ Public Class SalaryTab
 
         Dim oldsalary As Salary = Nothing
 
-        Try
-            With _currentSalary
-                .EffectiveFrom = dtpEffectiveFrom.Value
-                .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
-                .BasicSalary = txtAmount.Text.ToDecimal
-                .AllowanceSalary = txtAllowance.Text.ToDecimal
-                .TotalSalary = (.BasicSalary + .AllowanceSalary)
-                .DoPaySSSContribution = chkPaySSS.Checked
-                .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
-                .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
-                .AutoComputeHDMFContribution = ChkPagIbig.Checked
-                .HDMFAmount = txtPagIbig.Text.ToDecimal
-            End With
+        Await FunctionUtils.TryCatchFunctionAsync("Save Salary",
+            Async Function()
 
-            If _currentSalary.RowID.HasValue Then
+                With _currentSalary
+                    .EffectiveFrom = dtpEffectiveFrom.Value
+                    .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
+                    .BasicSalary = txtAmount.Text.ToDecimal
+                    .AllowanceSalary = txtAllowance.Text.ToDecimal
+                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
+                    .DoPaySSSContribution = chkPaySSS.Checked
+                    .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
+                    .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
+                    .AutoComputeHDMFContribution = ChkPagIbig.Checked
+                    .HDMFAmount = txtPagIbig.Text.ToDecimal
+                End With
 
-                oldsalary = Await _salaryRepository.GetByIdAsync(_currentSalary.RowID.Value)
-                _currentSalary.LastUpdBy = z_User
+                If _currentSalary.RowID.HasValue Then
 
-            End If
+                    Dim salaryRepositoryQuery = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                    oldsalary = Await salaryRepositoryQuery.GetByIdAsync(_currentSalary.RowID.Value)
+                    _currentSalary.LastUpdBy = z_User
 
-            Await _salaryRepository.SaveAsync(_currentSalary)
+                End If
 
-            If _isSystemOwnerBenchMark Then
+                Dim salaryRepositorySave = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+                Await salaryRepositorySave.SaveAsync(_currentSalary)
 
-                Await SaveEcola()
+                If _isSystemOwnerBenchMark Then
 
-            End If
+                    Await SaveEcola()
 
-            Dim messageTitle = ""
-            If _mode = FormMode.Creating Then
+                End If
 
-                messageTitle = "New Salary"
-                _userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+                Dim messageTitle = ""
+                If _mode = FormMode.Creating Then
 
-            ElseIf _mode = FormMode.Editing Then
+                    messageTitle = "New Salary"
+                    Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                    userActivityRepository.RecordAdd(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
-                messageTitle = "Update Salary"
-                RecordUpdateSalary(oldsalary)
+                ElseIf _mode = FormMode.Editing Then
 
-            End If
+                    messageTitle = "Update Salary"
+                    RecordUpdateSalary(oldsalary)
 
-            ShowBalloonInfo("Salary successfuly saved.", messageTitle)
-        Catch ex As Exception
-            MsgBox("Something wrong occured.", MsgBoxStyle.Exclamation)
-            Throw
-        End Try
-        LoadSalaries()
-        ChangeMode(FormMode.Editing)
+                End If
+
+                ShowBalloonInfo("Salary successfuly saved.", messageTitle)
+                LoadSalaries()
+                ChangeMode(FormMode.Editing)
+            End Function)
     End Sub
 
     Private Function RecordUpdateSalary(oldSalary As Salary) As Boolean
@@ -480,7 +479,8 @@ Public Class SalaryTab
         End If
 
         If changes.Count > 0 Then
-            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
         End If
 
         Return False
@@ -491,12 +491,14 @@ Public Class SalaryTab
 
         If _ecolaAllowanceId IsNot Nothing Then
 
-            Dim ecolaAllowance = Await _allowanceRepository.GetByIdAsync(_ecolaAllowanceId.Value)
+            Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+            Dim ecolaAllowance = Await allowanceRepository.GetByIdAsync(_ecolaAllowanceId.Value)
 
             ecolaAllowance.Amount = txtEcola.Text.ToDecimal
             ecolaAllowance.LastUpdBy = z_User
 
-            Await _allowanceRepository.SaveAsync(ecolaAllowance)
+            Await allowanceRepository.SaveAsync(ecolaAllowance)
 
         End If
     End Function
@@ -513,9 +515,11 @@ Public Class SalaryTab
 
         If result = MsgBoxResult.Yes Then
 
-            Await _salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
+            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            Await salaryRepository.DeleteAsync(_currentSalary.RowID.Value)
 
-            _userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
+            Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+            userActivityRepository.RecordDelete(z_User, FormEntityName, CInt(_currentSalary.RowID), z_OrganizationID)
 
             LoadSalaries()
         End If

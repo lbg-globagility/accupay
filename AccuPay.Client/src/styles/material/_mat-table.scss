@@ -1,0 +1,65 @@
+.mat-table.m-dark-headers {
+  .mat-header-cell {
+    font-size: 0.875rem;
+    color: rgba(0, 0, 0, 0.87);
+  }
+}
+
+.mat-table.m-padded-cells {
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type {
+    padding-left: $app-space-2;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type {
+    padding-right: $app-space-2;
+  }
+
+  th.mat-header-cell {
+    padding-left: $app-space-1;
+    padding-right: $app-space-1;
+  }
+
+  td.mat-cell {
+    padding-left: $app-space-1;
+    padding-right: $app-space-1;
+  }
+}
+
+.mat-table.app-table-no-padding {
+  $padding: $app-space-2;
+
+  th.mat-header-cell:first-of-type,
+  td.mat-cell:first-of-type {
+    padding-left: $padding;
+  }
+
+  th.mat-header-cell:last-of-type,
+  td.mat-cell:last-of-type {
+    padding-right: $padding;
+  }
+
+  th.mat-header-cell {
+    padding-left: $padding;
+    padding-right: $padding;
+  }
+
+  td.mat-cell {
+    padding-left: $padding;
+    padding-right: $padding;
+  }
+}
+
+.mat-table.app-centered-columns {
+  .app-centered-column {
+    .mat-sort-header-container {
+      position: relative;
+      justify-content: center;
+    }
+    .mat-sort-header-arrow {
+      position: absolute;
+      right: 0;
+    }
+  }
+}

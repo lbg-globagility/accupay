@@ -1,0 +1,5 @@
+@import 'styles/variables';
+
+.u-row ~ .u-row {
+  margin-top: app-space(1);
+}

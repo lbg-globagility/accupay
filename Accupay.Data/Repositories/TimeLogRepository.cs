@@ -11,76 +11,77 @@ namespace AccuPay.Data.Repositories
 {
     public class TimeLogRepository
     {
+        private readonly PayrollContext _context;
+
+        public TimeLogRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task ChangeManyAsync(List<TimeLog> addedTimeLogs,
                                         List<TimeLog> updatedTimeLogs,
                                         List<TimeLog> deletedTimeLogs)
         {
-            using (var context = new PayrollContext())
+            if (addedTimeLogs != null)
             {
-                if (addedTimeLogs != null)
+                addedTimeLogs.ForEach(timeLog =>
                 {
-                    addedTimeLogs.ForEach(timeLog =>
-                    {
-                        context.Entry(timeLog).State = EntityState.Added;
-                    });
-                }
-
-                if (updatedTimeLogs != null)
-                {
-                    updatedTimeLogs.ForEach(timeLog =>
-                    {
-                        context.Entry(timeLog).State = EntityState.Modified;
-                    });
-                }
-
-                if (deletedTimeLogs != null)
-                {
-                    deletedTimeLogs = deletedTimeLogs.
-                                    GroupBy(x => x.RowID).
-                                    Select(x => x.FirstOrDefault()).
-                                    ToList();
-                    context.TimeLogs.RemoveRange(deletedTimeLogs);
-                }
-
-                await context.SaveChangesAsync();
+                    _context.Entry(timeLog).State = EntityState.Added;
+                });
             }
+
+            if (updatedTimeLogs != null)
+            {
+                updatedTimeLogs.ForEach(timeLog =>
+                {
+                    _context.Entry(timeLog).State = EntityState.Modified;
+                });
+            }
+
+            if (deletedTimeLogs != null)
+            {
+                deletedTimeLogs = deletedTimeLogs.
+                                GroupBy(x => x.RowID).
+                                Select(x => x.FirstOrDefault()).
+                                ToList();
+                _context.TimeLogs.RemoveRange(deletedTimeLogs);
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveImportAsync(List<TimeLog> timeLogs, List<TimeAttendanceLog> timeAttendanceLogs = null)
         {
-            using (var context = new PayrollContext())
+            string importId = GenerateImportId(_context);
+
+            foreach (var timeLog in timeLogs)
             {
-                string importId = GenerateImportId(context);
+                timeLog.TimeentrylogsImportID = importId;
 
-                foreach (var timeLog in timeLogs)
-                {
-                    timeLog.TimeentrylogsImportID = importId;
+                _context.TimeLogs.Add(timeLog);
 
-                    context.TimeLogs.Add(timeLog);
+                var minimumDate = timeLog.LogDate.ToMinimumHourValue();
+                var maximumDate = timeLog.LogDate.ToMaximumHourValue();
 
-                    var minimumDate = timeLog.LogDate.ToMinimumHourValue();
-                    var maximumDate = timeLog.LogDate.ToMaximumHourValue();
-
-                    context.TimeAttendanceLogs.
-                                RemoveRange(context.TimeAttendanceLogs.
-                                                        Where(t => t.TimeStamp >= minimumDate).
-                                                        Where(t => t.TimeStamp <= maximumDate));
-                }
-
-                if (timeAttendanceLogs != null)
-                {
-                    foreach (var timeAttendanceLog in timeAttendanceLogs)
-                    {
-                        timeAttendanceLog.ImportNumber = importId;
-
-                        context.TimeAttendanceLogs.Add(timeAttendanceLog);
-                    }
-                }
-
-                await context.SaveChangesAsync();
+                _context.TimeAttendanceLogs.
+                            RemoveRange(_context.TimeAttendanceLogs.
+                                                    Where(t => t.TimeStamp >= minimumDate).
+                                                    Where(t => t.TimeStamp <= maximumDate));
             }
+
+            if (timeAttendanceLogs != null)
+            {
+                foreach (var timeAttendanceLog in timeAttendanceLogs)
+                {
+                    timeAttendanceLog.ImportNumber = importId;
+
+                    _context.TimeAttendanceLogs.Add(timeAttendanceLog);
+                }
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         #endregion CRUD
@@ -89,36 +90,27 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<TimeLog>> GetByEmployeeAndDateAsync(int employeeId, DateTime date)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.TimeLogs.
-                            Where(x => x.EmployeeID == employeeId).
-                            Where(x => x.LogDate == date).
-                            ToListAsync();
-            }
+            return await _context.TimeLogs.
+                        Where(x => x.EmployeeID == employeeId).
+                        Where(x => x.LogDate == date).
+                        ToListAsync();
         }
 
         public IEnumerable<TimeLog> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return CreateBaseQueryByDatePeriod(timePeriod, context).
-                        Where(x => x.OrganizationID == organizationId).
-                        ToList();
-            }
+            return CreateBaseQueryByDatePeriod(timePeriod, _context).
+                    Where(x => x.OrganizationID == organizationId).
+                    ToList();
         }
 
         public async Task<IEnumerable<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
                                                                                     int[] employeeIds,
                                                                                     TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryByDatePeriod(timePeriod, context).
-                            Include(x => x.Employee).
-                            Where(x => employeeIds.Contains(x.EmployeeID.Value)).
-                            ToListAsync();
-            }
+            return await CreateBaseQueryByDatePeriod(timePeriod, _context).
+                        Include(x => x.Employee).
+                        Where(x => employeeIds.Contains(x.EmployeeID.Value)).
+                        ToListAsync();
         }
 
         private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod timePeriod, PayrollContext context)

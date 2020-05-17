@@ -10,23 +10,23 @@ namespace AccuPay.Data.Services
 {
     public class LeaveAccrualService
     {
-        private LeaveAccrualCalculator _calculator;
+        private readonly LeaveAccrualCalculator _calculator;
 
-        public LeaveAccrualService()
+        private readonly PayrollContext context;
+
+        public LeaveAccrualService(PayrollContext context)
         {
             _calculator = new LeaveAccrualCalculator();
+            this.context = context;
         }
 
         public async Task CheckAccruals(int organizationId, int userId)
         {
             ICollection<Employee> employees;
 
-            using (var context = new PayrollContext())
-            {
-                employees = await context.Employees
-                    .Where(e => e.OrganizationID == organizationId)
-                    .ToListAsync();
-            }
+            employees = await context.Employees
+                .Where(e => e.OrganizationID == organizationId)
+                .ToListAsync();
 
             foreach (var employee in employees)
             {
@@ -36,27 +36,24 @@ namespace AccuPay.Data.Services
 
         public async Task ComputeAccrual(Employee employee, PayPeriod payperiod, int z_OrganizationID, int z_User)
         {
-            using (var context = new PayrollContext())
-            {
-                var startOfFirstYear = employee.StartDate;
+            var startOfFirstYear = employee.StartDate;
 
-                var firstPayperiodOfYear = await context.PayPeriods
-                    .Where(p => p.PayFromDate <= startOfFirstYear && startOfFirstYear <= p.PayToDate)
-                    .Where(p => p.OrganizationID == z_OrganizationID)
-                    .FirstOrDefaultAsync();
+            var firstPayperiodOfYear = await context.PayPeriods
+                .Where(p => p.PayFromDate <= startOfFirstYear && startOfFirstYear <= p.PayToDate)
+                .Where(p => p.OrganizationID == z_OrganizationID)
+                .FirstOrDefaultAsync();
 
-                var endOfFirstYear = employee.StartDate.AddYears(1);
+            var endOfFirstYear = employee.StartDate.AddYears(1);
 
-                var lastPayperiodOfYear = await context.PayPeriods
-                    .Where(p => p.PayFromDate <= endOfFirstYear && endOfFirstYear <= p.PayToDate)
-                    .Where(p => p.OrganizationID == z_OrganizationID)
-                    .FirstOrDefaultAsync();
+            var lastPayperiodOfYear = await context.PayPeriods
+                .Where(p => p.PayFromDate <= endOfFirstYear && endOfFirstYear <= p.PayToDate)
+                .Where(p => p.OrganizationID == z_OrganizationID)
+                .FirstOrDefaultAsync();
 
-                await UpdateVacationLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
-                await UpdateSickLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
+            await UpdateVacationLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
+            await UpdateSickLeaveLedger(context, employee, payperiod, firstPayperiodOfYear, lastPayperiodOfYear, z_OrganizationID, z_User);
 
-                await context.SaveChangesAsync();
-            }
+            await context.SaveChangesAsync();
         }
 
         private async Task UpdateVacationLeaveLedger(PayrollContext context,
@@ -159,18 +156,15 @@ namespace AccuPay.Data.Services
 
         public async Task ComputeAccrual2(Employee employee, int z_OrganizationID, int z_User)
         {
-            using (var context = new PayrollContext())
+            try
             {
-                try
-                {
-                    await UpdateVacationLeaveLedger2(context, employee, z_OrganizationID, z_User);
-                    await UpdateSickLeaveLedger2(context, employee, z_OrganizationID, z_User);
+                await UpdateVacationLeaveLedger2(context, employee, z_OrganizationID, z_User);
+                await UpdateSickLeaveLedger2(context, employee, z_OrganizationID, z_User);
 
-                    await context.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                }
+                await context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
             }
         }
 

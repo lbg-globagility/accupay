@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AwardTab
 
@@ -19,9 +20,19 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
+    Private _userActivityRepo As UserActivityRepository
+
     Public Sub New()
+
         InitializeComponent()
+
         dgvAwards.AutoGenerateColumns = False
+
+        'for issues in designer and also defensive programming
+        If MainServiceProvider IsNot Nothing Then
+
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
     End Sub
 
@@ -39,7 +50,7 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        Dim awardRepo = New AwardRepository
+        Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
         _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
@@ -48,14 +59,22 @@ Public Class AwardTab
         If _awards.Count > 0 Then
             SelectAward(DirectCast(dgvAwards.CurrentRow?.DataBoundItem, Award))
             ChangeMode(FormMode.Editing)
+            FormToolsControl(True)
         Else
             SelectAward(Nothing)
             _currentAward = New Award
             ChangeMode(FormMode.Empty)
+            FormToolsControl(False)
         End If
 
         AddHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
     End Function
+
+    Private Sub FormToolsControl(control As Boolean)
+        txtAwardType.Enabled = control
+        txtDescription.Enabled = control
+        dtpAwardDate.Enabled = control
+    End Sub
 
     Private Sub SelectAward(award As Award)
         If award IsNot Nothing Then
@@ -144,11 +163,10 @@ Public Class AwardTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-                    Dim repo = New AwardRepository
-                    Await repo.DeleteAsync(_currentAward)
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+                    Await awardRepo.DeleteAsync(_currentAward)
 
-                    Dim userActivityRepo = New UserActivityRepository
-                    userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
 
                     Await LoadAwards()
                 End Function)
@@ -208,7 +226,7 @@ Public Class AwardTab
                         .LastUpdBy = z_User
                     End With
 
-                    Dim awardRepo = New AwardRepository
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
                     Await awardRepo.UpdateAsync(_currentAward)
 
                     RecordUpdateAward(oldAward)
@@ -221,7 +239,7 @@ Public Class AwardTab
             End Function)
 
         If succeed Then
-            ShowBalloonInfo("Bonus successfuly saved.", messageTitle)
+            ShowBalloonInfo("Award successfuly saved.", messageTitle)
             Return True
         End If
         Return False
@@ -268,8 +286,8 @@ Public Class AwardTab
                         })
         End If
 
-        Dim repo = New UserActivityRepository
-        repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+        _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
 End Class

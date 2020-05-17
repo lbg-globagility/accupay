@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay
 
@@ -23,8 +24,8 @@ Namespace Global.AccuPay
             InitializeComponent()
             _employee = employee
 
-            _leaveLedgerRepository = New LeaveLedgerRepository()
-            _productRepository = New ProductRepository()
+            _leaveLedgerRepository = MainServiceProvider.GetRequiredService(Of LeaveLedgerRepository)
+            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
         End Sub
 
         Private Async Sub ViewLeaveLedgerDialog_Load(sender As Object, e As EventArgs) Handles MyBase.Load

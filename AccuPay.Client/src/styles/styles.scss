@@ -1,0 +1,20 @@
+/* You can add global styles to this file, and also import other style files */
+@import "~normalize-scss/sass/normalize";
+@import "styles/reset";
+
+@import "~flexboxgrid/dist/flexboxgrid.css";
+// @import '~ngx-toastr/toastr.css';
+// @import '~saturn-datepicker/theming';
+// @import '~tailwindcss/dist/utilities';
+@import "styles/theming";
+@import "styles/variables";
+
+@include normalize();
+@include mat-core();
+
+@include angular-material-theme($app-theme);
+// @include sat-datepicker-theme($app-theme);
+
+@import "styles/helpers";
+@import "styles/material";
+@import "styles/utilities";

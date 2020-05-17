@@ -1,19 +1,34 @@
-﻿Imports AccuPay.Data.Enums
-Imports System.Threading.Tasks
+﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
-    Private _userRepository As UserRepository
-
-    Private _organizationRepository As OrganizationRepository
     Private err_count As Integer
     Private freq As String
 
+    Private _policyHelper As PolicyHelper
+
+    Private _userRepository As UserRepository
+
+    Private _organizationRepository As OrganizationRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        DependencyInjectionHelper.ConfigureDependencyInjection()
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+    End Sub
+
     Protected Overrides Sub OnLoad(e As EventArgs)
-        _userRepository = New UserRepository()
-        _organizationRepository = New OrganizationRepository
 
         ReloadOrganization()
 
@@ -190,9 +205,7 @@ Public Class MetroLogin
             Return False
         End If
 
-        Dim settings = ListOfValueCollection.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        If _policyHelper.UseUserLevel = False Then
             Return True
         End If
 

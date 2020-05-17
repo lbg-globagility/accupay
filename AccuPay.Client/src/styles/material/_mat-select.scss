@@ -1,0 +1,16 @@
+.mat-select-panel {
+  .m-hide-checkbox .mat-pseudo-checkbox {
+    display: none;
+  }
+}
+
+.mat-select-panel {
+  .m-select-all {
+    height: 3em;
+    line-height: 3em;
+    width: 100%;
+    display: block;
+    padding: 0 16px;
+    box-sizing: border-box;
+  }
+}

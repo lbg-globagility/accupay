@@ -10,6 +10,13 @@ namespace AccuPay.Data.Repositories
 {
     public class PaystubRepository
     {
+        private readonly PayrollContext _context;
+
+        public PaystubRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public class EmployeeCompositeKey
         {
             public int EmployeeId { get; set; }
@@ -45,14 +52,11 @@ namespace AccuPay.Data.Repositories
         {
             int? paystubId = null;
 
-            using (var context = new PayrollContext())
-            {
-                paystubId = context.Paystubs.
-                     Where(x => x.EmployeeID == key.EmployeeId).
-                     Where(x => x.PayPeriodID == key.PayPeriodId).
-                     Select(x => x.RowID).
-                     FirstOrDefault();
-            }
+            paystubId = _context.Paystubs.
+                 Where(x => x.EmployeeID == key.EmployeeId).
+                 Where(x => x.PayPeriodID == key.PayPeriodId).
+                 Select(x => x.RowID).
+                 FirstOrDefault();
 
             if (paystubId == null)
             {
@@ -66,52 +70,39 @@ namespace AccuPay.Data.Repositories
 
         public async Task DeleteAsync(int id, int userId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                await DeleteAsyncWithContext(id: id,
-                                            userId: userId,
-                                            context: context);
+            await DeleteAsyncWithContext(id: id, userId: userId);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
         {
-            using (var context = new PayrollContext())
+            var payStubIds = await _context.Paystubs.
+                                            Where(x => x.PayPeriodID == payPeriodId).
+                                            Select(x => x.RowID.Value).
+                                            ToListAsync();
+
+            foreach (int id in payStubIds)
             {
-                var payStubIds = await context.Paystubs.
-                                                Where(x => x.PayPeriodID == payPeriodId).
-                                                Select(x => x.RowID.Value).
-                                                ToListAsync();
-
-                foreach (int id in payStubIds)
-                {
-                    await DeleteAsyncWithContext(id: id,
-                                                userId: userId,
-                                                context: context);
-                }
-
-                await context.SaveChangesAsync();
+                await DeleteAsyncWithContext(id: id, userId: userId);
             }
+
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateManyThirteenthMonthPaysAsync(IEnumerable<ThirteenthMonthPay> thirteenthMonthPays)
         {
-            using (var context = new PayrollContext())
+            foreach (var thirteenthMonthPay in thirteenthMonthPays)
             {
-                foreach (var thirteenthMonthPay in thirteenthMonthPays)
-                {
-                    context.Entry(thirteenthMonthPay).State = EntityState.Modified;
-                }
-
-                await context.SaveChangesAsync();
+                _context.Entry(thirteenthMonthPay).State = EntityState.Modified;
             }
+
+            await _context.SaveChangesAsync();
         }
 
-        private static async Task DeleteAsyncWithContext(int id, int userId, PayrollContext context)
+        private async Task DeleteAsyncWithContext(int id, int userId)
         {
-            var paystub = await context.Paystubs.
+            var paystub = await _context.Paystubs.
                                             Include(x => x.LoanTransactions).
                                                 ThenInclude(x => x.LoanSchedule).
                                             Include(x => x.LeaveTransactions).
@@ -136,24 +127,24 @@ namespace AccuPay.Data.Repositories
             // no AccuPay clients are using it.
 
             ResetLoanBalances(paystub.LoanTransactions, userId);
-            context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
+            _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
 
             // RemoveRange does not delete the entities immediately so the order of
             // resetting the parent entity and deleting that child are not important
-            ResetLeaveLedgerTransactions(context, paystub.LeaveTransactions, userId);
-            context.LeaveTransactions.RemoveRange(paystub.LeaveTransactions);
+            ResetLeaveLedgerTransactions(paystub.LeaveTransactions, userId);
+            _context.LeaveTransactions.RemoveRange(paystub.LeaveTransactions);
 
-            context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
-            context.Adjustments.RemoveRange(paystub.Adjustments);
-            context.ActualAdjustments.RemoveRange(paystub.ActualAdjustments);
-            context.PaystubEmails.RemoveRange(paystub.PaystubEmails);
-            context.PaystubEmailHistories.RemoveRange(paystub.PaystubEmailHistories);
-            context.PaystubItems.RemoveRange(paystub.PaystubItems);
+            _context.AllowanceItems.RemoveRange(paystub.AllowanceItems);
+            _context.Adjustments.RemoveRange(paystub.Adjustments);
+            _context.ActualAdjustments.RemoveRange(paystub.ActualAdjustments);
+            _context.PaystubEmails.RemoveRange(paystub.PaystubEmails);
+            _context.PaystubEmailHistories.RemoveRange(paystub.PaystubEmailHistories);
+            _context.PaystubItems.RemoveRange(paystub.PaystubItems);
 
-            context.ThirteenthMonthPays.Remove(paystub.ThirteenthMonthPay);
-            context.PaystubActuals.Remove(paystub.Actual);
+            _context.ThirteenthMonthPays.Remove(paystub.ThirteenthMonthPay);
+            _context.PaystubActuals.Remove(paystub.Actual);
 
-            context.Paystubs.Remove(paystub);
+            _context.Paystubs.Remove(paystub);
         }
 
         #endregion CRUD
@@ -162,23 +153,17 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(EmployeeCompositeKey key)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryWithFullPaystub(context).
-                                Where(x => x.EmployeeID == key.EmployeeId).
-                                Where(x => x.PayPeriodID == key.PayPeriodId).
-                                FirstOrDefaultAsync();
-            }
+            return await CreateBaseQueryWithFullPaystub(_context).
+                            Where(x => x.EmployeeID == key.EmployeeId).
+                            Where(x => x.PayPeriodID == key.PayPeriodId).
+                            FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryWithFullPaystub(context).
-                                Where(x => x.PayPeriodID == payPeriodId).
-                                ToListAsync();
-            }
+            return await CreateBaseQueryWithFullPaystub(_context).
+                            Where(x => x.PayPeriodID == payPeriodId).
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetPreviousCutOffPaystubsAsync(
@@ -187,36 +172,27 @@ namespace AccuPay.Data.Repositories
         {
             var previousCutoffEnd = currentCuttOffStart.AddDays(-1);
 
-            using (var context = new PayrollContext())
-            {
-                return await context.Paystubs.
-                                Where(x => x.PayToDate == previousCutoffEnd).
-                                Where(x => x.OrganizationID == organizationId).
-                                ToListAsync();
-            }
+            return await _context.Paystubs.
+                            Where(x => x.PayToDate == previousCutoffEnd).
+                            Where(x => x.OrganizationID == organizationId).
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetAllWithEmployeeAsync(DateCompositeKey key)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Paystubs.
-                                Where(x => x.PayFromdate == key.PayFromDate).
-                                Where(x => x.PayToDate == key.PayToDate).
-                                Where(x => x.OrganizationID == key.OrganizationId).
-                                ToListAsync();
-            }
+            return await _context.Paystubs.
+                            Where(x => x.PayFromdate == key.PayFromDate).
+                            Where(x => x.PayToDate == key.PayToDate).
+                            Where(x => x.OrganizationID == key.OrganizationId).
+                            ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Paystubs.
-                                Include(x => x.Employee).
-                                Where(x => x.PayPeriodID == payPeriodId).
-                                ToListAsync();
-            }
+            return await _context.Paystubs.
+                            Include(x => x.Employee).
+                            Where(x => x.PayPeriodID == payPeriodId).
+                            ToListAsync();
         }
 
         /// <summary>
@@ -226,13 +202,10 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAsync(int payPeriodId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Paystubs.
-                                Include(x => x.Employee.Position.Division).
-                                Where(x => x.PayPeriodID == payPeriodId).
-                                ToListAsync();
-            }
+            return await _context.Paystubs.
+                            Include(x => x.Employee.Position.Division).
+                            Where(x => x.PayPeriodID == payPeriodId).
+                            ToListAsync();
         }
 
         /// <summary>
@@ -244,47 +217,38 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Paystubs.
-                                Include(x => x.Employee.Position.Division).
-                                Include(x => x.ThirteenthMonthPay).
-                                Include(x => x.AllowanceItems).
-                                Where(x => x.PayPeriodID == payPeriodId).
-                                ToListAsync();
-            }
+            return await _context.Paystubs.
+                            Include(x => x.Employee.Position.Division).
+                            Include(x => x.ThirteenthMonthPay).
+                            Include(x => x.AllowanceItems).
+                            Where(x => x.PayPeriodID == payPeriodId).
+                            ToListAsync();
         }
 
         #region Child data
 
         public async Task<IEnumerable<AllowanceItem>> GetAllowanceItems(int paystubId)
         {
-            using (var context = new PayrollContext())
-            {
-                var paystub = await context.Paystubs.
-                                Include(x => x.AllowanceItems).
-                                    ThenInclude(x => x.Allowance).
-                                        ThenInclude(x => x.Product).
-                                Where(x => x.RowID == paystubId).
-                                FirstOrDefaultAsync();
+            var paystub = await _context.Paystubs.
+                            Include(x => x.AllowanceItems).
+                                ThenInclude(x => x.Allowance).
+                                    ThenInclude(x => x.Product).
+                            Where(x => x.RowID == paystubId).
+                            FirstOrDefaultAsync();
 
-                return paystub.AllowanceItems;
-            }
+            return paystub.AllowanceItems;
         }
 
         public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctions(int paystubId)
         {
-            using (var context = new PayrollContext())
-            {
-                var paystub = await context.Paystubs.
-                                Include(x => x.LoanTransactions).
-                                    ThenInclude(x => x.LoanSchedule).
-                                        ThenInclude(x => x.LoanType).
-                                Where(x => x.RowID == paystubId).
-                                FirstOrDefaultAsync();
+            var paystub = await _context.Paystubs.
+                            Include(x => x.LoanTransactions).
+                                ThenInclude(x => x.LoanSchedule).
+                                    ThenInclude(x => x.LoanType).
+                            Where(x => x.RowID == paystubId).
+                            FirstOrDefaultAsync();
 
-                return paystub.LoanTransactions;
-            }
+            return paystub.LoanTransactions;
         }
 
         #endregion Child data
@@ -296,8 +260,7 @@ namespace AccuPay.Data.Repositories
         /// </summary>
         /// <param name="context"></param>
         /// <param name="paystub">Has the leave transactions that will be used to reset the Leave Ledgers' last transactions.</param>
-        private static void ResetLeaveLedgerTransactions(
-                                        PayrollContext context,
+        private void ResetLeaveLedgerTransactions(
                                         ICollection<LeaveTransaction> toBeDeletedleaveTransactions,
                                         int userId)
         {
@@ -308,7 +271,7 @@ namespace AccuPay.Data.Repositories
                                                     ToArray();
 
             var leaveLedgerIds = groupedLeaves.Select(x => x.Key.RowID.Value).ToArray();
-            var allLeaveTransactions = context.LeaveTransactions.
+            var allLeaveTransactions = _context.LeaveTransactions.
                                     Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value)).
                                     Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false).
                                     ToList();
@@ -417,8 +380,9 @@ namespace AccuPay.Data.Repositories
             foreach (var loanGroup in groupedLoans)
             {
                 var loan = loanGroup.Key;
+                var loanTransaction = loanGroup.Select(x => x);
 
-                loan.TotalBalanceLeft += loanGroup.Sum(x => x.Amount);
+                loan.RetractLoanTransactions(loanTransaction);
                 loan.LastUpdBy = userId;
             }
         }

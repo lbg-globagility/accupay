@@ -35,7 +35,7 @@
 
     Private Sub BonusGenerator_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
 
-        PayrollForm.listPayrollForm.Remove(Me.Name)
+        'PayrollForm.listPayrollForm.Remove(Me.Name)
 
     End Sub
 
