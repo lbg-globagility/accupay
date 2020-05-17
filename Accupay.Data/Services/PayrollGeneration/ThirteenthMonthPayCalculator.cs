@@ -51,7 +51,7 @@ namespace AccuPay.Data.Services
                                                                 actualTimeEntries,
                                                                 salary,
                                                                 settings,
-                                                                new ReadOnlyCollection<AllowanceItem>(allowanceItems.ToList()),
+                                                                allowanceItems.ToList(),
                                                                 currentSystemOwner);
 
             var thirteenthMonthAmount = thirteenthMonthBasicPay / CalendarConstants.MonthsInAYear;

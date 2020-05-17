@@ -247,7 +247,7 @@ Public Class TimeEntrySummaryForm
 
         If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
             _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
-            LoadTimeEntries()
+            Await LoadTimeEntries()
         End If
 
         Dim isPayperiodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
@@ -316,7 +316,7 @@ Public Class TimeEntrySummaryForm
         Return payPeriods
     End Function
 
-    Private Async Sub LoadTimeEntries()
+    Private Async Function LoadTimeEntries() As Task
         If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
             Return
         End If
@@ -336,7 +336,7 @@ Public Class TimeEntrySummaryForm
 
         SetVisibleColumns(timeEntries)
         timeEntriesDataGridView.DataSource = timeEntries
-    End Sub
+    End Function
 
     Private Sub SetVisibleColumns(timeEntries As ICollection(Of TimeEntry))
         timeEntriesDataGridView.SuspendLayout()
@@ -912,7 +912,7 @@ Public Class TimeEntrySummaryForm
             Await GenerateTimeEntries(startDate, endDate)
         End If
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
@@ -942,7 +942,7 @@ Public Class TimeEntrySummaryForm
 
         Await GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
@@ -960,7 +960,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
         If employeesDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -971,10 +971,10 @@ Public Class TimeEntrySummaryForm
         End If
 
         _selectedEmployee = employee
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
-    Private Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+    Private Async Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -992,7 +992,7 @@ Public Class TimeEntrySummaryForm
         tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
         regenerateTimeEntryButton.Visible = isPayPeriodProcessing
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
@@ -1023,12 +1023,12 @@ Public Class TimeEntrySummaryForm
         End If
     End Function
 
-    Private Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
+    Private Async Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
         _isActual = Not _isActual
 
         actualButton.Checked = _isActual
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub btnAmPm_Click(sender As Object, e As EventArgs) Handles btnAmPm.Click
@@ -1531,12 +1531,13 @@ Public Class TimeEntrySummaryForm
 
             Try
                 Await command.ExecuteNonQueryAsync()
+
+                Await LoadTimeEntries()
                 'transactn.Commit()
             Catch ex As Exception
                 'transactn.Rollback()
                 _logger.Error("Deleting time entry period", ex)
-            Finally
-                LoadTimeEntries()
+
             End Try
         End Using
     End Sub

@@ -239,7 +239,7 @@ namespace AccuPay.Data.Services
                                             TimeEntryPolicy timeEntryPolicy,
                                             CalendarCollection calendarCollection)
         {
-            IReadOnlyCollection<TimeEntry> previousTimeEntries = _timeEntries.
+            IList<TimeEntry> previousTimeEntries = _timeEntries.
                                                         Where(t => t.EmployeeID == employee.RowID).
                                                         ToList();
 
@@ -336,6 +336,15 @@ namespace AccuPay.Data.Services
                     if (payrate.IsRegularHoliday)
                     {
                         regularHolidaysList.Add(currentDate);
+                    }
+
+                    // this is for the issue on hasWorkedLastDay on first time entry generation.
+                    // since there is no oldTimeEntries yet, hasWorkedLastDay will always be false.
+                    if (previousTimeEntries.Where(x => x.EmployeeID == employee.RowID).
+                                    Where(x => x.Date == currentDate).
+                                    Any() == false)
+                    {
+                        previousTimeEntries.Add(timeEntry);
                     }
 
                     timeEntries.Add(timeEntry);

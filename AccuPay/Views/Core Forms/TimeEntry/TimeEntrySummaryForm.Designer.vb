@@ -469,19 +469,18 @@ Partial Class TimeEntrySummaryForm
         '
         'generateTimeEntryButton
         '
-        Me.generateTimeEntryButton.Image = CType(resources.GetObject("generateTimeEntryButton.Image"), System.Drawing.Image)
+        Me.generateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.cash_register
         Me.generateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.generateTimeEntryButton.Name = "generateTimeEntryButton"
-        Me.generateTimeEntryButton.Size = New System.Drawing.Size(110, 22)
-        Me.generateTimeEntryButton.Text = "N&ew Pay period"
+        Me.generateTimeEntryButton.Size = New System.Drawing.Size(142, 22)
+        Me.generateTimeEntryButton.Text = "G&enerate Time Entries"
         '
         'regenerateTimeEntryButton
         '
-        Me.regenerateTimeEntryButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
-        Me.regenerateTimeEntryButton.Image = CType(resources.GetObject("regenerateTimeEntryButton.Image"), System.Drawing.Image)
+        Me.regenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
         Me.regenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.regenerateTimeEntryButton.Name = "regenerateTimeEntryButton"
-        Me.regenerateTimeEntryButton.Size = New System.Drawing.Size(70, 22)
+        Me.regenerateTimeEntryButton.Size = New System.Drawing.Size(86, 22)
         Me.regenerateTimeEntryButton.Text = "Regenerate"
         '
         'tsbtnCloseempawar
