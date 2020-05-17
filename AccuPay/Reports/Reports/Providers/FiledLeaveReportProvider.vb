@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class FiledLeaveReportProvider
     Implements IReportProvider
@@ -58,8 +59,8 @@ Public Class FiledLeaveReportProvider
         datatable.Columns.Add("DatCol15")
         datatable.Columns.Add("DatCol16")
 
-        Dim dataService As New FiledLeaveReportDataService(z_OrganizationID, timePeriod)
-        Dim leaveTransactions = Await dataService.GetData()
+        Dim dataService = MainServiceProvider.GetRequiredService(Of FiledLeaveReportDataService)
+        Dim leaveTransactions = Await dataService.GetData(z_OrganizationID, timePeriod)
 
         For Each transaction In leaveTransactions
 

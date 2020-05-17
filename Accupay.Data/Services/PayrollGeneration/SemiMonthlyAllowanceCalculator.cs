@@ -14,7 +14,7 @@ namespace AccuPay.Data.Services
 
         private readonly CalendarCollection _calendarCollection;
 
-        private readonly ICollection<TimeEntry> _timeEntries;
+        private readonly IReadOnlyCollection<TimeEntry> _timeEntries;
 
         private readonly AllowancePolicy _allowancePolicy;
 
@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
                                                 Paystub paystub,
                                                 PayPeriod payperiod,
                                                 CalendarCollection calendarCollection,
-                                                ICollection<TimeEntry> timeEntries,
+                                                IReadOnlyCollection<TimeEntry> timeEntries,
                                                 int organizationId,
                                                 int userId)
         {

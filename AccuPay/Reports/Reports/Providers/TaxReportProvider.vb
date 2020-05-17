@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Repositories
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TaxReportProvider
     Implements IReportProvider
@@ -12,7 +13,7 @@ Public Class TaxReportProvider
     Private _payPeriodRepository As PayPeriodRepository
 
     Sub New()
-        _payPeriodRepository = New PayPeriodRepository()
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
     End Sub
 
     Public Sub Run() Implements IReportProvider.Run

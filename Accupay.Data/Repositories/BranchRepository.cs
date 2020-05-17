@@ -9,64 +9,56 @@ namespace AccuPay.Data.Repositories
 {
     public class BranchRepository
     {
+        private readonly PayrollContext _context;
+
+        public BranchRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task DeleteAsync(Branch branch)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Branches.Remove(branch);
-                await context.SaveChangesAsync();
-            }
+            _context.Branches.Remove(branch);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<int?> CreateAsync(Branch branch)
         {
-            using (PayrollContext context = new PayrollContext())
+            if (await _context.Branches.
+                    Where(b => b.Code.Trim().ToUpper() == branch.Code.Trim().ToUpper()).
+                    AnyAsync())
             {
-                if (await context.Branches.
-                        Where(b => b.Code.Trim().ToUpper() == branch.Code.Trim().ToUpper()).
-                        AnyAsync())
-                {
-                    throw new AccuPayRepositoryException("Branch already exists.");
-                }
-
-                context.Branches.Add(branch);
-                await context.SaveChangesAsync();
-
-                return branch.RowID;
+                throw new AccuPayRepositoryException("Branch already exists.");
             }
+
+            _context.Branches.Add(branch);
+            await _context.SaveChangesAsync();
+
+            return branch.RowID;
         }
 
         public async Task UpdateAsync(Branch branch)
         {
-            using (PayrollContext context = new PayrollContext())
+            if (await _context.Branches.
+                    Where(b => b.Code.Trim().ToUpper() == branch.Code.Trim().ToUpper()).
+                    Where(b => b.RowID != branch.RowID)
+                    .AnyAsync())
             {
-                if (await context.Branches.
-                        Where(b => b.Code.Trim().ToUpper() == branch.Code.Trim().ToUpper()).
-                        Where(b => b.RowID != branch.RowID)
-                        .AnyAsync())
-                {
-                    throw new AccuPayRepositoryException("Branch already exists.");
-                }
-
-                context.Entry(branch).State = EntityState.Modified;
-                await context.SaveChangesAsync();
+                throw new AccuPayRepositoryException("Branch already exists.");
             }
+
+            _context.Entry(branch).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public IEnumerable<Branch> GetAll()
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Branches.ToList();
-            }
+            return _context.Branches.ToList();
         }
 
         public async Task<IEnumerable<Branch>> GetAllAsync()
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.Branches.ToListAsync();
-            }
+            return await _context.Branches.ToListAsync();
         }
     }
 }

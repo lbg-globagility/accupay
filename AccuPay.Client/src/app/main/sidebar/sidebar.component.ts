@@ -1,0 +1,42 @@
+import { Component, OnInit } from '@angular/core';
+import { cloneDeep } from 'lodash';
+
+interface MenuItem {
+  label: string;
+  route?: string;
+  icon?: string;
+  items?: MenuItem[];
+  toggled?: boolean;
+  permission?: string;
+}
+
+const menuItems: MenuItem[] = [
+  {
+    label: 'Employees',
+    route: '/employees',
+    icon: 'person',
+  },
+];
+
+@Component({
+  selector: 'app-sidebar',
+  templateUrl: './sidebar.component.html',
+  styleUrls: ['./sidebar.component.scss'],
+})
+export class SidebarComponent implements OnInit {
+  menuItems: MenuItem[] = menuItems;
+
+  constructor() {}
+
+  ngOnInit(): void {
+    this.menuItems = menuItems;
+  }
+
+  isLink(menuItem: MenuItem): boolean {
+    return menuItem.items == null;
+  }
+
+  toggle(menuItem: MenuItem): void {
+    menuItem.toggled = !menuItem.toggled;
+  }
+}

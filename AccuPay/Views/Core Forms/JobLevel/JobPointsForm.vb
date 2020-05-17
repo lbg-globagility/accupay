@@ -1,20 +1,22 @@
 ﻿Option Strict On
 
 Imports AccuPay.JobLevels
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class JobPointsForm
-    Implements JobPointsView
+    Implements IJobPointsView
 
-    Public Event JobPointsForm_OnLoad() Implements JobPointsView.OnLoad
+    Public Event JobPointsForm_OnLoad() Implements IJobPointsView.OnLoad
 
-    Public Event JobPointsForm_EmployeeSelected(employee As EmployeeModel) Implements JobPointsView.EmployeeSelected
+    Public Event JobPointsForm_EmployeeSelected(employee As EmployeeModel) Implements IJobPointsView.EmployeeSelected
 
-    Public Event JobPointsForm_EmployeeChanged(model As EmployeeModel) Implements JobPointsView.EmployeeChanged
+    Public Event JobPointsForm_EmployeeChanged(model As EmployeeModel) Implements IJobPointsView.EmployeeChanged
 
-    Public Event JobPointsForm_SaveEmployees() Implements JobPointsView.SaveEmployees
+    Public Event JobPointsForm_SaveEmployees() Implements IJobPointsView.SaveEmployees
 
     Public Sub New()
         InitializeComponent()
+
         Dim presenter = New JobPointsPresenter(Me)
     End Sub
 
@@ -27,7 +29,7 @@ Public Class JobPointsForm
         EmployeeDataGridView.AutoGenerateColumns = False
     End Sub
 
-    Public Sub LoadEmployees(employees As ICollection(Of EmployeeModel)) Implements JobPointsView.LoadEmployees
+    Public Sub LoadEmployees(employees As ICollection(Of EmployeeModel)) Implements IJobPointsView.LoadEmployees
         EmployeeDataGridView.DataSource = employees
     End Sub
 
@@ -59,26 +61,29 @@ Public Class JobPointsForm
         RaiseEvent JobPointsForm_SaveEmployees()
     End Sub
 
-    Public Sub ShowSavedMessage() Implements JobPointsView.ShowSavedMessage
+    Public Sub ShowSavedMessage() Implements IJobPointsView.ShowSavedMessage
         InfoBalloon("Successfully saved.", "", EmployeeDataGridView, dispo:=1)
     End Sub
 
     Private Sub CloseButton_Click(sender As Object, e As EventArgs) Handles CloseButton.Click
-        HRISForm.listHRISForm.Remove(Me.Name)
+        'HRISForm.listHRISForm.Remove(Me.Name)
         Close()
     End Sub
 
 End Class
 
-Public Interface JobPointsView
+Public Interface IJobPointsView
 
     Event OnLoad()
 
     Event EmployeeSelected(employee As EmployeeModel)
+
     Event EmployeeChanged(model As EmployeeModel)
+
     Event SaveEmployees()
 
     Sub LoadEmployees(employees As ICollection(Of EmployeeModel))
+
     Sub ShowSavedMessage()
 
 End Interface

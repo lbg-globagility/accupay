@@ -4,6 +4,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay.Views.Employees
 
@@ -25,6 +26,8 @@ Namespace Global.AccuPay.Views.Employees
 
         Private _socialSecurityBracketRepository As SocialSecurityBracketRepository
 
+        Private _listOfValueService As ListOfValueService
+
         Private _salaries As IList(Of Salary)
 
         Private _currentSalary As Salary
@@ -32,11 +35,14 @@ Namespace Global.AccuPay.Views.Employees
         Public Sub New(view As SalaryTab2)
             _view = view
 
-            _philHealthBracketRepository = New PhilHealthBracketRepository()
+            _philHealthBracketRepository = MainServiceProvider.GetRequiredService(Of PhilHealthBracketRepository)
 
-            _salaryRepository = New SalaryRepository()
+            _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
-            _socialSecurityBracketRepository = New SocialSecurityBracketRepository()
+            _socialSecurityBracketRepository = MainServiceProvider.GetRequiredService(Of SocialSecurityBracketRepository)
+
+            _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
         End Sub
 
         Private Sub OnLoad() Handles _view.Init
@@ -152,7 +158,7 @@ Namespace Global.AccuPay.Views.Employees
 
         Private Sub LoadPhilHealthBrackets()
 
-            Dim values = ListOfValueCollection.Create("PhilHealth")
+            Dim values = _listOfValueService.Create("PhilHealth")
 
             _philHealthPolicy = New PhilHealthPolicy(
                     values.GetStringOrDefault("DeductionType", "Bracket"),

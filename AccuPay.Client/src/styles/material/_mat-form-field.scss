@@ -1,0 +1,138 @@
+mat-form-field.mat-form-field {
+  label {
+    font-size: 16px;
+  }
+}
+
+// deprecated
+.mat-form-field.app-input-no-underline .mat-form-field-underline {
+  display: none;
+}
+
+.mat-form-field.m-no-underline {
+  .mat-form-field-underline {
+    display: none;
+  }
+
+  input {
+    cursor: default;
+  }
+}
+
+/**
+ * .m-no-padding
+ * Removes the extra padding
+ */
+.mat-form-field.m-no-padding {
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-wrapper {
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  &.mat-form-field-appearance-standard {
+    .mat-form-field-wrapper {
+      margin-bottom: -1.25em;
+    }
+  }
+}
+
+/**
+ * .m-no-margin
+ */
+.mat-form-field.m-no-margin {
+  &.mat-form-field-appearance-standard {
+    .mat-form-field-wrapper {
+      margin-bottom: -1.25em;
+    }
+  }
+
+  &.mat-form-field-appearance-outline {
+    .mat-form-field-wrapper {
+      margin: 0;
+    }
+  }
+}
+
+/**
+ * .m-no-label
+ * Removes the additional space provided for the label portion
+ */
+.mat-form-field.m-no-label {
+  &.mat-form-field-appearance-standard {
+    .mat-form-field-flex {
+      padding-top: 0;
+    }
+
+    .mat-form-field-infix {
+      border-top: none;
+    }
+  }
+}
+
+// deprecated
+.mat-form-field.app-no-padding .mat-form-field-wrapper {
+  margin-bottom: 0;
+  padding-bottom: 0;
+}
+
+.mat-form-field.mat-form-field-appearance-outline.m-with-icon {
+  .mat-select-trigger .mat-icon {
+    vertical-align: middle;
+    margin-right: app-space(2);
+  }
+
+  .mat-form-field-infix {
+    padding: 0;
+  }
+
+  .mat-select {
+    padding: 9.5px 0;
+
+    .mat-select-arrow-wrapper {
+      transform: translateY(-2.75px);
+    }
+  }
+
+  .mat-select.mat-select-empty {
+    padding: 1em 0;
+
+    .mat-select-arrow-wrapper {
+      transform: translateY(-25%);
+    }
+  }
+}
+
+.mat-form-field.mat-form-field-appearance-outline.app-with-icon {
+  .mat-select-trigger .mat-icon {
+    vertical-align: middle;
+    margin-right: app-space(2);
+  }
+
+  .mat-form-field-infix {
+    padding: 0;
+  }
+
+  .mat-select {
+    padding: 9.5px 0;
+
+    .mat-select-arrow-wrapper {
+      transform: translateY(-2.75px);
+    }
+  }
+
+  .mat-select.mat-select-empty {
+    padding: 1em 0;
+
+    .mat-select-arrow-wrapper {
+      transform: translateY(-25%);
+    }
+  }
+}
+
+.mat-form-field.mat-form-field-appearance-outline.m-readonly {
+  .mat-form-field-outline {
+    display: none;
+  }
+}

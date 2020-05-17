@@ -7,7 +7,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
@@ -16,15 +16,19 @@ Public Class SelectPayslipEmployeesForm
 
     Private ReadOnly _isEmail As Boolean
 
-    Private Declared As String = "Declared"
+    Private Const Declared As String = "Declared"
 
-    Private Actual As String = "Actual"
+    Private Const Actual As String = "Actual"
 
-    Private PayslipTypes As New List(Of String) From {Declared, Actual}
+    Private _payslipTypes As List(Of String)
 
-    Private _employeeModels As New List(Of EmployeeModel)
+    Private _employeeModels As List(Of EmployeeModel)
 
     Private _currentPayPeriod As PayPeriod
+
+    Private _payslipCreator As PayslipCreator
+
+    Private _policyHelper As PolicyHelper
 
     Private _payPeriodRepository As PayPeriodRepository
 
@@ -36,25 +40,34 @@ Public Class SelectPayslipEmployeesForm
 
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _isEmail = isEmail
         _currentPayPeriodId = currentPayPeriodId
 
-        _payPeriodRepository = New PayPeriodRepository()
-        _paystubRepository = New PaystubRepository()
-        _paystubEmailRepository = New PaystubEmailRepository()
-        _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
+        _employeeModels = New List(Of EmployeeModel)
+
+        _payslipTypes = New List(Of String) From {Declared, Actual}
+
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+
+        _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailHistoryRepository)
 
     End Sub
 
     Private Async Sub SelectPayslipEmployeesForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        EmployeesDataGrid.AutoGenerateColumns = False
+        EmployeeGridView.AutoGenerateColumns = False
 
-        PayslipTypeComboBox.DataSource = PayslipTypes
+        PayslipTypeComboBox.DataSource = _payslipTypes
 
         SendEmailsButton.Visible = _isEmail
         RefreshEmailStatusButton.Visible = _isEmail
@@ -68,9 +81,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Dim settings = ListOfValueCollection.Create()
-
-        Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+        Dim showActual = _policyHelper.ShowActual
 
         If showActual = False Then
 
@@ -110,7 +121,7 @@ Public Class SelectPayslipEmployeesForm
 
         _employeeModels = employeeModels.OrderBy(Function(e) e.FullName).ToList
 
-        EmployeesDataGrid.DataSource = _employeeModels
+        EmployeeGridView.DataSource = _employeeModels
 
         Await RefreshEmailStatus()
 
@@ -132,7 +143,7 @@ Public Class SelectPayslipEmployeesForm
         Dim index = 0
         For Each employee In _employeeModels
 
-            Dim row = EmployeesDataGrid.Rows(index)
+            Dim row = EmployeeGridView.Rows(index)
             Dim checkBoxCell = row.Cells(SelectedCheckBoxColumn.Index)
 
             Dim history = paystubEmailHistories.
@@ -223,24 +234,6 @@ Public Class SelectPayslipEmployeesForm
 
     End Sub
 
-    Private Class EmployeeModel
-        Public Property EmployeeId As Integer
-        Public Property EmailAddress As String
-        Public Property PaystubId As Integer
-        Public Property IsSelected As Boolean
-        Public Property EmployeeNumber As String
-        Public Property FirstName As String
-        Public Property MiddleName As String
-        Public Property LastName As String
-        Public Property FullName As String
-        Public Property EmployeeType As String
-        Public Property PositionName As String
-        Public Property DivisionName As String
-        Public Property EmailStatus As String
-        Public Property SentDateTime As Date?
-        Public Property ErrorLogMessage As String
-    End Class
-
     Private Sub CancelButton_Click(sender As Object, e As EventArgs) Handles CancelDialogButton.Click
         Me.Close()
     End Sub
@@ -249,16 +242,15 @@ Public Class SelectPayslipEmployeesForm
 
         Dim isActual = PayslipTypeComboBox.Text = Actual
 
-        Dim payslipCreator As New PayslipCreator(_currentPayPeriod, Convert.ToSByte(isActual))
-
-        Dim nextPayPeriod = Data.Helpers.PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
-
         Dim employeeIds = _employeeModels.
                             Where(Function(m) m.IsSelected).
                             Select(Function(m) m.EmployeeId).
                             ToArray()
 
-        Dim reportDocument = payslipCreator.CreateReportDocument(z_OrganizationID, nextPayPeriod, employeeIds)
+        Dim reportDocument = _payslipCreator.CreateReportDocument(organizationId:=z_OrganizationID,
+                                                                 payPeriodId:=_currentPayPeriod.RowID.Value,
+                                                                 Convert.ToSByte(isActual),
+                                                                 employeeIds)
 
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
@@ -297,7 +289,7 @@ Public Class SelectPayslipEmployeesForm
         EnableDisableButtons()
     End Sub
 
-    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeesDataGrid.CellMouseUp
+    Private Sub EmployeesDataGrid_CellMouseUp(sender As Object, e As DataGridViewCellMouseEventArgs) Handles EmployeeGridView.CellMouseUp
 
         EnableDisableButtons()
     End Sub
@@ -332,5 +324,23 @@ Public Class SelectPayslipEmployeesForm
         End Try
 
     End Sub
+
+    Private Class EmployeeModel
+        Public Property EmployeeId As Integer
+        Public Property EmailAddress As String
+        Public Property PaystubId As Integer
+        Public Property IsSelected As Boolean
+        Public Property EmployeeNumber As String
+        Public Property FirstName As String
+        Public Property MiddleName As String
+        Public Property LastName As String
+        Public Property FullName As String
+        Public Property EmployeeType As String
+        Public Property PositionName As String
+        Public Property DivisionName As String
+        Public Property EmailStatus As String
+        Public Property SentDateTime As Date?
+        Public Property ErrorLogMessage As String
+    End Class
 
 End Class

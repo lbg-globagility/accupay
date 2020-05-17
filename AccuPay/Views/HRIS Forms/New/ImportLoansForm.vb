@@ -7,6 +7,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportLoansForm
@@ -15,19 +16,37 @@ Public Class ImportLoansForm
 
     Private _loans As List(Of LoanSchedule)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
-
-    Private _loanScheduleRepository As New LoanScheduleRepository
-
-    Private _listOfValueRepository As New ListOfValueRepository
-
     Private _deductionSchedulesList As List(Of String)
 
     Private _loanTypeList As List(Of Product)
 
     Public IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _loanScheduleRepository As LoanScheduleRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Async Sub ImportLoansForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -131,7 +150,7 @@ Public Class ImportLoansForm
 
             'TODO: use a ViewModel instead of showing the entity to the gridview
             'problems with detaching Employee
-            Dim loanSchedule = New LoanSchedule With {
+            Dim newLoanSchedule = New LoanSchedule With {
                 .RowID = Nothing,
                 .OrganizationID = z_OrganizationID,
                 .CreatedBy = z_User,
@@ -146,13 +165,14 @@ Public Class ImportLoansForm
                 .DeductionPercentage = 0,
                 .LoanName = record.LoanName,
                 .LoanTypeID = loanType.RowID,
-                .Status = LoanScheduleRepository.STATUS_IN_PROGRESS,
-                .DeductionSchedule = deductionSchedule,
-                .NoOfPayPeriod = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalLoanAmount.Value, record.DeductionAmount.Value),
-                .LoanPayPeriodLeft = Me._loanScheduleRepository.ComputeNumberOfPayPeriod(record.TotalBalanceLeft.Value, record.DeductionAmount.Value)
+                .Status = LoanSchedule.STATUS_IN_PROGRESS,
+                .DeductionSchedule = deductionSchedule
             }
 
-            _loans.Add(loanSchedule)
+            newLoanSchedule.RecomputeTotalPayPeriod()
+            newLoanSchedule.RecomputePayPeriodLeft()
+
+            _loans.Add(newLoanSchedule)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
@@ -255,8 +275,7 @@ Public Class ImportLoansForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
 

@@ -1,0 +1,26 @@
+@import 'styles/variables';
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background: app-color(primary);
+  color: white;
+}
+
+.error {
+  padding: 48px;
+  background: white;
+  color: app-color(primary);
+
+  &__title {
+    font-size: 96px;
+    line-height: normal;
+  }
+
+  &__message {
+    font-size: 48px;
+    line-height: normal;
+  }
+}

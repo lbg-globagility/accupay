@@ -7,10 +7,11 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLoansForm
 
-    Dim sys_ownr As New SystemOwnerService()
+    Private _systemOwnerService As SystemOwnerService
 
     Private sysowner_is_benchmark As Boolean
 
@@ -33,8 +34,6 @@ Public Class EmployeeLoansForm
     Private _productRepository As ProductRepository
 
     Private _listOfValueRepository As ListOfValueRepository
-
-    Private _loanScheduleRepository As LoanScheduleRepository
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -64,15 +63,15 @@ Public Class EmployeeLoansForm
 
         _currentLoanTransactions = New List(Of LoanTransaction)
 
-        _employeeRepository = New EmployeeRepository()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _productRepository = New ProductRepository()
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _listOfValueRepository = New ListOfValueRepository()
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _loanScheduleRepository = New LoanScheduleRepository()
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _userActivityRepository = New UserActivityRepository()
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
     End Sub
@@ -199,23 +198,22 @@ Public Class EmployeeLoansForm
     End Sub
 
     Private Sub UpdateBalanceAndNumberOfPayPeriod()
-        Dim totalLoanAmount = AccuMath.CommercialRound(Me._currentLoan.TotalLoanAmount)
-        Dim deductionAmount = AccuMath.CommercialRound(Me._currentLoan.DeductionAmount)
+        Me._currentLoan.TotalLoanAmount = AccuMath.CommercialRound(Me._currentLoan.TotalLoanAmount)
+        Me._currentLoan.DeductionAmount = AccuMath.CommercialRound(Me._currentLoan.DeductionAmount)
+
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
 
         If Me._currentLoanTransactions.Count = 0 AndAlso
-            (Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_CANCELLED OrElse
-            Me._currentLoan.Status IsNot LoanScheduleRepository.STATUS_COMPLETE) Then
+            (Me._currentLoan.Status IsNot LoanSchedule.STATUS_CANCELLED OrElse
+            Me._currentLoan.Status IsNot LoanSchedule.STATUS_COMPLETE) Then
 
-            Dim numberOfPayPeriod = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalLoanAmount, deductionAmount)
+            Me._currentLoan.RecomputeTotalPayPeriod()
 
-            Me._currentLoan.TotalBalanceLeft = totalLoanAmount
-            Me._currentLoan.NoOfPayPeriod = numberOfPayPeriod
+            Me._currentLoan.TotalBalanceLeft = Me._currentLoan.TotalLoanAmount
 
         End If
 
-        Dim totalBalanceLeft = AccuMath.CommercialRound(Me._currentLoan.TotalBalanceLeft)
-
-        Me._currentLoan.LoanPayPeriodLeft = _loanScheduleRepository.ComputeNumberOfPayPeriod(totalBalanceLeft, deductionAmount)
+        Me._currentLoan.RecomputePayPeriodLeft()
     End Sub
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
@@ -274,7 +272,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
-                Await _loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
+                Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+                Await loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -415,7 +414,8 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim currentLoanSchedule = Await _loanScheduleRepository.
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim currentLoanSchedule = Await loanScheduleRepository.
                                             GetByIdAsync(Me._currentLoan.RowID.Value)
 
         If currentLoanSchedule Is Nothing Then
@@ -435,7 +435,7 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        If currentLoanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE Then
+        If currentLoanSchedule.Status = LoanSchedule.STATUS_COMPLETE Then
 
             If MessageBoxHelper.Confirm(Of Boolean) _
         ("Loan schedule is already completed. Deleting this might affect previous cutoffs. Do you want to proceed deletion?", "Confirm Deletion",
@@ -445,7 +445,7 @@ Public Class EmployeeLoansForm
             End If
         Else
 
-            Dim loanTransactions = Await _loanScheduleRepository.
+            Dim loanTransactions = Await loanScheduleRepository.
                 GetLoanTransactionsWithPayPeriodAsync(Me._currentLoan.RowID.Value)
 
             If loanTransactions.Count > 0 Then
@@ -477,7 +477,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                     Async Function()
-                                        Await _loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
+                                        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+                                        Await loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
 
                                         _userActivityRepository.RecordDelete(z_User,
                                                                              FormEntityName,
@@ -556,9 +557,10 @@ Public Class EmployeeLoansForm
 
     Private Sub LoadLoanStatus()
 
-        Dim statusList = _loanScheduleRepository.GetStatusList()
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim statusList = loanScheduleRepository.GetStatusList()
 
-        statusList.Remove(LoanScheduleRepository.STATUS_COMPLETE)
+        statusList.Remove(LoanSchedule.STATUS_COMPLETE)
 
         cmbLoanStatus.DataSource = statusList
 
@@ -568,10 +570,10 @@ Public Class EmployeeLoansForm
 
         RemoveHandler EmployeesDataGridView.SelectionChanged, AddressOf EmployeesDataGridView_SelectionChanged
 
-        chkInProgressFilter.Text = LoanScheduleRepository.STATUS_IN_PROGRESS
-        chkOnHoldFilter.Text = LoanScheduleRepository.STATUS_ON_HOLD
-        chkCancelledFilter.Text = LoanScheduleRepository.STATUS_CANCELLED
-        chkCompleteFilter.Text = LoanScheduleRepository.STATUS_COMPLETE
+        chkInProgressFilter.Text = LoanSchedule.STATUS_IN_PROGRESS
+        chkOnHoldFilter.Text = LoanSchedule.STATUS_ON_HOLD
+        chkCancelledFilter.Text = LoanSchedule.STATUS_CANCELLED
+        chkCompleteFilter.Text = LoanSchedule.STATUS_COMPLETE
 
         If String.IsNullOrEmpty(searchValue) Then
             EmployeesDataGridView.DataSource = Me._employees
@@ -594,7 +596,8 @@ Public Class EmployeeLoansForm
         Dim cancelledChecked = chkCancelledFilter.Checked
         Dim completeChecked = chkCompleteFilter.Checked
 
-        Dim loanSchedules = Await _loanScheduleRepository.
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim loanSchedules = Await loanScheduleRepository.
                                     GetByEmployeeAsync(currentEmployee.RowID.Value)
 
         Dim statusFilter = CreateStatusFilter()
@@ -608,10 +611,10 @@ Public Class EmployeeLoansForm
 
         Me._changedLoans = Me._currentloans.CloneListJson()
 
-        chkInProgressFilter.Text = $"{LoanScheduleRepository.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_IN_PROGRESS)})"
-        chkOnHoldFilter.Text = $"{LoanScheduleRepository.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_ON_HOLD)})"
-        chkCancelledFilter.Text = $"{LoanScheduleRepository.STATUS_CANCELLED} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_CANCELLED)})"
-        chkCompleteFilter.Text = $"{LoanScheduleRepository.STATUS_COMPLETE} ({loanSchedules.Count(Function(l) l.Status = LoanScheduleRepository.STATUS_COMPLETE)})"
+        chkInProgressFilter.Text = $"{LoanSchedule.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_IN_PROGRESS)})"
+        chkOnHoldFilter.Text = $"{LoanSchedule.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_ON_HOLD)})"
+        chkCancelledFilter.Text = $"{LoanSchedule.STATUS_CANCELLED} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_CANCELLED)})"
+        chkCompleteFilter.Text = $"{LoanSchedule.STATUS_COMPLETE} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_COMPLETE)})"
 
         Await PopulateLoanGridView()
 
@@ -633,10 +636,10 @@ Public Class EmployeeLoansForm
 
         Dim whereFunction = Function(loanSchedule As LoanSchedule) As Boolean
 
-                                Return (inProgressChecked AndAlso loanSchedule.Status = LoanScheduleRepository.STATUS_IN_PROGRESS) OrElse
-                                   (onHoldChecked AndAlso loanSchedule.Status = LoanScheduleRepository.STATUS_ON_HOLD) OrElse
-                                   (cancelledChecked AndAlso loanSchedule.Status = LoanScheduleRepository.STATUS_CANCELLED) OrElse
-                                   (completeChecked AndAlso loanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE)
+                                Return (inProgressChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS) OrElse
+                                   (onHoldChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_ON_HOLD) OrElse
+                                   (cancelledChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_CANCELLED) OrElse
+                                   (completeChecked AndAlso loanSchedule.Status = LoanSchedule.STATUS_COMPLETE)
 
                             End Function
 
@@ -648,8 +651,9 @@ Public Class EmployeeLoansForm
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoan()
         If currentLoanSchedule Is Nothing Then Return
 
+        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
-            (Await _loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
+            (Await loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
 
         LoanHistoryGridView.DataSource = Me._currentLoanTransactions
 
@@ -708,8 +712,8 @@ Public Class EmployeeLoansForm
         Dim isUneditable As Boolean = False
 
         If originalLoanSchedule IsNot Nothing Then
-            isUneditable = originalLoanSchedule.Status = LoanScheduleRepository.STATUS_CANCELLED OrElse
-            originalLoanSchedule.Status = LoanScheduleRepository.STATUS_COMPLETE
+            isUneditable = originalLoanSchedule.Status = LoanSchedule.STATUS_CANCELLED OrElse
+            originalLoanSchedule.Status = LoanSchedule.STATUS_COMPLETE
         End If
 
         DetailsTabLayout.Enabled = Not isUneditable
@@ -871,7 +875,7 @@ Public Class EmployeeLoansForm
             newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount OrElse
             newLoanSchedule.TotalBalanceLeft <> oldLoanSchedule.TotalBalanceLeft OrElse
             newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom OrElse
-            newLoanSchedule.NoOfPayPeriod <> oldLoanSchedule.NoOfPayPeriod OrElse
+            newLoanSchedule.TotalPayPeriod <> oldLoanSchedule.TotalPayPeriod OrElse
             newLoanSchedule.LoanPayPeriodLeft <> oldLoanSchedule.LoanPayPeriodLeft OrElse
             newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount OrElse
             newLoanSchedule.Status <> oldLoanSchedule.Status OrElse

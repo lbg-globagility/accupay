@@ -7,12 +7,16 @@ namespace AccuPay.Data.Repositories
 {
     public class FilingStatusTypeRepository
     {
+        private readonly PayrollContext _context;
+
+        public FilingStatusTypeRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<FilingStatusType>> GetAllAsync()
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return await context.FilingStatusTypes.ToListAsync();
-            }
+            return await _context.FilingStatusTypes.ToListAsync();
         }
     }
 }

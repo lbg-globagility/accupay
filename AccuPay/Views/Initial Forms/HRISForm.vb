@@ -2,6 +2,7 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class HRISForm
 
@@ -13,26 +14,22 @@ Public Class HRISForm
 
     Private _policyHelper As PolicyHelper
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _userRepository As UserRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        sys_ownr = New SystemOwnerService()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        curr_sys_owner_name = sys_ownr.GetCurrentSystemOwner()
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-
-        _policyHelper = New PolicyHelper()
-
-        _userRepository = New UserRepository()
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
         PrepareFormForBenchmark()
     End Sub
@@ -160,10 +157,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Personal Profile")
         EmployeeForm.tbpEmployee.Focus()
-        '    File.AppendAllText(Path.GetTempPath() & "dgvetent.txt", c.Name & "@" & c.HeaderText & "&" & c.Visible.ToString & Environment.NewLine)
-        'Next
-
-        'Employee.tbpEmployee_Enter(sender, e)
     End Sub
 
     Private Sub EmpSalToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EmpSalToolStripMenuItem.Click
@@ -174,7 +167,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Salary")
         EmployeeForm.tbpNewSalary.Focus()
-        'Employee.tbpSalary_Enter(sender, e)
     End Sub
 
     Private Sub AwardsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AwardsToolStripMenuItem.Click
@@ -185,7 +177,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Award")
         EmployeeForm.tbpAwards.Focus()
-        'Employee.tbpAwards_Enter(sender, e)
     End Sub
 
     Private Sub CertificatesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CertificatesToolStripMenuItem.Click
@@ -196,7 +187,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Certification")
         EmployeeForm.tbpCertifications.Focus()
-        'Employee.tbpCertifications_Enter(sender, e)
     End Sub
 
     Private Sub DisciplinaryActionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DisciplinaryActionToolStripMenuItem.Click
@@ -207,7 +197,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Disciplinary Action")
         EmployeeForm.tbpDiscipAct.Focus()
-        'Employee.tbpDiscipAct_Enter(sender, e)
     End Sub
 
     Private Sub EducBGToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles EducBGToolStripMenuItem.Click
@@ -218,7 +207,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Educational Background")
         EmployeeForm.tbpEducBG.Focus()
-        'Employee.tbpEducBG_Enter(sender, e)
     End Sub
 
     Private Sub PrevEmplyrToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrevEmplyrToolStripMenuItem.Click
@@ -229,7 +217,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Previous Employer")
         EmployeeForm.tbpPrevEmp.Focus()
-        'Employee.tbpPrevEmp_Enter(sender, e)
     End Sub
 
     Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles PromotionToolStripMenuItem.Click
@@ -240,7 +227,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Promotion")
         EmployeeForm.tbpPromotion.Focus()
-        'Employee.tbpPromotion_Enter(sender, e)
     End Sub
 
     Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
@@ -251,7 +237,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Bonus")
         EmployeeForm.tbpBonus.Focus()
-        'Employee.tbpBonus_Enter(sender, e)
     End Sub
 
     Private Sub AttachmentToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles AttachmentToolStripMenuItem.Click
@@ -262,7 +247,6 @@ Public Class HRISForm
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Attachment")
         EmployeeForm.tbpAttachment.Focus()
-        'Employee.tbpAttachment_Enter(sender, e)
     End Sub
 
     Private Sub HRISForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -281,7 +265,7 @@ Public Class HRISForm
     End Sub
 
     Private Sub HRISForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If sys_ownr.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
+        If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Hyundai Then
             JobLevelToolStripMenuItem.Visible = False
             JobCategoryToolStripMenuItem.Visible = False
             PointsToolStripMenuItem.Visible = False

@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeOvertimeForm
 
@@ -21,20 +22,15 @@ Public Class EmployeeOvertimeForm
 
     Private _changedOvertimes As List(Of Overtime)
 
-    Private _overtimeRepository As OvertimeRepository
+    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
 
     Private _employeeRepository As EmployeeRepository
 
     Private _userActivityRepository As UserActivityRepository
 
-    Private _textBoxDelayedAction As DelayedAction(Of Boolean)
-
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _employees = New List(Of Employee)
 
@@ -44,11 +40,9 @@ Public Class EmployeeOvertimeForm
 
         _changedOvertimes = New List(Of Overtime)
 
-        _overtimeRepository = New OvertimeRepository()
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _employeeRepository = New EmployeeRepository()
-
-        _userActivityRepository = New UserActivityRepository()
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         _textBoxDelayedAction = New DelayedAction(Of Boolean)
 
@@ -114,7 +108,8 @@ Public Class EmployeeOvertimeForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _overtimeRepository.GetStatusList()
+        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        StatusComboBox.DataSource = overtimeRepository.GetStatusList()
 
     End Sub
 
@@ -226,7 +221,8 @@ Public Class EmployeeOvertimeForm
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Me._currentOvertimes = (Await _overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Me._currentOvertimes = (Await overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.OTStartDate).
                                 ToList
 
@@ -380,7 +376,8 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Await _overtimeRepository.DeleteAsync(Me._currentOvertime.RowID.Value)
+                                                Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+                                                Await overtimeRepository.DeleteAsync(Me._currentOvertime.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
                                                                                      FormEntityName,
@@ -552,7 +549,8 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim currentOvertime = Await _overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID.Value)
+        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        Dim currentOvertime = Await overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then
 
@@ -623,7 +621,8 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Await _overtimeRepository.SaveManyAsync(changedOvertimes)
+                                            Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+                                            Await overtimeRepository.SaveManyAsync(changedOvertimes)
 
                                             For Each item In changedOvertimes
                                                 RecordUpdate(item)

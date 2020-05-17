@@ -34,7 +34,7 @@ Public Class SalaryIncreaseHistoryReportProvider
     End Sub
 
     Private Sub LinkSalaryToPreviousSalary(data As DataTable)
-        Dim column = New DataColumn("DatCol10", System.Type.GetType("System.Decimal"))
+        Dim column = New DataColumn("DatCol10", Type.GetType("System.Decimal"))
         data.Columns.Add(column)
 
         Dim previousRow As DataRow = Nothing

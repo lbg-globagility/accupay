@@ -11,66 +11,59 @@ namespace AccuPay.Data.Services
 {
     public class BpiInsuranceAmountReportDataService
     {
+        private readonly PayrollContext _context;
         private readonly PayPeriodRepository _payPeriodRepository;
         private readonly ProductRepository _productRepository;
 
-        private readonly int _organizationId;
-        private readonly int _userId;
-        private readonly DateTime _selectedDate;
-
-        public BpiInsuranceAmountReportDataService(int organizationId, int userId, DateTime selectedDate)
+        public BpiInsuranceAmountReportDataService(PayrollContext context,
+                                                    PayPeriodRepository payPeriodRepository,
+                                                    ProductRepository productRepository)
         {
-            _payPeriodRepository = new PayPeriodRepository();
-            _productRepository = new ProductRepository();
-
-            _organizationId = organizationId;
-            _userId = userId;
-            _selectedDate = selectedDate;
+            _context = context;
+            _payPeriodRepository = payPeriodRepository;
+            _productRepository = productRepository;
         }
 
-        public async Task<IEnumerable<BpiInsuranceDataSource>> GetData()
+        public async Task<IEnumerable<BpiInsuranceDataSource>> GetData(int organizationId, int userId, DateTime selectedDate)
         {
             var bpiInsuranceProductID = (await (_productRepository.
                                                 GetOrCreateAdjustmentTypeAsync(
                                                         ProductConstant.BPI_INSURANCE_ADJUSTMENT,
-                                                        organizationId: _organizationId,
-                                                        userId: _userId)))?.RowID;
+                                                        organizationId: organizationId,
+                                                        userId: userId)))?.RowID;
 
             if (bpiInsuranceProductID.HasValue == false)
                 throw new Exception("Cannot get BPI Insurance data.");
 
             var periods = (await _payPeriodRepository.GetByMonthYearAndPayPrequencyAsync(
-                                    organizationId: _organizationId,
-                                    month: _selectedDate.Month,
-                                    year: _selectedDate.Year,
+                                    organizationId: organizationId,
+                                    month: selectedDate.Month,
+                                    year: selectedDate.Year,
                                     payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId)).
                             ToList();
 
-            using (var context = new PayrollContext())
+            var periodIDs = periods.Select(p => p.RowID.Value).ToArray();
+
+            // TODO: move this to repository
+            var adjustments = _context.Adjustments.
+                                        Include(a => a.Paystub.Employee).
+                                        Where(a => periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
+                                        Where(a => bpiInsuranceProductID == a.ProductID).
+                                        ToList();
+
+            if (!adjustments.Any())
             {
-                var periodIDs = periods.Select(p => p.RowID.Value).ToArray();
-
-                // TODO: move this to repository
-                var adjustments = context.Adjustments.
-                                            Include(a => a.Paystub.Employee).
-                                            Where(a => periodIDs.Contains(a.Paystub.PayPeriodID.Value)).
-                                            Where(a => bpiInsuranceProductID == a.ProductID).
-                                            ToList();
-
-                if (!adjustments.Any())
-                {
-                    return new List<BpiInsuranceDataSource>();
-                }
-
-                return adjustments.
-                        GroupBy(a => a.Paystub.EmployeeID).
-                        Select(a => ConvertToDataSource(a)).
-                        OrderBy(a => a.Column2).
-                        ToList();
+                return new List<BpiInsuranceDataSource>();
             }
+
+            return adjustments.
+                    GroupBy(a => a.Paystub.EmployeeID).
+                    Select(a => ConvertToDataSource(a, selectedDate)).
+                    OrderBy(a => a.Column2).
+                    ToList();
         }
 
-        private BpiInsuranceDataSource ConvertToDataSource(IGrouping<int?, Adjustment> bpiInsuranceAdjustments)
+        private BpiInsuranceDataSource ConvertToDataSource(IGrouping<int?, Adjustment> bpiInsuranceAdjustments, DateTime selectedDate)
         {
             var employee = bpiInsuranceAdjustments.FirstOrDefault().Paystub.Employee;
 
@@ -79,7 +72,7 @@ namespace AccuPay.Data.Services
                 Column1 = employee.EmployeeNo,
                 Column2 = employee.FullNameWithMiddleInitialLastNameFirst,
                 Column3 = bpiInsuranceAdjustments.Sum(adj => adj.Amount).ToString(),
-                Column4 = _selectedDate.ToShortDateString()
+                Column4 = selectedDate.ToShortDateString()
             };
 
             return result;

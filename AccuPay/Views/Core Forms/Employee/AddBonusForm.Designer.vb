@@ -41,7 +41,7 @@ Partial Class AddBonusForm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
         CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -243,15 +243,15 @@ Partial Class AddBonusForm
         Me.AddAndCloseButton.Text = "&Add && Close"
         Me.AddAndCloseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(388, 285)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 404
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(388, 285)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelDialogButton.TabIndex = 404
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'AddAndNewButton
         '
@@ -270,7 +270,7 @@ Partial Class AddBonusForm
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(684, 321)
         Me.Controls.Add(Me.AddAndCloseButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
         Me.Controls.Add(Me.Label9)
         Me.Controls.Add(Me.Label8)
@@ -321,6 +321,6 @@ Partial Class AddBonusForm
     Friend WithEvents Label2 As Label
     Friend WithEvents Label1 As Label
     Friend WithEvents AddAndCloseButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
 End Class

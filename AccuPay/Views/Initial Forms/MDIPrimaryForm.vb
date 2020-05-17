@@ -5,11 +5,12 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Indigo
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class MDIPrimaryForm
 
-    Dim DefaultFontStyle = New System.Drawing.Font("Microsoft Sans Serif", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim DefaultFontStyle = New Font("Microsoft Sans Serif", 8.25!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim ExemptedForms As New List(Of String)
 
@@ -32,17 +33,26 @@ Public Class MDIPrimaryForm
     Private if_sysowner_is_cinema2k As Boolean
     Private if_sysowner_is_hyundai As Boolean
 
-    Private sys_ownr As New SystemOwnerService()
+    Private _listOfValueService As ListOfValueService
+
+    Private _systemOwnerService As SystemOwnerService
 
     Private _userRepository As UserRepository
 
     Sub New()
-        ' This call is required by the designer.
+
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.
-        if_sysowner_is_benchmark = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
-        if_sysowner_is_cinema2k = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
-        if_sysowner_is_hyundai = sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
+        if_sysowner_is_cinema2k = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000
+        if_sysowner_is_hyundai = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Hyundai
+
         PrepareFormForBenchmark()
     End Sub
 
@@ -262,7 +272,6 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Sub MDIPrimaryForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        _userRepository = New UserRepository()
 
         Try
             PrepareForm(sender, e)
@@ -304,7 +313,7 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 
@@ -346,9 +355,9 @@ Public Class MDIPrimaryForm
     'Trebuchet MS
     'Segoe UI
 
-    Dim selectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim selectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Bold, GraphicsUnit.Point, CType(0, Byte))
 
-    Dim unselectedButtonFont = New System.Drawing.Font("Trebuchet MS", 9.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+    Dim unselectedButtonFont = New Font("Trebuchet MS", 9.0!, FontStyle.Regular, GraphicsUnit.Point, CType(0, Byte))
 
     Dim isHome As SByte = 0
 
@@ -509,13 +518,6 @@ Public Class MDIPrimaryForm
 
                             Case .GetEmployeeProfileTabPageIndex
                                 If .listofEditDepen.Count = 0 Then
-                                    .SearchEmployee_Click(sndr, ee)
-                                Else
-
-                                End If
-
-                            Case .GetAttachmentTabPageIndex
-                                If .listofEditRoweatt.Count = 0 Then
                                     .SearchEmployee_Click(sndr, ee)
                                 Else
 
@@ -911,7 +913,7 @@ Public Class MDIPrimaryForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
+        Dim settings = _listOfValueService.Create()
 
         If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
 

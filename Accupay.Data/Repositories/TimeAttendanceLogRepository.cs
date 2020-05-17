@@ -10,27 +10,28 @@ namespace AccuPay.Data.Repositories
 {
     public class TimeAttendanceLogRepository
     {
+        private readonly PayrollContext _context;
+
+        public TimeAttendanceLogRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<TimeAttendanceLog> GetByTimePeriod(int organizationId, TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.TimeAttendanceLogs.
-                            Where(x => x.OrganizationID == organizationId).
-                            Where(x => timePeriod.Start <= x.WorkDay).
-                            Where(x => x.WorkDay <= timePeriod.End).
-                            ToList();
-            }
+            return _context.TimeAttendanceLogs.
+                        Where(x => x.OrganizationID == organizationId).
+                        Where(x => timePeriod.Start <= x.WorkDay).
+                        Where(x => x.WorkDay <= timePeriod.End).
+                        ToList();
         }
 
         public async Task<IEnumerable<TimeAttendanceLog>> GetByDateAndEmployeeAsync(DateTime date, int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.TimeAttendanceLogs.
-                            Where(x => x.EmployeeID == employeeId).
-                            Where(x => x.WorkDay == date).
-                            ToListAsync();
-            }
+            return await _context.TimeAttendanceLogs.
+                        Where(x => x.EmployeeID == employeeId).
+                        Where(x => x.WorkDay == date).
+                        ToListAsync();
         }
     }
 }

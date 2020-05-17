@@ -1,11 +1,12 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Public Class ImportAllowanceForm
@@ -14,17 +15,33 @@ Public Class ImportAllowanceForm
 
     Private _allowances As List(Of Allowance)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private _productRepository As New ProductRepository
-
-    Private _allowanceRepository As New AllowanceRepository
-
     Private _allowanceTypeList As List(Of Product)
 
     Private _allowanceFrequencyList As New List(Of String)
 
     Public IsSaved As Boolean
+
+    Private _allowanceRepository As AllowanceRepository
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _productRepository As ProductRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Async Sub ImportAllowanceForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -216,8 +233,7 @@ Public Class ImportAllowanceForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
                 Me.IsSaved = True
                 Me.Cursor = Cursors.Default

@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Global.AccuPay.JobLevels
 
@@ -13,7 +14,7 @@ Namespace Global.AccuPay.JobLevels
     ''' </summary>
     Public Class JobPointsPresenter
 
-        Private WithEvents _view As JobPointsView
+        Private WithEvents _view As IJobPointsView
 
         'Private _context As PayrollContext
 
@@ -23,14 +24,21 @@ Namespace Global.AccuPay.JobLevels
 
         Private _jobLevels As ICollection(Of JobLevel)
 
-        Private _employeeRepo As New EmployeeRepository
+        Private _employeeRepo As EmployeeRepository
 
-        Private _salaryRepo As New SalaryRepository
+        Private _salaryRepo As SalaryRepository
 
-        Private _jobLevelRepositories As New JobLevelRepository
+        Private _jobLevelRepo As JobLevelRepository
 
-        Public Sub New(view As JobPointsView)
+        Public Sub New(view As IJobPointsView)
             _view = view
+
+            _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+            _jobLevelRepo = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+
         End Sub
 
         Private Async Sub OnLoad() Handles _view.OnLoad
@@ -80,7 +88,7 @@ Namespace Global.AccuPay.JobLevels
         End Sub
 
         Private Function GetJobLevels() As ICollection(Of JobLevel)
-            Return _jobLevelRepositories.GetAll(z_OrganizationID).ToList
+            Return _jobLevelRepo.GetAll(z_OrganizationID).ToList
         End Function
 
         Private Async Function GetEmployeeModels() As Threading.Tasks.Task(Of ICollection(Of EmployeeModel))

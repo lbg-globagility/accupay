@@ -1,4 +1,7 @@
-﻿
+﻿Option Strict On
+
+Imports Microsoft.Extensions.DependencyInjection
+
 Public Class FormReports
 
     Public listReportsForm As New List(Of String)
@@ -13,7 +16,6 @@ Public Class FormReports
             If listReportsForm.Contains(FName) Then
                 Formname.Show()
                 Formname.BringToFront()
-
             Else
                 PanelReport.Controls.Add(Formname)
                 listReportsForm.Add(Formname.Name)
@@ -27,7 +29,6 @@ Public Class FormReports
                 Formname.Dock = DockStyle.Fill
 
             End If
-
         Catch ex As Exception
 
             Exit Sub
@@ -47,6 +48,8 @@ Public Class FormReports
     Private Sub tsbtnstartreport_Click(sender As Object, e As EventArgs) Handles tsbtnstartreport.Click
 
         ChangeForm(ReportsList)
+
+        previousForm = ReportsList
 
     End Sub
 

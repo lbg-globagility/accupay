@@ -3,6 +3,7 @@
 Imports System.ComponentModel
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 'Refactor this form to not be tightly coupled to payroll context
 'other functions may have stopped working after the recent changes
@@ -22,7 +23,7 @@ Public Class JobLevelForm
     End Sub
 
     Private Sub InitializeComponents()
-        _jobLevelRepository = New JobLevelRepository()
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
         _jobLevelsSource = New BindingSource()
         JobLevelsDataGridView.DataSource = _jobLevelsSource
         JobCategoriesDataGridView.AutoGenerateColumns = False

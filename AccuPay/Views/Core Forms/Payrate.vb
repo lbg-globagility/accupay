@@ -1,5 +1,6 @@
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PayRateForm
     Dim view_ID As Integer = Nothing
@@ -13,8 +14,6 @@ Public Class PayRateForm
                 previousForm = Nothing
             End If
         End If
-
-        showAuditTrail.Close()
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
 
@@ -888,7 +887,8 @@ Public Class PayRateForm
 
         'Dim ratevalues = Split(holidaypayrate, ",")
 
-        Dim overtimeRates = Await OvertimeRateService.GetOvertimeRates()
+        Dim overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+        Dim overtimeRates = Await overtimeRateService.GetOvertimeRates()
 
         Dim overtimeRate As New OvertimeRate.RateGroup
 
@@ -1130,12 +1130,6 @@ Public Class PayRateForm
         Else
             dgvisLlostfocus = 0
         End If
-    End Sub
-
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-        showAuditTrail.loadAudTrail(view_ID)
-        showAuditTrail.BringToFront()
     End Sub
 
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click

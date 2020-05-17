@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Services
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Implements IReportProvider
@@ -13,16 +14,13 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
     Public Async Sub Run() Implements IReportProvider.Run
 
         Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
-        form.ShowDialog()
+
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
         Dim payPeriod = form.PayPeriod
 
-        If payPeriod Is Nothing Then Return
-
-        Dim dataService As New PaystubPayslipModelDataService(z_OrganizationID, payPeriod)
-
-        Dim paystubModels = Await dataService.GetData()
+        Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubPayslipModelDataService)
+        Dim paystubModels = Await dataService.GetData(z_OrganizationID, payPeriod)
 
         Dim report As New Payslip.DefaulltPayslipFullOvertimeBreakdown
         report.SetDataSource(paystubModels)

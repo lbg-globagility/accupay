@@ -5,6 +5,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportOvertimeForm
 
@@ -12,11 +13,21 @@ Public Class ImportOvertimeForm
 
     Private _overtimes As List(Of Overtime)
 
-    Private _employeeRepository As New EmployeeRepository
-
-    Private overtimeRepository As New OvertimeRepository()
-
     Public IsSaved As Boolean
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Sub ImportOvertimeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -184,6 +195,7 @@ Public Class ImportOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
+                Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
                 Await overtimeRepository.SaveManyAsync(_overtimes)
 
                 Dim importlist = New List(Of UserActivityItem)
@@ -196,8 +208,7 @@ Public Class ImportOvertimeForm
                         })
                 Next
 
-                Dim repo = New UserActivityRepository
-                repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
+                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importlist)
 
                 Me.IsSaved = True
 

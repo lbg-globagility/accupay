@@ -8,15 +8,19 @@ namespace AccuPay.Data.Repositories
 {
     public class AdjustmentRepository
     {
+        private readonly PayrollContext _context;
+
+        public AdjustmentRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<Adjustment>> GetByPaystubWithProductAsync(int paystubId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Adjustments.
-                                Include(x => x.Product).
-                                Where(x => x.PaystubID == paystubId).
-                                ToListAsync();
-            }
+            return await _context.Adjustments.
+                            Include(x => x.Product).
+                            Where(x => x.PaystubID == paystubId).
+                            ToListAsync();
         }
     }
 }

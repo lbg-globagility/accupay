@@ -1,0 +1,23 @@
+@import '~@angular/material/theming';
+@import 'styles/variables';
+
+:host {
+  display: block;
+  background: app-color(accent);
+  color: white;
+  @include mat-elevation(4);
+}
+
+.menu-item {
+  display: flex;
+  padding: $app-space-1 $app-space-2;
+}
+
+.submenu-item {
+  display: flex;
+  padding: $app-space-1 $app-space-2 $app-space-1 $app-space-4;
+}
+
+.menu-icon {
+  margin-right: $app-space-2;
+}

@@ -1,0 +1,16 @@
+@import 'styles/variables';
+
+// deprecate
+.mat-icon.app-align-icon {
+  vertical-align: middle;
+}
+
+.mat-icon.m-align-middle {
+  vertical-align: middle;
+}
+
+.mat-icon.m-text {
+  display: inline;
+  font-size: inherit;
+  vertical-align: middle;
+}

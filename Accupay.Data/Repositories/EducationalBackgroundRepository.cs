@@ -8,39 +8,36 @@ namespace AccuPay.Data.Repositories
 {
     public class EducationalBackgroundRepository
     {
+        private readonly PayrollContext _context;
+
+        public EducationalBackgroundRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<EducationalBackground>> GetListByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.EducationalBackgrounds.Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.EducationalBackgrounds.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
 
         public async Task DeleteAsync(EducationalBackground educBg)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.EducationalBackgrounds.Remove(educBg);
-                await context.SaveChangesAsync();
-            }
+            _context.EducationalBackgrounds.Remove(educBg);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(EducationalBackground educBg)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.EducationalBackgrounds.Add(educBg);
-                await context.SaveChangesAsync();
-            }
+            _context.EducationalBackgrounds.Add(educBg);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(EducationalBackground educBg)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(educBg).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(educBg).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
     }
 }

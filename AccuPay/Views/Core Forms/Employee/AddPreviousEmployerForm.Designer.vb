@@ -63,7 +63,7 @@ Partial Class AddPreviousEmployerForm
         Me.Label56 = New System.Windows.Forms.Label()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.AddAndCloseButton = New System.Windows.Forms.Button()
-        Me.CancelButton = New System.Windows.Forms.Button()
+        Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AddAndNewButton = New System.Windows.Forms.Button()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -447,15 +447,15 @@ Partial Class AddPreviousEmployerForm
         Me.AddAndCloseButton.Text = "&Add && Close"
         Me.AddAndCloseButton.UseVisualStyleBackColor = True
         '
-        'CancelButton
+        'CancelDialogButton
         '
-        Me.CancelButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CancelButton.Location = New System.Drawing.Point(455, 319)
-        Me.CancelButton.Name = "CancelButton"
-        Me.CancelButton.Size = New System.Drawing.Size(75, 23)
-        Me.CancelButton.TabIndex = 432
-        Me.CancelButton.Text = "&Cancel"
-        Me.CancelButton.UseVisualStyleBackColor = True
+        Me.CancelDialogButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CancelDialogButton.Location = New System.Drawing.Point(455, 319)
+        Me.CancelDialogButton.Name = "CancelDialogButton"
+        Me.CancelDialogButton.Size = New System.Drawing.Size(75, 23)
+        Me.CancelDialogButton.TabIndex = 432
+        Me.CancelDialogButton.Text = "&Cancel"
+        Me.CancelDialogButton.UseVisualStyleBackColor = True
         '
         'AddAndNewButton
         '
@@ -474,7 +474,7 @@ Partial Class AddPreviousEmployerForm
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(819, 354)
         Me.Controls.Add(Me.AddAndCloseButton)
-        Me.Controls.Add(Me.CancelButton)
+        Me.Controls.Add(Me.CancelDialogButton)
         Me.Controls.Add(Me.AddAndNewButton)
         Me.Controls.Add(Me.txtName)
         Me.Controls.Add(Me.Label1)
@@ -569,6 +569,6 @@ Partial Class AddPreviousEmployerForm
     Friend WithEvents Label56 As Label
     Friend WithEvents Label1 As Label
     Friend WithEvents AddAndCloseButton As Button
-    Friend WithEvents CancelButton As Button
+    Friend WithEvents CancelDialogButton As Button
     Friend WithEvents AddAndNewButton As Button
 End Class

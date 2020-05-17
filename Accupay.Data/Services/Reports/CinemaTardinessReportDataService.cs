@@ -13,19 +13,23 @@ namespace AccuPay.Data.Services
         private const int JanuaryMonth = 1;
         private const int DecemberMonth = 12;
 
-        private readonly int _organizationId;
-        private readonly DateTime _selectedDate;
-        private readonly bool _isLimitedReport;
+        private readonly PayrollContext _context;
 
-        public CinemaTardinessReportDataService(int organizationId, DateTime selectedDate, bool isLimitedReport)
+        private int _organizationId;
+        private DateTime _selectedDate;
+        private bool _isLimitedReport;
+
+        public CinemaTardinessReportDataService(PayrollContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<ICinemaTardinessReportModel>> GetData(int organizationId, DateTime selectedDate, bool isLimitedReport)
         {
             _organizationId = organizationId;
             _selectedDate = selectedDate;
             _isLimitedReport = isLimitedReport;
-        }
 
-        public async Task<List<ICinemaTardinessReportModel>> GetData()
-        {
             var firstDayOfTheMonth = new DateTime(_selectedDate.Year, _selectedDate.Month, 1);
             var lastDayOfTheMonth = new DateTime(_selectedDate.Year, _selectedDate.Month, DateTime.DaysInMonth(_selectedDate.Year, _selectedDate.Month));
 
@@ -55,86 +59,83 @@ namespace AccuPay.Data.Services
 
             var daysRequirement = _isLimitedReport ? CinemaTardinessReportModel.DaysLateLimit : 0;
 
-            using (PayrollContext context = new PayrollContext())
+            // #1.
+            var tardinessReportModelQuery = _context.TimeEntries.
+                                    Include(t => t.Employee).
+                                    Where(t => t.Date >= firstDayOfTheMonth).
+                                    Where(t => t.Date <= lastDayOfTheMonth).
+                                    Where(t => t.OrganizationID == _organizationId).
+                                    Where(t => t.LateHours > 0).
+                                    GroupBy(t => t.Employee).
+                                    Select(gt => new CinemaTardinessReportModel()
+                                    {
+                                        EmployeeId = gt.Key.RowID.Value,
+                                        EmployeeName = gt.Key.FullNameWithMiddleInitialLastNameFirst,
+                                        Days = gt.Count(),
+                                        Hours = gt.Sum(t => t.LateHours)
+                                    });
+
+            if (_isLimitedReport)
+                tardinessReportModelQuery = tardinessReportModelQuery.
+                                        Where(t => t.Days >= CinemaTardinessReportModel.DaysLateLimit);
+
+            tardinessReportModels = await tardinessReportModelQuery.ToListAsync();
+
+            // #2
+            // this list contains the first offense dates per employee within the year of the report
+            var employeeTardinessDates = await GetEmployeeTardinessRecordList(firstDayOfTheMonth, lastDayOfTheMonth, firstDayOneYear, tardinessReportModels);
+
+            if (tardinessReportModels.Count != employeeTardinessDates.Count)
+                throw new Exception("Error creating new tardiness records.");
+
+            // #3
+            var earliestFirstOffenseDate = employeeTardinessDates.OrderBy(t => t.FirstOffenseDate).FirstOrDefault()?.FirstOffenseDate;
+
+            if (earliestFirstOffenseDate == null)
+                earliestFirstOffenseDate = firstDayOfTheMonth;
+
+            var previousOffenseList = await _context.TimeEntries.
+                                                Include(t => t.Employee).
+                                                Where(t => t.Date >= earliestFirstOffenseDate.Value).
+                                                Where(t => t.Date <= lastDayOfTheMonth).
+                                                Where(t => t.OrganizationID == _organizationId).
+                                                Where(t => t.LateHours > 0).
+                                                ToListAsync();
+
+            // #4
+            foreach (var tardinessReportModel in tardinessReportModels)
             {
-                // #1.
-                var tardinessReportModelQuery = context.TimeEntries.
-                                        Include(t => t.Employee).
-                                        Where(t => t.Date >= firstDayOfTheMonth).
-                                        Where(t => t.Date <= lastDayOfTheMonth).
-                                        Where(t => t.OrganizationID == _organizationId).
-                                        Where(t => t.LateHours > 0).
-                                        GroupBy(t => t.Employee).
-                                        Select(gt => new CinemaTardinessReportModel()
-                                        {
-                                            EmployeeId = gt.Key.RowID.Value,
-                                            EmployeeName = gt.Key.FullNameWithMiddleInitialLastNameFirst,
-                                            Days = gt.Count(),
-                                            Hours = gt.Sum(t => t.LateHours)
-                                        });
+                tardinessReportModel.NumberOfOffense = 0;
 
-                if (_isLimitedReport)
-                    tardinessReportModelQuery = tardinessReportModelQuery.
-                                            Where(t => t.Days >= CinemaTardinessReportModel.DaysLateLimit);
+                var firstOffenseDate = employeeTardinessDates.Where(e => e.EmployeeId == tardinessReportModel.EmployeeId).FirstOrDefault()?.FirstOffenseDate;
 
-                tardinessReportModels = await tardinessReportModelQuery.ToListAsync();
-
-                // #2
-                // this list contains the first offense dates per employee within the year of the report
-                var employeeTardinessDates = await GetEmployeeTardinessRecordList(firstDayOfTheMonth, lastDayOfTheMonth, firstDayOneYear, tardinessReportModels, context);
-
-                if (tardinessReportModels.Count != employeeTardinessDates.Count)
+                if (firstOffenseDate == null)
                     throw new Exception("Error creating new tardiness records.");
 
-                // #3
-                var earliestFirstOffenseDate = employeeTardinessDates.OrderBy(t => t.FirstOffenseDate).FirstOrDefault()?.FirstOffenseDate;
+                var employeeOffenseList = previousOffenseList.
+                                        Where(o => o.EmployeeID == tardinessReportModel.EmployeeId).
+                                        Where(o => o.Date >= firstOffenseDate).
+                                        Where(o => o.Date <= lastDayOfTheMonth).
+                                        ToList();
 
-                if (earliestFirstOffenseDate == null)
-                    earliestFirstOffenseDate = firstDayOfTheMonth;
+                var employeeOffenseListPerMonth = employeeOffenseList.
+                                            GroupBy(o => o.Date.Month).
+                                            Select(m => new CinemaTardinessReportModel.PerMonth()
+                                            {
+                                                EmployeeId = tardinessReportModel.EmployeeId,
+                                                Month = m.Key,
+                                                Days = m.Count(),
+                                                Hours = m.Sum(t => t.LateHours)
+                                            }).ToList();
 
-                var previousOffenseList = await context.TimeEntries.
-                                                    Include(t => t.Employee).
-                                                    Where(t => t.Date >= earliestFirstOffenseDate.Value).
-                                                    Where(t => t.Date <= lastDayOfTheMonth).
-                                                    Where(t => t.OrganizationID == _organizationId).
-                                                    Where(t => t.LateHours > 0).
-                                                    ToListAsync();
+                var previousNumberOfOffense = employeeOffenseListPerMonth.
+                                    Where(o => o.Days >= CinemaTardinessReportModel.DaysLateLimit).
+                                    Count();
 
-                // #4
-                foreach (var tardinessReportModel in tardinessReportModels)
-                {
-                    tardinessReportModel.NumberOfOffense = 0;
-
-                    var firstOffenseDate = employeeTardinessDates.Where(e => e.EmployeeId == tardinessReportModel.EmployeeId).FirstOrDefault()?.FirstOffenseDate;
-
-                    if (firstOffenseDate == null)
-                        throw new Exception("Error creating new tardiness records.");
-
-                    var employeeOffenseList = previousOffenseList.
-                                            Where(o => o.EmployeeID == tardinessReportModel.EmployeeId).
-                                            Where(o => o.Date >= firstOffenseDate).
-                                            Where(o => o.Date <= lastDayOfTheMonth).
-                                            ToList();
-
-                    var employeeOffenseListPerMonth = employeeOffenseList.
-                                                GroupBy(o => o.Date.Month).
-                                                Select(m => new CinemaTardinessReportModel.PerMonth()
-                                                {
-                                                    EmployeeId = tardinessReportModel.EmployeeId,
-                                                    Month = m.Key,
-                                                    Days = m.Count(),
-                                                    Hours = m.Sum(t => t.LateHours)
-                                                }).ToList();
-
-                    var previousNumberOfOffense = employeeOffenseListPerMonth.
-                                        Where(o => o.Days >= CinemaTardinessReportModel.DaysLateLimit).
-                                        Count();
-
-                    tardinessReportModel.NumberOfOffense += previousNumberOfOffense;
-                }
-
-                await context.SaveChangesAsync();
+                tardinessReportModel.NumberOfOffense += previousNumberOfOffense;
             }
+
+            await _context.SaveChangesAsync();
 
             // tardinessReportModels = GetSampleTardinessReportModels()
 
@@ -143,7 +144,7 @@ namespace AccuPay.Data.Services
 
         #region Private methods
 
-        private async Task<List<EmployeeTardinessDate>> GetEmployeeTardinessRecordList(DateTime firstDayOfTheMonth, DateTime lastDayOfTheMonth, DateTime firstDayOneYear, List<CinemaTardinessReportModel> tardinessReportModels, PayrollContext context)
+        private async Task<List<EmployeeTardinessDate>> GetEmployeeTardinessRecordList(DateTime firstDayOfTheMonth, DateTime lastDayOfTheMonth, DateTime firstDayOneYear, List<CinemaTardinessReportModel> tardinessReportModels)
         {
             var employeeIds = tardinessReportModels.
                                 Select(t => t.EmployeeId).
@@ -174,9 +175,9 @@ namespace AccuPay.Data.Services
 
             var firstDayTwoYearsBefore = firstDayOfTheMonth.AddMonths(-22); // -22 because -2years which is -24 months +2months (Nov17-Sep19 span)
 
-            await context.TardinessRecords.LoadAsync();
+            await _context.TardinessRecords.LoadAsync();
 
-            var employeeTardinessRecords = context.TardinessRecords.Local.
+            var employeeTardinessRecords = _context.TardinessRecords.Local.
                                                         Where(t => employeeIds.
                                                         Contains(t.EmployeeId)).
                                                         Where(t => t.FirstOffenseDate >= firstDayTwoYearsBefore).
@@ -187,14 +188,14 @@ namespace AccuPay.Data.Services
 
             foreach (var employeeId in employeesWithNoTardinessRecordsYet)
 
-                context.TardinessRecords.Add(new TardinessRecord()
+                _context.TardinessRecords.Add(new TardinessRecord()
                 {
                     EmployeeId = employeeId,
                     FirstOffenseDate = firstDayOfTheMonth,
                     Year = firstDayOfTheMonth.Year
                 });
 
-            employeeTardinessRecords = context.TardinessRecords.Local.
+            employeeTardinessRecords = _context.TardinessRecords.Local.
                                                 Where(t => employeeIds.Contains(t.EmployeeId)).
                                                 Where(t => t.FirstOffenseDate >= firstDayTwoYearsBefore).
                                                 Where(t => t.FirstOffenseDate <= lastDayOfTheMonth).
