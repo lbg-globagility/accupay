@@ -8,39 +8,37 @@ namespace AccuPay.Data.Repositories
 {
     public class PromotionRepository
     {
+        private readonly PayrollContext _context;
+
+        public PromotionRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<Promotion>> GetListByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Promotions.Include(x => x.SalaryEntity).Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.Promotions.
+                                Include(x => x.SalaryEntity).
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
 
         public async Task CreateAsync(Promotion promotion)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Promotions.Add(promotion);
-                await context.SaveChangesAsync();
-            }
+            _context.Promotions.Add(promotion);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Promotion promotion)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(promotion).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(promotion).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Promotion promotion)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Promotions.Remove(promotion);
-                await context.SaveChangesAsync();
-            }
+            _context.Promotions.Remove(promotion);
+            await _context.SaveChangesAsync();
         }
     }
 }

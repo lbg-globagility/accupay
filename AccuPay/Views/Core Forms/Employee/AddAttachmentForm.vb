@@ -1,8 +1,10 @@
 ﻿Option Strict On
+
 Imports System.IO
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAttachmentForm
 
@@ -16,22 +18,25 @@ Public Class AddAttachmentForm
 
     Private _newAttachment As Attachment
 
+    Private _employee As Employee
+
     Private _attachmentRepo As AttachmentRepository
 
     Private _listOfValRepo As ListOfValueRepository
 
-    Private _employee As Employee
-
     Private _userActivityRepo As UserActivityRepository
+
     Public Sub New(employee As Employee)
+
         InitializeComponent()
+
         _employee = employee
 
-        _attachmentRepo = New AttachmentRepository
+        _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)
 
-        _listOfValRepo = New ListOfValueRepository
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
     Private Async Sub AddAttachmentForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -135,4 +140,5 @@ Public Class AddAttachmentForm
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeePictureBox, 67, -67)
     End Sub
+
 End Class

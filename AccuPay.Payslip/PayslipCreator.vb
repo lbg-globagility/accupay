@@ -1,5 +1,6 @@
 ﻿Imports System.IO
 Imports AccuPay.Data
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.DB
@@ -13,13 +14,13 @@ Public Class PayslipCreator
 
     Const customDateFormat As String = "M/d/yyyy"
 
-    Private sys_ownr As New SystemOwnerService()
+    Private ReadOnly _organizationRepository As OrganizationRepository
 
-    Private _currentPayPeriod As IPayPeriod
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _payPeriodId As Integer?
+    Private ReadOnly _addressRepository As AddressRepository
 
-    Private _isActual As SByte = 0
+    Private _systemOwnerService As SystemOwnerService
 
     Private _reportDocument As ReportClass
 
@@ -27,13 +28,18 @@ Public Class PayslipCreator
 
     Private _payslipDatatable As DataTable
 
-    Sub New(payPeriod As IPayPeriod, isActual As SByte)
+    Sub New(organizationRepository As OrganizationRepository,
+            payPeriodRepository As PayPeriodRepository,
+            addressRepository As AddressRepository,
+            systemOwnerService As SystemOwnerService)
 
-        _currentPayPeriod = payPeriod
+        _organizationRepository = organizationRepository
 
-        _payPeriodId = _currentPayPeriod?.RowID
+        _payPeriodRepository = payPeriodRepository
 
-        _isActual = isActual
+        _addressRepository = addressRepository
+
+        _systemOwnerService = systemOwnerService
     End Sub
 
     Public Function GetReportDocument() As ReportClass
@@ -53,27 +59,31 @@ Public Class PayslipCreator
     End Function
 
     Public Function CreateReportDocument(
-                        orgztnID As Integer,
-                        nextPayPeriod As IPayPeriod,
+                        organizationId As Integer,
+                        payPeriodId As Integer,
+                        isActual As SByte,
                         Optional employeeIds As Integer() = Nothing) As PayslipCreator
+
+        Dim _isActual = isActual
 
         'filter employees, print and email payslip is tested on cinema only
         'test this before deploying
         Dim rptdoc As Object = Nothing
 
-        Dim organization = New OrganizationRepository().GetById(orgztnID)
-        Dim payperiod = New PayPeriodRepository().GetById(_payPeriodId)
-        Dim address As Entities.Address = If(organization?.PrimaryAddressId Is Nothing,
+        Dim organization = _organizationRepository.GetById(organizationId)
+        Dim payperiod = _payPeriodRepository.GetById(payPeriodId)
+        Dim address As Address = If(organization?.PrimaryAddressId Is Nothing,
                                                 Nothing,
-                                                New AddressRepository().GetById(organization?.PrimaryAddressId))
+                                                _addressRepository.
+                                                    GetById(organization?.PrimaryAddressId))
 
         Dim organizationName = organization.Name
 
-        Static current_system_owner As String = sys_ownr.GetCurrentSystemOwner()
+        Static current_system_owner As String = _systemOwnerService.GetCurrentSystemOwner()
 
         If SystemOwnerService.Goldwings = current_system_owner Then
 
-            Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
+            Dim query As New SQLQueryToDatatable("CALL paystub_payslip(" & organizationId & "," & payPeriodId & "," & _isActual & ");")
             _payslipDatatable = query.ResultTable
 
             rptdoc = New OfficialPaySlipFormat
@@ -104,7 +114,7 @@ Public Class PayslipCreator
 
         ElseIf SystemOwnerService.Cinema2000 = current_system_owner Then
 
-            Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & orgztnID & "," & _payPeriodId & ", TRUE, NULL);")
+            Dim query As New SQLQueryToDatatable("CALL RPT_payslip(" & organizationId & "," & payPeriodId & ", TRUE, NULL);")
             _payslipDatatable = query.ResultTable
 
             If employeeIds IsNot Nothing AndAlso employeeIds.Count > 0 Then
@@ -120,6 +130,8 @@ Public Class PayslipCreator
             Dim objText As TextObject = Nothing
 
             objText = rptdoc.ReportDefinition.Sections(2).ReportObjects("payperiod")
+
+            Dim nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(payPeriodId)
 
             If nextPayPeriod IsNot Nothing Then
 
@@ -138,7 +150,7 @@ Public Class PayslipCreator
         Else
 
             Dim n_SQLQueryToDatatable As _
-            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & orgztnID & "," & _payPeriodId & "," & _isActual & ");")
+            New SQLQueryToDatatable("CALL PrintDefaultPayslip(" & organizationId & "," & payPeriodId & "," & _isActual & ");")
 
             _payslipDatatable = n_SQLQueryToDatatable.ResultTable
 

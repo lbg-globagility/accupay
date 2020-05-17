@@ -1,16 +1,20 @@
 ﻿Option Strict On
+
 Imports System.IO
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AttachmentTab
 
     Private Const FormEntityName As String = "Attachment"
 
     Private _employee As Employee
+
+    Private _parentForm As Form
 
     Private _attachments As IEnumerable(Of Attachment)
 
@@ -20,18 +24,30 @@ Public Class AttachmentTab
 
     Private _attachmentRepo As AttachmentRepository
 
+    Private _listOfValRepo As ListOfValueRepository
+
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvAttachments.AutoGenerateColumns = False
 
-        _attachmentRepo = New AttachmentRepository
+        If MainServiceProvider IsNot Nothing Then
 
-        _userActivityRepo = New UserActivityRepository
+            _attachmentRepo = MainServiceProvider.GetRequiredService(Of AttachmentRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
+
     End Sub
-    Public Async Function SetEmployee(employee As Employee) As Task
+
+    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+
         _employee = employee
+
+        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -48,7 +64,6 @@ Public Class AttachmentTab
         RemoveHandler dgvAttachments.SelectionChanged, AddressOf dgvAttachments_SelectionChanged
 
         dgvAttachments.DataSource = _attachments
-
 
         If _attachments.Count > 0 Then
             SelectAttachment(DirectCast(dgvAttachments.CurrentRow?.DataBoundItem, Attachment))
@@ -99,11 +114,9 @@ Public Class AttachmentTab
                 End If
             End With
 
-
         End If
 
     End Sub
-
 
     Private Sub dgvAttachments_SelectionChanged(sender As Object, e As EventArgs) Handles dgvAttachments.SelectionChanged
         If _attachments.Count > 0 Then
@@ -114,7 +127,7 @@ Public Class AttachmentTab
     End Sub
 
     Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles ToolStripButton16.Click
-        EmployeeForm.Close()
+        _parentForm.Close()
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
@@ -159,7 +172,6 @@ Public Class AttachmentTab
 
     Private Sub btnattadl_Click(sender As Object, e As EventArgs) Handles btnattadl.Click
         dgvAttachments.Focus()
-
 
         Dim downloadFile As SaveFileDialog = New SaveFileDialog
         downloadFile.RestoreDirectory = True
@@ -218,6 +230,5 @@ Public Class AttachmentTab
             Process.Start(savefilepath)
         End If
     End Sub
-
 
 End Class

@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class selectPayPeriod
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,7 +20,7 @@ Partial Class selectPayPeriod
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.dgvpaypers = New System.Windows.Forms.DataGridView()
@@ -46,8 +46,8 @@ Partial Class selectPayPeriod
         Me.PayPeriodMinWageValue = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.linkNxt = New System.Windows.Forms.LinkLabel()
         Me.linkPrev = New System.Windows.Forms.LinkLabel()
-        Me.Button1 = New System.Windows.Forms.Button()
-        Me.Button2 = New System.Windows.Forms.Button()
+        Me.OkButton = New System.Windows.Forms.Button()
+        Me.CloseButton = New System.Windows.Forms.Button()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.lblpapyperiodval = New System.Windows.Forms.Label()
         Me.tstrip = New System.Windows.Forms.ToolStrip()
@@ -260,23 +260,24 @@ Partial Class selectPayPeriod
         Me.linkPrev.TabStop = True
         Me.linkPrev.Text = "<Prev"
         '
-        'Button1
+        'OkButton
         '
-        Me.Button1.Location = New System.Drawing.Point(383, 461)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 35)
-        Me.Button1.TabIndex = 3
-        Me.Button1.Text = "OK"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.OkButton.Location = New System.Drawing.Point(383, 461)
+        Me.OkButton.Name = "OkButton"
+        Me.OkButton.Size = New System.Drawing.Size(75, 35)
+        Me.OkButton.TabIndex = 3
+        Me.OkButton.Text = "OK"
+        Me.OkButton.UseVisualStyleBackColor = True
         '
-        'Button2
+        'CloseButton
         '
-        Me.Button2.Location = New System.Drawing.Point(464, 461)
-        Me.Button2.Name = "Button2"
-        Me.Button2.Size = New System.Drawing.Size(75, 35)
-        Me.Button2.TabIndex = 4
-        Me.Button2.Text = "Close"
-        Me.Button2.UseVisualStyleBackColor = True
+        Me.CloseButton.DialogResult = System.Windows.Forms.DialogResult.Cancel
+        Me.CloseButton.Location = New System.Drawing.Point(464, 461)
+        Me.CloseButton.Name = "CloseButton"
+        Me.CloseButton.Size = New System.Drawing.Size(75, 35)
+        Me.CloseButton.TabIndex = 4
+        Me.CloseButton.Text = "Close"
+        Me.CloseButton.UseVisualStyleBackColor = True
         '
         'Label2
         '
@@ -335,15 +336,17 @@ Partial Class selectPayPeriod
         '
         'selectPayPeriod
         '
+        Me.AcceptButton = Me.OkButton
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.CancelButton = Me.CloseButton
         Me.ClientSize = New System.Drawing.Size(548, 508)
         Me.Controls.Add(Me.PayPeriodStatusLabel)
         Me.Controls.Add(Me.tstrip)
         Me.Controls.Add(Me.lblpapyperiodval)
         Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Button2)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.CloseButton)
+        Me.Controls.Add(Me.OkButton)
         Me.Controls.Add(Me.dgvpaypers)
         Me.Controls.Add(Me.Panel2)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog
@@ -362,8 +365,8 @@ Partial Class selectPayPeriod
     Friend WithEvents dgvpaypers As System.Windows.Forms.DataGridView
     Friend WithEvents linkNxt As System.Windows.Forms.LinkLabel
     Friend WithEvents linkPrev As System.Windows.Forms.LinkLabel
-    Friend WithEvents Button1 As System.Windows.Forms.Button
-    Friend WithEvents Button2 As System.Windows.Forms.Button
+    Friend WithEvents OkButton As System.Windows.Forms.Button
+    Friend WithEvents CloseButton As System.Windows.Forms.Button
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents lblpapyperiodval As System.Windows.Forms.Label
     Friend WithEvents tstrip As System.Windows.Forms.ToolStrip

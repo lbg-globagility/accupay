@@ -7,6 +7,7 @@ using System.ServiceProcess;
 using System.Timers;
 using System.Linq;
 using System.Data;
+using AccuPay.Data.Entities;
 
 namespace AccupayWindowsService
 {
@@ -34,12 +35,17 @@ namespace AccupayWindowsService
         private const string PayslipsFolderName = "Payslips";
         private const string LogsFolderName = "Logs";
 
-        public EmailService()
+        private readonly PaystubEmailRepository _paystubEmailRepository;
+        private readonly PayPeriodRepository _payPeriodRepository;
+
+        public EmailService(PaystubEmailRepository paystubEmailRepository, PayPeriodRepository payPeriodRepository)
         {
             InitializeComponent();
 
             _emailTimer = new Timer();
             _emailSender = new EmailSender(new EmailConfig());
+            _paystubEmailRepository = paystubEmailRepository;
+            _payPeriodRepository = payPeriodRepository;
         }
 
         protected override void OnStart(string[] args)
@@ -58,15 +64,13 @@ namespace AccupayWindowsService
 
         private void OnElapsedTimeEmail(object source, ElapsedEventArgs e)
         {
-            AccuPay.Data.Entities.PaystubEmail paystubEmail = null;
+            PaystubEmail paystubEmail = null;
 
             try
             {
                 WriteToFile("--OnElapsedTimeEmail--");
 
-                var repo = new PaystubEmailRepository();
-
-                paystubEmail = repo.FirstOnQueueWithPaystubDetails();
+                paystubEmail = _paystubEmailRepository.FirstOnQueueWithPaystubDetails();
                 if (paystubEmail == null)
                 {
                     WriteToFile("No queued email.");
@@ -81,7 +85,7 @@ namespace AccupayWindowsService
                 var errorTitle = $"[Error] {paystubEmailLog}";
 
                 var currentPayPeriod = paystubEmail.Paystub?.PayPeriod;
-                var nextPayPeriod = currentPayPeriod.NextPayPeriod();
+                var nextPayPeriod = _payPeriodRepository.GetNextPayPeriod(currentPayPeriod.RowID.Value);
                 var employeeId = paystubEmail.Paystub?.Employee?.RowID;
                 var employee = paystubEmail.Paystub?.Employee;
                 var organizationId = paystubEmail.Paystub?.OrganizationID;
@@ -157,7 +161,7 @@ namespace AccupayWindowsService
 
                 WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
 
-                paystubEmail.Finish(fileName, employee.EmailAddress);
+                _paystubEmailRepository.Finish(paystubEmail.RowID, fileName, employee.EmailAddress)
             }
             catch (Exception ex)
             {

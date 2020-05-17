@@ -7,6 +7,7 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewDivisionPositionForm
 
@@ -32,19 +33,33 @@ Public Class NewDivisionPositionForm
 
     Private _currentPosition As New Position
 
-    Private _jobLevelRepository As New JobLevelRepository
-
-    Private _positionRepository As New PositionRepository
-
-    Private _divisionRepository As New DivisionRepository
-
-    Private _payFrequencyRepository As New PayFrequencyRepository
-
-    Private _listOfValueRepository As New ListOfValueRepository
-
-    Private _employeeRepository As New EmployeeRepository
-
     Public Property _currentTreeNodes As TreeNode()
+
+    Private _employeeRepository As EmployeeRepository
+
+    Private _jobLevelRepository As JobLevelRepository
+
+    Private _listOfValueRepository As ListOfValueRepository
+
+    Private _payFrequencyRepository As PayFrequencyRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
+    Sub New()
+        ' This call is required by the designer.
+        InitializeComponent()
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+
+        _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+
+        _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Async Sub NewEmployeePositionForm_Load(sender As Object, e As EventArgs) Handles Me.Load
 
@@ -522,7 +537,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadDivisions() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Dim divisions = Await divisionRepository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -530,7 +546,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -548,7 +565,8 @@ Public Class NewDivisionPositionForm
 
     Private Sub GetDivisionTypes()
 
-        _divisionTypes = _divisionRepository.GetDivisionTypeList
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionTypes = divisionRepository.GetDivisionTypeList
 
     End Sub
 
@@ -749,7 +767,9 @@ Public Class NewDivisionPositionForm
     Private Async Function SavePosition(messageTitle As String) As Task
 
         Me._currentPosition.LastUpdBy = z_User
-        Await _positionRepository.SaveAsync(Me._currentPosition,
+
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Await positionRepository.SaveAsync(Me._currentPosition,
                                             organizationId:=z_OrganizationID,
                                             divisionId:=Me._currentPosition.DivisionID.Value)
 
@@ -795,8 +815,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, PositionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -822,10 +841,10 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Await _positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Await positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
 
-        Dim repo As New UserActivityRepository
-        repo.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
+        _userActivityRepository.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
 
         Await RefreshTreeView()
 
@@ -837,16 +856,15 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Await _divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Await divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
 
         If Me._currentDivision.IsRoot Then
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DivisionLocationEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
+            _userActivityRepository.RecordDelete(z_User, DivisionLocationEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
         Else
 
-            Dim repo As New UserActivityRepository
-            repo.RecordDelete(z_User, DivisionEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
+            _userActivityRepository.RecordDelete(z_User, DivisionEntityName, CInt(Me._currentDivision.RowID), z_OrganizationID)
 
         End If
 
@@ -910,8 +928,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, DivisionLocationEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1158,8 +1175,7 @@ Public Class NewDivisionPositionForm
         End If
 
         If changes.Count > 0 Then
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+            _userActivityRepository.CreateRecord(z_User, DivisionEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
 
             Return True
         End If
@@ -1171,9 +1187,10 @@ Public Class NewDivisionPositionForm
 
         Dim division = Me._currentDivision.CloneJson()
         division.ParentDivision = Nothing
-
         division.LastUpdBy = z_User
-        Await _divisionRepository.SaveAsync(division, z_OrganizationID)
+
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        Await divisionRepository.SaveAsync(division, z_OrganizationID)
 
         If isRoot Then
             RecordUpdateDivisionLocation()

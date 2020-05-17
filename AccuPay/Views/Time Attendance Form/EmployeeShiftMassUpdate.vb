@@ -140,9 +140,7 @@ Public Class EmployeeShiftMassUpdate
         '    End If
         'End If
 
-        'dutyshift.Close()
-
-        'TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
+        TimeAttendForm.listTimeAttendForm.Remove(Me.Name)
 
         'ShiftList.Close()
         'ShiftList.Dispose()
@@ -359,13 +357,6 @@ Public Class EmployeeShiftMassUpdate
     End Sub
 
     Private Sub lblShiftEntry_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblShiftEntry.LinkClicked
-        'ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
-        'ShiftEntryForm.Close()
-        'ShiftEntryForm.ShowDialog()
-
-        'dutyshift.Show()
-        'dutyshift.BringToFront()
-
         Dim n_ShiftEntryForm As New ShiftEntryForm
 
         n_ShiftEntryForm.FormBorderStyle = Windows.Forms.FormBorderStyle.FixedDialog
@@ -409,15 +400,6 @@ Public Class EmployeeShiftMassUpdate
         chkbxNewShiftByDay.Checked = False
 
         includedEmployees.Clear()
-
-    End Sub
-
-    Private Sub btnAudittrail_Click(sender As Object, e As EventArgs)
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
 
     End Sub
 

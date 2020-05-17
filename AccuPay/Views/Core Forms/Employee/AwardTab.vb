@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AwardTab
 
@@ -19,17 +20,20 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _awardRepo As AwardRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvAwards.AutoGenerateColumns = False
 
-        _awardRepo = New AwardRepository
+        'for issues in designer and also defensive programming
+        If MainServiceProvider IsNot Nothing Then
 
-        _userActivityRepo = New UserActivityRepository
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
+
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -46,8 +50,8 @@ Public Class AwardTab
     Private Async Function LoadAwards() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _awards = Await _awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _awards = _awards.OrderByDescending(Function(x) x.AwardDate).ToList()
+        Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+        _awards = Await awardRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAwards.SelectionChanged, AddressOf dgvAwards_SelectionChanged
         dgvAwards.DataSource = _awards
@@ -159,8 +163,8 @@ Public Class AwardTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Award",
                 Async Function()
-
-                    Await _awardRepo.DeleteAsync(_currentAward)
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+                    Await awardRepo.DeleteAsync(_currentAward)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentAward.RowID), z_OrganizationID)
 
@@ -222,7 +226,8 @@ Public Class AwardTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _awardRepo.UpdateAsync(_currentAward)
+                    Dim awardRepo = MainServiceProvider.GetRequiredService(Of AwardRepository)
+                    Await awardRepo.UpdateAsync(_currentAward)
 
                     RecordUpdateAward(oldAward)
 
@@ -282,6 +287,7 @@ Public Class AwardTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
 End Class

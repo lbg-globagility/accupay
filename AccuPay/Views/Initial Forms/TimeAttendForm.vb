@@ -2,6 +2,7 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeAttendForm
 
@@ -9,23 +10,17 @@ Public Class TimeAttendForm
 
     Public listTimeAttendForm As New List(Of String)
 
-    Private lRepo As ListOfValueRepository
-
     Private _policyHelper As PolicyHelper
 
     Private _userRepository As UserRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        lRepo = New ListOfValueRepository()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _policyHelper = New PolicyHelper()
-
-        _userRepository = New UserRepository()
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
     End Sub
 
@@ -128,17 +123,8 @@ Public Class TimeAttendForm
         PrepareFormForUserLevelAuthorizations()
     End Sub
 
-    Private Async Sub LoadShiftSchedulePolicyAsync()
-        Dim shiftPolicies = Await lRepo.GetShiftPoliciesAsync()
-
-        If Not shiftPolicies.Any() Then
-            ShiftScheduleToolStripMenuItem.Visible = False
-            Return
-        End If
-        Dim settings = ListOfValueCollection.Create(shiftPolicies)
-        Dim _policy = New TimeEntryPolicy(settings)
-
-        Dim _bool = _policy.UseShiftSchedule
+    Private Sub LoadShiftSchedulePolicyAsync()
+        Dim _bool = _policyHelper.UseShiftSchedule
         ShiftScheduleToolStripMenuItem.Visible = _bool
         TimeEntToolStripMenuItem.Visible = Not _bool
     End Sub
@@ -152,9 +138,7 @@ Public Class TimeAttendForm
             MessageBoxHelper.ErrorMessage("Cannot read user data. Please log out and try to log in again.")
         End If
 
-        Dim settings = ListOfValueCollection.Create()
-
-        If settings.GetBoolean("User Policy.UseUserLevel", False) = False Then
+        If _policyHelper.UseUserLevel = False Then
 
             Return
 

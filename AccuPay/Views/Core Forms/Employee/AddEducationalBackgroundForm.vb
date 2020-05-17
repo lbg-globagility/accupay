@@ -1,6 +1,7 @@
 ﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddEducationalBackgroundForm
 
@@ -12,17 +13,15 @@ Public Class AddEducationalBackgroundForm
 
     Private _newEducBg As EducationalBackground
 
-    Private _educBgRepo As EducationalBackgroundRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
+
         InitializeComponent()
+
         _employee = employee
 
-        _educBgRepo = New EducationalBackgroundRepository
-
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
     Private Sub AddEducationalBackgroundForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -42,6 +41,7 @@ Public Class AddEducationalBackgroundForm
         dtpDateTo.Value = Today
         txtRemarks.Text = ""
     End Sub
+
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, pbEmployee, 70, -74)
     End Sub
@@ -78,9 +78,11 @@ Public Class AddEducationalBackgroundForm
                     .EmployeeID = _employee.RowID.Value
                 End With
 
-                Await _educBgRepo.CreateAsync(_newEducBg)
+                Dim educBGRepo = MainServiceProvider.GetRequiredService(Of EducationalBackgroundRepository)
+                Await educBGRepo.CreateAsync(_newEducBg)
 
                 _userActivityRepo.RecordAdd(z_User, FormEntityName, CInt(_newEducBg.RowID), z_OrganizationID)
+
                 succeed = True
             End Function)
 
@@ -106,4 +108,5 @@ Public Class AddEducationalBackgroundForm
             dtpDateTo.Value = dtpDateFrom.Value
         End If
     End Sub
+
 End Class

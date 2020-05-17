@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Text.RegularExpressions
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -6,6 +7,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PromotionTab
 
@@ -21,32 +23,37 @@ Public Class PromotionTab
 
     Private _currentPromotion As Promotion
 
+    Private _employeeRepo As EmployeeRepository
+
+    Private _positionRepo As PositionRepository
+
     Private _promotionRepo As PromotionRepository
 
     Private _salaryRepo As SalaryRepository
 
-    Private _positionRepo As PositionRepository
-
-    Private _employeeRepo As EmployeeRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvPromotions.AutoGenerateColumns = False
 
-        _promotionRepo = New PromotionRepository
+        If MainServiceProvider IsNot Nothing Then
 
-        _salaryRepo = New SalaryRepository
+            _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)
+            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
+            _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
-        _positionRepo = New PositionRepository
-
-        _employeeRepo = New EmployeeRepository
-
-        _userActivityRepo = New UserActivityRepository
     End Sub
+
     Friend Async Function SetEmployee(employee As Employee) As Task
+
         pbEmployee.Focus()
+
         _employee = employee
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
@@ -217,7 +224,7 @@ Public Class PromotionTab
         ElseIf CompensationToString10() = "1" Then
             If String.IsNullOrWhiteSpace(txtNewSalary.Text) Then
                 messageBody = "New Salary is empty."
-            ElseIf Not Regex.IsMatch(txtNewSalary.text, "^(\d*\.)?\d+$") Then
+            ElseIf Not Regex.IsMatch(txtNewSalary.Text, "^(\d*\.)?\d+$") Then
                 messageBody = "New Salary is invalid."
             End If
         End If
@@ -226,7 +233,6 @@ Public Class PromotionTab
             ShowBalloonInfo(messageBody, "Invalid Input")
             Return False
         End If
-
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Promotion",
             Async Function()
@@ -435,4 +441,5 @@ Public Class PromotionTab
     Private Sub btnCloseForm_Click(sender As Object, e As EventArgs) Handles btnCloseForm.Click
         EmployeeForm.Close()
     End Sub
+
 End Class

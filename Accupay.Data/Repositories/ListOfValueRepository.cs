@@ -10,6 +10,13 @@ namespace AccuPay.Data.Repositories
 {
     public class ListOfValueRepository
     {
+        private readonly PayrollContext _context;
+
+        public ListOfValueRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<ListOfValue> GetLeaveConvertiblePolicies()
         {
             return GetListOfValues("LeaveConvertiblePolicy");
@@ -17,13 +24,9 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
         {
-            using (var context = new PayrollContext())
-
-            {
-                return await context.ListOfValues.
-                                        Where(filter).
-                                        ToListAsync();
-            }
+            return await _context.ListOfValues.
+                                Where(filter).
+                                ToListAsync();
         }
 
         public async Task<IEnumerable<ListOfValue>> GetDeductionSchedulesAsync()
@@ -41,36 +44,35 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Employee Disciplinary Penalty");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
-        {
-            return await GetListOfValuesAsync("DutyShift");
-        }
-
         public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
         {
             return await GetListOfValuesAsync("ShiftPolicy");
         }
 
+        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        {
+            return await GetListOfValuesAsync("DutyShift");
+        }
+
+        public IEnumerable<ListOfValue> GetDutyShiftPolicies()
+        {
+            return GetListOfValues("DutyShift");
+        }
+
         public IEnumerable<ListOfValue> GetListOfValues(string type)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.ListOfValues.
-                                Where(l => l.Type == type).
-                                Where(l => l.Active == "Yes").
-                                ToList();
-            }
+            return _context.ListOfValues.
+                            Where(l => l.Type == type).
+                            Where(l => l.Active == "Yes").
+                            ToList();
         }
 
         public async Task<IEnumerable<ListOfValue>> GetListOfValuesAsync(string type)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.ListOfValues.
-                                        Where(l => l.Type == type).
-                                        Where(l => l.Active == "Yes").
-                                        ToListAsync();
-            }
+            return await _context.ListOfValues.
+                                Where(l => l.Type == type).
+                                Where(l => l.Active == "Yes").
+                                ToListAsync();
         }
 
         public List<string> ConvertToStringList(IEnumerable<ListOfValue> listOfValues, string columnName = "DisplayValue")
@@ -101,29 +103,20 @@ namespace AccuPay.Data.Repositories
 
         public async Task DeleteAsync(ListOfValue value)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.ListOfValues.Remove(value);
-                await context.SaveChangesAsync();
-            }
+            _context.ListOfValues.Remove(value);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(ListOfValue value)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(value).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(value).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(ListOfValue value)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.ListOfValues.Add(value);
-                await context.SaveChangesAsync();
-            }
+            _context.ListOfValues.Add(value);
+            await _context.SaveChangesAsync();
         }
     }
 }

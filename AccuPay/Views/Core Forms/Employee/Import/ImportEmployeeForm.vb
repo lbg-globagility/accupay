@@ -8,6 +8,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportEmployeeForm
 
@@ -19,7 +20,23 @@ Public Class ImportEmployeeForm
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
 
+    Private _divisionRepository As DivisionRepository
+    Private _positionRepository As PositionRepository
+    Private _userActivityRepository As UserActivityRepository
+
 #End Region
+
+    Sub New()
+
+        InitializeComponent()
+
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+    End Sub
 
     Private Class EmployeeModel
         Implements IExcelRowRecord
@@ -193,7 +210,7 @@ Public Class ImportEmployeeForm
 
         Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
 
-        Dim employeeRepo = New EmployeeRepository
+        Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
         Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
 
         Dim employees = employees1.
@@ -240,18 +257,18 @@ Public Class ImportEmployeeForm
 
         Next
 
-        Await SaveToDatabase(employeeRepo, existingEmployees, newEmployees)
+        Await SaveToDatabase(existingEmployees, newEmployees)
     End Function
 
-    Private Shared Async Function SaveToDatabase(employeeRepo As EmployeeRepository,
-                                                 existingEmployees As List(Of Employee),
-                                                 newEmployees As List(Of Employee)) As Task
+    Private Async Function SaveToDatabase(existingEmployees As List(Of Employee),
+                                        newEmployees As List(Of Employee)) As Task
 
         Dim importedEmployees = existingEmployees.CloneListJson()
         importedEmployees.AddRange(newEmployees)
 
         If importedEmployees.Any Then
 
+            Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             Await employeeRepo.SaveManyAsync(importedEmployees)
 
             Dim importList = New List(Of UserActivityItem)
@@ -274,8 +291,7 @@ Public Class ImportEmployeeForm
                     })
             Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
         End If
     End Function
@@ -375,10 +391,7 @@ Public Class ImportEmployeeForm
 
     Private Async Function AddPositionIdToModels(models As List(Of EmployeeModel)) As Task
 
-        Dim positionRepository = New PositionRepository
-        Dim divisionRepository = New DivisionRepository
-
-        Dim defaultDivision = Await divisionRepository.
+        Dim defaultDivision = Await _divisionRepository.
                                         GetOrCreateDefaultDivisionAsync(
                                                 organizationId:=z_OrganizationID,
                                                 userId:=z_User)
@@ -387,7 +400,7 @@ Public Class ImportEmployeeForm
             Throw New ArgumentException("Cannot create default division.")
         End If
 
-        Dim existingPositions = (Await positionRepository.GetAllAsync(z_OrganizationID)).ToList()
+        Dim existingPositions = (Await _positionRepository.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models
             Dim currentPosition = existingPositions.
@@ -399,7 +412,7 @@ Public Class ImportEmployeeForm
                 model.PositionId = currentPosition.RowID
             Else
 
-                currentPosition = Await positionRepository.
+                currentPosition = Await _positionRepository.
                                     GetByNameOrCreateAsync(model.Position,
                                                            organizationId:=z_OrganizationID,
                                                            userId:=z_User,

@@ -1,14 +1,16 @@
-﻿Imports System.Threading.Tasks
+﻿Option Strict On
+
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviousEmployerTab
 
     Private Const FormEntityName As String = "Previous Employer"
-
     Private _employee As Employee
 
     Private _previousEmployers As IEnumerable(Of PreviousEmployer)
@@ -17,18 +19,21 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _previousEmployerRepo As PreviousEmployerRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvPrevEmployers.AutoGenerateColumns = False
 
-        _previousEmployerRepo = New PreviousEmployerRepository
+        If MainServiceProvider IsNot Nothing Then
 
-        _userActivityRepo = New UserActivityRepository
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
+
     End Sub
+
     Public Async Function SetEmployee(employee As Employee) As Task
         pbEmployee.Focus()
         _employee = employee
@@ -43,7 +48,8 @@ Public Class PreviousEmployerTab
     Private Async Function LoadPrevEmployers() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _previousEmployers = Await _previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+        _previousEmployers = Await previousEmployerRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvPrevEmployers.SelectionChanged, AddressOf dgvPrevEmployers_SelectionChanged
         dgvPrevEmployers.DataSource = _previousEmployers
@@ -103,7 +109,6 @@ Public Class PreviousEmployerTab
                 txtCompAddr.Text = .BusinessAddress
 
             End With
-
         Else
             ClearForm()
         End If
@@ -187,10 +192,10 @@ Public Class PreviousEmployerTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Previous Employer",
                 Async Function()
+                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+                    Await previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
 
-                    Await _previousEmployerRepo.DeleteAsync(_currentPrevEmployer)
-
-                    _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentPrevEmployer.RowID), z_OrganizationID)
+                    _userActivityRepo.RecordDelete(z_User, "Previous Employer", CInt(_currentPrevEmployer.RowID), z_OrganizationID)
 
                     Await LoadPrevEmployers()
                 End Function)
@@ -281,7 +286,8 @@ Public Class PreviousEmployerTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _previousEmployerRepo.UpdateAsync(_currentPrevEmployer)
+                    Dim previousEmployerRepo = MainServiceProvider.GetRequiredService(Of PreviousEmployerRepository)
+                    Await previousEmployerRepo.UpdateAsync(_currentPrevEmployer)
 
                     RecordUpdatePrevEmployer(oldPrevEmployer)
 

@@ -1,0 +1,39 @@
+<mat-card class="login">
+  <div class="login__header">
+    <img src="/assets/notisphere-blue.png" width="200px" />
+  </div>
+
+  <p class="message">
+    You've been inactive for a while. For security purposes, we have logged you out. You can log back in or go back to
+    the login page.
+  </p>
+
+  <form [formGroup]="form" (ngSubmit)="login()" class="login__form">
+    <div *ngIf="loginError != null" class="error">
+      <mat-icon class="m-align-middle">cancel</mat-icon>
+      <ng-container [ngSwitch]="loginError">
+        <ng-container *ngSwitchCase="'BadCredentials'">
+          Either the email or password is incorrect.
+        </ng-container>
+        <ng-container *ngSwitchCase="'Server error'">Could not connect to the server</ng-container>
+      </ng-container>
+    </div>
+
+    <mat-form-field class="login__field app-input-no-underline" color="accent">
+      <mat-placeholder class="label-caption">Email</mat-placeholder>
+      <input matInput readonly [value]="email" />
+      <mat-error>Email is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="login__field" color="accent">
+      <mat-placeholder class="label-caption">Password</mat-placeholder>
+      <input matInput formControlName="password" type="password" />
+      <mat-error>Password is required</mat-error>
+    </mat-form-field>
+
+    <div class="login__actions">
+      <button mat-raised-button color="accent" type="submit" [disabled]="loggingIn | async">LOGIN</button>
+      <button mat-button type="button" (click)="goToLogin()">Go To Login Page</button>
+    </div>
+  </form>
+</mat-card>

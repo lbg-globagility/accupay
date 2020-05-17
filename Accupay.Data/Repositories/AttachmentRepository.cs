@@ -9,30 +9,30 @@ namespace AccuPay.Data.Repositories
 {
     public class AttachmentRepository
     {
+        private readonly PayrollContext _context;
+
+        public AttachmentRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<Attachment>> GetListByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Attachments.Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.Attachments.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
 
         public async Task DeleteAsync(Attachment attachment)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Attachments.Remove(attachment);
-                await context.SaveChangesAsync();
-            }
+            _context.Attachments.Remove(attachment);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(Attachment attachment)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Attachments.Add(attachment);
-                await context.SaveChangesAsync();
-            }
+            _context.Attachments.Add(attachment);
+            await _context.SaveChangesAsync();
         }
     }
 }

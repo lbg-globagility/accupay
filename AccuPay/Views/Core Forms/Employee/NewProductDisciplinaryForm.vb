@@ -1,4 +1,5 @@
 ﻿Option Strict On
+
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
@@ -13,17 +14,16 @@ Public Class NewProductDisciplinaryForm
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _productRepo As New ProductRepository
+    Private _productRepo As ProductRepository
 
-    Public Sub New()
+    Public Sub New(productRepo As ProductRepository)
 
-        ' This call is required by the designer.
         InitializeComponent()
         dgvFindings.AutoGenerateColumns = False
 
-        ' Add any initialization after the InitializeComponent() call.
-
+        _productRepo = productRepo
     End Sub
+
     Private Async Sub NewProductEmployeeDisciplinary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Await LoadFindings()
     End Sub
@@ -55,7 +55,6 @@ Public Class NewProductDisciplinaryForm
                 txtName.Text = .PartNo
                 txtDescription.Text = .Description
             End With
-
         Else
             ClearForm()
         End If
@@ -149,7 +148,6 @@ Public Class NewProductDisciplinaryForm
 
                     End If
                     succeed = True
-
                 Else
                     MessageBoxHelper.Warning("No value changed")
                 End If
@@ -198,4 +196,5 @@ Public Class NewProductDisciplinaryForm
 
         SelectFinding(Nothing)
     End Sub
+
 End Class

@@ -10,39 +10,36 @@ namespace AccuPay.Data.Repositories
 {
     public class CertificationRepository
     {
+        private readonly PayrollContext _context;
+
+        public CertificationRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task DeleteAsync(Certification certification)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Certifications.Remove(certification);
-                await context.SaveChangesAsync();
-            }
+            _context.Certifications.Remove(certification);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(Certification certification)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Certifications.Add(certification);
-                await context.SaveChangesAsync();
-            }
+            _context.Certifications.Add(certification);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Certification certification)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(certification).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(certification).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Certification>> GetByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Certifications.Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.Certifications.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
     }
 }

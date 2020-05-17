@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BonusTab
 
@@ -23,21 +24,23 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
-    Private _bonusRepo As BonusRepository
-
     Private _productRepo As ProductRepository
 
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvempbon.AutoGenerateColumns = False
 
-        _bonusRepo = New BonusRepository
+        If MainServiceProvider IsNot Nothing Then
 
-        _productRepo = New ProductRepository
+            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _userActivityRepo = New UserActivityRepository
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
+
     End Sub
 
     Private Sub BonusTab_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -62,8 +65,9 @@ Public Class BonusTab
             Return
         End If
 
-        _bonuses = Await _bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _frequencies = _bonusRepo.GetFrequencyList
+        Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+        _bonuses = Await bonusRepo.GetByEmployeeAsync(_employee.RowID.Value)
+        _frequencies = bonusRepo.GetFrequencyList
 
         _products = Await _productRepo.GetBonusTypesAsync(z_OrganizationID)
 
@@ -163,7 +167,8 @@ Public Class BonusTab
             If result = MsgBoxResult.Yes Then
                 Await FunctionUtils.TryCatchFunctionAsync("Delete Bonus",
                 Async Function()
-                    Await _bonusRepo.DeleteAsync(_currentBonus)
+                    Dim bonusRepo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+                    Await bonusRepo.DeleteAsync(_currentBonus)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentBonus.RowID), z_OrganizationID)
 
@@ -243,7 +248,10 @@ Public Class BonusTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _bonusRepo.UpdateAsync(_currentBonus)
+                    Dim repo = MainServiceProvider.GetRequiredService(Of BonusRepository)
+
+                    _currentBonus.LastUpdBy = z_User
+                    Await repo.UpdateAsync(_currentBonus)
 
                     RecordUpdateBonus(oldBonus)
 

@@ -3,8 +3,10 @@
 Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data
-Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class PayrollSummaDateSelection
@@ -188,8 +190,10 @@ Public Class PayrollSummaDateSelection
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
-        _currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+        _currentlyWorkedOnPayPeriod = Await payPeriodService.
+                                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         DateFromLabel.Text = ""
         DateToLabel.Text = ""

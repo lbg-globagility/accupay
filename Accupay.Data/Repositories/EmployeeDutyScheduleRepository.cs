@@ -9,41 +9,45 @@ namespace AccuPay.Data.Repositories
 {
     public class EmployeeDutyScheduleRepository
     {
+        private readonly PayrollContext _context;
+
+        public EmployeeDutyScheduleRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task ChangeManyAsync(List<EmployeeDutySchedule> addedShifts = null,
                                         List<EmployeeDutySchedule> updatedShifts = null,
                                         List<EmployeeDutySchedule> deletedShifts = null)
         {
-            using (var context = new PayrollContext())
+            if (addedShifts != null)
             {
-                if (addedShifts != null)
+                addedShifts.ForEach(shift =>
                 {
-                    addedShifts.ForEach(shift =>
-                    {
-                        context.Entry(shift).State = EntityState.Added;
-                    });
-                }
-
-                if (updatedShifts != null)
-                {
-                    updatedShifts.ForEach(shift =>
-                    {
-                        context.Entry(shift).State = EntityState.Modified;
-                    });
-                }
-
-                if (deletedShifts != null)
-                {
-                    deletedShifts = deletedShifts.
-                                    GroupBy(x => x.RowID).
-                                    Select(x => x.FirstOrDefault()).
-                                    ToList();
-                    context.EmployeeDutySchedules.RemoveRange(deletedShifts);
-                }
-
-                await context.SaveChangesAsync();
+                    _context.Entry(shift).State = EntityState.Added;
+                });
             }
+
+            if (updatedShifts != null)
+            {
+                updatedShifts.ForEach(shift =>
+                {
+                    _context.Entry(shift).State = EntityState.Modified;
+                });
+            }
+
+            if (deletedShifts != null)
+            {
+                deletedShifts = deletedShifts.
+                                GroupBy(x => x.RowID).
+                                Select(x => x.FirstOrDefault()).
+                                ToList();
+                _context.EmployeeDutySchedules.RemoveRange(deletedShifts);
+            }
+
+            await _context.SaveChangesAsync();
         }
 
         #endregion CRUD
@@ -53,19 +57,15 @@ namespace AccuPay.Data.Repositories
         public IEnumerable<EmployeeDutySchedule> GetByDatePeriod(int organizationId,
                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return CreateBaseQueryByDatePeriod(organizationId, timePeriod, context).ToList();
-            }
+            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
+                    ToList();
         }
 
         public async Task<IEnumerable<EmployeeDutySchedule>> GetByDatePeriodAsync(int organizationId,
                                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryByDatePeriod(organizationId, timePeriod, context).ToListAsync();
-            }
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
+                        ToListAsync();
         }
 
         public async Task<IEnumerable<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodAsync(
@@ -73,14 +73,10 @@ namespace AccuPay.Data.Repositories
                                                                                 int[] employeeIds,
                                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
-                                                                        employeeIds,
-                                                                        timePeriod,
-                                                                        context).
-                    ToListAsync();
-            }
+            return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
+                                                                    employeeIds,
+                                                                    timePeriod).
+                ToListAsync();
         }
 
         public async Task<IEnumerable<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
@@ -88,37 +84,31 @@ namespace AccuPay.Data.Repositories
                                                                                 int[] employeeIds,
                                                                                 TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
-                                                                        employeeIds,
-                                                                        timePeriod,
-                                                                        context).
-                    Include(x => x.Employee).
-                    ToListAsync();
-            }
+            return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
+                                                                    employeeIds,
+                                                                    timePeriod).
+                Include(x => x.Employee).
+                ToListAsync();
         }
 
         #endregion Queries
 
-        private static IQueryable<EmployeeDutySchedule> CreateBaseQueryByDatePeriod(int organizationId,
-                                                                                    TimePeriod timePeriod,
-                                                                                    PayrollContext context)
+        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByMultipleEmployeeDatePeriod(
+                                                                                int organizationId,
+                                                                                int[] employeeIds,
+                                                                                TimePeriod timePeriod)
         {
-            return context.EmployeeDutySchedules.
+            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
+                    Where(x => employeeIds.Contains(x.EmployeeID.Value));
+        }
+
+        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByDatePeriod(int organizationId,
+                                                                                    TimePeriod timePeriod)
+        {
+            return _context.EmployeeDutySchedules.
                             Where(l => l.OrganizationID == organizationId).
                             Where(l => timePeriod.Start <= l.DateSched).
                             Where(l => l.DateSched <= timePeriod.End);
-        }
-
-        private static IQueryable<EmployeeDutySchedule> CreateBaseQueryByMultipleEmployeeDatePeriod(
-                                                                                int organizationId,
-                                                                                int[] employeeIds,
-                                                                                TimePeriod timePeriod,
-                                                                                PayrollContext context)
-        {
-            return CreateBaseQueryByDatePeriod(organizationId, timePeriod, context).
-                    Where(x => employeeIds.Contains(x.EmployeeID.Value));
         }
     }
 }

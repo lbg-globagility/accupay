@@ -1,0 +1,27 @@
+<nav>
+  <ng-container *ngFor="let menuItem of menuItems">
+    <ng-container *ngIf="isLink(menuItem); else elseBlock">
+      <a mat-button class="menu-item" [routerLink]="menuItem.route">
+        <mat-icon class="menu-icon">{{ menuItem.icon }}</mat-icon>
+        <span>{{ menuItem.label }}</span>
+      </a>
+    </ng-container>
+    <ng-template #elseBlock>
+      <a mat-button class="menu-item" (click)="toggle(menuItem)">
+        <mat-icon class="menu-icon">{{ menuItem.icon }}</mat-icon>
+        <span>{{ menuItem.label }}</span>
+      </a>
+
+      <nav *ngIf="menuItem.toggled">
+        <a
+          *ngFor="let subMenuItem of menuItem.items"
+          [routerLink]="subMenuItem.route"
+          mat-button
+          class="submenu-item"
+        >
+          <span>{{ subMenuItem.label }}</span>
+        </a>
+      </nav>
+    </ng-template>
+  </ng-container>
+</nav>

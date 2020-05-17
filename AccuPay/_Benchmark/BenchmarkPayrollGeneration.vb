@@ -4,6 +4,7 @@ Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Benchmark
 
@@ -11,9 +12,9 @@ Namespace Benchmark
 
         Private ReadOnly _currentPayPeriod As IPayPeriod
 
-        Private ReadOnly _employee As New Entities.Employee
+        Private ReadOnly _employee As New Employee
 
-        Private ReadOnly _ecola As Entities.Allowance
+        Private ReadOnly _ecola As Allowance
 
         Private ReadOnly _regularDays As Decimal
 
@@ -36,7 +37,7 @@ Namespace Benchmark
         Private ReadOnly _employeeRate As BenchmarkPaystubRate
 
         Private Sub New(
-                employee As Entities.Employee,
+                employee As Employee,
                 payrollResources As PayrollResources,
                 currentPayPeriod As IPayPeriod,
                 employeeRate As BenchmarkPaystubRate,
@@ -82,7 +83,7 @@ Namespace Benchmark
         End Class
 
         Public Shared Function DoProcess(
-                                    employee As Entities.Employee,
+                                    employee As Employee,
                                     payrollResources As PayrollResources,
                                     currentPayPeriod As IPayPeriod,
                                     employeeRate As BenchmarkPaystubRate,
@@ -111,12 +112,12 @@ Namespace Benchmark
                                     overtimes:=overtimes,
                                     ecola:=ecola)
 
-            Dim payrollGeneration = New PayrollGeneration(
-                                organizationId:=z_OrganizationID,
-                                userId:=z_User,
-                                employee:=generator._employee,
-                                resources:=generator._payrollResources
-                            )
+            Dim payrollGeneration = MainServiceProvider.GetRequiredService(Of PayrollGeneration)
+
+            'organizationId:=z_OrganizationID,
+            '                    userId:=z_User,
+            '                    employee:=generator._employee,
+            '                    resources:=generator._payrollResources
 
             Dim output As DoProcessOutput = generator.CreatePaystub(employee, payrollGeneration)
 
@@ -124,17 +125,15 @@ Namespace Benchmark
 
         End Function
 
-        Public Shared Sub Save(
-                            payrollGenerator As PayrollGeneration,
-                            loanTransanctions As List(Of LoanTransaction),
-                            payPeriodId As Integer)
+        Public Shared Sub Save(paystub As Paystub,
+                               payrollGenerator As PayrollGeneration,
+                               loanTransanctions As List(Of LoanTransaction),
+                               payPeriodId As Integer)
 
-            payrollGenerator.SavePayroll(loanTransanctions)
-            PayrollTools.UpdateLoanSchedule(payPeriodId)
-
+            'payrollGenerator.SavePayroll(paystub, loanTransanctions)
         End Sub
 
-        Private Function CreatePaystub(employee As Entities.Employee, generator As PayrollGeneration) As DoProcessOutput
+        Private Function CreatePaystub(employee As Employee, generator As PayrollGeneration) As DoProcessOutput
             Dim paystub = New Paystub() With {
                     .OrganizationID = z_OrganizationID,
                     .CreatedBy = z_User,
@@ -171,12 +170,12 @@ Namespace Benchmark
             CreateAdjustments(paystub)
             ComputeTotalEarnings(paystub, employee)
 
-            Dim loans = generator.ComputePayroll(paystub, allowanceItems)
+            'Dim loans = generator.ComputePayroll(paystub, allowanceItems)
 
-            Return New DoProcessOutput(paystub, loans, generator)
+            'Return New DoProcessOutput(paystub, loans, generator)
         End Function
 
-        Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Entities.Employee)
+        Private Sub ComputeBasicHoursAndBasicPay(paystub As Paystub, employee As Employee)
 
             If employee.IsPremiumInclusive Then
 
@@ -443,7 +442,7 @@ Namespace Benchmark
             Next
         End Sub
 
-        Private Sub ComputeTotalEarnings(paystub As Paystub, employee As Entities.Employee)
+        Private Sub ComputeTotalEarnings(paystub As Paystub, employee As Employee)
 
             If employee.IsFixed Then
 

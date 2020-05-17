@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDisciplinaryAction
 
@@ -21,23 +22,25 @@ Public Class AddDisciplinaryAction
 
     Private _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _productRepo As ProductRepository
-
     Private _listOfValRepo As ListOfValueRepository
+
+    Private _productRepo As ProductRepository
 
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New(employee As Employee)
+
         InitializeComponent()
+
         _employee = employee
 
-        _disciplinaryActionRepo = New DisciplinaryActionRepository
+        _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
 
-        _productRepo = New ProductRepository
+        _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _listOfValRepo = New ListOfValueRepository
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-        _userActivityRepo = New UserActivityRepository
+        _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
 
     Private Async Sub AddDisciplinaryAction_Load(sender As Object, e As EventArgs) Handles MyBase.Load
@@ -135,14 +138,18 @@ Public Class AddDisciplinaryAction
     End Sub
 
     Private Async Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
-        With NewProductDisciplinaryForm
+
+        Dim form As New NewProductDisciplinaryForm(_productRepo)
+        With form
             .ShowDialog()
         End With
         Await RefreshDatasourceRetainSelection()
     End Sub
 
     Private Async Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
-        With NewListOfValDisciplinaryPenaltyForm
+
+        Dim form As New NewListOfValDisciplinaryPenaltyForm(_listOfValRepo)
+        With form
             .ShowDialog()
         End With
         Await RefreshDatasourceRetainSelection()
@@ -155,4 +162,5 @@ Public Class AddDisciplinaryAction
         cboFinding.Text = currentFinding
         cboAction.Text = currentAction
     End Function
+
 End Class

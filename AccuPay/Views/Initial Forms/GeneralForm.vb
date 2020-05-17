@@ -2,12 +2,13 @@
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class GeneralForm
 
     Public listGeneralForm As New List(Of String)
 
-    Dim sys_ownr As SystemOwnerService
+    Dim _systemOwnerService As SystemOwnerService
 
     Private _policyHelper As PolicyHelper
 
@@ -15,15 +16,14 @@ Public Class GeneralForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _policyHelper = New PolicyHelper()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        sys_ownr = New SystemOwnerService()
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        _userRepository = New UserRepository()
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
     End Sub
 
     Sub ChangeForm(ByVal Formname As Form, Optional ViewName As String = Nothing)
@@ -155,20 +155,6 @@ Public Class GeneralForm
         ChangeForm(UsersForm, "Users")
         previousForm = UsersForm
 
-        'If FormLeft.Contains("Users") Then
-        '    FormLeft.Remove("Users")
-
-        '    FormLeft.Add("Users")
-        'Else
-        '    FormLeft.Add("Users")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub ListOfValueToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ListOfValueToolStripMenuItem.Click
@@ -176,40 +162,12 @@ Public Class GeneralForm
         ChangeForm(ListOfValueForm, "List of value")
         previousForm = ListOfValueForm
 
-        'If FormLeft.Contains("List of value") Then
-        '    FormLeft.Remove("List of value")
-
-        '    FormLeft.Add("List of value")
-        'Else
-        '    FormLeft.Add("List of value")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub OrganizationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OrganizationToolStripMenuItem.Click
 
         ChangeForm(OrganizationForm, "Organization")
         previousForm = OrganizationForm
-
-        'If FormLeft.Contains("Organization") Then
-        '    FormLeft.Remove("Organization")
-
-        '    FormLeft.Add("Organization")
-        'Else
-        '    FormLeft.Add("Organization")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
 
     End Sub
 
@@ -220,40 +178,12 @@ Public Class GeneralForm
 
         previousForm = userprivil
 
-        'If FormLeft.Contains("User Privilege") Then
-        '    FormLeft.Remove("User Privilege")
-
-        '    FormLeft.Add("User Privilege")
-        'Else
-        '    FormLeft.Add("User Privilege")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub PhilHealthTableToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PhilHealthTableToolStripMenuItem.Click
 
         ChangeForm(PhiHealth, "PhilHealth Contribution Table")
         previousForm = PhiHealth
-
-        'If FormLeft.Contains("PhilHealth Contribution Table") Then
-        '    FormLeft.Remove("PhilHealth Contribution Table")
-
-        '    FormLeft.Add("PhilHealth Contribution Table")
-        'Else
-        '    FormLeft.Add("PhilHealth Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
 
     End Sub
 
@@ -262,41 +192,12 @@ Public Class GeneralForm
         ChangeForm(SSSCntrib, "SSS Contribution Table")
         previousForm = SSSCntrib
 
-        'If FormLeft.Contains("SSS Contribution Table") Then
-        '    FormLeft.Remove("SSS Contribution Table")
-
-        '    FormLeft.Add("SSS Contribution Table")
-        'Else
-        '    FormLeft.Add("SSS Contribution Table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub WithholdingTaxToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles WithholdingTaxToolStripMenuItem.Click
 
         ChangeForm(Revised_Withholding_Tax_Tables, "Withholding Tax Table")
         previousForm = Revised_Withholding_Tax_Tables
-
-        'If FormLeft.Contains("Withholding tax table") Then
-        '    FormLeft.Remove("Withholding tax table")
-
-        '    FormLeft.Add("Withholding tax table")
-        'Else
-        '    FormLeft.Add("Withholding tax table")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub DutyShiftingToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DutyShiftingToolStripMenuItem.Click
@@ -304,40 +205,12 @@ Public Class GeneralForm
         ChangeForm(ShiftEntryForm, "Duty shifting")
         previousForm = ShiftEntryForm
 
-        'If FormLeft.Contains("Duty shifting") Then
-        '    FormLeft.Remove("Duty shifting")
-
-        '    FormLeft.Add("Duty shifting")
-        'Else
-        '    FormLeft.Add("Duty shifting")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
     End Sub
 
     Private Sub PayRateToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PayRateToolStripMenuItem.Click
 
         ChangeForm(PayRateForm, "Pay rate")
         previousForm = PayRateForm
-
-        'If FormLeft.Contains("Pay rate") Then
-        '    FormLeft.Remove("Pay rate")
-
-        '    FormLeft.Add("Pay rate")
-        'Else
-        '    FormLeft.Add("Pay rate")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
 
     End Sub
 
@@ -401,7 +274,7 @@ Public Class GeneralForm
             Split(AgencyToolStripMenuItem.AccessibleDescription, ";")
 
         AgencyToolStripMenuItem.Visible =
-            ownr.Contains(sys_ownr.GetCurrentSystemOwner())
+            ownr.Contains(_systemOwnerService.GetCurrentSystemOwner())
 
         MyBase.OnLoad(e)
 

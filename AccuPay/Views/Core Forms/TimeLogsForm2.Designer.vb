@@ -22,6 +22,7 @@ Partial Class TimeLogsForm2
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(TimeLogsForm2))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -53,6 +54,7 @@ Partial Class TimeLogsForm2
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripProgressBar1 = New System.Windows.Forms.ToolStripProgressBar()
+        Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.grid = New System.Windows.Forms.DataGridView()
         Me.colRowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.colEmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -212,7 +214,7 @@ Partial Class TimeLogsForm2
         Me.Label6.BackColor = System.Drawing.Color.Transparent
         Me.Label6.Location = New System.Drawing.Point(104, 31)
         Me.Label6.Name = "Label6"
-        Me.Label6.Size = New System.Drawing.Size(18, 13)
+        Me.Label6.Size = New System.Drawing.Size(19, 13)
         Me.Label6.TabIndex = 346
         Me.Label6.Text = "To"
         '
@@ -288,7 +290,7 @@ Partial Class TimeLogsForm2
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnClose, Me.ToolStripProgressBar1})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsbtnClose, Me.ToolStripProgressBar1, Me.btnUserActivity})
         Me.ToolStrip1.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(258, 25)
@@ -310,6 +312,14 @@ Partial Class TimeLogsForm2
         Me.ToolStripProgressBar1.Name = "ToolStripProgressBar1"
         Me.ToolStripProgressBar1.Size = New System.Drawing.Size(100, 22)
         Me.ToolStripProgressBar1.Visible = False
+        '
+        'btnUserActivity
+        '
+        Me.btnUserActivity.Image = CType(resources.GetObject("btnUserActivity.Image"), System.Drawing.Image)
+        Me.btnUserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.btnUserActivity.Name = "btnUserActivity"
+        Me.btnUserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.btnUserActivity.Text = "User Activity"
         '
         'grid
         '
@@ -860,4 +870,5 @@ Partial Class TimeLogsForm2
     Friend WithEvents colHasChanged As DataGridViewTextBoxColumn
     Friend WithEvents colDelete As DataGridViewImageColumn
     Friend WithEvents colRestore As DataGridViewImageColumn
+    Friend WithEvents btnUserActivity As ToolStripButton
 End Class

@@ -6,14 +6,18 @@ namespace AccuPay.Data.Repositories
 {
     public class AgencyRepository
     {
+        private readonly PayrollContext _context;
+
+        public AgencyRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<Agency> GetAll(int organizationId)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Agencies.
-                                Where(x => x.OrganizationID == organizationId).
-                                ToList();
-            }
+            return _context.Agencies.
+                            Where(x => x.OrganizationID == organizationId).
+                            ToList();
         }
     }
 }

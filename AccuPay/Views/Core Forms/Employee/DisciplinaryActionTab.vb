@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DisciplinaryActionTab
 
@@ -27,26 +28,32 @@ Public Class DisciplinaryActionTab
 
     Private _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _productRepo As ProductRepository
-
     Private _listOfValRepo As ListOfValueRepository
+
+    Private _productRepo As ProductRepository
 
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvDisciplinaryList.AutoGenerateColumns = False
 
-        _disciplinaryActionRepo = New DisciplinaryActionRepository
+        If MainServiceProvider IsNot Nothing Then
 
-        _productRepo = New ProductRepository
+            _disciplinaryActionRepo = MainServiceProvider.GetRequiredService(Of DisciplinaryActionRepository)
+            _listOfValRepo = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
+            _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
 
-        _listOfValRepo = New ListOfValueRepository
-
-        _userActivityRepo = New UserActivityRepository
     End Sub
+
     Public Async Function SetEmployee(employee As Employee) As Task
+
         pbEmployee.Focus()
+
         _employee = employee
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
@@ -107,7 +114,6 @@ Public Class DisciplinaryActionTab
                 txtComments.Text = .Comments
 
             End With
-
         Else
             ClearForm()
         End If
@@ -348,16 +354,23 @@ Public Class DisciplinaryActionTab
     End Sub
 
     Private Async Sub LinkLabel3_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles LinkLabel3.LinkClicked
-        With NewListOfValDisciplinaryPenaltyForm
+
+        Dim form As New NewListOfValDisciplinaryPenaltyForm(_listOfValRepo)
+
+        With form
             .ShowDialog()
         End With
         Await LoadDisciplinaryActions()
     End Sub
 
     Private Async Sub lblAddFindingname_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lblAddFindingname.LinkClicked
-        With NewProductDisciplinaryForm
+
+        Dim form As New NewProductDisciplinaryForm(_productRepo)
+
+        With form
             .ShowDialog()
         End With
         Await LoadDisciplinaryActions()
     End Sub
+
 End Class

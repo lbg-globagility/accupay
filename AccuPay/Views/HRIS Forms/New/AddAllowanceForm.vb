@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddAllowanceForm
 
@@ -14,10 +15,6 @@ Public Class AddAllowanceForm
 
     Private _newAllowance As New Allowance()
 
-    Private _productRepository As New ProductRepository()
-
-    Private _allowanceRepository As New AllowanceRepository()
-
     Private _allowanceTypeList As List(Of Product)
 
     Public Property NewAllowanceTypes As List(Of Product)
@@ -26,13 +23,23 @@ Public Class AddAllowanceForm
 
     Public Property ShowBalloonSuccess As Boolean
 
+    Private _productRepository As ProductRepository
+
+    Private _allowanceRepository As AllowanceRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -149,8 +156,7 @@ Public Class AddAllowanceForm
             Async Function()
                 Await _allowanceRepository.SaveAsync(Me._newAllowance)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

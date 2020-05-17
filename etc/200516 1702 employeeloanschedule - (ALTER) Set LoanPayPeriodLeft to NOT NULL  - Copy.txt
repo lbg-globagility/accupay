@@ -1,0 +1,4 @@
+ALTER TABLE `employeeloanschedule`
+	ALTER `LoanPayPeriodLeft` DROP DEFAULT;
+ALTER TABLE `employeeloanschedule`
+	CHANGE COLUMN `LoanPayPeriodLeft` `LoanPayPeriodLeft` DECIMAL(10,2) NOT NULL AFTER `NoOfPayPeriod`;

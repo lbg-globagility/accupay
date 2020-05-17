@@ -6,6 +6,7 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
     Private Const FormEntityName As String = "Certification"
@@ -17,17 +18,19 @@ Public Class CertificationTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _certificationRepo As CertificationRepository
-
     Private _userActivityRepo As UserActivityRepository
 
     Public Sub New()
+
         InitializeComponent()
+
         dgvCertifications.AutoGenerateColumns = False
 
-        _certificationRepo = New CertificationRepository()
+        If MainServiceProvider IsNot Nothing Then
 
-        _userActivityRepo = New UserActivityRepository()
+            _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+        End If
+
     End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
@@ -44,8 +47,8 @@ Public Class CertificationTab
     Private Async Function LoadCertifications() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _certifications = Await _certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
-        _certifications = _certifications.OrderByDescending(Function(x) x.IssueDate).ToList()
+        Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+        _certifications = Await certificationRepo.GetByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvCertifications.SelectionChanged, AddressOf dgvCertifications_SelectionChanged
         dgvCertifications.DataSource = _certifications
@@ -145,8 +148,8 @@ Public Class CertificationTab
         If result = MsgBoxResult.Yes Then
             Await FunctionUtils.TryCatchFunctionAsync("Delete Certification",
                 Async Function()
-
-                    Await _certificationRepo.DeleteAsync(_currentCertification)
+                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+                    Await certificationRepo.DeleteAsync(_currentCertification)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentCertification.RowID), z_OrganizationID)
 
@@ -225,7 +228,8 @@ Public Class CertificationTab
                         .LastUpdBy = z_User
                     End With
 
-                    Await _certificationRepo.UpdateAsync(_currentCertification)
+                    Dim certificationRepo = MainServiceProvider.GetRequiredService(Of CertificationRepository)
+                    Await certificationRepo.UpdateAsync(_currentCertification)
 
                     RecordUpdateCertification(oldCertification)
 
@@ -292,6 +296,7 @@ Public Class CertificationTab
         End If
 
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
+
     End Sub
 
     Private Function isChanged() As Boolean

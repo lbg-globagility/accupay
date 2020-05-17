@@ -5,12 +5,16 @@ namespace AccuPay.Data.Repositories
 {
     public class OrganizationRepository
     {
+        private readonly PayrollContext _context;
+
+        public OrganizationRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public Organization GetById(int id)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                return context.Organizations.FirstOrDefault(x => x.RowID == id);
-            }
+            return _context.Organizations.FirstOrDefault(x => x.RowID == id);
         }
     }
 }

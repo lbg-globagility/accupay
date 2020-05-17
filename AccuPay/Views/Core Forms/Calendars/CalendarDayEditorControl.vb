@@ -3,6 +3,7 @@
 Imports System.Globalization
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarDayEditorControl
 
@@ -19,7 +20,7 @@ Public Class CalendarDayEditorControl
     Private ReadOnly _repository As DayTypeRepository
 
     Public Sub New()
-        _repository = New DayTypeRepository()
+        _repository = MainServiceProvider.GetRequiredService(Of DayTypeRepository)
         InitializeComponent()
     End Sub
 

@@ -43,5 +43,12 @@ namespace AccuPay.Utilities.Extensions
         {
             return new DateTime(input.Year, input.Month, input.Day, input.Hour, input.Minute, 0);
         }
+
+        public static string ToShortDateString(this DateTime? input)
+        {
+            if (input == null) return string.Empty;
+
+            return input.Value.ToShortDateString();
+        }
     }
 }

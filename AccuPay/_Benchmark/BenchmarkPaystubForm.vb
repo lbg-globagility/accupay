@@ -9,7 +9,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Microsoft.EntityFrameworkCore
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class BenchmarkPaystubForm
 
@@ -20,6 +20,8 @@ Public Class BenchmarkPaystubForm
     Private _employees As List(Of Employee)
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
+
+    Private _overtimeRateService As OvertimeRateService
 
     Private _adjustmentRepository As AdjustmentRepository
 
@@ -39,15 +41,20 @@ Public Class BenchmarkPaystubForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
-        _adjustmentRepository = New AdjustmentRepository()
-        _employeeRepository = New EmployeeRepository()
-        _salaryRepository = New SalaryRepository()
-        _paystubRepository = New PaystubRepository()
-        _productRepository = New ProductRepository()
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
+
+        _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
 
@@ -97,7 +104,7 @@ Public Class BenchmarkPaystubForm
             Return
         End If
 
-        _overtimeRate = Await OvertimeRateService.GetOvertimeRates()
+        _overtimeRate = Await _overtimeRateService.GetOvertimeRates()
 
         Await LoadPayrollDetails()
     End Function
@@ -124,8 +131,11 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        _currentPayPeriod = Await Data.Helpers.PayrollTools.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID)
+
+        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+        _currentPayPeriod = Await payPeriodService.
+                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function
@@ -273,7 +283,9 @@ Public Class BenchmarkPaystubForm
 
         EcolaAmountTextBox.Text = payStub.Ecola.RoundToString()
         ThirteenthMonthPayTextBox.Text = payStub.ThirteenthMonthPay?.Amount.RoundToString()
-        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays((Await EmployeeData.GetVacationLeaveBalance(employee.RowID.Value))).ToString
+
+        Dim employeeLeave = Await _employeeRepository.GetVacationLeaveBalance(employee.RowID.Value)
+        LeaveBalanceTextBox.Text = BenchmarkPayrollHelper.ConvertHoursToDays(employeeLeave).ToString
 
         GrossPayTextBox.Text = payStub.GrossPay.RoundToString()
         TotalLeaveTextBox.Text = payStub.LeavePay.RoundToString()
@@ -761,22 +773,19 @@ Public Class BenchmarkPaystubForm
 
     Private Async Sub PayPeriodLabel_Click(sender As Object, e As EventArgs) Handles PayPeriodLabel.Click
         Dim form As New selectPayPeriod()
-        form.GeneratePayroll = False
-        form.ShowDialog()
 
-        If form.PayPeriod IsNot Nothing Then
+        If form.ShowDialog() <> DialogResult.OK OrElse form.PayPeriod Is Nothing Then Return
 
-            _currentPayPeriod = form.PayPeriod
+        _currentPayPeriod = form.PayPeriod
 
-            If _currentPayPeriod Is Nothing Then
-                MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
-                Return
-            End If
-
-            UpdateCutOffLabel()
-
-            Await LoadPayrollDetails()
+        If _currentPayPeriod Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Cannot identify the selected pay period. Please close then reopen this form and try again.")
+            Return
         End If
+
+        UpdateCutOffLabel()
+
+        Await LoadPayrollDetails()
     End Sub
 
     Private Class Adjustments
