@@ -135,7 +135,9 @@ Public Class MDIPrimaryForm
     End Sub
 
     Private Async Sub RunLeaveAccrual()
-        Dim collection = Await _listOfValueService.CreateAsync("LeavePolicy")
+
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
 
         If collection.GetBoolean("AutomaticAccrual") Then
             Dim unused = Task.Run(
