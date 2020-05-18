@@ -44,6 +44,7 @@ namespace AccuPay.Data.Entities
         [Column("LeaveStartDate")]
         public virtual DateTime StartDate { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("LeaveEndDate")]
         public virtual DateTime? EndDate { get; set; }
 
@@ -87,8 +88,20 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public DateTime ProperEndDate
         {
-            get => EndDate ?? DateTime.Now.Date;
+            get => EndDate ?? StartDate;
             set => EndDate = value;
+        }
+
+        public void UpdateEndDate()
+        {
+            if (StartTime == null || EndTime == null)
+            {
+                EndDate = ProperEndDate;
+            }
+            else
+            {
+                EndDate = EndTime < StartTime ? StartDate.AddDays(1) : StartDate;
+            }
         }
 
         public string Validate()

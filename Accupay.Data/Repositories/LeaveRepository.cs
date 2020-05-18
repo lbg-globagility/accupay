@@ -39,18 +39,22 @@ namespace AccuPay.Data.Repositories
         public async Task SaveWithContextAsync(Leave leave, bool deferSave = true)
         {
             if (leave.StartTime.HasValue)
+            {
                 leave.StartTime = leave.StartTime.Value.StripSeconds();
-            if (leave.EndTime.HasValue)
-                leave.EndTime = leave.EndTime.Value.StripSeconds();
+            }
 
+            if (leave.EndTime.HasValue)
+            {
+                leave.EndTime = leave.EndTime.Value.StripSeconds();
+            }
+
+            leave.UpdateEndDate();
+
+            await SaveAsyncFunction(leave);
+            
             if (deferSave == false)
             {
-                await SaveAsyncFunction(leave);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                await SaveAsyncFunction(leave);
             }
         }
 
@@ -122,7 +126,7 @@ namespace AccuPay.Data.Repositories
             var query = _context.Leaves
                                 .Include(x => x.Employee)
                                 .Where(x => x.OrganizationID == organizationId)
-                                .OrderBy(x => x.StartDate)
+                                .OrderByDescending(x => x.StartDate)
                                 .ThenBy(x => x.StartTime)
                                 .ThenBy(x => x.Employee.LastName)
                                 .ThenBy(x => x.Employee.FirstName)
