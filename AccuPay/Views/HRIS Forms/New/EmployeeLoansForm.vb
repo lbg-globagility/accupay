@@ -600,6 +600,11 @@ Public Class EmployeeLoansForm
         Dim loanSchedules = Await loanScheduleRepository.
                                     GetByEmployeeAsync(currentEmployee.RowID.Value)
 
+        loanSchedules = loanSchedules.
+                                OrderByDescending(Function(l) l.DedEffectiveDateFrom).
+                                ThenBy(Function(l) l.LoanName).
+                                ToList()
+
         Dim statusFilter = CreateStatusFilter()
 
         If statusFilter Is Nothing Then
@@ -610,6 +615,10 @@ Public Class EmployeeLoansForm
         End If
 
         Me._changedLoans = Me._currentloans.CloneListJson()
+        Me._changedLoans.ForEach(Sub(loan)
+                                     loan.RecomputePayPeriodLeft()
+                                     loan.RecomputeTotalPayPeriod()
+                                 End Sub)
 
         chkInProgressFilter.Text = $"{LoanSchedule.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_IN_PROGRESS)})"
         chkOnHoldFilter.Text = $"{LoanSchedule.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_ON_HOLD)})"
@@ -875,7 +884,6 @@ Public Class EmployeeLoansForm
             newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount OrElse
             newLoanSchedule.TotalBalanceLeft <> oldLoanSchedule.TotalBalanceLeft OrElse
             newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom OrElse
-            newLoanSchedule.TotalPayPeriod <> oldLoanSchedule.TotalPayPeriod OrElse
             newLoanSchedule.LoanPayPeriodLeft <> oldLoanSchedule.LoanPayPeriodLeft OrElse
             newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount OrElse
             newLoanSchedule.Status <> oldLoanSchedule.Status OrElse

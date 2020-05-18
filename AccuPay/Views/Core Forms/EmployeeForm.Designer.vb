@@ -928,6 +928,7 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DisplayLeaveHistoryButton = New System.Windows.Forms.Button()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1512,6 +1513,7 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
+        Me.SplitContainer2.Panel1.Controls.Add(Me.DisplayLeaveHistoryButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel4)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceText)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceLabel)
@@ -9032,6 +9034,15 @@ Partial Class EmployeeForm
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
         '
+        'DisplayLeaveHistoryButton
+        '
+        Me.DisplayLeaveHistoryButton.Location = New System.Drawing.Point(784, 368)
+        Me.DisplayLeaveHistoryButton.Name = "DisplayLeaveHistoryButton"
+        Me.DisplayLeaveHistoryButton.Size = New System.Drawing.Size(75, 23)
+        Me.DisplayLeaveHistoryButton.TabIndex = 543
+        Me.DisplayLeaveHistoryButton.Text = "Button2"
+        Me.DisplayLeaveHistoryButton.UseVisualStyleBackColor = True
+        '
         'EmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -10007,4 +10018,5 @@ Partial Class EmployeeForm
     Friend WithEvents WorkOrderToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Print201ReportToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents DisplayLeaveHistoryButton As Button
 End Class
