@@ -37,8 +37,6 @@ namespace AccuPay.Data.Entities
 
         public DateTime DedEffectiveDateFrom { get; set; }
 
-        public DateTime? DedEffectiveDateTo { get; set; }
-
         public decimal TotalLoanAmount { get; set; }
 
         public string DeductionSchedule { get; set; }

@@ -210,6 +210,35 @@ namespace AccuPay.Data.Repositories
                         ToListAsync();
         }
 
+        public async Task<PaginatedListResult<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.LoanSchedules
+                                .Include(x => x.Employee)
+                                .Include(x => x.LoanType)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.DedEffectiveDateFrom)
+                                .ThenBy(x => x.LoanType.PartNo)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LoanType.PartNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var loanSchedule = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<LoanSchedule>(loanSchedule, count);
+        }
+
         public async Task<IEnumerable<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName,
                                                                                     int employeeId)
         {

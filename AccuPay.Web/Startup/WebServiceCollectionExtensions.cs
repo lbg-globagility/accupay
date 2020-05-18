@@ -3,6 +3,7 @@ using AccuPay.Web.Account;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
+using AccuPay.Web.Loans;
 using AccuPay.Web.OfficialBusinesses;
 using AccuPay.Web.Overtimes;
 using AccuPay.Web.Users;
@@ -20,6 +21,7 @@ namespace AccuPay.Web
             services.AddScoped<TokenService>();
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
+            services.AddScoped<LoanService>();
             services.AddScoped<OfficialBusinessService>();
             services.AddScoped<OvertimeService>();
 
