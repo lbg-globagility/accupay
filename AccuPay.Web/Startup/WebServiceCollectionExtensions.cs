@@ -4,6 +4,7 @@ using AccuPay.Web.Account;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Accupay.Web.Core.Auth;
 
 namespace AccuPay.Web
 {
@@ -16,6 +17,7 @@ namespace AccuPay.Web
             services.AddScoped<AccountTokenService>();
             services.AddScoped<TokenService>();
             services.AddScoped<EmployeeService>();
+            services.AddScoped<CurrentUser>();
 
             services.AddScoped<JwtConfiguration>();
 
