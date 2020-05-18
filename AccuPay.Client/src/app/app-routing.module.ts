@@ -5,6 +5,7 @@ import { PageNotFoundComponent } from 'src/app/errors/page-not-found/page-not-fo
 import { UnderConstructionComponent } from 'src/app/errors/under-construction/under-construction.component';
 import { LoginComponent } from 'src/app/accounts/login/login.component';
 import { AuthGuard } from 'src/app/core/auth/auth.guard';
+import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
 
 const routes: Routes = [
   {
@@ -13,7 +14,7 @@ const routes: Routes = [
     children: [
       {
         path: 'employees',
-        component: UnderConstructionComponent,
+        component: EmployeeListComponent,
       },
     ],
     canActivate: [AuthGuard],
