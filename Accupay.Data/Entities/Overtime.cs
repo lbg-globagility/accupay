@@ -40,20 +40,18 @@ namespace AccuPay.Data.Entities
 
         public DateTime OTStartDate { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         public DateTime OTEndDate { get; set; }
 
         [Column("OTStatus")]
         public string Status { get; set; }
 
-        [NotMapped]
-        public DateTime? Start { get; set; }
-
-        [NotMapped]
-        public DateTime? End { get; set; }
-
         public string Reason { get; set; }
 
         public string Comments { get; set; }
+
+        [ForeignKey("EmployeeID")]
+        public virtual Employee Employee { get; set; }
 
         public Overtime()
         {
@@ -78,6 +76,18 @@ namespace AccuPay.Data.Entities
                         OTEndDate.Date.ToMinimumHourValue().Add(OTEndTime.Value);
 
             set => OTEndTime = value == null ? null : value?.TimeOfDay;
+        }
+
+        public void UpdateEndDate()
+        {
+            if (OTStartTime == null || OTEndTime == null)
+            {
+                OTEndDate = OTStartDate;
+            }
+            else
+            {
+                OTEndDate = OTEndTime < OTStartTime ? OTStartDate.AddDays(1) : OTStartDate;
+            }
         }
 
         public string Validate()

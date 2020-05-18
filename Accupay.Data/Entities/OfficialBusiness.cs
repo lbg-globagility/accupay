@@ -46,6 +46,7 @@ namespace AccuPay.Data.Entities
         [Column("OffBusStartDate")]
         public DateTime? StartDate { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("OffBusEndDate")]
         public DateTime? EndDate { get; set; }
 

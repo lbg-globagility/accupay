@@ -4,6 +4,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.OfficialBusinesses;
+using AccuPay.Web.Overtimes;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -20,6 +21,7 @@ namespace AccuPay.Web
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
             services.AddScoped<OfficialBusinessService>();
+            services.AddScoped<OvertimeService>();
 
             services.AddScoped<JwtConfiguration>();
 

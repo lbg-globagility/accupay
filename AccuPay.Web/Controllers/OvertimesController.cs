@@ -1,6 +1,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.OfficialBusinesses;
+using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,49 +9,49 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class OfficialBusinessesController : ControllerBase
+    public class OvertimesController : ControllerBase
     {
-        private readonly OfficialBusinessService _service;
-        private readonly OfficialBusinessRepository _repository;
+        private readonly OvertimeService _service;
+        private readonly OvertimeRepository _repository;
 
-        public OfficialBusinessesController(OfficialBusinessService service, OfficialBusinessRepository repository)
+        public OvertimesController(OvertimeService service, OvertimeRepository repository)
         {
             _service = service;
             _repository = repository;
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<OfficialBusinessDto>>> List([FromForm] PageOptions options, string searchTerm)
+        public async Task<ActionResult<PaginatedList<OvertimeDto>>> List([FromForm] PageOptions options, string searchTerm)
         {
             return await _service.PaginatedList(options, searchTerm);
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<OfficialBusinessDto>> GetById(int id)
+        public async Task<ActionResult<OvertimeDto>> GetById(int id)
         {
-            var officalBusiness = await _service.GetById(id);
+            var overtime = await _service.GetById(id);
 
-            if (officalBusiness == null)
+            if (overtime == null)
                 return NotFound();
             else
-                return officalBusiness;
+                return overtime;
         }
 
         [HttpPost]
-        public async Task<ActionResult<OfficialBusinessDto>> Create([FromBody] CreateOfficialBusinessDto dto)
+        public async Task<ActionResult<OvertimeDto>> Create([FromBody] CreateOvertimeDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<OfficialBusinessDto>> Update(int id, [FromBody] UpdateOfficialBusinessDto dto)
+        public async Task<ActionResult<OvertimeDto>> Update(int id, [FromBody] UpdateOvertimeDto dto)
         {
-            var officalBusiness = await _service.Update(id, dto);
+            var overtime = await _service.Update(id, dto);
 
-            if (officalBusiness == null)
+            if (overtime == null)
                 return NotFound();
             else
-                return officalBusiness;
+                return overtime;
         }
 
         [HttpDelete("{id}")]
