@@ -26,6 +26,9 @@ Public Class SmDeploymentEndorsementReportProvider
                 .SetParameter("startDate", dateNow.Date)
                 .SetParameter("endDate", dateNow.Date)
 
+                Dim mrMrs = If(e.Gender = "M", "Mr.", "Ms.")
+                .SetParameter("salutation", $"{mrMrs} {e.LastName}")
+
             End With
 
             Dim form = New LaGlobalEmployeeReportForm
