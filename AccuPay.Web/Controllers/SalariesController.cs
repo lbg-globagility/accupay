@@ -11,9 +11,9 @@ namespace AccuPay.Web.Controllers
     {
         private readonly SalaryService _salaryService;
 
-        public SalariesController(SalaryService branchRepository)
+        public SalariesController(SalaryService salaryService)
         {
-            _salaryService = branchRepository;
+            _salaryService = salaryService;
         }
 
         [HttpPost]
@@ -22,7 +22,7 @@ namespace AccuPay.Web.Controllers
             try
             {
                 var salary = await _salaryService.Create(dto);
-                return Ok(salary.RowID);
+                return Ok();
             }
             catch
             {
