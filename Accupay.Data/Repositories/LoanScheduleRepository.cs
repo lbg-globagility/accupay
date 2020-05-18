@@ -80,6 +80,11 @@ namespace AccuPay.Data.Repositories
             // while import loans does not use ViewModel, do this to avoid errors
             var newLoanSchedule = loanSchedule.CloneJson();
             newLoanSchedule.Employee = null;
+            // after cloning, TotalPayPeriod and TotalBalanceLeft are not set properly
+            // since they are internal. Use a better cloning mechanism next time
+            // but for now, recompute those values
+            newLoanSchedule.RecomputeTotalPayPeriod();
+            newLoanSchedule.RecomputePayPeriodLeft();
 
             // add or update the loanSchedule
             if (deferSave == false)

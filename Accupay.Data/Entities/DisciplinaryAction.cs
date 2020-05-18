@@ -42,12 +42,6 @@ namespace AccuPay.Data.Entities
 
         public string Comments { get; set; }
 
-        public string FindingName
-        {
-            get
-            {
-                return Finding?.Name;
-            }
-        }
+        public string FindingName => Finding?.PartNo;
     }
 }
