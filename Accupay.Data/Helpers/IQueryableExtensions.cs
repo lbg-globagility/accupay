@@ -3,7 +3,7 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Notisphere.Core.Extensions
+namespace AccuPay.Data.Helpers
 {
     public static class IQueryableExtensions
     {

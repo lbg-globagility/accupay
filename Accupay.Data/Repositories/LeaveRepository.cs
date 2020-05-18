@@ -1,7 +1,5 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Services;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -117,6 +115,34 @@ namespace AccuPay.Data.Repositories
             return await _context.Leaves.
                                 Where(l => l.EmployeeID == employeeId).
                                 ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<Leave>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.Leaves
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderBy(x => x.StartDate)
+                                .ThenBy(x => x.StartTime)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LeaveType, searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var leaves = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Leave>(leaves, count);
         }
 
         public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)

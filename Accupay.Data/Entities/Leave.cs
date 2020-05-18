@@ -55,6 +55,9 @@ namespace AccuPay.Data.Entities
 
         public virtual string Status { get; set; }
 
+        [ForeignKey("EmployeeID")]
+        public virtual Employee Employee { get; set; }
+
         [NotMapped]
         public bool IsNew { get; set; } // Delete this. This is only used on ImportLeaveForm and other codes may use this and get a wrong result
 
