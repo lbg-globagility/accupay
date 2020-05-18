@@ -77,9 +77,7 @@ namespace AccuPay.Data.Entities
         {
             get => EndTime == null ?
                         (DateTime?)null :
-                        EndDate == null ?
-                                DateTime.Now.ToMinimumHourValue().Add(EndTime.Value) :
-                                EndDate.Value.Date.ToMinimumHourValue().Add(EndTime.Value);
+                        ProperEndDate.Date.ToMinimumHourValue().Add(EndTime.Value);
 
             set => EndTime = value == null ? null : value?.TimeOfDay;
         }
