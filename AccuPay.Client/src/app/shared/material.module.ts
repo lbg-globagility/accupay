@@ -4,6 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatInputModule } from '@angular/material/input';
 import { NgModule } from '@angular/core';
 
 @NgModule({
@@ -11,7 +13,7 @@ import { NgModule } from '@angular/core';
     MatAutocompleteModule,
     MatButtonModule,
     // MatButtonToggleModule,
-    // MatCardModule,
+    MatCardModule,
     // MatCheckboxModule,
     // MatChipsModule,
     // MatDatepickerModule,
@@ -19,7 +21,7 @@ import { NgModule } from '@angular/core';
     // MatDividerModule,
     // MatExpansionModule,
     MatIconModule,
-    // MatInputModule,
+    MatInputModule,
     // MatListModule,
     MatMenuModule,
     // MatNativeDateModule,
