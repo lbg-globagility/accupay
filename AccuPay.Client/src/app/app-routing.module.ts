@@ -5,6 +5,8 @@ import { PageNotFoundComponent } from 'src/app/errors/page-not-found/page-not-fo
 import { UnderConstructionComponent } from 'src/app/errors/under-construction/under-construction.component';
 import { LoginComponent } from 'src/app/accounts/login/login.component';
 import { AuthGuard } from 'src/app/core/auth/auth.guard';
+import { UserListComponent } from 'src/app/users/user-list/user-list.component';
+import { ViewUserComponent } from 'src/app/users/view-user/view-user.component';
 
 const routes: Routes = [
   {
@@ -14,6 +16,14 @@ const routes: Routes = [
       {
         path: 'employees',
         component: UnderConstructionComponent,
+      },
+      {
+        path: 'users',
+        component: UserListComponent,
+      },
+      {
+        path: 'users/:id',
+        component: ViewUserComponent,
       },
     ],
     canActivate: [AuthGuard],
