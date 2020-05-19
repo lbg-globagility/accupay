@@ -8,6 +8,7 @@
 
     <img appImgFallback class="__organization-logo" />
 
+    <button mat-button [matMenuTriggerFor]="accountMenu">John Doe</button>
     <mat-menu #accountMenu="matMenu">
       <button mat-menu-item routerLink="/myaccount">My Account</button>
       <button mat-menu-item (click)="logout()">Log Out</button>

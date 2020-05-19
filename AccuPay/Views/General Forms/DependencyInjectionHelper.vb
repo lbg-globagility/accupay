@@ -1,4 +1,6 @@
-﻿Imports AccuPay.Benchmark
+﻿Option Strict On
+
+Imports AccuPay.Benchmark
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -152,7 +154,7 @@ Public Class DependencyInjectionHelper
 
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
         dbContextOptionsBuilder.
-            UseMySql("server=localhost;userid=root;password=globagility;database=accupaydb_cinema2k;").
+            UseMySql(mysql_conn_text).
             EnableSensitiveDataLogging()
     End Sub
 

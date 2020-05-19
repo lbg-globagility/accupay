@@ -42,6 +42,8 @@ namespace AccuPay.Data.Entities
 
         public virtual DateTime TransactionDate { get; set; }
 
+        public string Description { get; set; }
+
         public virtual string Type { get; set; }
 
         public virtual decimal Balance { get; set; }

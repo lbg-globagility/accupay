@@ -44,6 +44,7 @@ namespace AccuPay.Data.Entities
         [Column("LeaveStartDate")]
         public virtual DateTime StartDate { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("LeaveEndDate")]
         public virtual DateTime? EndDate { get; set; }
 
@@ -54,6 +55,9 @@ namespace AccuPay.Data.Entities
         public virtual byte[] Image { get; set; }
 
         public virtual string Status { get; set; }
+
+        [ForeignKey("EmployeeID")]
+        public virtual Employee Employee { get; set; }
 
         [NotMapped]
         public bool IsNew { get; set; } // Delete this. This is only used on ImportLeaveForm and other codes may use this and get a wrong result
@@ -73,9 +77,7 @@ namespace AccuPay.Data.Entities
         {
             get => EndTime == null ?
                         (DateTime?)null :
-                        EndDate == null ?
-                                DateTime.Now.ToMinimumHourValue().Add(EndTime.Value) :
-                                EndDate.Value.Date.ToMinimumHourValue().Add(EndTime.Value);
+                        ProperEndDate.Date.ToMinimumHourValue().Add(EndTime.Value);
 
             set => EndTime = value == null ? null : value?.TimeOfDay;
         }
@@ -84,8 +86,20 @@ namespace AccuPay.Data.Entities
         [NotMapped]
         public DateTime ProperEndDate
         {
-            get => EndDate ?? DateTime.Now.Date;
+            get => EndDate ?? StartDate;
             set => EndDate = value;
+        }
+
+        public void UpdateEndDate()
+        {
+            if (StartTime == null || EndTime == null)
+            {
+                EndDate = ProperEndDate;
+            }
+            else
+            {
+                EndDate = EndTime < StartTime ? StartDate.AddDays(1) : StartDate;
+            }
         }
 
         public string Validate()

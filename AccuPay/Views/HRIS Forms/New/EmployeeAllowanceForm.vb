@@ -460,7 +460,8 @@ Public Class EmployeeAllowanceForm
 
         Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
         Dim allowances = (Await allowanceRepository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
-                                OrderByDescending(Function(a) a.EffectiveEndDate).
+                                OrderByDescending(Function(a) a.EffectiveStartDate).
+                                ThenBy(Function(a) a.Type).
                                 ToList
 
         'only get the items with effective end dates first

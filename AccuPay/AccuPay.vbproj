@@ -434,7 +434,6 @@
     <Compile Include="Domain\BankExports\BankExporterFactory.vb" />
     <Compile Include="Domain\BankExports\BDOBankExporter.vb" />
     <Compile Include="Domain\BankExports\IBankExporter.vb" />
-    <Compile Include="Domain\Commons\Calendar.vb" />
     <Compile Include="Domain\Commons\DbRepository.vb" />
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
@@ -652,6 +651,18 @@
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PreviousEmployerTab.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\ViewLeaveLedgerDialog.Designer.vb">
+      <DependentUpon>ViewLeaveLedgerDialog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\ViewLeaveLedgerDialog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\ViewLeaveLedgerTypeSelector.Designer.vb">
+      <DependentUpon>ViewLeaveLedgerTypeSelector.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\ViewLeaveLedgerTypeSelector.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Views\Core Forms\Employee\PromotionTab.Designer.vb">
@@ -2060,6 +2071,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PreviousEmployerTab.resx">
       <DependentUpon>PreviousEmployerTab.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\ViewLeaveLedgerDialog.resx">
+      <DependentUpon>ViewLeaveLedgerDialog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\ViewLeaveLedgerTypeSelector.resx">
+      <DependentUpon>ViewLeaveLedgerTypeSelector.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\PromotionTab.resx">
       <DependentUpon>PromotionTab.vb</DependentUpon>

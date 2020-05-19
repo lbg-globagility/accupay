@@ -3,15 +3,12 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLoansForm
-
-    Private _systemOwnerService As SystemOwnerService
 
     Private sysowner_is_benchmark As Boolean
 
@@ -49,10 +46,8 @@ Public Class EmployeeLoansForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _employees = New List(Of Employee)
 
         _allEmployees = New List(Of Employee)
@@ -62,8 +57,6 @@ Public Class EmployeeLoansForm
         _changedLoans = New List(Of LoanSchedule)
 
         _currentLoanTransactions = New List(Of LoanTransaction)
-
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -273,7 +266,7 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
                 Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-                Await loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
+                Await loanScheduleRepository.SaveManyAsync(changedLoans)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -600,6 +593,11 @@ Public Class EmployeeLoansForm
         Dim loanSchedules = Await loanScheduleRepository.
                                     GetByEmployeeAsync(currentEmployee.RowID.Value)
 
+        loanSchedules = loanSchedules.
+                                OrderByDescending(Function(l) l.DedEffectiveDateFrom).
+                                ThenBy(Function(l) l.LoanName).
+                                ToList()
+
         Dim statusFilter = CreateStatusFilter()
 
         If statusFilter Is Nothing Then
@@ -610,6 +608,10 @@ Public Class EmployeeLoansForm
         End If
 
         Me._changedLoans = Me._currentloans.CloneListJson()
+        Me._changedLoans.ForEach(Sub(loan)
+                                     loan.RecomputePayPeriodLeft()
+                                     loan.RecomputeTotalPayPeriod()
+                                 End Sub)
 
         chkInProgressFilter.Text = $"{LoanSchedule.STATUS_IN_PROGRESS} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_IN_PROGRESS)})"
         chkOnHoldFilter.Text = $"{LoanSchedule.STATUS_ON_HOLD} ({loanSchedules.Count(Function(l) l.Status = LoanSchedule.STATUS_ON_HOLD)})"
@@ -875,7 +877,6 @@ Public Class EmployeeLoansForm
             newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount OrElse
             newLoanSchedule.TotalBalanceLeft <> oldLoanSchedule.TotalBalanceLeft OrElse
             newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom OrElse
-            newLoanSchedule.TotalPayPeriod <> oldLoanSchedule.TotalPayPeriod OrElse
             newLoanSchedule.LoanPayPeriodLeft <> oldLoanSchedule.LoanPayPeriodLeft OrElse
             newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount OrElse
             newLoanSchedule.Status <> oldLoanSchedule.Status OrElse

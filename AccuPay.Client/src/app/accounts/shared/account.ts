@@ -1,5 +1,3 @@
-import { Role } from 'src/app/roles/shared/role';
-
 export interface Account {
   id: string;
   email: string;
@@ -18,6 +16,5 @@ export interface Account {
   role: string;
   status: string;
   location: string;
-  role2: Role;
   recallCategories: string[];
 }

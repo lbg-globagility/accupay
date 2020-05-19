@@ -102,30 +102,13 @@ Public Class PayStubForm
 
     End Sub
 
-    Private Sub PayStub_EnabledChanged(sender As Object, e As EventArgs) Handles Me.EnabledChanged
-
-        Dim _bool As Boolean = Me.Enabled
-
-        ''###### CONTROL DISABLER ######
-
-        PayrollForm.MenuStrip1.Enabled = _bool
-        MDIPrimaryForm.Showmainbutton.Enabled = _bool
-        ToolStrip1.Enabled = _bool
-
-        Panel5.Enabled = _bool
-
-        MDIPrimaryForm.systemprogressbar.Value = 0
-        MDIPrimaryForm.systemprogressbar.Visible = CBool(Not _bool)
-
-    End Sub
-
     Private Async Sub PayStub_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         dgvAdjustments.AutoGenerateColumns = False
 
         viewID = VIEW_privilege("Employee Pay Slip", orgztnID)
 
-        Await VIEW_payperiodofyear()
+        Await RefreshForm()
 
         dgvpayper.Focus()
 
@@ -169,6 +152,23 @@ Public Class PayStubForm
         ShowOrHideActual()
         ShowOrHideEmailPayslip()
         ShowOrHidePayrollSummaryByBranch()
+
+    End Sub
+
+    Private Sub PayStub_EnabledChanged(sender As Object, e As EventArgs) Handles Me.EnabledChanged
+
+        Dim _bool As Boolean = Me.Enabled
+
+        ''###### CONTROL DISABLER ######
+
+        PayrollForm.MenuStrip1.Enabled = _bool
+        MDIPrimaryForm.Showmainbutton.Enabled = _bool
+        ToolStrip1.Enabled = _bool
+
+        Panel5.Enabled = _bool
+
+        MDIPrimaryForm.systemprogressbar.Value = 0
+        MDIPrimaryForm.systemprogressbar.Visible = CBool(Not _bool)
 
     End Sub
 
@@ -353,8 +353,6 @@ Public Class PayStubForm
     End Sub
 
     Private Sub dgvpayper_SelectionChanged(sender As Object, e As EventArgs) 'Handles dgvpayper.SelectionChanged
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         Static str_pay_freq_sched As String = String.Empty
@@ -550,8 +548,6 @@ Public Class PayStubForm
 
         loademployee(quer_empPayFreq)
 
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
-        RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
         RemoveHandler dgvemployees.SelectionChanged, AddressOf dgvemployees_SelectionChanged
 
         dgvemployees_SelectionChanged(sender, e)

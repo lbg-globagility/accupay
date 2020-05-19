@@ -1,5 +1,6 @@
 Imports System.Configuration
 Imports System.Threading
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -95,6 +96,8 @@ Public Class MDIPrimaryForm
 
         setProperDashBoardAccordingToSystemOwner()
 
+        RunLeaveAccrual()
+
         Panel1.Focus()
         BackgroundWorker1.RunWorkerAsync()
         MyBase.OnLoad(e)
@@ -129,6 +132,21 @@ Public Class MDIPrimaryForm
 
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
         lblTime.Text = TimeOfDay
+    End Sub
+
+    Private Async Sub RunLeaveAccrual()
+
+        Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
+
+        If collection.GetBoolean("AutomaticAccrual") Then
+            Dim unused = Task.Run(
+                Async Function()
+
+                    Dim service = MainServiceProvider.GetRequiredService(Of LeaveAccrualService)
+                    Await service.CheckAccruals(z_OrganizationID, z_User)
+                End Function)
+        End If
     End Sub
 
     Dim ClosingForm As Form = Nothing 'New

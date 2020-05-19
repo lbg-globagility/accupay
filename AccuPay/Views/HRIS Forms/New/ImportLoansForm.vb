@@ -263,8 +263,7 @@ Public Class ImportLoansForm
                     loan.Employee = Nothing
                 Next
 
-                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject,
-                                                            Me._loanTypeList)
+                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In loansWithOutEmployeeObject
