@@ -1,84 +1,80 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Allowances.Models;
-using AccuPay.Web.Employees.Models;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Allowances.Services
 {
-    class AllowanceService
+    public class AllowanceService
     {
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly AllowanceRepository _repository;
 
         public AllowanceService(AllowanceRepository allowanceRepository)
         {
-            _allowanceRepository = allowanceRepository;
+            _repository = allowanceRepository;
         }
 
-        internal async Task<Allowance> Create(AllowanceDto dto)
+        public async Task<AllowanceDto> GetByIdAsync(int id)
         {
-            var allowance = new Allowance();
+            var allowance = await _repository.GetByIdAsync(id);
 
-            allowance.OrganizationID = 5;
-            allowance.CreatedBy = 1;
-
-            ApplyUpdate(dto, allowance);
-
-            await Save(allowance);
-
-            return allowance;
+            return ConvertToDto(allowance);
         }
 
-        internal async Task Update(int id, AllowanceDto dto)
+        internal async Task<AllowanceDto> Create(CreateAllowanceDto dto)
         {
-            var allowance = await GetAllowanceById(id);
+            // TODO: validations
+            var allowance = new Allowance
+            {
+                OrganizationID = 5,
+                CreatedBy = 1,
+                EmployeeID = dto.EmployeeID
+            };
+            ApplyChanges(dto, allowance);
+
+            await _repository.SaveAsync(allowance);
+
+            return ConvertToDto(allowance);
+        }
+
+        internal async Task<AllowanceDto> Update(int id, UpdateAllowanceDto dto)
+        {
+            // TODO: validations
+            var allowance = await _repository.GetByIdAsync(id);
+            if (allowance == null) return null;
 
             allowance.LastUpdBy = 1;
 
-            ApplyUpdate(dto, allowance);
+            ApplyChanges(dto, allowance);
 
-            await Save(allowance);
+            await _repository.SaveAsync(allowance);
+
+            return ConvertToDto(allowance);
         }
 
-        internal async Task Delete(int id, AllowanceDto dto)
+        private static void ApplyChanges(ICrudAllowanceDto dto, Allowance allowance)
         {
-            await _allowanceRepository.DeleteAsync(id);
-        }
-
-        private async Task Save(Allowance allowance)
-        {
-            List<Allowance> allowances = new List<Allowance>() { allowance };
-            await _allowanceRepository.SaveManyAsync(allowances);
-        }
-
-        private static void ApplyUpdate(AllowanceDto dto, Allowance allowance)
-        {
-            allowance.RowID = dto.RowID;
-            allowance.EmployeeID = dto.EmployeeID;
             allowance.ProductID = dto.ProductID;
-            allowance.EffectiveStartDate = dto.EffectiveStartDate;
             allowance.AllowanceFrequency = dto.AllowanceFrequency;
+            allowance.EffectiveStartDate = dto.EffectiveStartDate;
             allowance.EffectiveEndDate = dto.EffectiveEndDate;
-            allowance.TaxableFlag = dto.TaxableFlag;
             allowance.Amount = dto.Amount;
         }
 
-        private async Task<Allowance> GetAllowanceById(int id)
+        private static AllowanceDto ConvertToDto(Allowance allowance)
         {
-            return await _allowanceRepository.GetByIdAsync(id);
+            if (allowance == null) return null;
+
+            return new AllowanceDto()
+            {
+                Id = allowance.RowID.Value,
+                EmployeeID = allowance.EmployeeID.Value,
+                ProductID = allowance.ProductID.Value,
+                EffectiveStartDate = allowance.EffectiveStartDate,
+                AllowanceFrequency = allowance.AllowanceFrequency,
+                EffectiveEndDate = allowance.EffectiveEndDate,
+                Amount = allowance.Amount
+            };
         }
-
-        internal async Task<AllowanceDto> GeyByIdAsync(int id)
-        {
-            var allowance = await GetAllowanceById(id);
-            var dto = AllowanceDto.Produce(allowance);
-
-            return dto;
-        }
-
-
     }
 }

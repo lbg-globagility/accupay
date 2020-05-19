@@ -3,15 +3,12 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLoansForm
-
-    Private _systemOwnerService As SystemOwnerService
 
     Private sysowner_is_benchmark As Boolean
 
@@ -49,10 +46,8 @@ Public Class EmployeeLoansForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _employees = New List(Of Employee)
 
         _allEmployees = New List(Of Employee)
@@ -62,8 +57,6 @@ Public Class EmployeeLoansForm
         _changedLoans = New List(Of LoanSchedule)
 
         _currentLoanTransactions = New List(Of LoanTransaction)
-
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 

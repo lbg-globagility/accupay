@@ -1,5 +1,6 @@
 using Accupay.Web.Core.Configurations;
 using AccuPay.Web.Account;
+using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
@@ -19,6 +20,7 @@ namespace AccuPay.Web
             services.AddScoped<AccountService>();
             services.AddScoped<AccountTokenService>();
             services.AddScoped<TokenService>();
+            services.AddScoped<AllowanceService>();
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();

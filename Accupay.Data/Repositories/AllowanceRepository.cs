@@ -1,7 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -47,48 +46,39 @@ namespace AccuPay.Data.Repositories
 
         private async Task SaveWithContextAsync(Allowance allowance, bool deferSave = true)
         {
-            // remove the product so it won't override the saving of ProductID
-            // this is probably done because Product is used in front end that is why it has data
-            // other repository has no need for this, maybe standardize this TODO:
-            var newAllowance = allowance.CloneJson();
-            newAllowance.Product = null;
+            if (allowance.Product != null)
+            {
+                _context.Entry(allowance.Product).State = EntityState.Detached;
+            }
+
+            await SaveAsyncFunction(allowance);
 
             if (deferSave == false)
             {
-                // TODO: refactor this code to always call SaveAsyncFunction
-                await SaveAsyncFunction(newAllowance);
                 await _context.SaveChangesAsync();
             }
-            else
-            {
-                await SaveAsyncFunction(newAllowance);
-            }
-
-            // we used clone json at the top so the passed allowance
-            // won't have the new RowID if the SaveAsync is Insert
-            allowance.RowID = newAllowance.RowID;
         }
 
-        private async Task SaveAsyncFunction(Allowance newAllowance)
+        private async Task SaveAsyncFunction(Allowance allowance)
         {
-            if (newAllowance.ProductID == null)
+            if (allowance.ProductID == null)
                 throw new ArgumentException("Allowance type cannot be empty.");
 
             var product = await _context.Products.
-                                    Where(p => p.RowID == newAllowance.ProductID).
+                                    Where(p => p.RowID == allowance.ProductID).
                                     FirstOrDefaultAsync();
 
             if (product == null)
                 throw new ArgumentException("The selected allowance type no longer exists. Please close then reopen the form to view the latest data.");
 
-            if (newAllowance.IsMonthly && !product.Fixed)
+            if (allowance.IsMonthly && !product.Fixed)
                 throw new ArgumentException("Only fixed allowance type are allowed for Monthly allowances.");
 
             // add or update the allowance
-            if (newAllowance.RowID == null)
-                _context.Allowances.Add(newAllowance);
+            if (allowance.RowID == null)
+                _context.Allowances.Add(allowance);
             else
-                _context.Entry(newAllowance).State = EntityState.Modified;
+                _context.Entry(allowance).State = EntityState.Modified;
         }
 
         #endregion CRUD
