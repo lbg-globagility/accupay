@@ -8,6 +8,7 @@ import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { HttpClientModule } from '@angular/common/http';
 import { UsersModule } from 'src/app/users/users.module';
+import { LeavesModule } from 'src/app/leaves/leaves.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -19,6 +20,7 @@ import { UsersModule } from 'src/app/users/users.module';
     AccountsModule,
     MainModule,
     UsersModule,
+    LeavesModule
   ],
   providers: [],
   bootstrap: [AppComponent],

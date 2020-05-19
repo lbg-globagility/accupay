@@ -21,6 +21,11 @@ const menuItems: MenuItem[] = [
     route: '/users',
     icon: 'person',
   },
+  {
+    label: 'Leaves',
+    route: '/leaves',
+    icon: 'person',
+  },
 ];
 
 @Component({
