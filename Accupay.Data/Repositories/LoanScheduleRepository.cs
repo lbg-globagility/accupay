@@ -33,25 +33,22 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        // TODO: move this to service, shouldn't pass loanTypes in repository
-        public async Task SaveManyAsync(List<LoanSchedule> loanSchedules, IEnumerable<Product> loanTypes)
+        public async Task SaveManyAsync(List<LoanSchedule> loanSchedules)
         {
             foreach (var loanSchedule in loanSchedules)
             {
-                await SaveWithContextAsync(loanSchedule, loanTypes);
+                await SaveWithContextAsync(loanSchedule);
 
                 await _context.SaveChangesAsync();
             }
         }
 
-        public async Task SaveAsync(LoanSchedule loanSchedule, IEnumerable<Product> loanTypes)
+        public async Task SaveAsync(LoanSchedule loanSchedule)
         {
-            await SaveWithContextAsync(loanSchedule, loanTypes, deferSave: false);
+            await SaveWithContextAsync(loanSchedule, deferSave: false);
         }
 
-        private async Task SaveWithContextAsync(LoanSchedule loanSchedule,
-                                            IEnumerable<Product> loanTypes,
-                                            bool deferSave = true)
+        private async Task SaveWithContextAsync(LoanSchedule loanSchedule, bool deferSave = true)
         {
             // if completed yung loan, hindi pwede ma i-insert or update
             if (loanSchedule.Status == LoanSchedule.STATUS_COMPLETE)
@@ -59,7 +56,10 @@ namespace AccuPay.Data.Repositories
 
             if (string.IsNullOrWhiteSpace(loanSchedule.LoanName))
             {
-                var loanName = loanTypes.FirstOrDefault(l => l.RowID == loanSchedule.LoanTypeID)?.PartNo;
+                var loanName = await _context.Products
+                                        .Where(l => l.RowID == loanSchedule.LoanTypeID)
+                                        .Select(x => x.PartNo)
+                                        .FirstOrDefaultAsync();
 
                 loanSchedule.LoanName = loanName;
             }
@@ -70,11 +70,22 @@ namespace AccuPay.Data.Repositories
             loanSchedule.TotalLoanAmount = AccuMath.CommercialRound(loanSchedule.TotalLoanAmount);
             loanSchedule.DeductionAmount = AccuMath.CommercialRound(loanSchedule.DeductionAmount);
             loanSchedule.DeductionPercentage = AccuMath.CommercialRound(loanSchedule.DeductionPercentage);
-
             loanSchedule.TotalPayPeriod = AccuMath.CommercialRound(loanSchedule.TotalPayPeriod);
-            loanSchedule.RecomputeTotalPayPeriod();
-
             loanSchedule.TotalBalanceLeft = AccuMath.CommercialRound(loanSchedule.TotalBalanceLeft);
+
+            if (!GetStatusList().Any(x => x.ToTrimmedLowerCase() == loanSchedule.Status.ToTrimmedLowerCase()))
+            {
+                if (loanSchedule.TotalBalanceLeft >= loanSchedule.TotalLoanAmount)
+                {
+                    loanSchedule.Status = LoanSchedule.STATUS_COMPLETE;
+                }
+                else
+                {
+                    loanSchedule.Status = LoanSchedule.STATUS_IN_PROGRESS;
+                }
+            }
+
+            loanSchedule.RecomputeTotalPayPeriod();
             loanSchedule.RecomputePayPeriodLeft();
 
             // while import loans does not use ViewModel, do this to avoid errors
@@ -86,19 +97,18 @@ namespace AccuPay.Data.Repositories
             newLoanSchedule.RecomputeTotalPayPeriod();
             newLoanSchedule.RecomputePayPeriodLeft();
 
-            // add or update the loanSchedule
+            await SaveAsyncFunction(newLoanSchedule);
+
             if (deferSave == false)
             {
-                await SaveAsyncFunction(newLoanSchedule);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                await SaveAsyncFunction(newLoanSchedule);
             }
 
             // while import loans does not use ViewModel, do this to avoid errors
             loanSchedule.RowID = newLoanSchedule.RowID;
+            loanSchedule.TotalPayPeriod = newLoanSchedule.TotalPayPeriod;
+            loanSchedule.TotalBalanceLeft = newLoanSchedule.TotalBalanceLeft;
+            loanSchedule.Status = newLoanSchedule.Status;
         }
 
         private async Task SaveAsyncFunction(LoanSchedule loanSchedule)
