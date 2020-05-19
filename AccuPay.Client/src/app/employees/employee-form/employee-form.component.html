@@ -1,0 +1,64 @@
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-content>
+      <div class="row middle-md">
+        <div class="col-md-12">
+          <div class="row">
+            <ng-container *ngIf="uncontrollable === false">
+              <mat-form-field
+                class="col-md-8"
+                appearance="outline"
+                color="accent"
+              >
+                <mat-label>Employee ID *</mat-label>
+                <input matInput formControlName="employeeNo" />
+              </mat-form-field>
+
+              <mat-form-field
+                class="col-md-6"
+                appearance="outline"
+                color="accent"
+              >
+                <mat-label>Last Name *</mat-label>
+                <input matInput formControlName="lastName" />
+              </mat-form-field>
+
+              <mat-form-field
+                class="col-md-6"
+                appearance="outline"
+                color="accent"
+              >
+                <mat-label>First Name *</mat-label>
+                <input matInput formControlName="firstName" />
+              </mat-form-field>
+            </ng-container>
+
+            <ng-container *ngIf="uncontrollable">
+              <mat-form-field class="col-md-8 m-no-underline">
+                <mat-label>Employee ID</mat-label>
+                <input matInput [value]="getValue('employeeNo')" readonly />
+              </mat-form-field>
+
+              <mat-form-field class="col-md-6 m-no-underline">
+                <mat-label>Last Name</mat-label>
+                <input matInput [value]="getValue('lastName')" readonly />
+              </mat-form-field>
+
+              <mat-form-field class="col-md-6 m-no-underline">
+                <mat-label>First Name</mat-label>
+                <input matInput [value]="getValue('firstName')" readonly />
+              </mat-form-field>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions [ngClass]="{ 'is-hidden': uncontrollable }">
+      <button mat-button type="button" color="accent" (click)="cancel.emit()">
+        CANCEL
+      </button>
+      <button mat-raised-button type="submit" color="accent">FINISH</button>
+    </mat-card-actions>
+  </mat-card>
+</form>

@@ -10,12 +10,27 @@ import { UserListComponent } from 'src/app/users/user-list/user-list.component';
 import { ViewUserComponent } from 'src/app/users/view-user/view-user.component';
 import { NewUserComponent } from 'src/app/users/new-user/new-user.component';
 import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
+import { NewEmployeeComponent } from './employees/new-employee/new-employee.component';
+import { ViewEmployeeComponent } from './employees/view-employee/view-employee.component';
+import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
 
 const routes: Routes = [
   {
     path: '',
     component: MainComponent,
     children: [
+      {
+        path: 'employees/new',
+        component: NewEmployeeComponent,
+      },
+      {
+        path: 'employees/:id',
+        component: ViewEmployeeComponent,
+      },
+      {
+        path: 'employees/:id/edit',
+        component: EditEmployeeComponent,
+      },
       {
         path: 'employees',
         component: EmployeeListComponent,

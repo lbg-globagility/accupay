@@ -24,4 +24,16 @@ export class EmployeeService {
       params,
     });
   }
+
+  getById(id: number): Observable<Employee> {
+    return this.httpClient.get<Employee>(`${this.apiRoute}/${id}`);
+  }
+
+  update(id: number, employee: Employee) {
+    return this.httpClient.put(`${this.apiRoute}/${id}`, employee);
+  }
+
+  create(employee: Employee): Observable<number> {
+    return this.httpClient.post<number>(this.apiRoute, employee);
+  }
 }
