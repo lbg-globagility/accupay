@@ -26,6 +26,11 @@ const menuItems: MenuItem[] = [
     route: '/leaves',
     icon: 'person',
   },
+  {
+    label: 'Official Business',
+    route: '/official-business',
+    icon: 'person',
+  },
 ];
 
 @Component({
