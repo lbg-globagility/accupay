@@ -6,9 +6,11 @@ namespace AccuPay.Web.Allowances.Models
     {
         public int Id { get; set; }
 
-        public int EmployeeID { get; set; }
+        public string EmployeeNumber { get; set; }
 
-        public int ProductID { get; set; }
+        public string EmployeeName { get; set; }
+
+        public string AllowanceType { get; set; }
 
         public DateTime EffectiveStartDate { get; set; }
 

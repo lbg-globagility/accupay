@@ -1,3 +1,4 @@
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Allowances.Models;
 using AccuPay.Web.Allowances.Services;
@@ -11,19 +12,25 @@ namespace AccuPay.Web.Controllers
     [ApiController]
     public class AllowancesController : ControllerBase
     {
-        private readonly AllowanceService _allowanceService;
+        private readonly AllowanceService _service;
         private readonly AllowanceRepository _repository;
 
         public AllowancesController(AllowanceService allowanceService, AllowanceRepository repository)
         {
-            _allowanceService = allowanceService;
+            _service = allowanceService;
             _repository = repository;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<AllowanceDto>>> List([FromForm] PageOptions options, string searchTerm)
+        {
+            return await _service.PaginatedList(options, searchTerm);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<AllowanceDto>> GetById(int id)
         {
-            var allowance = await _allowanceService.GetByIdAsync(id);
+            var allowance = await _service.GetByIdAsync(id);
 
             if (allowance == null)
                 return NotFound();
@@ -36,7 +43,7 @@ namespace AccuPay.Web.Controllers
         {
             try
             {
-                return await _allowanceService.Create(dto);
+                return await _service.Create(dto);
             }
             catch
             {
@@ -49,7 +56,7 @@ namespace AccuPay.Web.Controllers
         {
             try
             {
-                var allowance = await _allowanceService.Update(id, dto);
+                var allowance = await _service.Update(id, dto);
 
                 if (allowance == null)
                     return NotFound();

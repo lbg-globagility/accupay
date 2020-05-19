@@ -243,10 +243,10 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
             }
 
-            var loanSchedule = await query.Page(options).ToListAsync();
+            var loanSchedules = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();
 
-            return new PaginatedListResult<LoanSchedule>(loanSchedule, count);
+            return new PaginatedListResult<LoanSchedule>(loanSchedules, count);
         }
 
         public async Task<IEnumerable<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName,

@@ -1,6 +1,8 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Allowances.Models;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Allowances.Services
@@ -12,6 +14,18 @@ namespace AccuPay.Web.Allowances.Services
         public AllowanceService(AllowanceRepository allowanceRepository)
         {
             _repository = allowanceRepository;
+        }
+
+        public async Task<PaginatedList<AllowanceDto>> PaginatedList(PageOptions options, string searchTerm)
+        {
+            // TODO: sort and desc in repository
+
+            int organizationId = 2; // temporary OrganizationID
+            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+
+            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
+
+            return new PaginatedList<AllowanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
         public async Task<AllowanceDto> GetByIdAsync(int id)
@@ -68,8 +82,9 @@ namespace AccuPay.Web.Allowances.Services
             return new AllowanceDto()
             {
                 Id = allowance.RowID.Value,
-                EmployeeID = allowance.EmployeeID.Value,
-                ProductID = allowance.ProductID.Value,
+                EmployeeNumber = allowance.Employee?.EmployeeNo,
+                EmployeeName = allowance.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                AllowanceType = allowance.Type,
                 EffectiveStartDate = allowance.EffectiveStartDate,
                 AllowanceFrequency = allowance.AllowanceFrequency,
                 EffectiveEndDate = allowance.EffectiveEndDate,
