@@ -71,7 +71,17 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Salary> GetByIdAsync(int id)
         {
-            return await _context.Salaries.Where(x => x.RowID == id).FirstOrDefaultAsync();
+            return await _context.Salaries
+                                .Where(x => x.RowID == id)
+                                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Salary> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.Salaries
+                                .Include(x => x.Employee)
+                                .Where(x => x.RowID == id)
+                                .FirstOrDefaultAsync();
         }
 
         #endregion Single entity

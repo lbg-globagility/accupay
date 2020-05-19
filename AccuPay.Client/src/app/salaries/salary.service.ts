@@ -23,4 +23,8 @@ export class SalaryService {
       params,
     });
   }
+
+  get(id: string): Observable<Salary> {
+    return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
+  }
 }
