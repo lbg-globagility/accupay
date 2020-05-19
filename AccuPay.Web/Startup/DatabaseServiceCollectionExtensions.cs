@@ -13,11 +13,11 @@ namespace AccuPay.Web
 {
     public static class DatabaseServiceCollectionExtensions
     {
-        public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration, IWebHostEnvironment env)
+        public static IServiceCollection AddDatabase(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddDbContext<PayrollContext>(options =>
             {
-                ConfigureDbContextOptions(configuration, options, env);
+                ConfigureDbContextOptions(configuration, options);
             });
 
             // passing DbContextOptions for services that needs to directly access PayrollContext.
@@ -25,31 +25,26 @@ namespace AccuPay.Web
             // like in the case of services accessed in multiple threads.
             services.AddSingleton(serviceProvider =>
             {
-                var options = GetDbContextOptions(configuration, env);
+                var options = GetDbContextOptions(configuration);
                 return new DbContextOptionsService(options);
             });
 
             return services;
         }
 
-        private static DbContextOptions GetDbContextOptions(IConfiguration configuration, IWebHostEnvironment env)
+        private static DbContextOptions GetDbContextOptions(IConfiguration configuration)
         {
             DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-            ConfigureDbContextOptions(configuration, builder, env);
+            ConfigureDbContextOptions(configuration, builder);
 
             return builder.Options;
         }
 
-        private static void ConfigureDbContextOptions(IConfiguration configuration, DbContextOptionsBuilder dbContextOptionsBuilder, IWebHostEnvironment env)
+        private static void ConfigureDbContextOptions(IConfiguration configuration, DbContextOptionsBuilder dbContextOptionsBuilder)
         {
             dbContextOptionsBuilder
                 .UseMySql(configuration.GetConnectionString("accupaydb"))
                 .EnableSensitiveDataLogging();
-
-            if (env.IsDevelopment())
-            {
-                dbContextOptionsBuilder.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()));
-            }
         }
     }
 }
