@@ -4,13 +4,13 @@ namespace AccuPay.Web.Allowances.Models
 {
     public class UpdateAllowanceDto : ICrudAllowanceDto
     {
-        public int ProductId { get; set; }
+        public int AllowanceTypeId { get; set; }
 
-        public string AllowanceFrequency { get; set; }
+        public string Frequency { get; set; }
 
-        public DateTime? EffectiveEndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
-        public DateTime EffectiveStartDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         public decimal Amount { get; set; }
     }

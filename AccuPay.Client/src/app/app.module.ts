@@ -5,12 +5,14 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
-import { EmployeesModule } from './employees/employees.module';
 import { HttpClientModule } from '@angular/common/http';
-import { UsersModule } from 'src/app/users/users.module';
+import { AllowancesModule } from 'src/app/allowances/allowances.module';
+import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
+import { LoansModule } from 'src/app/loans/loans.module';
 import { OfficialBusinessesModule } from 'src/app/official-businesses/official-businesses.module';
 import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
+import { UsersModule } from 'src/app/users/users.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -21,11 +23,13 @@ import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
     BrowserAnimationsModule,
     AccountsModule,
     MainModule,
+    AllowancesModule,
     EmployeesModule,
-    UsersModule,
     LeavesModule,
+    LoansModule,
     OfficialBusinessesModule,
     OvertimesModule,
+    UsersModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

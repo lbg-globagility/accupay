@@ -13,7 +13,9 @@ import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
 import { NewEmployeeComponent } from './employees/new-employee/new-employee.component';
 import { ViewEmployeeComponent } from './employees/view-employee/view-employee.component';
 import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
+import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
+import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 
@@ -65,6 +67,14 @@ const routes: Routes = [
       {
         path: 'overtimes',
         component: OvertimeListComponent,
+      },
+      {
+        path: 'allowances',
+        component: AllowanceListComponent,
+      },
+      {
+        path: 'loans',
+        component: LoanListComponent,
       },
     ],
     canActivate: [AuthGuard],

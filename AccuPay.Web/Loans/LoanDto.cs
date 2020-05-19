@@ -16,7 +16,7 @@ namespace AccuPay.Web.Loans
 
         public decimal TotalBalanceLeft { get; set; }
 
-        public DateTime EffectiveDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         public int LoanPayPeriodLeft { get; set; }
 

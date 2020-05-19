@@ -12,11 +12,11 @@ namespace AccuPay.Web.Allowances.Models
 
         public string AllowanceType { get; set; }
 
-        public DateTime EffectiveStartDate { get; set; }
+        public string Frequency { get; set; }
 
-        public string AllowanceFrequency { get; set; }
+        public DateTime StartDate { get; set; }
 
-        public DateTime? EffectiveEndDate { get; set; }
+        public DateTime? EndDate { get; set; }
 
         public decimal Amount { get; set; }
     }

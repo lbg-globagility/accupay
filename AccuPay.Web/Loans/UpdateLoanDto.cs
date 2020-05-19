@@ -13,7 +13,7 @@ namespace AccuPay.Web.Loans
         // this should not be updatable by the user.
         public decimal TotalBalanceLeft { get; set; }
 
-        public DateTime EffectiveDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         public decimal DeductionAmount { get; set; }
 

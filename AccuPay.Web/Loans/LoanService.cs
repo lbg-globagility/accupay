@@ -82,7 +82,7 @@ namespace AccuPay.Web.Loans
             loanSchedule.LoanTypeID = dto.LoanTypeId;
             loanSchedule.LoanNumber = dto.LoanNumber;
             loanSchedule.TotalLoanAmount = dto.TotalLoanAmount;
-            loanSchedule.DedEffectiveDateFrom = dto.EffectiveDate;
+            loanSchedule.DedEffectiveDateFrom = dto.StartDate;
             loanSchedule.DeductionAmount = dto.DeductionAmount;
             loanSchedule.Status = dto.Status;
             loanSchedule.DeductionPercentage = dto.DeductionPercentage;
@@ -102,7 +102,7 @@ namespace AccuPay.Web.Loans
                 LoanType = loan.LoanType?.Name,
                 TotalLoanAmount = loan.TotalLoanAmount,
                 TotalBalanceLeft = loan.TotalBalanceLeft,
-                EffectiveDate = loan.DedEffectiveDateFrom,
+                StartDate = loan.DedEffectiveDateFrom,
                 LoanPayPeriodLeft = loan.LoanPayPeriodLeft,
                 DeductionAmount = loan.DeductionAmount,
                 Status = loan.Status,

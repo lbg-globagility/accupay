@@ -68,10 +68,10 @@ namespace AccuPay.Web.Allowances.Services
 
         private static void ApplyChanges(ICrudAllowanceDto dto, Allowance allowance)
         {
-            allowance.ProductID = dto.ProductId;
-            allowance.AllowanceFrequency = dto.AllowanceFrequency;
-            allowance.EffectiveStartDate = dto.EffectiveStartDate;
-            allowance.EffectiveEndDate = dto.EffectiveEndDate;
+            allowance.ProductID = dto.AllowanceTypeId;
+            allowance.AllowanceFrequency = dto.Frequency;
+            allowance.EffectiveStartDate = dto.StartDate;
+            allowance.EffectiveEndDate = dto.EndDate;
             allowance.Amount = dto.Amount;
         }
 
@@ -85,9 +85,9 @@ namespace AccuPay.Web.Allowances.Services
                 EmployeeNumber = allowance.Employee?.EmployeeNo,
                 EmployeeName = allowance.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 AllowanceType = allowance.Type,
-                EffectiveStartDate = allowance.EffectiveStartDate,
-                AllowanceFrequency = allowance.AllowanceFrequency,
-                EffectiveEndDate = allowance.EffectiveEndDate,
+                StartDate = allowance.EffectiveStartDate,
+                Frequency = allowance.AllowanceFrequency,
+                EndDate = allowance.EffectiveEndDate,
                 Amount = allowance.Amount
             };
         }

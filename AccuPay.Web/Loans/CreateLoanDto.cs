@@ -12,7 +12,7 @@ namespace AccuPay.Web.Loans
 
         public decimal TotalLoanAmount { get; set; }
 
-        public DateTime EffectiveDate { get; set; }
+        public DateTime StartDate { get; set; }
 
         public decimal DeductionAmount { get; set; }
 

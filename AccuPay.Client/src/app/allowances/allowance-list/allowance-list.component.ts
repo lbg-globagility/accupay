@@ -6,22 +6,23 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { Leave } from 'src/app/leaves/shared/leave';
-import { LeaveService } from 'src/app/leaves/leave.service';
+import { Allowance } from 'src/app/allowances/shared/allowance';
+import { AllowanceService } from 'src/app/allowances/allowance.service';
 
 @Component({
-  selector: 'app-leave-list',
-  templateUrl: './leave-list.component.html',
-  styleUrls: ['./leave-list.component.scss']
+  selector: 'app-allowance-list',
+  templateUrl: './allowance-list.component.html',
+  styleUrls: ['./allowance-list.component.scss']
 })
-export class LeaveListComponent implements OnInit {
+export class AllowanceListComponent implements OnInit {
+
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
-    'leaveType',
+    'allowanceType',
+    'frequency',
     'date',
-    'time',
-    'status',
+    'amount',
   ];
 
   placeholder: string;
@@ -30,13 +31,11 @@ export class LeaveListComponent implements OnInit {
 
   modelChanged: Subject<any>;
 
-  leaves: Leave[];
+  allowances: Allowance[];
 
   totalCount: number;
 
-  dataSource: MatTableDataSource<Leave>;
-
-  clearSearch = '';
+  dataSource: MatTableDataSource<Allowance>;
 
   pageIndex = 0;
 
@@ -47,20 +46,22 @@ export class LeaveListComponent implements OnInit {
     direction: '',
   };
 
+  clearSearch = '';
+
   selectedRow: number;
 
-  constructor(private leaveService: LeaveService) { 
+  constructor(private allowanceService: AllowanceService) { 
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.getLeaveList());
+      .subscribe(() => this.getAllowanceList());
   }
 
   ngOnInit(): void {
-    this.getLeaveList();
+    this.getAllowanceList();
   }
 
-  getLeaveList() {
+  getAllowanceList() {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -68,24 +69,24 @@ export class LeaveListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.leaveService
+    this.allowanceService
       .getAll(options, this.searchTerm)
       .subscribe((data) => {
-        this.leaves = data.items;
+        this.allowances = data.items;
         this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.leaves);
+        this.dataSource = new MatTableDataSource(this.allowances);
       });
-  }
-
-  clearSearchBox() {
-    this.clearSearch = '';
-    this.applyFilter(this.clearSearch);
   }
 
   applyFilter(searchTerm: string) {
     this.searchTerm = searchTerm;
     this.pageIndex = 0;
     this.modelChanged.next();
+  }
+
+  clearSearchBox() {
+    this.clearSearch = '';
+    this.applyFilter(this.clearSearch);
   }
 
   sortData(sort: Sort) {
@@ -100,7 +101,7 @@ export class LeaveListComponent implements OnInit {
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.getLeaveList();
+    this.getAllowanceList();
   }
 
 }

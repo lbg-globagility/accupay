@@ -41,7 +41,7 @@ export class OvertimeListComponent implements OnInit {
   pageSize: number = 10;
 
   sort: Sort = {
-    active: 'firstName',
+    active: 'date',
     direction: '',
   };
 
