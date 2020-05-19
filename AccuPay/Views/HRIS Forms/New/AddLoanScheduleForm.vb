@@ -185,7 +185,7 @@ Public Class AddLoanScheduleForm
                 Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
                 Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
-                Await loanScheduleRepository.SaveAsync(Me._newLoanSchedule, Me._loanTypeList)
+                Await loanScheduleRepository.SaveAsync(Me._newLoanSchedule)
 
                 userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 

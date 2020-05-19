@@ -273,7 +273,7 @@ Public Class EmployeeLoansForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
                 Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-                Await loanScheduleRepository.SaveManyAsync(changedLoans, Me._loanTypeList)
+                Await loanScheduleRepository.SaveManyAsync(changedLoans)
 
                 For Each item In changedLoans
                     RecordUpdate(item)

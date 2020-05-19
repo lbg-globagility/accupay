@@ -36,6 +36,23 @@ namespace AccuPay.Web.Controllers
                 return overtime;
         }
 
+        [HttpPost]
+        public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto dto)
+        {
+            return await _service.Create(dto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<LoanDto>> Update(int id, [FromBody] UpdateLoanDto dto)
+        {
+            var leave = await _service.Update(id, dto);
+
+            if (leave == null)
+                return NotFound();
+            else
+                return leave;
+        }
+
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
