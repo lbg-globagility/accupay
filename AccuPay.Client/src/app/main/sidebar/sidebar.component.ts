@@ -31,6 +31,11 @@ const menuItems: MenuItem[] = [
     route: '/official-business',
     icon: 'person',
   },
+  {
+    label: 'Overtimes',
+    route: '/overtimes',
+    icon: 'person',
+  },
 ];
 
 @Component({

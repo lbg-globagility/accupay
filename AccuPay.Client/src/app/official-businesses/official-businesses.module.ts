@@ -6,8 +6,6 @@ import { OfficialBusinessListComponent } from './official-business-list/official
 
 @NgModule({
   declarations: [OfficialBusinessListComponent],
-  imports: [
-    SharedModule
-  ]
+  imports: [SharedModule]
 })
 export class OfficialBusinessesModule { }

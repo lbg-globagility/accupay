@@ -15,6 +15,7 @@ import { ViewEmployeeComponent } from './employees/view-employee/view-employee.c
 import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
 import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
+import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 
 const routes: Routes = [
   {
@@ -60,6 +61,10 @@ const routes: Routes = [
       {
         path: 'official-business',
         component: OfficialBusinessListComponent,
+      },
+      {
+        path: 'overtimes',
+        component: OvertimeListComponent,
       },
     ],
     canActivate: [AuthGuard],

@@ -6,15 +6,15 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { Subject } from 'rxjs';
 import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
-import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
-import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
+import { Overtime } from 'src/app/overtimes/shared/overtime';
+import { OvertimeService } from 'src/app/overtimes/overtime.service';
 
 @Component({
-  selector: 'app-official-business-list',
-  templateUrl: './official-business-list.component.html',
-  styleUrls: ['./official-business-list.component.scss']
+  selector: 'app-overtime-list',
+  templateUrl: './overtime-list.component.html',
+  styleUrls: ['./overtime-list.component.scss']
 })
-export class OfficialBusinessListComponent implements OnInit {
+export class OvertimeListComponent implements OnInit {
 
   readonly displayedColumns: string[] = [
     'employeeNumber',
@@ -30,11 +30,11 @@ export class OfficialBusinessListComponent implements OnInit {
 
   modelChanged: Subject<any>;
 
-  officialBusinesses: OfficialBusiness[];
+  overtimes: Overtime[];
 
   totalCount: number;
 
-  dataSource: MatTableDataSource<OfficialBusiness>;
+  dataSource: MatTableDataSource<Overtime>;
 
   pageIndex = 0;
 
@@ -49,18 +49,18 @@ export class OfficialBusinessListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private officialBusinessService: OfficialBusinessService) { 
+  constructor(private overtimeService: OvertimeService) { 
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.getOfficialBusinessList());
+      .subscribe(() => this.getOvertimeList());
   }
 
   ngOnInit(): void {
-    this.getOfficialBusinessList();
+    this.getOvertimeList();
   }
 
-  getOfficialBusinessList() {
+  getOvertimeList() {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -68,12 +68,12 @@ export class OfficialBusinessListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.officialBusinessService
+    this.overtimeService
       .getAll(options, this.searchTerm)
       .subscribe((data) => {
-        this.officialBusinesses = data.items;
+        this.overtimes = data.items;
         this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.officialBusinesses);
+        this.dataSource = new MatTableDataSource(this.overtimes);
       });
   }
 
@@ -100,7 +100,7 @@ export class OfficialBusinessListComponent implements OnInit {
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.getOfficialBusinessList();
+    this.getOvertimeList();
   }
 
 }

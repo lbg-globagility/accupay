@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { UsersModule } from 'src/app/users/users.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
 import { OfficialBusinessesModule } from 'src/app/official-businesses/official-businesses.module';
+import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -23,7 +24,8 @@ import { OfficialBusinessesModule } from 'src/app/official-businesses/official-b
     EmployeesModule,
     UsersModule,
     LeavesModule,
-    OfficialBusinessesModule
+    OfficialBusinessesModule,
+    OvertimesModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
