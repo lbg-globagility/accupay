@@ -1,3 +1,5 @@
+using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Web.Salaries.Models;
 using AccuPay.Web.Salaries.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -7,22 +9,40 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    class SalariesController : ControllerBase
+    public class SalariesController : ControllerBase
     {
-        private readonly SalaryService _salaryService;
+        private readonly SalaryService _service;
+        private readonly SalaryRepository _repository;
 
-        public SalariesController(SalaryService salaryService)
+        public SalariesController(SalaryService salaryService, SalaryRepository repository)
         {
-            _salaryService = salaryService;
+            _service = salaryService;
+            _repository = repository;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<SalaryDto>>> List([FromForm] PageOptions options, string searchTerm)
+        {
+            return await _service.PaginatedList(options, searchTerm);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<SalaryDto>> GetById(int id)
+        {
+            var allowance = await _service.GetById(id);
+
+            if (allowance == null)
+                return NotFound();
+            else
+                return allowance;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] SalaryDto dto)
+        public async Task<ActionResult<SalaryDto>> Create([FromBody] CreateSalaryDto dto)
         {
             try
             {
-                var salary = await _salaryService.Create(dto);
-                return Ok();
+                return await _service.Create(dto);
             }
             catch
             {
@@ -31,12 +51,16 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] SalaryDto dto)
+        public async Task<ActionResult<SalaryDto>> Update(int id, [FromBody] UpdateSalaryDto dto)
         {
             try
             {
-                await _salaryService.Update(id, dto);
-                return Ok();
+                var allowance = await _service.Update(id, dto);
+
+                if (allowance == null)
+                    return NotFound();
+                else
+                    return allowance;
             }
             catch
             {
@@ -45,25 +69,22 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        public async Task<ActionResult> Delete(int id, [FromBody] SalaryDto dto)
+        public async Task<ActionResult> Delete(int id)
         {
             try
             {
-                await _salaryService.Delete(id, dto);
+                var allowance = await _repository.GetByIdAsync(id);
+
+                if (allowance == null) return NotFound();
+
+                await _repository.DeleteAsync(id);
+
                 return Ok();
             }
             catch
             {
                 return BadRequest();
             }
-        }
-
-        [HttpGet("{id}")]
-        public async Task<ActionResult<SalaryDto>> GeyById(int id)
-        {
-            var dto = await _salaryService.GeyByIdAsync(id);
-
-            return dto;
         }
     }
 }

@@ -4,9 +4,9 @@ namespace AccuPay.Web.Allowances.Models
 {
     public class CreateAllowanceDto : ICrudAllowanceDto
     {
-        public int EmployeeID { get; set; }
+        public int EmployeeId { get; set; }
 
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
 
         public string AllowanceFrequency { get; set; }
 

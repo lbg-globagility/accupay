@@ -30,7 +30,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<AllowanceDto>> GetById(int id)
         {
-            var allowance = await _service.GetByIdAsync(id);
+            var allowance = await _service.GetById(id);
 
             if (allowance == null)
                 return NotFound();

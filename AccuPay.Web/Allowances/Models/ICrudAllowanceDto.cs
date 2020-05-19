@@ -4,7 +4,7 @@ namespace AccuPay.Web.Allowances.Models
 {
     public interface ICrudAllowanceDto
     {
-        int ProductID { get; set; }
+        int ProductId { get; set; }
 
         string AllowanceFrequency { get; set; }
 

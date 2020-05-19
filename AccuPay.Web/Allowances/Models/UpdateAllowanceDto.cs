@@ -4,7 +4,7 @@ namespace AccuPay.Web.Allowances.Models
 {
     public class UpdateAllowanceDto : ICrudAllowanceDto
     {
-        public int ProductID { get; set; }
+        public int ProductId { get; set; }
 
         public string AllowanceFrequency { get; set; }
 

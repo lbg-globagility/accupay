@@ -28,7 +28,7 @@ namespace AccuPay.Web.Allowances.Services
             return new PaginatedList<AllowanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
-        public async Task<AllowanceDto> GetByIdAsync(int id)
+        public async Task<AllowanceDto> GetById(int id)
         {
             var allowance = await _repository.GetByIdAsync(id);
 
@@ -42,7 +42,7 @@ namespace AccuPay.Web.Allowances.Services
             {
                 OrganizationID = 5,
                 CreatedBy = 1,
-                EmployeeID = dto.EmployeeID
+                EmployeeID = dto.EmployeeId
             };
             ApplyChanges(dto, allowance);
 
@@ -68,7 +68,7 @@ namespace AccuPay.Web.Allowances.Services
 
         private static void ApplyChanges(ICrudAllowanceDto dto, Allowance allowance)
         {
-            allowance.ProductID = dto.ProductID;
+            allowance.ProductID = dto.ProductId;
             allowance.AllowanceFrequency = dto.AllowanceFrequency;
             allowance.EffectiveStartDate = dto.EffectiveStartDate;
             allowance.EffectiveEndDate = dto.EffectiveEndDate;

@@ -100,12 +100,13 @@ Namespace Global.AccuPay.Views.Employees
                 With _currentSalary
                     .BasicSalary = _view.BasicSalary
                     .AllowanceSalary = _view.AllowanceSalary
-                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
                     .EffectiveFrom = _view.EffectiveFrom
                     .EffectiveTo = effectiveTo
                     .PhilHealthDeduction = If(_view.PhilHealth, 0D)
                     .HDMFAmount = _view.PagIBIG
                 End With
+
+                _currentSalary.UpdateTotalSalary()
 
                 If _currentSalary.RowID.HasValue Then
                     _currentSalary.LastUpdBy = z_User
