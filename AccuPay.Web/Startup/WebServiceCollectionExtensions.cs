@@ -10,6 +10,7 @@ using AccuPay.Web.Overtimes;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Accupay.Web.Core.Auth;
 
 namespace AccuPay.Web
 {
@@ -23,6 +24,7 @@ namespace AccuPay.Web
             services.AddScoped<TokenService>();
             services.AddScoped<AllowanceService>();
             services.AddScoped<EmployeeService>();
+            services.AddScoped<CurrentUser>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();
             services.AddScoped<OfficialBusinessService>();
