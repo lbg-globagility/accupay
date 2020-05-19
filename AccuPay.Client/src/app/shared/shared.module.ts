@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MaterialModule } from 'src/app/shared/material.module';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 
 @NgModule({
   declarations: [
@@ -12,7 +13,7 @@ import { RouterModule } from '@angular/router';
     // SanitizerPipe,
     // BytesPipe,
     // CoalescePipe,
-    // IfEmptyPipe,
+    IfEmptyPipe,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
@@ -34,7 +35,7 @@ import { RouterModule } from '@angular/router';
     // SanitizerPipe,
     // BytesPipe,
     // CoalescePipe,
-    // IfEmptyPipe,
+    IfEmptyPipe,
     // ImgFallbackDirective,
     // StatusComponent,
     // UserMiniInfoComponent,

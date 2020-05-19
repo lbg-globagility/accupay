@@ -1,7 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Notisphere.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,9 +22,19 @@ namespace AccuPay.Data.Repositories
             return await _context.Users.FindAsync(userId);
         }
 
-        public async Task<(ICollection<AspNetUser>, int)> List(PageOptions options)
+        public async Task<(ICollection<AspNetUser>, int)> List(PageOptions options, string searchTerm = "")
         {
             var query = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(u =>
+                    EF.Functions.Like(u.FirstName, searchTerm) ||
+                    EF.Functions.Like(u.LastName, searchTerm) ||
+                    EF.Functions.Like(u.Email, searchTerm));
+            }
 
             var users = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();

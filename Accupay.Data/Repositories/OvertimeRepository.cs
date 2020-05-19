@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -49,18 +50,21 @@ namespace AccuPay.Data.Repositories
                                                 bool deferSave = true)
         {
             if (overtime.OTStartTime.HasValue)
+            {
                 overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
+            }
             if (overtime.OTEndTime.HasValue)
+            {
                 overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
+            }
+
+            overtime.UpdateEndDate();
+
+            SaveFunction(overtime);
 
             if (deferSave == false)
             {
-                SaveFunction(overtime);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                SaveFunction(overtime);
             }
         }
 
@@ -103,6 +107,33 @@ namespace AccuPay.Data.Repositories
             return await _context.Overtimes.
                                 Where(l => l.EmployeeID == employeeId).
                                 ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.Overtimes
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.OTStartDate)
+                                .ThenBy(x => x.OTStartTime)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var overtimes = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Overtime>(overtimes, count);
         }
 
         public async Task<IEnumerable<Overtime>> GetByDatePeriodAsync(

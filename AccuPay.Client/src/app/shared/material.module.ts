@@ -7,6 +7,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
 import { NgModule } from '@angular/core';
+import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
   exports: [
@@ -25,7 +27,7 @@ import { NgModule } from '@angular/core';
     // MatListModule,
     MatMenuModule,
     // MatNativeDateModule,
-    // MatPaginatorModule,
+    MatPaginatorModule,
     // MatProgressBarModule,
     // MatProgressSpinnerModule,
     // MatRadioModule,
@@ -34,7 +36,7 @@ import { NgModule } from '@angular/core';
     // MatSnackBarModule,
     // MatSortModule,
     // MatStepperModule,
-    // MatTableModule,
+    MatTableModule,
     // MatTabsModule,
     MatToolbarModule,
     // MatTooltipModule,

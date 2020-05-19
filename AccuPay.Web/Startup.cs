@@ -12,9 +12,12 @@ namespace AccuPay.Web
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private readonly IWebHostEnvironment CurrentEnvironment;
+
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             Configuration = configuration;
+            CurrentEnvironment = env;
         }
 
         public IConfiguration Configuration { get; }
@@ -23,7 +26,7 @@ namespace AccuPay.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
-            services.AddDatabase(Configuration);
+            services.AddDatabase(Configuration, CurrentEnvironment);
             services.AddAccuPayCoreServices();
             services.AddAuthenticationService(Configuration);
             services.AddWebServices();

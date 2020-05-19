@@ -80,6 +80,11 @@ namespace AccuPay.Data.Repositories
             // while import loans does not use ViewModel, do this to avoid errors
             var newLoanSchedule = loanSchedule.CloneJson();
             newLoanSchedule.Employee = null;
+            // after cloning, TotalPayPeriod and TotalBalanceLeft are not set properly
+            // since they are internal. Use a better cloning mechanism next time
+            // but for now, recompute those values
+            newLoanSchedule.RecomputeTotalPayPeriod();
+            newLoanSchedule.RecomputePayPeriodLeft();
 
             // add or update the loanSchedule
             if (deferSave == false)
@@ -203,6 +208,35 @@ namespace AccuPay.Data.Repositories
             return await _context.LoanSchedules.
                         Where(l => l.EmployeeID == employeeId).
                         ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.LoanSchedules
+                                .Include(x => x.Employee)
+                                .Include(x => x.LoanType)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.DedEffectiveDateFrom)
+                                .ThenBy(x => x.LoanType.PartNo)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LoanType.PartNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var loanSchedule = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<LoanSchedule>(loanSchedule, count);
         }
 
         public async Task<IEnumerable<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName,

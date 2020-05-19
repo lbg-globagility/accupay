@@ -60,12 +60,15 @@ namespace AccuPay.Data.Services
             var daysRequirement = _isLimitedReport ? CinemaTardinessReportModel.DaysLateLimit : 0;
 
             // #1.
-            var tardinessReportModelQuery = _context.TimeEntries.
+            var employeeLateTimeEntries = await _context.TimeEntries.
                                     Include(t => t.Employee).
                                     Where(t => t.Date >= firstDayOfTheMonth).
                                     Where(t => t.Date <= lastDayOfTheMonth).
                                     Where(t => t.OrganizationID == _organizationId).
                                     Where(t => t.LateHours > 0).
+                                    ToListAsync();
+
+            tardinessReportModels = employeeLateTimeEntries.
                                     GroupBy(t => t.Employee).
                                     Select(gt => new CinemaTardinessReportModel()
                                     {
@@ -73,13 +76,15 @@ namespace AccuPay.Data.Services
                                         EmployeeName = gt.Key.FullNameWithMiddleInitialLastNameFirst,
                                         Days = gt.Count(),
                                         Hours = gt.Sum(t => t.LateHours)
-                                    });
+                                    }).
+                                    ToList();
 
             if (_isLimitedReport)
-                tardinessReportModelQuery = tardinessReportModelQuery.
-                                        Where(t => t.Days >= CinemaTardinessReportModel.DaysLateLimit);
-
-            tardinessReportModels = await tardinessReportModelQuery.ToListAsync();
+            {
+                tardinessReportModels = tardinessReportModels.
+                                                Where(t => t.Days >= CinemaTardinessReportModel.DaysLateLimit).
+                                                ToList();
+            }
 
             // #2
             // this list contains the first offense dates per employee within the year of the report
@@ -138,6 +143,8 @@ namespace AccuPay.Data.Services
             await _context.SaveChangesAsync();
 
             // tardinessReportModels = GetSampleTardinessReportModels()
+
+            tardinessReportModels = tardinessReportModels.OrderBy(x => x.EmployeeName).ToList();
 
             return new List<ICinemaTardinessReportModel>(tardinessReportModels);
         }

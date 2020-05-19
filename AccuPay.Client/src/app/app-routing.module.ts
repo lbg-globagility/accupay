@@ -6,6 +6,10 @@ import { UnderConstructionComponent } from 'src/app/errors/under-construction/un
 import { LoginComponent } from 'src/app/accounts/login/login.component';
 import { AuthGuard } from 'src/app/core/auth/auth.guard';
 import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
+import { UserListComponent } from 'src/app/users/user-list/user-list.component';
+import { ViewUserComponent } from 'src/app/users/view-user/view-user.component';
+import { NewUserComponent } from 'src/app/users/new-user/new-user.component';
+import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
 
 const routes: Routes = [
   {
@@ -15,6 +19,22 @@ const routes: Routes = [
       {
         path: 'employees',
         component: EmployeeListComponent,
+      },
+      {
+        path: 'users',
+        component: UserListComponent,
+      },
+      {
+        path: 'users/new',
+        component: NewUserComponent,
+      },
+      {
+        path: 'users/:id',
+        component: ViewUserComponent,
+      },
+      {
+        path: 'users/:id/edit',
+        component: EditUserComponent,
       },
     ],
     canActivate: [AuthGuard],

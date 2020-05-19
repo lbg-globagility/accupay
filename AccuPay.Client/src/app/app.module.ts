@@ -7,6 +7,7 @@ import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { EmployeesModule } from './employees/employees.module';
 import { HttpClientModule } from '@angular/common/http';
+import { UsersModule } from 'src/app/users/users.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     AccountsModule,
     MainModule,
     EmployeesModule,
+    UsersModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

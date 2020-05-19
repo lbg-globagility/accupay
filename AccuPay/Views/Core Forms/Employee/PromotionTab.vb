@@ -23,11 +23,7 @@ Public Class PromotionTab
 
     Private _currentPromotion As Promotion
 
-    Private _employeeRepo As EmployeeRepository
-
     Private _positionRepo As PositionRepository
-
-    Private _promotionRepo As PromotionRepository
 
     Private _salaryRepo As SalaryRepository
 
@@ -40,10 +36,7 @@ Public Class PromotionTab
         dgvPromotions.AutoGenerateColumns = False
 
         If MainServiceProvider IsNot Nothing Then
-
-            _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)
-            _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
             _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
@@ -66,7 +59,8 @@ Public Class PromotionTab
     Private Async Function LoadPromotions() As Task
         If _employee?.RowID Is Nothing Then Return
 
-        _promotions = Await _promotionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
+        Dim promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
+        _promotions = Await promotionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _promotions = _promotions.OrderByDescending(Function(x) x.EffectiveDate).ToList()
 
         _positions = Await _positionRepo.GetAllAsync(z_OrganizationID)
@@ -256,8 +250,11 @@ Public Class PromotionTab
 
                     Await SavePromotionSalary(oldPromotion)
 
-                    Await _promotionRepo.UpdateAsync(_currentPromotion)
-                    Await _employeeRepo.SaveAsync(_employee)
+                    Dim promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
+                    Await promotionRepo.UpdateAsync(_currentPromotion)
+
+                    Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+                    Await employeeRepo.SaveAsync(_employee)
 
                     RecordUpdateAward(oldPromotion)
 
@@ -409,7 +406,8 @@ Public Class PromotionTab
             Await FunctionUtils.TryCatchFunctionAsync("Delete Promotion",
                 Async Function()
 
-                    Await _promotionRepo.DeleteAsync(_currentPromotion)
+                    Dim promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
+                    Await promotionRepo.DeleteAsync(_currentPromotion)
 
                     _userActivityRepo.RecordDelete(z_User, FormEntityName, CInt(_currentPromotion.RowID), z_OrganizationID)
 

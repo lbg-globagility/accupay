@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/users")]
     [ApiController]
     public class UsersController : ControllerBase
     {
@@ -53,9 +53,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<UserDto>>> List([FromBody] PageOptions options)
+        public async Task<ActionResult<PaginatedList<UserDto>>> List([FromForm] PageOptions options, string term)
         {
-            var (users, count) = await _repository.List(options);
+            var (users, count) = await _repository.List(options, term);
 
             var dtos = users.Select(t =>
                 new UserDto()

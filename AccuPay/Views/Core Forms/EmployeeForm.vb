@@ -4488,6 +4488,13 @@ Public Class EmployeeForm
 
     End Sub
 
+    Private Async Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
+        Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        Dim employee = Await employeeRepository.GetByIdAsync(CInt(publicEmpRowID))
+        Dim dialog = New ViewLeaveLedgerDialog(employee)
+        dialog.ShowDialog()
+    End Sub
+
     Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click
         Dim userActivity As New UserActivityForm(EmployeeEntityName)
         userActivity.ShowDialog()

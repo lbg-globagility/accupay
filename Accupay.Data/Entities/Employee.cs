@@ -123,7 +123,7 @@ namespace AccuPay.Data.Entities
         public string FullNameLastNameFirst => $"{LastName}, {FirstName}";
 
         public string FullNameWithMiddleInitialLastNameFirst =>
-            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}";
+            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ".")}";
 
         public string FullNameWithMiddleInitial =>
             $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";
