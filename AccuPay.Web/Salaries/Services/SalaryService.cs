@@ -84,7 +84,9 @@ namespace AccuPay.Web.Salaries.Services
             return new SalaryDto()
             {
                 Id = salary.RowID.Value,
-                EmployeeId = salary.EmployeeID.Value,
+                EmployeeNumber = salary.Employee?.EmployeeNo,
+                EmployeeName = salary.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = salary.Employee?.EmployeeType,
                 BasicSalary = salary.BasicSalary,
                 AllowanceSalary = salary.AllowanceSalary,
                 TotalSalary = salary.TotalSalary,

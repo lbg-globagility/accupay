@@ -18,6 +18,7 @@ import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.compone
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
+import { SalaryListComponent } from 'src/app/salaries/salary-list/salary-list.component';
 
 const routes: Routes = [
   {
@@ -55,6 +56,10 @@ const routes: Routes = [
       {
         path: 'users/:id/edit',
         component: EditUserComponent,
+      },
+      {
+        path: 'salaries',
+        component: SalaryListComponent,
       },
       {
         path: 'leaves',
