@@ -354,13 +354,14 @@ Public Class SalaryTab
                     .EffectiveTo = If(dtpEffectiveTo.Checked, dtpEffectiveTo.Value, New DateTime?)
                     .BasicSalary = txtAmount.Text.ToDecimal
                     .AllowanceSalary = txtAllowance.Text.ToDecimal
-                    .TotalSalary = (.BasicSalary + .AllowanceSalary)
                     .DoPaySSSContribution = chkPaySSS.Checked
                     .AutoComputePhilHealthContribution = chkPayPhilHealth.Checked
                     .PhilHealthDeduction = txtPhilHealth.Text.ToDecimal
                     .AutoComputeHDMFContribution = ChkPagIbig.Checked
                     .HDMFAmount = txtPagIbig.Text.ToDecimal
                 End With
+
+                _currentSalary.UpdateTotalSalary()
 
                 If _currentSalary.RowID.HasValue Then
 

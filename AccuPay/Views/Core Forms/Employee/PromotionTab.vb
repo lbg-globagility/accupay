@@ -290,7 +290,6 @@ Public Class PromotionTab
             With promotionSalary
                 .BasicSalary = CDec(txtNewSalary.Text)
                 .AllowanceSalary = 0
-                .TotalSalary = .BasicSalary + .AllowanceSalary
                 .MaritalStatus = _employee.MaritalStatus
                 .PositionID = _employee.PositionID
                 .EffectiveFrom = dtpEffectivityDate.Value
@@ -302,6 +301,8 @@ Public Class PromotionTab
                 .OrganizationID = z_OrganizationID
             End With
 
+            promotionSalary.UpdateTotalSalary()
+
         ElseIf oldPromotion.CompensationToYesNo = "Yes" And
             _currentPromotion.CompensationToYesNo = "Yes" Then
 
@@ -309,10 +310,11 @@ Public Class PromotionTab
 
             With promotionSalary
                 .BasicSalary = CDec(txtNewSalary.Text)
-                .TotalSalary = .BasicSalary + .AllowanceSalary
                 .EffectiveFrom = dtpEffectivityDate.Value
                 .LastUpdBy = z_User
             End With
+
+            promotionSalary.UpdateTotalSalary()
 
         End If
 

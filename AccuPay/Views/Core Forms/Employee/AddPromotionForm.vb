@@ -16,7 +16,7 @@ Public Class AddPromotionForm
 
     Private _positions As IEnumerable(Of Position)
 
-    Private _newSalary As Salary
+    Private newSalary As Salary
 
     Private _currentSalary As Salary
 
@@ -98,12 +98,11 @@ Public Class AddPromotionForm
         Await FunctionUtils.TryCatchFunctionAsync("New Promotion",
             Async Function()
                 If CompensationToString10() = "1" Then
-                    _newSalary = New Salary
+                    newSalary = New Salary
 
-                    With _newSalary
+                    With newSalary
                         .BasicSalary = CDec(txtNewSalary.Text)
                         .AllowanceSalary = 0
-                        .TotalSalary = .BasicSalary + .AllowanceSalary
                         .MaritalStatus = _employee.MaritalStatus
                         .PositionID = CType(cboPositionTo.SelectedValue, Position).RowID.Value
                         .EffectiveFrom = dtpEffectivityDate.Value
@@ -115,7 +114,9 @@ Public Class AddPromotionForm
                         .OrganizationID = z_OrganizationID
                     End With
 
-                    Await _salaryRepo.SaveAsync(_newSalary)
+                    newSalary.UpdateTotalSalary()
+
+                    Await _salaryRepo.SaveAsync(newSalary)
                 End If
 
                 _newPromotion = New Promotion
@@ -132,7 +133,7 @@ Public Class AddPromotionForm
                     .CreatedBy = z_User
 
                     If CompensationToString10() = "1" Then
-                        .EmployeeSalaryID = _newSalary.RowID.Value
+                        .EmployeeSalaryID = newSalary.RowID.Value
                     ElseIf CompensationToString10() = "0" And _currentSalary IsNot Nothing Then
                         .EmployeeSalaryID = _currentSalary.RowID.Value
                     End If
