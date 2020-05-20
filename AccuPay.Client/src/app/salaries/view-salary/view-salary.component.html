@@ -2,12 +2,19 @@
   <header class="app-page-header">
     <h1>View Salary</h1>
   </header>
-
+  
   <button
+  style="margin-right: 10px;"
     mat-raised-button
     color="accent"
     routerLink="/salaries/{{ salaryId }}/edit">
     EDIT SALARY
+  </button>
+  <button
+    mat-raised-button
+    color="warn"
+    (click)="confirmDelete()">
+    DELETE SALARY
   </button>
 
   <mat-card>

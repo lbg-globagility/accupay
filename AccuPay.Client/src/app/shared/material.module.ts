@@ -9,6 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   exports: [
@@ -19,7 +20,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     // MatCheckboxModule,
     // MatChipsModule,
     // MatDatepickerModule,
-    // MatDialogModule,
+    MatDialogModule,
     // MatDividerModule,
     // MatExpansionModule,
     MatIconModule,

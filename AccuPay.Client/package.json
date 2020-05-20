@@ -25,6 +25,7 @@
     "jwt-decode": "^2.2.0",
     "normalize-scss": "^7.0.1",
     "rxjs": "~6.5.4",
+    "sweetalert2": "^9.11.0",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
   },

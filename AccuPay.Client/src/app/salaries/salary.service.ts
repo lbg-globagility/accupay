@@ -27,4 +27,8 @@ export class SalaryService {
   get(id: string): Observable<Salary> {
     return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
   }
+
+  delete(id: string): Observable<Salary> {
+    return this.httpClient.delete<Salary>(`${this.baseUrl}/${id}`);
+  }
 }

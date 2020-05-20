@@ -1,5 +1,9 @@
+import Swal from 'sweetalert2';
 import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
+import {MatDialog} from '@angular/material/dialog';
+import { Router } from '@angular/router';
+import { DeleteSalaryConfirmationComponent } from 'src/app/salaries/components/delete-salary-confirmation/delete-salary-confirmation.component';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
 
@@ -16,11 +20,34 @@ export class ViewSalaryComponent implements OnInit {
 
   constructor(
     private salaryService: SalaryService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog,
+    private router: Router,
   ) { }
 
   ngOnInit() {
     this.loadUser();
+  }
+
+  confirmDelete() {
+    const dialogRef = this.dialog.open(DeleteSalaryConfirmationComponent);
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(result !== true) return;
+
+      this.salaryService.delete(this.salaryId).subscribe(() => {
+
+        this.router.navigate(['salaries']);
+        Swal.fire({
+          title: 'Deleted',
+          text: `This salary has been deleted`,
+          icon: 'success',
+          showConfirmButton: true
+        });
+
+      });
+
+    });
   }
 
   private loadUser() {
@@ -28,5 +55,4 @@ export class ViewSalaryComponent implements OnInit {
       this.salary = data;
     });
   }
-
 }
