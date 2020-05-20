@@ -31,6 +31,8 @@ Public Class CalendarsForm
 
     Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
 
+    Private _nameHasChanged As Boolean
+
     Public Sub New()
         Editor = New CalendarDayEditorControl()
         _changeTracker = New Collection(Of CalendarDay)
@@ -80,6 +82,7 @@ Public Class CalendarsForm
         _currentCalendar = selectedCalendar
         ClearChangeTracker()
         CalendarLabel.Text = _currentCalendar.Name
+        MonthSelectorControl.CalendarName = _currentCalendar.Name
         Await LoadCalendarDays()
     End Sub
 
@@ -134,7 +137,9 @@ Public Class CalendarsForm
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
         Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
-        Await repository.UpdateManyAsync(_changeTracker)
+
+        Await repository.Update(_currentCalendar)
+        Await repository.UpdateDaysAsync(_changeTracker)
 
         ClearChangeTracker()
     End Sub
@@ -152,6 +157,12 @@ Public Class CalendarsForm
     Private Async Sub MonthSelectorControl_MonthChanged(year As Integer, month As Integer) Handles MonthSelectorControl.MonthChanged
         _currentYear = year
         Await LoadCalendarDays()
+    End Sub
+
+    Private Sub MonthSelectorControl_NameChanged(name As String) Handles MonthSelectorControl.NameChanged
+        _currentCalendar.Name = name
+        CancelToolStripButton.Enabled = True
+        SaveToolStripButton.Enabled = True
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As Message)

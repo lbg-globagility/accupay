@@ -55,7 +55,13 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task UpdateManyAsync(ICollection<CalendarDay> calendarDays)
+        public async Task Update(PayCalendar calendar)
+        {
+            _context.Entry(calendar).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateDaysAsync(ICollection<CalendarDay> calendarDays)
         {
             foreach (var calendarDay in calendarDays)
             {

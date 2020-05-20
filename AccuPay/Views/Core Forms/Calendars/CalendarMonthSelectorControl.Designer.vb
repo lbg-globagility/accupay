@@ -24,11 +24,13 @@ Partial Class CalendarMonthSelectorControl
     Private Sub InitializeComponent()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.YearTextBox = New System.Windows.Forms.TextBox()
+        Me.NameTextBox = New System.Windows.Forms.TextBox()
+        Me.Label2 = New System.Windows.Forms.Label()
         Me.SuspendLayout()
         '
         'Label1
         '
-        Me.Label1.Location = New System.Drawing.Point(8, 8)
+        Me.Label1.Location = New System.Drawing.Point(8, 64)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(100, 24)
         Me.Label1.TabIndex = 1
@@ -36,15 +38,32 @@ Partial Class CalendarMonthSelectorControl
         '
         'YearTextBox
         '
-        Me.YearTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.YearTextBox.Location = New System.Drawing.Point(8, 88)
         Me.YearTextBox.Name = "YearTextBox"
         Me.YearTextBox.Size = New System.Drawing.Size(120, 22)
         Me.YearTextBox.TabIndex = 2
+        '
+        'NameTextBox
+        '
+        Me.NameTextBox.Location = New System.Drawing.Point(8, 32)
+        Me.NameTextBox.Name = "NameTextBox"
+        Me.NameTextBox.Size = New System.Drawing.Size(120, 22)
+        Me.NameTextBox.TabIndex = 3
+        '
+        'Label2
+        '
+        Me.Label2.Location = New System.Drawing.Point(8, 8)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(100, 24)
+        Me.Label2.TabIndex = 4
+        Me.Label2.Text = "Calendar Name"
         '
         'CalendarMonthSelectorControl
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.NameTextBox)
         Me.Controls.Add(Me.YearTextBox)
         Me.Controls.Add(Me.Label1)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -57,4 +76,6 @@ Partial Class CalendarMonthSelectorControl
     End Sub
     Friend WithEvents Label1 As Label
     Friend WithEvents YearTextBox As TextBox
+    Friend WithEvents NameTextBox As TextBox
+    Friend WithEvents Label2 As Label
 End Class
