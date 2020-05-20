@@ -51,7 +51,7 @@ namespace AccuPay.Data.Repositories
             leave.UpdateEndDate();
 
             await SaveAsyncFunction(leave);
-            
+
             if (deferSave == false)
             {
                 await _context.SaveChangesAsync();
@@ -107,7 +107,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Leave> GetByIdAsync(int id)
         {
-            return await _context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Leaves
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<Leave> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.Leaves
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity

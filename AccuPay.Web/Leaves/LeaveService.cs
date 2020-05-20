@@ -32,7 +32,7 @@ namespace AccuPay.Web.Leaves
 
         public async Task<LeaveDto> GetById(int id)
         {
-            var leave = await _repository.GetByIdAsync(id);
+            var leave = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(leave);
         }
@@ -96,6 +96,7 @@ namespace AccuPay.Web.Leaves
                 Id = leave.RowID.Value,
                 EmployeeNumber = leave.Employee?.EmployeeNo,
                 EmployeeName = leave.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = leave.Employee?.EmployeeType,
                 LeaveType = leave.LeaveType,
                 StartTime = leave.StartTimeFull,
                 EndTime = leave.EndTimeFull,
