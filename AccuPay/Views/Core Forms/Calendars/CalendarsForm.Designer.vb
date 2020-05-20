@@ -23,8 +23,8 @@ Partial Class CalendarsForm
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(CalendarsForm))
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.NewToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.SaveToolStripButton = New System.Windows.Forms.ToolStripButton()
@@ -36,12 +36,12 @@ Partial Class CalendarsForm
         Me.DayTypesToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.FormTitleLabel = New System.Windows.Forms.Label()
         Me.MainPanel = New System.Windows.Forms.Panel()
-        Me.CalendarPanel = New System.Windows.Forms.Panel()
-        Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.CalendarLabel = New System.Windows.Forms.Label()
-        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.CalendarPanel = New System.Windows.Forms.Panel()
         Me.MonthSelectorControl = New AccuPay.CalendarMonthSelectorControl()
+        Me.CalendarsDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Column_Name = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -52,6 +52,7 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn11 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DeleteToolStripButton = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip12.SuspendLayout()
         Me.MainPanel.SuspendLayout()
         CType(Me.CalendarsDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -61,7 +62,7 @@ Partial Class CalendarsForm
         '
         Me.ToolStrip12.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip12.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ToolStripSeparator1, Me.DayTypesToolStripButton})
+        Me.ToolStrip12.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.NewToolStripButton, Me.SaveToolStripButton, Me.ToolStripSeparator9, Me.CancelToolStripButton, Me.CloseButton, Me.ToolStripButton25, Me.ToolStripSeparator1, Me.DayTypesToolStripButton, Me.DeleteToolStripButton})
         Me.ToolStrip12.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip12.Name = "ToolStrip12"
         Me.ToolStrip12.Size = New System.Drawing.Size(849, 25)
@@ -158,6 +159,19 @@ Partial Class CalendarsForm
         Me.MainPanel.Size = New System.Drawing.Size(849, 503)
         Me.MainPanel.TabIndex = 156
         '
+        'CalendarLabel
+        '
+        Me.CalendarLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CalendarLabel.BackColor = System.Drawing.Color.Transparent
+        Me.CalendarLabel.Font = New System.Drawing.Font("Segoe UI Semibold", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.CalendarLabel.Location = New System.Drawing.Point(136, 24)
+        Me.CalendarLabel.Name = "CalendarLabel"
+        Me.CalendarLabel.Size = New System.Drawing.Size(712, 32)
+        Me.CalendarLabel.TabIndex = 511
+        Me.CalendarLabel.Text = "<CalendarLabel>"
+        Me.CalendarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'CalendarPanel
         '
         Me.CalendarPanel.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -169,6 +183,18 @@ Partial Class CalendarsForm
         Me.CalendarPanel.Name = "CalendarPanel"
         Me.CalendarPanel.Size = New System.Drawing.Size(712, 448)
         Me.CalendarPanel.TabIndex = 509
+        '
+        'MonthSelectorControl
+        '
+        Me.MonthSelectorControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.MonthSelectorControl.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.MonthSelectorControl.Location = New System.Drawing.Point(0, 24)
+        Me.MonthSelectorControl.Margin = New System.Windows.Forms.Padding(0)
+        Me.MonthSelectorControl.Name = "MonthSelectorControl"
+        Me.MonthSelectorControl.Size = New System.Drawing.Size(136, 480)
+        Me.MonthSelectorControl.TabIndex = 510
+        Me.MonthSelectorControl.Year = 0
         '
         'CalendarsDataGridView
         '
@@ -183,14 +209,14 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.ColumnHeadersHeight = 34
         Me.CalendarsDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
         Me.CalendarsDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column_Name})
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!)
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.CalendarsDataGridView.DefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle5.Font = New System.Drawing.Font("Segoe UI", 8.25!)
+        DataGridViewCellStyle5.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle5.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle5.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.CalendarsDataGridView.DefaultCellStyle = DataGridViewCellStyle5
         Me.CalendarsDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.CalendarsDataGridView.Location = New System.Drawing.Point(8, 32)
         Me.CalendarsDataGridView.MultiSelect = False
@@ -201,18 +227,12 @@ Partial Class CalendarsForm
         Me.CalendarsDataGridView.Size = New System.Drawing.Size(352, 503)
         Me.CalendarsDataGridView.TabIndex = 2
         '
-        'CalendarLabel
+        'Column_Name
         '
-        Me.CalendarLabel.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CalendarLabel.BackColor = System.Drawing.Color.Transparent
-        Me.CalendarLabel.Font = New System.Drawing.Font("Segoe UI Semibold", 14.25!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CalendarLabel.Location = New System.Drawing.Point(136, 24)
-        Me.CalendarLabel.Name = "CalendarLabel"
-        Me.CalendarLabel.Size = New System.Drawing.Size(712, 32)
-        Me.CalendarLabel.TabIndex = 511
-        Me.CalendarLabel.Text = "<CalendarLabel>"
-        Me.CalendarLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        Me.Column_Name.DataPropertyName = "Name"
+        Me.Column_Name.HeaderText = "Calendar"
+        Me.Column_Name.Name = "Column_Name"
+        Me.Column_Name.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -221,25 +241,6 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn1.Name = "DataGridViewTextBoxColumn1"
         Me.DataGridViewTextBoxColumn1.ReadOnly = True
         Me.DataGridViewTextBoxColumn1.Width = 103
-        '
-        'MonthSelectorControl
-        '
-        Me.MonthSelectorControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.MonthSelectorControl.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MonthSelectorControl.Location = New System.Drawing.Point(0, 24)
-        Me.MonthSelectorControl.Margin = New System.Windows.Forms.Padding(0)
-        Me.MonthSelectorControl.Name = "MonthSelectorControl"
-        Me.MonthSelectorControl.Size = New System.Drawing.Size(136, 480)
-        Me.MonthSelectorControl.TabIndex = 510
-        Me.MonthSelectorControl.Year = 0
-        '
-        'Column_Name
-        '
-        Me.Column_Name.DataPropertyName = "Name"
-        Me.Column_Name.HeaderText = "Calendar"
-        Me.Column_Name.Name = "Column_Name"
-        Me.Column_Name.ReadOnly = True
         '
         'DataGridViewTextBoxColumn2
         '
@@ -287,10 +288,10 @@ Partial Class CalendarsForm
         'DataGridViewTextBoxColumn7
         '
         Me.DataGridViewTextBoxColumn7.DataPropertyName = "Amount"
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        DataGridViewCellStyle4.Format = "N2"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        DataGridViewCellStyle6.Format = "N2"
+        DataGridViewCellStyle6.NullValue = Nothing
+        Me.DataGridViewTextBoxColumn7.DefaultCellStyle = DataGridViewCellStyle6
         Me.DataGridViewTextBoxColumn7.HeaderText = "Amount"
         Me.DataGridViewTextBoxColumn7.Name = "DataGridViewTextBoxColumn7"
         Me.DataGridViewTextBoxColumn7.ReadOnly = True
@@ -324,6 +325,15 @@ Partial Class CalendarsForm
         Me.DataGridViewTextBoxColumn11.DataPropertyName = "Comments"
         Me.DataGridViewTextBoxColumn11.HeaderText = "Comments"
         Me.DataGridViewTextBoxColumn11.Name = "DataGridViewTextBoxColumn11"
+        '
+        'DeleteToolStripButton
+        '
+        Me.DeleteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text
+        Me.DeleteToolStripButton.Image = CType(resources.GetObject("DeleteToolStripButton.Image"), System.Drawing.Image)
+        Me.DeleteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.DeleteToolStripButton.Name = "DeleteToolStripButton"
+        Me.DeleteToolStripButton.Size = New System.Drawing.Size(44, 22)
+        Me.DeleteToolStripButton.Text = "Delete"
         '
         'CalendarsForm
         '
@@ -373,4 +383,5 @@ Partial Class CalendarsForm
     Friend WithEvents DayTypesToolStripButton As ToolStripButton
     Friend WithEvents MonthSelectorControl As CalendarMonthSelectorControl
     Friend WithEvents CalendarLabel As Label
+    Friend WithEvents DeleteToolStripButton As ToolStripButton
 End Class

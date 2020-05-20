@@ -22,14 +22,6 @@ Public Class DependencyInjectionHelper
 
     Private Shared Sub ConfigureServices(services As ServiceCollection)
 
-        Dim dbCommandConsoleLoggerFactory As LoggerFactory = New LoggerFactory({
-                         New ConsoleLoggerProvider(
-                               Function(category, level)
-                                   Return category = DbLoggerCategory.Database.Command.Name AndAlso
-                                        level = LogLevel.Information
-                               End Function, True)
-                         })
-
         services.AddDbContext(Of PayrollContext)(
             Sub(options As DbContextOptionsBuilder)
                 ConfigureDbContextOptions(options)
@@ -153,8 +145,18 @@ Public Class DependencyInjectionHelper
     End Function
 
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
+
+        Dim dbCommandConsoleLoggerFactory As LoggerFactory = New LoggerFactory({
+                         New ConsoleLoggerProvider(
+                               Function(category, level)
+                                   Return category = DbLoggerCategory.Database.Command.Name AndAlso
+                                        level = LogLevel.Information
+                               End Function, True)
+                         })
+
         dbContextOptionsBuilder.
             UseMySql(mysql_conn_text).
+            UseLoggerFactory(dbCommandConsoleLoggerFactory).
             EnableSensitiveDataLogging()
     End Sub
 
