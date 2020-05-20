@@ -55,7 +55,13 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        public async Task UpdateManyAsync(ICollection<CalendarDay> calendarDays)
+        public async Task Update(PayCalendar calendar)
+        {
+            _context.Entry(calendar).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateDaysAsync(ICollection<CalendarDay> calendarDays)
         {
             foreach (var calendarDay in calendarDays)
             {
@@ -63,6 +69,27 @@ namespace AccuPay.Data.Repositories
             }
 
             await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(PayCalendar payCalendar)
+        {
+            var isInUse = await _context.Branches
+                .Where(b => b.CalendarID == payCalendar.RowID)
+                .AnyAsync();
+
+            if (isInUse)
+            {
+                throw new Exception("Calendar is currently in use");
+            }
+            else
+            {
+                var calendarDays = await _context.CalendarDays
+                    .Where(d => d.CalendarID == payCalendar.RowID)
+                    .ToListAsync();
+
+                _context.Calendars.Remove(payCalendar);
+                await _context.SaveChangesAsync();
+            }
         }
 
         public async Task<ICollection<PayCalendar>> GetAllAsync()

@@ -4,6 +4,7 @@ Imports System.Collections.ObjectModel
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CalendarsForm
@@ -29,6 +30,8 @@ Public Class CalendarsForm
     Private _currentMonthControl As CalendarMonthControl
 
     Private ReadOnly _changeTracker As ICollection(Of CalendarDay)
+
+    Private _nameHasChanged As Boolean
 
     Public Sub New()
         Editor = New CalendarDayEditorControl()
@@ -79,6 +82,7 @@ Public Class CalendarsForm
         _currentCalendar = selectedCalendar
         ClearChangeTracker()
         CalendarLabel.Text = _currentCalendar.Name
+        MonthSelectorControl.CalendarName = _currentCalendar.Name
         Await LoadCalendarDays()
     End Sub
 
@@ -128,15 +132,16 @@ Public Class CalendarsForm
     Private Sub NewToolStripButton_Click(sender As Object, e As EventArgs) Handles NewToolStripButton.Click
         Dim dialog = New NewCalendarDialog()
         dialog.ShowDialog()
+        LoadCalendars()
     End Sub
 
     Private Async Sub SaveToolStripButton_Click(sender As Object, e As EventArgs) Handles SaveToolStripButton.Click
-
         Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
-        Await repository.UpdateManyAsync(_changeTracker)
+
+        Await repository.Update(_currentCalendar)
+        Await repository.UpdateDaysAsync(_changeTracker)
 
         ClearChangeTracker()
-
     End Sub
 
     Private Async Sub CancelToolStripButton_Click(sender As Object, e As EventArgs) Handles CancelToolStripButton.Click
@@ -152,6 +157,12 @@ Public Class CalendarsForm
     Private Async Sub MonthSelectorControl_MonthChanged(year As Integer, month As Integer) Handles MonthSelectorControl.MonthChanged
         _currentYear = year
         Await LoadCalendarDays()
+    End Sub
+
+    Private Sub MonthSelectorControl_NameChanged(name As String) Handles MonthSelectorControl.NameChanged
+        _currentCalendar.Name = name
+        CancelToolStripButton.Enabled = True
+        SaveToolStripButton.Enabled = True
     End Sub
 
     Protected Overrides Sub WndProc(ByRef m As Message)
@@ -188,6 +199,18 @@ Public Class CalendarsForm
         _changeTracker.Clear()
         CancelToolStripButton.Enabled = False
         SaveToolStripButton.Enabled = False
+    End Sub
+
+    Private Async Sub DeleteToolStripButton_Click(sender As Object, e As EventArgs) Handles DeleteToolStripButton.Click
+        Dim repository = MainServiceProvider.GetRequiredService(Of CalendarRepository)
+
+        Try
+            Await repository.Delete(_currentCalendar)
+            LoadCalendars()
+            MessageBoxHelper.Information("Calendar has been deleted", "Calendar Deleted", MessageBoxButtons.OK)
+        Catch ex As Exception
+            MessageBoxHelper.ErrorMessage("Failed to delete calendar, calendar might be in use.")
+        End Try
     End Sub
 
 End Class

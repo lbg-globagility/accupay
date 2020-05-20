@@ -7,9 +7,20 @@ Public Class CalendarMonthSelectorControl
 
     Public Event MonthChanged(year As Integer, month As Integer)
 
+    Public Event NameChanged(name As String)
+
     Private _currentYear As Integer
 
     Private _currentMonth As Integer
+
+    Public Property CalendarName As String
+        Get
+            Return NameTextBox.Text
+        End Get
+        Set(value As String)
+            NameTextBox.Text = value
+        End Set
+    End Property
 
     Public Property Year As Integer
         Get
@@ -32,6 +43,10 @@ Public Class CalendarMonthSelectorControl
         _currentYear = year
 
         RaiseEvent MonthChanged(_currentYear, _currentMonth)
+    End Sub
+
+    Private Sub NameTextBox_TextChanged(sender As Object, e As EventArgs) Handles NameTextBox.TextChanged
+        RaiseEvent NameChanged(NameTextBox.Text)
     End Sub
 
     Private Function IsValidYear(year As Integer) As Boolean
