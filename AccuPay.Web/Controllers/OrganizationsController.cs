@@ -18,15 +18,15 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<OrganizationDto>>> List()
+        public async Task<ActionResult<PaginatedList<OrganizationDto>>> List([FromQuery] PageOptions options)
         {
-            throw new NotImplementedException();
+            return await _service.List(options);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<OrganizationDto>> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _service.GetById(id);
         }
 
         [HttpPost]
@@ -36,9 +36,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("{id}")]
-        public async Task<ActionResult<OrganizationDto>> Update([FromBody] UpdateOrganizationDto dto)
+        public async Task<ActionResult<OrganizationDto>> Update(int id, [FromBody] UpdateOrganizationDto dto)
         {
-            throw new NotImplementedException();
+            return await _service.Update(id, dto);
         }
     }
 }
