@@ -13,6 +13,7 @@ import { LoansModule } from 'src/app/loans/loans.module';
 import { OfficialBusinessesModule } from 'src/app/official-businesses/official-businesses.module';
 import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
 import { UsersModule } from 'src/app/users/users.module';
+import { OrganizationsModule } from 'src/app/organizations/organizations.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -30,6 +31,7 @@ import { UsersModule } from 'src/app/users/users.module';
     OfficialBusinessesModule,
     OvertimesModule,
     UsersModule,
+    OrganizationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

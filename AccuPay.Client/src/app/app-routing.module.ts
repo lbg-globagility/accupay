@@ -18,6 +18,7 @@ import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.compone
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
+import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 
 const routes: Routes = [
   {
@@ -75,6 +76,10 @@ const routes: Routes = [
       {
         path: 'loans',
         component: LoanListComponent,
+      },
+      {
+        path: 'organizations',
+        component: OrganizationListComponent,
       },
     ],
     canActivate: [AuthGuard],
