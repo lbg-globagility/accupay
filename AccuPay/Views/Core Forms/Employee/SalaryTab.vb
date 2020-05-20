@@ -70,6 +70,7 @@ Public Class SalaryTab
 
     Public Async Function SetEmployee(employee As Employee) As Task
 
+        pbEmployee.Focus()
         _employee = employee
 
         If Await InitializeBenchmarkData() = False Then
@@ -189,6 +190,7 @@ Public Class SalaryTab
     End Sub
 
     Private Sub LoadSalaries()
+
         If _employee?.RowID Is Nothing Then
             Return
         End If
@@ -212,16 +214,36 @@ Public Class SalaryTab
                     _currentSalary = oldSalary
                     dgvSalaries.CurrentCell = row.Cells(0)
                     row.Selected = True
+                    FormToolsControl(True)
+                    ChangeMode(FormMode.Editing)
                     Exit For
                 End If
             Next
         End If
 
         If _currentSalary Is Nothing Then
+            FormToolsControl(False)
             SelectSalary(_salaries.FirstOrDefault())
         End If
 
         AddHandler dgvSalaries.SelectionChanged, AddressOf dgvSalaries_SelectionChanged
+    End Sub
+
+    Private Sub FormToolsControl(control As Boolean)
+        dtpEffectiveFrom.Enabled = control
+        txtAmount.Enabled = control
+        txtAllowance.Enabled = control
+        chkPayPhilHealth.Enabled = control
+        chkPaySSS.Enabled = control
+        ChkPagIbig.Enabled = control
+        txtPhilHealth.Enabled = control
+        txtPagIbig.Enabled = control
+
+        If control Then
+            txtPhilHealth.Enabled = Not chkPayPhilHealth.Checked
+            txtPagIbig.Enabled = Not ChkPagIbig.Checked
+        End If
+
     End Sub
 
     <Obsolete("Remove if it's been decided that Effective Date To is really going to be gone")>
@@ -299,26 +321,23 @@ Public Class SalaryTab
     End Sub
 
     Private Sub btnNew_Click(sender As Object, e As EventArgs) Handles btnNew.Click
-        Dim latestSalary = _salaries.
-            OrderBy(Function(s) s.EffectiveTo).
-            LastOrDefault()
+        If _employee Is Nothing Then
+            MessageBoxHelper.ErrorMessage("Please select an employee first.")
+            Return
+        End If
 
-        _currentSalary = New Salary() With {
-            .OrganizationID = z_OrganizationID,
-            .CreatedBy = z_User,
-            .EmployeeID = _employee.RowID,
-            .PositionID = _employee.PositionID,
-            .HDMFAmount = Data.Services.HdmfCalculator.StandardEmployeeContribution,
-            .EffectiveFrom = Date.Today,
-            .EffectiveTo = Nothing,
-            .AutoComputeHDMFContribution = True,
-            .AutoComputePhilHealthContribution = True,
-            .DoPaySSSContribution = True
-        }
+        Dim form As New AddSalaryForm(_employee)
+        form.ShowDialog()
 
-        DisableSalaryGrid()
-        ChangeMode(FormMode.Creating)
-        DisplaySalary()
+        If form.isSaved Then
+            LoadSalaries()
+            FormToolsControl(True)
+            If form.showBalloon Then
+                ShowBalloonInfo("Salary successfuly added.", "Saved")
+            End If
+
+        End If
+
     End Sub
 
     Private Sub DisableSalaryGrid()

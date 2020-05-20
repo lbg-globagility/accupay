@@ -623,6 +623,12 @@
     <Compile Include="Views\Core Forms\Employee\AddPromotionForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddSalaryForm.Designer.vb">
+      <DependentUpon>AddSalaryForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\Employee\AddSalaryForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\Employee\AttachmentTab.Designer.vb">
       <DependentUpon>AttachmentTab.vb</DependentUpon>
     </Compile>
@@ -2056,6 +2062,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AddPromotionForm.resx">
       <DependentUpon>AddPromotionForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\Employee\AddSalaryForm.resx">
+      <DependentUpon>AddSalaryForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\Employee\AttachmentTab.resx">
       <DependentUpon>AttachmentTab.vb</DependentUpon>
