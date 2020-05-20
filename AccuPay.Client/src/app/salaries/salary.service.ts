@@ -25,7 +25,11 @@ export class SalaryService {
     return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
   }
 
-  update(salary: Salary, id: string): Observable<any> {
+  create(salary: Salary): Observable<Salary> {
+    return this.httpClient.post<Salary>(`${this.baseUrl}`, salary);
+  }
+
+  update(salary: Salary, id: string): Observable<Salary> {
     return this.httpClient.put<Salary>(`${this.baseUrl}/${id}`, salary);
   }
 

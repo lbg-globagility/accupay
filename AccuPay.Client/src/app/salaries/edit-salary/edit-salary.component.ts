@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
@@ -20,7 +21,8 @@ export class EditSalaryComponent implements OnInit {
   constructor(
     private salaryService: SalaryService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private snackBar: MatSnackBar
   ) {}
 
   ngOnInit() {
@@ -28,13 +30,12 @@ export class EditSalaryComponent implements OnInit {
   }
 
   onSave(salary: Salary) {
-    console.log(salary);
     this.salaryService.update(salary, this.salaryId).subscribe(
       () => {
         this.displaySuccess();
         this.router.navigate(['salaries', this.salaryId]);
       },
-      (err) => {}
+      (err) => this.showErrorDialog()
     );
   }
 
@@ -52,11 +53,17 @@ export class EditSalaryComponent implements OnInit {
 
   private displaySuccess() {
     Swal.fire({
-      title: 'Complete',
-      text: 'Successfully saved!',
+      title: 'Success',
+      text: 'Successfully updated!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
+    });
+  }
+
+  private showErrorDialog(): void {
+    this.snackBar.open('Failed to create the salary', null, {
+      duration: 2000,
     });
   }
 }

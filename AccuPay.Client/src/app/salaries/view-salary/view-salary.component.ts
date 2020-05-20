@@ -1,6 +1,6 @@
 import Swal from 'sweetalert2';
 import { Component, OnInit } from '@angular/core';
-import {MatDialog} from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { DeleteSalaryConfirmationComponent } from 'src/app/salaries/components/delete-salary-confirmation/delete-salary-confirmation.component';
@@ -10,10 +10,9 @@ import { SalaryService } from 'src/app/salaries/salary.service';
 @Component({
   selector: 'app-view-salary',
   templateUrl: './view-salary.component.html',
-  styleUrls: ['./view-salary.component.scss']
+  styleUrls: ['./view-salary.component.scss'],
 })
 export class ViewSalaryComponent implements OnInit {
-
   salary: Salary;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
@@ -24,8 +23,8 @@ export class ViewSalaryComponent implements OnInit {
     private salaryService: SalaryService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router,
-  ) { }
+    private router: Router
+  ) {}
 
   ngOnInit() {
     this.loadSalary();
@@ -34,21 +33,18 @@ export class ViewSalaryComponent implements OnInit {
   confirmDelete() {
     const dialogRef = this.dialog.open(DeleteSalaryConfirmationComponent);
 
-    dialogRef.afterClosed().subscribe(result => {
-      if(result !== true) return;
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result !== true) return;
 
       this.salaryService.delete(this.salaryId).subscribe(() => {
-
         this.router.navigate(['salaries']);
         Swal.fire({
           title: 'Deleted',
-          text: `This salary has been deleted`,
+          text: `The salary was successfully deleted.`,
           icon: 'success',
-          showConfirmButton: true
+          showConfirmButton: true,
         });
-
       });
-
     });
   }
 
@@ -57,7 +53,6 @@ export class ViewSalaryComponent implements OnInit {
       this.salary = data;
 
       this.isLoading.next(true);
-
     });
   }
 }

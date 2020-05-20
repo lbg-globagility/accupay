@@ -5,6 +5,7 @@ namespace AccuPay.Web.Salaries.Models
     public class SalaryDto
     {
         public int Id { get; set; }
+        public int EmployeeId { get; set; }
 
         public string EmployeeNumber { get; set; }
 

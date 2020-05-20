@@ -1,5 +1,6 @@
 export interface Salary {
   id: number;
+  employeeId: number;
   employeeNumber: string;
   employeeName: string;
   employeeType: string;

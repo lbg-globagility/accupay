@@ -20,6 +20,7 @@ import { OfficialBusinessListComponent } from 'src/app/official-businesses/offic
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 import { SalaryListComponent } from 'src/app/salaries/salary-list/salary-list.component';
 import { ViewSalaryComponent } from 'src/app/salaries/view-salary/view-salary.component';
+import { NewSalaryComponent } from 'src/app/salaries/new-salary/new-salary.component';
 import { EditSalaryComponent } from 'src/app/salaries/edit-salary/edit-salary.component';
 
 const routes: Routes = [
@@ -62,6 +63,10 @@ const routes: Routes = [
       {
         path: 'salaries',
         component: SalaryListComponent,
+      },
+      {
+        path: 'salaries/new',
+        component: NewSalaryComponent,
       },
       {
         path: 'salaries/:id',

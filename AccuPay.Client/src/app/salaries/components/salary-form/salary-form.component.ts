@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Salary } from 'src/app/salaries/shared/salary';
+import { EmployeeService } from 'src/app/employees/services/employee.service';
+import { PageOptions } from 'src/app/core/shared/page-options';
+import { Employee } from 'src/app/employees/shared/employee';
 
 @Component({
   selector: 'app-salary-form',
@@ -19,19 +22,25 @@ export class SalaryFormComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     id: [null],
+    employeeId: [null, [Validators.required]],
     basicSalary: [null, [Validators.required]],
     allowanceSalary: [null, Validators.required],
     effectiveFrom: [null, Validators.required],
-    doPaySSSContribution: [false],
-    autoComputePhilHealthContribution: [false],
-    philHealthDeduction: [null],
-    autoComputeHDMFContribution: [false],
-    hdmfDeduction: [null],
+    doPaySSSContribution: [true],
+    autoComputePhilHealthContribution: [true],
+    philHealthDeduction: [null, [Validators.required]],
+    autoComputeHDMFContribution: [true],
+    hdmfDeduction: [null, [Validators.required]],
   });
 
   computedTotalSalary: number;
 
-  constructor(private fb: FormBuilder) {
+  employees: Employee[];
+
+  constructor(
+    private fb: FormBuilder,
+    private employeeService: EmployeeService
+  ) {
     this.form
       .get('basicSalary')
       .valueChanges.subscribe(this.recomputeTotalSalary());
@@ -51,22 +60,29 @@ export class SalaryFormComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.salary != null) {
+      this.form.get('employeeId').disable();
       this.form.patchValue(this.salary);
+    } else {
+      this.form.get('philHealthDeduction').disable();
+      this.form.get('hdmfDeduction').disable();
+      this.loadEmployees();
     }
   }
 
-  onSave(): void {
-    console.log(this.form.get('effectiveFrom'));
-    console.log(new Date(this.form.get('effectiveFrom').value));
+  private loadEmployees(): void {
+    const options = new PageOptions(0, 1000, null, null);
 
+    this.employeeService.getList(options).subscribe((data) => {
+      this.employees = data.items;
+    });
+  }
+
+  onSave(): void {
     if (!this.form.valid) {
       return;
     }
 
     const salary = this.form.value as Salary;
-    console.log(salary);
-    // salary.effectiveFrom = new Date()
-
     this.save.emit(salary);
   }
 

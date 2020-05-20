@@ -12,6 +12,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import {
   MatMomentDateModule,
@@ -39,9 +41,9 @@ import {
     // MatProgressBarModule,
     // MatProgressSpinnerModule,
     // MatRadioModule,
-    // MatSelectModule,
+    MatSelectModule,
     MatSidenavModule,
-    // MatSnackBarModule,
+    MatSnackBarModule,
     // MatSortModule,
     // MatStepperModule,
     MatTableModule,

@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card *ngIf="salary">
   <mat-card-content>
     <div class="row">
       <!-- Employee Name -->
@@ -31,8 +31,29 @@
 <form [formGroup]="form" (ngSubmit)="onSave()">
   <mat-card>
     <mat-card-content>
-      <div class="row" style="padding-top: 10px;">
+      <div class="row">
         <div class="col-md-12">
+          <div class="row" *ngIf="!salary">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-8"
+            >
+              <mat-label>Employee *</mat-label>
+              <mat-select matInput formControlName="employeeId">
+                <mat-option></mat-option>
+                <mat-option
+                  *ngFor="let employee of employees"
+                  [value]="employee.rowID"
+                >
+                  {{ employee.employeeNo }} - {{ employee.lastName }},
+                  {{ employee.firstName }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select an employee</mat-error>
+            </mat-form-field>
+          </div>
+
           <h3 class="font-medium">Salary</h3>
           <br />
           <div class="row">
@@ -41,7 +62,7 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Basic Salary</mat-label>
+              <mat-label>Basic Salary *</mat-label>
               <input
                 matInput
                 type="number"
@@ -55,7 +76,7 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Allowance Salary</mat-label>
+              <mat-label>Allowance Salary *</mat-label>
               <input
                 matInput
                 type="number"
@@ -80,7 +101,7 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Effective From</mat-label>
+              <mat-label>Effective From *</mat-label>
               <input
                 matInput
                 [matDatepicker]="effectiveFrom"
@@ -117,7 +138,7 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>PhilHealth Deduction</mat-label>
+              <mat-label>PhilHealth Deduction *</mat-label>
               <input
                 matInput
                 type="number"
@@ -139,7 +160,7 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>PAGIBIG Deduction</mat-label>
+              <mat-label>PAGIBIG Deduction *</mat-label>
               <input
                 matInput
                 type="number"

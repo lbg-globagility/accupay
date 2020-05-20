@@ -8,9 +8,8 @@ describe('SalaryFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SalaryFormComponent ]
-    })
-    .compileComponents();
+      declarations: [SalaryFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
