@@ -109,13 +109,14 @@ Public Class ImportSalaryForm
                 .EffectiveFrom = record.EffectiveFrom.Value,
                 .BasicSalary = record.BasicSalary.Value,
                 .AllowanceSalary = record.AllowanceSalary,
-                .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
                 .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
                 .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
                 .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
                 .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
                 .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
             }
+
+            salary.UpdateTotalSalary()
 
             _salaries.Add(salary)
             salaryViewModels.Add(New SalaryViewModel(salary, employee))

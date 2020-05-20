@@ -1,7 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
-using Notisphere.Core.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;

@@ -41,16 +41,9 @@ namespace AccuPay.Data.Entities
         [Column("UndeclaredSalary")]
         public decimal AllowanceSalary { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("TrueSalary")]
-        public decimal TotalSalary { get; set; }
-
-        [Column("BasicDailyPay")]
-        public decimal DailyRate { get; set; }
-
-        [Column("BasicHourlyPay")]
-        public decimal HourlyRate { get; set; }
-
-        public int NoOfDependents { get; set; }
+        public decimal TotalSalary { get; internal set; }
 
         public string MaritalStatus { get; set; }
 
@@ -60,8 +53,8 @@ namespace AccuPay.Data.Entities
         [Column("EffectiveDateTo")]
         public DateTime? EffectiveTo { get; set; }
 
-        //[ForeignKey("EmployeeID")]
-        //public virtual Employee Employee { get; set; }
+        [ForeignKey("EmployeeID")]
+        public virtual Employee Employee { get; set; }
 
         public bool DoPaySSSContribution { get; set; }
 
@@ -69,12 +62,11 @@ namespace AccuPay.Data.Entities
 
         public bool AutoComputeHDMFContribution { get; set; }
 
-        public bool IsIndefinite
-        {
-            get
-            {
-                return !EffectiveTo.HasValue;
-            }
-        }
+        public bool IsIndefinite => !EffectiveTo.HasValue;
+
+        /// <summary>
+        /// Updates TotalSalary. Call this everytime BasicSalary or AllowanceSalary has changed.
+        /// </summary>
+        public void UpdateTotalSalary() => TotalSalary = BasicSalary + AllowanceSalary;
     }
 }

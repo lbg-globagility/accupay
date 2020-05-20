@@ -46,6 +46,7 @@ namespace AccuPay.Data.Entities
         [Column("OffBusStartDate")]
         public DateTime? StartDate { get; set; }
 
+        // TODO: make this readonly. Domain methods should only be the one to set this.
         [Column("OffBusEndDate")]
         public DateTime? EndDate { get; set; }
 
@@ -53,14 +54,14 @@ namespace AccuPay.Data.Entities
 
         public string Comments { get; set; }
 
+        public virtual Employee Employee { get; set; }
+
         [NotMapped]
         public DateTime? StartTimeFull
         {
             get => StartTime == null ?
                         (DateTime?)null :
-                        StartDate == null ?
-                                DateTime.Now.ToMinimumHourValue().ToMinimumHourValue().Add(StartTime.Value) :
-                                StartDate.Value.Date.ToMinimumHourValue().Add(StartTime.Value);
+                        ProperStartDate.Date.ToMinimumHourValue().Add(StartTime.Value);
 
             set => StartTime = value == null ? null : value?.TimeOfDay;
         }
@@ -70,9 +71,7 @@ namespace AccuPay.Data.Entities
         {
             get => EndTime == null ?
                         (DateTime?)null :
-                        EndDate == null ?
-                                DateTime.Now.ToMinimumHourValue().Add(EndTime.Value) :
-                                EndDate.Value.Date.ToMinimumHourValue().Add(EndTime.Value);
+                        ProperEndDate.Date.ToMinimumHourValue().Add(EndTime.Value);
 
             set => EndTime = value == null ? null : value?.TimeOfDay;
         }
@@ -85,17 +84,23 @@ namespace AccuPay.Data.Entities
             set => StartDate = value;
         }
 
-        // End Date that is not usinesnullable since it should not be nullable
+        // End Date that is not nullable since it should not be nullable
         [NotMapped]
         public DateTime ProperEndDate
         {
-            get
+            get => EndDate ?? ProperStartDate;
+            set => EndDate = value;
+        }
+
+        public void UpdateEndDate()
+        {
+            if (StartTime == null || EndTime == null)
             {
-                return EndDate ?? DateTime.Now.Date;
+                EndDate = ProperEndDate;
             }
-            set
+            else
             {
-                EndDate = value;
+                EndDate = EndTime < StartTime ? ProperStartDate.AddDays(1) : StartDate;
             }
         }
 

@@ -124,9 +124,14 @@ namespace AccuPay.Web.Employees.Services
         internal async Task<EmployeeDto> GeyByIdAsync(int id)
         {
             var employee = await GetEmployeeById(id);
-            var dto = EmployeeDto.Produce(employee);
+            var dto = EmployeeDto.Convert(employee);
 
             return dto;
+        }
+
+        internal async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
+        {
+            return await _employeeRepository.GetAllAsync(organizationId);
         }
     }
 }

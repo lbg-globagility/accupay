@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -42,17 +43,15 @@ namespace AccuPay.Data.Repositories
             await SaveWithContextAsync(salary, deferSave: false);
         }
 
-        private async Task SaveWithContextAsync(Salary salary,
-                                                bool deferSave = true)
+        private async Task SaveWithContextAsync(Salary salary, bool deferSave = true)
         {
+            salary.UpdateTotalSalary();
+
+            SaveFunction(salary);
+
             if (deferSave == false)
             {
-                SaveFunction(salary);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                SaveFunction(salary);
             }
         }
 
@@ -84,6 +83,32 @@ namespace AccuPay.Data.Repositories
             return _context.Salaries.
                     Where(x => x.EmployeeID == employeeId).
                     ToList();
+        }
+
+        public async Task<PaginatedListResult<Salary>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.Salaries
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.EffectiveFrom)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var salaries = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Salary>(salaries, count);
         }
 
         public async Task<IEnumerable<Salary>> GetAll(int organizationId)

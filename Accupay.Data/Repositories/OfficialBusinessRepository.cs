@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -51,18 +52,21 @@ namespace AccuPay.Data.Repositories
                 throw new ArgumentException("Employee does not exists.");
 
             if (officialBusiness.StartTime.HasValue)
+            {
                 officialBusiness.StartTime = officialBusiness.StartTime.Value.StripSeconds();
+            }
             if (officialBusiness.EndTime.HasValue)
+            {
                 officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
+            }
+
+            officialBusiness.UpdateEndDate();
+
+            await SaveAsyncFunction(officialBusiness);
 
             if (deferSave == false)
             {
-                await SaveAsyncFunction(officialBusiness);
                 await _context.SaveChangesAsync();
-            }
-            else
-            {
-                await SaveAsyncFunction(officialBusiness);
             }
         }
 
@@ -107,6 +111,33 @@ namespace AccuPay.Data.Repositories
             return await _context.OfficialBusinesses.
                                 Where(l => l.EmployeeID == employeeId).
                                 ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.OfficialBusinesses
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.StartDate)
+                                .ThenBy(x => x.StartTime)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var officialBusinesses = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<OfficialBusiness>(officialBusinesses, count);
         }
 
         public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)

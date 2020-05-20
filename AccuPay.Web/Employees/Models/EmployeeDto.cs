@@ -5,7 +5,7 @@ namespace AccuPay.Web.Employees.Models
 {
     public class EmployeeDto
     {
-        public static EmployeeDto Produce(Employee employee)
+        public static EmployeeDto Convert(Employee employee)
         {
             return FromEmployeeToDto(employee);
         }

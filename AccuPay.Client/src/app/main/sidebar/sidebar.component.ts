@@ -21,6 +21,31 @@ const menuItems: MenuItem[] = [
     route: '/users',
     icon: 'person',
   },
+  {
+    label: 'Leaves',
+    route: '/leaves',
+    icon: 'person',
+  },
+  {
+    label: 'Official Business',
+    route: '/official-business',
+    icon: 'person',
+  },
+  {
+    label: 'Overtimes',
+    route: '/overtimes',
+    icon: 'person',
+  },
+  {
+    label: 'Allowances',
+    route: '/allowances',
+    icon: 'person',
+  },
+  {
+    label: 'Loans',
+    route: '/loans',
+    icon: 'person',
+  },
 ];
 
 @Component({
