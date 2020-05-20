@@ -1,0 +1,13 @@
+<div>
+  <h1>View Employee</h1>
+  <div>
+    <button mat-raised-button type="button" color="accent" (click)="routeToEditPage()">
+      EDIT EMPLOYEE
+    </button>
+  </div>
+</div>
+
+<ng-container *ngIf="isLoading | async">
+  <app-employee-form [employee]="employee" [uncontrollable]="true">
+  </app-employee-form>
+</ng-container>

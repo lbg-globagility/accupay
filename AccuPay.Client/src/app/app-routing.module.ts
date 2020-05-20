@@ -5,10 +5,19 @@ import { PageNotFoundComponent } from 'src/app/errors/page-not-found/page-not-fo
 import { UnderConstructionComponent } from 'src/app/errors/under-construction/under-construction.component';
 import { LoginComponent } from 'src/app/accounts/login/login.component';
 import { AuthGuard } from 'src/app/core/auth/auth.guard';
+import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
 import { UserListComponent } from 'src/app/users/user-list/user-list.component';
 import { ViewUserComponent } from 'src/app/users/view-user/view-user.component';
 import { NewUserComponent } from 'src/app/users/new-user/new-user.component';
 import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
+import { NewEmployeeComponent } from './employees/new-employee/new-employee.component';
+import { ViewEmployeeComponent } from './employees/view-employee/view-employee.component';
+import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
+import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
+import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
+import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
+import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
+import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 
 const routes: Routes = [
   {
@@ -16,8 +25,20 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
+        path: 'employees/new',
+        component: NewEmployeeComponent,
+      },
+      {
+        path: 'employees/:id',
+        component: ViewEmployeeComponent,
+      },
+      {
+        path: 'employees/:id/edit',
+        component: EditEmployeeComponent,
+      },
+      {
         path: 'employees',
-        component: UnderConstructionComponent,
+        component: EmployeeListComponent,
       },
       {
         path: 'users',
@@ -34,6 +55,26 @@ const routes: Routes = [
       {
         path: 'users/:id/edit',
         component: EditUserComponent,
+      },
+      {
+        path: 'leaves',
+        component: LeaveListComponent,
+      },
+      {
+        path: 'official-business',
+        component: OfficialBusinessListComponent,
+      },
+      {
+        path: 'overtimes',
+        component: OvertimeListComponent,
+      },
+      {
+        path: 'allowances',
+        component: AllowanceListComponent,
+      },
+      {
+        path: 'loans',
+        component: LoanListComponent,
       },
     ],
     canActivate: [AuthGuard],
