@@ -6,17 +6,14 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Salary } from 'src/app/salaries/shared/salary';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class SalaryService {
   baseUrl = 'api/salaries';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getAll(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<Salary>> {
+  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Salary>> {
     const params = options ? options.toObject() : null;
     params.term = term;
     return this.httpClient.get<PaginatedList<Salary>>(`${this.baseUrl}`, {
@@ -26,6 +23,10 @@ export class SalaryService {
 
   get(id: string): Observable<Salary> {
     return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
+  }
+
+  update(salary: Salary, id: string): Observable<any> {
+    return this.httpClient.put<Salary>(`${this.baseUrl}/${id}`, salary);
   }
 
   delete(id: string): Observable<Salary> {

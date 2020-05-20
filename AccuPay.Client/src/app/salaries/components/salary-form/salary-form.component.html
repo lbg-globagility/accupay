@@ -1,0 +1,160 @@
+<mat-card>
+  <mat-card-content>
+    <div class="row">
+      <!-- Employee Name -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Name</p>
+          <p class="field-value">{{ salary.employeeName }}</p>
+        </div>
+      </div>
+
+      <!-- Employee Number -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Number</p>
+          <p class="field-value">{{ salary.employeeNumber }}</p>
+        </div>
+      </div>
+
+      <!-- Employee Type -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Type</p>
+          <p class="field-value">{{ salary.employeeType }}</p>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+<form [formGroup]="form" (ngSubmit)="onSave()">
+  <mat-card>
+    <mat-card-content>
+      <div class="row" style="padding-top: 10px;">
+        <div class="col-md-12">
+          <h3 class="font-medium">Salary</h3>
+          <br />
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Basic Salary</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="basicSalary"
+              />
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Allowance Salary</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="allowanceSalary"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <div class="col-lg-4 mb-4 readonly-field">
+              <div class="field">
+                <p class="field-label">Total Salary</p>
+                <p class="field-value">
+                  {{ computedTotalSalary | number: "1.2-2" }}
+                </p>
+              </div>
+            </div>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Effective From</mat-label>
+              <input
+                matInput
+                [matDatepicker]="effectiveFrom"
+                formControlName="effectiveFrom"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="effectiveFrom"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #effectiveFrom></mat-datepicker>
+            </mat-form-field>
+          </div>
+
+          <h3 class="font-medium">Contributions</h3>
+          <br />
+
+          <div class="row" style="margin-bottom: 50px;">
+            <mat-checkbox
+              class="col-lg-4"
+              formControlName="doPaySSSContribution"
+              >Pay SSS</mat-checkbox
+            >
+          </div>
+
+          <div class="row">
+            <mat-checkbox
+              class="col-lg-4"
+              formControlName="autoComputePhilHealthContribution"
+              >Auto Compute PhilHealth</mat-checkbox
+            >
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>PhilHealth Deduction</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="philHealthDeduction"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-checkbox
+              class="col-lg-4"
+              formControlName="autoComputeHDMFContribution"
+              >Auto Compute PAGIBIG</mat-checkbox
+            >
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>PAGIBIG Deduction</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="hdmfDeduction"
+              />
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <button mat-button type="button" color="accent" (click)="onCancel()">
+        CANCEL
+      </button>
+      <button mat-raised-button type="submit" color="accent">FINISH</button>
+    </mat-card-content>
+  </mat-card>
+</form>

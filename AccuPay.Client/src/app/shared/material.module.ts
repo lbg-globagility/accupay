@@ -10,6 +10,13 @@ import { NgModule } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+
+import {
+  MatMomentDateModule,
+  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
+} from '@angular/material-moment-adapter';
 
 @NgModule({
   exports: [
@@ -17,9 +24,10 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatButtonModule,
     // MatButtonToggleModule,
     MatCardModule,
-    // MatCheckboxModule,
+    MatCheckboxModule,
     // MatChipsModule,
-    // MatDatepickerModule,
+    MatDatepickerModule,
+    MatMomentDateModule,
     MatDialogModule,
     // MatDividerModule,
     // MatExpansionModule,
@@ -27,7 +35,6 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatInputModule,
     // MatListModule,
     MatMenuModule,
-    // MatNativeDateModule,
     MatPaginatorModule,
     // MatProgressBarModule,
     // MatProgressSpinnerModule,
@@ -41,6 +48,9 @@ import { MatDialogModule } from '@angular/material/dialog';
     // MatTabsModule,
     MatToolbarModule,
     // MatTooltipModule,
+  ],
+  providers: [
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
   ],
 })
 export class MaterialModule {}

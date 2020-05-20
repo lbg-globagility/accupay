@@ -1,8 +1,8 @@
 import Swal from 'sweetalert2';
-import { ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import {MatDialog} from '@angular/material/dialog';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs';
 import { DeleteSalaryConfirmationComponent } from 'src/app/salaries/components/delete-salary-confirmation/delete-salary-confirmation.component';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
@@ -16,6 +16,8 @@ export class ViewSalaryComponent implements OnInit {
 
   salary: Salary;
 
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   salaryId = this.route.snapshot.paramMap.get('id');
 
   constructor(
@@ -26,7 +28,7 @@ export class ViewSalaryComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.loadUser();
+    this.loadSalary();
   }
 
   confirmDelete() {
@@ -50,9 +52,12 @@ export class ViewSalaryComponent implements OnInit {
     });
   }
 
-  private loadUser() {
+  private loadSalary() {
     this.salaryService.get(this.salaryId).subscribe((data) => {
       this.salary = data;
+
+      this.isLoading.next(true);
+
     });
   }
 }
