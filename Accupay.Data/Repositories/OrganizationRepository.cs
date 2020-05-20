@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
@@ -15,6 +16,12 @@ namespace AccuPay.Data.Repositories
         public Organization GetById(int id)
         {
             return _context.Organizations.FirstOrDefault(x => x.RowID == id);
+        }
+
+        public async Task Create(Organization organization)
+        {
+            _context.Organizations.Add(organization);
+            await _context.SaveChangesAsync();
         }
     }
 }
