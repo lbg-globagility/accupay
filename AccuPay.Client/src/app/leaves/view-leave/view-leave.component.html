@@ -1,0 +1,17 @@
+<header class="app-page-header">
+  <h1>View Leave</h1>
+</header>
+
+<ng-container *ngIf="isLoading | async">
+  <button
+    style="margin-right: 10px;"
+    mat-raised-button
+    color="accent"
+    routerLink="/leaves/{{ leaveId }}/edit"
+  >
+    EDIT LEAVE
+  </button>
+  <button mat-raised-button color="warn" (click)="confirmDelete()">
+    DELETE LEAVE
+  </button>
+</ng-container>

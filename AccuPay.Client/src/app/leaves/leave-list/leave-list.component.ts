@@ -12,7 +12,7 @@ import { LeaveService } from 'src/app/leaves/leave.service';
 @Component({
   selector: 'app-leave-list',
   templateUrl: './leave-list.component.html',
-  styleUrls: ['./leave-list.component.scss']
+  styleUrls: ['./leave-list.component.scss'],
 })
 export class LeaveListComponent implements OnInit {
   readonly displayedColumns: string[] = [
@@ -49,7 +49,7 @@ export class LeaveListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private leaveService: LeaveService) { 
+  constructor(private leaveService: LeaveService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -60,7 +60,7 @@ export class LeaveListComponent implements OnInit {
     this.getLeaveList();
   }
 
-  getLeaveList() {
+  getLeaveList(): void {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -68,39 +68,36 @@ export class LeaveListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.leaveService
-      .getAll(options, this.searchTerm)
-      .subscribe((data) => {
-        this.leaves = data.items;
-        this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.leaves);
-      });
+    this.leaveService.getAll(options, this.searchTerm).subscribe((data) => {
+      this.leaves = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.leaves);
+    });
   }
 
-  clearSearchBox() {
+  clearSearchBox(): void {
     this.clearSearch = '';
     this.applyFilter(this.clearSearch);
   }
 
-  applyFilter(searchTerm: string) {
+  applyFilter(searchTerm: string): void {
     this.searchTerm = searchTerm;
     this.pageIndex = 0;
     this.modelChanged.next();
   }
 
-  sortData(sort: Sort) {
+  sortData(sort: Sort): void {
     this.sort = sort;
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
+  setHoveredRow(id: number): void {
     this.selectedRow = id;
   }
 
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getLeaveList();
   }
-
 }

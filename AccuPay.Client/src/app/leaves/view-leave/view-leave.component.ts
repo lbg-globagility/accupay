@@ -4,48 +4,48 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
-import { Salary } from 'src/app/salaries/shared/salary';
-import { SalaryService } from 'src/app/salaries/salary.service';
+import { Leave } from 'src/app/leaves/shared/leave';
+import { LeaveService } from 'src/app/leaves/leave.service';
 
 @Component({
-  selector: 'app-view-salary',
-  templateUrl: './view-salary.component.html',
-  styleUrls: ['./view-salary.component.scss'],
+  selector: 'app-view-leave',
+  templateUrl: './view-leave.component.html',
+  styleUrls: ['./view-leave.component.scss'],
 })
-export class ViewSalaryComponent implements OnInit {
-  salary: Salary;
+export class ViewLeaveComponent implements OnInit {
+  leave: Leave;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  salaryId = this.route.snapshot.paramMap.get('id');
+  leaveId = this.route.snapshot.paramMap.get('id');
 
   constructor(
-    private salaryService: SalaryService,
+    private leaveService: LeaveService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.loadSalary();
+    this.loadLeave();
   }
 
   confirmDelete(): void {
     const dialogRef = this.dialog.open(ConfirmationDialogComponent, {
       data: {
-        title: 'Delete Salary',
-        content: 'Are you sure you want to delete this salary?',
+        title: 'Delete Leave',
+        content: 'Are you sure you want to delete this leave?',
       },
     });
 
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== true) return;
 
-      this.salaryService.delete(this.salaryId).subscribe(() => {
-        this.router.navigate(['salaries']);
+      this.leaveService.delete(this.leaveId).subscribe(() => {
+        this.router.navigate(['leaves']);
         Swal.fire({
           title: 'Deleted',
-          text: `The salary was successfully deleted.`,
+          text: `The leave was successfully deleted.`,
           icon: 'success',
           showConfirmButton: true,
         });
@@ -53,9 +53,9 @@ export class ViewSalaryComponent implements OnInit {
     });
   }
 
-  private loadSalary(): void {
-    this.salaryService.get(this.salaryId).subscribe((data) => {
-      this.salary = data;
+  private loadLeave(): void {
+    this.leaveService.get(this.leaveId).subscribe((data) => {
+      this.leave = data;
 
       this.isLoading.next(true);
     });

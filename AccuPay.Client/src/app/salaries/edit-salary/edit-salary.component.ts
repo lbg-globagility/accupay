@@ -25,11 +25,11 @@ export class EditSalaryComponent implements OnInit {
     private snackBar: MatSnackBar
   ) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.loadSalary();
   }
 
-  onSave(salary: Salary) {
+  onSave(salary: Salary): void {
     this.salaryService.update(salary, this.salaryId).subscribe(
       () => {
         this.displaySuccess();
@@ -39,11 +39,11 @@ export class EditSalaryComponent implements OnInit {
     );
   }
 
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(['salaries', this.salaryId]);
   }
 
-  private loadSalary() {
+  private loadSalary(): void {
     this.salaryService.get(this.salaryId).subscribe((data) => {
       this.salary = data;
 
@@ -51,7 +51,7 @@ export class EditSalaryComponent implements OnInit {
     });
   }
 
-  private displaySuccess() {
+  private displaySuccess(): void {
     Swal.fire({
       title: 'Success',
       text: 'Successfully updated!',

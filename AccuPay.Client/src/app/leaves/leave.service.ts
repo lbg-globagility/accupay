@@ -6,21 +6,26 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Leave } from 'src/app/leaves/shared/leave';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LeaveService {
   baseUrl = 'api/leaves';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getAll(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<Leave>> {
+  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Leave>> {
     const params = options ? options.toObject() : null;
     params.term = term;
     return this.httpClient.get<PaginatedList<Leave>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  get(id: string): Observable<Leave> {
+    return this.httpClient.get<Leave>(`${this.baseUrl}/${id}`);
+  }
+
+  delete(id: string): Observable<Leave> {
+    return this.httpClient.delete<Leave>(`${this.baseUrl}/${id}`);
   }
 }

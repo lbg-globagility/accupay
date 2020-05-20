@@ -17,7 +17,7 @@ export class NewSalaryComponent {
     private snackBar: MatSnackBar
   ) {}
 
-  onSave(salary: Salary) {
+  onSave(salary: Salary): void {
     this.salaryService.create(salary).subscribe(
       (s) => {
         this.displaySuccess();
@@ -27,7 +27,7 @@ export class NewSalaryComponent {
     );
   }
 
-  onCancel() {
+  onCancel(): void {
     this.router.navigate(['salaries']);
   }
 

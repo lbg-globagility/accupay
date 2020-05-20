@@ -12,10 +12,9 @@ import { SalaryService } from 'src/app/salaries/salary.service';
 @Component({
   selector: 'app-salary-list',
   templateUrl: './salary-list.component.html',
-  styleUrls: ['./salary-list.component.scss']
+  styleUrls: ['./salary-list.component.scss'],
 })
 export class SalaryListComponent implements OnInit {
-
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
@@ -51,7 +50,7 @@ export class SalaryListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private salaryService: SalaryService) { 
+  constructor(private salaryService: SalaryService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -62,7 +61,7 @@ export class SalaryListComponent implements OnInit {
     this.getSalaryList();
   }
 
-  getSalaryList() {
+  getSalaryList(): void {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -70,39 +69,36 @@ export class SalaryListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.salaryService
-      .getAll(options, this.searchTerm)
-      .subscribe((data) => {
-        this.salaries = data.items;
-        this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.salaries);
-      });
+    this.salaryService.getAll(options, this.searchTerm).subscribe((data) => {
+      this.salaries = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.salaries);
+    });
   }
 
-  applyFilter(searchTerm: string) {
+  applyFilter(searchTerm: string): void {
     this.searchTerm = searchTerm;
     this.pageIndex = 0;
     this.modelChanged.next();
   }
 
-  clearSearchBox() {
+  clearSearchBox(): void {
     this.clearSearch = '';
     this.applyFilter(this.clearSearch);
   }
 
-  sortData(sort: Sort) {
+  sortData(sort: Sort): void {
     this.sort = sort;
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
+  setHoveredRow(id: number): void {
     this.selectedRow = id;
   }
 
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getSalaryList();
   }
-
 }

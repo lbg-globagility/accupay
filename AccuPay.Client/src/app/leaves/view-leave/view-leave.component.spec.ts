@@ -1,19 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { LeaveListComponent } from './leave-list.component';
+import { ViewLeaveComponent } from './view-leave.component';
 
-describe('LeaveListComponent', () => {
-  let component: LeaveListComponent;
-  let fixture: ComponentFixture<LeaveListComponent>;
+describe('ViewLeaveComponent', () => {
+  let component: ViewLeaveComponent;
+  let fixture: ComponentFixture<ViewLeaveComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [LeaveListComponent],
-    }).compileComponents();
+      declarations: [ ViewLeaveComponent ]
+    })
+    .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(LeaveListComponent);
+    fixture = TestBed.createComponent(ViewLeaveComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
