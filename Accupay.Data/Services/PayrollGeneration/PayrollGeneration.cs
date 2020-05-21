@@ -256,6 +256,7 @@ namespace AccuPay.Data.Services
             {
                 foreach (var loan in loanSchedules)
                 {
+                    loan.LastUpdBy = userId;
                     context.Entry(loan).State = EntityState.Modified;
                 }
 
