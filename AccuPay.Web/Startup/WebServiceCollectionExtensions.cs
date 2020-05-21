@@ -2,6 +2,8 @@ using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
+using AccuPay.Web.Core.Emails;
+using AccuPay.Web.Core.Views;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
@@ -32,8 +34,12 @@ namespace AccuPay.Web
             services.AddScoped<SalaryService>();
 
             services.AddScoped<JwtConfiguration>();
+            services.AddScoped<EmailConfiguration>();
 
             services.AddScoped<ICurrentUser, CurrentUser>();
+
+            services.AddScoped<EmailService>();
+            services.AddScoped<ViewRenderService>();
 
             return services;
         }

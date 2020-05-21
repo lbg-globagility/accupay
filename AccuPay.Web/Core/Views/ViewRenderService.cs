@@ -11,7 +11,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 
-namespace AccuPay.Web.Core.Emails
+namespace AccuPay.Web.Core.Views
 {
     public class ViewRenderService
     {
