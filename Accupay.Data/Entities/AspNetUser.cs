@@ -13,5 +13,7 @@ namespace AccuPay.Data.Entities
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public int? OrganizationId { get; set; }
     }
 }

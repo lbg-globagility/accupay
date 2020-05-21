@@ -5,7 +5,7 @@ import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AllowancesModule } from 'src/app/allowances/allowances.module';
 import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
@@ -15,6 +15,7 @@ import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
 import { SalariesModule } from 'src/app/salaries/salaries.module';
 import { UsersModule } from 'src/app/users/users.module';
 import { OrganizationsModule } from 'src/app/organizations/organizations.module';
+import { AuthInterceptor } from 'src/app/core/auth/auth.interceptor';
 
 @NgModule({
   declarations: [AppComponent],
@@ -35,7 +36,13 @@ import { OrganizationsModule } from 'src/app/organizations/organizations.module'
     UsersModule,
     OrganizationsModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

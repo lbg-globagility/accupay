@@ -3,14 +3,11 @@ using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Accupay.Web.Core.Auth
+namespace AccuPay.Web.Core.Auth
 {
-    /// <summary>
-    /// Represents the existing user for the current request.
-    /// </summary>
-    public class CurrentUser
+    public class CurrentUser : ICurrentUser
     {
-        public Guid Id { get; private set; }
+        public Guid UserId { get; private set; }
 
         public int OrganizationId { get; private set; }
 
@@ -27,17 +24,17 @@ namespace Accupay.Web.Core.Auth
             }
 
             ReadUserId(user);
-            ReadCompanyId(user);
+            ReadOrganizationId(user);
         }
 
         private void ReadUserId(ClaimsPrincipal principal)
         {
             var value = principal.FindFirst(JwtRegisteredClaimNames.Sub)?.Value;
 
-            Id = (value is null ? Guid.Empty : Guid.Parse(value));
+            UserId = (value is null ? Guid.Empty : Guid.Parse(value));
         }
 
-        private void ReadCompanyId(ClaimsPrincipal principal)
+        private void ReadOrganizationId(ClaimsPrincipal principal)
         {
             var claim = principal.FindFirst(CustomClaimTypes.CompanyId);
 
