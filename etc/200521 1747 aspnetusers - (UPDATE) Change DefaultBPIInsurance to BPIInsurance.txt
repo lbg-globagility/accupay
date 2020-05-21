@@ -1,0 +1,1 @@
+UPDATE listofval SET  LIC = 'BPIInsurance' WHERE LIC = 'DefaultBPIInsurance';
