@@ -86,6 +86,7 @@ namespace AccuPay.Web.Leaves
             var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
 
             return leaveTypes
+                    .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))
                     .Select(x => x.PartNo)
                     .ToList();
         }

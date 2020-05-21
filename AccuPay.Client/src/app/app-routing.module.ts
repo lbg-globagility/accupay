@@ -31,6 +31,8 @@ import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtim
 import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { ViewAllowanceComponent } from 'src/app/allowances/view-allowance/view-allowance.component';
+import { NewAllowanceComponent } from 'src/app/allowances/new-allowance/new-allowance.component';
+import { EditAllowanceComponent } from 'src/app/allowances/edit-allowance/edit-allowance.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
@@ -143,8 +145,16 @@ const routes: Routes = [
         component: AllowanceListComponent,
       },
       {
+        path: 'allowances/new',
+        component: NewAllowanceComponent,
+      },
+      {
         path: 'allowances/:id',
         component: ViewAllowanceComponent,
+      },
+      {
+        path: 'allowances/:id/edit',
+        component: EditAllowanceComponent,
       },
       {
         path: 'loans',
