@@ -1,0 +1,9 @@
+<h1>Edit Overtime</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-overtime-form
+    [overtime]="overtime"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-overtime-form>
+</ng-container>

@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Leave } from 'src/app/leaves/shared/leave';
 import { LeaveService } from 'src/app/leaves/leave.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-view-leave',
@@ -17,13 +18,14 @@ export class ViewLeaveComponent implements OnInit {
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  leaveId = this.route.snapshot.paramMap.get('id');
+  leaveId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
     private leaveService: LeaveService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -41,15 +43,18 @@ export class ViewLeaveComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== true) return;
 
-      this.leaveService.delete(this.leaveId).subscribe(() => {
-        this.router.navigate(['leaves']);
-        Swal.fire({
-          title: 'Deleted',
-          text: `The leave was successfully deleted.`,
-          icon: 'success',
-          showConfirmButton: true,
-        });
-      });
+      this.leaveService.delete(this.leaveId).subscribe(
+        () => {
+          this.router.navigate(['leaves']);
+          Swal.fire({
+            title: 'Deleted',
+            text: `The leave was successfully deleted.`,
+            icon: 'success',
+            showConfirmButton: true,
+          });
+        },
+        (err) => this.errorHandler.badRequest(err, 'Failed to delete leave.')
+      );
     });
   }
 

@@ -29,7 +29,7 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdAsync(id);
+            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -87,8 +87,10 @@ namespace AccuPay.Web.OfficialBusinesses
             return new OfficialBusinessDto()
             {
                 Id = officialBusiness.RowID.Value,
+                EmployeeId = officialBusiness.EmployeeID.Value,
                 EmployeeNumber = officialBusiness.Employee?.EmployeeNo,
                 EmployeeName = officialBusiness.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = officialBusiness.Employee?.EmployeeType,
                 StartTime = officialBusiness.StartTimeFull,
                 EndTime = officialBusiness.EndTimeFull,
                 StartDate = officialBusiness.ProperStartDate,

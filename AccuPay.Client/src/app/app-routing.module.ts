@@ -22,9 +22,19 @@ import { ViewLeaveComponent } from 'src/app/leaves/view-leave/view-leave.compone
 import { NewLeaveComponent } from 'src/app/leaves/new-leave/new-leave.component';
 import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
+import { ViewOfficialBusinessComponent } from 'src/app/official-businesses/view-official-business/view-official-business.component';
+import { NewOfficialBusinessComponent } from 'src/app/official-businesses/new-official-business/new-official-business.component';
+import { EditOfficialBusinessComponent } from 'src/app/official-businesses/edit-official-business/edit-official-business.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
+import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-overtime.component';
+import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
+import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
+import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
+import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
+import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
+import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
 
 const routes: Routes = [
   {
@@ -96,12 +106,36 @@ const routes: Routes = [
         component: EditLeaveComponent,
       },
       {
-        path: 'official-business',
+        path: 'official-businesses',
         component: OfficialBusinessListComponent,
+      },
+      {
+        path: 'official-businesses/new',
+        component: NewOfficialBusinessComponent,
+      },
+      {
+        path: 'official-businesses/:id',
+        component: ViewOfficialBusinessComponent,
+      },
+      {
+        path: 'official-businesses/:id/edit',
+        component: EditOfficialBusinessComponent,
       },
       {
         path: 'overtimes',
         component: OvertimeListComponent,
+      },
+      {
+        path: 'overtimes/new',
+        component: NewOvertimeComponent,
+      },
+      {
+        path: 'overtimes/:id',
+        component: ViewOvertimeComponent,
+      },
+      {
+        path: 'overtimes/:id/edit',
+        component: EditOvertimeComponent,
       },
       {
         path: 'allowances',
@@ -110,6 +144,22 @@ const routes: Routes = [
       {
         path: 'loans',
         component: LoanListComponent,
+      },
+      {
+        path: 'organizations',
+        component: OrganizationListComponent,
+      },
+      {
+        path: 'organizations/new',
+        component: NewOrganizationComponent,
+      },
+      {
+        path: 'organizations/:id',
+        component: ViewOrganizationComponent,
+      },
+      {
+        path: 'organizations/:id/edit',
+        component: EditOrganizationComponent,
       },
     ],
     canActivate: [AuthGuard],

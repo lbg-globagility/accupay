@@ -25,7 +25,8 @@ namespace AccuPay.Web.Account
         {
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(CustomClaimTypes.CompanyId, user.OrganizationId.ToString())
             };
 
             return _tokenService.Encode(

@@ -33,7 +33,7 @@ const menuItems: MenuItem[] = [
   },
   {
     label: 'Official Business',
-    route: '/official-business',
+    route: '/official-businesses',
     icon: 'person',
   },
   {
@@ -49,6 +49,11 @@ const menuItems: MenuItem[] = [
   {
     label: 'Loans',
     route: '/loans',
+    icon: 'person',
+  },
+  {
+    label: 'Organizations',
+    route: '/organizations',
     icon: 'person',
   },
 ];

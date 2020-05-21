@@ -38,8 +38,8 @@
     #table
     [dataSource]="dataSource"
     (matSortChange)="sortData($event)"
-    class="w-full">
-
+    class="w-full"
+  >
     <ng-container matColumnDef="employeeNumber">
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Number</th>
       <td mat-cell *matCellDef="let officialBusiness">
@@ -56,12 +56,17 @@
 
     <ng-container matColumnDef="date">
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
-      <td mat-cell *matCellDef="let officialBusiness">{{ officialBusiness.startDate | date }}</td>
+      <td mat-cell *matCellDef="let officialBusiness">
+        {{ officialBusiness.startDate | date }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="time">
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Time</th>
-      <td mat-cell *matCellDef="let officialBusiness">{{ officialBusiness.startTime | date: 'shortTime' }} - {{ officialBusiness.endTime | date: 'shortTime' }}</td>
+      <td mat-cell *matCellDef="let officialBusiness">
+        {{ officialBusiness.startTime | date: "shortTime" }} -
+        {{ officialBusiness.endTime | date: "shortTime" }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="status">
@@ -79,7 +84,7 @@
       (mouseover)="setHoveredRow(row.id)"
       [class.active]="row.rowId == selectedRow"
       (mouseout)="selectedRow = null"
-      routerLink="/officialBusinesses/{{ row.id }}"
+      routerLink="/official-businesses/{{ row.id }}"
     ></tr>
   </table>
 

@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -63,6 +64,12 @@ namespace AccuPay.Web.Controllers
             await _repository.DeleteAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet("statuslist")]
+        public ActionResult<ICollection<string>> GetStatusList()
+        {
+            return _repository.GetStatusList();
         }
     }
 }
