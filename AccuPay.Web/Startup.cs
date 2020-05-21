@@ -1,4 +1,4 @@
-using Accupay.Web.Core.Configurations;
+using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Notisphere.Core.Startup;
 using System;
 using System.IO;
 using System.Reflection;
@@ -29,6 +30,7 @@ namespace AccuPay.Web
             services.AddAccuPayCoreServices();
             services.AddAuthenticationService(new JwtConfiguration(Configuration));
             services.AddWebServices();
+            services.AddEmailService(new EmailConfiguration(Configuration));
 
             services.AddSwaggerGen(c =>
             {

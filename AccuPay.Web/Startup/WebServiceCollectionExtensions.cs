@@ -1,7 +1,7 @@
-using Accupay.Web.Core.Configurations;
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;

@@ -6,26 +6,26 @@ namespace AccuPay.Web.Core.Emails
 {
     public class EmailService
     {
-        private readonly IEmailSender sender;
-        private readonly ILogger<EmailService> logger;
+        private readonly IEmailSender _sender;
+        private readonly ILogger<EmailService> _logger;
 
         public EmailService(IEmailSender sender, ILogger<EmailService> logger)
         {
-            this.sender = sender;
-            this.logger = logger;
+            _sender = sender;
+            _logger = logger;
         }
 
         public async Task Send(Email email)
         {
             try
             {
-                await this.sender.Send(email);
+                await _sender.Send(email);
 
-                this.logger.LogInformation("Email was sent to SMTP server");
+                _logger.LogInformation("Email was sent to SMTP server");
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex, "Email failed sending to SMTP server");
+                _logger.LogError(ex, "Email failed sending to SMTP server");
             }
         }
     }

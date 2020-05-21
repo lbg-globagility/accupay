@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Accupay.Web.Core.Configurations
+namespace AccuPay.Web.Core.Configurations
 {
     public class JwtConfiguration
     {
