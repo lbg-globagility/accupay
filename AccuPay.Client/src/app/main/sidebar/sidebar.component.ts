@@ -51,6 +51,11 @@ const menuItems: MenuItem[] = [
     route: '/loans',
     icon: 'person',
   },
+  {
+    label: 'Organizations',
+    route: '/organizations',
+    icon: 'person',
+  },
 ];
 
 @Component({

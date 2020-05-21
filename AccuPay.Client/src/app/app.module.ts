@@ -14,6 +14,7 @@ import { OfficialBusinessesModule } from 'src/app/official-businesses/official-b
 import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
 import { SalariesModule } from 'src/app/salaries/salaries.module';
 import { UsersModule } from 'src/app/users/users.module';
+import { OrganizationsModule } from 'src/app/organizations/organizations.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +33,7 @@ import { UsersModule } from 'src/app/users/users.module';
     OvertimesModule,
     SalariesModule,
     UsersModule,
+    OrganizationsModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

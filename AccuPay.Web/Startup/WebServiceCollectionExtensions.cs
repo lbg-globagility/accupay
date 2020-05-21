@@ -11,6 +11,7 @@ using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Accupay.Web.Core.Auth;
+using AccuPay.Web.Organizations;
 
 namespace AccuPay.Web
 {
@@ -29,6 +30,7 @@ namespace AccuPay.Web
             services.AddScoped<LoanService>();
             services.AddScoped<OfficialBusinessService>();
             services.AddScoped<OvertimeService>();
+            services.AddScoped<OrganizationService>();
             services.AddScoped<SalaryService>();
 
             services.AddScoped<JwtConfiguration>();
