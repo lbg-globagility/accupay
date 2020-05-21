@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Leave } from 'src/app/leaves/shared/leave';
 import { LeaveService } from 'src/app/leaves/leave.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-new-leave',
@@ -14,7 +14,7 @@ export class NewLeaveComponent {
   constructor(
     private leaveService: LeaveService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {}
 
   onSave(leave: Leave): void {
@@ -23,7 +23,7 @@ export class NewLeaveComponent {
         this.displaySuccess();
         this.router.navigate(['leaves', result.id]);
       },
-      (err) => this.showErrorDialog(err)
+      (err) => this.errorHandler.badRequest(err, 'Failed to create leave.')
     );
   }
 
@@ -38,18 +38,6 @@ export class NewLeaveComponent {
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(err): void {
-    let message: string = 'Failed to create leave.';
-
-    if (err && err.status == 400) {
-      message = err.error.Error;
-    }
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

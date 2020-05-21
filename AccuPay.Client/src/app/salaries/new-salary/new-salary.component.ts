@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-new-salary',
@@ -14,7 +14,7 @@ export class NewSalaryComponent {
   constructor(
     private salaryService: SalaryService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {}
 
   onSave(salary: Salary): void {
@@ -23,7 +23,7 @@ export class NewSalaryComponent {
         this.displaySuccess();
         this.router.navigate(['salaries', s.id]);
       },
-      (err) => this.showErrorDialog()
+      (err) => this.errorHandler.badRequest(err, 'Failed to create salary.')
     );
   }
 
@@ -38,12 +38,6 @@ export class NewSalaryComponent {
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(): void {
-    this.snackBar.open('Failed to create the salary', null, {
-      duration: 2000,
     });
   }
 }

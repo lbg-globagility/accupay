@@ -4,8 +4,7 @@ import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { OvertimeService } from 'src/app/overtimes/overtime.service';
-import { PageOptions } from 'src/app/core/shared/page-options';
-import { TimeParser } from 'src/app/core/shared/time-parser';
+import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
 

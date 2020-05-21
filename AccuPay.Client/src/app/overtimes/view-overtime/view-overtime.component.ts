@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { OvertimeService } from 'src/app/overtimes/overtime.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-view-overtime',
@@ -23,7 +24,8 @@ export class ViewOvertimeComponent implements OnInit {
     private overtimeService: OvertimeService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -41,15 +43,18 @@ export class ViewOvertimeComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== true) return;
 
-      this.overtimeService.delete(this.overtimeId).subscribe(() => {
-        this.router.navigate(['overtimes']);
-        Swal.fire({
-          title: 'Deleted',
-          text: `The overtime was successfully deleted.`,
-          icon: 'success',
-          showConfirmButton: true,
-        });
-      });
+      this.overtimeService.delete(this.overtimeId).subscribe(
+        () => {
+          this.router.navigate(['overtimes']);
+          Swal.fire({
+            title: 'Deleted',
+            text: `The overtime was successfully deleted.`,
+            icon: 'success',
+            showConfirmButton: true,
+          });
+        },
+        (err) => this.errorHandler.badRequest(err, 'Failed to delete overtime.')
+      );
     });
   }
 

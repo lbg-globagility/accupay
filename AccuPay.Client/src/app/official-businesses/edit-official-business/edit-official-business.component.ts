@@ -1,10 +1,10 @@
 import Swal from 'sweetalert2';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-edit-official-business',
@@ -22,7 +22,7 @@ export class EditOfficialBusinessComponent implements OnInit {
     private officialBusinessService: OfficialBusinessService,
     private route: ActivatedRoute,
     private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -40,7 +40,11 @@ export class EditOfficialBusinessComponent implements OnInit {
             this.officialBusinessId,
           ]);
         },
-        (err) => this.showErrorDialog(err)
+        (err) =>
+          this.errorHandler.badRequest(
+            err,
+            'Failed to update official business.'
+          )
       );
   }
 
@@ -65,18 +69,6 @@ export class EditOfficialBusinessComponent implements OnInit {
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(err): void {
-    let message: string = 'Failed to update official business.';
-
-    if (err && err.status == 400) {
-      message = err.error.Error;
-    }
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

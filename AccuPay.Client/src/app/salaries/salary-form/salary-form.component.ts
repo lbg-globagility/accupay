@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { Employee } from 'src/app/employees/shared/employee';
 
 @Component({
