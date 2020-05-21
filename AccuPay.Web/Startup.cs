@@ -1,3 +1,4 @@
+using Accupay.Web.Core.Configurations;
 using AccuPay.Web.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -26,7 +27,7 @@ namespace AccuPay.Web
             services.AddControllers();
             services.AddDatabase(Configuration);
             services.AddAccuPayCoreServices();
-            services.AddAuthenticationService(Configuration);
+            services.AddAuthenticationService(new JwtConfiguration(Configuration));
             services.AddWebServices();
 
             services.AddSwaggerGen(c =>
@@ -76,6 +77,7 @@ namespace AccuPay.Web
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
