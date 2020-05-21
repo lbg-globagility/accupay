@@ -7,7 +7,7 @@
       mat-raised-button
       color="accent"
       class="new-btn"
-      routerLink="/organization/new"
+      routerLink="/organizations/new"
     >
       NEW ORGANIZATION
     </button>
@@ -28,7 +28,6 @@
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       class="cursor-link"
-      (mouseout)="selectedRow = null"
       routerLink="/organizations/{{ row.id }}"
     ></tr>
   </table>

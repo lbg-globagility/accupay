@@ -19,6 +19,9 @@ import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
+import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
+import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
+import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
 
 const routes: Routes = [
   {
@@ -80,6 +83,18 @@ const routes: Routes = [
       {
         path: 'organizations',
         component: OrganizationListComponent,
+      },
+      {
+        path: 'organizations/new',
+        component: NewOrganizationComponent,
+      },
+      {
+        path: 'organizations/:id',
+        component: ViewOrganizationComponent,
+      },
+      {
+        path: 'organizations/:id/edit',
+        component: EditOrganizationComponent,
       },
     ],
     canActivate: [AuthGuard],
