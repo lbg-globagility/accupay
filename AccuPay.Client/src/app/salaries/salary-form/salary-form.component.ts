@@ -90,12 +90,12 @@ export class SalaryFormComponent implements OnInit {
     this.cancel.emit();
   }
 
-  private toggleContributionInput(controlName: string): (value: any) => void {
-    return (autoComputePhilHealthContribution: boolean) => {
-      if (autoComputePhilHealthContribution) {
-        this.form.get(controlName).disable();
+  private toggleContributionInput(inputName: string): (value: any) => void {
+    return (checked: boolean) => {
+      if (checked) {
+        this.form.get(inputName).disable();
       } else {
-        this.form.get(controlName).enable();
+        this.form.get(inputName).enable();
       }
     };
   }

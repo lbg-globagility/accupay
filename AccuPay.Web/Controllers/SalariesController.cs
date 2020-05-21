@@ -40,51 +40,30 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<SalaryDto>> Create([FromBody] CreateSalaryDto dto)
         {
-            try
-            {
-                return await _service.Create(dto);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<SalaryDto>> Update(int id, [FromBody] UpdateSalaryDto dto)
         {
-            try
-            {
-                var allowance = await _service.Update(id, dto);
+            var allowance = await _service.Update(id, dto);
 
-                if (allowance == null)
-                    return NotFound();
-                else
-                    return allowance;
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            if (allowance == null)
+                return NotFound();
+            else
+                return allowance;
         }
 
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            try
-            {
-                var allowance = await _repository.GetByIdAsync(id);
+            var allowance = await _repository.GetByIdAsync(id);
 
-                if (allowance == null) return NotFound();
+            if (allowance == null) return NotFound();
 
-                await _repository.DeleteAsync(id);
+            await _repository.DeleteAsync(id);
 
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            return Ok();
         }
     }
 }

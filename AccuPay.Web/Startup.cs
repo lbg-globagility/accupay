@@ -1,3 +1,4 @@
+using AccuPay.Web.Core.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -70,6 +71,8 @@ namespace AccuPay.Web
                 builder => builder.UseSpa(spa => { }));
 
             app.UseHttpsRedirection();
+
+            app.UseMiddleware<ErrorLoggingMiddleware>();
 
             app.UseRouting();
 

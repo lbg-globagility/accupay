@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Utilities.Extensions;
@@ -154,7 +155,7 @@ namespace AccuPay.Data.Services
                                                 Leave leave)
         {
             if (employee.RowID == null)
-                throw new ArgumentException("Employee does not exists.");
+                throw new BusinessLogicException("Employee does not exists.");
 
             if (leave.Status.ToTrimmedLowerCase() == Leave.StatusApproved.ToTrimmedLowerCase() &&
                 policy.ValidateLeaveBalance && VALIDATABLE_TYPES.Contains(leave.LeaveType))
@@ -171,7 +172,7 @@ namespace AccuPay.Data.Services
                                                 GetSickLeaveBalance(employee.RowID.Value);
 
                     if (totalLeaveHours > sickLeaveBalance)
-                        throw new ArgumentException("Employee will exceed the allowable sick leave hours.");
+                        throw new BusinessLogicException("Employee will exceed the allowable sick leave hours.");
                 }
                 else if (leave.LeaveType == ProductConstant.VACATION_LEAVE)
                 {
@@ -179,7 +180,7 @@ namespace AccuPay.Data.Services
                                                 GetVacationLeaveBalance(employee.RowID.Value);
 
                     if (totalLeaveHours > vacationLeaveBalance)
-                        throw new ArgumentException("Employee will exceed the allowable vacation leave hours.");
+                        throw new BusinessLogicException("Employee will exceed the allowable vacation leave hours.");
                 }
             }
         }

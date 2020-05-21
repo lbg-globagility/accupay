@@ -26,29 +26,15 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] EmployeeDto dto)
         {
-            try
-            {
-                var employee = await _employeeService.Create(dto);
-                return Ok(employee.RowID);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var employee = await _employeeService.Create(dto);
+            return Ok(employee.RowID);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] EmployeeDto dto)
         {
-            try
-            {
-                await _employeeService.Update(id, dto);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await _employeeService.Update(id, dto);
+            return Ok();
         }
 
         [HttpGet("{id}")]

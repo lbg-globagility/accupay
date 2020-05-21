@@ -9,12 +9,16 @@ namespace AccuPay.Web.Leaves
 {
     public class LeaveService
     {
-        private readonly LeaveRepository _repository;
+        private readonly LeaveRepository _leaveRepository;
+        private readonly ProductRepository _productRepository;
         private readonly Data.Services.LeaveService _service;
 
-        public LeaveService(LeaveRepository repository, Data.Services.LeaveService service)
+        public LeaveService(LeaveRepository leaveRepository,
+                            ProductRepository productRepository,
+                            Data.Services.LeaveService service)
         {
-            _repository = repository;
+            _leaveRepository = leaveRepository;
+            _productRepository = productRepository;
             _service = service;
         }
 
@@ -22,8 +26,8 @@ namespace AccuPay.Web.Leaves
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
-            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            int organizationId = 2;
+            var paginatedList = await _leaveRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -32,7 +36,7 @@ namespace AccuPay.Web.Leaves
 
         public async Task<LeaveDto> GetById(int id)
         {
-            var leave = await _repository.GetByIdWithEmployeeAsync(id);
+            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(leave);
         }
@@ -41,8 +45,8 @@ namespace AccuPay.Web.Leaves
         {
             // TODO: validations
 
-            int organizationId = 2; // temporary OrganizationID
-            int userId = 1; // temporary User Id
+            int organizationId = 2;
+            int userId = 1;
             var leave = new Leave()
             {
                 EmployeeID = dto.EmployeeId,
@@ -61,11 +65,11 @@ namespace AccuPay.Web.Leaves
         {
             // TODO: validations
 
-            var leave = await _repository.GetByIdAsync(id);
+            var leave = await _leaveRepository.GetByIdAsync(id);
             if (leave == null) return null;
 
-            int organizationId = 2; // temporary OrganizationID
-            int userId = 1; // temporary User Id
+            int organizationId = 2;
+            int userId = 1;
             leave.LastUpdBy = userId;
 
             ApplyChanges(dto, leave);
@@ -74,6 +78,16 @@ namespace AccuPay.Web.Leaves
             await _service.SaveManyAsync(new List<Leave> { leave }, organizationId);
 
             return ConvertToDto(leave);
+        }
+
+        public async Task<List<string>> GetLeaveTypes()
+        {
+            int organizationId = 2;
+            var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
+
+            return leaveTypes
+                    .Select(x => x.PartNo)
+                    .ToList();
         }
 
         private static void ApplyChanges(ICrudLeaveDto dto, Leave leave)

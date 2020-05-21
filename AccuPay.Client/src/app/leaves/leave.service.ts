@@ -25,7 +25,23 @@ export class LeaveService {
     return this.httpClient.get<Leave>(`${this.baseUrl}/${id}`);
   }
 
+  create(leave: Leave): Observable<Leave> {
+    return this.httpClient.post<Leave>(`${this.baseUrl}`, leave);
+  }
+
+  update(leave: Leave, id: string): Observable<Leave> {
+    return this.httpClient.put<Leave>(`${this.baseUrl}/${id}`, leave);
+  }
+
   delete(id: string): Observable<Leave> {
     return this.httpClient.delete<Leave>(`${this.baseUrl}/${id}`);
+  }
+
+  getLeaveTypes(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/leavetypes`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
   }
 }

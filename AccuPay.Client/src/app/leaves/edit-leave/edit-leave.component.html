@@ -1,0 +1,9 @@
+<h1>Edit Leave</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-leave-form
+    [leave]="leave"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-leave-form>
+</ng-container>

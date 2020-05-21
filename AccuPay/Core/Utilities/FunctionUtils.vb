@@ -44,7 +44,7 @@ Namespace Global.AccuPay.Utils
                 Await action()
             Catch ex As ArgumentException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As AccuPayRepositoryException
+            Catch ex As BusinessLogicException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As Exception
                 Debugger.Break()
@@ -71,7 +71,7 @@ Namespace Global.AccuPay.Utils
                 Return Await action()
             Catch ex As ArgumentException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As AccuPayRepositoryException
+            Catch ex As BusinessLogicException
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As Exception
                 Debugger.Break()
