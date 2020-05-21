@@ -1,0 +1,120 @@
+<h1>Salary</h1>
+
+<div class="row middle-md">
+  <div class="col-md-3">
+    <mat-form-field color="accent" class="w-full">
+      <mat-icon matPrefix class="m-align-middle">search</mat-icon>
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        (keyup)="applyFilter($event.target.value)"
+        [placeholder]="placeholder"
+        name="salaries"
+        [(ngModel)]="clearSearch"
+      />
+      <button
+        *ngIf="clearSearch"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearSearchBox()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+  <div class="col-md-6"></div>
+  <div class="col-md-3">
+    <button mat-raised-button color="accent" class="new-btn" routerLink="new">
+      NEW SALARY
+    </button>
+  </div>
+</div>
+
+<div class="mat-elevation-z1">
+  <table
+    mat-table
+    matSort
+    #table
+    [dataSource]="dataSource"
+    (matSortChange)="sortData($event)"
+    class="w-full"
+  >
+    <ng-container matColumnDef="employeeNumber">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Number</th>
+      <td mat-cell *matCellDef="let salary">
+        {{ salary.employeeNumber | ifEmpty: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="employeeName">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Name</th>
+      <td mat-cell *matCellDef="let salary">
+        {{ salary.employeeName | ifEmpty: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="employeeType">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Type</th>
+      <td mat-cell *matCellDef="let salary">
+        {{ salary.employeeType | ifEmpty: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="effectiveFrom">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Effective From</th>
+      <td mat-cell *matCellDef="let salary">
+        {{ salary.effectiveFrom | date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="basicSalary">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Basic Salary</th>
+      <td mat-cell *matCellDef="let loan">
+        {{ loan.basicSalary | number: "1.2-2" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="allowanceSalary">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>
+        Allowance Salary
+      </th>
+      <td mat-cell *matCellDef="let loan">
+        {{ loan.allowanceSalary | number: "1.2-2" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="totalSalary">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Total Salary</th>
+      <td mat-cell *matCellDef="let loan">
+        {{ loan.totalSalary | number: "1.2-2" }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="cursor-link"
+      (mouseover)="setHoveredRow(row.id)"
+      [class.active]="row.rowId == selectedRow"
+      (mouseout)="selectedRow = null"
+      routerLink="/salaries/{{ row.id }}"
+    ></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No salaries were found.
+  </div>
+
+  <mat-paginator
+    #paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]"
+    [length]="totalCount"
+    [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

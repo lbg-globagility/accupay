@@ -30,7 +30,7 @@ namespace AccuPay.Web.Salaries.Services
 
         public async Task<SalaryDto> GetById(int id)
         {
-            var salary = await _repository.GetByIdAsync(id);
+            var salary = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(salary);
         }
@@ -85,6 +85,9 @@ namespace AccuPay.Web.Salaries.Services
             {
                 Id = salary.RowID.Value,
                 EmployeeId = salary.EmployeeID.Value,
+                EmployeeNumber = salary.Employee?.EmployeeNo,
+                EmployeeName = salary.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = salary.Employee?.EmployeeType,
                 BasicSalary = salary.BasicSalary,
                 AllowanceSalary = salary.AllowanceSalary,
                 TotalSalary = salary.TotalSalary,

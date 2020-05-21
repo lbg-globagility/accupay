@@ -13,11 +13,18 @@ import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
 import { NewEmployeeComponent } from './employees/new-employee/new-employee.component';
 import { ViewEmployeeComponent } from './employees/view-employee/view-employee.component';
 import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
-import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
+import { SalaryListComponent } from 'src/app/salaries/salary-list/salary-list.component';
+import { ViewSalaryComponent } from 'src/app/salaries/view-salary/view-salary.component';
+import { NewSalaryComponent } from 'src/app/salaries/new-salary/new-salary.component';
+import { EditSalaryComponent } from 'src/app/salaries/edit-salary/edit-salary.component';
 import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
-import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
+import { ViewLeaveComponent } from 'src/app/leaves/view-leave/view-leave.component';
+import { NewLeaveComponent } from 'src/app/leaves/new-leave/new-leave.component';
+import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
+import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
+import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 
 const routes: Routes = [
   {
@@ -57,8 +64,36 @@ const routes: Routes = [
         component: EditUserComponent,
       },
       {
+        path: 'salaries',
+        component: SalaryListComponent,
+      },
+      {
+        path: 'salaries/new',
+        component: NewSalaryComponent,
+      },
+      {
+        path: 'salaries/:id',
+        component: ViewSalaryComponent,
+      },
+      {
+        path: 'salaries/:id/edit',
+        component: EditSalaryComponent,
+      },
+      {
         path: 'leaves',
         component: LeaveListComponent,
+      },
+      {
+        path: 'leaves/new',
+        component: NewLeaveComponent,
+      },
+      {
+        path: 'leaves/:id',
+        component: ViewLeaveComponent,
+      },
+      {
+        path: 'leaves/:id/edit',
+        component: EditLeaveComponent,
       },
       {
         path: 'official-business',

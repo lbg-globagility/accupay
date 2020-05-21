@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -31,11 +32,6 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(Leave leave)
-        {
-            await SaveWithContextAsync(leave, deferSave: false);
-        }
-
         public async Task SaveWithContextAsync(Leave leave, bool deferSave = true)
         {
             if (leave.StartTime.HasValue)
@@ -51,7 +47,7 @@ namespace AccuPay.Data.Repositories
             leave.UpdateEndDate();
 
             await SaveAsyncFunction(leave);
-            
+
             if (deferSave == false)
             {
                 await _context.SaveChangesAsync();
@@ -65,7 +61,7 @@ namespace AccuPay.Data.Repositories
                                 Where(l => (leave.StartDate.Date >= l.StartDate.Date && leave.StartDate.Date <= l.EndDate.Value.Date) ||
                                         (leave.EndDate.Value.Date >= l.StartDate.Date && leave.EndDate.Value.Date <= l.EndDate.Value.Date)).
                                 AnyAsync())
-                throw new ArgumentException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
+                throw new BusinessLogicException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
 
             if (leave.RowID == null)
             {
@@ -107,7 +103,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Leave> GetByIdAsync(int id)
         {
-            return await _context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Leaves
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<Leave> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.Leaves
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity

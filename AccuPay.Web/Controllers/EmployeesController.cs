@@ -26,29 +26,15 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Create([FromBody] EmployeeDto dto)
         {
-            try
-            {
-                var employee = await _employeeService.Create(dto);
-                return Ok(employee.RowID);
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            var employee = await _employeeService.Create(dto);
+            return Ok(employee.RowID);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult> Update(int id, [FromBody] EmployeeDto dto)
         {
-            try
-            {
-                await _employeeService.Update(id, dto);
-                return Ok();
-            }
-            catch
-            {
-                return BadRequest();
-            }
+            await _employeeService.Update(id, dto);
+            return Ok();
         }
 
         [HttpGet("{id}")]
@@ -62,7 +48,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] PageOptions options, string term = "")
         {
-            int variableOrganizationId = 5;//_currentUser.OrganizationId
+            int variableOrganizationId = 2;//_currentUser.OrganizationId
             var query = await _employeeService.GetAllAsync(variableOrganizationId);
 
             if (!string.IsNullOrWhiteSpace(term))

@@ -8,9 +8,8 @@ describe('LeaveListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LeaveListComponent ]
-    })
-    .compileComponents();
+      declarations: [LeaveListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -6,21 +6,42 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Leave } from 'src/app/leaves/shared/leave';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class LeaveService {
   baseUrl = 'api/leaves';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getAll(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<Leave>> {
+  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Leave>> {
     const params = options ? options.toObject() : null;
     params.term = term;
     return this.httpClient.get<PaginatedList<Leave>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  get(id: string): Observable<Leave> {
+    return this.httpClient.get<Leave>(`${this.baseUrl}/${id}`);
+  }
+
+  create(leave: Leave): Observable<Leave> {
+    return this.httpClient.post<Leave>(`${this.baseUrl}`, leave);
+  }
+
+  update(leave: Leave, id: string): Observable<Leave> {
+    return this.httpClient.put<Leave>(`${this.baseUrl}/${id}`, leave);
+  }
+
+  delete(id: string): Observable<Leave> {
+    return this.httpClient.delete<Leave>(`${this.baseUrl}/${id}`);
+  }
+
+  getLeaveTypes(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/leavetypes`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
   }
 }

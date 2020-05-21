@@ -22,6 +22,11 @@ const menuItems: MenuItem[] = [
     icon: 'person',
   },
   {
+    label: 'Salaries',
+    route: '/salaries',
+    icon: 'person',
+  },
+  {
     label: 'Leaves',
     route: '/leaves',
     icon: 'person',

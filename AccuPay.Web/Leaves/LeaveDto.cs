@@ -10,6 +10,8 @@ namespace AccuPay.Web.Leaves
 
         public string EmployeeName { get; set; }
 
+        public string EmployeeType { get; set; }
+
         public string LeaveType { get; set; }
 
         public DateTime? StartTime { get; set; }

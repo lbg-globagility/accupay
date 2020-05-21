@@ -12,6 +12,7 @@ import { LeavesModule } from 'src/app/leaves/leaves.module';
 import { LoansModule } from 'src/app/loans/loans.module';
 import { OfficialBusinessesModule } from 'src/app/official-businesses/official-businesses.module';
 import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
+import { SalariesModule } from 'src/app/salaries/salaries.module';
 import { UsersModule } from 'src/app/users/users.module';
 
 @NgModule({
@@ -29,6 +30,7 @@ import { UsersModule } from 'src/app/users/users.module';
     LoansModule,
     OfficialBusinessesModule,
     OvertimesModule,
+    SalariesModule,
     UsersModule,
   ],
   providers: [],

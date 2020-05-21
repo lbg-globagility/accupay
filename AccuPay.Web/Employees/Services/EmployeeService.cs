@@ -35,7 +35,7 @@ namespace AccuPay.Web.Employees.Services
 
             // this should intercepted, base on Globagility's Client ID
             // and the current User who made the http request
-            employee.OrganizationID = 5;
+            employee.OrganizationID = 2;
             employee.CreatedBy = 1;
 
             ApplyUpdate(dto, employee);

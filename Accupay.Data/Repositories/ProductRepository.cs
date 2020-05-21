@@ -291,16 +291,12 @@ namespace AccuPay.Data.Repositories
                 switch (columnName)
                 {
                     case "Name":
-                        {
-                            stringList.Add(product.PartNo);
-                            break;
-                        }
+                        stringList.Add(product.Name);
+                        break;
 
                     default:
-                        {
-                            stringList.Add(product.Name);
-                            break;
-                        }
+                        stringList.Add(product.PartNo);
+                        break;
                 }
             }
 

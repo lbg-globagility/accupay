@@ -28,7 +28,7 @@ namespace AccuPay.Data.Repositories
                     Where(b => b.Code.Trim().ToUpper() == branch.Code.Trim().ToUpper()).
                     AnyAsync())
             {
-                throw new AccuPayRepositoryException("Branch already exists.");
+                throw new BusinessLogicException("Branch already exists.");
             }
 
             _context.Branches.Add(branch);
@@ -44,7 +44,7 @@ namespace AccuPay.Data.Repositories
                     Where(b => b.RowID != branch.RowID)
                     .AnyAsync())
             {
-                throw new AccuPayRepositoryException("Branch already exists.");
+                throw new BusinessLogicException("Branch already exists.");
             }
 
             _context.Entry(branch).State = EntityState.Modified;

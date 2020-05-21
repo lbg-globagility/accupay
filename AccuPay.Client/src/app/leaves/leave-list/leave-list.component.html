@@ -38,8 +38,8 @@
     #table
     [dataSource]="dataSource"
     (matSortChange)="sortData($event)"
-    class="w-full">
-
+    class="w-full"
+  >
     <ng-container matColumnDef="employeeNumber">
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Number</th>
       <td mat-cell *matCellDef="let leave">
@@ -68,7 +68,10 @@
 
     <ng-container matColumnDef="time">
       <th mat-header-cell mat-sort-header *matHeaderCellDef>Time</th>
-      <td mat-cell *matCellDef="let leave">{{ leave.startTime | date: 'shortTime' }} - {{ leave.endTime | date: 'shortTime' }}</td>
+      <td mat-cell *matCellDef="let leave">
+        {{ leave.startTime | date: "shortTime" }} -
+        {{ leave.endTime | date: "shortTime" }}
+      </td>
     </ng-container>
 
     <ng-container matColumnDef="status">

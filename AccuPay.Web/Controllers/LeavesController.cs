@@ -1,7 +1,10 @@
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -63,6 +66,18 @@ namespace AccuPay.Web.Controllers
             await _repository.DeleteAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet("leavetypes")]
+        public async Task<ActionResult<ICollection<string>>> GetLeaveTypes()
+        {
+            return await _service.GetLeaveTypes();
+        }
+
+        [HttpGet("statuslist")]
+        public ActionResult<ICollection<string>> GetStatusList()
+        {
+            return _repository.GetStatusList();
         }
     }
 }
