@@ -98,8 +98,8 @@ namespace AccuPay.Data.Repositories
 
         public async Task<OfficialBusiness> GetByIdAsync(int id)
         {
-            return await _context.OfficialBusinesses.
-                            FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.OfficialBusinesses
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)

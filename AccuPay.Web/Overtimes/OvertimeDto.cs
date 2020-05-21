@@ -10,6 +10,8 @@ namespace AccuPay.Web.Overtimes
 
         public string EmployeeName { get; set; }
 
+        public string EmployeeType { get; set; }
+
         public DateTime? StartTime { get; set; }
 
         public DateTime? EndTime { get; set; }

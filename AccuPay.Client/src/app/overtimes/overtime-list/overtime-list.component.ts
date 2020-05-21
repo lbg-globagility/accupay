@@ -12,10 +12,9 @@ import { OvertimeService } from 'src/app/overtimes/overtime.service';
 @Component({
   selector: 'app-overtime-list',
   templateUrl: './overtime-list.component.html',
-  styleUrls: ['./overtime-list.component.scss']
+  styleUrls: ['./overtime-list.component.scss'],
 })
 export class OvertimeListComponent implements OnInit {
-
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
@@ -49,7 +48,7 @@ export class OvertimeListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private overtimeService: OvertimeService) { 
+  constructor(private overtimeService: OvertimeService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -68,13 +67,11 @@ export class OvertimeListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.overtimeService
-      .getAll(options, this.searchTerm)
-      .subscribe((data) => {
-        this.overtimes = data.items;
-        this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.overtimes);
-      });
+    this.overtimeService.getAll(options, this.searchTerm).subscribe((data) => {
+      this.overtimes = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.overtimes);
+    });
   }
 
   applyFilter(searchTerm: string) {
@@ -102,5 +99,4 @@ export class OvertimeListComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.getOvertimeList();
   }
-
 }

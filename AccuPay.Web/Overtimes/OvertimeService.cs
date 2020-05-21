@@ -19,7 +19,7 @@ namespace AccuPay.Web.Overtimes
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
+            int organizationId = 2;
             var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
@@ -29,7 +29,7 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdAsync(id);
+            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -38,8 +38,8 @@ namespace AccuPay.Web.Overtimes
         {
             // TODO: validations
 
-            int organizationId = 2; // temporary OrganizationID
-            int userId = 1; // temporary User Id
+            int organizationId = 2;
+            int userId = 1;
             var overtime = new Overtime()
             {
                 EmployeeID = dto.EmployeeId,
@@ -60,7 +60,7 @@ namespace AccuPay.Web.Overtimes
             var overtime = await _repository.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            int userId = 1; // temporary User Id
+            int userId = 1;
             overtime.LastUpdBy = userId;
 
             ApplyChanges(dto, overtime);
@@ -89,6 +89,7 @@ namespace AccuPay.Web.Overtimes
                 Id = overtime.RowID.Value,
                 EmployeeNumber = overtime.Employee?.EmployeeNo,
                 EmployeeName = overtime.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = overtime.Employee?.EmployeeType,
                 StartTime = overtime.OTStartTimeFull,
                 EndTime = overtime.OTEndTimeFull,
                 StartDate = overtime.OTStartDate,

@@ -97,6 +97,13 @@ namespace AccuPay.Data.Repositories
             return await _context.Overtimes.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
+        public async Task<Overtime> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.Overtimes
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
         #endregion Single entity
 
         #region List of entities
