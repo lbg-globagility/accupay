@@ -1,0 +1,35 @@
+<ng-container *ngIf="state.isSuccess">
+  <div>
+    <h1>View Organization</h1>
+    <div>
+      <button
+        mat-raised-button
+        type="button"
+        color="accent"
+        routerLink="/organizations/{{ organization?.id }}/edit"
+      >
+        EDIT
+      </button>
+    </div>
+  </div>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <div class="col-lg-12">
+          <h3 class="font-medium mb-4">Organization Info</h3>
+
+          <div class="row">
+            <!-- First Name -->
+            <div class="col-lg-6 mb-4">
+              <div class="field">
+                <p class="field-label">First Name</p>
+                <p class="field-value">{{ organization.name }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

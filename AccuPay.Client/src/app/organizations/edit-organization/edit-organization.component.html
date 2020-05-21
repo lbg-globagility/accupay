@@ -1,0 +1,9 @@
+<ng-container *ngIf="organization">
+  <h1>Edit Organization</h1>
+
+  <app-organization-form
+    [organization]="organization"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-organization-form>
+</ng-container>
