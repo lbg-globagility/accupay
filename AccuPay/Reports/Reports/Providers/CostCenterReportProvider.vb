@@ -149,7 +149,7 @@ Public Class CostCenterReportProvider
 
         Dim selectBranchDialog As New SelectBranchForm
 
-        If Not selectBranchDialog.ShowDialog <> DialogResult.OK Then
+        If selectBranchDialog.ShowDialog <> DialogResult.OK Then
             Return Nothing
         End If
 

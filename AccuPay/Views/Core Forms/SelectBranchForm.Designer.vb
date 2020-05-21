@@ -41,6 +41,7 @@ Partial Class SelectBranchForm
         'OkButton
         '
         Me.OkButton.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.OkButton.DialogResult = System.Windows.Forms.DialogResult.OK
         Me.OkButton.Location = New System.Drawing.Point(116, 67)
         Me.OkButton.Name = "OkButton"
         Me.OkButton.Size = New System.Drawing.Size(75, 35)

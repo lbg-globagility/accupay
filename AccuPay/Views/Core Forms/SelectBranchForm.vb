@@ -41,7 +41,6 @@ Public Class SelectBranchForm
     Private Sub OkButton_Click(sender As Object, e As EventArgs) Handles OkButton.Click
 
         SelectedBranch = DirectCast(BranchComboBox.SelectedValue, Branch)
-        DialogResult = DialogResult.OK
     End Sub
 
 End Class
