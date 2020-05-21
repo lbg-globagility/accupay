@@ -2,39 +2,39 @@ import Swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Leave } from 'src/app/leaves/shared/leave';
-import { LeaveService } from 'src/app/leaves/leave.service';
+import { Overtime } from 'src/app/overtimes/shared/overtime';
+import { OvertimeService } from 'src/app/overtimes/overtime.service';
 
 @Component({
-  selector: 'app-new-leave',
-  templateUrl: './new-leave.component.html',
-  styleUrls: ['./new-leave.component.scss'],
+  selector: 'app-new-overtime',
+  templateUrl: './new-overtime.component.html',
+  styleUrls: ['./new-overtime.component.scss'],
 })
-export class NewLeaveComponent {
+export class NewOvertimeComponent {
   constructor(
-    private leaveService: LeaveService,
+    private overtimeService: OvertimeService,
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
-  onSave(leave: Leave): void {
-    this.leaveService.create(leave).subscribe(
-      (result) => {
+  onSave(overtime: Overtime): void {
+    this.overtimeService.create(overtime).subscribe(
+      (x) => {
         this.displaySuccess();
-        this.router.navigate(['leaves', result.id]);
+        this.router.navigate(['overtimes', x.id]);
       },
       (err) => this.showErrorDialog(err)
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['leaves']);
+    this.router.navigate(['overtimes']);
   }
 
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully created a new leave!',
+      text: 'Successfully created a new overtime!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
@@ -42,7 +42,7 @@ export class NewLeaveComponent {
   }
 
   private showErrorDialog(err): void {
-    let message: string = 'Failed to create leave.';
+    let message: string = 'Failed to update overtime.';
 
     if (err && err.status == 400) {
       message = err.error.Error;

@@ -87,6 +87,7 @@ namespace AccuPay.Web.Overtimes
             return new OvertimeDto()
             {
                 Id = overtime.RowID.Value,
+                EmployeeId = overtime.EmployeeID.Value,
                 EmployeeNumber = overtime.Employee?.EmployeeNo,
                 EmployeeName = overtime.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = overtime.Employee?.EmployeeType,

@@ -25,7 +25,19 @@ export class OvertimeService {
     return this.httpClient.get<Overtime>(`${this.baseUrl}/${id}`);
   }
 
+  create(overtime: Overtime): Observable<Overtime> {
+    return this.httpClient.post<Overtime>(`${this.baseUrl}`, overtime);
+  }
+
+  update(overtime: Overtime, id: number): Observable<Overtime> {
+    return this.httpClient.put<Overtime>(`${this.baseUrl}/${id}`, overtime);
+  }
+
   delete(id: number): Observable<Overtime> {
     return this.httpClient.delete<Overtime>(`${this.baseUrl}/${id}`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
   }
 }

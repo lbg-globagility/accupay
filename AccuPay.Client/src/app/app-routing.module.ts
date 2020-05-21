@@ -27,6 +27,8 @@ import { NewOfficialBusinessComponent } from 'src/app/official-businesses/new-of
 import { EditOfficialBusinessComponent } from 'src/app/official-businesses/edit-official-business/edit-official-business.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-overtime.component';
+import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
+import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
@@ -124,8 +126,16 @@ const routes: Routes = [
         component: OvertimeListComponent,
       },
       {
+        path: 'overtimes/new',
+        component: NewOvertimeComponent,
+      },
+      {
         path: 'overtimes/:id',
         component: ViewOvertimeComponent,
+      },
+      {
+        path: 'overtimes/:id/edit',
+        component: EditOvertimeComponent,
       },
       {
         path: 'allowances',

@@ -42,7 +42,7 @@ export class NewOfficialBusinessComponent {
   }
 
   private showErrorDialog(err): void {
-    let message: string = 'Failed to update official business';
+    let message: string = 'Failed to update official business.';
 
     if (err && err.status == 400) {
       message = err.error.Error;
