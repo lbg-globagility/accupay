@@ -2,24 +2,24 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
-import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
-import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
+import { Overtime } from 'src/app/overtimes/shared/overtime';
+import { OvertimeService } from 'src/app/overtimes/overtime.service';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { TimeParser } from 'src/app/core/shared/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
 
 @Component({
-  selector: 'app-official-business-form',
-  templateUrl: './official-business-form.component.html',
-  styleUrls: ['./official-business-form.component.scss'],
+  selector: 'app-overtime-form',
+  templateUrl: './overtime-form.component.html',
+  styleUrls: ['./overtime-form.component.scss'],
 })
-export class OfficialBusinessFormComponent implements OnInit {
+export class OvertimeFormComponent implements OnInit {
   @Input()
-  officialBusiness: OfficialBusiness;
+  overtime: Overtime;
 
   @Output()
-  save: EventEmitter<OfficialBusiness> = new EventEmitter();
+  save: EventEmitter<Overtime> = new EventEmitter();
 
   @Output()
   cancel: EventEmitter<any> = new EventEmitter();
@@ -41,16 +41,16 @@ export class OfficialBusinessFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
-    private officialBusinessService: OfficialBusinessService,
+    private overtimeService: OvertimeService,
     private timeParser: TimeParser
   ) {}
 
   ngOnInit(): void {
-    this.loadOfficialBusinessStatusList();
+    this.loadOvertimeStatusList();
 
-    if (this.officialBusiness != null) {
+    if (this.overtime != null) {
       this.form.get('employeeId').disable();
-      this.form.patchValue(this.officialBusiness);
+      this.form.patchValue(this.overtime);
     } else {
       this.loadEmployees();
     }
@@ -60,8 +60,8 @@ export class OfficialBusinessFormComponent implements OnInit {
     });
   }
 
-  private loadOfficialBusinessStatusList(): void {
-    this.officialBusinessService.getStatusList().subscribe((data) => {
+  private loadOvertimeStatusList(): void {
+    this.overtimeService.getStatusList().subscribe((data) => {
       this.statusList = data;
     });
   }
@@ -79,23 +79,25 @@ export class OfficialBusinessFormComponent implements OnInit {
       return;
     }
 
-    const officialBusiness = cloneDeep(this.form.value as OfficialBusiness);
+    const overtime = cloneDeep(this.form.value as Overtime);
 
-    officialBusiness.startTime = this.timeParser.parse(
-      moment(officialBusiness.startDate),
-      officialBusiness.startTime
+    console.log(overtime);
+    overtime.startTime = this.timeParser.parse(
+      moment(overtime.startDate),
+      overtime.startTime
     );
-    officialBusiness.endTime = this.timeParser.parse(
-      moment(officialBusiness.startDate),
-      officialBusiness.endTime
+    overtime.endTime = this.timeParser.parse(
+      moment(overtime.startDate),
+      overtime.endTime
     );
+    console.log(overtime);
 
-    if (!officialBusiness.startTime || !officialBusiness.endTime) {
-      officialBusiness.startTime = null;
-      officialBusiness.endTime = null;
+    if (!overtime.startTime || !overtime.endTime) {
+      overtime.startTime = null;
+      overtime.endTime = null;
     }
 
-    this.save.emit(officialBusiness);
+    this.save.emit(overtime);
   }
 
   onCancel(): void {

@@ -6,21 +6,38 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class OvertimeService {
   baseUrl = 'api/overtimes';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
-  getAll(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<Overtime>> {
+  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Overtime>> {
     const params = options ? options.toObject() : null;
     params.term = term;
     return this.httpClient.get<PaginatedList<Overtime>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  get(id: number): Observable<Overtime> {
+    return this.httpClient.get<Overtime>(`${this.baseUrl}/${id}`);
+  }
+
+  create(overtime: Overtime): Observable<Overtime> {
+    return this.httpClient.post<Overtime>(`${this.baseUrl}`, overtime);
+  }
+
+  update(overtime: Overtime, id: number): Observable<Overtime> {
+    return this.httpClient.put<Overtime>(`${this.baseUrl}/${id}`, overtime);
+  }
+
+  delete(id: number): Observable<Overtime> {
+    return this.httpClient.delete<Overtime>(`${this.baseUrl}/${id}`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
   }
 }

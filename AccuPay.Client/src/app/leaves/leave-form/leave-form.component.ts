@@ -37,8 +37,6 @@ export class LeaveFormComponent implements OnInit {
     comments: [null],
   });
 
-  computedTotalLeave: number;
-
   employees: Employee[];
   leaveTypes: string[];
   statusList: string[];

@@ -8,9 +8,8 @@ describe('OvertimeListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OvertimeListComponent ]
-    })
-    .compileComponents();
+      declarations: [OvertimeListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -3,49 +3,49 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { BehaviorSubject } from 'rxjs';
-import { Leave } from 'src/app/leaves/shared/leave';
-import { LeaveService } from 'src/app/leaves/leave.service';
+import { Overtime } from 'src/app/overtimes/shared/overtime';
+import { OvertimeService } from 'src/app/overtimes/overtime.service';
 
 @Component({
-  selector: 'app-edit-leave',
-  templateUrl: './edit-leave.component.html',
-  styleUrls: ['./edit-leave.component.scss'],
+  selector: 'app-edit-overtime',
+  templateUrl: './edit-overtime.component.html',
+  styleUrls: ['./edit-overtime.component.scss'],
 })
-export class EditLeaveComponent implements OnInit {
-  leave: Leave;
+export class EditOvertimeComponent implements OnInit {
+  overtime: Overtime;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  leaveId = Number(this.route.snapshot.paramMap.get('id'));
+  overtimeId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
-    private leaveService: LeaveService,
+    private overtimeService: OvertimeService,
     private route: ActivatedRoute,
     private router: Router,
     private snackBar: MatSnackBar
   ) {}
 
   ngOnInit(): void {
-    this.loadLeave();
+    this.loadOvertime();
   }
 
-  onSave(leave: Leave): void {
-    this.leaveService.update(leave, this.leaveId).subscribe(
+  onSave(overtime: Overtime): void {
+    this.overtimeService.update(overtime, this.overtimeId).subscribe(
       () => {
         this.displaySuccess();
-        this.router.navigate(['leaves', this.leaveId]);
+        this.router.navigate(['overtimes', this.overtimeId]);
       },
       (err) => this.showErrorDialog(err)
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['leaves', this.leaveId]);
+    this.router.navigate(['overtimes', this.overtimeId]);
   }
 
-  private loadLeave(): void {
-    this.leaveService.get(this.leaveId).subscribe((data) => {
-      this.leave = data;
+  private loadOvertime(): void {
+    this.overtimeService.get(this.overtimeId).subscribe((data) => {
+      this.overtime = data;
 
       this.isLoading.next(true);
     });
@@ -62,7 +62,7 @@ export class EditLeaveComponent implements OnInit {
   }
 
   private showErrorDialog(err): void {
-    let message: string = 'Failed to update leave.';
+    let message: string = 'Failed to update overtime.';
 
     if (err && err.status == 400) {
       message = err.error.Error;
