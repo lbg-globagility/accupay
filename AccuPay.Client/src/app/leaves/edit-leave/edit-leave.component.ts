@@ -62,9 +62,7 @@ export class EditLeaveComponent implements OnInit {
   }
 
   private showErrorDialog(err): void {
-    console.log(err);
-
-    let message: string = 'Failed to create the leave';
+    let message: string = 'Failed to update leave';
 
     if (err && err.status == 400) {
       message = err.error.Error;

@@ -1,9 +1,9 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -49,7 +49,7 @@ namespace AccuPay.Data.Repositories
                                                 bool deferSave = true)
         {
             if (officialBusiness.EmployeeID == null)
-                throw new ArgumentException("Employee does not exists.");
+                throw new BusinessLogicException("Employee does not exists.");
 
             if (officialBusiness.StartTime.HasValue)
             {
@@ -77,7 +77,7 @@ namespace AccuPay.Data.Repositories
                     Where(l => l.EmployeeID == officialBusiness.EmployeeID).
                     Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).
                     AnyAsync())
-                throw new ArgumentException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
+                throw new BusinessLogicException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
 
             if (officialBusiness.RowID == null)
             {

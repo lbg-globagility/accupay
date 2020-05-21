@@ -87,6 +87,7 @@ namespace AccuPay.Web.OfficialBusinesses
             return new OfficialBusinessDto()
             {
                 Id = officialBusiness.RowID.Value,
+                EmployeeId = officialBusiness.EmployeeID.Value,
                 EmployeeNumber = officialBusiness.Employee?.EmployeeNo,
                 EmployeeName = officialBusiness.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = officialBusiness.Employee?.EmployeeType,

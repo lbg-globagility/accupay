@@ -19,9 +19,9 @@ export class NewLeaveComponent {
 
   onSave(leave: Leave): void {
     this.leaveService.create(leave).subscribe(
-      (s) => {
+      (result) => {
         this.displaySuccess();
-        this.router.navigate(['leaves', s.id]);
+        this.router.navigate(['leaves', result.id]);
       },
       (err) => this.showErrorDialog(err)
     );
@@ -42,8 +42,14 @@ export class NewLeaveComponent {
   }
 
   private showErrorDialog(err): void {
-    this.snackBar.open('Failed to create the leave', null, {
+    let message: string = 'Failed to create leave';
+
+    if (err && err.status == 400) {
+      message = err.error.Error;
+    }
+    this.snackBar.open(message, null, {
       duration: 2000,
+      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

@@ -7,6 +7,7 @@ import { LeaveService } from 'src/app/leaves/leave.service';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { TimeParser } from 'src/app/core/shared/time-parser';
 import * as moment from 'moment';
+import { cloneDeep } from 'lodash';
 
 @Component({
   selector: 'app-leave-form',
@@ -64,30 +65,11 @@ export class LeaveFormComponent implements OnInit {
       this.loadEmployees();
     }
     this.form.patchValue({
-      startTime: this.convertToTime('startTime'),
-      endTime: this.convertToTime('endTime'),
+      startTime: this.timeParser.toInputTime(this.form.get('startTime').value),
+      endTime: this.timeParser.toInputTime(this.form.get('endTime').value),
       isWholeDay:
         !this.form.get('startTime').value || !this.form.get('endTime').value,
     });
-  }
-
-  private convertToTime(inputName: string): string {
-    if (!this.form.get(inputName).value) return null;
-
-    const date = new Date(this.form.get(inputName).value);
-    console.log(this.form.get(inputName).value);
-    console.log(date);
-    console.log(date.getHours() + ':' + date.getMinutes());
-    console.log(
-      this.twoDigits(date.getHours()) + ':' + this.twoDigits(date.getMinutes())
-    );
-    return (
-      this.twoDigits(date.getHours()) + ':' + this.twoDigits(date.getMinutes())
-    );
-  }
-
-  private twoDigits(twoDigits: number) {
-    return twoDigits > 9 ? '' + twoDigits : '0' + twoDigits;
   }
 
   private loadLeaveTypes(): void {
@@ -115,13 +97,8 @@ export class LeaveFormComponent implements OnInit {
       return;
     }
 
-    const leave = this.form.value as Leave;
+    const leave = cloneDeep(this.form.value as Leave);
 
-    console.log(moment.isMoment(leave.startDate));
-    console.log(moment.isDate(leave.startDate));
-    console.log(moment(leave.startDate));
-    console.log(leave.startDate);
-    console.log(moment(leave.startDate).utc());
     leave.startTime = this.timeParser.parse(
       moment(leave.startDate),
       leave.startTime
@@ -132,7 +109,7 @@ export class LeaveFormComponent implements OnInit {
     );
 
     if (
-      this.form.get('startTime').value === true ||
+      this.form.get('isWholeDay').value === true ||
       !leave.startTime ||
       !leave.endTime
     ) {

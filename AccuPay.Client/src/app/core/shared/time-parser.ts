@@ -16,4 +16,17 @@ export class TimeParser {
 
     return new Date(date.format('L') + ' ' + time + ':00Z');
   }
+
+  toInputTime(input: string): string {
+    if (!input) return null;
+
+    const date = new Date(input);
+    return (
+      this.twoDigits(date.getHours()) + ':' + this.twoDigits(date.getMinutes())
+    );
+  }
+
+  private twoDigits(twoDigits: number) {
+    return twoDigits > 9 ? '' + twoDigits : '0' + twoDigits;
+  }
 }

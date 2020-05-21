@@ -1,5 +1,6 @@
 export interface OfficialBusiness {
   id: number;
+  employeeId: number;
   employeeNumber: string;
   employeeName: string;
   employeeType: string;

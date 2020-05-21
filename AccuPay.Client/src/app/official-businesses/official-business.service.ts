@@ -31,7 +31,28 @@ export class OfficialBusinessService {
     return this.httpClient.get<OfficialBusiness>(`${this.baseUrl}/${id}`);
   }
 
+  create(officialBusiness: OfficialBusiness): Observable<OfficialBusiness> {
+    return this.httpClient.post<OfficialBusiness>(
+      `${this.baseUrl}`,
+      officialBusiness
+    );
+  }
+
+  update(
+    officialBusiness: OfficialBusiness,
+    id: number
+  ): Observable<OfficialBusiness> {
+    return this.httpClient.put<OfficialBusiness>(
+      `${this.baseUrl}/${id}`,
+      officialBusiness
+    );
+  }
+
   delete(id: number): Observable<OfficialBusiness> {
     return this.httpClient.delete<OfficialBusiness>(`${this.baseUrl}/${id}`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
   }
 }
