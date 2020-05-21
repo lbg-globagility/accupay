@@ -12,10 +12,9 @@ import { OfficialBusinessService } from 'src/app/official-businesses/official-bu
 @Component({
   selector: 'app-official-business-list',
   templateUrl: './official-business-list.component.html',
-  styleUrls: ['./official-business-list.component.scss']
+  styleUrls: ['./official-business-list.component.scss'],
 })
 export class OfficialBusinessListComponent implements OnInit {
-
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
@@ -49,7 +48,7 @@ export class OfficialBusinessListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private officialBusinessService: OfficialBusinessService) { 
+  constructor(private officialBusinessService: OfficialBusinessService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -102,5 +101,4 @@ export class OfficialBusinessListComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.getOfficialBusinessList();
   }
-
 }

@@ -33,7 +33,7 @@ const menuItems: MenuItem[] = [
   },
   {
     label: 'Official Business',
-    route: '/official-business',
+    route: '/official-businesses',
     icon: 'person',
   },
   {

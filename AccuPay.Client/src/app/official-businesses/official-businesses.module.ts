@@ -1,11 +1,12 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { OfficialBusinessListComponent } from './official-business-list/official-business-list.component';
+import { ViewOfficialBusinessComponent } from './view-official-business/view-official-business.component';
 
 
 
 @NgModule({
-  declarations: [OfficialBusinessListComponent],
+  declarations: [OfficialBusinessListComponent, ViewOfficialBusinessComponent],
   imports: [SharedModule]
 })
 export class OfficialBusinessesModule { }

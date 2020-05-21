@@ -17,7 +17,7 @@ export class ViewSalaryComponent implements OnInit {
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  salaryId = this.route.snapshot.paramMap.get('id');
+  salaryId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
     private salaryService: SalaryService,

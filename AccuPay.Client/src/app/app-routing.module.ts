@@ -22,6 +22,7 @@ import { ViewLeaveComponent } from 'src/app/leaves/view-leave/view-leave.compone
 import { NewLeaveComponent } from 'src/app/leaves/new-leave/new-leave.component';
 import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
+import { ViewOfficialBusinessComponent } from 'src/app/official-businesses/view-official-business/view-official-business.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
@@ -96,8 +97,12 @@ const routes: Routes = [
         component: EditLeaveComponent,
       },
       {
-        path: 'official-business',
+        path: 'official-businesses',
         component: OfficialBusinessListComponent,
+      },
+      {
+        path: 'official-businesses/:id',
+        component: ViewOfficialBusinessComponent,
       },
       {
         path: 'overtimes',

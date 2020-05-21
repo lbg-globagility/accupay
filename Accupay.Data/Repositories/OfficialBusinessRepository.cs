@@ -102,6 +102,13 @@ namespace AccuPay.Data.Repositories
                             FirstOrDefaultAsync(l => l.RowID == id);
         }
 
+        public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.OfficialBusinesses
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
         #endregion Single entity
 
         #region List of entities

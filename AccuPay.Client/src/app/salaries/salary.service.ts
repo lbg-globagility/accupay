@@ -21,7 +21,7 @@ export class SalaryService {
     });
   }
 
-  get(id: string): Observable<Salary> {
+  get(id: number): Observable<Salary> {
     return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
   }
 
@@ -29,11 +29,11 @@ export class SalaryService {
     return this.httpClient.post<Salary>(`${this.baseUrl}`, salary);
   }
 
-  update(salary: Salary, id: string): Observable<Salary> {
+  update(salary: Salary, id: number): Observable<Salary> {
     return this.httpClient.put<Salary>(`${this.baseUrl}/${id}`, salary);
   }
 
-  delete(id: string): Observable<Salary> {
+  delete(id: number): Observable<Salary> {
     return this.httpClient.delete<Salary>(`${this.baseUrl}/${id}`);
   }
 }

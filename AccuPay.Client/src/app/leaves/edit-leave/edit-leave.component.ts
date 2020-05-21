@@ -16,7 +16,7 @@ export class EditLeaveComponent implements OnInit {
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  leaveId = this.route.snapshot.paramMap.get('id');
+  leaveId = Number(this.route.snapshot.paramMap.get('id'));
 
   constructor(
     private leaveService: LeaveService,

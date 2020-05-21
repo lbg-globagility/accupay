@@ -8,9 +8,8 @@ describe('OfficialBusinessListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OfficialBusinessListComponent ]
-    })
-    .compileComponents();
+      declarations: [OfficialBusinessListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {
