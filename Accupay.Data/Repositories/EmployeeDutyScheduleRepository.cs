@@ -1,6 +1,8 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -50,6 +52,28 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task CreateAsync(EmployeeDutySchedule shift)
+        {
+            _context.EmployeeDutySchedules.Add(shift);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var shift = await GetByIdAsync(id);
+
+            _context.Remove(shift);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(EmployeeDutySchedule shift)
+        {
+            _context.Entry(shift).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+
         #endregion CRUD
 
         #region Queries
@@ -89,6 +113,38 @@ namespace AccuPay.Data.Repositories
                                                                     timePeriod).
                 Include(x => x.Employee).
                 ToListAsync();
+        }
+
+        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
+        {
+            return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.EmployeeDutySchedules
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .ThenBy(x => x.DateSched)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.DateSched.ToString(), searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            var shifts = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<EmployeeDutySchedule>(shifts, count);
         }
 
         #endregion Queries
