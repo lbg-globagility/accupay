@@ -6,12 +6,11 @@ using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
 using AccuPay.Web.OfficialBusinesses;
+using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
-using Accupay.Web.Core.Auth;
-using AccuPay.Web.Organizations;
 
 namespace AccuPay.Web
 {
@@ -25,7 +24,6 @@ namespace AccuPay.Web
             services.AddScoped<TokenService>();
             services.AddScoped<AllowanceService>();
             services.AddScoped<EmployeeService>();
-            services.AddScoped<CurrentUser>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();
             services.AddScoped<OfficialBusinessService>();
@@ -34,6 +32,8 @@ namespace AccuPay.Web
             services.AddScoped<SalaryService>();
 
             services.AddScoped<JwtConfiguration>();
+
+            services.AddScoped<ICurrentUser, CurrentUser>();
 
             return services;
         }

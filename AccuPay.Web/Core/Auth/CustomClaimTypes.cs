@@ -1,4 +1,4 @@
-namespace Accupay.Web.Core.Auth
+namespace AccuPay.Web.Core.Auth
 {
     public static class CustomClaimTypes
     {

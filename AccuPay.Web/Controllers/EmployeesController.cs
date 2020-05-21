@@ -1,5 +1,5 @@
-using Accupay.Web.Core.Auth;
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Extensions;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
@@ -15,9 +15,9 @@ namespace AccuPay.Web.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly EmployeeService _employeeService;
-        private readonly CurrentUser _currentUser;
+        private readonly ICurrentUser _currentUser;
 
-        public EmployeesController(EmployeeService employeeService, CurrentUser currentUser)
+        public EmployeesController(EmployeeService employeeService, ICurrentUser currentUser)
         {
             _employeeService = employeeService;
             _currentUser = currentUser;
