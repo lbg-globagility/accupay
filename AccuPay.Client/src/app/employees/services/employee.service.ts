@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { PageOptions } from 'src/app/core/shared/page-options';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Employee } from '../shared/employee';
 import { HttpClient } from '@angular/common/http';
@@ -23,6 +24,14 @@ export class EmployeeService {
     return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute, {
       params,
     });
+  }
+
+  getAll(): Observable<Employee[]> {
+    return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute).pipe(
+      map((data) => {
+        return data.items;
+      })
+    );
   }
 
   getById(id: number): Observable<Employee> {

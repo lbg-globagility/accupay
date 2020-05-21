@@ -70,10 +70,8 @@ export class SalaryFormComponent implements OnInit {
   }
 
   private loadEmployees(): void {
-    const options = new PageOptions(0, 1000, null, null);
-
-    this.employeeService.getList(options).subscribe((data) => {
-      this.employees = data.items;
+    this.employeeService.getAll().subscribe((data) => {
+      this.employees = data;
     });
   }
 
