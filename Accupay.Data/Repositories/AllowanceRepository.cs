@@ -89,7 +89,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Allowance> GetByIdAsync(int id)
         {
-            return await _context.Allowances.FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Allowances
+                                    .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
+        {
+            return await _context.Allowances
+                                .Include(x => x.Employee)
+                                .Include(x => x.Product)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         public async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,

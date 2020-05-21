@@ -30,7 +30,7 @@ namespace AccuPay.Web.Allowances.Services
 
         public async Task<AllowanceDto> GetById(int id)
         {
-            var allowance = await _repository.GetByIdAsync(id);
+            var allowance = await _repository.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(allowance);
         }
@@ -84,6 +84,7 @@ namespace AccuPay.Web.Allowances.Services
                 Id = allowance.RowID.Value,
                 EmployeeNumber = allowance.Employee?.EmployeeNo,
                 EmployeeName = allowance.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = allowance.Employee?.EmployeeType,
                 AllowanceType = allowance.Type,
                 StartDate = allowance.EffectiveStartDate,
                 Frequency = allowance.AllowanceFrequency,

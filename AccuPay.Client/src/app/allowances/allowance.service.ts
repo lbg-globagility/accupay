@@ -6,12 +6,12 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Allowance } from 'src/app/allowances/shared/allowance';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AllowanceService {
   baseUrl = 'api/allowances';
 
-  constructor(private httpClient: HttpClient) { }
+  constructor(private httpClient: HttpClient) {}
 
   getAll(
     options: PageOptions,
@@ -22,5 +22,13 @@ export class AllowanceService {
     return this.httpClient.get<PaginatedList<Allowance>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  get(id: number): Observable<Allowance> {
+    return this.httpClient.get<Allowance>(`${this.baseUrl}/${id}`);
+  }
+
+  delete(id: number): Observable<Allowance> {
+    return this.httpClient.delete<Allowance>(`${this.baseUrl}/${id}`);
   }
 }

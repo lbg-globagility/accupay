@@ -30,6 +30,7 @@ import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-over
 import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
 import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
+import { ViewAllowanceComponent } from 'src/app/allowances/view-allowance/view-allowance.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
@@ -140,6 +141,10 @@ const routes: Routes = [
       {
         path: 'allowances',
         component: AllowanceListComponent,
+      },
+      {
+        path: 'allowances/:id',
+        component: ViewAllowanceComponent,
       },
       {
         path: 'loans',

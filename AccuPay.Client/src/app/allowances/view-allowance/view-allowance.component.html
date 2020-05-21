@@ -1,0 +1,106 @@
+<header class="app-page-header">
+  <h1>View Allowance</h1>
+</header>
+
+<ng-container *ngIf="isLoading | async">
+  <button
+    style="margin-right: 10px;"
+    mat-raised-button
+    color="accent"
+    routerLink="/allowances/{{ allowanceId }}/edit"
+  >
+    EDIT ALLOWANCE
+  </button>
+  <button mat-raised-button color="warn" (click)="confirmDelete()">
+    DELETE ALLOWANCE
+  </button>
+
+  <!-- Employee -->
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Employee Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Name</p>
+            <p class="field-value">{{ allowance.employeeName }}</p>
+          </div>
+        </div>
+
+        <!-- Employee Number -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Number</p>
+            <p class="field-value">{{ allowance.employeeNumber }}</p>
+          </div>
+        </div>
+
+        <!-- Employee Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Type</p>
+            <p class="field-value">{{ allowance.employeeType }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Details -->
+  <mat-card>
+    <mat-card-content>
+      <h3 class="font-medium">Details</h3>
+      <br />
+
+      <div class="row">
+        <!-- Start Date -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Start Date</p>
+            <p class="field-value">{{ allowance.startDate | date }}</p>
+          </div>
+        </div>
+
+        <!-- End Date -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">End Date</p>
+            <p class="field-value">
+              {{ allowance.startDate | date | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Amount -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Amount</p>
+            <p class="field-value">
+              {{ allowance.amount | number: "1.2-2" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Type</p>
+            <p class="field-value">{{ allowance.allowanceType }}</p>
+          </div>
+        </div>
+
+        <!-- Frequency -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Frequency</p>
+            <p class="field-value">
+              {{ allowance.frequency }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

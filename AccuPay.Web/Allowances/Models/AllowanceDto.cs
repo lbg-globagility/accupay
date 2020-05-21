@@ -10,6 +10,8 @@ namespace AccuPay.Web.Allowances.Models
 
         public string EmployeeName { get; set; }
 
+        public string EmployeeType { get; set; }
+
         public string AllowanceType { get; set; }
 
         public string Frequency { get; set; }

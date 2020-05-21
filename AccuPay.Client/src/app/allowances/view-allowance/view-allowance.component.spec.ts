@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AllowanceListComponent } from './allowance-list.component';
+import { ViewAllowanceComponent } from './view-allowance.component';
 
-describe('AllowanceListComponent', () => {
-  let component: AllowanceListComponent;
-  let fixture: ComponentFixture<AllowanceListComponent>;
+describe('ViewAllowanceComponent', () => {
+  let component: ViewAllowanceComponent;
+  let fixture: ComponentFixture<ViewAllowanceComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [AllowanceListComponent],
+      declarations: [ViewAllowanceComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AllowanceListComponent);
+    fixture = TestBed.createComponent(ViewAllowanceComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

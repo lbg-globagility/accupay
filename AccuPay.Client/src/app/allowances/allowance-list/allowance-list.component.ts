@@ -12,10 +12,9 @@ import { AllowanceService } from 'src/app/allowances/allowance.service';
 @Component({
   selector: 'app-allowance-list',
   templateUrl: './allowance-list.component.html',
-  styleUrls: ['./allowance-list.component.scss']
+  styleUrls: ['./allowance-list.component.scss'],
 })
 export class AllowanceListComponent implements OnInit {
-
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
@@ -50,7 +49,7 @@ export class AllowanceListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private allowanceService: AllowanceService) { 
+  constructor(private allowanceService: AllowanceService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -69,13 +68,11 @@ export class AllowanceListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.allowanceService
-      .getAll(options, this.searchTerm)
-      .subscribe((data) => {
-        this.allowances = data.items;
-        this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.allowances);
-      });
+    this.allowanceService.getAll(options, this.searchTerm).subscribe((data) => {
+      this.allowances = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.allowances);
+    });
   }
 
   applyFilter(searchTerm: string) {
@@ -103,5 +100,4 @@ export class AllowanceListComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.getAllowanceList();
   }
-
 }
