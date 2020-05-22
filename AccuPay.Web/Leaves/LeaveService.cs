@@ -91,7 +91,7 @@ namespace AccuPay.Web.Leaves
                     .ToList();
         }
 
-        private static void ApplyChanges(ICrudLeaveDto dto, Leave leave)
+        private static void ApplyChanges(CrudLeaveDto dto, Leave leave)
         {
             leave.LeaveType = dto.LeaveType;
             leave.Status = dto.Status;

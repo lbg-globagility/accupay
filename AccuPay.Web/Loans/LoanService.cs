@@ -100,7 +100,7 @@ namespace AccuPay.Web.Loans
                             await _listOfValueRepository.GetDeductionSchedulesAsync());
         }
 
-        private static void ApplyChanges(ICrudLoanDto dto, LoanSchedule loanSchedule)
+        private static void ApplyChanges(CrudLoanDto dto, LoanSchedule loanSchedule)
         {
             loanSchedule.LoanTypeID = dto.LoanTypeId;
             loanSchedule.LoanNumber = dto.LoanNumber;

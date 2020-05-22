@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { OrganizationService } from 'src/app/organizations/organization.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Organization } from 'src/app/organizations/shared/organization';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-edit-organization',
@@ -16,7 +17,8 @@ export class EditOrganizationComponent implements OnInit {
   constructor(
     private organizationService: OrganizationService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -28,9 +30,13 @@ export class EditOrganizationComponent implements OnInit {
   onSave(organization: Organization) {
     this.organizationService
       .update(this.organizationId, organization)
-      .subscribe(() => {
-        this.router.navigate(['organizations', this.organizationId]);
-      });
+      .subscribe(
+        () => {
+          this.router.navigate(['organizations', this.organizationId]);
+        },
+        (err) =>
+          this.errorHandler.badRequest(err, 'Failed to update organization.')
+      );
   }
 
   onCancel() {

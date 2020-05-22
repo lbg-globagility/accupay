@@ -1,4 +1,5 @@
 using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccuPay.Web.Loans
 {
@@ -16,6 +17,7 @@ namespace AccuPay.Web.Loans
 
         public string LoanType { get; set; }
 
+        [Required]
         public string LoanNumber { get; set; }
 
         public decimal TotalLoanAmount { get; set; }
