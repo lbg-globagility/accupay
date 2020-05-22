@@ -205,8 +205,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<LoanSchedule> GetByIdAsync(int loanScheduleId)
         {
-            return await _context.LoanSchedules.
-                            FirstOrDefaultAsync(l => l.RowID == loanScheduleId);
+            return await _context.LoanSchedules
+                                .FirstOrDefaultAsync(l => l.RowID == loanScheduleId);
+        }
+
+        public async Task<LoanSchedule> GetByIdWithEmployeeAndProductAsync(int id)
+        {
+            return await _context.LoanSchedules
+                                .Include(x => x.Employee)
+                                .Include(x => x.LoanType)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity

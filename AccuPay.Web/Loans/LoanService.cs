@@ -19,7 +19,7 @@ namespace AccuPay.Web.Loans
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
+            int organizationId = 2;
             var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
@@ -29,7 +29,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdAsync(id);
+            var officialBusiness = await _repository.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -40,8 +40,8 @@ namespace AccuPay.Web.Loans
             // validations on what to edit on Create
             // in progress and on hold status only
 
-            int organizationId = 2; // temporary OrganizationID
-            int userId = 1; // temporary User Id
+            int organizationId = 2;
+            int userId = 1;
             var loanSchedule = new LoanSchedule()
             {
                 EmployeeID = dto.EmployeeId,
@@ -51,7 +51,6 @@ namespace AccuPay.Web.Loans
             };
             ApplyChanges(dto, loanSchedule);
 
-            // use SaveManyAsync temporarily for validating leave balance
             await _repository.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
@@ -65,13 +64,12 @@ namespace AccuPay.Web.Loans
             var loanSchedule = await _repository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
-            int userId = 1; // temporary User Id
+            int userId = 1;
             loanSchedule.LastUpdBy = userId;
 
             ApplyChanges(dto, loanSchedule);
             loanSchedule.TotalBalanceLeft = dto.TotalBalanceLeft;
 
-            // use SaveManyAsync temporarily for validating leave balance
             await _repository.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
@@ -99,6 +97,8 @@ namespace AccuPay.Web.Loans
                 Id = loan.RowID.Value,
                 EmployeeNumber = loan.Employee?.EmployeeNo,
                 EmployeeName = loan.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = loan.Employee?.EmployeeType,
+                LoanNumber = loan.LoanNumber,
                 LoanType = loan.LoanType?.Name,
                 TotalLoanAmount = loan.TotalLoanAmount,
                 TotalBalanceLeft = loan.TotalBalanceLeft,
