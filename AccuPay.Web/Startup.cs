@@ -32,6 +32,8 @@ namespace AccuPay.Web
             services.AddWebServices();
             services.AddEmailService(new EmailConfiguration(Configuration));
 
+            services.AddMvc();
+
             services.AddSwaggerGen(c =>
             {
                 c.CustomSchemaIds(t => t.FullName);

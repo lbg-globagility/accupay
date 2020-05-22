@@ -13,6 +13,7 @@ using AccuPay.Web.Overtimes;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Notisphere.Users.Services;
 
 namespace AccuPay.Web
 {
@@ -40,6 +41,8 @@ namespace AccuPay.Web
 
             services.AddScoped<EmailService>();
             services.AddScoped<ViewRenderService>();
+            services.AddScoped<UserEmailService>();
+            services.AddScoped<UserTokenService>();
 
             return services;
         }
