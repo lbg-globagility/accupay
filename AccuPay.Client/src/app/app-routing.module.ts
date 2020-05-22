@@ -35,6 +35,8 @@ import { NewAllowanceComponent } from 'src/app/allowances/new-allowance/new-allo
 import { EditAllowanceComponent } from 'src/app/allowances/edit-allowance/edit-allowance.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { ViewLoanComponent } from 'src/app/loans/view-loan/view-loan.component';
+import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
+import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
@@ -162,8 +164,16 @@ const routes: Routes = [
         component: LoanListComponent,
       },
       {
+        path: 'loans/new',
+        component: NewLoanComponent,
+      },
+      {
         path: 'loans/:id',
         component: ViewLoanComponent,
+      },
+      {
+        path: 'loans/:id/edit',
+        component: EditLoanComponent,
       },
       {
         path: 'organizations',

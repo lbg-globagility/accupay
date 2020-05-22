@@ -3,8 +3,9 @@ export interface Loan {
   employeeNumber: string;
   employeeName: string;
   employeeType: string;
-  loanNumber: string;
+  loanTypeId: number;
   loanType: string;
+  loanNumber: string;
   startDate: Date;
   totalLoanAmount: number;
   deductionAmount: number;

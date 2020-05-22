@@ -12,9 +12,11 @@ namespace AccuPay.Web.Loans
 
         public string EmployeeType { get; set; }
 
-        public string LoanNumber { get; set; }
+        public int LoanTypeId { get; set; }
 
         public string LoanType { get; set; }
+
+        public string LoanNumber { get; set; }
 
         public decimal TotalLoanAmount { get; set; }
 

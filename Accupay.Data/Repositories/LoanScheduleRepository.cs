@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Utilities;
@@ -52,7 +53,7 @@ namespace AccuPay.Data.Repositories
         {
             // if completed yung loan, hindi pwede ma i-insert or update
             if (loanSchedule.Status == LoanSchedule.STATUS_COMPLETE)
-                throw new ArgumentException("Loan schedule is already completed!");
+                throw new BusinessLogicException("Loan schedule is already completed!");
 
             if (string.IsNullOrWhiteSpace(loanSchedule.LoanName))
             {
@@ -148,7 +149,7 @@ namespace AccuPay.Data.Repositories
 
             // if cancelled na yung loan, hindi pwede ma update
             if ((oldLoanSchedule.Status == LoanSchedule.STATUS_CANCELLED))
-                throw new ArgumentException("Loan schedule is already cancelled!");
+                throw new BusinessLogicException("Loan schedule is already cancelled!");
 
             if (newLoanSchedule.TotalBalanceLeft == 0)
             {
@@ -358,12 +359,12 @@ namespace AccuPay.Data.Repositories
         private async Task ValidationForBenchmark(LoanSchedule loanSchedule)
         {
             if (loanSchedule == null)
-                throw new ArgumentException("Invalid loan.");
+                throw new BusinessLogicException("Invalid loan.");
 
             if (_systemOwnerService.GetCurrentSystemOwner() == SystemOwnerService.Benchmark)
             {
                 if (loanSchedule.EmployeeID == null)
-                    throw new ArgumentException("Employee does not exists.");
+                    throw new BusinessLogicException("Employee does not exists.");
 
                 // IF benchmark
                 // #1. Only Pagibig loan or SSS loan can be saved
@@ -372,7 +373,7 @@ namespace AccuPay.Data.Repositories
                 // #1
                 if (loanSchedule.LoanName != ProductConstant.PAG_IBIG_LOAN &&
                     loanSchedule.LoanName != ProductConstant.SSS_LOAN)
-                    throw new ArgumentException("Only PAGIBIG and SSS loan are allowed!");
+                    throw new BusinessLogicException("Only PAGIBIG and SSS loan are allowed!");
 
                 // #2
                 if (loanSchedule.Status == LoanSchedule.STATUS_IN_PROGRESS)
@@ -385,7 +386,7 @@ namespace AccuPay.Data.Repositories
                     if ((loanSchedule.RowID == null && sameActiveLoans.Any()) ||
                         (loanSchedule.RowID.HasValue &&
                             sameActiveLoans.Where(l => l.RowID != loanSchedule.RowID).Any()))
-                        throw new ArgumentException("Only one active PAGIBIG and one active SSS loan are allowed!");
+                        throw new BusinessLogicException("Only one active PAGIBIG and one active SSS loan are allowed!");
                 }
             }
         }

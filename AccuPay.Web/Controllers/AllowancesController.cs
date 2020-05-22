@@ -69,7 +69,7 @@ namespace AccuPay.Web.Controllers
             return Ok();
         }
 
-        [HttpGet("allowancetypes")]
+        [HttpGet("types")]
         public async Task<ActionResult<ICollection<ProductDto>>> GetAllowanceTypes()
         {
             return await _service.GetAllowanceTypes();

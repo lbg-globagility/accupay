@@ -1,11 +1,11 @@
-<mat-card *ngIf="allowance">
+<mat-card *ngIf="loan">
   <mat-card-content>
     <div class="row">
       <!-- Employee Name -->
       <div class="col-lg-4 mb-4">
         <div class="field">
           <p class="field-label">Employee Name</p>
-          <p class="field-value">{{ allowance.employeeName }}</p>
+          <p class="field-value">{{ loan.employeeName }}</p>
         </div>
       </div>
 
@@ -13,7 +13,7 @@
       <div class="col-lg-4 mb-4">
         <div class="field">
           <p class="field-label">Employee Number</p>
-          <p class="field-value">{{ allowance.employeeNumber }}</p>
+          <p class="field-value">{{ loan.employeeNumber }}</p>
         </div>
       </div>
 
@@ -21,7 +21,7 @@
       <div class="col-lg-4 mb-4">
         <div class="field">
           <p class="field-label">Employee Type</p>
-          <p class="field-value">{{ allowance.employeeType }}</p>
+          <p class="field-value">{{ loan.employeeType }}</p>
         </div>
       </div>
     </div>
@@ -33,7 +33,7 @@
     <mat-card-content>
       <div class="row">
         <div class="col-md-12">
-          <div class="row" *ngIf="!allowance">
+          <div class="row" *ngIf="!loan">
             <mat-form-field
               appearance="outline"
               color="accent"
@@ -60,6 +60,49 @@
               color="accent"
               class="col-lg-4"
             >
+              <mat-label>Loan Amount *</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="totalLoanAmount"
+              />
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Deduction Percentage *</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="deductionPercentage"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Deduction Amount *</mat-label>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="deductionAmount"
+              />
+            </mat-form-field>
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
               <mat-label>Start Date *</mat-label>
               <input
                 matInput
@@ -72,24 +115,6 @@
               ></mat-datepicker-toggle>
               <mat-datepicker #startDate></mat-datepicker>
             </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>End Date</mat-label>
-              <input
-                matInput
-                [matDatepicker]="endDate"
-                formControlName="endDate"
-              />
-              <mat-datepicker-toggle
-                matSuffix
-                [for]="endDate"
-              ></mat-datepicker-toggle>
-              <mat-datepicker #endDate></mat-datepicker>
-            </mat-form-field>
           </div>
 
           <div class="row">
@@ -98,35 +123,63 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Allowance Type *</mat-label>
-              <mat-select matInput formControlName="allowanceTypeId">
+              <mat-label>Loan Number</mat-label>
+              <input
+                matInput
+                type="text"
+                autocomplete="off"
+                formControlName="loanNumber"
+              />
+            </mat-form-field>
+
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Loan Type *</mat-label>
+              <mat-select matInput formControlName="loanTypeId">
                 <mat-option></mat-option>
-                <mat-option
-                  *ngFor="let type of allowanceTypes"
-                  [value]="type.id"
-                >
+                <mat-option *ngFor="let type of loanTypes" [value]="type.id">
                   {{ type.name }}
                 </mat-option>
               </mat-select>
               <mat-error>Please select a type</mat-error>
             </mat-form-field>
+          </div>
+
+          <div class="row">
+            <mat-form-field
+              appearance="outline"
+              color="accent"
+              class="col-lg-4"
+            >
+              <mat-label>Status *</mat-label>
+              <mat-select matInput formControlName="status">
+                <mat-option></mat-option>
+                <mat-option *ngFor="let status of statusList" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+              <mat-error>Please select a status</mat-error>
+            </mat-form-field>
 
             <mat-form-field
               appearance="outline"
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Frequency *</mat-label>
-              <mat-select matInput formControlName="frequency">
+              <mat-label>Deduction Schedule *</mat-label>
+              <mat-select matInput formControlName="deductionSchedule">
                 <mat-option></mat-option>
                 <mat-option
-                  *ngFor="let frequency of frequencyList"
-                  [value]="frequency"
+                  *ngFor="let deductionSchedule of deductionSchedules"
+                  [value]="deductionSchedule"
                 >
-                  {{ frequency }}
+                  {{ deductionSchedule }}
                 </mat-option>
               </mat-select>
-              <mat-error>Please select a frequency</mat-error>
+              <mat-error>Please select a deduction schedule</mat-error>
             </mat-form-field>
           </div>
 
@@ -136,13 +189,12 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Amount *</mat-label>
-              <input
+              <mat-label>Remarks</mat-label>
+              <textarea
                 matInput
-                type="number"
                 autocomplete="off"
-                formControlName="amount"
-              />
+                formControlName="comments"
+              ></textarea>
             </mat-form-field>
           </div>
         </div>

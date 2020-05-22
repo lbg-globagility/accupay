@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
+import { SelectItem } from 'src/app/core/shared/select-item';
 import { Loan } from 'src/app/loans/shared/loan';
 
 @Injectable({
@@ -25,7 +26,27 @@ export class LoanService {
     return this.httpClient.get<Loan>(`${this.baseUrl}/${id}`);
   }
 
+  create(loan: Loan): Observable<Loan> {
+    return this.httpClient.post<Loan>(`${this.baseUrl}`, loan);
+  }
+
+  update(loan: Loan, id: number): Observable<Loan> {
+    return this.httpClient.put<Loan>(`${this.baseUrl}/${id}`, loan);
+  }
+
   delete(id: number): Observable<Loan> {
     return this.httpClient.delete<Loan>(`${this.baseUrl}/${id}`);
+  }
+
+  getLoanTypes(): Observable<SelectItem[]> {
+    return this.httpClient.get<SelectItem[]>(`${this.baseUrl}/types`);
+  }
+
+  getStatusList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
+  }
+
+  getDeductionSchedules(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/deductionsechedules`);
   }
 }

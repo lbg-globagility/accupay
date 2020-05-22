@@ -1,6 +1,8 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Shared;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,11 +10,17 @@ namespace AccuPay.Web.Loans
 {
     public class LoanService
     {
-        private readonly LoanScheduleRepository _repository;
+        private readonly LoanScheduleRepository _loanRepository;
+        private readonly ProductRepository _productRepository;
+        private readonly ListOfValueRepository _listOfValueRepository;
 
-        public LoanService(LoanScheduleRepository repository)
+        public LoanService(LoanScheduleRepository loanRepository,
+                            ProductRepository productRepository,
+                            ListOfValueRepository listOfValueRepository)
         {
-            _repository = repository;
+            _loanRepository = loanRepository;
+            _productRepository = productRepository;
+            _listOfValueRepository = listOfValueRepository;
         }
 
         public async Task<PaginatedList<LoanDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -20,7 +28,7 @@ namespace AccuPay.Web.Loans
             // TODO: sort and desc in repository
 
             int organizationId = 2;
-            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _loanRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -29,7 +37,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdWithEmployeeAndProductAsync(id);
+            var officialBusiness = await _loanRepository.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -51,7 +59,7 @@ namespace AccuPay.Web.Loans
             };
             ApplyChanges(dto, loanSchedule);
 
-            await _repository.SaveAsync(loanSchedule);
+            await _loanRepository.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
         }
@@ -61,18 +69,35 @@ namespace AccuPay.Web.Loans
             // TODO: validations
             // validations on what to edit on Update
 
-            var loanSchedule = await _repository.GetByIdAsync(id);
+            var loanSchedule = await _loanRepository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
             int userId = 1;
             loanSchedule.LastUpdBy = userId;
 
             ApplyChanges(dto, loanSchedule);
-            loanSchedule.TotalBalanceLeft = dto.TotalBalanceLeft;
+            //loanSchedule.TotalBalanceLeft = dto.TotalBalanceLeft;
 
-            await _repository.SaveAsync(loanSchedule);
+            await _loanRepository.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
+        }
+
+        public async Task<List<DropDownItem>> GetLoanTypes()
+        {
+            int organizationId = 2;
+            var leaveTypes = await _productRepository.GetLoanTypesAsync(organizationId);
+
+            return leaveTypes
+                    .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))
+                    .Select(x => DropDownItem.FromProduct(x))
+                    .ToList();
+        }
+
+        public async Task<List<string>> GetDeductionSchedules()
+        {
+            return _listOfValueRepository.ConvertToStringList(
+                            await _listOfValueRepository.GetDeductionSchedulesAsync());
         }
 
         private static void ApplyChanges(ICrudLoanDto dto, LoanSchedule loanSchedule)
@@ -98,8 +123,9 @@ namespace AccuPay.Web.Loans
                 EmployeeNumber = loan.Employee?.EmployeeNo,
                 EmployeeName = loan.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = loan.Employee?.EmployeeType,
-                LoanNumber = loan.LoanNumber,
+                LoanTypeId = loan.LoanTypeID.Value,
                 LoanType = loan.LoanType?.Name,
+                LoanNumber = loan.LoanNumber,
                 TotalLoanAmount = loan.TotalLoanAmount,
                 TotalBalanceLeft = loan.TotalBalanceLeft,
                 StartDate = loan.DedEffectiveDateFrom,

@@ -53,34 +53,6 @@
       <br />
 
       <div class="row">
-        <!-- Start Date -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Start Date</p>
-            <p class="field-value">{{ loan.startDate | date }}</p>
-          </div>
-        </div>
-
-        <!-- Loan Number -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Loan Number</p>
-            <p class="field-value">
-              {{ loan.loanNumber | ifEmpty: "-" }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Type -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Type</p>
-            <p class="field-value">{{ loan.loanType }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
         <!-- Loan Amount -->
         <div class="col-lg-3 mb-4">
           <div class="field">
@@ -120,6 +92,34 @@
             <p class="field-value">
               {{ loan.deductionPercentage | number: "1.2-2" }}
             </p>
+          </div>
+        </div>
+
+        <!-- Start Date -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Start Date</p>
+            <p class="field-value">{{ loan.startDate | date }}</p>
+          </div>
+        </div>
+
+        <!-- Loan Number -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Loan Number</p>
+            <p class="field-value">
+              {{ loan.loanNumber | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Type</p>
+            <p class="field-value">{{ loan.loanType }}</p>
           </div>
         </div>
 

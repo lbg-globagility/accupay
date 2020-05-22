@@ -41,13 +41,11 @@ export class AllowanceService {
     return this.httpClient.delete<Allowance>(`${this.baseUrl}/${id}`);
   }
 
-  getAllowanceTypes(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/allowancetypes`);
+  getAllowanceTypes(): Observable<AllowanceType[]> {
+    return this.httpClient.get<AllowanceType[]>(`${this.baseUrl}/types`);
   }
 
-  GetFrequencyList(): Observable<AllowanceType[]> {
-    return this.httpClient.get<AllowanceType[]>(
-      `${this.baseUrl}/frequencylist`
-    );
+  GetFrequencyList(): Observable<string[]> {
+    return this.httpClient.get<string[]>(`${this.baseUrl}/frequencylist`);
   }
 }

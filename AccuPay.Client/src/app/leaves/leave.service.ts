@@ -38,7 +38,7 @@ export class LeaveService {
   }
 
   getLeaveTypes(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/leavetypes`);
+    return this.httpClient.get<string[]>(`${this.baseUrl}/types`);
   }
 
   getStatusList(): Observable<string[]> {

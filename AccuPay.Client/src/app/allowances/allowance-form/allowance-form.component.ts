@@ -32,8 +32,8 @@ export class AllowanceFormComponent implements OnInit {
   });
 
   employees: Employee[];
-  allowanceTypes: string[];
-  frequencyList: AllowanceType[];
+  allowanceTypes: AllowanceType[];
+  frequencyList: string[];
 
   constructor(
     private fb: FormBuilder,
