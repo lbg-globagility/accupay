@@ -685,7 +685,12 @@ Public Class EmployeeForm
     Private Sub Print201Report()
         Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
 
-        If employeeID Is Nothing Then Return
+        If employeeID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        End If
 
         Dim provider = New Employee201ReportProvider(employeeID)
         provider.Run()
@@ -699,12 +704,19 @@ Public Class EmployeeForm
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         'dgvEmp.CurrentRow.Cells("RowID").Value
-        If (tsbtnNewEmp.Enabled = False AndAlso
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
-                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
-           (tsbtnNewEmp.Enabled = True AndAlso
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
-                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
+        If (tsbtnNewEmp.Enabled = True AndAlso
+            (dgvEmp.CurrentRow Is Nothing OrElse
+            String.IsNullOrWhiteSpace(dgvEmp.CurrentRow.Cells("RowID").Value))) Then
+
+            WarnBalloon("Please select an employee to update.", "No employee selected", lblforballoon, 0, -69)
+            Return
+
+        ElseIf (tsbtnNewEmp.Enabled = False AndAlso
+        EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+            Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
+       (tsbtnNewEmp.Enabled = True AndAlso
+        EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+            Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             WarnBalloon("Employee ID has already exist.", "Invalid employee ID", lblforballoon, 0, -69)
@@ -4608,7 +4620,12 @@ Public Class EmployeeForm
         WorkOrderToolStripMenuItem.Click
 
         Dim employeeRow = dgvEmp.CurrentRow
-        If employeeRow Is Nothing Then Return
+        If employeeRow Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        End If
 
         Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
 
@@ -4620,6 +4637,21 @@ Public Class EmployeeForm
                                         IncludeBranch().
                                         ByEmployeeNumber(employeeNumber).
                                         FirstOrDefaultAsync(z_OrganizationID)
+        If employee Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        ElseIf sender Is EmploymentContractToolStripMenuItem AndAlso
+            (String.IsNullOrWhiteSpace(employee.SssNo) OrElse
+            String.IsNullOrWhiteSpace(employee.PhilHealthNo) OrElse
+            String.IsNullOrWhiteSpace(employee.HdmfNo) OrElse
+            String.IsNullOrWhiteSpace(employee.TinNo)) Then
+
+            MessageBoxHelper.Warning("Employee needs to have SSS, Philhealth, PAGIBIG and TIN numbers encoded in his profile.")
+            Return
+
+        End If
 
         Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
 
