@@ -65,6 +65,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of JobCategoryRepository)
         services.AddTransient(Of JobLevelRepository)
         services.AddTransient(Of LeaveRepository)
+        services.AddTransient(Of LeaveLedgerRepository)
         services.AddTransient(Of ListOfValueRepository)
         services.AddTransient(Of LoanScheduleRepository)
         services.AddTransient(Of LoanTransactionRepository)
