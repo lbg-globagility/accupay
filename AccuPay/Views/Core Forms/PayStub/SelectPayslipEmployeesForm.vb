@@ -7,6 +7,7 @@ Imports AccuPay.Data.Services
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 
 Public Class SelectPayslipEmployeesForm
@@ -25,6 +26,10 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
+    Private _payslipCreator As PayslipCreator
+
+    Private _policyHelper As PolicyHelper
+
     Private _payPeriodRepository As PayPeriodRepository
 
     Private _paystubRepository As PaystubRepository
@@ -35,10 +40,8 @@ Public Class SelectPayslipEmployeesForm
 
     Sub New(currentPayPeriodId As Integer, isEmail As Boolean)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _isEmail = isEmail
         _currentPayPeriodId = currentPayPeriodId
 
@@ -46,13 +49,17 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipTypes = New List(Of String) From {Declared, Actual}
 
-        _payPeriodRepository = New PayPeriodRepository()
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
 
-        _paystubRepository = New PaystubRepository()
+        _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
-        _paystubEmailRepository = New PaystubEmailRepository()
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-        _paystubEmailHistoryRepository = New PaystubEmailHistoryRepository()
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _paystubEmailRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailRepository)
+
+        _paystubEmailHistoryRepository = MainServiceProvider.GetRequiredService(Of PaystubEmailHistoryRepository)
 
     End Sub
 
@@ -74,9 +81,7 @@ Public Class SelectPayslipEmployeesForm
 
         Await ShowEmployees()
 
-        Dim settings = ListOfValueCollection.Create()
-
-        Dim showActual = (settings.GetBoolean("Policy.ShowActual", True) = True)
+        Dim showActual = _policyHelper.ShowActual
 
         If showActual = False Then
 
@@ -237,16 +242,15 @@ Public Class SelectPayslipEmployeesForm
 
         Dim isActual = PayslipTypeComboBox.Text = Actual
 
-        Dim payslipCreator As New PayslipCreator(_currentPayPeriod, Convert.ToSByte(isActual))
-
-        Dim nextPayPeriod = Data.Helpers.PayrollTools.GetNextPayPeriod(_currentPayPeriod.RowID.Value)
-
         Dim employeeIds = _employeeModels.
                             Where(Function(m) m.IsSelected).
                             Select(Function(m) m.EmployeeId).
                             ToArray()
 
-        Dim reportDocument = payslipCreator.CreateReportDocument(z_OrganizationID, nextPayPeriod, employeeIds)
+        Dim reportDocument = _payslipCreator.CreateReportDocument(organizationId:=z_OrganizationID,
+                                                                 payPeriodId:=_currentPayPeriod.RowID.Value,
+                                                                 Convert.ToSByte(isActual),
+                                                                 employeeIds)
 
         Dim crvwr As New CrysRepForm
         crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()

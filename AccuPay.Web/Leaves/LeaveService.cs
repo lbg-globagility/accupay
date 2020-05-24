@@ -1,0 +1,126 @@
+using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace AccuPay.Web.Leaves
+{
+    public class LeaveService
+    {
+        private readonly LeaveRepository _leaveRepository;
+        private readonly ProductRepository _productRepository;
+        private readonly Data.Services.LeaveService _service;
+
+        public LeaveService(LeaveRepository leaveRepository,
+                            ProductRepository productRepository,
+                            Data.Services.LeaveService service)
+        {
+            _leaveRepository = leaveRepository;
+            _productRepository = productRepository;
+            _service = service;
+        }
+
+        public async Task<PaginatedList<LeaveDto>> PaginatedList(PageOptions options, string searchTerm)
+        {
+            // TODO: sort and desc in repository
+
+            int organizationId = 2;
+            var paginatedList = await _leaveRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
+
+            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
+
+            return new PaginatedList<LeaveDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<LeaveDto> GetById(int id)
+        {
+            var leave = await _leaveRepository.GetByIdWithEmployeeAsync(id);
+
+            return ConvertToDto(leave);
+        }
+
+        public async Task<LeaveDto> Create(CreateLeaveDto dto)
+        {
+            // TODO: validations
+
+            int organizationId = 2;
+            int userId = 1;
+            var leave = new Leave()
+            {
+                EmployeeID = dto.EmployeeId,
+                CreatedBy = userId,
+                OrganizationID = organizationId,
+            };
+            ApplyChanges(dto, leave);
+
+            // use SaveManyAsync temporarily for validating leave balance
+            await _service.SaveManyAsync(new List<Leave> { leave }, organizationId);
+
+            return ConvertToDto(leave);
+        }
+
+        public async Task<LeaveDto> Update(int id, UpdateLeaveDto dto)
+        {
+            // TODO: validations
+
+            var leave = await _leaveRepository.GetByIdAsync(id);
+            if (leave == null) return null;
+
+            int organizationId = 2;
+            int userId = 1;
+            leave.LastUpdBy = userId;
+
+            ApplyChanges(dto, leave);
+
+            // use SaveManyAsync temporarily for validating leave balance
+            await _service.SaveManyAsync(new List<Leave> { leave }, organizationId);
+
+            return ConvertToDto(leave);
+        }
+
+        public async Task<List<string>> GetLeaveTypes()
+        {
+            int organizationId = 2;
+            var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
+
+            return leaveTypes
+                    .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))
+                    .Select(x => x.PartNo)
+                    .ToList();
+        }
+
+        private static void ApplyChanges(CrudLeaveDto dto, Leave leave)
+        {
+            leave.LeaveType = dto.LeaveType;
+            leave.Status = dto.Status;
+            leave.StartDate = dto.StartDate;
+            leave.StartTime = dto.StartTime?.TimeOfDay;
+            leave.EndTime = dto.EndTime?.TimeOfDay;
+            leave.Reason = dto.Reason;
+            leave.Comments = dto.Comments;
+        }
+
+        private static LeaveDto ConvertToDto(Leave leave)
+        {
+            if (leave == null) return null;
+
+            return new LeaveDto()
+            {
+                Id = leave.RowID.Value,
+                EmployeeNumber = leave.Employee?.EmployeeNo,
+                EmployeeName = leave.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = leave.Employee?.EmployeeType,
+                LeaveType = leave.LeaveType,
+                StartTime = leave.StartTimeFull,
+                EndTime = leave.EndTimeFull,
+                StartDate = leave.StartDate,
+                EndDate = leave.ProperEndDate,
+                Status = leave.Status,
+                Reason = leave.Reason,
+                Comments = leave.Comments
+            };
+        }
+    }
+}

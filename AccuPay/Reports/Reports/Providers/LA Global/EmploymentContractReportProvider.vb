@@ -1,5 +1,8 @@
-﻿Imports AccuPay.Data.Entities
+﻿Option Strict On
+
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmploymentContractReportProvider
     Implements ILaGlobalEmployeeReport
@@ -36,7 +39,8 @@ Public Class EmploymentContractReportProvider
             .SetParameter("employeeType", e.EmployeeType)
             .SetParameter("startDate", e.StartDate)
 
-            Dim latestSalary = Await (New EmployeeRepository().GetCurrentSalaryAsync(e.RowID.Value))
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+            Dim latestSalary = Await employeeRepository.GetCurrentSalaryAsync(e.RowID.Value)
 
             .SetParameter("salary", If(latestSalary?.BasicSalary, 0))
             .SetParameter("companyName", orgNam)

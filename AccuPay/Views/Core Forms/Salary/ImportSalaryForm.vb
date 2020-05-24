@@ -7,6 +7,7 @@ Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Salaries
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportSalaryForm
 
@@ -18,21 +19,17 @@ Public Class ImportSalaryForm
 
     Private _employeeRepository As EmployeeRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private _userActivityRepository As UserActivityRepository
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
-
-        _employeeRepository = New EmployeeRepository()
-
-        _salaryRepository = New SalaryRepository()
-
     End Sub
 
     Private Async Sub BrowseButton_Click(sender As Object, e As EventArgs) Handles BrowseButton.Click
@@ -112,13 +109,14 @@ Public Class ImportSalaryForm
                 .EffectiveFrom = record.EffectiveFrom.Value,
                 .BasicSalary = record.BasicSalary.Value,
                 .AllowanceSalary = record.AllowanceSalary,
-                .TotalSalary = record.BasicSalary.Value + record.AllowanceSalary,
                 .DoPaySSSContribution = If(lastSalary?.DoPaySSSContribution, True),
                 .AutoComputeHDMFContribution = If(lastSalary?.AutoComputeHDMFContribution, True),
                 .AutoComputePhilHealthContribution = If(lastSalary?.AutoComputePhilHealthContribution, True),
                 .HDMFAmount = If(lastSalary?.HDMFAmount, HdmfCalculator.StandardEmployeeContribution),
                 .PhilHealthDeduction = If(lastSalary?.PhilHealthDeduction, 0)
             }
+
+            salary.UpdateTotalSalary()
 
             _salaries.Add(salary)
             salaryViewModels.Add(New SalaryViewModel(salary, employee))
@@ -184,7 +182,8 @@ Public Class ImportSalaryForm
 
         Try
 
-            Await _salaryRepository.SaveManyAsync(_salaries.ToList())
+            Dim salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+            Await salaryRepository.SaveManyAsync(_salaries.ToList())
 
             Dim importList = New List(Of UserActivityItem)
             For Each item In _salaries
@@ -195,8 +194,7 @@ Public Class ImportSalaryForm
                         })
             Next
 
-            Dim repo = New UserActivityRepository
-            repo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+            _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
 
             Me.IsSaved = True
         Catch ex As Exception

@@ -57,22 +57,6 @@ namespace AccuPay.Data.Entities
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
 
-        public PayPeriod NextPayPeriod()
-        {
-            // transfer this to a repository, no database call in entity
-            if (this.RowID == null) return null;
-
-            using (var context = new PayrollContext())
-            {
-                return context.PayPeriods.
-                                Where(p => p.OrganizationID == this.OrganizationID).
-                                Where(p => p.PayFrequencyID == this.PayFrequencyID).
-                                Where(p => p.PayFromDate > this.PayFromDate).
-                                OrderBy(p => p.PayFromDate).
-                                FirstOrDefault();
-            }
-        }
-
         public bool IsSemiMonthly => PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId;
         public bool IsWeekly => PayFrequencyID == PayrollTools.PayFrequencyWeeklyId;
         public bool IsFirstHalf => Half == 1;

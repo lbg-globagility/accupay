@@ -1,8 +1,9 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,80 +12,81 @@ namespace AccuPay.Data.Repositories
 {
     public class OfficialBusinessRepository
     {
+        private readonly PayrollContext _context;
+
+        public OfficialBusinessRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         #region CRUD
 
         public async Task DeleteAsync(int id)
         {
-            using (var context = new PayrollContext())
-            {
-                var officialBusiness = await GetByIdAsync(id);
+            var officialBusiness = await GetByIdAsync(id);
 
-                context.Remove(officialBusiness);
+            _context.Remove(officialBusiness);
 
-                await context.SaveChangesAsync();
-            }
+            await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
         {
-            using (PayrollContext context = new PayrollContext())
+            foreach (var officialBusiness in officialBusinesses)
             {
-                foreach (var officialBusiness in officialBusinesses)
-                {
-                    await this.SaveWithContextAsync(officialBusiness, context);
+                await this.SaveWithContextAsync(officialBusiness);
 
-                    await context.SaveChangesAsync();
-                }
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task SaveAsync(OfficialBusiness officialBusiness)
         {
-            await SaveWithContextAsync(officialBusiness);
+            await SaveWithContextAsync(officialBusiness, deferSave: false);
         }
 
         private async Task SaveWithContextAsync(OfficialBusiness officialBusiness,
-                                                PayrollContext context = null)
+                                                bool deferSave = true)
         {
             if (officialBusiness.EmployeeID == null)
-                throw new ArgumentException("Employee does not exists.");
+                throw new BusinessLogicException("Employee does not exists.");
 
             if (officialBusiness.StartTime.HasValue)
+            {
                 officialBusiness.StartTime = officialBusiness.StartTime.Value.StripSeconds();
-            if (officialBusiness.EndTime.HasValue)
-                officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
-
-            if (context == null)
-            {
-                using (context = new PayrollContext())
-                {
-                    await SaveAsyncFunction(officialBusiness, context);
-                    await context.SaveChangesAsync();
-                }
             }
-            else
+            if (officialBusiness.EndTime.HasValue)
             {
-                await SaveAsyncFunction(officialBusiness, context);
+                officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
+            }
+
+            officialBusiness.UpdateEndDate();
+
+            await SaveAsyncFunction(officialBusiness);
+
+            if (deferSave == false)
+            {
+                await _context.SaveChangesAsync();
             }
         }
 
-        private async Task SaveAsyncFunction(OfficialBusiness officialBusiness, PayrollContext context)
+        private async Task SaveAsyncFunction(OfficialBusiness officialBusiness)
         {
-            if (await context.OfficialBusinesses.
+            if (await _context.OfficialBusinesses.
                     Where(l => officialBusiness.RowID == null ? true : officialBusiness.RowID != l.RowID).
                     Where(l => l.EmployeeID == officialBusiness.EmployeeID).
                     Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).
                     AnyAsync())
-                throw new ArgumentException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
+                throw new BusinessLogicException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
 
             if (officialBusiness.RowID == null)
             {
-                context.OfficialBusinesses.Add(officialBusiness);
+                _context.OfficialBusinesses.Add(officialBusiness);
             }
             else
             {
-                context.OfficialBusinesses.Attach(officialBusiness);
-                context.Entry(officialBusiness).State = EntityState.Modified;
+                _context.OfficialBusinesses.Attach(officialBusiness);
+                _context.Entry(officialBusiness).State = EntityState.Modified;
             }
         }
 
@@ -96,11 +98,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task<OfficialBusiness> GetByIdAsync(int id)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.OfficialBusinesses.
-                                FirstOrDefaultAsync(l => l.RowID == id);
-            }
+            return await _context.OfficialBusinesses
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.OfficialBusinesses
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
@@ -109,25 +115,46 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
+            return await _context.OfficialBusinesses.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.OfficialBusinesses
+                                .Include(x => x.Employee)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.StartDate)
+                                .ThenBy(x => x.StartTime)
+                                .ThenBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
             {
-                return await context.OfficialBusinesses.
-                                    Where(l => l.EmployeeID == employeeId).
-                                    ToListAsync();
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm));
             }
+
+            var officialBusinesses = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<OfficialBusiness>(officialBusinesses, count);
         }
 
         public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.OfficialBusinesses.
-                                Where(l => l.OrganizationID == organizationId).
-                                Where(l => timePeriod.Start <= l.StartDate).
-                                Where(l => l.EndDate <= timePeriod.End).
-                                Where(l => l.Status == OfficialBusiness.StatusApproved).
-                                ToList();
-            }
+            return _context.OfficialBusinesses.
+                            Where(l => l.OrganizationID == organizationId).
+                            Where(l => timePeriod.Start <= l.StartDate).
+                            Where(l => l.EndDate <= timePeriod.End).
+                            Where(l => l.Status == OfficialBusiness.StatusApproved).
+                            ToList();
         }
 
         #endregion List of entities

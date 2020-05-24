@@ -5,6 +5,8 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
 Imports AccuPay.Tools
 
+Imports AccuPay.Utilities
+
 Public Class TimeAnalyzer
 
     Protected _projectPath As String

@@ -1,0 +1,117 @@
+<header class="app-page-header">
+  <h1>View Leave</h1>
+</header>
+
+<ng-container *ngIf="isLoading | async">
+  <button
+    style="margin-right: 10px;"
+    mat-raised-button
+    color="accent"
+    routerLink="/leaves/{{ leaveId }}/edit"
+  >
+    EDIT LEAVE
+  </button>
+  <button mat-raised-button color="warn" (click)="confirmDelete()">
+    DELETE LEAVE
+  </button>
+
+  <!-- Employee -->
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Employee Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Name</p>
+            <p class="field-value">{{ leave.employeeName }}</p>
+          </div>
+        </div>
+
+        <!-- Employee Number -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Number</p>
+            <p class="field-value">{{ leave.employeeNumber }}</p>
+          </div>
+        </div>
+
+        <!-- Employee Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Type</p>
+            <p class="field-value">{{ leave.employeeType }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Details -->
+  <mat-card>
+    <mat-card-content>
+      <h3 class="font-medium">Details</h3>
+      <br />
+
+      <div class="row">
+        <!-- Date -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Date</p>
+            <p class="field-value">{{ leave.startDate | date }}</p>
+          </div>
+        </div>
+
+        <!-- Time -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Time</p>
+            <p class="field-value">
+              {{ leave.startTime | date: "shortTime" }} -
+              {{ leave.endTime | date: "shortTime" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Status -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Status</p>
+            <p class="field-value">
+              {{ leave.status | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <!-- Type -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Type</p>
+            <p class="field-value">{{ leave.leaveType }}</p>
+          </div>
+        </div>
+
+        <!-- Reason -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Reason</p>
+            <p class="field-value">
+              {{ leave.reason | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+
+        <!-- Comments -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Comments</p>
+            <p class="field-value">
+              {{ leave.comments | ifEmpty: "-" }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>

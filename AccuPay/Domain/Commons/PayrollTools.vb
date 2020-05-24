@@ -1,66 +1,6 @@
 ﻿Option Strict On
 
-Imports System.Threading.Tasks
-Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.Services
-Imports AccuPay.Utils
-
 Public Class PayrollTools
-
-    Public Shared Sub UpdateLoanSchedule(paypRowID As Integer)
-
-        Dim param_array = New Object() {orgztnID, paypRowID, z_User}
-
-        Static strquery_recompute_13monthpay As String =
-                        "call recompute_thirteenthmonthpay(?organizid, ?payprowid, ?userrowid);"
-
-        Dim n_ExecSQLProcedure = New SQL(strquery_recompute_13monthpay, param_array)
-        n_ExecSQLProcedure.ExecuteQuery()
-    End Sub
-
-    Public Shared Async Function ValidatePayPeriodAction(payPeriodId As Integer?) As Task(Of Boolean)
-
-        Dim sys_ownr As New SystemOwnerService()
-
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
-
-            'Add temporarily. Consult maam mely first as she is still testing the system with multiple pay periods
-            Return True
-
-        End If
-
-        If payPeriodId Is Nothing Then
-            MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
-            Return False
-        End If
-
-        Dim payPeriod = Await New PayPeriodRepository().GetByIdAsync(payPeriodId.Value)
-
-        If payPeriod Is Nothing Then
-            MessageBoxHelper.Warning("Pay period does not exists. Please refresh the form.")
-            Return False
-        End If
-
-        Dim currentProcessingPayPeriod = Await New PayPeriodRepository().
-                                                        GetCurrentProcessing(z_OrganizationID)
-        Dim hasOtherProcessingPayPeriod = currentProcessingPayPeriod IsNot Nothing AndAlso
-                                        currentProcessingPayPeriod.RowID <> payPeriod.RowID.Value
-
-        If payPeriod.IsClosed Then
-
-            MessageBoxHelper.Warning("The pay period you selected is already closed. Please reopen so you can alter the data for that pay period. If there are ""Processing"" pay periods, make sure to close them first.")
-            Return False
-
-        ElseIf Not payPeriod.IsClosed AndAlso hasOtherProcessingPayPeriod Then
-
-            MessageBoxHelper.Warning("There is currently a pay period with ""PROCESSING"" status. Please finish that pay period first then close it to process other open pay periods.")
-            Return False
-
-        End If
-
-        Return True
-
-    End Function
 
     Public Shared Function GetOrganizationAddress() As String
 

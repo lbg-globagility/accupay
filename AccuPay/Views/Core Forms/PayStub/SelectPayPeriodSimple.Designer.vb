@@ -26,6 +26,8 @@ Partial Class SelectPayPeriodSimple
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Button2 = New System.Windows.Forms.Button()
         Me.gridPeriods = New System.Windows.Forms.DataGridView()
+        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.labelCurrentYear = New System.Windows.Forms.Label()
         Me.linkNextYear = New System.Windows.Forms.LinkLabel()
@@ -33,8 +35,6 @@ Partial Class SelectPayPeriodSimple
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Column3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Panel1.SuspendLayout()
         CType(Me.gridPeriods, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel2.SuspendLayout()
@@ -87,6 +87,24 @@ Partial Class SelectPayPeriodSimple
         Me.gridPeriods.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.gridPeriods.Size = New System.Drawing.Size(424, 377)
         Me.gridPeriods.TabIndex = 0
+        '
+        'Column2
+        '
+        Me.Column2.DataPropertyName = "Month"
+        Me.Column2.HeaderText = "Month"
+        Me.Column2.Name = "Column2"
+        Me.Column2.ReadOnly = True
+        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column2.Width = 181
+        '
+        'Column3
+        '
+        Me.Column3.DataPropertyName = "Period"
+        Me.Column3.HeaderText = "Period"
+        Me.Column3.Name = "Column3"
+        Me.Column3.ReadOnly = True
+        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
+        Me.Column3.Width = 181
         '
         'Panel2
         '
@@ -159,24 +177,6 @@ Partial Class SelectPayPeriodSimple
         Me.DataGridViewTextBoxColumn3.Name = "DataGridViewTextBoxColumn3"
         Me.DataGridViewTextBoxColumn3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
         Me.DataGridViewTextBoxColumn3.Width = 183
-        '
-        'Column2
-        '
-        Me.Column2.DataPropertyName = "Month"
-        Me.Column2.HeaderText = "Month"
-        Me.Column2.Name = "Column2"
-        Me.Column2.ReadOnly = True
-        Me.Column2.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column2.Width = 181
-        '
-        'Column3
-        '
-        Me.Column3.DataPropertyName = "Period"
-        Me.Column3.HeaderText = "Period"
-        Me.Column3.Name = "Column3"
-        Me.Column3.ReadOnly = True
-        Me.Column3.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable
-        Me.Column3.Width = 181
         '
         'SelectPayPeriodSimple
         '

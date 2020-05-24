@@ -1,0 +1,28 @@
+@import '~@angular/material/theming';
+
+:host {
+  display: block;
+  @include mat-elevation(1);
+}
+
+mat-toolbar {
+  background: white;
+}
+
+.__spacer {
+  flex: 1 1 auto;
+}
+
+.__preview {
+  $size: 40px;
+  width: $size;
+  height: $size;
+
+  display: inline-block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.__organization-logo {
+  height: 40px;
+}

@@ -334,11 +334,6 @@ Public Class ListOfValueForm
 
         btnSave.Enabled = True
 
-        If txtType.Text = "DutyShift" _
-            And Application.OpenForms.OfType(Of ShiftScheduleForm).Any Then
-            Application.OpenForms.OfType(Of ShiftScheduleForm).FirstOrDefault.LoadShiftScheduleConfigurablePolicy()
-        End If
-
     End Sub
 
     Private Sub ListOfValueForm_FormClosing(sender As Object, e As FormClosingEventArgs) Handles Me.FormClosing
@@ -348,16 +343,6 @@ Public Class ListOfValueForm
                 previousForm = Nothing
             End If
         End If
-
-        'If FormLeft.Contains("List of value") Then
-        '    FormLeft.Remove("List of value")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
 
         GeneralForm.listGeneralForm.Remove(Me.Name)
 
@@ -445,15 +430,6 @@ Public Class ListOfValueForm
             'filllistofvalues()
 
         End If
-    End Sub
-
-    Private Sub tsAudittrail_Click(sender As Object, e As EventArgs) Handles tsAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
     End Sub
 
     Dim pagination As Integer = 0

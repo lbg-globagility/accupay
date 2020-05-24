@@ -620,16 +620,6 @@ Public Class OrganizationForm
             End If
         End If
 
-        'If FormLeft.Contains("Organization") Then
-        '    FormLeft.Remove("Organization")
-        'End If
-
-        'If FormLeft.Count = 0 Then
-        '    MDIPrimaryForm.Text = "Welcome"
-        'Else
-        '    MDIPrimaryForm.Text = "Welcome to " & FormLeft.Item(FormLeft.Count - 1)
-        'End If
-
         GeneralForm.listGeneralForm.Remove(Me.Name)
 
     End Sub
@@ -1136,15 +1126,6 @@ Public Class OrganizationForm
         Return retrnObj
 
     End Function
-
-    Private Sub tsbtnAudittrail_Click(sender As Object, e As EventArgs) Handles tsbtnAudittrail.Click
-        showAuditTrail.Show()
-
-        showAuditTrail.loadAudTrail(view_ID)
-
-        showAuditTrail.BringToFront()
-
-    End Sub
 
     Private Sub txtmindayperyear_KeyDown(sender As Object, e As KeyEventArgs) Handles txtmindayperyear.KeyDown
         If e.KeyCode = Keys.Up Then

@@ -2,23 +2,38 @@ Option Strict On
 
 Imports System.Collections.ObjectModel
 Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ReportsList
 
-    Dim sys_ownr As New SystemOwnerService()
-
-    Private curr_sys_owner_name As String = sys_ownr.GetCurrentSystemOwner()
-
     Private Const ActualDescription As String = "(Actual)"
 
+    Private ReadOnly curr_sys_owner_name As String
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Sub New()
+
+        InitializeComponent()
+
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        curr_sys_owner_name = _systemOwnerService.GetCurrentSystemOwner()
+    End Sub
+
     Private Sub ReportsList_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+
+        'Removed since there is no audit trail anymore. Is this report really needed?
+        'New EmployeeIdentificationNumberReportProvider()
+
+        'This has errors
+        'New EmployeeOffenseReportProvider(),
+
         Dim providers = New Collection(Of IReportProvider) From {
             New SalaryIncreaseHistoryReportProvider(),
             New EmploymentRecordReportProvider(),
             New EmployeeProfilesReportProvider(),
             New PostEmploymentClearanceReportProvider(),
-            New EmployeeIdentificationNumberReportProvider(),
-            New EmployeeOffenseReportProvider(),
             New LeaveLedgerReportProvider() With {.IsNewReport = True},
             New FiledLeaveReportProvider(),
             New LoanSummaryByEmployeeReportProvider(),
@@ -38,7 +53,7 @@ Public Class ReportsList
         }
         'New PayrollLedgerReportProvider(),
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             providers = GetBenchmarkReports()
         End If
 
@@ -64,7 +79,7 @@ Public Class ReportsList
             End If
         Next
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
 
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem("(Declared)"))
             lvMainMenu.Items.Add(CreatePayrollSummaryListViewItem(ActualDescription))
@@ -137,7 +152,7 @@ Public Class ReportsList
             Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
 
             Try
-                If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
+                If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
                     TypeOf provider Is PayrollSummaryExcelFormatReportProvider Then
 
                     Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)

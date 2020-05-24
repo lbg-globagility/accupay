@@ -1,0 +1,26 @@
+@import 'styles/variables';
+
+:host {
+  display: flex;
+  padding: $app-space-2;
+  flex-flow: column nowrap;
+  align-items: center;
+}
+
+.image-menu {
+  width: 150px;
+  display: block;
+}
+
+.menu-edit {
+  background-color: rgb(65, 77, 73);
+}
+
+.menu-title {
+  margin-top: $app-space-2;
+  font-size: 20px;
+}
+
+.menu-button {
+  align-self: flex-end;
+}

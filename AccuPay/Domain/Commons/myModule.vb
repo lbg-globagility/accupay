@@ -2,6 +2,7 @@
 Imports System.IO
 Imports CrystalDecisions.CrystalReports.Engine
 Imports CrystalDecisions.Shared
+Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 Imports MySql.Data.MySqlClient
 Imports Excel = Microsoft.Office.Interop.Excel
@@ -10,6 +11,8 @@ Module myModule
     Public conn As New MySqlConnection
     Public da As New MySqlDataAdapter
     Public cmd As New MySqlCommand
+
+    Public MainServiceProvider As ServiceProvider
 
     Public firstchar_requiredforparametername As String = "?"
 
@@ -643,9 +646,12 @@ Module myModule
 
     End Sub
 
-    Public infohint As ToolTip
+    Public infohint As New ToolTip
 
     Public Sub InfoBalloon(Optional ToolTipStringContent As String = Nothing, Optional ToolTipStringTitle As String = Nothing, Optional objct As System.Windows.Forms.IWin32Window = Nothing, Optional x As Integer = 0, Optional y As Integer = 0, Optional dispo As SByte = 0, Optional duration As Integer = 3000)
+
+        If infohint Is Nothing Then Return
+
         Try
             If dispo = 1 Then
                 infohint.Active = False
@@ -666,9 +672,11 @@ Module myModule
         End Try
     End Sub
 
-    Public hintWarn As ToolTip 'New ToolTip
+    Public hintWarn As New ToolTip 'New ToolTip
 
     Public Sub WarnBalloon(Optional ToolTipStringContent As String = Nothing, Optional ToolTipStringTitle As String = Nothing, Optional objct As System.Windows.Forms.IWin32Window = Nothing, Optional x As Integer = 0, Optional y As Integer = 0, Optional dispo As Byte = 0, Optional duration As Integer = 2275)
+
+        If hintWarn Is Nothing Then Return
 
         'Dim hint As New ToolTip
         Try

@@ -8,39 +8,36 @@ namespace AccuPay.Data.Repositories
 {
     public class AwardRepository
     {
+        private readonly PayrollContext _context;
+
+        public AwardRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task DeleteAsync(Award award)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Awards.Remove(award);
-                await context.SaveChangesAsync();
-            }
+            _context.Awards.Remove(award);
+            await _context.SaveChangesAsync();
         }
 
         public async Task CreateAsync(Award award)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Awards.Add(award);
-                await context.SaveChangesAsync();
-            }
+            _context.Awards.Add(award);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Award award)
         {
-            using (PayrollContext context = new PayrollContext())
-            {
-                context.Entry(award).State = EntityState.Modified;
-                await context.SaveChangesAsync();
-            }
+            _context.Entry(award).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Award>> GetByEmployeeAsync(int employeeId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Awards.Where(l => l.EmployeeID == employeeId).ToListAsync();
-            }
+            return await _context.Awards.
+                                Where(l => l.EmployeeID == employeeId).
+                                ToListAsync();
         }
     }
 }

@@ -12,9 +12,14 @@ namespace AccuPay.Data.Entities
         [Key]
         public int? RowID { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime Created { get; set; }
+
         public int? CreatedBy { get; set; }
+
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public DateTime? LastUpd { get; set; }
+
         public int? LastUpdBy { get; set; }
         public int? OrganizationID { get; set; }
         public int? PositionID { get; set; }
@@ -118,7 +123,7 @@ namespace AccuPay.Data.Entities
         public string FullNameLastNameFirst => $"{LastName}, {FirstName}";
 
         public string FullNameWithMiddleInitialLastNameFirst =>
-            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}";
+            $"{LastName}, {FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ".")}";
 
         public string FullNameWithMiddleInitial =>
             $"{FirstName} {(MiddleInitial == null ? "" : MiddleInitial + ". ")}{LastName}";

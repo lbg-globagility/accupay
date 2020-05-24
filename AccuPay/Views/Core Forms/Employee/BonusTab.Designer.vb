@@ -22,20 +22,20 @@ Partial Class BonusTab
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BonusTab))
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(BonusTab))
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.ToolStrip20 = New System.Windows.Forms.ToolStrip()
         Me.ToolStripButton11 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnNewBon = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveBon = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCancelBon = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripButton29 = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripLabel8 = New System.Windows.Forms.ToolStripLabel()
         Me.tsbtnDelBon = New System.Windows.Forms.ToolStripButton()
+        Me.UserActivity = New System.Windows.Forms.ToolStripButton()
         Me.pbEmpPicBon = New System.Windows.Forms.PictureBox()
         Me.txtEmpIDBon = New System.Windows.Forms.TextBox()
         Me.txtFNameBon = New System.Windows.Forms.TextBox()
@@ -56,19 +56,18 @@ Partial Class BonusTab
         Me.Label8 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.dgvempbon = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.bon_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.bon_Start = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
         Me.bon_End = New DevComponents.DotNetBar.Controls.DataGridViewDateTimeInputColumn()
+        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_RowID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Type = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_Frequency = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.bon_ProdID = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserActivity = New System.Windows.Forms.ToolStripButton()
         Me.ToolStrip20.SuspendLayout()
         CType(Me.pbEmpPicBon, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvempbon, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -78,7 +77,7 @@ Partial Class BonusTab
         '
         Me.ToolStrip20.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip20.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripButton29, Me.ToolStripLabel8, Me.tsbtnDelBon, Me.UserActivity})
+        Me.ToolStrip20.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripButton11, Me.tsbtnNewBon, Me.tsbtnSaveBon, Me.tsbtnCancelBon, Me.ToolStripLabel8, Me.tsbtnDelBon, Me.UserActivity})
         Me.ToolStrip20.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip20.Name = "ToolStrip20"
         Me.ToolStrip20.Size = New System.Drawing.Size(856, 25)
@@ -118,17 +117,6 @@ Partial Class BonusTab
         Me.tsbtnCancelBon.Size = New System.Drawing.Size(63, 22)
         Me.tsbtnCancelBon.Text = "Cancel"
         '
-        'ToolStripButton29
-        '
-        Me.ToolStripButton29.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.ToolStripButton29.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image
-        Me.ToolStripButton29.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.ToolStripButton29.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.ToolStripButton29.Name = "ToolStripButton29"
-        Me.ToolStripButton29.Size = New System.Drawing.Size(23, 22)
-        Me.ToolStripButton29.Text = "ToolStripButton1"
-        Me.ToolStripButton29.ToolTipText = "Show audit trails"
-        '
         'ToolStripLabel8
         '
         Me.ToolStripLabel8.AutoSize = False
@@ -142,6 +130,14 @@ Partial Class BonusTab
         Me.tsbtnDelBon.Name = "tsbtnDelBon"
         Me.tsbtnDelBon.Size = New System.Drawing.Size(96, 22)
         Me.tsbtnDelBon.Text = "Delete bonus"
+        '
+        'UserActivity
+        '
+        Me.UserActivity.Image = CType(resources.GetObject("UserActivity.Image"), System.Drawing.Image)
+        Me.UserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.UserActivity.Name = "UserActivity"
+        Me.UserActivity.Size = New System.Drawing.Size(93, 22)
+        Me.UserActivity.Text = "User Activity"
         '
         'pbEmpPicBon
         '
@@ -380,6 +376,43 @@ Partial Class BonusTab
         Me.dgvempbon.Size = New System.Drawing.Size(782, 242)
         Me.dgvempbon.TabIndex = 370
         '
+        'bon_RowID
+        '
+        Me.bon_RowID.DataPropertyName = "RowID"
+        Me.bon_RowID.HeaderText = "RowID"
+        Me.bon_RowID.Name = "bon_RowID"
+        Me.bon_RowID.ReadOnly = True
+        Me.bon_RowID.Visible = False
+        Me.bon_RowID.Width = 50
+        '
+        'bon_Type
+        '
+        Me.bon_Type.DataPropertyName = "BonusType"
+        Me.bon_Type.HeaderText = "Type"
+        Me.bon_Type.Name = "bon_Type"
+        Me.bon_Type.ReadOnly = True
+        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Type.Width = 180
+        '
+        'bon_Amount
+        '
+        Me.bon_Amount.DataPropertyName = "BonusAmount"
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle2
+        Me.bon_Amount.HeaderText = "Amount"
+        Me.bon_Amount.Name = "bon_Amount"
+        Me.bon_Amount.ReadOnly = True
+        Me.bon_Amount.Width = 180
+        '
+        'bon_Frequency
+        '
+        Me.bon_Frequency.DataPropertyName = "AllowanceFrequency"
+        Me.bon_Frequency.HeaderText = "Frequency"
+        Me.bon_Frequency.Name = "bon_Frequency"
+        Me.bon_Frequency.ReadOnly = True
+        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.bon_Frequency.Width = 180
+        '
         'bon_Start
         '
         '
@@ -458,6 +491,14 @@ Partial Class BonusTab
         Me.bon_End.ReadOnly = True
         Me.bon_End.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
         '
+        'bon_ProdID
+        '
+        Me.bon_ProdID.DataPropertyName = "ProductID"
+        Me.bon_ProdID.HeaderText = "ProductID"
+        Me.bon_ProdID.Name = "bon_ProdID"
+        Me.bon_ProdID.ReadOnly = True
+        Me.bon_ProdID.Visible = False
+        '
         'DataGridViewTextBoxColumn1
         '
         Me.DataGridViewTextBoxColumn1.DataPropertyName = "RowID"
@@ -497,59 +538,6 @@ Partial Class BonusTab
         Me.DataGridViewTextBoxColumn5.HeaderText = "ProductID"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.Visible = False
-        '
-        'bon_RowID
-        '
-        Me.bon_RowID.DataPropertyName = "RowID"
-        Me.bon_RowID.HeaderText = "RowID"
-        Me.bon_RowID.Name = "bon_RowID"
-        Me.bon_RowID.ReadOnly = True
-        Me.bon_RowID.Visible = False
-        Me.bon_RowID.Width = 50
-        '
-        'bon_Type
-        '
-        Me.bon_Type.DataPropertyName = "BonusType"
-        Me.bon_Type.HeaderText = "Type"
-        Me.bon_Type.Name = "bon_Type"
-        Me.bon_Type.ReadOnly = True
-        Me.bon_Type.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Type.Width = 180
-        '
-        'bon_Amount
-        '
-        Me.bon_Amount.DataPropertyName = "BonusAmount"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.bon_Amount.DefaultCellStyle = DataGridViewCellStyle2
-        Me.bon_Amount.HeaderText = "Amount"
-        Me.bon_Amount.Name = "bon_Amount"
-        Me.bon_Amount.ReadOnly = True
-        Me.bon_Amount.Width = 180
-        '
-        'bon_Frequency
-        '
-        Me.bon_Frequency.DataPropertyName = "AllowanceFrequency"
-        Me.bon_Frequency.HeaderText = "Frequency"
-        Me.bon_Frequency.Name = "bon_Frequency"
-        Me.bon_Frequency.ReadOnly = True
-        Me.bon_Frequency.Resizable = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.bon_Frequency.Width = 180
-        '
-        'bon_ProdID
-        '
-        Me.bon_ProdID.DataPropertyName = "ProductID"
-        Me.bon_ProdID.HeaderText = "ProductID"
-        Me.bon_ProdID.Name = "bon_ProdID"
-        Me.bon_ProdID.ReadOnly = True
-        Me.bon_ProdID.Visible = False
-        '
-        'UserActivity
-        '
-        Me.UserActivity.Image = CType(resources.GetObject("UserActivity.Image"), System.Drawing.Image)
-        Me.UserActivity.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.UserActivity.Name = "UserActivity"
-        Me.UserActivity.Size = New System.Drawing.Size(93, 22)
-        Me.UserActivity.Text = "User Activity"
         '
         'BonusTab
         '
@@ -593,7 +581,6 @@ Partial Class BonusTab
     Friend WithEvents tsbtnNewBon As ToolStripButton
     Friend WithEvents tsbtnSaveBon As ToolStripButton
     Friend WithEvents tsbtnCancelBon As ToolStripButton
-    Friend WithEvents ToolStripButton29 As ToolStripButton
     Friend WithEvents ToolStripLabel8 As ToolStripLabel
     Friend WithEvents tsbtnDelBon As ToolStripButton
     Friend WithEvents pbEmpPicBon As PictureBox

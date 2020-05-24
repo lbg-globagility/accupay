@@ -41,22 +41,19 @@ namespace AccuPay.Data.Entities
 
         public DateTime? EffectiveEndDate { get; set; }
 
-        [NotMapped]
-        public char TaxableFlag { get; set; }
-
         [Column("AllowanceAmount")]
         public decimal Amount { get; set; }
 
         [ForeignKey("ProductID")]
         public virtual Product Product { get; set; }
 
+        [ForeignKey("EmployeeID")]
+        public virtual Employee Employee { get; set; }
+
         [NotMapped]
         public string Type
         {
-            get
-            {
-                return Product?.PartNo;
-            }
+            get => Product?.PartNo;
             set
             {
                 if (Product != null)
@@ -64,36 +61,12 @@ namespace AccuPay.Data.Entities
             }
         }
 
-        public bool IsOneTime
-        {
-            get
-            {
-                return AllowanceFrequency == FREQUENCY_ONE_TIME;
-            }
-        }
+        public bool IsOneTime => AllowanceFrequency == FREQUENCY_ONE_TIME;
 
-        public bool IsDaily
-        {
-            get
-            {
-                return AllowanceFrequency == FREQUENCY_DAILY;
-            }
-        }
+        public bool IsDaily => AllowanceFrequency == FREQUENCY_DAILY;
 
-        public bool IsSemiMonthly
-        {
-            get
-            {
-                return AllowanceFrequency == FREQUENCY_SEMI_MONTHLY;
-            }
-        }
+        public bool IsSemiMonthly => AllowanceFrequency == FREQUENCY_SEMI_MONTHLY;
 
-        public bool IsMonthly
-        {
-            get
-            {
-                return AllowanceFrequency == FREQUENCY_MONTHLY;
-            }
-        }
+        public bool IsMonthly => AllowanceFrequency == FREQUENCY_MONTHLY;
     }
 }

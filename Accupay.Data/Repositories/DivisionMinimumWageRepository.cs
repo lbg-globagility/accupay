@@ -9,16 +9,21 @@ namespace AccuPay.Data.Repositories
 {
     public class DivisionMinimumWageRepository
     {
-        public async Task<IEnumerable<DivisionMinimumWage>> GetByDateAsync(int organizationId, DateTime date)
+        private readonly PayrollContext _context;
+
+        public DivisionMinimumWageRepository(PayrollContext context)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.DivisionMinimumWages.
-                                Where(t => t.OrganizationID == organizationId).
-                                Where(t => t.EffectiveDateFrom <= date).
-                                Where(t => date <= t.EffectiveDateTo).
-                                ToListAsync();
-            }
+            _context = context;
+        }
+
+        public async Task<IEnumerable<DivisionMinimumWage>> GetByDateAsync(int organizationId,
+                                                                            DateTime date)
+        {
+            return await _context.DivisionMinimumWages.
+                            Where(t => t.OrganizationID == organizationId).
+                            Where(t => t.EffectiveDateFrom <= date).
+                            Where(t => date <= t.EffectiveDateTo).
+                            ToListAsync();
         }
     }
 }

@@ -1,0 +1,9 @@
+<h1>Edit Official Business</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-official-business-form
+    [officialBusiness]="officialBusiness"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-official-business-form>
+</ng-container>

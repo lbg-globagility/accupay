@@ -2,6 +2,9 @@ Option Strict On
 
 Imports System.ComponentModel
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PaystubView
 
@@ -19,14 +22,34 @@ Public Class PaystubView
 
     Private WithEvents _adjustmentSource As BindingSource
 
-    Public Sub New()
-        ' This call is required by the designer.
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _paystubRepository As PaystubRepository
+
+    Private ReadOnly _adjustmentService As AdjustmentService
+
+    Private ReadOnly _listOfValueService As ListOfValueService
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Sub New()
+
         InitializeComponent()
-        ' Add any initialization after the InitializeComponent() call.
         Dim presenter = New PaystubPresenter(Me)
         _adjustmentSource = New BindingSource With {
             .AllowNew = True
         }
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _adjustmentService = MainServiceProvider.GetRequiredService(Of AdjustmentService)
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
     End Sub
 
     Public Sub SetAdjustmentTypes(adjustmentTypes As ICollection(Of String))
@@ -296,14 +319,14 @@ Public Class PaystubView
     End Sub
 
     Private Sub DeclaredToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DeclaredToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+        Dim report = New PayrollSummaryExcelFormatReportProvider() With {
             .IsActual = False
         }
         report.Run()
     End Sub
 
     Private Sub ActualToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ActualToolStripMenuItem.Click
-        Dim report = New PayrollSummaryExcelFormatReportProvider With {
+        Dim report = New PayrollSummaryExcelFormatReportProvider() With {
             .IsActual = True
         }
         report.Run()

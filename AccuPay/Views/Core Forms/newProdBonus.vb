@@ -1,11 +1,19 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class newProdBonus
 
-    Private _newProduct As New Product
+    Private _productRepo As ProductRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _productRepo = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+    End Sub
 
     Private Sub newProdBonus_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'dbconn()
@@ -19,11 +27,10 @@ Public Class newProdBonus
             If Trim(TextBox1.Text) <> "" Then
                 TextBox1.Text = StrConv(TextBox1.Text, VbStrConv.ProperCase)
 
-                Dim productRepo = New ProductRepository
-                _newProduct = Await productRepo.AddBonusTypeAsync(TextBox1.Text,
-                                                             organizationId:=z_OrganizationID,
-                                                             userId:=z_User,
-                                                             isTaxable:=chktaxab.Checked)
+                Await _productRepo.AddBonusTypeAsync(TextBox1.Text,
+                                                    organizationId:=z_OrganizationID,
+                                                    userId:=z_User,
+                                                    isTaxable:=chktaxab.Checked)
 
             End If
 

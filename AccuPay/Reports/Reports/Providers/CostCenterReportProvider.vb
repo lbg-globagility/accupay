@@ -10,6 +10,7 @@ Imports AccuPay.ExcelReportColumn
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 Imports OfficeOpenXml.Style
 
@@ -101,17 +102,13 @@ Public Class CostCenterReportProvider
     Public Sub Run() Implements IReportProvider.Run
 
         Try
-            Dim selectMonthForm As New selectMonth
-
-            If Not selectMonthForm.ShowDialog = Windows.Forms.DialogResult.OK Then
-                Return
-            End If
-            Dim selectedMonth As Date = CDate(selectMonthForm.MonthValue).ToMinimumDateValue
+            Dim selectedMonth = GetSelectedMonth()
+            If selectedMonth Is Nothing Then Return
 
             Dim selectedBranch = GetSelectedBranch()
-            If selectedBranch Is Nothing Then Return
+            If selectedBranch?.RowID Is Nothing Then Return
 
-            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth)
+            Dim defaultFileName = GetDefaultFileName("Cost Center Report", selectedBranch, selectedMonth.Value)
 
             Dim saveFileDialogHelperOutPut = SaveFileDialogHelper.BrowseFile(defaultFileName, ".xlsx")
 
@@ -121,11 +118,10 @@ Public Class CostCenterReportProvider
 
             Dim newFile = saveFileDialogHelperOutPut.FileInfo
 
-            Dim dataService As New CostCenterReportDataService(selectedMonth,
-                                                                selectedBranch,
-                                                                userId:=z_User)
-
-            Dim payPeriodModels = dataService.GetData()
+            Dim dataService = MainServiceProvider.GetRequiredService(Of CostCenterReportDataService)
+            Dim payPeriodModels = dataService.GetData(selectedMonth.Value,
+                                                    selectedBranch,
+                                                    userId:=z_User)
 
             If payPeriodModels.Any = False OrElse payPeriodModels.Sum(Function(p) p.Paystubs.Count) = 0 Then
 
@@ -153,12 +149,22 @@ Public Class CostCenterReportProvider
 
         Dim selectBranchDialog As New SelectBranchForm
 
-        If Not selectBranchDialog.ShowDialog <> DialogResult.OK Then
+        If selectBranchDialog.ShowDialog <> DialogResult.OK Then
             Return Nothing
         End If
 
         Return selectBranchDialog.SelectedBranch
 
+    End Function
+
+    Private Function GetSelectedMonth() As Date?
+        Dim selectMonthForm As New selectMonth
+
+        If Not selectMonthForm.ShowDialog = Windows.Forms.DialogResult.OK Then
+            Return Nothing
+        End If
+
+        Return CDate(selectMonthForm.MonthValue).ToMinimumDateValue
     End Function
 
     Protected Shared Function GetDefaultFileName(reportName As String,
@@ -228,9 +234,9 @@ Public Class CostCenterReportProvider
 
         worksheet.Cells.Style.Font.Size = FontSize
 
-        Dim sys_ownr As New SystemOwnerService()
+        Dim systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
-        If sys_ownr.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
+        If systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark Then
             worksheet.Cells.Style.Font.Name = "Book Antiqua"
         End If
 

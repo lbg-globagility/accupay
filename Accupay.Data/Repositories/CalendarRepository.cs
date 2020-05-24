@@ -10,66 +10,91 @@ namespace AccuPay.Data.Repositories
 {
     public class CalendarRepository
     {
+        private readonly PayrollContext _context;
+
+        public CalendarRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public async Task CreateAsync(PayCalendar calendar, PayCalendar copiedCalendar)
         {
             if (copiedCalendar.RowID == null)
                 throw new Exception("Copied calendar does not exists");
 
-            using (var context = new PayrollContext())
+            var transaction = await _context.Database.BeginTransactionAsync();
+
+            try
             {
-                var transaction = await context.Database.BeginTransactionAsync();
+                _context.Calendars.Add(calendar);
+                await _context.SaveChangesAsync();
 
-                try
+                var copiedDays = await GetCalendarDays(copiedCalendar.RowID.Value);
+
+                var newDays = new Collection<CalendarDay>();
+                foreach (var copiedDay in copiedDays)
                 {
-                    context.Calendars.Add(calendar);
-                    await context.SaveChangesAsync();
+                    var day = new CalendarDay();
+                    day.CalendarID = calendar.RowID;
+                    day.Date = copiedDay.Date;
+                    day.DayTypeID = copiedDay.DayTypeID;
+                    day.Description = copiedDay.Description;
 
-                    var copiedDays = await GetCalendarDays(copiedCalendar.RowID.Value);
-
-                    var newDays = new Collection<CalendarDay>();
-                    foreach (var copiedDay in copiedDays)
-                    {
-                        var day = new CalendarDay();
-                        day.CalendarID = calendar.RowID;
-                        day.Date = copiedDay.Date;
-                        day.DayTypeID = copiedDay.DayTypeID;
-                        day.Description = copiedDay.Description;
-
-                        newDays.Add(day);
-                    }
-
-                    context.CalendarDays.AddRange(newDays);
-                    await context.SaveChangesAsync();
-
-                    transaction.Commit();
+                    newDays.Add(day);
                 }
-                catch (Exception)
-                {
-                    transaction.Rollback();
-                    throw;
-                }
+
+                _context.CalendarDays.AddRange(newDays);
+                await _context.SaveChangesAsync();
+
+                transaction.Commit();
+            }
+            catch (Exception)
+            {
+                transaction.Rollback();
+                throw;
             }
         }
 
-        public async Task UpdateManyAsync(ICollection<CalendarDay> calendarDays)
+        public async Task Update(PayCalendar calendar)
         {
-            using (var context = new PayrollContext())
-            {
-                foreach (var calendarDay in calendarDays)
-                {
-                    context.Entry(calendarDay).State = EntityState.Modified;
-                }
+            _context.Entry(calendar).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
 
-                await context.SaveChangesAsync();
+        public async Task UpdateDaysAsync(ICollection<CalendarDay> calendarDays)
+        {
+            foreach (var calendarDay in calendarDays)
+            {
+                _context.Entry(calendarDay).State = EntityState.Modified;
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task Delete(PayCalendar payCalendar)
+        {
+            var isInUse = await _context.Branches
+                .Where(b => b.CalendarID == payCalendar.RowID)
+                .AnyAsync();
+
+            if (isInUse)
+            {
+                throw new Exception("Calendar is currently in use");
+            }
+            else
+            {
+                var calendarDays = await _context.CalendarDays
+                    .Where(d => d.CalendarID == payCalendar.RowID)
+                    .ToListAsync();
+
+                _context.Calendars.Remove(payCalendar);
+                await _context.SaveChangesAsync();
             }
         }
 
         public async Task<ICollection<PayCalendar>> GetAllAsync()
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.Calendars.ToListAsync();
-            }
+            return await _context.Calendars.ToListAsync();
         }
 
         /// <summary>
@@ -97,14 +122,11 @@ namespace AccuPay.Data.Repositories
                                                                     DateTime from,
                                                                     DateTime to)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.CalendarDays.
-                                    Include(t => t.DayType).
-                                    Where(t => from <= t.Date && t.Date <= to).
-                                    Where(t => t.CalendarID == calendarId).
-                                    ToListAsync();
-            }
+            return await _context.CalendarDays.
+                                Include(t => t.DayType).
+                                Where(t => from <= t.Date && t.Date <= to).
+                                Where(t => t.CalendarID == calendarId).
+                                ToListAsync();
         }
 
         /// <summary>
@@ -114,13 +136,10 @@ namespace AccuPay.Data.Repositories
         ///         ''' <returns></returns>
         public async Task<ICollection<CalendarDay>> GetCalendarDays(int calendarId)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.CalendarDays.
-                                Include(t => t.DayType).
-                                Where(t => t.CalendarID == calendarId).
-                                ToListAsync();
-            }
+            return await _context.CalendarDays.
+                            Include(t => t.DayType).
+                            Where(t => t.CalendarID == calendarId).
+                            ToListAsync();
         }
     }
 }

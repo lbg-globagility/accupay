@@ -1,0 +1,25 @@
+@import "styles/variables";
+
+.field {
+  &-label,
+  &-value {
+    display: block;
+  }
+
+  &-label {
+    font-size: 0.75rem;
+    color: $text-color-300;
+  }
+}
+
+.readonly-field {
+  padding-left: 0.5rem;
+}
+
+.readonly-field > .field {
+  padding: 0 0.75em 0 0.75em;
+}
+
+.readonly-field > .field > .field-value {
+  margin-top: 10px;
+}

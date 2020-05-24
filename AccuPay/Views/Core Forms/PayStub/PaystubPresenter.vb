@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.ValueObjects
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PaystubPresenter
 
@@ -130,19 +131,20 @@ Public Class PaystubPresenter
 
         Sub New()
 
-            _adjustmentRepository = New AdjustmentRepository()
+            _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
 
-            _employeeRepository = New EmployeeRepository()
+            _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-            _payPeriodRepository = New PayPeriodRepository()
+            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
-            _paystubRepository = New PaystubRepository()
+            _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
-            _paystubActualRepository = New PaystubActualRepository()
+            _paystubActualRepository = MainServiceProvider.GetRequiredService(Of PaystubActualRepository)
 
-            _productRepository = New ProductRepository()
+            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
-            _timeEntryRepository = New TimeEntryRepository()
+            _timeEntryRepository = MainServiceProvider.GetRequiredService(Of TimeEntryRepository)
+
         End Sub
 
         Public Async Function GetSalary(paystub As Paystub) As Task(Of Salary)

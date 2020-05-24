@@ -1,9 +1,10 @@
 ﻿Option Strict On
 
-Imports AccuPay.Data
-Imports AccuPay.Data.Services
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PreviewLeaveBalanceForm
 
@@ -17,10 +18,21 @@ Public Class PreviewLeaveBalanceForm
 
     Private policy As New RenewLeaveBalancePolicy
 
-    Private _employeeRepo As New Repositories.EmployeeRepository
+    Private _listOfValueService As ListOfValueService
+
+    Private _employeeRepository As EmployeeRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+    End Sub
 
     Private Async Sub PreviewLeaveBalanceForm_LoadAsync(sender As Object, e As EventArgs) Handles MyBase.Load
-        Dim basis = Await ListOfValueCollection.CreateAsync("ResetLeaveBalancePolicy")
+        Dim basis = Await _listOfValueService.CreateAsync("ResetLeaveBalancePolicy")
 
         Dim leaveAllowanceAmountBasis = basis.GetValue("LeaveAllowanceAmountBasis")
 
@@ -249,7 +261,7 @@ Public Class PreviewLeaveBalanceForm
     Private Async Function LoadEmployees() As Threading.Tasks.Task
         Dim unemployedStatuses = New String() {"Resigned", "Terminated"}
 
-        Dim activeEmployees = Await _employeeRepo.GetAllActiveAsync(z_OrganizationID)
+        Dim activeEmployees = Await _employeeRepository.GetAllActiveAsync(z_OrganizationID)
 
         _employees = activeEmployees.
             OrderBy(Function(e) e.FullNameWithMiddleInitialLastNameFirst).

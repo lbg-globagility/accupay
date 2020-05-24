@@ -1,0 +1,123 @@
+@import '~@angular/material/theming';
+@import 'styles/theming';
+
+$app-primary-palette: mat-palette($mat-grey, 300);
+$app-accent-palette: mat-palette($mat-light-blue, 900);
+$app-warn-palette: mat-palette($mat-red);
+
+$app-success: #00c853;
+$app-border-color: rgba(0, 0, 0, 0.12);
+$app-select-color: #f5f5dc;
+
+$text-color: rgba(0, 0, 0, 0.87);
+$text-color-100: rgba(0, 0, 0, 0.87);
+$text-color-200: rgba(0, 0, 0, 0.67);
+$text-color-300: rgba(0, 0, 0, 0.54);
+$text-color-400: rgba(0, 0, 0, 0.38);
+
+$text-warn: mat-color($app-warn-palette);
+
+$app-secondary-text-color: rgba(0, 0, 0, 0.67);
+
+// deprecated
+$colors: (
+  primary: (
+    base: mat-color($app-primary-palette),
+    foreground: #434343,
+    50: mat-color($app-primary-palette, 50),
+    100: mat-color($app-primary-palette, 100),
+    200: mat-color($app-primary-palette, 200),
+    300: mat-color($app-primary-palette, 300),
+    400: mat-color($app-primary-palette, 400),
+    500: mat-color($app-primary-palette, 500),
+    600: mat-color($app-primary-palette, 600),
+    700: mat-color($app-primary-palette, 700),
+    800: mat-color($app-primary-palette, 800),
+    900: mat-color($app-primary-palette, 900)
+  ),
+  accent: (
+    base: mat-color($app-accent-palette),
+    foreground: white,
+    50: mat-color($app-accent-palette, 50),
+    100: mat-color($app-accent-palette, 100),
+    200: mat-color($app-accent-palette, 200),
+    300: mat-color($app-accent-palette, 300),
+    400: mat-color($app-accent-palette, 400),
+    500: mat-color($app-accent-palette, 500),
+    600: mat-color($app-accent-palette, 600),
+    700: mat-color($app-accent-palette, 700),
+    800: mat-color($app-accent-palette, 800),
+    900: mat-color($app-accent-palette, 900)
+  ),
+  accent-1: (
+    base: #99cc33
+  ),
+  accent-2: (
+    base: #ffc20e
+  ),
+  accent-3: (
+    base: #ff3333
+  ),
+  accent-4: (
+    base: #7f5eba
+  ),
+  warn: (
+    base: mat-color($app-warn-palette),
+    foreground: white
+  ),
+  foreground: (
+    base: rgba(0, 0, 0, 0.87),
+    secondary: rgba(0, 0, 0, 0.54),
+    disabled: rgba(0, 0, 0, 0.38)
+  ),
+  status: (
+    yellow: #f1c40f,
+    green: #00c853,
+    blue: #03a9f4,
+    red: #f44336,
+    purple: #7f5eba
+  )
+);
+
+@function app-color($name, $variant: null) {
+  @if ($variant != null) {
+    @return map-get(map-get($colors, $name), $variant);
+  } @else {
+    @return map-get(map-get($colors, $name), base);
+  }
+}
+
+$app-space: (
+  0.5: 4px,
+  1: 8px,
+  2: 16px,
+  3: 24px,
+  4: 32px,
+  5: 40px,
+  6: 48px
+);
+
+@function app-space($no) {
+  @return map-get($app-space, $no);
+}
+
+$app-theme: mat-light-theme(
+  $app-primary-palette,
+  $app-accent-palette,
+  $app-warn-palette
+);
+
+$app-space-1: 8px;
+$app-space-2: 16px;
+$app-space-3: 24px;
+$app-space-4: 32px;
+$app-space-5: 40px;
+$app-space-6: 48px;
+$new-btn-border-radius: 48px;
+$app-font-size1: 8px;
+$app-font-size2: 16px;
+$app-font-size3: 24px;
+$app-font-size4: 32px;
+$app-font-size5: 40px;
+$app-font-size6: 48px;
+$app-border: thin solid rgba(0, 0, 0, 0.12);

@@ -10,6 +10,13 @@ namespace AccuPay.Data.Repositories
 {
     public class ListOfValueRepository
     {
+        private readonly PayrollContext _context;
+
+        public ListOfValueRepository(PayrollContext context)
+        {
+            _context = context;
+        }
+
         public IEnumerable<ListOfValue> GetLeaveConvertiblePolicies()
         {
             return GetListOfValues("LeaveConvertiblePolicy");
@@ -17,13 +24,9 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<ListOfValue>> GetFilteredListOfValuesAsync(Expression<Func<ListOfValue, bool>> filter)
         {
-            using (var context = new PayrollContext())
-
-            {
-                return await context.ListOfValues.
-                                        Where(filter).
-                                        ToListAsync();
-            }
+            return await _context.ListOfValues.
+                                Where(filter).
+                                ToListAsync();
         }
 
         public async Task<IEnumerable<ListOfValue>> GetDeductionSchedulesAsync()
@@ -31,9 +34,14 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("Government deduction schedule");
         }
 
-        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeChecklistsAsync()
         {
-            return await GetListOfValuesAsync("DutyShift");
+            return await GetListOfValuesAsync("Employee Checklist");
+        }
+
+        public async Task<IEnumerable<ListOfValue>> GetEmployeeDisciplinaryPenalties()
+        {
+            return await GetListOfValuesAsync("Employee Disciplinary Penalty");
         }
 
         public async Task<IEnumerable<ListOfValue>> GetShiftPoliciesAsync()
@@ -41,26 +49,30 @@ namespace AccuPay.Data.Repositories
             return await GetListOfValuesAsync("ShiftPolicy");
         }
 
+        public async Task<IEnumerable<ListOfValue>> GetDutyShiftPoliciesAsync()
+        {
+            return await GetListOfValuesAsync("DutyShift");
+        }
+
+        public IEnumerable<ListOfValue> GetDutyShiftPolicies()
+        {
+            return GetListOfValues("DutyShift");
+        }
+
         public IEnumerable<ListOfValue> GetListOfValues(string type)
         {
-            using (var context = new PayrollContext())
-            {
-                return context.ListOfValues.
-                                Where(l => l.Type == type).
-                                Where(l => l.Active == "Yes").
-                                ToList();
-            }
+            return _context.ListOfValues.
+                            Where(l => l.Type == type).
+                            Where(l => l.Active == "Yes").
+                            ToList();
         }
 
         public async Task<IEnumerable<ListOfValue>> GetListOfValuesAsync(string type)
         {
-            using (var context = new PayrollContext())
-            {
-                return await context.ListOfValues.
-                                        Where(l => l.Type == type).
-                                        Where(l => l.Active == "Yes").
-                                        ToListAsync();
-            }
+            return await _context.ListOfValues.
+                                Where(l => l.Type == type).
+                                Where(l => l.Active == "Yes").
+                                ToListAsync();
         }
 
         public List<string> ConvertToStringList(IEnumerable<ListOfValue> listOfValues, string columnName = "DisplayValue")
@@ -87,6 +99,24 @@ namespace AccuPay.Data.Repositories
             }
 
             return stringList;
+        }
+
+        public async Task DeleteAsync(ListOfValue value)
+        {
+            _context.ListOfValues.Remove(value);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(ListOfValue value)
+        {
+            _context.Entry(value).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(ListOfValue value)
+        {
+            _context.ListOfValues.Add(value);
+            await _context.SaveChangesAsync();
         }
     }
 }

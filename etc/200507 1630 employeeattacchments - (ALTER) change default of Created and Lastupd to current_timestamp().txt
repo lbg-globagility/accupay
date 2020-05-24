@@ -1,0 +1,3 @@
+ALTER TABLE `employeeattachments`
+	CHANGE COLUMN `LastUpd` `LastUpd` DATETIME NULL DEFAULT NULL ON UPDATE current_timestamp() AFTER `Type`,
+	CHANGE COLUMN `Created` `Created` TIMESTAMP NULL DEFAULT current_timestamp() AFTER `LastUpd`;

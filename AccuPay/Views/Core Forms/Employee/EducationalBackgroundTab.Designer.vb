@@ -34,12 +34,14 @@ Partial Class EducationalBackgroundTab
         Me.ToolStripLabel2 = New System.Windows.Forms.ToolStripLabel()
         Me.btnDelete = New System.Windows.Forms.ToolStripButton()
         Me.btnCancel = New System.Windows.Forms.ToolStripButton()
-        Me.tsAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.btnUserActivity = New System.Windows.Forms.ToolStripButton()
         Me.txtEmployeeID = New System.Windows.Forms.TextBox()
         Me.txtFullname = New System.Windows.Forms.TextBox()
         Me.pbEmployee = New System.Windows.Forms.PictureBox()
         Me.grpSalary = New System.Windows.Forms.GroupBox()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.lblSchool = New System.Windows.Forms.Label()
         Me.txtSchool = New System.Windows.Forms.TextBox()
@@ -74,9 +76,6 @@ Partial Class EducationalBackgroundTab
         Me.DataGridViewTextBoxColumn6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
-        Me.Label4 = New System.Windows.Forms.Label()
         Me.ToolStrip9.SuspendLayout()
         CType(Me.pbEmployee, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpSalary.SuspendLayout()
@@ -88,7 +87,7 @@ Partial Class EducationalBackgroundTab
         Me.ToolStrip9.AutoSize = False
         Me.ToolStrip9.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip9.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip9.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.ToolStripSeparator3, Me.btnSave, Me.ToolStripSeparator4, Me.ToolStripLabel2, Me.btnDelete, Me.btnCancel, Me.tsAudittrail, Me.btnUserActivity})
+        Me.ToolStrip9.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.btnNew, Me.btnClose, Me.ToolStripSeparator3, Me.btnSave, Me.ToolStripSeparator4, Me.ToolStripLabel2, Me.btnDelete, Me.btnCancel, Me.btnUserActivity})
         Me.ToolStrip9.Location = New System.Drawing.Point(0, 0)
         Me.ToolStrip9.Name = "ToolStrip9"
         Me.ToolStrip9.Size = New System.Drawing.Size(856, 25)
@@ -152,15 +151,6 @@ Partial Class EducationalBackgroundTab
         Me.btnCancel.Name = "btnCancel"
         Me.btnCancel.Size = New System.Drawing.Size(63, 22)
         Me.btnCancel.Text = "&Cancel"
-        '
-        'tsAudittrail
-        '
-        Me.tsAudittrail.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.tsAudittrail.Image = Global.AccuPay.My.Resources.Resources.audit_trail_icon
-        Me.tsAudittrail.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.tsAudittrail.Name = "tsAudittrail"
-        Me.tsAudittrail.Size = New System.Drawing.Size(23, 22)
-        Me.tsAudittrail.ToolTipText = "Show audit trails"
         '
         'btnUserActivity
         '
@@ -236,6 +226,36 @@ Partial Class EducationalBackgroundTab
         Me.grpSalary.TabIndex = 355
         Me.grpSalary.TabStop = False
         Me.grpSalary.Text = "Educational Background"
+        '
+        'Label4
+        '
+        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label4.Location = New System.Drawing.Point(532, 56)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(13, 13)
+        Me.Label4.TabIndex = 512
+        Me.Label4.Text = "*"
+        '
+        'Label2
+        '
+        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label2.Location = New System.Drawing.Point(532, 32)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(13, 13)
+        Me.Label2.TabIndex = 511
+        Me.Label2.Text = "*"
+        '
+        'Label1
+        '
+        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label1.Location = New System.Drawing.Point(173, 57)
+        Me.Label1.Name = "Label1"
+        Me.Label1.Size = New System.Drawing.Size(13, 13)
+        Me.Label1.TabIndex = 510
+        Me.Label1.Text = "*"
         '
         'Label3
         '
@@ -514,36 +534,6 @@ Partial Class EducationalBackgroundTab
         Me.DataGridViewTextBoxColumn8.HeaderText = "Remarks"
         Me.DataGridViewTextBoxColumn8.Name = "DataGridViewTextBoxColumn8"
         '
-        'Label1
-        '
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(173, 57)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(13, 13)
-        Me.Label1.TabIndex = 510
-        Me.Label1.Text = "*"
-        '
-        'Label2
-        '
-        Me.Label2.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label2.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label2.Location = New System.Drawing.Point(532, 32)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(13, 13)
-        Me.Label2.TabIndex = 511
-        Me.Label2.Text = "*"
-        '
-        'Label4
-        '
-        Me.Label4.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label4.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label4.Location = New System.Drawing.Point(532, 56)
-        Me.Label4.Name = "Label4"
-        Me.Label4.Size = New System.Drawing.Size(13, 13)
-        Me.Label4.TabIndex = 512
-        Me.Label4.Text = "*"
-        '
         'EducationalBackgroundTab
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -577,7 +567,6 @@ Partial Class EducationalBackgroundTab
     Friend WithEvents ToolStripLabel2 As ToolStripLabel
     Friend WithEvents btnDelete As ToolStripButton
     Friend WithEvents btnCancel As ToolStripButton
-    Friend WithEvents tsAudittrail As ToolStripButton
     Friend WithEvents btnUserActivity As ToolStripButton
     Friend WithEvents txtEmployeeID As TextBox
     Public WithEvents txtFullname As TextBox

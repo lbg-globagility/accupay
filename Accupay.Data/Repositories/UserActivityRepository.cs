@@ -14,26 +14,30 @@ namespace AccuPay.Data.Repositories
         public const string RecordTypeDelete = "DELETE";
         public const string RecordTypeImport = "IMPORT";
 
+        private readonly PayrollContext _context;
+
+        public UserActivityRepository(PayrollContext context)
+        {
+            this._context = context;
+        }
+
         public IEnumerable<UserActivity> GetAll(int? organizationId = null, string entityName = null)
         {
-            using (PayrollContext context = new PayrollContext())
+            IQueryable<UserActivity> query = _context.UserActivities.
+                                                Include(x => x.ActivityItems).
+                                                Include(x => x.User);
+
+            if (organizationId != null)
             {
-                IQueryable<UserActivity> query = context.UserActivities.
-                                                    Include(x => x.ActivityItems).
-                                                    Include(x => x.User);
-
-                if (organizationId != null)
-                {
-                    query = query.Where(x => x.OrganizationID == organizationId);
-                }
-
-                if (!string.IsNullOrWhiteSpace(entityName))
-                {
-                    query = query.Where(x => x.EntityName == entityName);
-                }
-
-                return query.ToList();
+                query = query.Where(x => x.OrganizationID == organizationId);
             }
+
+            if (!string.IsNullOrWhiteSpace(entityName))
+            {
+                query = query.Where(x => x.EntityName == entityName);
+            }
+
+            return query.ToList();
         }
 
         public void RecordAdd(int userId, string entityName, int entityId, int organizationId)
@@ -78,20 +82,17 @@ namespace AccuPay.Data.Repositories
                                     string recordType,
                                     List<UserActivityItem> activityItems = null)
         {
-            using (var context = new PayrollContext())
+            _context.UserActivities.Add(new UserActivity()
             {
-                context.UserActivities.Add(new UserActivity()
-                {
-                    Created = DateTime.Now,
-                    UserId = userId,
-                    EntityName = entityName.ToUpper(),
-                    ActivityItems = activityItems,
-                    OrganizationID = organizationId,
-                    RecordType = recordType
-                });
+                Created = DateTime.Now,
+                UserId = userId,
+                EntityName = entityName.ToUpper(),
+                ActivityItems = activityItems,
+                OrganizationID = organizationId,
+                RecordType = recordType
+            });
 
-                context.SaveChanges();
-            }
+            _context.SaveChanges();
         }
 
         public static bool CheckIfFirstLetterIsVowel(string entityName)

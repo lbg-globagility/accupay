@@ -11,7 +11,7 @@ namespace AccuPay.Data.Services
 
         private const decimal StandardEmployerContribution = 100;
 
-        public void Calculate(Salary salary, Paystub paystub, Employee employee, PayPeriod payperiod, ListOfValueCollection settings)
+        public void Calculate(Salary salary, Paystub paystub, Employee employee, ListOfValueCollection settings, PayPeriod payperiod)
         {
             // Reset HDMF contribution
             paystub.HdmfEmployeeShare = 0;

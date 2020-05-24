@@ -1,0 +1,2 @@
+DROP TRIGGER IF EXISTS `BEFINS_employeeloanschedule`;
+DROP TRIGGER IF EXISTS `BEFUPD_employeeloanschedule`;

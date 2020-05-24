@@ -1,8 +1,9 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
 Namespace Global.AccuPay.Helpers
@@ -38,7 +39,7 @@ Namespace Global.AccuPay.Helpers
         End Sub
 
         Public Shared Async Function DownloadExcelWithData(excelTemplate As ExcelTemplates) As Threading.Tasks.Task(Of FileInfo)
-            Dim _employeeRepository As New Repositories.EmployeeRepository
+            Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             Dim excelName = TemplatesHelper.GetFileName(excelTemplate)
             Dim template = TemplatesHelper.GetFullPath(excelTemplate)
 
@@ -55,7 +56,7 @@ Namespace Global.AccuPay.Helpers
                 'Import employee numbers
                 Using package As New ExcelPackage(fileInfo)
                     Dim worksheet As ExcelWorksheet = package.Workbook.Worksheets("Options")
-                    Dim allEmployees = Await _employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
+                    Dim allEmployees = Await employeeRepository.GetAllWithPositionAsync(z_OrganizationID)
                     Dim allEmployed = allEmployees.
                         Where(Function(emp) emp.IsActive).
                         Select(Function(emp) emp.EmployeeNo).

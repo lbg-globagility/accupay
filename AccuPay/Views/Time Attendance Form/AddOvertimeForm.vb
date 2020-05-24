@@ -3,6 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddOvertimeForm
     Public Property IsSaved As Boolean
@@ -10,19 +11,23 @@ Public Class AddOvertimeForm
 
     Private Const FormEntityName As String = "Overtime"
 
-    Private _overtimeRepository As New OvertimeRepository()
-
     Private _currentEmployee As Employee
 
     Private _newOvertime As New Overtime()
 
+    Private _overtimeRepository As OvertimeRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
+
+        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -152,8 +157,7 @@ Public Class AddOvertimeForm
             Async Function()
                 Await _overtimeRepository.SaveAsync(Me._newOvertime)
 
-                Dim repo As New UserActivityRepository
-                repo.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 

@@ -3,14 +3,22 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLoanTypeForm
 
-    Private _productRepository As New ProductRepository
+    Private _productRepository As ProductRepository
 
     Public Property NewLoanType As Product
 
     Public Property IsSaved As Boolean
+
+    Sub New()
+
+        InitializeComponent()
+
+        _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+    End Sub
 
     Private Sub AddLoanTypeForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 

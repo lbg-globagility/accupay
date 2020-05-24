@@ -1,0 +1,9 @@
+<h1>Edit Loan</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-loan-form
+    [loan]="loan"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-loan-form>
+</ng-container>

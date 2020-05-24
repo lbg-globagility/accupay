@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+      <DocumentationFile>.\AccuPay.Web.xml</DocumentationFile>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="3.1.4" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices" Version="3.1.4" />
+      <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="3.1.4" />
+      <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
+      <PackageReference Include="Swashbuckle.AspNetCore" Version="5.4.1" />
+      <PackageReference Include="Swashbuckle.AspNetCore.ReDoc" Version="5.4.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Account\Exceptions\" />
+      <Folder Include="Core\Configurations\" />
+    </ItemGroup>
+</Project>

@@ -14,6 +14,7 @@ Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 
 Public Class TimeEntrySummaryForm
@@ -58,13 +59,37 @@ Public Class TimeEntrySummaryForm
 
     Private _policy As PolicyHelper
 
+    Private _payPeriodService As PayPeriodService
+
     Private _breakTimeBracketRepository As BreakTimeBracketRepository
 
     Private _employeeRepository As EmployeeRepository
 
+    Private _payPeriodRepository As PayPeriodRepository
+
     Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
     Private _userRepository As UserRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+
+        _breakTimeBracketRepository = MainServiceProvider.GetRequiredService(Of BreakTimeBracketRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _timeAttendanceLogRepository = MainServiceProvider.GetRequiredService(Of TimeAttendanceLogRepository)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+    End Sub
 
     Private Async Sub TimeEntrySummary_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
@@ -76,17 +101,9 @@ Public Class TimeEntrySummaryForm
         ' Default selected year is the current year
         _selectedYear = Date.Today.Year
 
-        _breakTimeBracketRepository = New Repositories.BreakTimeBracketRepository()
-
-        _employeeRepository = New Repositories.EmployeeRepository()
-
-        _userRepository = New Repositories.UserRepository()
-
         ' Hide `delete` and `regenerate` menu buttons by default
         tsBtnDeleteTimeEntry.Visible = False
         regenerateTimeEntryButton.Visible = False
-
-        _policy = New PolicyHelper
 
         Await LoadEmployees()
         Await LoadPayPeriods()
@@ -140,10 +157,11 @@ Public Class TimeEntrySummaryForm
 
         If payPeriod Is Nothing Then Return Nothing
 
-        Return Data.Helpers.PayrollTools.
-                                    GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
-                                                        _policy.PayRateCalculationBasis,
-                                                        z_OrganizationID)
+        Dim calendarService = MainServiceProvider.GetRequiredService(Of CalendarService)
+
+        Return calendarService.GetCalendarCollection(New TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
+                                                    _policy.PayRateCalculationBasis,
+                                                    z_OrganizationID)
     End Function
 
     Private Async Function LoadEmployees() As Task
@@ -216,8 +234,8 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await Data.Helpers.PayrollTools.
-                        GetCurrentlyWorkedOnPayPeriodByCurrentYear(z_OrganizationID,
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodService.
+                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID,
                                                                     New List(Of IPayPeriod)(_payPeriods))
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
@@ -229,7 +247,7 @@ Public Class TimeEntrySummaryForm
 
         If _selectedPayPeriod IsNot payPeriodsDataGridView.CurrentCell Then
             _selectedPayPeriod = DirectCast(payPeriodsDataGridView.CurrentCell.Value, PayPeriod)
-            LoadTimeEntries()
+            Await LoadTimeEntries()
         End If
 
         Dim isPayperiodProcessing = _selectedPayPeriod.Status = PayPeriodStatusData.PayPeriodStatus.Processing
@@ -251,7 +269,8 @@ Public Class TimeEntrySummaryForm
 
         Dim payPeriods = New Collection(Of PayPeriod)
 
-        Dim payPeriodsWithPaystubCount = PayPeriodStatusData.GetPeriodsWithPaystubCount(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.
+                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
 
         Using connection As New MySqlConnection(connectionString),
             command As New MySqlCommand(sql, connection)
@@ -297,7 +316,7 @@ Public Class TimeEntrySummaryForm
         Return payPeriods
     End Function
 
-    Private Async Sub LoadTimeEntries()
+    Private Async Function LoadTimeEntries() As Task
         If _selectedEmployee Is Nothing Or _selectedPayPeriod Is Nothing Then
             Return
         End If
@@ -317,7 +336,7 @@ Public Class TimeEntrySummaryForm
 
         SetVisibleColumns(timeEntries)
         timeEntriesDataGridView.DataSource = timeEntries
-    End Sub
+    End Function
 
     Private Sub SetVisibleColumns(timeEntries As ICollection(Of TimeEntry))
         timeEntriesDataGridView.SuspendLayout()
@@ -893,15 +912,15 @@ Public Class TimeEntrySummaryForm
             Await GenerateTimeEntries(startDate, endDate)
         End If
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Async Function GenerateTimeEntries(startDate As Date, endDate As Date) As Task
-        Dim generator = New TimeEntryGenerator(z_OrganizationID, startDate, endDate)
+        Dim generator = MainServiceProvider.GetRequiredService(Of TimeEntryGenerator)
         Dim progressDialog = New TimeEntryProgressDialog(generator)
         progressDialog.Show()
 
-        Await Task.Run(Sub() generator.Start()).
+        Await Task.Run(Sub() generator.Start(z_OrganizationID, startDate, endDate)).
             ContinueWith(
                 Sub() DoneGenerating(progressDialog, generator),
                 CancellationToken.None,
@@ -911,11 +930,19 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub regenerateTimeEntryButton_Click(sender As Object, e As EventArgs) Handles regenerateTimeEntryButton.Click
 
-        If Await PayrollTools.ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
+                                                _selectedPayPeriod.RowID,
+                                                z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
 
         Await GenerateTimeEntries(_selectedPayPeriod.PayFromDate, _selectedPayPeriod.PayToDate)
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub DoneGenerating(dialog As TimeEntryProgressDialog, generator As TimeEntryGenerator)
@@ -933,7 +960,7 @@ Public Class TimeEntrySummaryForm
 
     End Sub
 
-    Private Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
+    Private Async Sub employeesDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles employeesDataGridView.SelectionChanged
         If employeesDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -944,10 +971,10 @@ Public Class TimeEntrySummaryForm
         End If
 
         _selectedEmployee = employee
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
-    Private Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
+    Private Async Sub payPeriodDataGridView_SelectionChanged(sender As Object, e As EventArgs) Handles payPeriodsDataGridView.SelectionChanged
         If payPeriodsDataGridView.CurrentRow Is Nothing Then
             Return
         End If
@@ -965,7 +992,7 @@ Public Class TimeEntrySummaryForm
         tsBtnDeleteTimeEntry.Visible = isPayPeriodProcessing
         regenerateTimeEntryButton.Visible = isPayPeriodProcessing
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub tsbtnCloseempawar_Click(sender As Object, e As EventArgs) Handles tsbtnCloseempawar.Click
@@ -996,12 +1023,12 @@ Public Class TimeEntrySummaryForm
         End If
     End Function
 
-    Private Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
+    Private Async Sub actualButtonn_Click(sender As Object, e As EventArgs) Handles actualButton.Click
         _isActual = Not _isActual
 
         actualButton.Checked = _isActual
 
-        LoadTimeEntries()
+        Await LoadTimeEntries()
     End Sub
 
     Private Sub btnAmPm_Click(sender As Object, e As EventArgs) Handles btnAmPm.Click
@@ -1471,8 +1498,15 @@ Public Class TimeEntrySummaryForm
 
     Private Async Sub tsBtnDeleteTimeEntry_ClickAsync(sender As Object, e As EventArgs) Handles tsBtnDeleteTimeEntry.Click
 
-        If Await PayrollTools.
-                    ValidatePayPeriodAction(_selectedPayPeriod.RowID) = False Then Return
+        Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
+                                                _selectedPayPeriod.RowID,
+                                                z_OrganizationID)
+
+        If validate = FunctionResult.Failed Then
+
+            MessageBoxHelper.Warning(validate.Message)
+            Return
+        End If
 
         Dim ask = String.Concat("Proceed deleting employee's time entry between ", _selectedPayPeriod.PayFromDate.ToShortDateString,
                                 " and ", _selectedPayPeriod.PayToDate.ToShortDateString, " ?")
@@ -1497,12 +1531,13 @@ Public Class TimeEntrySummaryForm
 
             Try
                 Await command.ExecuteNonQueryAsync()
+
+                Await LoadTimeEntries()
                 'transactn.Commit()
             Catch ex As Exception
                 'transactn.Rollback()
                 _logger.Error("Deleting time entry period", ex)
-            Finally
-                LoadTimeEntries()
+
             End Try
         End Using
     End Sub

@@ -1,0 +1,27 @@
+.mat-button-base {
+  letter-spacing: 0.05em;
+}
+
+.mat-button-base.m-with-icon {
+  padding: 0 16px 0 12px;
+  .mat-icon {
+    height: 18px;
+    width: 18px;
+    font-size: 18px;
+    margin-right: 8px;
+  }
+}
+
+.mat-button-toggle {
+  background-color: white !important;
+  color: app-color(accent) !important;
+}
+
+.mat-button-toggle-checked {
+  background-color: app-color(accent) !important;
+  color: white !important;
+}
+
+.mat-button-toggle-checked .mat-button-toggle-focus-overlay {
+  border-bottom: none !important;
+}

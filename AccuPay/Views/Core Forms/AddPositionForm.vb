@@ -4,16 +4,11 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddPositionForm
 
     Private Const FormEntityName As String = "Position"
-
-    Private _divisionRepository As New DivisionRepository()
-
-    Private _positionRepository As New PositionRepository()
-
-    Private _jobLevelRepository As New JobLevelRepository()
 
     Private _divisions As List(Of Division)
 
@@ -27,12 +22,21 @@ Public Class AddPositionForm
 
     Public Property LastPositionAdded As Position
 
+    Private _divisionRepository As DivisionRepository
+
+    Private _jobLevelRepository As JobLevelRepository
+
+    Private _userActivityRepository As UserActivityRepository
+
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
+        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+
+        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         Me.IsSaved = False
 
@@ -123,12 +127,12 @@ Public Class AddPositionForm
 
     Private Async Function SavePosition(sender As Object) As Task
 
-        Me.LastPositionAdded = Await _positionRepository.SaveAsync(Me._newPosition,
+        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        Me.LastPositionAdded = Await positionRepository.SaveAsync(Me._newPosition,
                                                                    organizationId:=z_OrganizationID,
                                                                     divisionId:=Me._newPosition.DivisionID.Value)
 
-        Dim repo As New UserActivityRepository
-        repo.RecordAdd(z_User, FormEntityName, Me._newPosition.RowID.Value, z_OrganizationID)
+        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newPosition.RowID.Value, z_OrganizationID)
 
         Me.IsSaved = True
 

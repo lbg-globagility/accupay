@@ -1,0 +1,9 @@
+<h1>Edit Salary</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-salary-form
+    [salary]="salary"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-salary-form>
+</ng-container>

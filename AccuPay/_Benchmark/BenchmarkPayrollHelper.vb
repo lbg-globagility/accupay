@@ -3,15 +3,17 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports log4net
+Imports Microsoft.Extensions.DependencyInjection
 
 Namespace Benchmark
 
     Public Class BenchmarkPayrollHelper
 
-        Private _productRepository As ProductRepository
         Private _loanScheduleRepository As LoanScheduleRepository
+        Private _productRepository As ProductRepository
 
         Private _pagibigLoanId As Integer
         Private _sssLoanId As Integer
@@ -38,8 +40,9 @@ Namespace Benchmark
 
         Private Sub New()
 
-            _loanScheduleRepository = New LoanScheduleRepository()
-            _productRepository = New ProductRepository()
+            _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+
+            _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
         End Sub
 
@@ -50,13 +53,14 @@ Namespace Benchmark
 
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
-            Return Await Data.Helpers.PayrollTools.GetOrCreateEmployeeEcola(
-                                                employeeId:=employeeId,
-                                                organizationId:=z_OrganizationID,
-                                                userId:=z_User,
-                                                timePeriod:=timePeriod,
-                                                allowanceFrequency:=Allowance.FREQUENCY_DAILY,
-                                                amount:=0)
+            Dim productService = MainServiceProvider.GetRequiredService(Of ProductService)
+            Return Await productService.GetOrCreateEmployeeEcola(
+                                            employeeId:=employeeId,
+                                            organizationId:=z_OrganizationID,
+                                            userId:=z_User,
+                                            timePeriod:=timePeriod,
+                                            allowanceFrequency:=Allowance.FREQUENCY_DAILY,
+                                            amount:=0)
 
         End Function
 
