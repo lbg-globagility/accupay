@@ -1,4 +1,4 @@
-﻿Imports AccuPay.Data
+﻿Imports AccuPay.Data.Entities
 Imports Femiani.Forms.UI.Input
 
 Public Class OverTimeForm
@@ -208,7 +208,7 @@ Public Class OverTimeForm
 
         param(12, 1) = imageobj
 
-        param(13, 1) = If(OTStatusString = Nothing, Entities.Overtime.StatusPending, OTStatusString)
+        param(13, 1) = If(OTStatusString = Nothing, Overtime.StatusPending, OTStatusString)
 
         Return _
                 EXEC_INSUPD_PROCEDURE(param,

@@ -2,7 +2,6 @@
 
 Imports System.IO
 Imports System.Threading.Tasks
-Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -10,7 +9,6 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports FlashControlV71
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -554,10 +552,10 @@ Public Class TimeLogsForm2
                 ).ToList()
     End Function
 
-    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Threading.Tasks.Task(Of List(Of Entities.Employee))
+    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Task(Of List(Of Employee))
 
         If logsGroupedByEmployee.Count < 1 Then
-            Return New List(Of Entities.Employee)
+            Return New List(Of Employee)
         End If
 
         Dim employeeNumbersArray = logsGroupedByEmployee.Select(Function(x) x.Key).ToArray()
@@ -761,10 +759,10 @@ Public Class TimeLogsForm2
             End Get
         End Property
 
-        Public ReadOnly Property ToTimeLog As Entities.TimeLog
+        Public ReadOnly Property ToTimeLog As TimeLog
             Get
                 If _timeLog Is Nothing Then
-                    _timeLog = New Entities.TimeLog With {
+                    _timeLog = New TimeLog With {
                         .RowID = RowID,
                         .EmployeeID = EmployeeID,
                         .OrganizationID = z_OrganizationID,
