@@ -10,6 +10,7 @@ Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports FlashControlV71
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -492,7 +493,7 @@ Public Class TimeLogsForm2
         logs = logs.OrderBy(Function(l) l.DateTime).ToList
 
         Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
-        Dim employees As List(Of Entities.Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
+        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
 
         Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
         Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
@@ -503,10 +504,10 @@ Public Class TimeLogsForm2
 
         If _useShiftSchedulePolicy Then
 
-            Dim employeeShifts As List(Of Entities.EmployeeDutySchedule) =
+            Dim employeeShifts As List(Of EmployeeDutySchedule) =
                     Await GetEmployeeDutyShifts(datePeriod)
 
-            Dim employeeOvertimes As List(Of Entities.Overtime) =
+            Dim employeeOvertimes As List(Of Overtime) =
                     Await GetEmployeeOvertime(datePeriod)
 
             timeAttendanceHelper = New TimeAttendanceHelperNew(logs,
@@ -517,7 +518,7 @@ Public Class TimeLogsForm2
                                                                userId:=z_User)
         Else
 
-            Dim employeeShifts As List(Of Entities.ShiftSchedule) =
+            Dim employeeShifts As List(Of ShiftSchedule) =
                     Await GetEmployeeShifts(datePeriod)
 
             timeAttendanceHelper = New TimeAttendanceHelper(logs,
@@ -531,7 +532,7 @@ Public Class TimeLogsForm2
         Return timeAttendanceHelper
     End Function
 
-    Private Async Function GetEmployeeShifts(timePeriod As TimePeriod) As Task(Of List(Of Entities.ShiftSchedule))
+    Private Async Function GetEmployeeShifts(timePeriod As TimePeriod) As Task(Of List(Of ShiftSchedule))
 
         Return (Await _shiftScheduleRepository.
                         GetByDatePeriodAsync(z_OrganizationID, timePeriod)
@@ -539,14 +540,14 @@ Public Class TimeLogsForm2
     End Function
 
     'new shift table
-    Private Async Function GetEmployeeDutyShifts(timePeriod As TimePeriod) As Task(Of List(Of Entities.EmployeeDutySchedule))
+    Private Async Function GetEmployeeDutyShifts(timePeriod As TimePeriod) As Task(Of List(Of EmployeeDutySchedule))
 
         Return (Await _employeeDutyScheduleRepository.
                         GetByDatePeriodAsync(z_OrganizationID, timePeriod)
                         ).ToList()
     End Function
 
-    Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Entities.Overtime))
+    Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Overtime))
 
         Return (Await _overtimeRepository.
                         GetByDatePeriodAsync(z_OrganizationID, timePeriod)
@@ -575,18 +576,18 @@ Public Class TimeLogsForm2
 
         Private Const CUSTOM_SHORT_TIME_FORMAT As String = "HH:mm"
         Public Property RowID As Integer
-        Public Property ShiftSchedule As Entities.EmployeeDutySchedule
+        Public Property ShiftSchedule As EmployeeDutySchedule
         Public Property DateIn As Date
 
-        Private _timeLog As Entities.TimeLog
-        Private _employee As Entities.Employee
+        Private _timeLog As TimeLog
+        Private _employee As Employee
         Private _dateOut, origDateIn, origDateOut As Date
         Private origTimeIn, origTimeOut As String
         Private _dateOutDisplay As Date?
         Private _timeIn, _timeOut As String
         Private _branchId, origBranchId As Integer?
 
-        Sub New(timeLog As Entities.TimeLog)
+        Sub New(timeLog As TimeLog)
             _timeLog = timeLog
 
             With _timeLog
@@ -619,8 +620,11 @@ Public Class TimeLogsForm2
 
         End Sub
 
-        Sub New(employee As Entities.Employee, d As Date)
+        Sub New(employee As Employee, d As Date)
             _employee = employee
+
+            origBranchId = employee.BranchID
+            BranchID = employee.BranchID
 
             origDateIn = d
             DateIn = d
@@ -645,6 +649,12 @@ Public Class TimeLogsForm2
         Public ReadOnly Property FullName As String
             Get
                 Return If(_timeLog?.Employee?.FullNameWithMiddleInitialLastNameFirst, _employee.FullNameWithMiddleInitialLastNameFirst)
+            End Get
+        End Property
+
+        Public ReadOnly Property EmployeeBranchID As Integer?
+            Get
+                Return If(_timeLog?.Employee?.BranchID, _employee.BranchID)
             End Get
         End Property
 
@@ -888,11 +898,12 @@ Public Class TimeLogsForm2
         Dim timeLogRepositoryQuery = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
         Dim existingRecords = Await timeLogRepositoryQuery.
             GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(toSaveListEmployeeIDs, datePeriod)
+        addDefaultBranchIDs(existingRecords)
         Dim oldRecords = existingRecords.CloneJson()
 
-        Dim addedTimeLogs As New List(Of Entities.TimeLog)
-        Dim updatedTimeLogs As New List(Of Entities.TimeLog)
-        Dim deletedTimeLogs As New List(Of Entities.TimeLog)
+        Dim addedTimeLogs As New List(Of TimeLog)
+        Dim updatedTimeLogs As New List(Of TimeLog)
+        Dim deletedTimeLogs As New List(Of TimeLog)
 
         For Each model In toSaveList
             Dim seek = existingRecords.
@@ -930,6 +941,9 @@ Public Class TimeLogsForm2
                 updatedTimeLogs.Add(timeLog)
             ElseIf Not exists And model.IsValidToSave Then
                 model.Remove()
+                If model.BranchID Is Nothing Then
+                    model.BranchID = model.EmployeeBranchID
+                End If
                 Dim addedTimeLog = model.ToTimeLog
                 'addedTimeLog.RowID = Nothing
                 addedTimeLog.RowID = Nothing
@@ -996,6 +1010,16 @@ Public Class TimeLogsForm2
             MessageBox.Show(errMsg, "Help", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
 
+    End Sub
+
+    Private Sub addDefaultBranchIDs(records As IEnumerable(Of TimeLog))
+        For Each record In records
+
+            If record.BranchID Is Nothing Then
+                record.BranchID = record.Employee?.BranchID
+            End If
+
+        Next
     End Sub
 
     Private Sub CreateUserActivityRecords(oldRecords As IEnumerable(Of TimeLog), addedTimeLogs As List(Of TimeLog), updatedTimeLogs As List(Of TimeLog), deletedTimeLogs As List(Of TimeLog))
@@ -1243,7 +1267,7 @@ Public Class TimeLogsForm2
 
         Dim dateCreated = Date.Now
 
-        Dim timeLogs As New List(Of Entities.TimeLog)
+        Dim timeLogs As New List(Of TimeLog)
         For Each timeLogList In parsedTimeLogsGroupedByEmployee
             Dim employee = employees.
                 Where(Function(et) et.EmployeeNo = timeLogList.Key).
@@ -1255,12 +1279,13 @@ Public Class TimeLogsForm2
             End If
 
             For Each timeLog In timeLogList
-                Dim t = New Entities.TimeLog() With {
+                Dim t = New TimeLog() With {
                     .OrganizationID = z_OrganizationID,
                     .EmployeeID = employee.RowID,
                     .Created = dateCreated,
                     .CreatedBy = z_User,
-                    .LogDate = timeLog.DateOccurred
+                    .LogDate = timeLog.DateOccurred,
+                    .BranchID = employee.BranchID
                 }
 
                 If Not String.IsNullOrWhiteSpace(timeLog.TimeIn) Then
