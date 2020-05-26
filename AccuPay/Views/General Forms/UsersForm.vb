@@ -148,122 +148,6 @@ Public Class UsersForm
 
     Dim dontUpdate As SByte = 0
 
-    Private Sub btnSave_Click(sender As Object, e As EventArgs)
-        If isNew Then
-            Z_ErrorProvider.Dispose()
-
-            If txtLastName.Text.Trim.Length = 0 Or txtFirstName.Text.Trim.Length = 0 Or txtUserName.Text.Trim.Length = 0 Or txtPassword.Text.Trim.Length = 0 _
-                Or txtConfirmPassword.Text.Trim.Length = 0 Or cboxposition.Text.Trim.Length = 0 Then
-                If Not SetWarningIfEmpty(txtLastName) And SetWarningIfEmpty(txtFirstName) And SetWarningIfEmpty(txtUserName) And
-                    SetWarningIfEmpty(txtPassword) And SetWarningIfEmpty(txtConfirmPassword) And SetWarningIfEmpty(cboxposition) Then
-
-                End If
-            Else
-
-                Dim position As String = getStringItem("Select RowID From Position Where PositionName = '" & cboxposition.Text & "' And OrganizationID = " & z_OrganizationID & "")
-                Dim getposition As Integer = Val(position) 'ValNoComma(cboxposition.SelectedValue)
-
-                Dim status As String = "Active"
-                Dim userid As String = getStringItem("Select UserID from user Where UserID = '" & EncryptData(txtUserName.Text) & "' AND OrganizationID = '" & z_OrganizationID & "'")
-                Dim getuserid As String = userid
-                If getuserid = EncryptData(txtUserName.Text) Then
-                    SetWarning(txtUserName, "User ID Already exist.")
-                    'myBalloonWarn("User ID Already exist.", "Duplicate", txtUserName, , -65)
-                Else
-                    If txtPassword.Text = txtConfirmPassword.Text Then
-                        I_UsersProc(txtLastName.Text,
-                                    txtFirstName.Text,
-                                    txtMiddleName.Text,
-                               EncryptData(txtUserName.Text),
-                                    EncryptData(txtConfirmPassword.Text),
-                               z_OrganizationID,
-                                    getposition,
-                                    Date.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                               z_User,
-                                    z_User,
-                                    Date.Now.ToString("yyyy-MM-dd HH:mm:ss"),
-                                    status,
-                                    txtEmailAdd.Text,
-                                    UserLevelComboBox.SelectedIndex)
-                        'audittrail(
-
-                        myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
-                        FillUsers()
-                        btnNew.Enabled = True
-                        dgvUserList.Enabled = True
-                    Else
-                        SetWarning(txtConfirmPassword, "Password does not match.")
-                        'myBalloonWarn("Password does not match", "Not Match", txtConfirmPassword, , -65)
-                    End If
-
-                End If
-
-            End If
-        Else
-
-            If txtConfirmPassword.Tag = Nothing Then
-                SetWarning(txtConfirmPassword, "Password mismatch.")
-                'myBalloonWarn("Password mismatch", "Incorrect data", txtConfirmPassword, , -65)
-            Else
-
-                Dim enc_userid = New EncryptString(txtUserName.Text.Trim).ResultValue
-
-                Dim enc_pword = New EncryptString(txtConfirmPassword.Tag).ResultValue
-
-                If dontUpdate = 1 Then
-                    Exit Sub
-                End If
-
-                Dim position As String = getStringItem("SELECT RowID FROM Position WHERE PositionName = '" & cmbPosition.Text & "' AND OrganizationID = " & z_OrganizationID & ";")
-
-                Dim getposition As Integer = 0 'Val(position)
-
-                'If getposition = 0 Then
-
-                '    Dim position_count As String = getStringItem("Select COUNT(RowID) From Position Where PositionName = '" & cmbPosition.Text & "';")
-
-                '    If position_count <> 0 Then
-
-                '        If position_count = 1 Then
-
-                '            getposition = getStringItem("Select RowID From Position Where PositionName = '" & cmbPosition.Text & "';")
-
-                '        ElseIf position_count > 1 Then
-
-                '            getposition = getStringItem("SELECT PositionID FROM user WHERE RowID = '" & z_User & "';")
-
-                '        End If
-
-                '    End If
-
-                'End If
-                getposition = cboxposition.SelectedValue
-                Dim status As String = "Active"
-                U_UsersProc(Val(dgvUserList.CurrentRow.Cells(c_rowid.Index).Value),
-                                        txtLastName.Text,
-                                        txtFirstName.Text,
-                                        txtMiddleName.Text,
-                                        getposition,
-                                        Today.Date,
-                                        z_User,
-                                        z_User,
-                                        Today.Date,
-                                        status,
-                                        txtEmailAdd.Text,
-                                        enc_userid,
-                                        enc_pword,
-                                        UserLevelComboBox.SelectedIndex)
-
-                'SetBalloonTip("Updated, "Successfully Save.")
-                myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
-                FillUsers()
-
-            End If
-
-        End If
-
-    End Sub
-
     Private Function ValidateRequiredFields() As Boolean
         Dim requiredControls = grpDetails.Controls.OfType(Of Control).
             Where(Function(e) TypeOf e Is TextBox Or TypeOf e Is ComboBox).
@@ -300,8 +184,8 @@ Public Class UsersForm
 
         Dim usernameExistsAlready = Sub()
                                         Dim userIDErrorMessage = "User ID Already exist."
-                                        SetWarning(txtUserName, userIDErrorMessage)
                                         myBalloon(userIDErrorMessage, "Save failed", lblSaveMsg, , -100)
+                                        txtUserName.Focus()
                                         enableSaveButton()
                                     End Sub
 
@@ -318,7 +202,8 @@ Public Class UsersForm
         Dim password = EncryptData(txtPassword.Text)
 
         If Not passwordConfirmed Then
-            SetWarning(txtConfirmPassword, "Password does not match.")
+            myBalloon("Password does not match.", "Save failed", lblSaveMsg, , -100)
+            txtConfirmPassword.Focus()
             enableSaveButton()
             Return
         End If

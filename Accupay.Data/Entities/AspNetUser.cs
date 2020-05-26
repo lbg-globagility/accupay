@@ -8,6 +8,7 @@ namespace AccuPay.Data.Entities
         public AspNetUser()
         {
             Id = Guid.NewGuid();
+            Status = AspNetUserStatus.Pending;
         }
 
         public string FirstName { get; set; }
@@ -15,5 +16,7 @@ namespace AccuPay.Data.Entities
         public string LastName { get; set; }
 
         public int? OrganizationId { get; set; }
+
+        public AspNetUserStatus Status { get; set; }
     }
 }

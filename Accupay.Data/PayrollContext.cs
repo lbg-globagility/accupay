@@ -3,6 +3,7 @@ using AccuPay.Data.Entities;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System;
 
 namespace AccuPay.Data
@@ -141,6 +142,10 @@ namespace AccuPay.Data
             modelBuilder.Entity<AspNetUser>()
                 .Property(t => t.Id)
                 .HasConversion(new GuidToBigEndianBytesConverter());
+
+            modelBuilder.Entity<AspNetUser>()
+                .Property(t => t.Status)
+                .HasConversion(new EnumToStringConverter<AspNetUserStatus>());
 
             modelBuilder.Entity<AspNetRole>()
                 .Property(t => t.Id)

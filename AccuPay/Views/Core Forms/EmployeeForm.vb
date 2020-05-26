@@ -56,7 +56,6 @@ Public Class EmployeeForm
     Dim empchklist_columns As New AutoCompleteStringCollection
 
     Sub tbpempchklist_Enter(sender As Object, e As EventArgs) Handles tbpempchklist.Enter
-
         InfoBalloon(, , txtTIN, , , 1)
         InfoBalloon(, , txtPIN, , , 1)
         InfoBalloon(, , txtHDMF, , , 1)
@@ -685,7 +684,12 @@ Public Class EmployeeForm
     Private Sub Print201Report()
         Dim employeeID = ObjectUtils.ToNullableInteger(publicEmpRowID)
 
-        If employeeID Is Nothing Then Return
+        If employeeID Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        End If
 
         Dim provider = New Employee201ReportProvider(employeeID)
         provider.Run()
@@ -699,12 +703,20 @@ Public Class EmployeeForm
         RemoveHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
         'dgvEmp.CurrentRow.Cells("RowID").Value
-        If (tsbtnNewEmp.Enabled = False AndAlso
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
-                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
-           (tsbtnNewEmp.Enabled = True AndAlso
-            EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
-                Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
+        If (tsbtnNewEmp.Enabled = True AndAlso
+            (dgvEmp.CurrentRow Is Nothing OrElse
+            String.IsNullOrWhiteSpace(dgvEmp.CurrentRow.Cells("RowID").Value))) Then
+            AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
+
+            WarnBalloon("Please select an employee to update.", "No employee selected", lblforballoon, 0, -69)
+            Return
+
+        ElseIf (tsbtnNewEmp.Enabled = False AndAlso
+        EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+            Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & ");") = 1) OrElse
+       (tsbtnNewEmp.Enabled = True AndAlso
+        EXECQUER("SELECT EXISTS(SELECT RowID FROM employee WHERE EmployeeID='" &
+            Trim(txtEmpID.Text) & "' AND OrganizationID=" & orgztnID & " AND RowID <> " & dgvEmp.CurrentRow.Cells("RowID").Value & "); ") = 1) Then
             AddHandler dgvEmp.SelectionChanged, AddressOf dgvEmp_SelectionChanged
 
             WarnBalloon("Employee ID has already exist.", "Invalid employee ID", lblforballoon, 0, -69)
@@ -1903,8 +1915,6 @@ Public Class EmployeeForm
 
         paytypestring = EXECQUER("SELECT PayFrequencyType FROM payfrequency pfq LEFT JOIN organization org ON org.PayFrequencyID=pfq.RowID WHERE org.RowID='" & orgztnID & "' LIMIT 1;")
 
-        employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
-
         PrepareFormForUserLevelAuthorizations()
 
         InitializeLaGlobalReportList()
@@ -2102,190 +2112,7 @@ Public Class EmployeeForm
 
                 ElseIf selectedTab Is tbpEmployee Then 'Employee
 
-                    txtNName.Text = If(IsDBNull(.Cells("Column5").Value), "", .Cells("Column5").Value)
-                    txtDivisionName.Text = .Cells("Column7").Value
-
-                    If .Cells("Column6").Value Is Nothing Then
-                        dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
-                    Else
-                        dtpempbdate.Value = Format(CDate(.Cells("Column6").Value), machineShortDateFormat)
-                    End If
-
-                    txtTIN.Text = .Cells("Column10").Value : txtSSS.Text = .Cells("Column11").Value
-                    txtHDMF.Text = .Cells("Column12").Value : txtPIN.Text = .Cells("Column13").Value
-                    txtWorkPhne.Text = .Cells("Column15").Value : txtHomePhne.Text = .Cells("Column16").Value
-                    txtMobPhne.Text = If(IsDBNull(.Cells("Column17").Value), "", .Cells("Column17").Value) : txtHomeAddr.Text = .Cells("Column18").Value
-                    txtemail.Text = .Cells("Column14").Value
-
-                    Dim payFrequency = _payFrequencies.Where(Function(p) p.Type = .Cells("Column22").Value).FirstOrDefault
-                    If payFrequency Is Nothing Then
-                        cboPayFreq.SelectedIndex = -1
-                    Else
-                        cboPayFreq.SelectedIndex = _payFrequencies.IndexOf(payFrequency)
-                    End If
-
-                    RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
-
-                    If .Cells("Column20").Value = "" Then
-                        cboEmpStat.SelectedIndex = -1
-                        cboEmpStat.Text = ""
-                    Else
-                        cboEmpStat.Text = .Cells("Column20").Value
-                    End If
-
-                    reloadPositName(.Cells("Column29").Value)  ': cboPosit.Text = .Cells("Column8").Value
-
-                    cboPosit.Text = .Cells("Column8").Value
-
-                    AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
-
-                    If IsDBNull(.Cells("Column9").Value) OrElse .Cells("Column9").Value = "" Then
-                        cboSalut.SelectedIndex = -1
-                        cboSalut.Text = ""
-                    Else
-                        cboSalut.Text = .Cells("Column9").Value
-                    End If
-                    '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
-                    '"Creation date" = "Column25" : "Created by" = "Column26"
-                    '"Last update" = "Column27" : "Last Update by" = "Column28"
-                    If .Cells("Column31").Value = "" Then
-                        cboMaritStat.SelectedIndex = -1
-                        cboMaritStat.Text = ""
-                    Else
-                        cboMaritStat.Text = .Cells("Column31").Value
-                    End If
-
-                    cboEmpType.SelectedIndex = -1
-                    cboEmpType.Text = ""
-
-                    cboEmpType.Text = .Cells("Column34").Value
-
-                    txtNumDepen.Text = Val(.Cells("Column32").Value)
-
-                    Dim radioGender As RadioButton
-                    If .Cells("Column19").Value = "Male" Then
-                        rdMale.Checked = True
-                        radioGender = rdMale
-                    Else
-                        rdFMale.Checked = True
-                        radioGender = rdFMale
-                    End If
-
-                    Gender_CheckedChanged(radioGender, New EventArgs)
-
-                    noCurrCellChange = 0
-                    dtpempstartdate.Value = CDate(.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
-
-                    pbemppic.Image = Nothing
-                    pbemppic.Image = EmployeeImage
-                    txtEmpID.Text = If(IsDBNull(.Cells("Column1").Value), "", .Cells("Column1").Value)
-                    txtFName.Text = If(IsDBNull(.Cells("Column2").Value), "", .Cells("Column2").Value)
-                    txtMName.Text = If(IsDBNull(.Cells("Column3").Value), "", .Cells("Column3").Value)
-                    txtLName.Text = If(IsDBNull(.Cells("Column4").Value), "", .Cells("Column4").Value)
-                    txtSName.Text = If(IsDBNull(.Cells("Column21").Value), "", .Cells("Column21").Value)
-
-                    Dim case_one As Integer = -1
-                    If case_one <> sameEmpID Then
-                        case_one = sameEmpID
-                        VIEW_employeedependents(.Cells("RowID").Value)
-                        dependentitemcount = dgvDepen.RowCount - 1
-                    ElseIf case_one = sameEmpID Then
-                        VIEW_employeedependents(.Cells("RowID").Value)
-                    Else
-                        If dgvDepen.RowCount = 1 Then
-                        Else
-
-                            If dgvDepen.CurrentRow.Index >= dependentitemcount Then
-                                ''MsgBox("If")
-                                If dependentitemcount = -1 Then
-                                    VIEW_employeedependents(.Cells("RowID").Value)
-                                    dependentitemcount = dgvDepen.RowCount - 1
-                                End If
-                            Else
-                                ''MsgBox("else")
-                                dgvDepen.Rows.Clear()
-                                VIEW_employeedependents(.Cells("RowID").Value)
-                                dependentitemcount = dgvDepen.RowCount - 1
-                            End If
-
-                        End If
-                    End If
-
-                    If if_sysowner_is_benchmark Then
-
-                        LeaveAllowanceTextBox.Text = .Cells("Column36").Value
-                        LeaveBalanceTextBox.Text = .Cells("Column35").Value
-
-                    End If
-
-                    txtvlallow.Text = .Cells("Column36").Value
-                    txtslallow.Text = .Cells("slallowance").Value
-                    txtmlallow.Text = .Cells("mlallowance").Value
-
-                    txtvlbal.Text = .Cells("Column35").Value
-                    txtslbal.Text = .Cells("slbalance").Value
-                    txtmlbal.Text = .Cells("mlbalance").Value
-
-                    chkutflag.Checked = If(.Cells("Column23").Value = 1, True, False)
-                    chkotflag.Checked = If(.Cells("Column24").Value = 1, True, False)
-
-                    chkAlphaListExempt.Checked = If(.Cells("AlphaExempted").Value = 0, True, False)
-                    txtWorkDaysPerYear.Text = .Cells("WorkDaysPerYear").Value
-                    cboDayOfRest.Text = String.Empty
-                    cboDayOfRest.Text = .Cells("DayOfRest").Value
-                    txtATM.Text = If(IsDBNull(.Cells("ATMNo").Value), "", .Cells("ATMNo").Value)
-                    txtothrallow.Text = .Cells("OtherLeaveAllowance").Value
-                    txtothrbal.Text = .Cells("OtherLeaveBalance").Value
-                    If String.IsNullOrWhiteSpace(txtATM.Text) Then
-                        rdbCash.Checked = True
-                        rdbDirectDepo.Checked = False
-                    Else
-                        rdbCash.Checked = False
-                        rdbDirectDepo.Checked = True
-                    End If
-
-                    rdbDirectDepo_CheckedChanged(rdbDirectDepo, New EventArgs)
-
-                    chkcalcHoliday.Checked = Convert.ToInt16(.Cells("CalcHoliday").Value) 'If(.Cells("CalcHoliday").Value = "Y", True, False)
-                    chkcalcSpclHoliday.Checked = Convert.ToInt16(.Cells("CalcSpecialHoliday").Value) 'If(.Cells("CalcSpecialHoliday").Value = "Y", True, False)
-                    chkcalcNightDiff.Checked = Convert.ToInt16(.Cells("CalcNightDiff").Value) 'If(.Cells("CalcNightDiff").Value = "Y", True, False)
-                    chkcalcNightDiffOT.Checked = Convert.ToInt16(.Cells("CalcNightDiffOT").Value) 'If(.Cells("CalcNightDiffOT").Value = "Y", True, False)
-                    chkcalcRestDay.Checked = Convert.ToInt16(.Cells("CalcRestDay").Value) 'If(.Cells("CalcRestDay").Value = "Y", True, False)
-                    chkcalcRestDayOT.Checked = Convert.ToInt16(.Cells("CalcRestDayOT").Value) 'If(.Cells("CalcRestDayOT").Value = "Y", True, False)
-
-                    chkbxRevealInPayroll.Checked =
-                        (Not CBool(Convert.ToInt16(.Cells("RevealInPayroll").Value)))
-
-                    txtUTgrace.Text = .Cells("LateGracePeriod").Value 'AgencyName
-                    cboAgency.Text = .Cells("AgencyName").Value
-
-                    Dim dataRow = DirectCast(.Tag, DataRow)
-                    If dataRow IsNot Nothing Then
-                        Dim hasDateEvaluated = Not IsDBNull(dataRow("DateEvaluated"))
-                        dtpEvaluationDate.Value = If(hasDateEvaluated, dataRow("DateEvaluated"), dtpEvaluationDate.MinDate)
-                        dtpEvaluationDate.Checked = hasDateEvaluated
-
-                        Dim hasDateRegularized = Not IsDBNull(dataRow("DateRegularized"))
-                        dtpRegularizationDate.Value = If(hasDateRegularized, dataRow("DateRegularized"), dtpRegularizationDate.MinDate)
-                        dtpRegularizationDate.Checked = hasDateRegularized
-                    End If
-
-                    Dim branchId = .Cells("BranchID").Value
-                    Dim branch = _branches.
-                        Where(Function(b) Nullable.Equals(b.RowID, branchId)).
-                        FirstOrDefault
-
-                    Dim branchIndex As Integer = -1
-
-                    If branch IsNot Nothing Then
-                        branchIndex = _branches.IndexOf(branch)
-                    End If
-
-                    BranchComboBox.SelectedIndex = branchIndex
-
-                    BPIinsuranceText.Text = .Cells("BPIInsuranceColumn").Value
-
-                    AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+                    SetEmployee()
 
                 ElseIf selectedTab Is tbpAwards Then
                     Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
@@ -2377,6 +2204,193 @@ Public Class EmployeeForm
             End Select
         End If
         listofEditDepen.Clear()
+    End Sub
+
+    Private Sub SetEmployee()
+        txtNName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column5").Value), "", dgvEmp.CurrentRow.Cells("Column5").Value)
+        txtDivisionName.Text = dgvEmp.CurrentRow.Cells("Column7").Value
+
+        If dgvEmp.CurrentRow.Cells("Column6").Value Is Nothing Then
+            dtpempbdate.Value = Format(CDate(dbnow), machineShortDateFormat)
+        Else
+            dtpempbdate.Value = Format(CDate(dgvEmp.CurrentRow.Cells("Column6").Value), machineShortDateFormat)
+        End If
+
+        txtTIN.Text = dgvEmp.CurrentRow.Cells("Column10").Value : txtSSS.Text = dgvEmp.CurrentRow.Cells("Column11").Value
+        txtHDMF.Text = dgvEmp.CurrentRow.Cells("Column12").Value : txtPIN.Text = dgvEmp.CurrentRow.Cells("Column13").Value
+        txtWorkPhne.Text = dgvEmp.CurrentRow.Cells("Column15").Value : txtHomePhne.Text = dgvEmp.CurrentRow.Cells("Column16").Value
+        txtMobPhne.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column17").Value), "", dgvEmp.CurrentRow.Cells("Column17").Value) : txtHomeAddr.Text = dgvEmp.CurrentRow.Cells("Column18").Value
+        txtemail.Text = dgvEmp.CurrentRow.Cells("Column14").Value
+
+        Dim payFrequency = _payFrequencies.Where(Function(p) p.Type = dgvEmp.CurrentRow.Cells("Column22").Value).FirstOrDefault
+        If payFrequency Is Nothing Then
+            cboPayFreq.SelectedIndex = -1
+        Else
+            cboPayFreq.SelectedIndex = _payFrequencies.IndexOf(payFrequency)
+        End If
+
+        RemoveHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
+
+        If dgvEmp.CurrentRow.Cells("Column20").Value = "" Then
+            cboEmpStat.SelectedIndex = -1
+            cboEmpStat.Text = ""
+        Else
+            cboEmpStat.Text = dgvEmp.CurrentRow.Cells("Column20").Value
+        End If
+
+        reloadPositName(dgvEmp.CurrentRow.Cells("Column29").Value)  ': cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
+
+        cboPosit.Text = dgvEmp.CurrentRow.Cells("Column8").Value
+
+        AddHandler cboPosit.SelectedIndexChanged, AddressOf cboPosit_SelectedIndexChanged
+
+        If IsDBNull(dgvEmp.CurrentRow.Cells("Column9").Value) OrElse dgvEmp.CurrentRow.Cells("Column9").Value = "" Then
+            cboSalut.SelectedIndex = -1
+            cboSalut.Text = ""
+        Else
+            cboSalut.Text = dgvEmp.CurrentRow.Cells("Column9").Value
+        End If
+        '"UndertimeOverride" = "Column23" : "OvertimeOverride" = "Column24"
+        '"Creation date" = "Column25" : "Created by" = "Column26"
+        '"Last update" = "Column27" : "Last Update by" = "Column28"
+        If dgvEmp.CurrentRow.Cells("Column31").Value = "" Then
+            cboMaritStat.SelectedIndex = -1
+            cboMaritStat.Text = ""
+        Else
+            cboMaritStat.Text = dgvEmp.CurrentRow.Cells("Column31").Value
+        End If
+
+        cboEmpType.SelectedIndex = -1
+        cboEmpType.Text = ""
+
+        cboEmpType.Text = dgvEmp.CurrentRow.Cells("Column34").Value
+
+        txtNumDepen.Text = Val(dgvEmp.CurrentRow.Cells("Column32").Value)
+
+        Dim radioGender As RadioButton
+        If dgvEmp.CurrentRow.Cells("Column19").Value = "Male" Then
+            rdMale.Checked = True
+            radioGender = rdMale
+        Else
+            rdFMale.Checked = True
+            radioGender = rdFMale
+        End If
+
+        Gender_CheckedChanged(radioGender, New EventArgs)
+
+        noCurrCellChange = 0
+        dtpempstartdate.Value = CDate(dgvEmp.CurrentRow.Cells("colstartdate").Value) '.ToString.Replace("-", "/")
+
+        pbemppic.Image = Nothing
+        pbemppic.Image = EmployeeImage
+        txtEmpID.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column1").Value), "", dgvEmp.CurrentRow.Cells("Column1").Value)
+        txtFName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column2").Value), "", dgvEmp.CurrentRow.Cells("Column2").Value)
+        txtMName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column3").Value), "", dgvEmp.CurrentRow.Cells("Column3").Value)
+        txtLName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column4").Value), "", dgvEmp.CurrentRow.Cells("Column4").Value)
+        txtSName.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("Column21").Value), "", dgvEmp.CurrentRow.Cells("Column21").Value)
+
+        Dim case_one As Integer = -1
+        If case_one <> sameEmpID Then
+            case_one = sameEmpID
+            VIEW_employeedependents(dgvEmp.CurrentRow.Cells("RowID").Value)
+            dependentitemcount = dgvDepen.RowCount - 1
+        ElseIf case_one = sameEmpID Then
+            VIEW_employeedependents(dgvEmp.CurrentRow.Cells("RowID").Value)
+        Else
+            If dgvDepen.RowCount = 1 Then
+            Else
+
+                If dgvDepen.CurrentRow.Index >= dependentitemcount Then
+                    ''MsgBox("If")
+                    If dependentitemcount = -1 Then
+                        VIEW_employeedependents(dgvEmp.CurrentRow.Cells("RowID").Value)
+                        dependentitemcount = dgvDepen.RowCount - 1
+                    End If
+                Else
+                    ''MsgBox("else")
+                    dgvDepen.Rows.Clear()
+                    VIEW_employeedependents(dgvEmp.CurrentRow.Cells("RowID").Value)
+                    dependentitemcount = dgvDepen.RowCount - 1
+                End If
+
+            End If
+        End If
+
+        If if_sysowner_is_benchmark Then
+
+            LeaveAllowanceTextBox.Text = dgvEmp.CurrentRow.Cells("Column36").Value
+            LeaveBalanceTextBox.Text = dgvEmp.CurrentRow.Cells("Column35").Value
+
+        End If
+
+        txtvlallow.Text = dgvEmp.CurrentRow.Cells("Column36").Value
+        txtslallow.Text = dgvEmp.CurrentRow.Cells("slallowance").Value
+        txtmlallow.Text = dgvEmp.CurrentRow.Cells("mlallowance").Value
+
+        txtvlbal.Text = dgvEmp.CurrentRow.Cells("Column35").Value
+        txtslbal.Text = dgvEmp.CurrentRow.Cells("slbalance").Value
+        txtmlbal.Text = dgvEmp.CurrentRow.Cells("mlbalance").Value
+
+        chkutflag.Checked = If(dgvEmp.CurrentRow.Cells("Column23").Value = 1, True, False)
+        chkotflag.Checked = If(dgvEmp.CurrentRow.Cells("Column24").Value = 1, True, False)
+
+        chkAlphaListExempt.Checked = If(dgvEmp.CurrentRow.Cells("AlphaExempted").Value = 0, True, False)
+        txtWorkDaysPerYear.Text = dgvEmp.CurrentRow.Cells("WorkDaysPerYear").Value
+        cboDayOfRest.Text = String.Empty
+        cboDayOfRest.Text = dgvEmp.CurrentRow.Cells("DayOfRest").Value
+        txtATM.Text = If(IsDBNull(dgvEmp.CurrentRow.Cells("ATMNo").Value), "", dgvEmp.CurrentRow.Cells("ATMNo").Value)
+        txtothrallow.Text = dgvEmp.CurrentRow.Cells("OtherLeaveAllowance").Value
+        txtothrbal.Text = dgvEmp.CurrentRow.Cells("OtherLeaveBalance").Value
+        If String.IsNullOrWhiteSpace(txtATM.Text) Then
+            rdbCash.Checked = True
+            rdbDirectDepo.Checked = False
+        Else
+            rdbCash.Checked = False
+            rdbDirectDepo.Checked = True
+        End If
+
+        rdbDirectDepo_CheckedChanged(rdbDirectDepo, New EventArgs)
+
+        chkcalcHoliday.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcHoliday").Value) 'If(dgvEmp.CurrentRow.Cells("CalcHoliday").Value = "Y", True, False)
+        chkcalcSpclHoliday.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcSpecialHoliday").Value) 'If(dgvEmp.CurrentRow.Cells("CalcSpecialHoliday").Value = "Y", True, False)
+        chkcalcNightDiff.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcNightDiff").Value) 'If(dgvEmp.CurrentRow.Cells("CalcNightDiff").Value = "Y", True, False)
+        chkcalcNightDiffOT.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcNightDiffOT").Value) 'If(dgvEmp.CurrentRow.Cells("CalcNightDiffOT").Value = "Y", True, False)
+        chkcalcRestDay.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcRestDay").Value) 'If(dgvEmp.CurrentRow.Cells("CalcRestDay").Value = "Y", True, False)
+        chkcalcRestDayOT.Checked = Convert.ToInt16(dgvEmp.CurrentRow.Cells("CalcRestDayOT").Value) 'If(dgvEmp.CurrentRow.Cells("CalcRestDayOT").Value = "Y", True, False)
+
+        chkbxRevealInPayroll.Checked =
+            (Not CBool(Convert.ToInt16(dgvEmp.CurrentRow.Cells("RevealInPayroll").Value)))
+
+        txtUTgrace.Text = dgvEmp.CurrentRow.Cells("LateGracePeriod").Value 'AgencyName
+        cboAgency.Text = dgvEmp.CurrentRow.Cells("AgencyName").Value
+
+        Dim dataRow = DirectCast(dgvEmp.CurrentRow.Tag, DataRow)
+        If dataRow IsNot Nothing Then
+            Dim hasDateEvaluated = Not IsDBNull(dataRow("DateEvaluated"))
+            dtpEvaluationDate.Value = If(hasDateEvaluated, dataRow("DateEvaluated"), dtpEvaluationDate.MinDate)
+            dtpEvaluationDate.Checked = hasDateEvaluated
+
+            Dim hasDateRegularized = Not IsDBNull(dataRow("DateRegularized"))
+            dtpRegularizationDate.Value = If(hasDateRegularized, dataRow("DateRegularized"), dtpRegularizationDate.MinDate)
+            dtpRegularizationDate.Checked = hasDateRegularized
+        End If
+
+        Dim branchId = dgvEmp.CurrentRow.Cells("BranchID").Value
+        Dim branch = _branches.
+            Where(Function(b) Nullable.Equals(b.RowID, branchId)).
+            FirstOrDefault
+
+        Dim branchIndex As Integer = -1
+
+        If branch IsNot Nothing Then
+            branchIndex = _branches.IndexOf(branch)
+        End If
+
+        BranchComboBox.SelectedIndex = branchIndex
+
+        BPIinsuranceText.Text = dgvEmp.CurrentRow.Cells("BPIInsuranceColumn").Value
+
+        AddHandler cboEmpStat.TextChanged, AddressOf cboEmpStat_TextChanged
     End Sub
 
     Private Shared Function GetCurrentEmployeeEntity(employeeID As Integer?) As Employee
@@ -2747,6 +2761,8 @@ Public Class EmployeeForm
             dgvEmp.Rows(index).Tag = drow
         Next
         dtemployee.Dispose()
+        employeepix = retAsDatTbl("SELECT e.RowID,COALESCE(e.Image,'') 'Image' FROM employee e WHERE e.OrganizationID=" & orgztnID & " ORDER BY e.RowID DESC;")
+        dgvEmp_SelectionChanged(Nothing, Nothing)
     End Sub
 
     Private Async Sub SimpleEmployeeFilter(queryText As String, Optional dictionary As Dictionary(Of String, Object) = Nothing)
@@ -4608,7 +4624,12 @@ Public Class EmployeeForm
         WorkOrderToolStripMenuItem.Click
 
         Dim employeeRow = dgvEmp.CurrentRow
-        If employeeRow Is Nothing Then Return
+        If employeeRow Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        End If
 
         Dim employeeNumber = employeeRow.Cells(Column1.Name).Value
 
@@ -4620,6 +4641,21 @@ Public Class EmployeeForm
                                         IncludeBranch().
                                         ByEmployeeNumber(employeeNumber).
                                         FirstOrDefaultAsync(z_OrganizationID)
+        If employee Is Nothing Then
+
+            MessageBoxHelper.Warning("No selected employee.")
+            Return
+
+        ElseIf sender Is EmploymentContractToolStripMenuItem AndAlso
+            (String.IsNullOrWhiteSpace(employee.SssNo) OrElse
+            String.IsNullOrWhiteSpace(employee.PhilHealthNo) OrElse
+            String.IsNullOrWhiteSpace(employee.HdmfNo) OrElse
+            String.IsNullOrWhiteSpace(employee.TinNo)) Then
+
+            MessageBoxHelper.Warning("Employee needs to have SSS, Philhealth, PAGIBIG and TIN numbers encoded in his profile.")
+            Return
+
+        End If
 
         Dim selectedReport = _laGlobalEmployeeReports(sender.Name)
 

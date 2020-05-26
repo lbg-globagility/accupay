@@ -687,7 +687,7 @@ Public Class EmployeeAllowanceForm
     Private Sub Cboallowfreq_SelectedValueChanged(sender As Object, e As EventArgs) Handles cboallowfreq.SelectedValueChanged
         If _currentAllowance Is Nothing Then Return
 
-        Dim showEndDate = Not cboallowfreq.Text = Data.Entities.Allowance.FREQUENCY_ONE_TIME
+        Dim showEndDate = Not cboallowfreq.Text = Allowance.FREQUENCY_ONE_TIME
 
         lblEndDate.Visible = showEndDate
         dtpallowenddate.Visible = showEndDate

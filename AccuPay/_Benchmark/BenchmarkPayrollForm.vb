@@ -201,7 +201,7 @@ Public Class BenchmarkPayrollForm
                                 GetAllActiveWithoutPayrollAsync(_currentPayPeriod.RowID.Value,
                                                                 z_OrganizationID)).ToList
         Else
-            _employees = New List(Of Entities.Employee)
+            _employees = New List(Of Employee)
         End If
 
         Await FilterEmployeeGridView()
@@ -385,7 +385,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedEmployee() As Entities.Employee
+    Private Function GetSelectedEmployee() As Employee
 
         If EmployeesGridView.CurrentRow Is Nothing Then
 
@@ -596,7 +596,7 @@ Public Class BenchmarkPayrollForm
         SummaryGroupBox.Enabled = True
     End Sub
 
-    Private Function GetSelectedDeduction() As Entities.Product
+    Private Function GetSelectedDeduction() As Product
 
         If DeductionComboBox.SelectedIndex < 0 OrElse
             DeductionComboBox.SelectedIndex >= _benchmarkPayrollHelper.DeductionList.Count Then
@@ -609,7 +609,7 @@ Public Class BenchmarkPayrollForm
 
     End Function
 
-    Private Function GetSelectedIncome() As Entities.Product
+    Private Function GetSelectedIncome() As Product
 
         If OtherIncomeComboBox.SelectedIndex < 0 OrElse
             OtherIncomeComboBox.SelectedIndex >= _benchmarkPayrollHelper.IncomeList.Count Then

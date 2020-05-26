@@ -74,15 +74,6 @@ Partial Class UsersForm
         Me.Label13 = New System.Windows.Forms.Label()
         Me.Label12 = New System.Windows.Forms.Label()
         Me.dgvUserList = New System.Windows.Forms.DataGridView()
-        Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_fname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_Mname = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.c_emailadd = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserLevelDescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.UserLevelColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.UserPrivilegeLabel = New System.Windows.Forms.Label()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -95,6 +86,15 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn10 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_lname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_fname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Mname = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_emailadd = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_Position = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserLevelDescriptionColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_userid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.c_rowid = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.UserLevelColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.ToolStrip3.SuspendLayout()
         CType(Me.dgvPrivilege, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.grpDetails.SuspendLayout()
@@ -596,7 +596,7 @@ Partial Class UsersForm
         Me.dgvUserList.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
         Me.dgvUserList.BackgroundColor = System.Drawing.Color.White
         Me.dgvUserList.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvUserList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_userid, Me.c_Position, Me.c_lname, Me.c_fname, Me.c_Mname, Me.c_rowid, Me.c_emailadd, Me.UserLevelDescriptionColumn, Me.UserLevelColumn})
+        Me.dgvUserList.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_lname, Me.c_fname, Me.c_Mname, Me.c_emailadd, Me.c_Position, Me.UserLevelDescriptionColumn, Me.c_userid, Me.c_rowid, Me.UserLevelColumn})
         Me.dgvUserList.Location = New System.Drawing.Point(12, 243)
         Me.dgvUserList.Name = "dgvUserList"
         Me.dgvUserList.ReadOnly = True
@@ -604,70 +604,6 @@ Partial Class UsersForm
         Me.dgvUserList.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.dgvUserList.Size = New System.Drawing.Size(647, 304)
         Me.dgvUserList.TabIndex = 62
-        '
-        'c_userid
-        '
-        Me.c_userid.DataPropertyName = "UserID"
-        Me.c_userid.HeaderText = "Username"
-        Me.c_userid.Name = "c_userid"
-        Me.c_userid.ReadOnly = True
-        '
-        'c_Position
-        '
-        Me.c_Position.DataPropertyName = "PositionName"
-        Me.c_Position.HeaderText = "Position"
-        Me.c_Position.Name = "c_Position"
-        Me.c_Position.ReadOnly = True
-        '
-        'c_lname
-        '
-        Me.c_lname.DataPropertyName = "LastName"
-        Me.c_lname.HeaderText = "Last Name"
-        Me.c_lname.Name = "c_lname"
-        Me.c_lname.ReadOnly = True
-        '
-        'c_fname
-        '
-        Me.c_fname.DataPropertyName = "FirstName"
-        Me.c_fname.HeaderText = "First Name"
-        Me.c_fname.Name = "c_fname"
-        Me.c_fname.ReadOnly = True
-        '
-        'c_Mname
-        '
-        Me.c_Mname.DataPropertyName = "MiddleName"
-        Me.c_Mname.HeaderText = "Middle Name"
-        Me.c_Mname.Name = "c_Mname"
-        Me.c_Mname.ReadOnly = True
-        '
-        'c_rowid
-        '
-        Me.c_rowid.HeaderText = "Column1"
-        Me.c_rowid.Name = "c_rowid"
-        Me.c_rowid.ReadOnly = True
-        Me.c_rowid.Visible = False
-        '
-        'c_emailadd
-        '
-        Me.c_emailadd.DataPropertyName = "EmailAddress"
-        Me.c_emailadd.HeaderText = "Email Address"
-        Me.c_emailadd.Name = "c_emailadd"
-        Me.c_emailadd.ReadOnly = True
-        '
-        'UserLevelDescriptionColumn
-        '
-        Me.UserLevelDescriptionColumn.DataPropertyName = "UserLevelIndex"
-        Me.UserLevelDescriptionColumn.HeaderText = "User Level"
-        Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
-        Me.UserLevelDescriptionColumn.ReadOnly = True
-        '
-        'UserLevelColumn
-        '
-        Me.UserLevelColumn.DataPropertyName = "UserLevel"
-        Me.UserLevelColumn.HeaderText = "User Level (Index)"
-        Me.UserLevelColumn.Name = "UserLevelColumn"
-        Me.UserLevelColumn.ReadOnly = True
-        Me.UserLevelColumn.Visible = False
         '
         'Label10
         '
@@ -758,6 +694,70 @@ Partial Class UsersForm
         Me.DataGridViewTextBoxColumn10.Name = "DataGridViewTextBoxColumn10"
         Me.DataGridViewTextBoxColumn10.ReadOnly = True
         Me.DataGridViewTextBoxColumn10.Width = 150
+        '
+        'c_lname
+        '
+        Me.c_lname.DataPropertyName = "LastName"
+        Me.c_lname.HeaderText = "Last Name"
+        Me.c_lname.Name = "c_lname"
+        Me.c_lname.ReadOnly = True
+        '
+        'c_fname
+        '
+        Me.c_fname.DataPropertyName = "FirstName"
+        Me.c_fname.HeaderText = "First Name"
+        Me.c_fname.Name = "c_fname"
+        Me.c_fname.ReadOnly = True
+        '
+        'c_Mname
+        '
+        Me.c_Mname.DataPropertyName = "MiddleName"
+        Me.c_Mname.HeaderText = "Middle Name"
+        Me.c_Mname.Name = "c_Mname"
+        Me.c_Mname.ReadOnly = True
+        '
+        'c_emailadd
+        '
+        Me.c_emailadd.DataPropertyName = "EmailAddress"
+        Me.c_emailadd.HeaderText = "Email Address"
+        Me.c_emailadd.Name = "c_emailadd"
+        Me.c_emailadd.ReadOnly = True
+        '
+        'c_Position
+        '
+        Me.c_Position.DataPropertyName = "PositionName"
+        Me.c_Position.HeaderText = "Position"
+        Me.c_Position.Name = "c_Position"
+        Me.c_Position.ReadOnly = True
+        '
+        'UserLevelDescriptionColumn
+        '
+        Me.UserLevelDescriptionColumn.DataPropertyName = "UserLevelIndex"
+        Me.UserLevelDescriptionColumn.HeaderText = "User Level"
+        Me.UserLevelDescriptionColumn.Name = "UserLevelDescriptionColumn"
+        Me.UserLevelDescriptionColumn.ReadOnly = True
+        '
+        'c_userid
+        '
+        Me.c_userid.DataPropertyName = "UserID"
+        Me.c_userid.HeaderText = "Username"
+        Me.c_userid.Name = "c_userid"
+        Me.c_userid.ReadOnly = True
+        '
+        'c_rowid
+        '
+        Me.c_rowid.HeaderText = "Column1"
+        Me.c_rowid.Name = "c_rowid"
+        Me.c_rowid.ReadOnly = True
+        Me.c_rowid.Visible = False
+        '
+        'UserLevelColumn
+        '
+        Me.UserLevelColumn.DataPropertyName = "UserLevel"
+        Me.UserLevelColumn.HeaderText = "User Level (Index)"
+        Me.UserLevelColumn.Name = "UserLevelColumn"
+        Me.UserLevelColumn.ReadOnly = True
+        Me.UserLevelColumn.Visible = False
         '
         'UsersForm
         '
@@ -855,13 +855,13 @@ Partial Class UsersForm
     Friend WithEvents DataGridViewTextBoxColumn8 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn9 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn10 As DataGridViewTextBoxColumn
-    Friend WithEvents c_userid As DataGridViewTextBoxColumn
-    Friend WithEvents c_Position As DataGridViewTextBoxColumn
     Friend WithEvents c_lname As DataGridViewTextBoxColumn
     Friend WithEvents c_fname As DataGridViewTextBoxColumn
     Friend WithEvents c_Mname As DataGridViewTextBoxColumn
-    Friend WithEvents c_rowid As DataGridViewTextBoxColumn
     Friend WithEvents c_emailadd As DataGridViewTextBoxColumn
+    Friend WithEvents c_Position As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelDescriptionColumn As DataGridViewTextBoxColumn
+    Friend WithEvents c_userid As DataGridViewTextBoxColumn
+    Friend WithEvents c_rowid As DataGridViewTextBoxColumn
     Friend WithEvents UserLevelColumn As DataGridViewTextBoxColumn
 End Class
