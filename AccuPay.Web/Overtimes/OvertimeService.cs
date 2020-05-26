@@ -70,7 +70,7 @@ namespace AccuPay.Web.Overtimes
             return ConvertToDto(overtime);
         }
 
-        private static void ApplyChanges(ICrudOvertimeDto dto, Overtime overtime)
+        private static void ApplyChanges(CrudOvertimeDto dto, Overtime overtime)
         {
             overtime.Status = dto.Status;
             overtime.OTStartDate = dto.StartDate;

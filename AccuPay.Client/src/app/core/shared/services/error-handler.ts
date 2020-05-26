@@ -14,7 +14,7 @@ export class ErrorHandler {
   badRequest(httpError: any, defaultMessage: string): void {
     let message: string = defaultMessage;
 
-    if (httpError && httpError.status == 400) {
+    if (httpError && httpError.status == 400 && httpError?.error?.Error) {
       message = httpError.error.Error;
     }
     this.snackBar.open(message, null, {

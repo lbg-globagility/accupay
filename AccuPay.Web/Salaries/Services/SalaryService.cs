@@ -65,7 +65,7 @@ namespace AccuPay.Web.Salaries.Services
             return ConvertToDto(salary);
         }
 
-        private static void ApplyChanges(ICrudSalaryDto dto, Salary salary)
+        private static void ApplyChanges(CrudSalaryDto dto, Salary salary)
         {
             salary.BasicSalary = dto.BasicSalary;
             salary.AllowanceSalary = dto.AllowanceSalary;

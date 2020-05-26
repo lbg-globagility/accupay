@@ -82,7 +82,7 @@ namespace AccuPay.Web.Allowances.Services
                     .ToList();
         }
 
-        private static void ApplyChanges(ICrudAllowanceDto dto, Allowance allowance)
+        private static void ApplyChanges(CrudAllowanceDto dto, Allowance allowance)
         {
             allowance.ProductID = dto.AllowanceTypeId;
             allowance.AllowanceFrequency = dto.Frequency;

@@ -3,6 +3,7 @@ import { EmployeeService } from '../services/employee.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Employee } from '../shared/employee';
 import { BehaviorSubject } from 'rxjs';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-edit-employee',
@@ -19,7 +20,8 @@ export class EditEmployeeComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private service: EmployeeService,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -35,9 +37,12 @@ export class EditEmployeeComponent implements OnInit {
   }
 
   save(employee: Employee) {
-    this.service.update(this.id, employee).subscribe(() => {
-      this.router.navigate(['employees', this.id]);
-    });
+    this.service.update(this.id, employee).subscribe(
+      () => {
+        this.router.navigate(['employees', this.id]);
+      },
+      (err) => this.errorHandler.badRequest(err, 'Failed to update employee.')
+    );
   }
 
   cancel() {

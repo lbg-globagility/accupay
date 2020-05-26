@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from 'src/app/users/user.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from 'src/app/users/shared/user';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-edit-user',
@@ -14,7 +15,8 @@ export class EditUserComponent implements OnInit {
   constructor(
     private userService: UserService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -23,9 +25,12 @@ export class EditUserComponent implements OnInit {
   }
 
   save(user: User) {
-    this.userService.update(user, this.user.id).subscribe((u) => {
-      this.router.navigate(['users', u.id]);
-    });
+    this.userService.update(user, this.user.id).subscribe(
+      (u) => {
+        this.router.navigate(['users', u.id]);
+      },
+      (err) => this.errorHandler.badRequest(err, 'Failed to edit user.')
+    );
   }
 
   cancel() {
