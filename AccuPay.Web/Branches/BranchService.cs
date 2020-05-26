@@ -1,5 +1,8 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Branches
@@ -40,6 +43,14 @@ namespace AccuPay.Web.Branches
             await _branchRepository.UpdateAsync(branch);
 
             return ConvertToDto(branch);
+        }
+
+        public async Task<ICollection<BranchDto>> List()
+        {
+            var branches = await _branchRepository.GetAllAsync();
+            var dtos = branches.Select(b => ConvertToDto(b)).ToList();
+
+            return dtos;
         }
 
         private BranchDto ConvertToDto(Branch branch)

@@ -25,10 +25,7 @@ export class BranchService {
     return this.httpClient.put<Branch>(`${this.baseUrl}/${id}`, branch);
   }
 
-  list(options: PageOptions): Observable<PaginatedList<Branch>> {
-    const params = options.toObject();
-    return this.httpClient.get<PaginatedList<Branch>>(`${this.baseUrl}`, {
-      params,
-    });
+  list(): Observable<Branch[]> {
+    return this.httpClient.get<Branch[]>(`${this.baseUrl}`);
   }
 }

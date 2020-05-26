@@ -14,6 +14,7 @@ export class BranchFormComponent implements OnInit {
   @Output()
   save: EventEmitter<Branch> = new EventEmitter();
 
+  @Output()
   cancel: EventEmitter<void> = new EventEmitter();
 
   form: FormGroup = this.fb.group({

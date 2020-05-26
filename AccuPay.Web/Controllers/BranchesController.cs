@@ -1,7 +1,7 @@
-using AccuPay.Data.Helpers;
 using AccuPay.Web.Branches;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -36,9 +36,11 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<BranchDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult<ICollection<BranchDto>>> List()
         {
-            throw new NotImplementedException();
+            var dtos = await _service.List();
+
+            return dtos.ToList();
         }
     }
 }
