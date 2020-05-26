@@ -76,5 +76,20 @@ namespace AccuPay.Web.Users
                 throw new Exception();
             }
         }
+
+        public async Task<UserDto> GetById(Guid id)
+        {
+            var user = await _users.FindByIdAsync(id.ToString());
+
+            var dto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+
+            return dto;
+        }
     }
 }

@@ -20,12 +20,23 @@ namespace AccuPay.Web.Users
         {
             var claims = new List<Claim>()
             {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString())
+                new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+                new Claim(JwtRegisteredClaimNames.GivenName, user.FirstName),
+                new Claim(JwtRegisteredClaimNames.FamilyName, user.LastName),
+                new Claim(JwtRegisteredClaimNames.Email, user.Email)
             };
 
             var token = _tokenService.Encode(TimeSpan.FromDays(7), claims);
 
             return token;
+        }
+
+        public RegistrationClaim DecodeRegistrationToken(string token)
+        {
+            var principal = _tokenService.Decode(token);
+            var claim = new RegistrationClaim(principal);
+
+            return claim;
         }
     }
 }
