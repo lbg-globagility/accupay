@@ -2,11 +2,9 @@ import {
   AbstractControl,
   FormGroup,
   ValidationErrors,
-  ValidatorFn
+  ValidatorFn,
 } from '@angular/forms';
 import { isNumber } from 'lodash';
-import { sharedStylesheetJitUrl } from '@angular/compiler';
-import { OrganizationAcknowledgementThresholdsComponent } from 'src/app/main/organization/organization-acknowledgement-thresholds/organization-acknowledgement-thresholds.component';
 
 export class CustomValidators {
   public static equalTo(comparedField: string): ValidatorFn {
@@ -43,7 +41,7 @@ export class CustomValidators {
 
   public static notEmpty(key: string): ValidatorFn {
     return (group: FormGroup): ValidationErrors | null => {
-      const subGroup = <FormGroup>group.controls[key];
+      const subGroup = group.controls[key] as FormGroup;
 
       const hasAtleastOne =
         subGroup &&
@@ -77,7 +75,7 @@ export class CustomValidators {
     return { isPasswordAcceptable: true };
   }
 
-  static DecimalValidator(control: AbstractControl) {
+  static decimalValidator(control: AbstractControl) {
     const { value } = control;
 
     if (String(value).trim().length > 0) {
@@ -88,7 +86,7 @@ export class CustomValidators {
     return null;
   }
 
-  static isNumeric(x) {
+  static isNumeric(x: any) {
     return (
       !isNaN(x) &&
       typeof x !== 'object' &&
