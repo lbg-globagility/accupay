@@ -1,3 +1,5 @@
+using AccuPay.Data.Helpers;
+using AccuPay.Web.Branches;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
@@ -8,30 +10,33 @@ namespace AccuPay.Web.Controllers
     [ApiController]
     public class BranchesController : ControllerBase
     {
-        public BranchesController()
+        private readonly BranchService _service;
+
+        public BranchesController(BranchService service)
         {
+            _service = service;
         }
 
-        [HttpGet("{id}"]
-        public async Task<ActionResult> GetById()
+        [HttpGet("{id}")]
+        public async Task<ActionResult<BranchDto>> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _service.GetById(id);
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create()
+        public async Task<ActionResult<BranchDto>> Create([FromBody] CreateBranchDto dto)
         {
-            throw new NotImplementedException();
+            return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update()
+        public async Task<ActionResult<BranchDto>> Update(int id, [FromBody] UpdateBranchDto dto)
         {
-            throw new NotImplementedException();
+            return await _service.Update(id, dto);
         }
 
         [HttpGet]
-        public async Task<ActionResult> List()
+        public async Task<ActionResult<PaginatedList<BranchDto>>> List([FromQuery] PageOptions options)
         {
             throw new NotImplementedException();
         }
