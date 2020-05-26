@@ -1,7 +1,9 @@
-using Accupay.Web.Core.Configurations;
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Configurations;
+using AccuPay.Web.Core.Emails;
+using AccuPay.Web.Core.Views;
 using AccuPay.Web.Employees.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
@@ -11,6 +13,7 @@ using AccuPay.Web.Overtimes;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
+using Notisphere.Users.Services;
 
 namespace AccuPay.Web
 {
@@ -32,8 +35,14 @@ namespace AccuPay.Web
             services.AddScoped<SalaryService>();
 
             services.AddScoped<JwtConfiguration>();
+            services.AddScoped<EmailConfiguration>();
 
             services.AddScoped<ICurrentUser, CurrentUser>();
+
+            services.AddScoped<EmailService>();
+            services.AddScoped<ViewRenderService>();
+            services.AddScoped<UserEmailService>();
+            services.AddScoped<UserTokenService>();
 
             return services;
         }

@@ -41,6 +41,7 @@ import { OrganizationListComponent } from 'src/app/organizations/organization-li
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
 import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
+import { RegisterComponent } from 'src/app/accounts/register/register.component';
 
 const routes: Routes = [
   {
@@ -197,6 +198,10 @@ const routes: Routes = [
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
   },
   { path: '**', component: PageNotFoundComponent },
 ];

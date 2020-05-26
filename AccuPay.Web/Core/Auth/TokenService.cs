@@ -1,4 +1,4 @@
-using Accupay.Web.Core.Configurations;
+using AccuPay.Web.Core.Configurations;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;

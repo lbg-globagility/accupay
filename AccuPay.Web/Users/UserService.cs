@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using Microsoft.AspNetCore.Identity;
+using Notisphere.Users.Services;
 using System;
 using System.Threading.Tasks;
 
@@ -13,10 +14,12 @@ namespace AccuPay.Web.Users
         private readonly string DEFAULT_PASSWORD = "password";
 
         private readonly UserManager<AspNetUser> _users;
+        private readonly UserEmailService _emailService;
 
-        public UserService(UserManager<AspNetUser> users)
+        public UserService(UserManager<AspNetUser> users, UserEmailService emailService)
         {
             _users = users;
+            _emailService = emailService;
         }
 
         public async Task<UserDto> Create(CreateUserDto dto)
@@ -32,6 +35,8 @@ namespace AccuPay.Web.Users
             var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);
             if (result.Succeeded)
             {
+                await _emailService.SendInvitation(user);
+
                 return new UserDto()
                 {
                     Id = user.Id,
@@ -70,6 +75,21 @@ namespace AccuPay.Web.Users
                 // Probably not the best way to return errors
                 throw new Exception();
             }
+        }
+
+        public async Task<UserDto> GetById(Guid id)
+        {
+            var user = await _users.FindByIdAsync(id.ToString());
+
+            var dto = new UserDto()
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Email = user.Email
+            };
+
+            return dto;
         }
     }
 }
