@@ -45,7 +45,12 @@ namespace AccuPay.Web.Account
 
             if (user is null)
             {
-                throw new Exception();
+                throw new Exception("Cannot find user account");
+            }
+
+            if (user.Status != AspNetUserStatus.Pending)
+            {
+                throw new Exception("User account already verified");
             }
 
             var registerDto = new RegisterDto()
@@ -63,6 +68,11 @@ namespace AccuPay.Web.Account
             var claims = _userTokenService.DecodeRegistrationToken(dto.Token);
             var user = await _users.FindByIdAsync(claims.UserId);
 
+            if (user.Status != AspNetUserStatus.Pending)
+            {
+                throw new Exception("User account already verified");
+            }
+
             var passwordToken = await _users.GeneratePasswordResetTokenAsync(user);
             var result = await _users.ResetPasswordAsync(user, passwordToken, dto.Password);
 
@@ -70,6 +80,9 @@ namespace AccuPay.Web.Account
             {
                 throw new Exception("Failed to change password");
             }
+
+            user.Status = AspNetUserStatus.Verified;
+            await _users.UpdateAsync(user);
 
             var userDto = new UserDto()
             {
