@@ -22,7 +22,7 @@ export class NewBranchComponent implements OnInit {
   onSave(branch: Branch) {
     this.branchService.create(branch).subscribe({
       next: (result) => {
-        this.router.navigate(['branches', result.id]);
+        this.router.navigate(['branches']);
         this.displaySuccess();
       },
       error: (err) =>

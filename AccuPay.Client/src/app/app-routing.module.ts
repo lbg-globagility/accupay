@@ -43,6 +43,7 @@ import { ViewOrganizationComponent } from 'src/app/organizations/view-organizati
 import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
 import { RegisterComponent } from 'src/app/accounts/register/register.component';
 import { NewBranchComponent } from 'src/app/branches/new-branch/new-branch.component';
+import { EditBranchComponent } from 'src/app/branches/edit-branch/edit-branch.component';
 
 const routes: Routes = [
   {
@@ -196,6 +197,10 @@ const routes: Routes = [
       {
         path: 'branches/new',
         component: NewBranchComponent,
+      },
+      {
+        path: 'branches/:id/edit',
+        component: EditBranchComponent,
       },
     ],
     canActivate: [AuthGuard],
