@@ -1,5 +1,6 @@
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
+using AccuPay.Web.Branches;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Emails;
@@ -24,6 +25,7 @@ namespace AccuPay.Web
             services.AddScoped<UserService>();
             services.AddScoped<AccountService>();
             services.AddScoped<AccountTokenService>();
+            services.AddScoped<BranchService>();
             services.AddScoped<TokenService>();
             services.AddScoped<AllowanceService>();
             services.AddScoped<EmployeeService>();
