@@ -97,6 +97,11 @@ namespace AccuPay.Data.Repositories
             return await _context.Calendars.ToListAsync();
         }
 
+        public async Task<PayCalendar> GetById(int calendarId)
+        {
+            return await _context.Calendars.FindAsync(calendarId);
+        }
+
         /// <summary>
         ///         ''' Gets all days of a calendar that is part of a given year
         ///         ''' </summary>
