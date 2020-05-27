@@ -42,7 +42,7 @@ export class EmployeeService {
     return this.httpClient.put(`${this.apiRoute}/${id}`, employee);
   }
 
-  create(employee: Employee): Observable<number> {
-    return this.httpClient.post<number>(this.apiRoute, employee);
+  create(employee: Employee): Observable<Employee> {
+    return this.httpClient.post<Employee>(this.apiRoute, employee);
   }
 }
