@@ -42,6 +42,7 @@ import { NewOrganizationComponent } from 'src/app/organizations/new-organization
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
 import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
 import { RegisterComponent } from 'src/app/accounts/register/register.component';
+import { TimeLogTableComponent } from './time-logs/time-log-table/time-log-table.component';
 
 const routes: Routes = [
   {
@@ -191,6 +192,10 @@ const routes: Routes = [
       {
         path: 'organizations/:id/edit',
         component: EditOrganizationComponent,
+      },
+      {
+        path: 'time-logs',
+        component: TimeLogTableComponent,
       },
     ],
     canActivate: [AuthGuard],
