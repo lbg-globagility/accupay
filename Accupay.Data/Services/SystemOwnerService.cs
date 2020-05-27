@@ -17,7 +17,6 @@ namespace AccuPay.Data.Services
         public const string text_laglobal = "LA Global";
 
         public const string text_default = "Default";
-        private readonly PayrollContext _context;
 
         public static string Goldwings => text_goldwings;
 
@@ -30,6 +29,8 @@ namespace AccuPay.Data.Services
         public static string LAGlobal => text_laglobal;
 
         public static string DefaultOwner => text_default;
+        
+        private readonly PayrollContext _context;
 
         public SystemOwnerService(PayrollContext context)
         {
