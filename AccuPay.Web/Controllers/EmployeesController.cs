@@ -24,17 +24,21 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Create([FromBody] EmployeeDto dto)
+        public async Task<ActionResult<EmployeeDto>> Create([FromBody] EmployeeDto dto)
         {
             var employee = await _employeeService.Create(dto);
-            return Ok(employee.RowID);
+            var employeeDto = EmployeeDto.Convert(employee);
+
+            return employeeDto;
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult> Update(int id, [FromBody] EmployeeDto dto)
+        public async Task<ActionResult<EmployeeDto>> Update(int id, [FromBody] EmployeeDto dto)
         {
-            await _employeeService.Update(id, dto);
-            return Ok();
+            var employee = await _employeeService.Update(id, dto);
+            var employeeDto = EmployeeDto.Convert(employee);
+
+            return employeeDto;
         }
 
         [HttpGet("{id}")]
@@ -48,7 +52,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] PageOptions options, string term = "")
         {
-            int variableOrganizationId = 2;//_currentUser.OrganizationId
+            int variableOrganizationId = 5;//_currentUser.OrganizationId
             var query = await _employeeService.GetAllAsync(variableOrganizationId);
 
             if (!string.IsNullOrWhiteSpace(term))
