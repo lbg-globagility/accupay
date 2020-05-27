@@ -36,8 +36,4 @@ export class ShiftService {
   delete(id: number): Observable<Shift> {
     return this.httpClient.delete<Shift>(`${this.baseUrl}/${id}`);
   }
-
-  getStatusList(): Observable<string[]> {
-    return this.httpClient.get<string[]>(`${this.baseUrl}/statuslist`);
-  }
 }
