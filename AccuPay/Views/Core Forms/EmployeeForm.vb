@@ -172,9 +172,9 @@ Public Class EmployeeForm
                         .ImageAlign = ContentAlignment.MiddleLeft
                         .ImageIndex = lbllink_imgindx
                         'Segoe UI Semibold, 9.75pt, style=Bold
-                        .Font = New System.Drawing.Font("Segoe UI Semibold", 11.0!)
+                        .Font = New Font("Segoe UI Semibold", 11.0!)
                         .LinkColor = Color.FromArgb(0, 155, 255)
-                        'Me.txtEmpID.Font = New System.Drawing.Font("Microsoft Sans Serif", 9.75!, System.Drawing.FontStyle.Bold)
+                        'Me.txtEmpID.Font = New Font("Microsoft Sans Serif", 9.75!, FontStyle.Bold)
 
                         panelchklist.Controls.Add(chklistlinklbl)
                     End With

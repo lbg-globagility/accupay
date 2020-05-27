@@ -54,7 +54,6 @@ Public Class ImportEmployeeForm
         _noJob,
         _noEmploymentDate,
         _invalidEmploymentDate,
-        _noPayFrequency,
         _noEmploymentStatus As Boolean
 
         <ColumnName("Employee ID")>
@@ -68,9 +67,6 @@ Public Class ImportEmployeeForm
 
         <ColumnName("Middle name")>
         Public Property MiddleName As String
-
-        <ColumnName("Surname")>
-        Public Property Surname As String
 
         <ColumnName("Birth date(MM/dd/yyyy)")>
         Public Property BirthDate As Date?
@@ -114,9 +110,6 @@ Public Class ImportEmployeeForm
         <ColumnName("Date employed(MM/dd/yyyy)")>
         Public Property DateEmployed As Date?
 
-        <ColumnName("Pay frequency(Weekly/Semi-monthly)")>
-        Public Property PayFrequency As String
-
         <ColumnName("Employee Type(Daily/Monthly/Fixed)")>
         Public Property EmployeeType As String
 
@@ -147,7 +140,6 @@ Public Class ImportEmployeeForm
                 If _noJob Then resultStrings.Add("no Job Position")
                 If _noEmploymentDate Then resultStrings.Add("no Employment Date")
                 If _invalidEmploymentDate Then resultStrings.Add("Employment Date cannot be earlier than January 1, 1753")
-                If _noPayFrequency Then resultStrings.Add("no Pay Frequency")
                 If _noEmploymentStatus Then resultStrings.Add("no Employment Status")
 
                 Return String.Join("; ", resultStrings.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray())
@@ -168,7 +160,6 @@ Public Class ImportEmployeeForm
                 _noJob = String.IsNullOrWhiteSpace(Position)
                 _noEmploymentDate = Not DateEmployed.HasValue
                 _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
-                _noPayFrequency = String.IsNullOrWhiteSpace(PayFrequency)
                 _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
 
                 Return _monthlyHasNoWorkDaysPerYear _
@@ -182,7 +173,6 @@ Public Class ImportEmployeeForm
                 Or _noJob _
                 Or _noEmploymentDate _
                 Or _invalidEmploymentDate _
-                Or _noPayFrequency _
                 Or _noEmploymentStatus
             End Get
         End Property
@@ -246,9 +236,7 @@ Public Class ImportEmployeeForm
                 .OrganizationID = z_OrganizationID,
                 .Created = Now,
                 .CreatedBy = z_User,
-                .PayFrequencyID = If(model.PayFrequency.ToLower() = "semi-monthly",
-                                                                    Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId,
-                                                                    Data.Helpers.PayrollTools.PayFrequencyWeeklyId)
+                .PayFrequencyID = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId
             }
 
             AssignChanges(model, employee)
@@ -336,15 +324,11 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.Nickname) Then .Nickname = em.Nickname?.Trim()
 
-            'em.PayFrequency
-
             If Not String.IsNullOrWhiteSpace(em.PhilHealthNo) Then .PhilHealthNo = em.PhilHealthNo?.Trim()
 
             If Not String.IsNullOrWhiteSpace(em.Salutation) Then .Salutation = em.Salutation?.Trim()
 
             If Not String.IsNullOrWhiteSpace(em.SSSNo) Then .SssNo = em.SSSNo?.Trim()
-
-            'em.Surname
 
             If Not String.IsNullOrWhiteSpace(em.TIN) Then .TinNo = em.TIN?.Trim()
 

@@ -127,6 +127,7 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
+        Me.DisplayLeaveHistoryButton = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.BPIinsuranceText = New System.Windows.Forms.TextBox()
         Me.BPIinsuranceLabel = New System.Windows.Forms.Label()
@@ -928,7 +929,6 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DisplayLeaveHistoryButton = New System.Windows.Forms.Button()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -1348,6 +1348,7 @@ Partial Class EmployeeForm
         Me.cboPayFreq.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
         Me.cboPayFreq.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboPayFreq.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboPayFreq.Enabled = False
         Me.cboPayFreq.FormattingEnabled = True
         Me.cboPayFreq.Location = New System.Drawing.Point(128, 345)
         Me.cboPayFreq.Name = "cboPayFreq"
@@ -1639,6 +1640,15 @@ Partial Class EmployeeForm
         Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
+        '
+        'DisplayLeaveHistoryButton
+        '
+        Me.DisplayLeaveHistoryButton.Location = New System.Drawing.Point(784, 368)
+        Me.DisplayLeaveHistoryButton.Name = "DisplayLeaveHistoryButton"
+        Me.DisplayLeaveHistoryButton.Size = New System.Drawing.Size(75, 23)
+        Me.DisplayLeaveHistoryButton.TabIndex = 543
+        Me.DisplayLeaveHistoryButton.Text = "Button2"
+        Me.DisplayLeaveHistoryButton.UseVisualStyleBackColor = True
         '
         'Panel4
         '
@@ -9033,15 +9043,6 @@ Partial Class EmployeeForm
         Me.c_RowID1.Name = "c_RowID1"
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
-        '
-        'DisplayLeaveHistoryButton
-        '
-        Me.DisplayLeaveHistoryButton.Location = New System.Drawing.Point(784, 368)
-        Me.DisplayLeaveHistoryButton.Name = "DisplayLeaveHistoryButton"
-        Me.DisplayLeaveHistoryButton.Size = New System.Drawing.Size(75, 23)
-        Me.DisplayLeaveHistoryButton.TabIndex = 543
-        Me.DisplayLeaveHistoryButton.Text = "Button2"
-        Me.DisplayLeaveHistoryButton.UseVisualStyleBackColor = True
         '
         'EmployeeForm
         '
