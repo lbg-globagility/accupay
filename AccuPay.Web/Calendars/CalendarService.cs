@@ -38,6 +38,7 @@ namespace AccuPay.Web.Calendars
         public async Task<CalendarDto> Update(int id, UpdateCalendarDto dto)
         {
             var calendar = await _repository.GetById(id);
+            calendar.Name = dto.Name;
 
             await _repository.Update(calendar);
 

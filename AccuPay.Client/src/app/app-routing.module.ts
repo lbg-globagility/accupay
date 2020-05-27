@@ -45,6 +45,9 @@ import { RegisterComponent } from 'src/app/accounts/register/register.component'
 import { NewBranchComponent } from 'src/app/branches/new-branch/new-branch.component';
 import { EditBranchComponent } from 'src/app/branches/edit-branch/edit-branch.component';
 import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.component';
+import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-list.component';
+import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
+import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
 
 const routes: Routes = [
   {
@@ -206,6 +209,18 @@ const routes: Routes = [
       {
         path: 'branches/:id/edit',
         component: EditBranchComponent,
+      },
+      {
+        path: 'calendars',
+        component: CalendarListComponent,
+      },
+      {
+        path: 'calendars/new',
+        component: NewCalendarComponent,
+      },
+      {
+        path: 'calendars/:id/edit',
+        component: EditCalendarComponent,
       },
     ],
     canActivate: [AuthGuard],
