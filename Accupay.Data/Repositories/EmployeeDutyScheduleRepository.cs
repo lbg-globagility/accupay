@@ -120,6 +120,13 @@ namespace AccuPay.Data.Repositories
             return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
+        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.EmployeeDutySchedules
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
         public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.EmployeeDutySchedules

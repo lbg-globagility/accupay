@@ -12,6 +12,7 @@ import { LeavesModule } from 'src/app/leaves/leaves.module';
 import { LoansModule } from 'src/app/loans/loans.module';
 import { OfficialBusinessesModule } from 'src/app/official-businesses/official-businesses.module';
 import { OvertimesModule } from 'src/app/overtimes/overtimes.module';
+import { ShiftsModule } from 'src/app/shifts/shifts.module';
 import { SalariesModule } from 'src/app/salaries/salaries.module';
 import { UsersModule } from 'src/app/users/users.module';
 import { OrganizationsModule } from 'src/app/organizations/organizations.module';
@@ -32,6 +33,7 @@ import { AuthInterceptor } from 'src/app/core/auth/auth.interceptor';
     LoansModule,
     OfficialBusinessesModule,
     OvertimesModule,
+    ShiftsModule,
     SalariesModule,
     UsersModule,
     OrganizationsModule,

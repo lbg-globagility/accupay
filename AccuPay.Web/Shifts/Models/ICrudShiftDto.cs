@@ -8,18 +8,14 @@ namespace AccuPay.Web.Shifts.Models
     {
         DateTime DateSched { get; set; }
 
-        TimeSpan? StartTime { get; set; }
+        DateTime? StartTime { get; set; }
 
-        TimeSpan? EndTime { get; set; }
+        DateTime? EndTime { get; set; }
 
-        TimeSpan? BreakStartTime { get; set; }
+        DateTime? BreakStartTime { get; set; }
 
         decimal BreakLength { get; set; }
 
         bool IsRestDay { get; set; }
-
-        decimal ShiftHours { get; set; }
-
-        decimal WorkHours { get; set; }
     }
 }

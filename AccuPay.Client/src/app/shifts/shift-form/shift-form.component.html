@@ -1,0 +1,153 @@
+<mat-card *ngIf="shift">
+  <mat-card-content>
+    <div class="row">
+        <!-- Employee Name -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Name</p>
+          <p class="field-value">{{ shift.employeeName }}</p>
+        </div>
+      </div>
+  
+        <!-- Employee Number -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Number</p>
+          <p class="field-value">{{ shift.employeeNumber }}</p>
+        </div>
+      </div>
+  
+        <!-- Employee Type -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employee Type</p>
+          <p class="field-value">{{ shift.employeeType }}</p>
+        </div>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+  
+<form [formGroup]="form" (ngSubmit)="onSave()">
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row" *ngIf="!shift">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-8"
+              >
+                <mat-label>Employee *</mat-label>
+                <mat-select matInput formControlName="employeeId">
+                  <mat-option></mat-option>
+                  <mat-option
+                    *ngFor="let employee of employees"
+                    [value]="employee.rowID"
+                  >
+                    {{ employee.employeeNo }} - {{ employee.lastName }},
+                    {{ employee.firstName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>Please select an employee</mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Date *</mat-label>
+                <input
+                  matInput
+                  [matDatepicker]="dateSched"
+                  formControlName="dateSched"
+                />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="dateSched"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #dateSched></mat-datepicker>
+              </mat-form-field>
+            </div>
+  
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Start Time *</mat-label>
+                <input
+                  matInput
+                  type="time"
+                  autocomplete="off"
+                  formControlName="startTime"
+                />
+              </mat-form-field>
+  
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>End Time *</mat-label>
+                <input
+                  matInput
+                  type="time"
+                  autocomplete="off"
+                  formControlName="endTime"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Break Start Time *</mat-label>
+                <input
+                  matInput
+                  type="time"
+                  autocomplete="off"
+                  formControlName="breakStartTime"
+                />
+              </mat-form-field>
+
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Break Length *</mat-label>
+                <input
+                  matInput
+                  type="number"
+                  autocomplete="off"
+                  formControlName="breakLength"
+                />
+              </mat-form-field>
+            </div>
+  
+            <div class="row" style="margin-bottom: 25px;">
+              <mat-checkbox class="col-lg-4" formControlName="isRestDay"
+              >Offset</mat-checkbox
+            >
+            </div>
+          </div>
+        </div>
+  
+        <button mat-button type="button" color="accent" (click)="onCancel()">
+          CANCEL
+        </button>
+        <button mat-raised-button type="submit" color="accent">FINISH</button>
+      </mat-card-content>
+    </mat-card>
+  </form>
+  

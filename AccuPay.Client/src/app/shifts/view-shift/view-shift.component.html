@@ -1,0 +1,110 @@
+<header class="app-page-header">
+    <h1>View Shift</h1>
+  </header>
+  
+  <ng-container *ngIf="isLoading | async">
+    <button
+      style="margin-right: 10px;"
+      mat-raised-button
+      color="accent"
+      routerLink="/shifts/{{ shiftId }}/edit"
+    >
+      EDIT SHIFT
+    </button>
+    <button mat-raised-button color="warn" (click)="confirmDelete()">
+      DELETE SHIFT
+    </button>
+  
+    <!-- Employee -->
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <!-- Employee Name -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Employee Name</p>
+              <p class="field-value">{{ shift.employeeName }}</p>
+            </div>
+          </div>
+  
+          <!-- Employee Number -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Employee Number</p>
+              <p class="field-value">{{ shift.employeeNumber }}</p>
+            </div>
+          </div>
+  
+          <!-- Employee Type -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Employee Type</p>
+              <p class="field-value">{{ shift.employeeType }}</p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Details -->
+    <mat-card>
+      <mat-card-content>
+        <h3 class="font-medium">Details</h3>
+        <br />
+  
+        <div class="row">
+          <!-- Date -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Date</p>
+              <p class="field-value">{{ shift.dateSched | date }}</p>
+            </div>
+          </div>
+  
+          <!-- Time -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Time</p>
+              <p class="field-value">
+                {{ shift.startTime | date: "shortTime" }} -
+                {{ shift.endTime | date: "shortTime" }}
+              </p>
+            </div>
+          </div>
+        </div>
+  
+        <div class="row">
+          <!-- break start time -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Break Start Time</p>
+              <p class="field-value">
+                {{ shift.breakStartTime | date: "shortTime" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- break length -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Break Length</p>
+              <p class="field-value">
+                {{ shift.breakLength | ifEmpty: "-" }}
+              </p>
+            </div>
+          </div>
+
+          <!-- is rest day -->
+          <div class="col-lg-3 mb-4">
+            <div class="field">
+              <p class="field-label">Is Rest Day</p>
+              <p class="field-value">
+                {{ shift.isRestDay | ifEmpty: "-" }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+  

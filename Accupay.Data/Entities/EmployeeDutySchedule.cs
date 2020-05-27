@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccuPay.Utilities.Extensions;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -38,5 +39,37 @@ namespace AccuPay.Data.Entities
         public decimal WorkHours { get; set; }
 
         public virtual Employee Employee { get; set; }
+
+        [NotMapped]
+        public DateTime? ShiftStartTimeFull
+        {
+            get => StartTime == null ?
+                        (DateTime?)null :
+                        DateSched.Date.ToMinimumHourValue().Add(StartTime.Value);
+
+            set => StartTime = value == null ? null : value?.TimeOfDay;
+        }
+
+        [NotMapped]
+        public DateTime? ShiftEndTimeFull
+        {
+            get => EndTime == null ?
+                        (DateTime?)null :
+                        DateSched.Date.ToMinimumHourValue().Add(EndTime.Value);
+
+            set => EndTime = value == null ? null : value?.TimeOfDay;
+        }
+
+        [NotMapped]
+        public DateTime? ShiftBreakStartTimeFull
+        {
+            get => BreakStartTime == null ?
+                        (DateTime?)null :
+                        DateSched.Date.ToMinimumHourValue().Add(BreakStartTime.Value);
+
+            set => BreakStartTime = value == null ? null : value?.TimeOfDay;
+        }
+
+
     }
 }

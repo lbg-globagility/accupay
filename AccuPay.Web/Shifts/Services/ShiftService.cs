@@ -32,6 +32,14 @@ namespace AccuPay.Web.Shifts.Services
             return new PaginatedList<ShiftDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
+        internal async Task<ShiftDto> GetById(int id)
+        {
+            var shift = await _repository.GetByIdWithEmployeeAsync(id);
+
+            return ConvertToDto(shift);
+        }
+
+
         internal async Task<ShiftDto> Create(CreateShiftDto dto)
         {
             // TODO: validations
@@ -63,16 +71,22 @@ namespace AccuPay.Web.Shifts.Services
             return ConvertToDto(shift);
         }
 
-        private static void ApplyChanges(ICrudShiftDto dto, EmployeeDutySchedule x)
+        private static void ApplyChanges(ICrudShiftDto dto, EmployeeDutySchedule shift)
         {
-            x.DateSched = dto.DateSched;
-            x.StartTime = dto.StartTime;
-            x.EndTime = dto.EndTime;
-            x.BreakStartTime = dto.BreakStartTime;
-            x.BreakLength = dto.BreakLength;
-            x.IsRestDay = dto.IsRestDay;
-            x.ShiftHours = dto.ShiftHours;
-            x.WorkHours = dto.WorkHours;
+            shift.DateSched = dto.DateSched;
+            shift.StartTime = dto.StartTime.Value.TimeOfDay;
+            shift.EndTime = dto.EndTime.Value.TimeOfDay;
+            shift.BreakStartTime = dto.BreakStartTime.Value.TimeOfDay;
+            shift.BreakLength = dto.BreakLength;
+            shift.IsRestDay = dto.IsRestDay;
+            shift.ShiftHours = ComputeShiftHours(dto);
+            shift.WorkHours = shift.ShiftHours - shift.BreakLength;
+        }
+
+        private static decimal ComputeShiftHours(ICrudShiftDto dto)
+        {
+            return (dto.EndTime.Value - dto.StartTime.Value).Hours +
+                (Convert.ToDecimal((dto.EndTime.Value - dto.StartTime.Value).Minutes) / 60);
         }
 
         private static ShiftDto ConvertToDto(EmployeeDutySchedule shift)
@@ -82,16 +96,16 @@ namespace AccuPay.Web.Shifts.Services
             return new ShiftDto()
             {
                 Id = shift.RowID,
+                EmployeeId = shift.EmployeeID.Value,
                 EmployeeNumber = shift.Employee?.EmployeeNo,
                 EmployeeName = shift.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = shift.Employee?.EmployeeType,
                 DateSched = shift.DateSched,
-                StartTime = shift.StartTime,
-                EndTime = shift.EndTime,
-                BreakStartTime = shift.BreakStartTime,
+                StartTime = shift.ShiftStartTimeFull,
+                EndTime = shift.ShiftEndTimeFull,
+                BreakStartTime = shift.ShiftBreakStartTimeFull,
                 BreakLength = shift.BreakLength,
-                IsRestDay = shift.IsRestDay,
-                ShiftHours = shift.ShiftHours,
-                WorkHours = shift.WorkHours
+                IsRestDay = shift.IsRestDay
             };
         }
 

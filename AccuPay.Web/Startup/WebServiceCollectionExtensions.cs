@@ -9,6 +9,7 @@ using AccuPay.Web.OfficialBusinesses;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
 using AccuPay.Web.Salaries.Services;
+using AccuPay.Web.Shifts.Services;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,6 +31,7 @@ namespace AccuPay.Web
             services.AddScoped<OvertimeService>();
             services.AddScoped<OrganizationService>();
             services.AddScoped<SalaryService>();
+            services.AddScoped<ShiftService>();
 
             services.AddScoped<JwtConfiguration>();
 

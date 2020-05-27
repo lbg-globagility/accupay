@@ -30,6 +30,17 @@ namespace AccuPay.Web.Controllers
             return await _service.PaginatedList(options, term);
         }
 
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ShiftDto>> GetById(int id)
+        {
+            var shift = await _service.GetById(id);
+
+            if (shift == null)
+                return NotFound();
+            else
+                return shift;
+        }
+
         [HttpPost]
         public async Task<ActionResult<ShiftDto>> Create([FromBody] CreateShiftDto dto)
         {

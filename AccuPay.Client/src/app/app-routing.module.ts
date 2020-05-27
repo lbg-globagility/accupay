@@ -29,6 +29,10 @@ import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-
 import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-overtime.component';
 import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
 import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-overtime.component';
+import { ShiftListComponent } from 'src/app/shifts/shift-list/shift-list.component';
+import { ViewShiftComponent } from 'src/app/shifts/view-shift/view-shift.component';
+import { NewShiftComponent } from 'src/app/shifts/new-shift/new-shift.component';
+import { EditShiftComponent } from 'src/app/shifts/edit-shift/edit-shift.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
@@ -136,6 +140,22 @@ const routes: Routes = [
       {
         path: 'overtimes/:id/edit',
         component: EditOvertimeComponent,
+      },
+      {
+        path: 'shifts',
+        component: ShiftListComponent,
+      },
+      {
+        path: 'shifts/new',
+        component: NewShiftComponent,
+      },
+      {
+        path: 'shifts/:id',
+        component: ViewShiftComponent,
+      },
+      {
+        path: 'shifts/:id/edit',
+        component: EditShiftComponent,
       },
       {
         path: 'allowances',

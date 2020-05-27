@@ -1,0 +1,9 @@
+<h1>Edit Shift</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-shift-form
+    [shift]="shift"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-shift-form>
+</ng-container>

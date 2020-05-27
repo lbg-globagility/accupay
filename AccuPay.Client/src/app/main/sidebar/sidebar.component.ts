@@ -42,6 +42,11 @@ const menuItems: MenuItem[] = [
     icon: 'person',
   },
   {
+    label: 'Shifts',
+    route: '/shifts',
+    icon: 'person',
+  },
+  {
     label: 'Allowances',
     route: '/allowances',
     icon: 'person',
