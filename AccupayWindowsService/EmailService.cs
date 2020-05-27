@@ -1,5 +1,5 @@
 ﻿using AccuPay.Data.Repositories;
-using Accupay.Payslip;
+using AccuPay.Payslip;
 using GlobagilityShared.EmailSender;
 using System;
 using System.IO;
@@ -13,7 +13,7 @@ namespace AccupayWindowsService
 {
     // Steps to install the windows service to client
     // 1. Build the project
-    // 2. Compressed the files in the AccupayWindowsService\bin\Debug (except for the Payslip and Logs folders)
+    // 2. Compress the files in the AccupayWindowsService\bin\Debug (except for the Payslip and Logs folders)
     // 3. Paste the zip file to clients server
     // 4. Open command prompt in server as Administrator and type `cd C:\Windows\Microsoft.NET\Framework\v4.0.30319`
     // 5. Before installing the service, make sure to stop the service if it is running and uninstall it by typing `installUtil /u {path to .exe}\AccupayWindowsService.exe` ex. installUtil /u C:\AccupayWindowsService\AccupayWindowsService.exe
@@ -37,8 +37,11 @@ namespace AccupayWindowsService
 
         private readonly PaystubEmailRepository _paystubEmailRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly PayslipCreator _payslipCreator;
 
-        public EmailService(PaystubEmailRepository paystubEmailRepository, PayPeriodRepository payPeriodRepository)
+        public EmailService(PaystubEmailRepository paystubEmailRepository,
+                            PayPeriodRepository payPeriodRepository,
+                            PayslipCreator payslipCreator)
         {
             InitializeComponent();
 
@@ -46,6 +49,7 @@ namespace AccupayWindowsService
             _emailSender = new EmailSender(new EmailConfig());
             _paystubEmailRepository = paystubEmailRepository;
             _payPeriodRepository = payPeriodRepository;
+            _payslipCreator = payslipCreator;
         }
 
         protected override void OnStart(string[] args)
@@ -78,7 +82,7 @@ namespace AccupayWindowsService
                 }
                 else
                 {
-                    paystubEmail.SetStatusToProcessing();
+                    _paystubEmailRepository.SetStatusToProcessing(paystubEmail.RowID);
                 }
 
                 var paystubEmailLog = $"[paystubId: {paystubEmail.Paystub?.RowID}]";
@@ -99,14 +103,17 @@ namespace AccupayWindowsService
                 if (string.IsNullOrWhiteSpace(validationErrorMessage) == false)
                 {
                     WriteToFile(validationErrorMessage);
-                    paystubEmail.SetStatusToFailed(validationErrorMessage);
+                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                     return;
                 }
 
                 var employeeIds = new int[] { employeeId.Value };
 
-                var payslipCreator = new PayslipCreator(currentPayPeriod, isActual: 0)
-                                            .CreateReportDocument(organizationId.Value, nextPayPeriod, employeeIds);
+                var payslipCreator = _payslipCreator.CreateReportDocument(
+                                                        organizationId: organizationId.Value,
+                                                        payPeriodId: currentPayPeriod.RowID.Value,
+                                                        isActual: 0,
+                                                        employeeIds: employeeIds);
 
                 if (payslipCreator.GetPayslipDatatable()
                                     .AsEnumerable()
@@ -115,7 +122,7 @@ namespace AccupayWindowsService
                 {
                     validationErrorMessage = $"{errorTitle} Cannot find employee in the payslip report datatable.";
                     WriteToFile(validationErrorMessage);
-                    paystubEmail.SetStatusToFailed(validationErrorMessage);
+                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                     return;
                 }
 
@@ -137,7 +144,7 @@ namespace AccupayWindowsService
                 {
                     validationErrorMessage = $"{errorTitle} Email address is null or empty.";
                     WriteToFile(validationErrorMessage);
-                    paystubEmail.SetStatusToFailed(validationErrorMessage);
+                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                     return;
                 }
 
@@ -161,7 +168,7 @@ namespace AccupayWindowsService
 
                 WriteToFile($"{paystubEmailLog} Email Sent! [Email address: {employee.EmailAddress}]");
 
-                _paystubEmailRepository.Finish(paystubEmail.RowID, fileName, employee.EmailAddress)
+                _paystubEmailRepository.Finish(paystubEmail.RowID, fileName, employee.EmailAddress);
             }
             catch (Exception ex)
             {
@@ -171,7 +178,7 @@ namespace AccupayWindowsService
                 if (paystubEmail != null)
                 {
                     string validationErrorMessage = $"[System Error] {ex.Message}";
-                    paystubEmail.SetStatusToFailed(validationErrorMessage);
+                    _paystubEmailRepository.SetStatusToFailed(paystubEmail.RowID, validationErrorMessage);
                 }
             }
         }

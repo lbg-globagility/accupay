@@ -45,7 +45,7 @@ Public Class DefaulltPayslipFullOvertimeBreakdown
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "Accupay.Payslip.DefaulltPayslipFullOvertimeBreakdown.rpt"
+            Return "AccuPay.Payslip.DefaulltPayslipFullOvertimeBreakdown.rpt"
         End Get
         Set
             'Do nothing

@@ -45,7 +45,7 @@ Public Class TwoEmpIn1PaySlip
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "Accupay.Payslip.TwoEmpIn1PaySlip.rpt"
+            Return "AccuPay.Payslip.TwoEmpIn1PaySlip.rpt"
         End Get
         Set
             'Do nothing

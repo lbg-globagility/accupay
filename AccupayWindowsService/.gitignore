@@ -2,3 +2,5 @@
 /obj
 /Output
 *.user
+App.config
+Email.config
