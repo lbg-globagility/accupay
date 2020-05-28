@@ -120,11 +120,13 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeEntryGenerator)
 
         services.AddTransient(Of AdjustmentService)
-        services.AddTransient(Of LeaveService)
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of PayPeriodService)
         services.AddTransient(Of ProductService)
         services.AddTransient(Of SystemOwnerService)
+
+        services.AddTransient(Of LeaveDataService)
+        services.AddTransient(Of PositionDataService)
 
         services.AddTransient(Of PayslipCreator)
 

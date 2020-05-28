@@ -20,7 +20,7 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int positionId)
+        internal async Task DeleteAsync(int positionId)
         {
             var position = await GetByIdAsync(positionId);
 
@@ -63,14 +63,14 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Position> GetByIdAsync(int positionId)
+        internal async Task<Position> GetByIdAsync(int positionId)
         {
             return await _context.Positions.
                             Where(p => p.RowID == positionId).
                             FirstOrDefaultAsync();
         }
 
-        public async Task<Position> GetByIdWithDivisionAsync(int positionId)
+        internal async Task<Position> GetByIdWithDivisionAsync(int positionId)
         {
             return await _context.Positions.
                             Include(p => p.Division).

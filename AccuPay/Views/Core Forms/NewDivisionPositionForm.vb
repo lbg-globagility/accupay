@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
@@ -841,8 +842,8 @@ Public Class NewDivisionPositionForm
             Return
         End If
 
-        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-        Await positionRepository.DeleteAsync(Me._currentPosition.RowID.Value)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Await positionService.DeleteAsync(Me._currentPosition.RowID.Value)
 
         _userActivityRepository.RecordDelete(z_User, PositionEntityName, CInt(Me._currentPosition.RowID), z_OrganizationID)
 

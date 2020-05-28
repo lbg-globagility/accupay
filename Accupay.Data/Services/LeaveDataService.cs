@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LeaveService
+    public class LeaveDataService
     {
         private List<string> VALIDATABLE_TYPES = new List<string>()
         {
@@ -27,7 +27,7 @@ namespace AccuPay.Data.Services
         private readonly EmployeeRepository _employeeRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
 
-        public LeaveService(PayrollContext context,
+        public LeaveDataService(PayrollContext context,
                             PolicyHelper policy,
                             PayPeriodService payPeriodService,
                             EmployeeRepository employeeRepository,

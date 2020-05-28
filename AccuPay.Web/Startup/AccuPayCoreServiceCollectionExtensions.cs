@@ -84,11 +84,13 @@ namespace AccuPay.Web
             services.AddScoped<TimeEntryGenerator>();
 
             services.AddScoped<AdjustmentService>();
-            services.AddScoped<LeaveService>();
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodService>();
             services.AddScoped<ProductService>();
             services.AddScoped<SystemOwnerService>();
+
+            services.AddScoped<PositionDataService>();
+            services.AddScoped<LeaveDataService>();
 
             return services;
         }

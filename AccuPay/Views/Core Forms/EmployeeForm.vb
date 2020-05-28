@@ -908,7 +908,7 @@ Public Class EmployeeForm
             'this is during edit
             If if_sysowner_is_benchmark AndAlso employeeId IsNot Nothing Then
 
-                Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                 Dim newleaveBalance = Await leaveService.
                                             ForceUpdateLeaveAllowanceAsync(
                                                         employeeId:=employeeId,
@@ -2001,9 +2001,9 @@ Public Class EmployeeForm
             Dim positionId = cboPosit.SelectedValue
             Dim divisionName = String.Empty
 
-            Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+            Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
-            Dim position = Await positionRepository.GetByIdWithDivisionAsync(positionId)
+            Dim position = Await positionService.GetByIdWithDivisionAsync(positionId)
             If position IsNot Nothing Then
                 divisionName = position.Division.Name
             End If

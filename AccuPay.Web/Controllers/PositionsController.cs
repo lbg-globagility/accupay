@@ -1,31 +1,49 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Positions;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PositionsController
+    public class PositionsController : ControllerBase
     {
         private readonly PositionService _service;
-        private readonly PositionRepository _repository;
 
-        public PositionsController(PositionService service, PositionRepository repository)
+        public PositionsController(PositionService service)
         {
             _service = service;
-            _repository = repository;
         }
 
         [HttpGet]
         public async Task<ActionResult<PaginatedList<PositionDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PositionDto>> GetById(int id)
+        {
+            var position = await _service.GetById(id);
+
+            if (position == null)
+                return NotFound();
+            else
+                return position;
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> Delete(int id)
+        {
+            var position = await _service.GetById(id);
+
+            if (position == null) return NotFound();
+
+            await _service.Delete(id);
+
+            return Ok();
         }
     }
 }

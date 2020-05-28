@@ -20,4 +20,12 @@ export class PositionService {
       params,
     });
   }
+
+  get(id: number): Observable<Position> {
+    return this.httpClient.get<Position>(`${this.baseUrl}/${id}`);
+  }
+
+  delete(id: number): Observable<Position> {
+    return this.httpClient.delete<Position>(`${this.baseUrl}/${id}`);
+  }
 }
