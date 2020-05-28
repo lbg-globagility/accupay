@@ -21,9 +21,12 @@ export class NewEmployeeComponent implements OnInit {
   ngOnInit(): void {}
 
   save(employee: Employee) {
-    this.service.create(employee).subscribe((e) => {
-      this.router.navigate([this.baseRoute, e.rowId]);
-    });
+    this.service.create(employee).subscribe(
+      (e) => {
+        this.router.navigate([this.baseRoute, e.rowId]);
+      },
+      (err) => this.errorHandler.badRequest(err, 'Failed to create employee.')
+    );
   }
 
   cancel() {
