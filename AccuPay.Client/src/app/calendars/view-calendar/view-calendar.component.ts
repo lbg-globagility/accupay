@@ -6,6 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { CalendarDayDialogComponent } from 'src/app/calendars/calendar-day-dialog/calendar-day-dialog.component';
 import { DayType } from 'src/app/calendars/shared/day-type';
 import { filter } from 'rxjs/operators';
+import { Calendar } from 'src/app/calendars/shared/calendar';
 
 @Component({
   selector: 'app-view-calendar',
@@ -17,9 +18,11 @@ export class ViewCalendarComponent implements OnInit {
 
   calendarId: number = +this.route.snapshot.paramMap.get('id');
 
-  year: number = 2020;
+  year: number = new Date().getFullYear();
 
   calendarDays: CalendarDay[];
+
+  calendar: Calendar;
 
   dayTypes: DayType[];
 
@@ -32,8 +35,15 @@ export class ViewCalendarComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadCalendar();
     this.loadDays();
     this.loadDayTypes();
+  }
+
+  private loadCalendar() {
+    this.calendarService
+      .getById(this.calendarId)
+      .subscribe((calendar) => (this.calendar = calendar));
   }
 
   private loadDays() {
