@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace AccuPay.Infrastracture.Services.Excel
+﻿namespace AccuPay.Infrastructure.Services.Excel
 {
-    public class WorkSheetIsEmptyException : Exception
+    public class WorkSheetIsEmptyException : ExcelException
     {
         public WorkSheetIsEmptyException(string message = "WorkSheet is empty.") : base(message)
         {

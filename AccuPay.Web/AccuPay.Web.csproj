@@ -20,7 +20,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj" />
-        <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj" />
     </ItemGroup>
 
     <ItemGroup>

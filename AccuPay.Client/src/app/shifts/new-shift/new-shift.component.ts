@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import { ShiftService } from '../shift.service';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
 import { Shift } from '../shared/shift';

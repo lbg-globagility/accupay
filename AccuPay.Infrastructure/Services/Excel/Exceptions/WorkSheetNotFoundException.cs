@@ -1,8 +1,6 @@
-﻿using System;
-
-namespace AccuPay.Infrastracture.Services.Excel
+﻿namespace AccuPay.Infrastructure.Services.Excel
 {
-    public class WorkSheetNotFoundException : Exception
+    public class WorkSheetNotFoundException : ExcelException
     {
         public WorkSheetNotFoundException(string message) : base(message)
         {

@@ -16,11 +16,11 @@ namespace AccuPay.Web.Shifts.Models
 
         public DateTime Date { get; set; }
 
-        public DateTime StartTime { get; set; }
+        public DateTime? StartTime { get; set; }
 
-        public DateTime EndTime { get; set; }
+        public DateTime? EndTime { get; set; }
 
-        public DateTime BreakStartTime { get; set; }
+        public DateTime? BreakStartTime { get; set; }
 
         public decimal BreakLength { get; set; }
 

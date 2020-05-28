@@ -1,4 +1,5 @@
 using AccuPay.Data.Exceptions;
+using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -25,9 +26,17 @@ namespace AccuPay.Web.Core.Middlewares
             {
                 await _next(context);
             }
+            catch (WorkSheetRowParseValueException ex)
+            {
+                await HandleDomainExceptions(context, ex.Message);
+            }
+            catch (ExcelException ex)
+            {
+                await HandleDomainExceptions(context, ex.Message);
+            }
             catch (BusinessLogicException ex)
             {
-                await HandleDomainExceptions(context, ex);
+                await HandleDomainExceptions(context, ex.Message);
             }
             catch (Exception ex)
             {
@@ -36,9 +45,9 @@ namespace AccuPay.Web.Core.Middlewares
             }
         }
 
-        private Task HandleDomainExceptions(HttpContext context, BusinessLogicException ex)
+        private Task HandleDomainExceptions(HttpContext context, string message)
         {
-            var result = JsonConvert.SerializeObject(new { Error = ex.Message });
+            var result = JsonConvert.SerializeObject(new { Error = message });
             context.Response.ContentType = CONTENT_TYPE;
             context.Response.StatusCode = (int)400;
 

@@ -1,7 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
-using AccuPay.Infrastracture.Services.Excel;
+using AccuPay.Infrastructure.Services.Excel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,6 +23,15 @@ namespace AccuPay.Data.Services.Imports
             _parser = new ExcelParser<ShiftScheduleRowRecord>(workSheetName);
         }
 
+        public string XlsxExtension => ExcelParser<ShiftScheduleRowRecord>.XlsxExtension;
+
+        /// <summary>
+        /// Parses a stream into a list of models. This only supports .xlsx files.
+        /// Please check first if the file is an .xlsx type. If it is not, please throw an InvalidFormatException.
+        /// </summary>
+        /// <param name="importFile"></param>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public Task<ShiftImportParserOutput> Parse(Stream importFile, int organizationId)
         {
             var parsedRecords = _parser.Read(importFile);

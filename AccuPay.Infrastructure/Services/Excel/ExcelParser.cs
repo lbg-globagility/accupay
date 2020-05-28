@@ -8,10 +8,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 
-namespace AccuPay.Infrastracture.Services.Excel
+namespace AccuPay.Infrastructure.Services.Excel
 {
     public class ExcelParser<T> where T : IExcelRowRecord, new()
     {
+        public const string XlsxExtension = ".xlsx";
+
         private readonly string _worksheetName;
 
         public ExcelParser()
@@ -26,7 +28,7 @@ namespace AccuPay.Infrastracture.Services.Excel
         public IList<T> Read(string filePath)
         {
             // we can probably support other file format unless it's .xls
-            if (Path.GetExtension(filePath) != ".xlsx")
+            if (Path.GetExtension(filePath) != XlsxExtension)
                 throw new InvalidFormatException();
 
             var stream = GetFileContents(filePath);
@@ -36,6 +38,7 @@ namespace AccuPay.Infrastracture.Services.Excel
 
         /// <summary>
         /// Parses a stream into a list of models. This only supports .xlsx files.
+        /// Please check first if the file is an .xlsx type. If it is not, please throw an InvalidFormatException.
         /// </summary>
         /// <param name="fileStream"></param>
         /// <returns></returns>

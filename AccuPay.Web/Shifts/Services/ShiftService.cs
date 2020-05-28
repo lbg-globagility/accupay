@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Shifts.Models;
 using System;
 using System.IO;
@@ -83,11 +84,11 @@ namespace AccuPay.Web.Shifts.Services
 
         internal async Task Import(ImportShiftDto dto)
         {
-            Stream stream;
-            using (stream = new MemoryStream())
-            {
-                await dto.File.CopyToAsync(stream);
-            }
+            if (Path.GetExtension(dto.File.FileName) != _importParser.XlsxExtension)
+                throw new InvalidFormatException();
+
+            Stream stream = new MemoryStream();
+            await dto.File.CopyToAsync(stream);
 
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
@@ -122,9 +123,9 @@ namespace AccuPay.Web.Shifts.Services
                 EmployeeName = shift.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = shift.Employee?.EmployeeType,
                 Date = shift.DateSched,
-                StartTime = shift.ShiftStartTimeFull.Value,
-                EndTime = shift.ShiftEndTimeFull.Value,
-                BreakStartTime = shift.ShiftBreakStartTimeFull.Value,
+                StartTime = shift.ShiftStartTimeFull,
+                EndTime = shift.ShiftEndTimeFull,
+                BreakStartTime = shift.ShiftBreakStartTimeFull,
                 BreakLength = shift.BreakLength,
                 IsOffset = shift.IsRestDay
             };

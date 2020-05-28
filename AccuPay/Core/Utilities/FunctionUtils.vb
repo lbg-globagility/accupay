@@ -2,7 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Exceptions
-Imports AccuPay.Infrastracture.Services.Excel
+Imports AccuPay.Infrastructure.Services.Excel
 
 Namespace Global.AccuPay.Utils
 
@@ -70,18 +70,17 @@ Namespace Global.AccuPay.Utils
                 action()
 
                 Return True
-            Catch ex As InvalidFormatException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As WorkSheetNotFoundException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As WorkSheetIsEmptyException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As WorkSheetRowParseValueException
 
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As ExcelException
+
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As Exception
+                Debugger.Break()
+
+                MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+
             End Try
 
             Return False
@@ -94,18 +93,17 @@ Namespace Global.AccuPay.Utils
             Try
 
                 Await action()
-            Catch ex As InvalidFormatException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As WorkSheetNotFoundException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-            Catch ex As WorkSheetIsEmptyException
-
-                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
             Catch ex As WorkSheetRowParseValueException
 
                 MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As ExcelException
+
+                MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
+            Catch ex As Exception
+                Debugger.Break()
+
+                MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
+
             End Try
 
         End Function

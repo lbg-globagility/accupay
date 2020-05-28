@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data.Entities
-Imports AccuPay.Infrastracture.Services.Excel
+Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Utilities
 
 Public Class OvertimeRowRecord

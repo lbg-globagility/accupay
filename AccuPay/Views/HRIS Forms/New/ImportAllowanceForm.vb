@@ -3,7 +3,7 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
-Imports AccuPay.Infrastracture.Services.Excel
+Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Utils
 Imports Globagility.AccuPay.Loans
 Imports Microsoft.Extensions.DependencyInjection

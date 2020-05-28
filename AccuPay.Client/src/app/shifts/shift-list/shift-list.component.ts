@@ -8,9 +8,8 @@ import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
-import { Router } from '@angular/router';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-shift-list',
@@ -54,20 +53,19 @@ export class ShiftListComponent implements OnInit {
 
   constructor(
     private shiftService: ShiftService,
-    private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.getOvertimeList());
+      .subscribe(() => this.getShiftList());
   }
 
   ngOnInit(): void {
-    this.getOvertimeList();
+    this.getShiftList();
   }
 
-  getOvertimeList() {
+  getShiftList() {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -105,7 +103,7 @@ export class ShiftListComponent implements OnInit {
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.getOvertimeList();
+    this.getShiftList();
   }
 
   onImport(files: FileList) {
@@ -113,32 +111,20 @@ export class ShiftListComponent implements OnInit {
 
     this.shiftService.import(file).subscribe(
       () => {
+        this.getShiftList();
         this.displaySuccess();
-        this.router.navigate(['shifts']);
       },
-      (err) => this.showErrorDialog(err)
+      (err) => this.errorHandler.badRequest(err, 'Failed to import shift.')
     );
   }
 
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully imported a new shift!',
+      text: 'Successfully imported new shifts!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(err): void {
-    let message: string = 'Failed to import shift.';
-
-    if (err && err.status == 400) {
-      message = err.error.Error;
-    }
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

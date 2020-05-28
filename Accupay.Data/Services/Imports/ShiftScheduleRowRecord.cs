@@ -1,4 +1,4 @@
-﻿using AccuPay.Infrastracture.Services.Excel;
+﻿using AccuPay.Infrastructure.Services.Excel;
 using System;
 
 namespace AccuPay.Data.Services.Imports

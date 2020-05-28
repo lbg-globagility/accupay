@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccuPay.Infrastracture.Services.Excel
+namespace AccuPay.Infrastructure.Services.Excel
 {
     public class IgnoreAttribute : Attribute
     {
