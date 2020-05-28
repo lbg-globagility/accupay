@@ -4,6 +4,7 @@ using AccuPay.Web.Core.Extensions;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -57,7 +58,9 @@ namespace AccuPay.Web.Controllers
 
             if (!string.IsNullOrWhiteSpace(term))
             {
-                query = query.Where(s => s.FullNameWithMiddleInitialLastNameFirst.Contains(term, StringComparison.OrdinalIgnoreCase));
+                query = query.Where(x =>
+                                    EF.Functions.Like(x.EmployeeNo, term) ||
+                                    EF.Functions.Like(x.FullNameWithMiddleInitialLastNameFirst, term));
             }
 
             query = options.Sort switch
