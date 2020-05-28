@@ -48,6 +48,8 @@ import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.co
 import { TimeLogTableComponent } from './time-logs/time-log-table/time-log-table.component';
 import { PositionListComponent } from './positions/position-list/position-list.component';
 import { ViewPositionComponent } from 'src/app/positions/view-position/view-position.component';
+import { NewPositionComponent } from 'src/app/positions/new-position/new-position.component';
+import { EditPositionComponent } from 'src/app/positions/edit-position/edit-position.component';
 
 const routes: Routes = [
   {
@@ -219,8 +221,16 @@ const routes: Routes = [
         component: PositionListComponent,
       },
       {
+        path: 'positions/new',
+        component: NewPositionComponent,
+      },
+      {
         path: 'positions/:id',
         component: ViewPositionComponent,
+      },
+      {
+        path: 'positions/:id/edit',
+        component: EditPositionComponent,
       },
     ],
     canActivate: [AuthGuard],

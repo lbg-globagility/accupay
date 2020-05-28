@@ -25,6 +25,14 @@ export class PositionService {
     return this.httpClient.get<Position>(`${this.baseUrl}/${id}`);
   }
 
+  create(overtime: Position): Observable<Position> {
+    return this.httpClient.post<Position>(`${this.baseUrl}`, overtime);
+  }
+
+  update(overtime: Position, id: number): Observable<Position> {
+    return this.httpClient.put<Position>(`${this.baseUrl}/${id}`, overtime);
+  }
+
   delete(id: number): Observable<Position> {
     return this.httpClient.delete<Position>(`${this.baseUrl}/${id}`);
   }

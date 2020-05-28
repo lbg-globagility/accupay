@@ -2,14 +2,13 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class PositionRepository
+    public class PositionRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -29,15 +28,9 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<Position> SaveAsync(Position position, int organizationId, int divisionId)
+        internal async Task SaveAsync(Position position)
         {
-            // divisionId is passed as an additional check to have a divisionId that is not null
-            position.DivisionID = divisionId;
-
-            if (await GetByNameBaseQuery(organizationId, position.Name).AnyAsync())
-                throw new ArgumentException("Position name already exists!");
-
-            if (position.RowID == null)
+            if (isNewEntity(position.RowID))
             {
                 _context.Positions.Add(position);
             }
@@ -47,14 +40,6 @@ namespace AccuPay.Data.Repositories
             }
 
             await _context.SaveChangesAsync();
-
-            var newPosition = await _context.Positions.
-                                    FirstOrDefaultAsync(p => p.RowID == position.RowID);
-
-            if (newPosition == null)
-                throw new ArgumentException("There was a problem inserting the new position. Please try again.");
-
-            return newPosition;
         }
 
         #endregion CRUD
@@ -80,15 +65,11 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Position> GetByNameAsync(int organizationId, string positionName)
         {
-            return await GetByNameBaseQuery(organizationId, positionName).
-                            FirstOrDefaultAsync();
-        }
-
-        private IQueryable<Position> GetByNameBaseQuery(int organizationId, string positionName)
-        {
-            return _context.Positions.
-                        Where(p => p.OrganizationID == organizationId).
-                        Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase());
+            return await _context.Positions
+                            .Where(p => p.OrganizationID == organizationId)
+                            .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase())
+                            .AsNoTracking()
+                            .FirstOrDefaultAsync();
         }
 
         public async Task<List<Position>> GetAllByNameAsync(string positionName)
@@ -98,7 +79,7 @@ namespace AccuPay.Data.Repositories
                 ToListAsync();
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId, int divisionId)
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
         {
             var existingPosition = await GetByNameAsync(organizationId, positionName);
 
@@ -111,9 +92,9 @@ namespace AccuPay.Data.Repositories
                 CreatedBy = userId
             };
 
-            return await SaveAsync(position: position,
-                                    organizationId: organizationId,
-                                    divisionId: divisionId);
+            await SaveAsync(position);
+
+            return position;
         }
 
         #endregion Single entity

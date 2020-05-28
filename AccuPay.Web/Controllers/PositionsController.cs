@@ -23,6 +23,23 @@ namespace AccuPay.Web.Controllers
             return await _service.PaginatedList(options, term);
         }
 
+        [HttpPost]
+        public async Task<ActionResult<PositionDto>> Create([FromBody] CreatePositionDto dto)
+        {
+            return await _service.Create(dto);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<PositionDto>> Update(int id, [FromBody] UpdatePositionDto dto)
+        {
+            var overtime = await _service.Update(id, dto);
+
+            if (overtime == null)
+                return NotFound();
+            else
+                return overtime;
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<PositionDto>> GetById(int id)
         {

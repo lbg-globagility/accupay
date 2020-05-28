@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -168,6 +169,39 @@ namespace AccuPay.Data.Repositories
             return await _context.Divisions.
                                 Where(d => d.OrganizationID == organizationId).
                                 ToListAsync();
+        }
+
+        internal async Task<PaginatedListResult<Division>> GetPaginatedListAsync(PageOptions options, int organizationId, bool isRoot, string searchTerm = "")
+        {
+            var query = _context.Divisions
+                                .Include(x => x.ParentDivision)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderBy(x => x.ParentDivision.Name)
+                                .ThenBy(x => x.Name)
+                                .AsQueryable();
+
+            if (isRoot)
+            {
+                query = query.Where(x => x.ParentDivisionID == null);
+            }
+            else
+            {
+                query = query.Where(x => x.ParentDivisionID != null);
+            }
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Name, searchTerm) ||
+                    EF.Functions.Like(x.ParentDivision.Name, searchTerm));
+            }
+
+            var divisions = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Division>(divisions, count);
         }
 
         public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)

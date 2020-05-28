@@ -415,8 +415,7 @@ Public Class ImportEmployeeForm
                 currentPosition = Await _positionRepository.
                                     GetByNameOrCreateAsync(model.Position,
                                                            organizationId:=z_OrganizationID,
-                                                           userId:=z_User,
-                                                            divisionId:=defaultDivision.RowID.Value)
+                                                           userId:=z_User)
 
                 model.PositionId = currentPosition?.RowID
 

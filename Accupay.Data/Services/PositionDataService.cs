@@ -3,15 +3,12 @@ using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore.Internal;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PositionDataService
+    public class PositionDataService : BaseDataService
     {
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
@@ -34,6 +31,33 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Position already has at least one assigned employee therefore cannot be deleted.");
 
             await _positionRepository.DeleteAsync(positionId);
+        }
+
+        public async Task SaveAsync(Position position)
+        {
+            if (position.DivisionID == null)
+                throw new BusinessLogicException("Division is required.");
+
+            if (position.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
+            var existingPosition = await _positionRepository.GetByNameAsync(position.OrganizationID.Value, position.Name);
+
+            if (existingPosition != null)
+            {
+                // insert
+                if (isNewEntity(position.RowID))
+                {
+                    throw new BusinessLogicException("Position name already exists!");
+                }
+                // update
+                else if (position.RowID.Value != existingPosition.RowID.Value)
+                {
+                    throw new BusinessLogicException("Position name already exists!");
+                }
+            }
+
+            await _positionRepository.SaveAsync(position);
         }
 
         public async Task<Position> GetByIdAsync(int positionId)

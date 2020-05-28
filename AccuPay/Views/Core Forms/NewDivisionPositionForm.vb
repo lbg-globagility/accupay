@@ -769,10 +769,8 @@ Public Class NewDivisionPositionForm
 
         Me._currentPosition.LastUpdBy = z_User
 
-        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-        Await positionRepository.SaveAsync(Me._currentPosition,
-                                            organizationId:=z_OrganizationID,
-                                            divisionId:=Me._currentPosition.DivisionID.Value)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Await positionService.SaveAsync(Me._currentPosition)
 
         RecordUpdatePosition()
 

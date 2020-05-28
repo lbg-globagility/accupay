@@ -89,6 +89,7 @@ namespace AccuPay.Web
             services.AddScoped<ProductService>();
             services.AddScoped<SystemOwnerService>();
 
+            services.AddScoped<DivisionDataService>();
             services.AddScoped<PositionDataService>();
             services.AddScoped<LeaveDataService>();
 

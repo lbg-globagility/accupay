@@ -1,6 +1,6 @@
 namespace AccuPay.Web.Positions
 {
-    public class PositionDto
+    public abstract class CrudPositionDto
     {
         public int Id { get; set; }
 
