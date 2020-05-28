@@ -97,6 +97,11 @@ namespace AccuPay.Data.Repositories
             return await _context.Calendars.ToListAsync();
         }
 
+        public async Task<PayCalendar> GetById(int calendarId)
+        {
+            return await _context.Calendars.FindAsync(calendarId);
+        }
+
         /// <summary>
         ///         ''' Gets all days of a calendar that is part of a given year
         ///         ''' </summary>
@@ -109,6 +114,15 @@ namespace AccuPay.Data.Repositories
             var lastDayOfYear = new DateTime(year, 12, 31);
 
             return await GetCalendarDays(calendarId, firstDayOfYear, lastDayOfYear);
+        }
+
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(ICollection<int?> calendarDayIds)
+        {
+            var calendarDays = await _context.CalendarDays
+                .Where(t => calendarDayIds.Contains(t.RowID))
+                .ToListAsync();
+
+            return calendarDays;
         }
 
         /// <summary>

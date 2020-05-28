@@ -50,6 +50,10 @@ import { PositionListComponent } from './positions/position-list/position-list.c
 import { ViewPositionComponent } from 'src/app/positions/view-position/view-position.component';
 import { NewPositionComponent } from 'src/app/positions/new-position/new-position.component';
 import { EditPositionComponent } from 'src/app/positions/edit-position/edit-position.component';
+import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-list.component';
+import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
+import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
+import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
 
 const routes: Routes = [
   {
@@ -231,6 +235,22 @@ const routes: Routes = [
       {
         path: 'positions/:id/edit',
         component: EditPositionComponent,
+      },
+      {
+        path: 'calendars',
+        component: CalendarListComponent,
+      },
+      {
+        path: 'calendars/new',
+        component: NewCalendarComponent,
+      },
+      {
+        path: 'calendars/:id',
+        component: ViewCalendarComponent,
+      },
+      {
+        path: 'calendars/:id/edit',
+        component: EditCalendarComponent,
       },
     ],
     canActivate: [AuthGuard],

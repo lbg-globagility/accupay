@@ -62,6 +62,11 @@ const menuItems: MenuItem[] = [
     icon: 'person',
   },
   {
+    label: 'Calendars',
+    route: '/calendars',
+    icon: 'person',
+  },
+  {
     label: 'Positions',
     route: '/positions',
     icon: 'person',

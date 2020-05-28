@@ -1,0 +1,35 @@
+<h1>Calendars</h1>
+
+<div class="row middle-md">
+  <div class="col-md-6"></div>
+  <div class="col-md-3">
+    <button mat-raised-button color="accent" routerLink="new">
+      NEW CALENDAR
+    </button>
+  </div>
+</div>
+
+<div class="mat-elevation-z1">
+  <table mat-table [dataSource]="calendars" class="w-full">
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let calendar">
+        {{ calendar.name | ifEmpty }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let calendar">
+        <a routerLink="/calendars/{{ calendar.id }}">VIEW</a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="calendars?.length <= 0">
+    No calendars were found.
+  </div>
+</div>
