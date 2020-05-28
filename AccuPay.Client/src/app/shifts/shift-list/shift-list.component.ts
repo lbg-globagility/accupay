@@ -8,6 +8,9 @@ import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
+import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-shift-list',
@@ -49,7 +52,10 @@ export class ShiftListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private shiftService: ShiftService) {
+  constructor(
+    private shiftService: ShiftService,    
+    private router: Router,
+    private snackBar: MatSnackBar) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -99,5 +105,39 @@ export class ShiftListComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getOvertimeList();
+  }
+
+  onImport(files: FileList){
+    const file = files[0];
+
+    this.shiftService.import(file).subscribe(
+      () => {
+        this.displaySuccess();
+        this.router.navigate(['shifts']);
+      },
+      (err) => this.showErrorDialog(err)
+    );
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Successfully imported a new shift!',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
+  }
+
+  private showErrorDialog(err): void {
+    let message: string = 'Failed to import shift.';
+
+    if (err && err.status == 400) {
+      message = err.error.Error;
+    }
+    this.snackBar.open(message, null, {
+      duration: 2000,
+      panelClass: ['mat-toolbar', 'mat-warn'],
+    });
   }
 }

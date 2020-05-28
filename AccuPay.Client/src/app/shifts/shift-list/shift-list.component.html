@@ -28,6 +28,8 @@
     <button mat-raised-button color="accent" class="new-btn" routerLink="new">
       NEW SHIFT
     </button>
+    <input hidden type="file" #uploader (change)="onImport($event.target.files)">
+    <button mat-raised-button color="accent" class="new-btn" (click)="uploader.click()">IMPORT</button>
   </div>
 </div>
 

@@ -56,6 +56,11 @@ namespace AccuPay.Web.Shifts.Services
             return ConvertToDto(shift);
         }
 
+        internal async Task Import(ImportShiftDto dto)
+        {
+
+        }
+
         internal async Task<ShiftDto> Update(int id, UpdateShiftDto dto)
         {
             // TODO: validations

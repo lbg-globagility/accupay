@@ -3,9 +3,8 @@ using AccuPay.Data.Repositories;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
+using Microsoft.VisualStudio.Web.CodeGeneration;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -44,7 +43,16 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<ShiftDto>> Create([FromBody] CreateShiftDto dto)
         {
+
             return await _service.Create(dto);
+        }
+
+        [HttpPost("import")]
+        public async Task<ActionResult> Import([FromForm] ImportShiftDto dto)
+        {
+            await _service.Import(dto);
+
+            return Ok();
         }
 
         [HttpPut("{id}")]

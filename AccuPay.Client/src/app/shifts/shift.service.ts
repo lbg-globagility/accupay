@@ -36,4 +36,12 @@ export class ShiftService {
   delete(id: number): Observable<Shift> {
     return this.httpClient.delete<Shift>(`${this.baseUrl}/${id}`);
   }
+
+  import(file: File): Observable<Shift> {
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    return this.httpClient.post<Shift>(`${this.baseUrl}/import`, formData);
+  }
 }
