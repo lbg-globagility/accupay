@@ -4,6 +4,7 @@ Imports AccuPay.Benchmark
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Payslip
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
@@ -125,8 +126,11 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ProductService)
         services.AddTransient(Of SystemOwnerService)
 
+        services.AddTransient(Of EmployeeDutyScheduleDataService)
         services.AddTransient(Of LeaveDataService)
         services.AddTransient(Of PositionDataService)
+
+        services.AddTransient(Of ShiftImportParser)
 
         services.AddTransient(Of PayslipCreator)
 

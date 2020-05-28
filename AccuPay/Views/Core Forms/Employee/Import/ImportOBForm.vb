@@ -53,11 +53,12 @@ Public Class ImportOBForm
         Dim fileName = browseFile.FileName
 
         Dim records As New List(Of OBRowRecord)
-        Dim parser = New ExcelParser(Of OBRowRecord)()
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
-                records = parser.Read(fileName).ToList
+                records = ExcelService(Of OBRowRecord).
+                                Read(fileName).
+                                ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return

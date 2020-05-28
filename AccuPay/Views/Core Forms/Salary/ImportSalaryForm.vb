@@ -45,11 +45,10 @@ Public Class ImportSalaryForm
         Dim fileName = browseFile.FileName
 
         Dim records As New List(Of SalaryRowRecord)
-        Dim parser = New ExcelParser(Of SalaryRowRecord)("Employee Salary")
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
                                 Sub()
-                                    records = parser.Read(fileName).ToList
+                                    records = ExcelService(Of SalaryRowRecord).Read(fileName, "Employee Salary").ToList
                                 End Sub)
 
         If parsedSuccessfully = False Then Return

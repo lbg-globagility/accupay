@@ -140,8 +140,8 @@
     <Reference Include="EnvDTE, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
-    <Reference Include="EPPlus">
-      <HintPath>..\packages\EPPlus.4.1.0\lib\net40\EPPlus.dll</HintPath>
+    <Reference Include="EPPlus, Version=4.5.3.3, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.3.3\lib\net40\EPPlus.dll</HintPath>
     </Reference>
     <Reference Include="EWSoftware.ListControls">
       <HintPath>References\EWSoftware.ListControls.dll</HintPath>
@@ -322,6 +322,7 @@
     <Reference Include="Pomelo.JsonObject, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Pomelo.JsonObject.2.0.0\lib\netstandard2.0\Pomelo.JsonObject.dll</HintPath>
     </Reference>
+    <Reference Include="PresentationCore" />
     <Reference Include="Remotion.Linq, Version=2.2.0.0, Culture=neutral, PublicKeyToken=fee00910d6e5f53b, processorArchitecture=MSIL">
       <HintPath>..\packages\Remotion.Linq.2.2.0\lib\net45\Remotion.Linq.dll</HintPath>
     </Reference>
@@ -419,12 +420,9 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
-    <Compile Include="Core\Utilities\Attributes\ColumnNameAttribute.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
-    <Compile Include="Core\Utilities\Excel\IExcelRowRecord.vb" />
-    <Compile Include="Core\Utilities\Excel\WorkSheetIsEmptyException.vb" />
-    <Compile Include="Core\Utilities\Excel\WorkSheetNotFoundException.vb" />
-    <Compile Include="Core\Utilities\Excel\WorkSheetRowParseValueException.vb" />
+    <Compile Include="Core\Utilities\Excel\ExcelHelper.vb" />
+    <Compile Include="Core\Utilities\Excel\ExcelService.vb" />
     <Compile Include="Core\Utilities\FunctionUtils.vb" />
     <Compile Include="Core\Utilities\Helper\DownloadTemplateHelper.vb" />
     <Compile Include="Core\Utilities\Helper\OpenFileDialogImportHelper.vb" />
@@ -438,7 +436,6 @@
     <Compile Include="Domain\Commons\DebugUtility.vb" />
     <Compile Include="Domain\BankExports\ExportBankFile.vb" />
     <Compile Include="Domain\Commons\FeatureList.vb" />
-    <Compile Include="Core\Utilities\Attributes\IgnoreAttribute.vb" />
     <Compile Include="Domain\PayPeriod\PayPeriodStatusData.vb" />
     <Compile Include="Domain\TimeEntry\OBRowRecord.vb" />
     <Compile Include="Domain\TimeEntry\OvertimeRowRecord.vb" />
@@ -1086,7 +1083,6 @@
     <Compile Include="Views\Core Forms\Salary\ImportSalaryForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Core\Utilities\Excel\ExcelParser.vb" />
     <Compile Include="Domain\Salaries\SalaryRowRecord.vb" />
     <Compile Include="Views\Core Forms\TimeEntry\DateRangePickerDialog.Designer.vb">
       <DependentUpon>DateRangePickerDialog.vb</DependentUpon>
@@ -2827,6 +2823,10 @@
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
       <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>AccuPay.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj">
+      <Project>{f5b0535d-e73b-4d47-a19c-3bb57254246d}</Project>
+      <Name>AccuPay.Infrastructure</Name>
     </ProjectReference>
     <ProjectReference Include="..\Accupay.Payslip\AccuPay.Payslip.vbproj">
       <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>

@@ -1,4 +1,5 @@
-﻿using AccuPay.Utilities.Extensions;
+﻿using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -35,8 +36,8 @@ namespace AccuPay.Data.Entities
         public TimeSpan? BreakStartTime { get; set; }
         public decimal BreakLength { get; set; }
         public bool IsRestDay { get; set; }
-        public decimal ShiftHours { get; set; }
-        public decimal WorkHours { get; set; }
+        public decimal ShiftHours { get; internal set; }
+        public decimal WorkHours { get; internal set; }
 
         public virtual Employee Employee { get; set; }
 
@@ -70,6 +71,27 @@ namespace AccuPay.Data.Entities
             set => BreakStartTime = value == null ? null : value?.TimeOfDay;
         }
 
+        /// <summary>
+        /// Computes the shift hours and also update the work hours.
+        /// </summary>
+        public void ComputeShiftHours()
+        {
+            if (StartTime.HasValue && EndTime.HasValue)
+            {
+                var trueEndTime = StartTime > EndTime ? EndTime.Value.AddOneDay() : EndTime.Value;
 
+                double totalMinutes = (trueEndTime - StartTime).Value.TotalMinutes;
+
+                ShiftHours = Convert.ToDecimal(totalMinutes / TimeConstants.MinutesPerHour);
+            }
+            else
+            {
+                ShiftHours = 0;
+            }
+
+            ComputeWorkHours();
+        }
+
+        private void ComputeWorkHours() => WorkHours = ShiftHours > BreakLength ? ShiftHours - BreakLength : 0;
     }
 }

@@ -53,11 +53,12 @@ Public Class ImportOvertimeForm
         Dim fileName = browseFile.FileName
 
         Dim records As New List(Of OvertimeRowRecord)
-        Dim parser = New ExcelParser(Of OvertimeRowRecord)()
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
-                records = parser.Read(fileName).ToList
+                records = ExcelService(Of OvertimeRowRecord).
+                                Read(fileName).
+                                ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return

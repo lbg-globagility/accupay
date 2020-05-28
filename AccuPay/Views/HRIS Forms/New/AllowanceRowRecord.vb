@@ -1,7 +1,6 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Attributes
+Imports AccuPay.Infrastracture.Services.Excel
 
 Namespace Global.Globagility.AccuPay.Loans
 

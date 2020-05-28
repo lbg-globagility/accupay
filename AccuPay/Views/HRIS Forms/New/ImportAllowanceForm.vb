@@ -3,8 +3,8 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
+Imports AccuPay.Infrastracture.Services.Excel
 Imports AccuPay.Utils
-Imports Globagility.AccuPay
 Imports Globagility.AccuPay.Loans
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -74,7 +74,7 @@ Public Class ImportAllowanceForm
         Dim records As New List(Of AllowanceRowRecord)
         Dim parser = New ExcelParser(Of AllowanceRowRecord)()
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
                 records = parser.Read(fileName).ToList
             End Sub)

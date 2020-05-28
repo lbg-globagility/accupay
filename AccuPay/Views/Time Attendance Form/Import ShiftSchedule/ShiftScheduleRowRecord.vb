@@ -1,51 +1,37 @@
 ﻿Option Strict On
 
-Imports AccuPay
-Imports AccuPay.Attributes
+Imports AccuPay.Infrastracture.Services.Excel
 
 Namespace Global.Globagility.AccuPay.ShiftSchedules
 
     Public Class ShiftScheduleRowRecord
-        Implements IShiftScheduleRowRecord
+        Implements IExcelRowRecord
 
         <ColumnName("Employee No")>
-        Public Property EmployeeNo As String Implements IShiftScheduleRowRecord.EmployeeNo
+        Public Property EmployeeNo As String
 
         <ColumnName("Effective Date From")>
-        Public Property StartDate As Date Implements IShiftScheduleRowRecord.StartDate
+        Public Property StartDate As Date
 
         <ColumnName("Effective Date To (Optional)")>
-        Public Property EndDate As Date? Implements IShiftScheduleRowRecord.EndDate
+        Public Property EndDate As Date?
 
         <ColumnName("Time From")>
-        Public Property StartTime As TimeSpan? Implements IShiftScheduleRowRecord.StartTime
+        Public Property StartTime As TimeSpan?
 
         <ColumnName("Time To")>
-        Public Property EndTime As TimeSpan? Implements IShiftScheduleRowRecord.EndTime
+        Public Property EndTime As TimeSpan?
 
         <ColumnName("Break Start Time (Optional)")>
-        Public Property BreakStartTime As TimeSpan? Implements IShiftScheduleRowRecord.BreakStartTime
+        Public Property BreakStartTime As TimeSpan?
 
         <ColumnName("Break Length (Optional)")>
-        Public Property BreakLength As Decimal Implements IShiftScheduleRowRecord.BreakLength
+        Public Property BreakLength As Decimal
 
         <ColumnName("Offset (Optional) (true/false)")>
-        Public Property IsRestDay As Boolean Implements IShiftScheduleRowRecord.IsRestDay
+        Public Property IsRestDay As Boolean
 
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
     End Class
-
-    Public Interface IShiftScheduleRowRecord
-        Inherits IExcelRowRecord
-
-        Property EmployeeNo As String
-        Property StartDate As Date
-        Property EndDate As Date?
-        Property StartTime As TimeSpan?
-        Property EndTime As TimeSpan?
-        Property BreakStartTime As TimeSpan?
-        Property BreakLength As Decimal
-        Property IsRestDay As Boolean
-    End Interface
 
 End Namespace

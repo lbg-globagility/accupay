@@ -144,7 +144,7 @@ Public Class EmployeeTreeView
                 }
 
                 Dim childEmployees = employees.
-                    Where(Function(e) Nullable.Equals(e.Position?.Division.RowID, childDivision.RowID))
+                    Where(Function(e) Nullable.Equals(e.Position?.Division?.RowID, childDivision.RowID))
 
                 If Not childEmployees.Any() Then
                     Continue For

@@ -1,10 +1,10 @@
 Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Helpers
+Imports AccuPay.Infrastracture.Services.Excel
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -15,7 +15,6 @@ Public Class ImportEmployeeForm
 #Region "VariableDeclarations"
 
     Private Const FormEntityName As String = "Employee"
-    Private _ep As New ExcelParser(Of EmployeeModel)
     Private _filePath As String
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
@@ -342,9 +341,11 @@ Public Class ImportEmployeeForm
 
         Dim models As New List(Of EmployeeModel)
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
-                models = _ep.Read(_filePath).ToList
+                models = ExcelService(Of EmployeeModel).
+                            Read(_filePath).
+                            ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return

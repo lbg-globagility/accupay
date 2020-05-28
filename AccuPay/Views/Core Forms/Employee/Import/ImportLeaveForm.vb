@@ -1,11 +1,11 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.Attributes
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
+Imports AccuPay.Infrastracture.Services.Excel
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Microsoft.Extensions.DependencyInjection
@@ -15,8 +15,6 @@ Public Class ImportLeaveForm
 
     Private Const FormEntityName As String = "Leave"
     Private _filePath As String
-    Private _worksheetName As String
-    Private _ep As New ExcelParser(Of LeaveModel)("Employee Leave")
     Private _okModels As List(Of LeaveModel)
     Private _failModels As List(Of LeaveModel)
     Private _categoryRepository As CategoryRepository
@@ -56,9 +54,11 @@ Public Class ImportLeaveForm
     Private Async Sub FilePathChangedAsync()
         Dim models As New List(Of LeaveModel)
 
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()
-                models = _ep.Read(_filePath).ToList
+                models = ExcelService(Of LeaveModel).
+                                Read(_filePath, "Employee Leave").
+                                ToList()
             End Sub)
 
         If parsedSuccessfully = False Then Return

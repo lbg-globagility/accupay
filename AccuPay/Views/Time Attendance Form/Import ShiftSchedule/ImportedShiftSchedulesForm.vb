@@ -2,12 +2,10 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.[Imports]
 Imports AccuPay.Helpers
-Imports AccuPay.Utilities
 Imports AccuPay.Utils
-Imports Globagility.AccuPay
-Imports Globagility.AccuPay.ShiftSchedules
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportedShiftSchedulesForm
@@ -16,120 +14,30 @@ Public Class ImportedShiftSchedulesForm
 
     Private Const FormEntityName As String = "Shift Schedule"
 
-    Private _dataSource As IList(Of ShiftScheduleModel)
+    Private _dataSourceOk As IReadOnlyCollection(Of ShiftImportModel)
 
-    Private _dataSourceOk As IList(Of ShiftScheduleModel)
-
-    Private _dataSourceFailed As IList(Of ShiftScheduleModel)
-
-    Private _shiftScheduleRowRecords As IList(Of ShiftScheduleRowRecord)
-
-    Private _employees As IList(Of Employee)
+    Private _dataSourceFailed As IReadOnlyCollection(Of ShiftImportModel)
 
     Public IsSaved As Boolean
 
-    Private _employeeRepository As EmployeeRepository
-
     Private _userActivityRepository As UserActivityRepository
+
+    Private _importParser As ShiftImportParser
 
     Sub New()
 
         InitializeComponent()
 
-        _shiftScheduleRowRecords = New List(Of ShiftScheduleRowRecord)
-
-        _dataSourceFailed = New List(Of ShiftScheduleModel)
-
-        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+        _dataSourceFailed = New List(Of ShiftImportModel)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+
+        _importParser = MainServiceProvider.GetRequiredService(Of ShiftImportParser)
     End Sub
 
 #End Region
 
 #Region "Methods"
-
-    Private Async Sub GetEmployeesAsync(listOfShiftScheduleRowRecord As IList(Of ShiftScheduleRowRecord))
-
-        Dim employeeNumberList As String() = listOfShiftScheduleRowRecord.
-                                                    Select(Function(s) s.EmployeeNo).
-                                                    ToArray
-
-        _employees = (Await _employeeRepository.GetByMultipleEmployeeNumberAsync(
-                                                employeeNumberList,
-                                                z_OrganizationID)).ToList()
-
-        For Each shiftSched In _shiftScheduleRowRecords
-
-            Dim seek = _employees.Where(Function(ee) ee.EmployeeNo = shiftSched.EmployeeNo)
-
-            Dim endDate = If(shiftSched.EndDate.HasValue, shiftSched.EndDate.Value, shiftSched.StartDate)
-            Dim dates = Calendar.EachDay(shiftSched.StartDate, endDate)
-            If seek.Any Then
-                Dim employee = seek.FirstOrDefault
-
-                AppendToDataSourceWithEmployee(shiftSched, dates, employee)
-            Else
-                AppendToDataSourceWithNoEmployee(shiftSched, dates)
-            End If
-
-        Next
-
-        Dim satisfy = Function(ssm As ShiftScheduleModel)
-                          Return ssm.IsValidToSave And ssm.IsExistingEmployee
-                      End Function
-
-        _dataSourceOk = _dataSource.
-            Where(satisfy).
-            ToList()
-
-        gridOK.DataSource = _dataSourceOk
-
-        _dataSourceFailed = _dataSource.
-            Where(Function(ssm) Not satisfy(ssm)).
-            ToList()
-
-        For Each ssm In _dataSourceFailed
-            Dim reasons As New List(Of String)
-
-            If Not ssm.IsValidToSave Then reasons.Add("no shift")
-
-            If Not ssm.IsExistingEmployee Then reasons.Add("employee doesn't exists")
-
-            ssm.Remarks = String.Join("; ", reasons.ToArray())
-        Next
-        gridFailed.DataSource = _dataSourceFailed
-
-    End Sub
-
-    Private Sub AppendToDataSourceWithNoEmployee(shiftSched As ShiftScheduleRowRecord, dates As IEnumerable(Of Date))
-        For Each d In dates
-            _dataSource.Add(New ShiftScheduleModel() With {
-                        .EmployeeNo = shiftSched.EmployeeNo,
-                        .DateValue = d,
-                        .BreakFrom = shiftSched.BreakStartTime,
-                        .BreakLength = shiftSched.BreakLength,
-                        .IsRestDay = shiftSched.IsRestDay,
-                        .TimeFrom = shiftSched.StartTime,
-                        .TimeTo = shiftSched.EndTime})
-
-        Next
-    End Sub
-
-    Private Sub AppendToDataSourceWithEmployee(shiftSched As ShiftScheduleRowRecord,
-                                               dates As IEnumerable(Of Date),
-                                               employee As Employee)
-        For Each d In dates
-            _dataSource.Add(New ShiftScheduleModel(employee) With {
-                        .DateValue = d,
-                        .BreakFrom = shiftSched.BreakStartTime,
-                        .BreakLength = shiftSched.BreakLength,
-                        .IsRestDay = shiftSched.IsRestDay,
-                        .TimeFrom = shiftSched.StartTime,
-                        .TimeTo = shiftSched.EndTime})
-
-        Next
-    End Sub
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then
@@ -149,259 +57,6 @@ Public Class ImportedShiftSchedulesForm
         End If
     End Sub
 
-    Private Sub ResetDataSource()
-        _dataSource = New List(Of ShiftScheduleModel)
-
-        GetEmployeesAsync(_shiftScheduleRowRecords)
-    End Sub
-
-#End Region
-
-#Region "PrivateClasses"
-
-    Private Class ShiftScheduleModel
-        Private Const ONE_DAY_HOURS As Integer = 24
-        Private Const MINUTES_PER_HOUR As Integer = 60
-        Private origStartTime, origEndTime, origBreakStart As TimeSpan?
-        Private origOffset As Boolean
-        Private origBreakLength As Decimal
-        Private _timeFrom, _timeTo, _breakFrom As TimeSpan?
-        Private _isNew, _madeChanges, _isValid As Boolean
-        Private _eds As EmployeeDutySchedule
-
-        Public Sub New()
-
-        End Sub
-
-        Public Sub New(employee As Employee)
-            AssignEmployee(employee)
-
-        End Sub
-
-        Public Sub New(ess As EmployeeDutySchedule)
-            _eds = ess
-
-            _RowID = ess.RowID
-            AssignEmployee(ess.Employee)
-
-            _DateValue = ess.DateSched
-            _timeFrom = ess.StartTime
-            _timeTo = ess.EndTime
-
-            _BreakLength = ess.BreakLength
-
-            Dim _hasBreakStart = ess.BreakStartTime.HasValue
-            If _hasBreakStart Then
-                _breakFrom = ess.BreakStartTime
-
-            End If
-
-            _IsRestDay = ess.IsRestDay
-
-            origStartTime = _timeFrom
-            origEndTime = _timeTo
-
-            origBreakStart = _breakFrom
-            origBreakLength = _BreakLength
-
-            origOffset = _IsRestDay
-        End Sub
-
-        Private Sub AssignEmployee(employee As Employee)
-            _EmployeeId = employee.RowID
-            _EmployeeNo = employee.EmployeeNo
-            _FullName = String.Join(", ", employee.LastName, employee.FirstName)
-
-        End Sub
-
-        Public Property RowID As Integer
-        Public Property EmployeeId As Integer?
-        Public Property EmployeeNo As String
-        Public Property FullName As String
-        Public Property DateValue As Date
-
-        Public Property TimeFrom As TimeSpan?
-            Get
-                Return _timeFrom
-            End Get
-            Set(value As TimeSpan?)
-                _timeFrom = value
-            End Set
-        End Property
-
-        Public ReadOnly Property TimeFromDisplay As DateTime?
-            Get
-                Return TimeUtility.ToDateTime(_timeFrom)
-            End Get
-        End Property
-
-        Public ReadOnly Property TimeToDisplay As DateTime?
-            Get
-                Return TimeUtility.ToDateTime(_timeTo)
-            End Get
-        End Property
-
-        Public Property TimeTo As TimeSpan?
-            Get
-                Return _timeTo
-            End Get
-            Set(value As TimeSpan?)
-                _timeTo = value
-            End Set
-        End Property
-
-        Public ReadOnly Property BreakFromDisplay As DateTime?
-            Get
-                Return TimeUtility.ToDateTime(_breakFrom)
-            End Get
-        End Property
-
-        Public Property BreakFrom As TimeSpan?
-            Get
-                Return _breakFrom
-            End Get
-            Set(value As TimeSpan?)
-                _breakFrom = value
-            End Set
-        End Property
-
-        Public Property BreakLength As Decimal
-
-        Public Property IsRestDay As Boolean
-
-        Public Property ShiftHours As Decimal
-        Public Property WorkHours As Decimal
-
-        Public Property Remarks As String
-
-        Public Sub ComputeShiftHours()
-            Dim shiftStart = _timeFrom
-            Dim shiftEnd = _timeTo
-
-            Dim isValidForCompute = shiftStart.HasValue And shiftStart.HasValue
-
-            If isValidForCompute Then
-                Dim sdfsd = shiftEnd - shiftStart
-                If sdfsd.Value.Hours <= 0 Then sdfsd = sdfsd.Value.Add(New TimeSpan(ONE_DAY_HOURS, 0, 0))
-
-                ShiftHours = Convert.ToDecimal(sdfsd.Value.TotalMinutes / MINUTES_PER_HOUR)
-            Else
-                ShiftHours = 0
-            End If
-        End Sub
-
-        Public Sub ComputeWorkHours()
-            WorkHours = ShiftHours - BreakLength
-        End Sub
-
-        Public ReadOnly Property DayName As String
-            Get
-                Return GetDayName(DateValue)
-            End Get
-        End Property
-
-        Public Shared Function GetDayName(dateValue As Date) As String
-            Dim machineCulture As Globalization.CultureInfo = Globalization.CultureInfo.CurrentCulture
-
-            Dim dayOfWeek As DayOfWeek = machineCulture.Calendar.GetDayOfWeek(dateValue)
-            Return machineCulture.DateTimeFormat.GetDayName(dayOfWeek)
-        End Function
-
-        Public ReadOnly Property IsExisting As Boolean
-            Get
-                Return _RowID > 0
-            End Get
-        End Property
-
-        Public ReadOnly Property HasChanged As Boolean
-            Get
-                _madeChanges = Not Equals(origStartTime, _timeFrom) _
-                    Or Not Equals(origEndTime, _timeTo) _
-                    Or Not Equals(origBreakStart, _breakFrom) _
-                    Or Not Equals(origBreakLength, _BreakLength) _
-                    Or Not Equals(origOffset, _IsRestDay)
-
-                Return _madeChanges
-            End Get
-        End Property
-
-        Public ReadOnly Property IsValidToSave As Boolean
-            Get
-                Dim hasShiftTime = _timeFrom.HasValue _
-                    And _timeTo.HasValue
-
-                _isValid = hasShiftTime Or _IsRestDay
-
-                Return _isValid
-            End Get
-        End Property
-
-        Public ReadOnly Property IsExistingEmployee() As Boolean
-            Get
-                Return EmployeeId.HasValue
-            End Get
-        End Property
-
-        Public ReadOnly Property IsExist As Boolean
-            Get
-                Return _eds IsNot Nothing
-            End Get
-        End Property
-
-        Public ReadOnly Property IsNew As Boolean
-            Get
-                Return (_eds?.RowID).GetValueOrDefault() = 0 And IsValidToSave
-            End Get
-        End Property
-
-        Public ReadOnly Property IsUpdate As Boolean
-            Get
-                Return Not IsNew And _madeChanges And IsValidToSave
-            End Get
-        End Property
-
-        Public ReadOnly Property ConsideredDelete As Boolean
-            Get
-                Dim _deleteable = Not IsValidToSave And IsExist
-
-                Return _deleteable
-            End Get
-        End Property
-
-        Public Sub RemoveShift()
-            _eds = Nothing
-        End Sub
-
-        Public ReadOnly Property ToEmployeeDutySchedule As EmployeeDutySchedule
-            Get
-                If _eds Is Nothing Then
-                    _eds = New EmployeeDutySchedule With {
-                        .EmployeeID = _EmployeeId,
-                        .OrganizationID = z_OrganizationID,
-                        .DateSched = _DateValue,
-                        .CreatedBy = z_User,
-                        .Created = Now
-                    }
-                End If
-
-                With _eds
-                    .LastUpdBy = z_User
-                    .LastUpd = Now
-                    .StartTime = _timeFrom
-                    .EndTime = _timeTo
-                    .BreakStartTime = _breakFrom
-                    .BreakLength = _BreakLength
-                    .IsRestDay = _IsRestDay
-                    .ShiftHours = ShiftHours
-                    .WorkHours = WorkHours
-                End With
-
-                Return _eds
-            End Get
-        End Property
-
-    End Class
-
 #End Region
 
 #Region "EventHandlers"
@@ -417,72 +72,57 @@ Public Class ImportedShiftSchedulesForm
 
     End Sub
 
+    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
+
+        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.NewShift)
+
+    End Sub
+
+    Private Async Sub btnBrowse_Click(sender As Object, e As EventArgs) Handles btnBrowse.Click
+
+        Dim workSheetName = "ShiftSchedule"
+
+        Await FunctionUtils.TryCatchExcelParserReadFunctionAsync(
+            Async Function()
+
+                Dim result = ExcelHelper.GetFilePath()
+
+                If result.IsSuccess = False Then Return
+
+                Dim filePath = result.Result
+                Dim parsedResult = Await _importParser.Parse(filePath, z_OrganizationID)
+
+                _dataSourceOk = parsedResult.ValidRecords
+                _dataSourceFailed = parsedResult.InvalidRecords
+
+                gridOK.DataSource = _dataSourceOk
+                gridFailed.DataSource = _dataSourceFailed
+
+            End Function)
+
+    End Sub
+
     Private Async Sub btnSave_ClickAsync(sender As Object, e As EventArgs) Handles btnSave.Click
-
-        Dim minDate = _dataSourceOk.Min(Function(ssm) ssm.DateValue)
-        Dim maxDate = _dataSourceOk.Max(Function(ssm) ssm.DateValue)
-
-        Dim datePeriod = New TimePeriod(minDate, maxDate)
-
-        Dim employeeIDs = _dataSourceOk.Select(Function(ssm) ssm.EmployeeId.Value).
-                                            Distinct().
-                                            ToArray()
-
-        Dim employeeDutyScheduleRepositoryQuery = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim eDutyScheds = Await employeeDutyScheduleRepositoryQuery.
-                            GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID,
-                                                                    employeeIDs,
-                                                                    datePeriod)
-
-        Dim addedShiftSchedules As New List(Of EmployeeDutySchedule)
-        Dim updatedShiftSchedules As New List(Of EmployeeDutySchedule)
-
-        For Each ssm In _dataSourceOk
-            Dim seek = eDutyScheds.
-                    Where(Function(eSched) eSched.EmployeeID.Value = ssm.EmployeeId.Value).
-                    Where(Function(eSched) eSched.DateSched = ssm.DateValue)
-
-            Dim eds = seek.FirstOrDefault
-            ssm.ComputeShiftHours()
-            ssm.ComputeWorkHours()
-
-            If seek.Any Then
-                eds.StartTime = ssm.TimeFrom
-                eds.EndTime = ssm.TimeTo
-                eds.BreakStartTime = ssm.BreakFrom
-                eds.BreakLength = ssm.BreakLength
-
-                eds.ShiftHours = ssm.ShiftHours
-                eds.WorkHours = ssm.WorkHours
-                eds.IsRestDay = ssm.IsRestDay
-
-                updatedShiftSchedules.Add(eds)
-            Else
-
-                addedShiftSchedules.Add(ssm.ToEmployeeDutySchedule)
-            End If
-
-        Next
 
         Await FunctionUtils.TryCatchFunctionAsync("Import Shift Schedule",
             Async Function()
 
-                Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-                Await employeeDutyScheduleRepositorySave.ChangeManyAsync(
-                                                        addedShifts:=addedShiftSchedules,
-                                                         updatedShifts:=updatedShiftSchedules)
+                Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleDataService)
+                Dim result = Await employeeDutyScheduleRepositorySave.BatchApply(_dataSourceOk,
+                                                                                organizationId:=z_OrganizationID,
+                                                                                userId:=z_User)
 
                 Dim importList = New List(Of UserActivityItem)
                 Dim entityName = FormEntityName.ToLower()
 
-                For Each schedule In addedShiftSchedules
+                For Each schedule In result.AddedList
                     importList.Add(New UserActivityItem() With
                             {
                             .Description = $"Imported a new {entityName}.",
                             .EntityId = schedule.RowID
                             })
                 Next
-                For Each schedule In updatedShiftSchedules
+                For Each schedule In result.UpdatedList
                     importList.Add(New UserActivityItem() With
                             {
                             .Description = $"Updated a {entityName} on import.",
@@ -490,7 +130,11 @@ Public Class ImportedShiftSchedulesForm
                             })
                 Next
 
-                _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
+                _userActivityRepository.CreateRecord(z_User,
+                                                     FormEntityName,
+                                                     z_OrganizationID,
+                                                     UserActivityRepository.RecordTypeImport,
+                                                     importList)
 
                 Me.IsSaved = True
                 DialogResult = DialogResult.OK
@@ -523,31 +167,6 @@ Public Class ImportedShiftSchedulesForm
     End Sub
 
     Private Sub gridFailed_DataError(sender As Object, e As DataGridViewDataErrorEventArgs) Handles gridFailed.DataError
-
-    End Sub
-
-    Private Sub btnBrowse_Click(sender As Object, e As EventArgs) Handles btnBrowse.Click
-
-        Dim workSheetName = "ShiftSchedule"
-
-        Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunctionAsync(
-            Sub()
-                Dim excelParserOutput = ExcelParser(Of ShiftScheduleRowRecord).Parse(workSheetName)
-
-                If excelParserOutput.IsSuccess = False Then Return
-
-                _shiftScheduleRowRecords = excelParserOutput.Records
-
-                ResetDataSource()
-            End Sub)
-
-        If parsedSuccessfully = False Then Return
-
-    End Sub
-
-    Private Sub btnDownloadTemplate_Click(sender As Object, e As EventArgs) Handles btnDownloadTemplate.Click
-
-        DownloadTemplateHelper.DownloadExcel(ExcelTemplates.NewShift)
 
     End Sub
 

@@ -4,7 +4,7 @@ namespace AccuPay.Utilities.Extensions
 {
     public static class TimeSpanExtensions
     {
-        private const int MINUTES_PER_HOUR = 60;
+        public const int HoursPerDay = 24;
 
         public static string ToStringFormat(
                                 this TimeSpan timeSpanInput,
@@ -31,7 +31,12 @@ namespace AccuPay.Utilities.Extensions
 
         public static TimeSpan AddHours(this TimeSpan timeSpanInput, int value)
         {
-            return timeSpanInput.Add(new TimeSpan(0, value * MINUTES_PER_HOUR, 0));
+            return timeSpanInput.Add(new TimeSpan(value, 0, 0));
+        }
+
+        public static TimeSpan AddOneDay(this TimeSpan timeSpanInput)
+        {
+            return timeSpanInput.Add(new TimeSpan(HoursPerDay, 0, 0));
         }
 
         public static TimeSpan StripSeconds(this TimeSpan timeSpanInput)

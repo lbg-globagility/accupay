@@ -8,7 +8,7 @@ namespace AccuPay.Data.Helpers
         public bool IsSuccess { get; }
         public string Message { get; }
 
-        private FunctionResult(bool isSuccess, string message)
+        protected FunctionResult(bool isSuccess, string message)
         {
             IsSuccess = isSuccess;
             Message = message;
@@ -64,6 +64,27 @@ namespace AccuPay.Data.Helpers
             hashCode = hashCode * -1521134295 + IsSuccess.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(Message);
             return hashCode;
+        }
+    }
+
+    // TODO: add unit tests on operators of this class
+    public class FunctionResult<T> : FunctionResult
+    {
+        public T Result { get; }
+
+        private FunctionResult(bool isSuccess, T result, string message) : base(isSuccess, message)
+        {
+            Result = result;
+        }
+
+        public static FunctionResult<T> Success(T result)
+        {
+            return new FunctionResult<T>(true, result, string.Empty);
+        }
+
+        public static new FunctionResult<T> Failed(string message = null)
+        {
+            return new FunctionResult<T>(false, default(T), message);
         }
     }
 }

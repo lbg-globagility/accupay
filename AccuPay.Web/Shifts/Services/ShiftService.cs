@@ -1,12 +1,12 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports;
 using AccuPay.Web.Shifts.Models;
-using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Shifts.Services
@@ -14,17 +14,21 @@ namespace AccuPay.Web.Shifts.Services
     public class ShiftService
     {
         private readonly EmployeeDutyScheduleRepository _repository;
+        private readonly EmployeeDutyScheduleDataService _service;
+        private readonly ShiftImportParser _importParser;
 
-        public ShiftService(EmployeeDutyScheduleRepository shiftRepository)
+        public ShiftService(EmployeeDutyScheduleRepository repository, EmployeeDutyScheduleDataService service, ShiftImportParser importParser)
         {
-            _repository = shiftRepository;
+            _repository = repository;
+            _service = service;
+            _importParser = importParser;
         }
 
         public async Task<PaginatedList<ShiftDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
+            int organizationId = 2;
             var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
@@ -39,14 +43,16 @@ namespace AccuPay.Web.Shifts.Services
             return ConvertToDto(shift);
         }
 
-
         internal async Task<ShiftDto> Create(CreateShiftDto dto)
         {
             // TODO: validations
+            int organizationId = 2;
+            int userId = 1;
+
             var shift = new EmployeeDutySchedule
             {
-                OrganizationID = 5,
-                CreatedBy = 1,
+                OrganizationID = organizationId,
+                CreatedBy = userId,
                 EmployeeID = dto.EmployeeId
             };
             ApplyChanges(dto, shift);
@@ -58,7 +64,20 @@ namespace AccuPay.Web.Shifts.Services
 
         internal async Task Import(ImportShiftDto dto)
         {
+            Stream stream;
+            using (stream = new MemoryStream())
+            {
+                await dto.File.CopyToAsync(stream);
+            }
 
+            if (stream == null)
+                throw new Exception("Unable to parse excel file.");
+
+            int organizationId = 2;
+            int userId = 1;
+            var parsedResult = await _importParser.Parse(stream, organizationId);
+
+            await _service.BatchApply(parsedResult.ValidRecords, organizationId: organizationId, userId: userId);
         }
 
         internal async Task<ShiftDto> Update(int id, UpdateShiftDto dto)
@@ -84,14 +103,8 @@ namespace AccuPay.Web.Shifts.Services
             shift.BreakStartTime = dto.BreakStartTime.Value.TimeOfDay;
             shift.BreakLength = dto.BreakLength;
             shift.IsRestDay = dto.IsRestDay;
-            shift.ShiftHours = ComputeShiftHours(dto);
-            shift.WorkHours = shift.ShiftHours - shift.BreakLength;
-        }
 
-        private static decimal ComputeShiftHours(ICrudShiftDto dto)
-        {
-            return (dto.EndTime.Value - dto.StartTime.Value).Hours +
-                (Convert.ToDecimal((dto.EndTime.Value - dto.StartTime.Value).Minutes) / 60);
+            shift.ComputeShiftHours();
         }
 
         private static ShiftDto ConvertToDto(EmployeeDutySchedule shift)
@@ -113,6 +126,5 @@ namespace AccuPay.Web.Shifts.Services
                 IsRestDay = shift.IsRestDay
             };
         }
-
     }
 }

@@ -22,7 +22,6 @@ namespace AccuPay.Web.Controllers
             _repository = repository;
         }
 
-
         [HttpGet]
         public async Task<ActionResult<PaginatedList<ShiftDto>>> List([FromQuery] PageOptions options, string term)
         {
@@ -43,7 +42,6 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<ShiftDto>> Create([FromBody] CreateShiftDto dto)
         {
-
             return await _service.Create(dto);
         }
 
@@ -77,6 +75,5 @@ namespace AccuPay.Web.Controllers
 
             return Ok();
         }
-
     }
 }

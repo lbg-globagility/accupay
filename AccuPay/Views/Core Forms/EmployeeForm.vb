@@ -1191,7 +1191,7 @@ Public Class EmployeeForm
                         .Description = $"Updated {entityName} number of dependents from '{oldEmployee.NoOfDependents.ToString}' to '{txtNumDepen.Text}'."
                         })
         End If
-        If oldEmployee.PayFrequency.Type <> cboPayFreq.Text Then
+        If oldEmployee.PayFrequency?.Type <> cboPayFreq.Text Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
@@ -1333,7 +1333,7 @@ Public Class EmployeeForm
         '                .Description = $"Updated employee division from '{oldEmployee.Position.Division.Name}' to '{txtDivisionName.Text}'."
         '                })
         'End If
-        If oldEmployee.Position.Name <> cboPosit.Text Then
+        If oldEmployee.Position?.Name <> cboPosit.Text Then
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,

@@ -629,29 +629,6 @@ Public Class ShiftScheduleForm
 
         Public Property IsRestDay As Boolean
 
-        Public Property ShiftHours As Decimal
-        Public Property WorkHours As Decimal
-
-        Public Sub ComputeShiftHours()
-            Dim shiftStart = Calendar.ToTimespan(_timeFrom)
-            Dim shiftEnd = Calendar.ToTimespan(_timeTo)
-
-            Dim isValidForCompute = shiftEnd.HasValue And shiftStart.HasValue
-
-            If isValidForCompute Then
-                Dim sdfsd = shiftEnd - shiftStart
-                If sdfsd.Value.Hours <= 0 Then sdfsd = sdfsd.Value.Add(New TimeSpan(ONE_DAY_HOURS, 0, 0))
-
-                ShiftHours = Convert.ToDecimal(sdfsd.Value.TotalMinutes / MINUTES_PER_HOUR)
-            Else
-                ShiftHours = 0
-            End If
-        End Sub
-
-        Public Sub ComputeWorkHours()
-            WorkHours = ShiftHours - BreakLength
-        End Sub
-
         Public ReadOnly Property DayName As String
             Get
                 Return GetDayName(DateValue)
@@ -744,9 +721,9 @@ Public Class ShiftScheduleForm
                     .BreakStartTime = Calendar.ToTimespan(_breakFrom)
                     .BreakLength = _BreakLength
                     .IsRestDay = _IsRestDay
-                    .ShiftHours = ShiftHours
-                    .WorkHours = WorkHours
                 End With
+
+                _eds.ComputeShiftHours()
 
                 Return _eds
             End Get
@@ -919,8 +896,6 @@ Public Class ShiftScheduleForm
         Dim deletedShiftSchedules As New List(Of EmployeeDutySchedule)
 
         For Each ssm In toSaveList
-            ssm.ComputeShiftHours()
-            ssm.ComputeWorkHours()
 
             If ssm.IsNew Then
                 addedShiftSchedules.Add(ssm.ToEmployeeDutySchedule())
