@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -124,6 +125,30 @@ namespace AccuPay.Data.Repositories
             return await _context.Positions.
                 Where(p => p.OrganizationID == organizationId).
                 ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.Positions
+                                .Include(x => x.Division)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderBy(x => x.Division.Name)
+                                .ThenBy(x => x.Name)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.Name, searchTerm) ||
+                    EF.Functions.Like(x.Division.Name, searchTerm));
+            }
+
+            var positions = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Position>(positions, count);
         }
 
         #endregion List of entities

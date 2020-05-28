@@ -46,6 +46,7 @@ import { NewBranchComponent } from 'src/app/branches/new-branch/new-branch.compo
 import { EditBranchComponent } from 'src/app/branches/edit-branch/edit-branch.component';
 import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.component';
 import { TimeLogTableComponent } from './time-logs/time-log-table/time-log-table.component';
+import { PositionListComponent } from './positions/position-list/position-list.component';
 
 const routes: Routes = [
   {
@@ -211,6 +212,10 @@ const routes: Routes = [
       {
         path: 'time-logs',
         component: TimeLogTableComponent,
+      },
+      {
+        path: 'positions',
+        component: PositionListComponent,
       },
     ],
     canActivate: [AuthGuard],
