@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -57,14 +58,6 @@ Public Class AddPositionForm
         Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
-
-    End Function
-
-    Private Async Function LoadJobLevels() As Task
-
-        Dim jobLevels = Await _jobLevelRepository.GetAllAsync(z_OrganizationID)
-
-        _jobLevels = jobLevels.OrderBy(Function(j) j.Name).ToList
 
     End Function
 
@@ -127,10 +120,10 @@ Public Class AddPositionForm
 
     Private Async Function SavePosition(sender As Object) As Task
 
-        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-        Me.LastPositionAdded = Await positionRepository.SaveAsync(Me._newPosition,
-                                                                   organizationId:=z_OrganizationID,
-                                                                    divisionId:=Me._newPosition.DivisionID.Value)
+        Dim positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Await positionService.SaveAsync(Me._newPosition)
+
+        Me.LastPositionAdded = Me._newPosition
 
         _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newPosition.RowID.Value, z_OrganizationID)
 

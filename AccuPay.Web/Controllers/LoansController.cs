@@ -1,7 +1,9 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Loans;
+using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -63,6 +65,24 @@ namespace AccuPay.Web.Controllers
             await _repository.DeleteAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<ICollection<DropDownItem>>> GetLoanTypes()
+        {
+            return await _service.GetLoanTypes();
+        }
+
+        [HttpGet("statuslist")]
+        public ActionResult<ICollection<string>> GetStatusList()
+        {
+            return _repository.GetStatusList();
+        }
+
+        [HttpGet("deductionsechedules")]
+        public async Task<ActionResult<ICollection<string>>> GetDeductionSchedules()
+        {
+            return await _service.GetDeductionSchedules();
         }
     }
 }

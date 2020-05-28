@@ -204,7 +204,8 @@ namespace AccuPay.Data.Services
                         TimeIn = firstTimeIn,
                         TimeOut = finalTimeOut,
                         TimeStampIn = firstTimeStampIn,
-                        TimeStampOut = finalTimeStampOut
+                        TimeStampOut = finalTimeStampOut,
+                        BranchID = currentEmployee.BranchID
                     });
                 }
             }

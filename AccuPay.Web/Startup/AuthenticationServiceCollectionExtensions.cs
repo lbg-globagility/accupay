@@ -1,6 +1,6 @@
-using Accupay.Web.Core.Configurations;
 using AccuPay.Data;
 using AccuPay.Data.Entities;
+using AccuPay.Web.Core.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;

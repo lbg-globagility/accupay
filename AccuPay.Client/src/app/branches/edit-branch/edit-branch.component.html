@@ -1,0 +1,10 @@
+<h1>Edit Branch</h1>
+
+<ng-container *ngIf="state.isSuccess">
+  <app-branch-form
+    [branch]="branch"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  >
+  </app-branch-form>
+</ng-container>

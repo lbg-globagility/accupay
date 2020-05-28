@@ -4,8 +4,7 @@ import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
-import { PageOptions } from 'src/app/core/shared/page-options';
-import { TimeParser } from 'src/app/core/shared/time-parser';
+import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
 
@@ -67,10 +66,8 @@ export class OfficialBusinessFormComponent implements OnInit {
   }
 
   private loadEmployees(): void {
-    const options = new PageOptions(0, 1000, null, null);
-
-    this.employeeService.getList(options).subscribe((data) => {
-      this.employees = data.items;
+    this.employeeService.getAll().subscribe((data) => {
+      this.employees = data;
     });
   }
 

@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
@@ -65,6 +65,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of JobCategoryRepository)
         services.AddTransient(Of JobLevelRepository)
         services.AddTransient(Of LeaveRepository)
+        services.AddTransient(Of LeaveLedgerRepository)
         services.AddTransient(Of ListOfValueRepository)
         services.AddTransient(Of LoanScheduleRepository)
         services.AddTransient(Of LoanTransactionRepository)
@@ -119,11 +120,13 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeEntryGenerator)
 
         services.AddTransient(Of AdjustmentService)
-        services.AddTransient(Of LeaveService)
         services.AddTransient(Of OvertimeRateService)
         services.AddTransient(Of PayPeriodService)
         services.AddTransient(Of ProductService)
         services.AddTransient(Of SystemOwnerService)
+
+        services.AddTransient(Of LeaveDataService)
+        services.AddTransient(Of PositionDataService)
 
         services.AddTransient(Of PayslipCreator)
 

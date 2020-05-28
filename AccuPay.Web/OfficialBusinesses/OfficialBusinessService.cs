@@ -70,7 +70,7 @@ namespace AccuPay.Web.OfficialBusinesses
             return ConvertToDto(officialBusiness);
         }
 
-        private static void ApplyChanges(ICrudOfficialBusinessDto dto, OfficialBusiness officialBusiness)
+        private static void ApplyChanges(CrudOfficialBusinessDto dto, OfficialBusiness officialBusiness)
         {
             officialBusiness.Status = dto.Status;
             officialBusiness.StartDate = dto.StartDate;

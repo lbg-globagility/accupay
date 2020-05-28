@@ -12,10 +12,9 @@ import { LoanService } from 'src/app/loans/loan.service';
 @Component({
   selector: 'app-loan-list',
   templateUrl: './loan-list.component.html',
-  styleUrls: ['./loan-list.component.scss']
+  styleUrls: ['./loan-list.component.scss'],
 })
 export class LoanListComponent implements OnInit {
-
   readonly displayedColumns: string[] = [
     'employeeNumber',
     'employeeName',
@@ -51,7 +50,7 @@ export class LoanListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private loanService: LoanService) { 
+  constructor(private loanService: LoanService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -70,13 +69,11 @@ export class LoanListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.loanService
-      .getAll(options, this.searchTerm)
-      .subscribe((data) => {
-        this.loans = data.items;
-        this.totalCount = data.totalCount;
-        this.dataSource = new MatTableDataSource(this.loans);
-      });
+    this.loanService.getAll(options, this.searchTerm).subscribe((data) => {
+      this.loans = data.items;
+      this.totalCount = data.totalCount;
+      this.dataSource = new MatTableDataSource(this.loans);
+    });
   }
 
   applyFilter(searchTerm: string) {
@@ -104,5 +101,4 @@ export class LoanListComponent implements OnInit {
     this.pageSize = pageEvent.pageSize;
     this.getLoanList();
   }
-
 }

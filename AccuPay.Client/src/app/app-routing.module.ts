@@ -34,11 +34,26 @@ import { ViewShiftComponent } from 'src/app/shifts/view-shift/view-shift.compone
 import { NewShiftComponent } from 'src/app/shifts/new-shift/new-shift.component';
 import { EditShiftComponent } from 'src/app/shifts/edit-shift/edit-shift.component';
 import { AllowanceListComponent } from 'src/app/allowances/allowance-list/allowance-list.component';
+import { ViewAllowanceComponent } from 'src/app/allowances/view-allowance/view-allowance.component';
+import { NewAllowanceComponent } from 'src/app/allowances/new-allowance/new-allowance.component';
+import { EditAllowanceComponent } from 'src/app/allowances/edit-allowance/edit-allowance.component';
 import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
+import { ViewLoanComponent } from 'src/app/loans/view-loan/view-loan.component';
+import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
+import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
 import { EditOrganizationComponent } from 'src/app/organizations/edit-organization/edit-organization.component';
+import { RegisterComponent } from 'src/app/accounts/register/register.component';
+import { NewBranchComponent } from 'src/app/branches/new-branch/new-branch.component';
+import { EditBranchComponent } from 'src/app/branches/edit-branch/edit-branch.component';
+import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.component';
+import { TimeLogTableComponent } from './time-logs/time-log-table/time-log-table.component';
+import { PositionListComponent } from './positions/position-list/position-list.component';
+import { ViewPositionComponent } from 'src/app/positions/view-position/view-position.component';
+import { NewPositionComponent } from 'src/app/positions/new-position/new-position.component';
+import { EditPositionComponent } from 'src/app/positions/edit-position/edit-position.component';
 
 const routes: Routes = [
   {
@@ -162,8 +177,32 @@ const routes: Routes = [
         component: AllowanceListComponent,
       },
       {
+        path: 'allowances/new',
+        component: NewAllowanceComponent,
+      },
+      {
+        path: 'allowances/:id',
+        component: ViewAllowanceComponent,
+      },
+      {
+        path: 'allowances/:id/edit',
+        component: EditAllowanceComponent,
+      },
+      {
         path: 'loans',
         component: LoanListComponent,
+      },
+      {
+        path: 'loans/new',
+        component: NewLoanComponent,
+      },
+      {
+        path: 'loans/:id',
+        component: ViewLoanComponent,
+      },
+      {
+        path: 'loans/:id/edit',
+        component: EditLoanComponent,
       },
       {
         path: 'organizations',
@@ -181,12 +220,48 @@ const routes: Routes = [
         path: 'organizations/:id/edit',
         component: EditOrganizationComponent,
       },
+      {
+        path: 'branches',
+        component: BranchListComponent,
+      },
+      {
+        path: 'branches/new',
+        component: NewBranchComponent,
+      },
+      {
+        path: 'branches/:id/edit',
+        component: EditBranchComponent,
+      },
+      {
+        path: 'time-logs',
+        component: TimeLogTableComponent,
+      },
+      {
+        path: 'positions',
+        component: PositionListComponent,
+      },
+      {
+        path: 'positions/new',
+        component: NewPositionComponent,
+      },
+      {
+        path: 'positions/:id',
+        component: ViewPositionComponent,
+      },
+      {
+        path: 'positions/:id/edit',
+        component: EditPositionComponent,
+      },
     ],
     canActivate: [AuthGuard],
   },
   {
     path: 'login',
     component: LoginComponent,
+  },
+  {
+    path: 'register',
+    component: RegisterComponent,
   },
   { path: '**', component: PageNotFoundComponent },
 ];

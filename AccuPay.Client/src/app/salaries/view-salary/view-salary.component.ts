@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-view-salary',
@@ -23,7 +24,8 @@ export class ViewSalaryComponent implements OnInit {
     private salaryService: SalaryService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -41,15 +43,18 @@ export class ViewSalaryComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== true) return;
 
-      this.salaryService.delete(this.salaryId).subscribe(() => {
-        this.router.navigate(['salaries']);
-        Swal.fire({
-          title: 'Deleted',
-          text: `The salary was successfully deleted.`,
-          icon: 'success',
-          showConfirmButton: true,
-        });
-      });
+      this.salaryService.delete(this.salaryId).subscribe(
+        () => {
+          this.router.navigate(['salaries']);
+          Swal.fire({
+            title: 'Deleted',
+            text: `The salary was successfully deleted.`,
+            icon: 'success',
+            showConfirmButton: true,
+          });
+        },
+        (err) => this.errorHandler.badRequest(err, 'Failed to delete salary.')
+      );
     });
   }
 

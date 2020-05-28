@@ -2,8 +2,10 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Allowances.Models;
 using AccuPay.Web.Allowances.Services;
+using AccuPay.Web.Products;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -65,6 +67,18 @@ namespace AccuPay.Web.Controllers
             await _repository.DeleteAsync(id);
 
             return Ok();
+        }
+
+        [HttpGet("types")]
+        public async Task<ActionResult<ICollection<ProductDto>>> GetAllowanceTypes()
+        {
+            return await _service.GetAllowanceTypes();
+        }
+
+        [HttpGet("frequencylist")]
+        public ActionResult<ICollection<string>> GetFrequencyList()
+        {
+            return _repository.GetFrequencyList();
         }
     }
 }

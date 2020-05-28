@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Models;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,7 @@ namespace AccuPay.Web.Employees.Services
             _employeeRepository = employeeRepository;
         }
 
-        internal async Task Update(int id, EmployeeDto dto)
+        internal async Task<Employee> Update(int id, EmployeeDto dto)
         {
             var employee = await GetEmployeeById(id);
 
@@ -27,6 +28,8 @@ namespace AccuPay.Web.Employees.Services
             ApplyUpdate(dto, employee);
 
             await Save(employee);
+
+            return employee;
         }
 
         internal async Task<Employee> Create(EmployeeDto dto)
@@ -35,7 +38,7 @@ namespace AccuPay.Web.Employees.Services
 
             // this should intercepted, base on Globagility's Client ID
             // and the current User who made the http request
-            employee.OrganizationID = 2;
+            employee.OrganizationID = 7;
             employee.CreatedBy = 1;
 
             ApplyUpdate(dto, employee);

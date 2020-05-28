@@ -32,16 +32,9 @@ namespace AccuPay.Web.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
-            var user = await _repository.GetById(id);
-            var dto = new UserDto()
-            {
-                Id = user.Id,
-                FirstName = user.FirstName,
-                LastName = user.LastName,
-                Email = user.Email
-            };
+            var userDto = await _service.GetById(id);
 
-            return dto;
+            return userDto;
         }
 
         [HttpPost("{id}")]

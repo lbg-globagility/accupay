@@ -16,6 +16,9 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        // Use domain methods like paystubEmail.Failed()
+        // then just call service.Update(paystubEmail)
+        // Methods like this should not exist on the repository
         public void SetStatusToFailed(int paystubEmailId, string errorLogMessage)
         {
             var paystubEmail = _context.PaystubEmails.
@@ -79,9 +82,10 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<PaystubEmail>> GetByPaystubIdsAsync(int[] paystubIds)
         {
-            return await _context.PaystubEmails.
-                Where(x => paystubIds.Contains(x.PaystubID)).
-                ToListAsync();
+            return await _context.PaystubEmails
+                                .Where(x => paystubIds.Contains(x.PaystubID))
+                                .AsNoTracking()
+                                .ToListAsync();
         }
     }
 }

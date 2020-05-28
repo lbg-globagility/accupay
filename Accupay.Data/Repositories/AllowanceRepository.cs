@@ -1,8 +1,8 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -62,17 +62,17 @@ namespace AccuPay.Data.Repositories
         private async Task SaveAsyncFunction(Allowance allowance)
         {
             if (allowance.ProductID == null)
-                throw new ArgumentException("Allowance type cannot be empty.");
+                throw new BusinessLogicException("Allowance type cannot be empty.");
 
             var product = await _context.Products.
                                     Where(p => p.RowID == allowance.ProductID).
                                     FirstOrDefaultAsync();
 
             if (product == null)
-                throw new ArgumentException("The selected allowance type no longer exists. Please close then reopen the form to view the latest data.");
+                throw new BusinessLogicException("The selected allowance type no longer exists.");
 
             if (allowance.IsMonthly && !product.Fixed)
-                throw new ArgumentException("Only fixed allowance type are allowed for Monthly allowances.");
+                throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
 
             // add or update the allowance
             if (allowance.RowID == null)
@@ -89,7 +89,16 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Allowance> GetByIdAsync(int id)
         {
-            return await _context.Allowances.FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Allowances
+                                    .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
+        {
+            return await _context.Allowances
+                                .Include(x => x.Employee)
+                                .Include(x => x.Product)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         public async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,

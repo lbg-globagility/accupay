@@ -17,6 +17,9 @@ import { SalariesModule } from 'src/app/salaries/salaries.module';
 import { UsersModule } from 'src/app/users/users.module';
 import { OrganizationsModule } from 'src/app/organizations/organizations.module';
 import { AuthInterceptor } from 'src/app/core/auth/auth.interceptor';
+import { BranchesModule } from 'src/app/branches/branches.module';
+import { TimeLogsModule } from './time-logs/time-logs.module';
+import { PositionsModule } from './positions/positions.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -37,6 +40,9 @@ import { AuthInterceptor } from 'src/app/core/auth/auth.interceptor';
     SalariesModule,
     UsersModule,
     OrganizationsModule,
+    BranchesModule,
+    TimeLogsModule,
+    PositionsModule,
   ],
   providers: [
     {

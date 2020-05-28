@@ -1,0 +1,9 @@
+<h1>Edit Allowance</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-allowance-form
+    [allowance]="allowance"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-allowance-form>
+</ng-container>

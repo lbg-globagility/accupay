@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +12,11 @@ namespace AccuPay.Web.Leaves
     {
         private readonly LeaveRepository _leaveRepository;
         private readonly ProductRepository _productRepository;
-        private readonly Data.Services.LeaveService _service;
+        private readonly LeaveDataService _service;
 
         public LeaveService(LeaveRepository leaveRepository,
                             ProductRepository productRepository,
-                            Data.Services.LeaveService service)
+                            LeaveDataService service)
         {
             _leaveRepository = leaveRepository;
             _productRepository = productRepository;
@@ -86,11 +87,12 @@ namespace AccuPay.Web.Leaves
             var leaveTypes = await _productRepository.GetLeaveTypesAsync(organizationId);
 
             return leaveTypes
+                    .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))
                     .Select(x => x.PartNo)
                     .ToList();
         }
 
-        private static void ApplyChanges(ICrudLeaveDto dto, Leave leave)
+        private static void ApplyChanges(CrudLeaveDto dto, Leave leave)
         {
             leave.LeaveType = dto.LeaveType;
             leave.Status = dto.Status;

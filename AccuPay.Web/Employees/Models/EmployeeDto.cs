@@ -7,6 +7,10 @@ namespace AccuPay.Web.Employees.Models
     {
         public static EmployeeDto Convert(Employee employee)
         {
+            if (employee == null)
+            {
+                return new EmployeeDto();
+            }
             return FromEmployeeToDto(employee);
         }
 

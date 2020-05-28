@@ -1,9 +1,9 @@
 import Swal from 'sweetalert2';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-new-official-business',
@@ -14,7 +14,7 @@ export class NewOfficialBusinessComponent {
   constructor(
     private officialBusinessService: OfficialBusinessService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {}
 
   onSave(officialBusiness: OfficialBusiness): void {
@@ -23,7 +23,8 @@ export class NewOfficialBusinessComponent {
         this.displaySuccess();
         this.router.navigate(['official-businesses', x.id]);
       },
-      (err) => this.showErrorDialog(err)
+      (err) =>
+        this.errorHandler.badRequest(err, 'Failed to create official business.')
     );
   }
 
@@ -38,18 +39,6 @@ export class NewOfficialBusinessComponent {
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(err): void {
-    let message: string = 'Failed to update official business.';
-
-    if (err && err.status == 400) {
-      message = err.error.Error;
-    }
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

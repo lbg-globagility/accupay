@@ -150,7 +150,7 @@ Public Class ImportLeaveForm
         Return Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                         Async Function() As Task(Of Boolean)
 
-                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                             Await leaveService.SaveManyAsync(leaves,
                                                              z_OrganizationID)
 

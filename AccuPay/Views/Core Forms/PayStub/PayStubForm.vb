@@ -64,10 +64,8 @@ Public Class PayStubForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _results = New BlockingCollection(Of PayrollGeneration.Result)()
 
         _payPeriodDataList = New List(Of PayPeriodStatusData)
@@ -1056,20 +1054,24 @@ Public Class PayStubForm
 
             For Each strval In payfrqncy
 
+                If strval Is Nothing OrElse strval.ToString().Trim().ToUpper() <> "SEMI-MONTHLY" Then
+                    Continue For
+                End If
+
                 Dim new_tsbtn As New ToolStripButton
 
                 With new_tsbtn
 
                     .AutoSize = False
                     .BackColor = Color.FromArgb(255, 255, 255)
-                    .ImageTransparentColor = System.Drawing.Color.Magenta
-                    .Margin = New System.Windows.Forms.Padding(0, 1, 0, 1)
+                    .ImageTransparentColor = Color.Magenta
+                    .Margin = New Padding(0, 1, 0, 1)
                     .Name = String.Concat("tsbtn" & strval)
-                    .Overflow = System.Windows.Forms.ToolStripItemOverflow.Never
-                    .Size = New System.Drawing.Size(110, 30)
+                    .Overflow = ToolStripItemOverflow.Never
+                    .Size = New Size(110, 30)
                     .Text = strval
-                    .TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-                    .TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText
+                    .TextAlign = ContentAlignment.MiddleLeft
+                    .TextImageRelation = TextImageRelation.ImageBeforeText
                     .ToolTipText = strval
 
                 End With

@@ -17,7 +17,6 @@ namespace AccuPay.Data.Services
         public const string text_laglobal = "LA Global";
 
         public const string text_default = "Default";
-        private readonly PayrollContext context;
 
         public static string Goldwings => text_goldwings;
 
@@ -30,10 +29,12 @@ namespace AccuPay.Data.Services
         public static string LAGlobal => text_laglobal;
 
         public static string DefaultOwner => text_default;
+        
+        private readonly PayrollContext _context;
 
         public SystemOwnerService(PayrollContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public string GetCurrentSystemOwner()
@@ -50,7 +51,7 @@ namespace AccuPay.Data.Services
 
         private IQueryable<string> GetCurrentSystemOwnerBaseQuery()
         {
-            return context.SystemOwners.
+            return _context.SystemOwners.
                     Where(x => x.IsCurrentOwner == "1").
                     Select(x => x.Name);
         }

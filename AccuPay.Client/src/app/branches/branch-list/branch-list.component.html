@@ -1,0 +1,48 @@
+<h1>Branches</h1>
+
+<div class="row middle-md">
+  <div class="col-md-6"></div>
+  <div class="col-md-3">
+    <button mat-raised-button color="accent" class="new-btn" routerLink="new">
+      NEW BRANCH
+    </button>
+  </div>
+</div>
+
+<div class="mat-elevation-z1">
+  <table
+    mat-table
+    matSort
+    #table
+    [dataSource]="dataSource"
+    class="users w-full"
+  >
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let branch">
+        {{ branch.name | ifEmpty }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="code">
+      <th mat-header-cell *matHeaderCellDef>Code</th>
+      <td mat-cell *matCellDef="let branch">
+        {{ branch.code | ifEmpty }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell *matCellDef="let branch">
+        <a routerLink="/branches/{{ branch.id }}/edit">EDIT</a>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No users were found.
+  </div>
+</div>

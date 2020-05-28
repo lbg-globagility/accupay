@@ -16,6 +16,11 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        public async Task<Branch> GetById(int id)
+        {
+            return await _context.Branches.FindAsync(id);
+        }
+
         public async Task DeleteAsync(Branch branch)
         {
             _context.Branches.Remove(branch);

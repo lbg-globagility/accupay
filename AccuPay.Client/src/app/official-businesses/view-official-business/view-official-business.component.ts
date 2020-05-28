@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-view-official-business',
@@ -23,7 +24,8 @@ export class ViewOfficialBusinessComponent implements OnInit {
     private officialBusinessService: OfficialBusinessService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
-    private router: Router
+    private router: Router,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -41,9 +43,8 @@ export class ViewOfficialBusinessComponent implements OnInit {
     dialogRef.afterClosed().subscribe((result) => {
       if (result !== true) return;
 
-      this.officialBusinessService
-        .delete(this.officialBusinessId)
-        .subscribe(() => {
+      this.officialBusinessService.delete(this.officialBusinessId).subscribe(
+        () => {
           this.router.navigate(['official-businesses']);
           Swal.fire({
             title: 'Deleted',
@@ -51,7 +52,13 @@ export class ViewOfficialBusinessComponent implements OnInit {
             icon: 'success',
             showConfirmButton: true,
           });
-        });
+        },
+        (err) =>
+          this.errorHandler.badRequest(
+            err,
+            'Failed to delete official business.'
+          )
+      );
     });
   }
 

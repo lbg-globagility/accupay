@@ -1,4 +1,4 @@
-﻿Option Strict On
+Option Strict On
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
@@ -656,7 +656,7 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveService)
+                                            Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
                                             Await leaveService.SaveManyAsync(changedLeaves,
                                                                             z_OrganizationID)
 
@@ -689,7 +689,7 @@ Public Class EmployeeLeavesForm
         userActivity.ShowDialog()
     End Sub
 
-    Private Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
+    Private Sub LeaveHistoryToolStripButton_Click(sender As Object, e As EventArgs) Handles LeaveHistoryToolStripButton.Click
         Dim dialog = New ViewLeaveLedgerDialog(GetSelectedEmployee())
         dialog.ShowDialog()
     End Sub

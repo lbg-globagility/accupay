@@ -120,9 +120,9 @@
     </Compile>
     <Compile Include="Reports\TwoEmpIn1PaySlip.vb">
       <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
-      <AutoGen>True</AutoGen>
       <SubType>Component</SubType>
       <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +135,10 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\TwoEmpIn1PaySlip.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -150,10 +154,6 @@
     <EmbeddedResource Include="Reports\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\TwoEmpIn1PaySlip.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>TwoEmpIn1PaySlip.vb</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
     <EmbeddedResource Include="Reports\DefaultPayslipFormat.rpt">

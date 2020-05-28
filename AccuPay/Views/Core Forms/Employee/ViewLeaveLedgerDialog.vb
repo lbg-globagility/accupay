@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -35,6 +36,9 @@ Namespace Global.AccuPay
                 _leaveTypes = (Await _productRepository.GetLeaveTypesAsync(z_OrganizationID)).
                     OrderByDescending(Function(t) t.PartNo).
                     ToList()
+
+                Dim trackedLeaves = {ProductConstant.SICK_LEAVE, ProductConstant.VACATION_LEAVE}
+                _leaveTypes = _leaveTypes.Where(Function(l) trackedLeaves.Contains(l.PartNo)).ToList()
 
                 ViewLeaveLedgerTypeSelector.LeaveTypes = _leaveTypes
 

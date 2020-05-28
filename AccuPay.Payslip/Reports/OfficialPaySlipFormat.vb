@@ -45,7 +45,7 @@ Public Class OfficialPaySlipFormat
     
     Public Overrides Property FullResourceName() As String
         Get
-            Return "Accupay.Payslip.OfficialPaySlipFormat.rpt"
+            Return "AccuPay.Payslip.OfficialPaySlipFormat.rpt"
         End Get
         Set
             'Do nothing

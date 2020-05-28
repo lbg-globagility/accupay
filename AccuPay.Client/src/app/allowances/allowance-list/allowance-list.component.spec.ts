@@ -8,9 +8,8 @@ describe('AllowanceListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AllowanceListComponent ]
-    })
-    .compileComponents();
+      declarations: [AllowanceListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

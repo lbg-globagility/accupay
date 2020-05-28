@@ -1,9 +1,7 @@
-using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Leaves;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -68,7 +66,7 @@ namespace AccuPay.Web.Controllers
             return Ok();
         }
 
-        [HttpGet("leavetypes")]
+        [HttpGet("types")]
         public async Task<ActionResult<ICollection<string>>> GetLeaveTypes()
         {
             return await _service.GetLeaveTypes();
