@@ -22,8 +22,8 @@ export class NewEmployeeComponent implements OnInit {
 
   save(employee: Employee) {
     this.service.create(employee).subscribe(
-      (id) => {
-        this.router.navigate([this.baseRoute, id]);
+      (e) => {
+        this.router.navigate([this.baseRoute, e.rowId]);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to create employee.')
     );

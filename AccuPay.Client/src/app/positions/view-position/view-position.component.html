@@ -1,0 +1,39 @@
+<header class="app-page-header">
+  <h1>View Position</h1>
+</header>
+
+<ng-container *ngIf="isLoading | async">
+  <button
+    style="margin-right: 10px;"
+    mat-raised-button
+    color="accent"
+    routerLink="/positions/{{ positionId }}/edit"
+  >
+    EDIT POSITION
+  </button>
+  <button mat-raised-button color="warn" (click)="confirmDelete()">
+    DELETE POSITION
+  </button>
+
+  <mat-card>
+    <mat-card-content>
+      <div class="row">
+        <!-- Division Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Division Name</p>
+            <p class="field-value">{{ position.divisionName }}</p>
+          </div>
+        </div>
+
+        <!-- Position Name -->
+        <div class="col-lg-3 mb-4">
+          <div class="field">
+            <p class="field-label">Position Name</p>
+            <p class="field-value">{{ position.name }}</p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</ng-container>
