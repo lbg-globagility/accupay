@@ -48,6 +48,7 @@ import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.co
 import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-list.component';
 import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
 import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
+import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
 
 const routes: Routes = [
   {
@@ -217,6 +218,10 @@ const routes: Routes = [
       {
         path: 'calendars/new',
         component: NewCalendarComponent,
+      },
+      {
+        path: 'calendars/:id',
+        component: ViewCalendarComponent,
       },
       {
         path: 'calendars/:id/edit',

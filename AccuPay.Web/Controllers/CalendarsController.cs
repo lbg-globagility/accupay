@@ -29,6 +29,21 @@ namespace AccuPay.Web.Controllers
             return await _service.GetById(id);
         }
 
+        [HttpGet("{id}/days")]
+        public async Task<ActionResult<ICollection<CalendarDayDto>>> GetDays(int id, int year)
+        {
+            var dtos = await _service.GetDays(id, year);
+            return dtos.ToList();
+        }
+
+        [HttpPut("{id}/days")]
+        public async Task<ActionResult> UpdateDays(int id, [FromBody] ICollection<CalendarDayDto> dtos2)
+        {
+            await _service.UpdateDays(id, dtos2);
+
+            return Ok();
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult<CalendarDto>> Update(int id, [FromBody] UpdateCalendarDto dto)
         {
@@ -39,6 +54,13 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<ICollection<CalendarDto>>> List()
         {
             var dtos = await _service.List();
+            return dtos.ToList();
+        }
+
+        [HttpGet("day-types")]
+        public async Task<ActionResult<ICollection<DayTypeDto>>> DayTypes()
+        {
+            var dtos = await _service.GetDayTypes();
             return dtos.ToList();
         }
     }

@@ -116,6 +116,15 @@ namespace AccuPay.Data.Repositories
             return await GetCalendarDays(calendarId, firstDayOfYear, lastDayOfYear);
         }
 
+        public async Task<ICollection<CalendarDay>> GetCalendarDays(ICollection<int?> calendarDayIds)
+        {
+            var calendarDays = await _context.CalendarDays
+                .Where(t => calendarDayIds.Contains(t.RowID))
+                .ToListAsync();
+
+            return calendarDays;
+        }
+
         /// <summary>
         ///         ''' Gets all days of a calendar that is from and to the given date range
         ///         ''' </summary>

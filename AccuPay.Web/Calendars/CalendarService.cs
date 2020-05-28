@@ -1,6 +1,5 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,9 +10,12 @@ namespace AccuPay.Web.Calendars
     {
         private readonly CalendarRepository _repository;
 
-        public CalendarService(CalendarRepository repository)
+        private readonly DayTypeRepository _dayTypeRepository;
+
+        public CalendarService(CalendarRepository repository, DayTypeRepository dayTypeRepository)
         {
             _repository = repository;
+            _dayTypeRepository = dayTypeRepository;
         }
 
         public async Task<CalendarDto> GetById(int? calendarId)
@@ -21,6 +23,22 @@ namespace AccuPay.Web.Calendars
             var calendar = await _repository.GetById(calendarId.Value);
 
             return ConvertToDto(calendar);
+        }
+
+        public async Task<ICollection<CalendarDayDto>> GetDays(int calendarId, int year)
+        {
+            var calendarDays = await _repository.GetCalendarDays(calendarId, year);
+            var dtos = calendarDays.Select(t => ConvertToDto(t)).ToList();
+
+            return dtos;
+        }
+
+        public async Task<ICollection<DayTypeDto>> GetDayTypes()
+        {
+            var dayTypes = await _dayTypeRepository.GetAllAsync();
+            var dtos = dayTypes.Select(t => ConvertToDto(t)).ToList();
+
+            return dtos;
         }
 
         public async Task<CalendarDto> Create(CreateCalendarDto dto)
@@ -45,6 +63,24 @@ namespace AccuPay.Web.Calendars
             return ConvertToDto(calendar);
         }
 
+        public async Task UpdateDays(int calendarId, ICollection<CalendarDayDto> dtos)
+        {
+            var calendarDayIds = dtos.Select(t => t.Id).ToList();
+            var calendarDays = await _repository.GetCalendarDays(calendarDayIds);
+            var dayTypes = await _dayTypeRepository.GetAllAsync();
+
+            foreach (var calendarDay in calendarDays)
+            {
+                var dto = dtos.First(t => t.Id == calendarDay.RowID);
+                var dayType = dayTypes.First(t => t.Name == dto.DayType);
+
+                calendarDay.Description = dto.Description;
+                calendarDay.DayType = dayType;
+            }
+
+            await _repository.UpdateDaysAsync(calendarDays);
+        }
+
         public async Task<ICollection<CalendarDto>> List()
         {
             var calendars = await _repository.GetAllAsync();
@@ -58,6 +94,30 @@ namespace AccuPay.Web.Calendars
             {
                 Id = calendar.RowID,
                 Name = calendar.Name
+            };
+
+            return dto;
+        }
+
+        private CalendarDayDto ConvertToDto(CalendarDay calendarDay)
+        {
+            var dto = new CalendarDayDto()
+            {
+                Id = calendarDay.RowID,
+                Date = calendarDay.Date,
+                Description = calendarDay.Description,
+                DayType = calendarDay.DayType.Name
+            };
+
+            return dto;
+        }
+
+        private DayTypeDto ConvertToDto(DayType calendarDay)
+        {
+            var dto = new DayTypeDto()
+            {
+                Id = calendarDay.RowID,
+                Name = calendarDay.Name,
             };
 
             return dto;
