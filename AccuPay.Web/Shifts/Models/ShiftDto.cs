@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AccuPay.Web.Shifts.Models
 {
@@ -16,16 +14,16 @@ namespace AccuPay.Web.Shifts.Models
 
         public string EmployeeType { get; set; }
 
-        public DateTime DateSched { get; set; }
+        public DateTime Date { get; set; }
 
-        public DateTime? StartTime { get; set; }
-        
-        public DateTime? EndTime { get; set; }
+        public DateTime StartTime { get; set; }
 
-        public DateTime? BreakStartTime { get; set; }
+        public DateTime EndTime { get; set; }
+
+        public DateTime BreakStartTime { get; set; }
 
         public decimal BreakLength { get; set; }
 
-        public bool IsRestDay { get; set; }
+        public bool IsOffset { get; set; }
     }
 }

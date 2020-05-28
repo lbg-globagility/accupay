@@ -52,7 +52,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] PageOptions options, string term = "")
         {
-            int variableOrganizationId = 5;//_currentUser.OrganizationId
+            int variableOrganizationId = 2;//_currentUser.OrganizationId
             var query = await _employeeService.GetAllAsync(variableOrganizationId);
 
             if (!string.IsNullOrWhiteSpace(term))

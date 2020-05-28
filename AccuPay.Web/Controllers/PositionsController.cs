@@ -1,5 +1,4 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Services;
 using AccuPay.Web.Positions;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -12,10 +11,7 @@ namespace AccuPay.Web.Controllers
     {
         private readonly PositionService _service;
 
-        public PositionsController(PositionService service)
-        {
-            _service = service;
-        }
+        public PositionsController(PositionService service) => _service = service;
 
         [HttpGet]
         public async Task<ActionResult<PaginatedList<PositionDto>>> List([FromQuery] PageOptions options, string term)

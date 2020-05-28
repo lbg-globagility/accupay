@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ShiftService } from '../shift.service';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
 import { Shift } from '../shared/shift';
 
 @Component({
   selector: 'app-new-shift',
   templateUrl: './new-shift.component.html',
-  styleUrls: ['./new-shift.component.scss']
+  styleUrls: ['./new-shift.component.scss'],
 })
 export class NewShiftComponent {
   constructor(
     private shiftService: ShiftService,
     private router: Router,
-    private snackBar: MatSnackBar
+    private errorHandler: ErrorHandler
   ) {}
 
   onSave(shift: Shift): void {
@@ -23,7 +24,7 @@ export class NewShiftComponent {
         this.displaySuccess();
         this.router.navigate(['shifts', x.id]);
       },
-      (err) => this.showErrorDialog(err)
+      (err) => this.errorHandler.badRequest(err, 'Failed to update shift.')
     );
   }
 
@@ -38,18 +39,6 @@ export class NewShiftComponent {
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,
-    });
-  }
-
-  private showErrorDialog(err): void {
-    let message: string = 'Failed to update shift.';
-
-    if (err && err.status == 400) {
-      message = err.error.Error;
-    }
-    this.snackBar.open(message, null, {
-      duration: 2000,
-      panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }
 }

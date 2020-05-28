@@ -1,23 +1,14 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace AccuPay.Web.Shifts.Models
 {
-    public class CreateShiftDto : ICrudShiftDto
+    public class CreateShiftDto : CrudShiftDto
     {
+        [Required]
         public int EmployeeId { get; set; }
 
-        public DateTime DateSched { get; set; }
-
-        public DateTime? StartTime { get; set; }
-
-        public DateTime? EndTime { get; set; }
-
-        public DateTime? BreakStartTime { get; set; }
-
-        public decimal BreakLength { get; set; }
-
-        public bool IsRestDay { get; set; }
+        [Required]
+        public DateTime Date { get; set; }
     }
 }

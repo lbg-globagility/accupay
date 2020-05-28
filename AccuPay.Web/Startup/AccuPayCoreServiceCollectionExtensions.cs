@@ -1,5 +1,6 @@
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.Services.Imports;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AccuPay.Web
@@ -90,8 +91,11 @@ namespace AccuPay.Web
             services.AddScoped<SystemOwnerService>();
 
             services.AddScoped<DivisionDataService>();
+            services.AddScoped<EmployeeDutyScheduleDataService>();
             services.AddScoped<PositionDataService>();
             services.AddScoped<LeaveDataService>();
+
+            services.AddScoped<ShiftImportParser>();
 
             return services;
         }

@@ -8,9 +8,8 @@ describe('EditShiftComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ EditShiftComponent ]
-    })
-    .compileComponents();
+      declarations: [EditShiftComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

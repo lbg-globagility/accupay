@@ -15,7 +15,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'app-shift-list',
   templateUrl: './shift-list.component.html',
-  styleUrls: ['./shift-list.component.scss']
+  styleUrls: ['./shift-list.component.scss'],
 })
 export class ShiftListComponent implements OnInit {
   readonly displayedColumns: string[] = [
@@ -24,7 +24,7 @@ export class ShiftListComponent implements OnInit {
     'date',
     'time',
     'breakTime',
-    'breakLength'
+    'breakLength',
   ];
 
   placeholder: string;
@@ -44,7 +44,7 @@ export class ShiftListComponent implements OnInit {
   pageSize: number = 10;
 
   sort: Sort = {
-    active: 'employeeNumber',
+    active: 'employeeName',
     direction: '',
   };
 
@@ -53,9 +53,10 @@ export class ShiftListComponent implements OnInit {
   selectedRow: number;
 
   constructor(
-    private shiftService: ShiftService,    
+    private shiftService: ShiftService,
     private router: Router,
-    private snackBar: MatSnackBar) {
+    private snackBar: MatSnackBar
+  ) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -107,7 +108,7 @@ export class ShiftListComponent implements OnInit {
     this.getOvertimeList();
   }
 
-  onImport(files: FileList){
+  onImport(files: FileList) {
     const file = files[0];
 
     this.shiftService.import(file).subscribe(

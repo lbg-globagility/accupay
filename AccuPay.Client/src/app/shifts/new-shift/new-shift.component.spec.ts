@@ -8,9 +8,8 @@ describe('NewShiftComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ NewShiftComponent ]
-    })
-    .compileComponents();
+      declarations: [NewShiftComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

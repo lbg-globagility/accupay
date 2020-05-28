@@ -18,7 +18,7 @@ export class ErrorHandler {
       message = httpError.error.Error;
     }
     this.snackBar.open(message, null, {
-      duration: 2000,
+      duration: 3500,
       panelClass: ['mat-toolbar', 'mat-warn'],
     });
   }

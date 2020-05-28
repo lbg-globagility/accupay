@@ -8,19 +8,16 @@ namespace AccuPay.Web.Positions
 {
     public class PositionService
     {
-        private readonly PositionDataService _dataService;
+        private readonly PositionDataService _service;
 
-        public PositionService(PositionDataService dataService)
-        {
-            _dataService = dataService;
-        }
+        public PositionService(PositionDataService service) => _service = service;
 
         public async Task<PaginatedList<PositionDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
             int organizationId = 2;
-            var paginatedList = await _dataService.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -29,7 +26,7 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> GetById(int id)
         {
-            var positions = await _dataService.GetByIdWithDivisionAsync(id);
+            var positions = await _service.GetByIdWithDivisionAsync(id);
 
             return ConvertToDto(positions);
         }
@@ -47,7 +44,7 @@ namespace AccuPay.Web.Positions
             };
             ApplyChanges(dto, overtime);
 
-            await _dataService.SaveAsync(overtime);
+            await _service.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
@@ -56,7 +53,7 @@ namespace AccuPay.Web.Positions
         {
             // TODO: validations
 
-            var overtime = await _dataService.GetByIdAsync(id);
+            var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 
             int userId = 1;
@@ -64,14 +61,14 @@ namespace AccuPay.Web.Positions
 
             ApplyChanges(dto, overtime);
 
-            await _dataService.SaveAsync(overtime);
+            await _service.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
 
         public async Task Delete(int id)
         {
-            await _dataService.DeleteAsync(id);
+            await _service.DeleteAsync(id);
         }
 
         private static void ApplyChanges(CrudPositionDto dto, Position position)

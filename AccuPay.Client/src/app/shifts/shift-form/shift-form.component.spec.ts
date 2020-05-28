@@ -8,9 +8,8 @@ describe('ShiftFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShiftFormComponent ]
-    })
-    .compileComponents();
+      declarations: [ShiftFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

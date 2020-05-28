@@ -1,7 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using System;
 
-namespace AccuPay.Data.Services.Imports
+namespace AccuPay.Data.Services
 {
     public class ShiftModel
     {

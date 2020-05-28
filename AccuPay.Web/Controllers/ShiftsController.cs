@@ -1,10 +1,7 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.Web.CodeGeneration;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -14,13 +11,8 @@ namespace AccuPay.Web.Controllers
     public class ShiftsController : ControllerBase
     {
         private readonly ShiftService _service;
-        private readonly EmployeeDutyScheduleRepository _repository;
 
-        public ShiftsController(ShiftService shiftService, EmployeeDutyScheduleRepository repository)
-        {
-            _service = shiftService;
-            _repository = repository;
-        }
+        public ShiftsController(ShiftService shiftService) => _service = shiftService;
 
         [HttpGet]
         public async Task<ActionResult<PaginatedList<ShiftDto>>> List([FromQuery] PageOptions options, string term)
@@ -67,11 +59,11 @@ namespace AccuPay.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var shift = await _repository.GetByIdAsync(id);
+            var shift = await _service.GetById(id);
 
             if (shift == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }

@@ -8,9 +8,8 @@ describe('ShiftListComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ShiftListComponent ]
-    })
-    .compileComponents();
+      declarations: [ShiftListComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -1,14 +1,13 @@
 export interface Shift {
-    id: number;
-    employeeId: number;
-    employeeNumber: string;
-    employeeName: string;
-    employeeType: string;
-    dateSched: Date;
-    startTime: Date;
-    endTime: Date;
-    breakStartTime: Date;
-    breakLength: number;
-    isRestDay: boolean;  
-  }
-  
+  id: number;
+  employeeId: number;
+  employeeNumber: string;
+  employeeName: string;
+  employeeType: string;
+  date: Date;
+  startTime: Date;
+  endTime: Date;
+  breakStartTime: Date;
+  breakLength: number;
+  isOffset: boolean;
+}

@@ -8,9 +8,8 @@ describe('ViewShiftComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewShiftComponent ]
-    })
-    .compileComponents();
+      declarations: [ViewShiftComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

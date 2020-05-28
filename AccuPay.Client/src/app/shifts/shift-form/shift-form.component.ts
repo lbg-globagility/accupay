@@ -4,16 +4,15 @@ import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
 import { ShiftService } from '../shift.service';
-import { TimeParser } from 'src/app/core/shared/time-parser';
 import { PageOptions } from 'src/app/core/shared/page-options';
+import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import { cloneDeep } from 'lodash';
 import * as moment from 'moment';
-import { strict } from 'assert';
 
 @Component({
   selector: 'app-shift-form',
   templateUrl: './shift-form.component.html',
-  styleUrls: ['./shift-form.component.scss']
+  styleUrls: ['./shift-form.component.scss'],
 })
 export class ShiftFormComponent implements OnInit {
   @Input()
@@ -28,14 +27,12 @@ export class ShiftFormComponent implements OnInit {
   form: FormGroup = this.fb.group({
     id: [null],
     employeeId: [null, [Validators.required]],
-    dateSched: [null, [Validators.required]],
+    date: [null, [Validators.required]],
     startTime: [null, Validators.required],
     endTime: [null, Validators.required],
     breakStartTime: [null, Validators.required],
     breakLength: [null, Validators.required],
-    isRestDay: [null],
-    shiftHours: [null],
-    workHours: [null]
+    isOffset: [false],
   });
 
   employees: Employee[];
@@ -48,7 +45,6 @@ export class ShiftFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
     if (this.shift != null) {
       this.form.get('employeeId').disable();
       this.form.patchValue(this.shift);
@@ -58,7 +54,9 @@ export class ShiftFormComponent implements OnInit {
     this.form.patchValue({
       endTime: this.timeParser.toInputTime(this.form.get('endTime').value),
       startTime: this.timeParser.toInputTime(this.form.get('startTime').value),
-      breakStartTime: this.timeParser.toInputTime(this.form.get('breakStartTime').value),
+      breakStartTime: this.timeParser.toInputTime(
+        this.form.get('breakStartTime').value
+      ),
     });
   }
 
@@ -77,20 +75,17 @@ export class ShiftFormComponent implements OnInit {
 
     const shift = cloneDeep(this.form.value as Shift);
 
-    console.log(shift);
     shift.startTime = this.timeParser.parse(
-      moment(shift.dateSched),
+      moment(shift.date),
       shift.startTime
     );
-    shift.endTime = this.timeParser.parse(
-      moment(shift.dateSched),
-      shift.endTime
-    );
+
+    shift.endTime = this.timeParser.parse(moment(shift.date), shift.endTime);
+
     shift.breakStartTime = this.timeParser.parse(
-      moment(shift.dateSched),
+      moment(shift.date),
       shift.breakStartTime
     );
-    console.log(shift);
 
     if (!shift.startTime || !shift.endTime) {
       shift.startTime = null;
