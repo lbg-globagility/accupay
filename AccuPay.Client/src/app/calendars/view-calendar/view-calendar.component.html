@@ -1,0 +1,39 @@
+<h1>View Calendar / {{ calendar?.name }}</h1>
+
+<button mat-raised-button (click)="onSave()" color="accent">SAVE</button>
+<button
+  mat-raised-button
+  color="accent"
+  routerLink="/calendars/{{ calendarId }}/edit"
+>
+  EDIT
+</button>
+
+<div class="mat-elevation-z1">
+  <table mat-table [dataSource]="calendarDays" class="w-full">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let calendarDay">
+        {{ calendarDay.date | date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let calendarDay">
+        {{ calendarDay.description }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      (click)="changeDay(row)"
+    ></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="calendarDays?.length <= 0">
+    No calendars were found.
+  </div>
+</div>

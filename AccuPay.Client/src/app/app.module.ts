@@ -20,6 +20,7 @@ import { AuthInterceptor } from 'src/app/core/auth/auth.interceptor';
 import { BranchesModule } from 'src/app/branches/branches.module';
 import { TimeLogsModule } from './time-logs/time-logs.module';
 import { PositionsModule } from './positions/positions.module';
+import { CalendarsModule } from 'src/app/calendars/calendars.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -41,6 +42,7 @@ import { PositionsModule } from './positions/positions.module';
     UsersModule,
     OrganizationsModule,
     BranchesModule,
+    CalendarsModule,
     TimeLogsModule,
     PositionsModule,
   ],
