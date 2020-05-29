@@ -2,18 +2,20 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
-    Private _logs As IList(Of ImportTimeAttendanceLog)
+    Private _logs As IList(Of TimeLogImportModel)
 
-    Private _errors As IList(Of ImportTimeAttendanceLog)
+    Private _errors As IList(Of TimeLogImportModel)
 
-    Private _originalLogs As IList(Of ImportTimeAttendanceLog)
+    Private _originalLogs As IList(Of TimeLogImportModel)
 
-    Private _originalErrors As IList(Of ImportTimeAttendanceLog)
+    Private _originalErrors As IList(Of TimeLogImportModel)
 
     Public Property Cancelled As Boolean
 
@@ -24,40 +26,22 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     Private _employeeDetails As New List(Of EmployeeDetail)
 
-    Sub New(timeAttendanceHelper As ITimeAttendanceHelper, otherErrorLogs As IList(Of ImportTimeAttendanceLog))
+    Sub New(timeAttendanceHelper As ITimeAttendanceHelper, otherErrorLogs As IList(Of TimeLogImportModel))
 
         _timeAttendanceHelper = timeAttendanceHelper
 
-        'determines the IstimeIn, LogDate, and Employee values
-        Dim allLogs = _timeAttendanceHelper.Analyze()
+        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of TimeLogImportParser)
+        Dim allLogs = timeLogsImportParser.GetAllLogs(_timeAttendanceHelper, otherErrorLogs)
 
-        Dim validLogs = allLogs.Where(Function(l) l.HasError = False).ToList()
-        Dim invalidLogs = allLogs.Where(Function(l) l.HasError = True).ToList()
+        Me._logs = allLogs.ValidRecords
+        Me._errors = allLogs.InvalidRecords
 
-        invalidLogs.AddRange(otherErrorLogs)
+        Me._originalLogs = Me._logs
+        Me._originalErrors = Me._errors
 
-        Me._originalLogs = validLogs.
-                    OrderBy(Function(l) l.Employee?.LastName).
-                    ThenBy(Function(l) l.Employee?.FirstName).
-                    ThenBy(Function(l) l.Employee?.MiddleName).
-                    ThenBy(Function(l) l.LogDate).
-                    ThenBy(Function(l) l.DateTime).
-                    ToList
-
-        Me._logs = Me._originalLogs
-
-        Me._originalErrors = invalidLogs.
-                    OrderBy(Function(l) l.LineNumber).
-                    ToList()
-
-        Me._errors = Me._originalErrors
-
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         Me.Cancelled = True
-        Me._timeAttendanceHelper = _timeAttendanceHelper
     End Sub
 
     Private Sub TimeAttendanceLogDataGrid_CellClick(ByVal sender As Object, ByVal e As DataGridViewCellEventArgs) _
@@ -67,7 +51,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             _dtp.Size = New Size(_Rectangle.Width, _Rectangle.Height)
             _dtp.Location = New Point(_Rectangle.X, _Rectangle.Y)
 
-            Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+            Dim currentLog As TimeLogImportModel = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
             If currentLog Is Nothing Then Return
 
@@ -166,7 +150,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private Sub TimeAttendanceLogDataGrid_CellFormatting(sender As Object, e As DataGridViewCellFormattingEventArgs) _
         Handles TimeAttendanceLogDataGrid.CellFormatting
 
-        Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+        Dim currentLog As TimeLogImportModel = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
 
@@ -213,7 +197,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
     Private Sub TimeAttendanceLogDataGrid_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) _
                                            Handles TimeAttendanceLogDataGrid.CellContentClick
 
-        Dim currentLog As ImportTimeAttendanceLog = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
+        Dim currentLog As TimeLogImportModel = GetCurrentTimeLogByGridRowIndex(e.RowIndex)
 
         If currentLog Is Nothing Then Return
 
@@ -256,7 +240,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
     End Sub
 
-    Private Function GetCurrentTimeLogByGridRowIndex(rowIndex As Integer) As ImportTimeAttendanceLog
+    Private Function GetCurrentTimeLogByGridRowIndex(rowIndex As Integer) As TimeLogImportModel
 
         If rowIndex < 0 Then Return Nothing
 
@@ -285,7 +269,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
 
         Dim searchValue = txtErrorSearch.Text.ToLower()
 
-        Me._errors = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+        Me._errors = Await Task.Run(Function() As IList(Of TimeLogImportModel)
                                         Return Me._originalErrors.
                                           Where(Function(o) o.LineContent.ToLower.Contains(searchValue)).
                                           ToList
@@ -395,7 +379,7 @@ Public Class TimeLogsForm_PreviewAlternateLineImportTimeLogsDialog
             Me._logs = Me._originalLogs
         Else
 
-            Me._logs = Await Task.Run(Function() As IList(Of ImportTimeAttendanceLog)
+            Me._logs = Await Task.Run(Function() As IList(Of TimeLogImportModel)
                                           Return Me._originalLogs.
                                               Where(Function(o) Nullable.Equals(selectedEmployee.RowID, o.Employee?.RowID)).
                                               ToList

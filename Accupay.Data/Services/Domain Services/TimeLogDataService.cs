@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
@@ -17,6 +18,12 @@ namespace AccuPay.Data.Services
         public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
         {
             return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+        }
+
+        public async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
+                                        IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
+        {
+            await _repository.SaveImportAsync(timeLogs, timeAttendanceLogs);
         }
     }
 }

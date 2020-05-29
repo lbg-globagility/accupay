@@ -53,7 +53,8 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveImportAsync(List<TimeLog> timeLogs, List<TimeAttendanceLog> timeAttendanceLogs = null)
+        internal async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
+                                        IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             string importId = GenerateImportId(_context);
 

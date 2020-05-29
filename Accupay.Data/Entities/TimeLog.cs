@@ -38,6 +38,7 @@ namespace AccuPay.Data.Entities
         public DateTime? TimeStampOut { get; set; }
 
         public string TimeentrylogsImportID { get; set; }
+
         public int? BranchID { get; set; }
 
         [ForeignKey("EmployeeID")]

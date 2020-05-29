@@ -97,6 +97,8 @@ namespace AccuPay.Web
             services.AddScoped<TimeLogDataService>();
 
             services.AddScoped<ShiftImportParser>();
+            services.AddScoped<TimeLogImportParser>();
+            services.AddScoped<TimeLogsReader>();
 
             return services;
         }

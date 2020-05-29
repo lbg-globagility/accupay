@@ -107,20 +107,19 @@ export class TimeLogListComponent implements OnInit {
 
   onImport(files: FileList) {
     const file = files[0];
-
     this.timeLogService.import(file).subscribe(
       () => {
         this.getTimeLogList();
         this.displaySuccess();
       },
-      (err) => this.errorHandler.badRequest(err, 'Failed to import timeLog.')
+      (err) => this.errorHandler.badRequest(err, 'Failed to import time logs.')
     );
   }
 
   private displaySuccess() {
     Swal.fire({
       title: 'Success',
-      text: 'Successfully imported new timeLogs!',
+      text: 'Successfully imported new time logs!',
       icon: 'success',
       timer: 3000,
       showConfirmButton: false,

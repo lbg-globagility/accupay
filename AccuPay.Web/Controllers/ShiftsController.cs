@@ -1,6 +1,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -37,14 +38,6 @@ namespace AccuPay.Web.Controllers
             return await _service.Create(dto);
         }
 
-        [HttpPost("import")]
-        public async Task<ActionResult> Import([FromForm] ImportShiftDto dto)
-        {
-            await _service.Import(dto);
-
-            return Ok();
-        }
-
         [HttpPut("{id}")]
         public async Task<ActionResult<ShiftDto>> Update(int id, [FromBody] UpdateShiftDto dto)
         {
@@ -64,6 +57,14 @@ namespace AccuPay.Web.Controllers
             if (shift == null) return NotFound();
 
             await _service.Delete(id);
+
+            return Ok();
+        }
+
+        [HttpPost("import")]
+        public async Task<ActionResult> Import([FromForm] IFormFile file)
+        {
+            await _service.Import(file);
 
             return Ok();
         }

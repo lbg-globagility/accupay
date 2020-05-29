@@ -3,7 +3,7 @@
 Imports System.IO
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Services
-Imports AccuPay.Tools
+Imports AccuPay.Data.Services.Imports
 
 Imports AccuPay.Utilities
 
@@ -21,12 +21,12 @@ Public Class TimeAnalyzer
 
     End Sub
 
-    Protected Function GetParsedTimeLogs() As IList(Of ImportTimeAttendanceLog)
+    Protected Function GetParsedTimeLogs() As IList(Of TimeLogImportModel)
         Dim importer = New TimeLogsReader()
 
         Dim filename = _projectPath & "\_timelogs_test.dat"
 
-        Dim importOutput = importer.Import(filename)
+        Dim importOutput = importer.Read(filename)
         Dim logs = importOutput.Logs
 
         Return logs
