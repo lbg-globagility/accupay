@@ -49,7 +49,6 @@ import { RegisterComponent } from 'src/app/accounts/register/register.component'
 import { NewBranchComponent } from 'src/app/branches/new-branch/new-branch.component';
 import { EditBranchComponent } from 'src/app/branches/edit-branch/edit-branch.component';
 import { BranchListComponent } from 'src/app/branches/branch-list/branch-list.component';
-import { TimeLogTableComponent } from './time-logs/time-log-table/time-log-table.component';
 import { PositionListComponent } from './positions/position-list/position-list.component';
 import { ViewPositionComponent } from 'src/app/positions/view-position/view-position.component';
 import { NewPositionComponent } from 'src/app/positions/new-position/new-position.component';
@@ -58,6 +57,7 @@ import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-
 import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
 import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
 import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
+import { TimeLogListComponent } from 'src/app/time-logs/time-log-list/time-log-list.component';
 
 const routes: Routes = [
   {
@@ -238,7 +238,7 @@ const routes: Routes = [
       },
       {
         path: 'time-logs',
-        component: TimeLogTableComponent,
+        component: TimeLogListComponent,
       },
       {
         path: 'positions',

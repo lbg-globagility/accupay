@@ -1,45 +1,27 @@
-using AccuPay.Data.Entities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogDto
     {
-        public int? RowID { get; set; }
+        public int Id { get; set; }
 
-        public int? EmployeeID { get; set; }
+        public int EmployeeId { get; set; }
 
-        public DateTime LogDate { get; set; }
+        public string EmployeeNumber { get; set; }
 
-        public TimeSpan? TimeIn { get; set; }
+        public string EmployeeName { get; set; }
 
-        public TimeSpan? TimeOut { get; set; }
+        public string EmployeeType { get; set; }
 
-        public DateTime? TimeStampIn { get; set; }
+        public DateTime Date { get; set; }
 
-        public DateTime? TimeStampOut { get; set; }
+        public DateTime? StartTime { get; set; }
 
-        public string TimeentrylogsImportID { get; set; }
+        public DateTime? EndTime { get; set; }
 
-        public int? BranchID { get; set; }
+        public int? BranchId { get; set; }
 
-        internal static TimeLogDto Convert(TimeLog timeLog)
-        {
-            return new TimeLogDto()
-            {
-                BranchID = timeLog.BranchID,
-                EmployeeID = timeLog.EmployeeID,
-                LogDate = timeLog.LogDate,
-                RowID = timeLog.RowID,
-                TimeentrylogsImportID = timeLog.TimeentrylogsImportID,
-                TimeIn = timeLog.TimeIn,
-                TimeOut = timeLog.TimeOut,
-                TimeStampIn = timeLog.TimeStampIn,
-                TimeStampOut = timeLog.TimeStampOut
-            };
-        }
+        public string BranchName { get; set; }
     }
 }

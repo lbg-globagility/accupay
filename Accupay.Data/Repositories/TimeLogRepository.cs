@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -111,6 +112,35 @@ namespace AccuPay.Data.Repositories
                         Include(x => x.Employee).
                         Where(x => employeeIds.Contains(x.EmployeeID.Value)).
                         ToListAsync();
+        }
+
+        internal async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.TimeLogs
+                                .Include(x => x.Employee)
+                                .Include(x => x.Branch)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderBy(x => x.Employee.LastName)
+                                .ThenBy(x => x.Employee.FirstName)
+                                .ThenByDescending(x => x.LogDate)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LogDate.ToString(), searchTerm) ||
+                    EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.Employee.LastName, searchTerm) ||
+                    EF.Functions.Like(x.Branch.Name, searchTerm));
+            }
+
+            var timeLogs = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<TimeLog>(timeLogs, count);
         }
 
         private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod timePeriod, PayrollContext context)

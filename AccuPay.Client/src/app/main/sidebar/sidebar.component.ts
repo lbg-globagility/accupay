@@ -12,6 +12,26 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
+    label: 'Organizations',
+    route: '/organizations',
+    icon: 'person',
+  },
+  {
+    label: 'Branches',
+    route: '/branches',
+    icon: 'person',
+  },
+  {
+    label: 'Calendars',
+    route: '/calendars',
+    icon: 'person',
+  },
+  {
+    label: 'Positions',
+    route: '/positions',
+    icon: 'person',
+  },
+  {
     label: 'Employees',
     route: '/employees',
     icon: 'person',
@@ -47,6 +67,11 @@ const menuItems: MenuItem[] = [
     icon: 'person',
   },
   {
+    label: 'Time Logs',
+    route: '/time-logs',
+    icon: 'person',
+  },
+  {
     label: 'Allowances',
     route: '/allowances',
     icon: 'person',
@@ -54,26 +79,6 @@ const menuItems: MenuItem[] = [
   {
     label: 'Loans',
     route: '/loans',
-    icon: 'person',
-  },
-  {
-    label: 'Organizations',
-    route: '/organizations',
-    icon: 'person',
-  },
-  {
-    label: 'Branches',
-    route: '/branches',
-    icon: 'person',
-  },
-  {
-    label: 'Calendars',
-    route: '/calendars',
-    icon: 'person',
-  },
-  {
-    label: 'Positions',
-    route: '/positions',
     icon: 'person',
   },
 ];

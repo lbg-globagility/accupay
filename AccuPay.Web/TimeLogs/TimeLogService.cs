@@ -1,25 +1,49 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.ValueObjects;
-using System.Collections.Generic;
+using AccuPay.Data.Helpers;
+using AccuPay.Data.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogService
     {
-        private TimeLogRepository _timeLogRepository;
+        private TimeLogDataService _service;
 
-        public TimeLogService(TimeLogRepository timeLogRepository)
+        public TimeLogService(TimeLogDataService service)
         {
-            _timeLogRepository = timeLogRepository;
+            _service = service;
         }
 
-        internal async Task<IEnumerable<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(int[] employeeIds, TimePeriod timePeriod)
+        public async Task<PaginatedList<TimeLogDto>> PaginatedList(PageOptions options, string searchTerm)
         {
-            var list = await _timeLogRepository.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIds, timePeriod);
+            // TODO: sort and desc in repository
 
-            return list;
+            int organizationId = 2;
+            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+
+            var dtos = paginatedList.List.Select(x => ConvertToDto(x));
+
+            return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        private static TimeLogDto ConvertToDto(TimeLog timeLog)
+        {
+            if (timeLog == null) return null;
+
+            return new TimeLogDto()
+            {
+                Id = timeLog.RowID.Value,
+                EmployeeId = timeLog.EmployeeID.Value,
+                EmployeeNumber = timeLog.Employee?.EmployeeNo,
+                EmployeeName = timeLog.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = timeLog.Employee?.EmployeeType,
+                Date = timeLog.LogDate,
+                StartTime = timeLog.TimeInFull,
+                EndTime = timeLog.TimeOutFull,
+                BranchId = timeLog.BranchID,
+                BranchName = timeLog.Branch?.Name
+            };
         }
     }
 }
