@@ -58,6 +58,10 @@ import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-
 import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
 import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
 import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
+import { DivisionListComponent } from 'src/app/divisions/division-list/division-list.component';
+import { ViewDivisionComponent } from 'src/app/divisions/view-division/view-division.component';
+import { NewDivisionComponent } from 'src/app/divisions/new-division/new-division.component';
+import { EditDivisionComponent } from 'src/app/divisions/edit-division/edit-division.component';
 
 const routes: Routes = [
   {
@@ -239,6 +243,22 @@ const routes: Routes = [
       {
         path: 'time-logs',
         component: TimeLogTableComponent,
+      },
+      {
+        path: 'divisions',
+        component: DivisionListComponent,
+      },
+      {
+        path: 'divisions/new',
+        component: NewDivisionComponent,
+      },
+      {
+        path: 'divisions/:id',
+        component: ViewDivisionComponent,
+      },
+      {
+        path: 'divisions/:id/edit',
+        component: EditDivisionComponent,
       },
       {
         path: 'positions',

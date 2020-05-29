@@ -21,6 +21,8 @@ import { BranchesModule } from 'src/app/branches/branches.module';
 import { TimeLogsModule } from './time-logs/time-logs.module';
 import { PositionsModule } from './positions/positions.module';
 import { CalendarsModule } from 'src/app/calendars/calendars.module';
+import { DivisionsModule } from './divisions/divisions.module';
+
 
 @NgModule({
   declarations: [AppComponent],
@@ -45,6 +47,7 @@ import { CalendarsModule } from 'src/app/calendars/calendars.module';
     CalendarsModule,
     TimeLogsModule,
     PositionsModule,
+    DivisionsModule,
   ],
   providers: [
     {

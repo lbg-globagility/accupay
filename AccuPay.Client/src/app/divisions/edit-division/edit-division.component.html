@@ -1,0 +1,9 @@
+<h1>Edit Division</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-division-form
+    [division]="division"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-division-form>
+</ng-container>

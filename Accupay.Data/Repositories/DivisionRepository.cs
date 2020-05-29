@@ -153,6 +153,13 @@ namespace AccuPay.Data.Repositories
             }
         }
 
+        public async Task<Division> GetByIdAsync(int id)
+        {
+            return await _context.Divisions
+                                .Include(x => x.ParentDivision)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
         #endregion Single entity
 
         #region List of entities

@@ -76,6 +76,11 @@ const menuItems: MenuItem[] = [
     route: '/positions',
     icon: 'person',
   },
+  {
+    label: 'Divisions',
+    route: '/divisions',
+    icon: 'person',
+  },
 ];
 
 @Component({
