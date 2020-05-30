@@ -2,7 +2,9 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
+Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
 Imports Microsoft.Extensions.DependencyInjection
@@ -154,7 +156,7 @@ Public Class ImportOvertimeForm
             Return False
         End If
 
-        Dim validationErrorMessage = overtime.Validate()
+        Dim validationErrorMessage = ValidateOvertime(overtime)
 
         If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
             record.ErrorMessage = validationErrorMessage
@@ -163,6 +165,23 @@ Public Class ImportOvertimeForm
         End If
 
         Return True
+    End Function
+
+    Private Function ValidateOvertime(overtime As Overtime) As String
+        If overtime.OTStartTime Is Nothing Then Return "Start Time cannot be empty."
+
+        If overtime.OTEndTime Is Nothing Then Return "End Time cannot be empty."
+
+        If overtime.OTStartDate.Date.Add(overtime.OTStartTime.Value.StripSeconds()) >=
+                    overtime.OTEndDate.Date.Add(overtime.OTEndTime.Value.StripSeconds()) Then
+
+            Return "Start date and time cannot be greater than or equal to End date and time."
+        End If
+
+        Dim validStatuses = {Overtime.StatusPending, Overtime.StatusApproved}
+        If validStatuses.Contains(overtime.Status) = False Then Return "Status is not valid."
+
+        Return Nothing
     End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
@@ -196,8 +215,8 @@ Public Class ImportOvertimeForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-                Await overtimeRepository.SaveManyAsync(_overtimes)
+                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                Await service.SaveManyAsync(_overtimes)
 
                 Dim importlist = New List(Of UserActivityItem)
 

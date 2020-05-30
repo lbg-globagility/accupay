@@ -234,9 +234,8 @@ Public Class MassOvertimePresenter
     Private Function LoadOvertimes(dateFrom As Date, dateTo As Date, employees As IList(Of Employee)) As IList(Of IGrouping(Of Integer?, Overtime))
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToList()
 
-        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-        Dim overtimes = overtimeRepository.
-                            GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
+        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        Dim overtimes = service.GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
                                                             New TimePeriod(dateFrom, dateTo),
                                                             employeeIds)
 
@@ -319,20 +318,21 @@ Public Class MassOvertimePresenter
         If changedOvertimes.Any Then
 
             changedOvertimes.ForEach(Function(o) o.LastUpdBy = z_User)
-            Dim overtimeRepositorySave = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-            Await overtimeRepositorySave.SaveManyAsync(changedOvertimes)
+            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+            Await service.SaveManyAsync(changedOvertimes)
 
         End If
 
         Dim deletableOvertimeIDs = _models.
             Where(Function(ot) ot.IsDelete).
-            Select(Function(ot) ot.Overtime.RowID).
+            Where(Function(ot) ot.Overtime.RowID IsNot Nothing).
+            Select(Function(ot) ot.Overtime.RowID.Value).
             ToList()
 
         If deletableOvertimeIDs.Any Then
 
-            Dim overtimeRepositoryDelete = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-            Await overtimeRepositoryDelete.DeleteManyAsync(deletableOvertimeIDs)
+            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+            Await service.DeleteManyAsync(deletableOvertimeIDs)
 
         End If
     End Function

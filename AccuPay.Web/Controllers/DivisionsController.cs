@@ -1,5 +1,4 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Web.Divisions;
 using AccuPay.Web.Divisions.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,10 @@ namespace AccuPay.Web.Controllers
     public class DivisionsController : ControllerBase
     {
         private readonly DivisionService _service;
-        private readonly DivisionRepository _repository;
 
-        public DivisionsController(DivisionService divisionService, DivisionRepository repository)
+        public DivisionsController(DivisionService service)
         {
-            _service = divisionService;
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]

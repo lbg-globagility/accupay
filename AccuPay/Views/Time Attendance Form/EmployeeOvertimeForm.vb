@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -108,8 +109,8 @@ Public Class EmployeeOvertimeForm
 
     Private Sub LoadStatusList()
 
-        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-        StatusComboBox.DataSource = overtimeRepository.GetStatusList()
+        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        StatusComboBox.DataSource = service.GetStatusList()
 
     End Sub
 
@@ -221,8 +222,8 @@ Public Class EmployeeOvertimeForm
     Private Async Function LoadOvertimes(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-        Me._currentOvertimes = (Await overtimeRepository.GetByEmployeeAsync(currentEmployee.RowID.Value)).
+        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        Me._currentOvertimes = (Await service.GetByEmployeeAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.OTStartDate).
                                 ToList
 
@@ -376,8 +377,8 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-                                                Await overtimeRepository.DeleteAsync(Me._currentOvertime.RowID.Value)
+                                                Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                                                Await service.DeleteAsync(Me._currentOvertime.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
                                                                                      FormEntityName,
@@ -549,8 +550,8 @@ Public Class EmployeeOvertimeForm
             Return
         End If
 
-        Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-        Dim currentOvertime = Await overtimeRepository.GetByIdAsync(Me._currentOvertime.RowID.Value)
+        Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+        Dim currentOvertime = Await service.GetByIdAsync(Me._currentOvertime.RowID.Value)
 
         If currentOvertime Is Nothing Then
 
@@ -597,12 +598,6 @@ Public Class EmployeeOvertimeForm
         For Each item In Me._currentOvertimes
             If CheckIfOvertimeIsChanged(item) Then
 
-                Dim validationErrorMessage = item.Validate()
-                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-                    MessageBoxHelper.ErrorMessage(validationErrorMessage)
-                    Return
-                End If
-
                 item.LastUpdBy = z_User
                 changedOvertimes.Add(item)
             End If
@@ -621,8 +616,8 @@ Public Class EmployeeOvertimeForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
-                                            Dim overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
-                                            Await overtimeRepository.SaveManyAsync(changedOvertimes)
+                                            Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
+                                            Await service.SaveManyAsync(changedOvertimes)
 
                                             For Each item In changedOvertimes
                                                 RecordUpdate(item)

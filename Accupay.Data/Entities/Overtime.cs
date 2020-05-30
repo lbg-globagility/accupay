@@ -2,7 +2,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
@@ -88,27 +87,6 @@ namespace AccuPay.Data.Entities
             {
                 OTEndDate = OTEndTime < OTStartTime ? OTStartDate.AddDays(1) : OTStartDate;
             }
-        }
-
-        public string Validate()
-        {
-            if (OTStartTime == null)
-                return "Start Time cannot be empty.";
-
-            if (OTEndTime == null)
-                return "End Time cannot be empty.";
-
-            if (OTStartDate.Date.Add(OTStartTime.Value.StripSeconds()) >= OTEndDate.Date.Add(OTEndTime.Value.StripSeconds()))
-                return "Start date and time cannot be greater than or equal to End date and time.";
-
-            string[] invalidStatuses = { StatusPending, StatusApproved };
-            if (!invalidStatuses.Contains(Status))
-            {
-                return "Status is not valid.";
-            }
-
-            // Means no error
-            return null;
         }
     }
 }

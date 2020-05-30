@@ -33,8 +33,6 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> Create(CreatePositionDto dto)
         {
-            // TODO: validations
-
             int organizationId = 2;
             int userId = 1;
             var overtime = new Position()
@@ -51,8 +49,6 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> Update(int id, UpdatePositionDto dto)
         {
-            // TODO: validations
-
             var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 

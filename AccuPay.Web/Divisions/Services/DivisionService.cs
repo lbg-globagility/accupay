@@ -39,8 +39,6 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
-            // TODO: validations
-
             int organizationId = 2;
             int userId = 1;
             var division = Division.CreateEmptyDivision(organizationId: organizationId, userId: userId);
@@ -78,8 +76,6 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<DivisionDto> Update(int id, UpdateDivisionDto dto)
         {
-            // TODO: validations
-
             var division = await _service.GetByIdWithParentAsync(id);
             if (division == null) return null;
 

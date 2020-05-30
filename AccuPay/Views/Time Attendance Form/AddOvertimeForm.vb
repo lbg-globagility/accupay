@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -15,7 +16,7 @@ Public Class AddOvertimeForm
 
     Private _newOvertime As New Overtime()
 
-    Private _overtimeRepository As OvertimeRepository
+    Private _overtimeService As OvertimeDataService
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -25,7 +26,7 @@ Public Class AddOvertimeForm
 
         _currentEmployee = employee
 
-        _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+        _overtimeService = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -45,7 +46,7 @@ Public Class AddOvertimeForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _overtimeRepository.GetStatusList()
+        StatusComboBox.DataSource = _overtimeService.GetStatusList()
 
     End Sub
 
@@ -112,19 +113,6 @@ Public Class AddOvertimeForm
         UpdateEndDateDependingOnStartAndEndTimes()
     End Sub
 
-    Private Function ValidateSave(newOvertime As Overtime) As Boolean
-
-        Dim validationErrorMessage = newOvertime.Validate()
-
-        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-            MessageBoxHelper.ErrorMessage(validationErrorMessage)
-            Return False
-        End If
-
-        Return True
-
-    End Function
-
     Private Sub ShowBalloonInfo(content As String, title As String)
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
     End Sub
@@ -151,11 +139,9 @@ Public Class AddOvertimeForm
 
         ForceDataBindingsCommit()
 
-        If ValidateSave(Me._newOvertime) = False Then Return
-
         Await FunctionUtils.TryCatchFunctionAsync("New Overtime",
             Async Function()
-                Await _overtimeRepository.SaveAsync(Me._newOvertime)
+                Await _overtimeService.SaveAsync(Me._newOvertime)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOvertime.RowID.Value, z_OrganizationID)
 

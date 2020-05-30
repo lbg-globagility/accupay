@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class OvertimeRepository
+    public class OvertimeRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -21,69 +21,46 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int id)
+        internal async Task DeleteAsync(Overtime overtime)
         {
-            var overtime = await GetByIdAsync(id);
-
             _context.Remove(overtime);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveManyAsync(List<Overtime> overtimes)
-        {
-            foreach (var overtime in overtimes)
-            {
-                await SaveWithContextAsync(overtime);
-            }
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SaveAsync(Overtime overtime)
-        {
-            await SaveWithContextAsync(overtime, deferSave: false);
-        }
-
-        private async Task SaveWithContextAsync(Overtime overtime,
-                                                bool deferSave = true)
-        {
-            if (overtime.OTStartTime.HasValue)
-            {
-                overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
-            }
-            if (overtime.OTEndTime.HasValue)
-            {
-                overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
-            }
-
-            overtime.UpdateEndDate();
-
-            SaveFunction(overtime);
-
-            if (deferSave == false)
-            {
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private void SaveFunction(Overtime overtime)
-        {
-            if (overtime.RowID == null)
-                _context.Overtimes.Add(overtime);
-            else
-                _context.Entry(overtime).State = EntityState.Modified;
-        }
-
-        public async Task DeleteManyAsync(IList<int?> ids)
+        internal async Task DeleteManyAsync(IEnumerable<int> ids)
         {
             var overtimes = await _context.Overtimes.
-                Where(o => ids.Contains(o.RowID)).
+                Where(o => ids.Contains(o.RowID.Value)).
                 ToListAsync();
 
             _context.RemoveRange(overtimes);
 
             await _context.SaveChangesAsync();
+        }
+
+        internal async Task SaveAsync(Overtime overtime)
+        {
+            SaveFunction(overtime);
+            await _context.SaveChangesAsync();
+        }
+
+        internal async Task SaveManyAsync(List<Overtime> overtimes)
+        {
+            overtimes.ForEach(x => SaveFunction(x));
+            await _context.SaveChangesAsync();
+        }
+
+        private void SaveFunction(Overtime overtime)
+        {
+            if (IsNewEntity(overtime.RowID))
+            {
+                _context.Overtimes.Add(overtime);
+            }
+            else
+            {
+                _context.Entry(overtime).State = EntityState.Modified;
+            }
         }
 
         #endregion CRUD
@@ -92,12 +69,12 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Overtime> GetByIdAsync(int id)
+        internal async Task<Overtime> GetByIdAsync(int id)
         {
             return await _context.Overtimes.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        public async Task<Overtime> GetByIdWithEmployeeAsync(int id)
+        internal async Task<Overtime> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Overtimes
                                 .Include(x => x.Employee)
@@ -108,14 +85,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Overtime>> GetByEmployeeAsync(int employeeId)
+        internal async Task<IEnumerable<Overtime>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.Overtimes.
                                 Where(l => l.EmployeeID == employeeId).
                                 ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Overtimes
                                 .Include(x => x.Employee)
@@ -142,7 +119,19 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Overtime>(overtimes, count);
         }
 
-        public async Task<IEnumerable<Overtime>> GetByDatePeriodAsync(
+        internal IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
+                                                                TimePeriod timePeriod,
+                                                                List<int> employeeIdList,
+                                                                OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        {
+            return CreateBaseQueryByTimePeriod(organizationId,
+                                                timePeriod,
+                                                overtimeStatus).
+                            Where(ot => employeeIdList.Contains(ot.EmployeeID.Value)).
+                            ToList();
+        }
+
+        internal async Task<IEnumerable<Overtime>> GetByDatePeriodAsync(
                                                         int organizationId,
                                                         TimePeriod timePeriod,
                                                         OvertimeStatus overtimeStatus = OvertimeStatus.All)
@@ -153,7 +142,7 @@ namespace AccuPay.Data.Repositories
                             ToListAsync();
         }
 
-        public IEnumerable<Overtime> GetByDatePeriod(int organizationId,
+        internal IEnumerable<Overtime> GetByDatePeriod(int organizationId,
                                                     TimePeriod timePeriod,
                                                     OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
@@ -163,23 +152,11 @@ namespace AccuPay.Data.Repositories
                         ToList();
         }
 
-        public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
-                                                                TimePeriod timePeriod,
-                                                                List<int> employeeIdList,
-                                                                OvertimeStatus overtimeStatus = OvertimeStatus.All)
-        {
-            return CreateBaseQueryByTimePeriod(organizationId,
-                                                    timePeriod,
-                                                    overtimeStatus).
-                            Where(ot => employeeIdList.Contains(ot.EmployeeID.Value)).
-                            ToList();
-        }
-
         #endregion List of entities
 
         #region Others
 
-        public List<string> GetStatusList()
+        internal List<string> GetStatusList()
         {
             return new List<string>()
             {

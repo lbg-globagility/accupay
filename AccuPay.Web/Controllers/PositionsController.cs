@@ -11,7 +11,10 @@ namespace AccuPay.Web.Controllers
     {
         private readonly PositionService _service;
 
-        public PositionsController(PositionService service) => _service = service;
+        public PositionsController(PositionService service)
+        {
+            _service = service;
+        }
 
         [HttpGet]
         public async Task<ActionResult<PaginatedList<PositionDto>>> List([FromQuery] PageOptions options, string term)

@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,11 +9,11 @@ namespace AccuPay.Web.Overtimes
 {
     public class OvertimeService
     {
-        private readonly OvertimeRepository _repository;
+        private readonly OvertimeDataService _service;
 
-        public OvertimeService(OvertimeRepository repository)
+        public OvertimeService(OvertimeDataService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -20,7 +21,7 @@ namespace AccuPay.Web.Overtimes
             // TODO: sort and desc in repository
 
             int organizationId = 2;
-            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -29,15 +30,13 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
+            var officialBusiness = await _service.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task<OvertimeDto> Create(CreateOvertimeDto dto)
         {
-            // TODO: validations
-
             int organizationId = 2;
             int userId = 1;
             var overtime = new Overtime()
@@ -48,16 +47,14 @@ namespace AccuPay.Web.Overtimes
             };
             ApplyChanges(dto, overtime);
 
-            await _repository.SaveAsync(overtime);
+            await _service.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
         }
 
         public async Task<OvertimeDto> Update(int id, UpdateOvertimeDto dto)
         {
-            // TODO: validations
-
-            var overtime = await _repository.GetByIdAsync(id);
+            var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 
             int userId = 1;
@@ -65,9 +62,19 @@ namespace AccuPay.Web.Overtimes
 
             ApplyChanges(dto, overtime);
 
-            await _repository.SaveAsync(overtime);
+            await _service.SaveAsync(overtime);
 
             return ConvertToDto(overtime);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+        }
+
+        public List<string> GetStatusList()
+        {
+            return _service.GetStatusList();
         }
 
         private static void ApplyChanges(CrudOvertimeDto dto, Overtime overtime)
