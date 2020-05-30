@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -15,7 +16,7 @@ Public Class AddOfficialBusinessForm
 
     Private _newOfficialBusiness As New OfficialBusiness()
 
-    Private _officialBusinessRepository As OfficialBusinessRepository
+    Private _officialBusinessDataService As OfficialBusinessDataService
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -25,7 +26,7 @@ Public Class AddOfficialBusinessForm
 
         _currentEmployee = employee
 
-        _officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
+        _officialBusinessDataService = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -55,7 +56,7 @@ Public Class AddOfficialBusinessForm
 
     Private Sub LoadStatusList()
 
-        StatusComboBox.DataSource = _officialBusinessRepository.GetStatusList()
+        StatusComboBox.DataSource = _officialBusinessDataService.GetStatusList()
 
     End Sub
 
@@ -157,7 +158,7 @@ Public Class AddOfficialBusinessForm
 
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()
-                Await _officialBusinessRepository.SaveAsync(Me._newOfficialBusiness)
+                Await _officialBusinessDataService.SaveAsync(Me._newOfficialBusiness)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newOfficialBusiness.RowID.Value, z_OrganizationID)
 

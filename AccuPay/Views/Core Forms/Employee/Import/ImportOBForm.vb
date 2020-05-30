@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Utils
 Imports Globagility.AccuPay
@@ -167,8 +168,8 @@ Public Class ImportOBForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim officialBusinessRepository = MainServiceProvider.GetRequiredService(Of OfficialBusinessRepository)
-                Await officialBusinessRepository.SaveManyAsync(Me._officialBusinesses)
+                Dim service = MainServiceProvider.GetRequiredService(Of OfficialBusinessDataService)
+                Await service.SaveManyAsync(Me._officialBusinesses)
 
                 Dim importlist = New List(Of UserActivityItem)
 

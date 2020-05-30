@@ -1,8 +1,6 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class OfficialBusinessRepository
+    public class OfficialBusinessRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -21,71 +19,32 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int id)
+        internal async Task DeleteAsync(OfficialBusiness officialBusiness)
         {
-            var officialBusiness = await GetByIdAsync(id);
-
             _context.Remove(officialBusiness);
-
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
+        internal async Task SaveAsync(OfficialBusiness officialBusiness)
         {
-            foreach (var officialBusiness in officialBusinesses)
-            {
-                await this.SaveWithContextAsync(officialBusiness);
-
-                await _context.SaveChangesAsync();
-            }
+            SaveFunction(officialBusiness);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(OfficialBusiness officialBusiness)
+        internal async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
         {
-            await SaveWithContextAsync(officialBusiness, deferSave: false);
+            officialBusinesses.ForEach(x => SaveFunction(x));
+            await _context.SaveChangesAsync();
         }
 
-        private async Task SaveWithContextAsync(OfficialBusiness officialBusiness,
-                                                bool deferSave = true)
+        private void SaveFunction(OfficialBusiness officialBusiness)
         {
-            if (officialBusiness.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
-
-            if (officialBusiness.StartTime.HasValue)
-            {
-                officialBusiness.StartTime = officialBusiness.StartTime.Value.StripSeconds();
-            }
-            if (officialBusiness.EndTime.HasValue)
-            {
-                officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
-            }
-
-            officialBusiness.UpdateEndDate();
-
-            await SaveAsyncFunction(officialBusiness);
-
-            if (deferSave == false)
-            {
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task SaveAsyncFunction(OfficialBusiness officialBusiness)
-        {
-            if (await _context.OfficialBusinesses.
-                    Where(l => officialBusiness.RowID == null ? true : officialBusiness.RowID != l.RowID).
-                    Where(l => l.EmployeeID == officialBusiness.EmployeeID).
-                    Where(l => (l.StartDate.HasValue && officialBusiness.StartDate.HasValue && l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date)).
-                    AnyAsync())
-                throw new BusinessLogicException($"Employee already has an OB for {officialBusiness.StartDate.Value.ToShortDateString()}");
-
-            if (officialBusiness.RowID == null)
+            if (IsNewEntity(officialBusiness.RowID))
             {
                 _context.OfficialBusinesses.Add(officialBusiness);
             }
             else
             {
-                _context.OfficialBusinesses.Attach(officialBusiness);
                 _context.Entry(officialBusiness).State = EntityState.Modified;
             }
         }
@@ -96,13 +55,13 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<OfficialBusiness> GetByIdAsync(int id)
+        internal async Task<OfficialBusiness> GetByIdAsync(int id)
         {
             return await _context.OfficialBusinesses
                                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        public async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
+        internal async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.OfficialBusinesses
                                 .Include(x => x.Employee)
@@ -113,14 +72,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
+        internal async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.OfficialBusinesses.
                                 Where(l => l.EmployeeID == employeeId).
                                 ToListAsync();
         }
 
-        public async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.OfficialBusinesses
                                 .Include(x => x.Employee)
@@ -147,7 +106,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<OfficialBusiness>(officialBusinesses, count);
         }
 
-        public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
+        internal IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.OfficialBusinesses.
                             Where(l => l.OrganizationID == organizationId).
@@ -161,7 +120,7 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        public List<string> GetStatusList()
+        internal List<string> GetStatusList()
         {
             return new List<string>()
             {

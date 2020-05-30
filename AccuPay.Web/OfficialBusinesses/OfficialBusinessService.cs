@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,19 +9,19 @@ namespace AccuPay.Web.OfficialBusinesses
 {
     public class OfficialBusinessService
     {
-        private readonly OfficialBusinessRepository _repository;
+        private readonly OfficialBusinessDataService _service;
 
-        public OfficialBusinessService(OfficialBusinessRepository repository)
+        public OfficialBusinessService(OfficialBusinessDataService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
-            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            int organizationId = 2;
+            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -29,17 +30,15 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> GetById(int id)
         {
-            var officialBusiness = await _repository.GetByIdWithEmployeeAsync(id);
+            var officialBusiness = await _service.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task<OfficialBusinessDto> Create(CreateOfficialBusinessDto dto)
         {
-            // TODO: validations
-
-            int organizationId = 2; // temporary OrganizationID
-            int userId = 1; // temporary User Id
+            int organizationId = 2;
+            int userId = 1;
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = dto.EmployeeId,
@@ -48,26 +47,34 @@ namespace AccuPay.Web.OfficialBusinesses
             };
             ApplyChanges(dto, officialBusiness);
 
-            await _repository.SaveAsync(officialBusiness);
+            await _service.SaveAsync(officialBusiness);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task<OfficialBusinessDto> Update(int id, UpdateOfficialBusinessDto dto)
         {
-            // TODO: validations
-
-            var officialBusiness = await _repository.GetByIdAsync(id);
+            var officialBusiness = await _service.GetByIdAsync(id);
             if (officialBusiness == null) return null;
 
-            int userId = 1; // temporary User Id
+            int userId = 1;
             officialBusiness.LastUpdBy = userId;
 
             ApplyChanges(dto, officialBusiness);
 
-            await _repository.SaveAsync(officialBusiness);
+            await _service.SaveAsync(officialBusiness);
 
             return ConvertToDto(officialBusiness);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+        }
+
+        public List<string> GetStatusList()
+        {
+            return _service.GetStatusList();
         }
 
         private static void ApplyChanges(CrudOfficialBusinessDto dto, OfficialBusiness officialBusiness)

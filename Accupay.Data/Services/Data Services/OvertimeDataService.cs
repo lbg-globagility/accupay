@@ -21,9 +21,11 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
-        public async Task DeleteAsync(int ovetimeId)
+        #region CRUD
+
+        public async Task DeleteAsync(int overtimeId)
         {
-            var overtime = await _repository.GetByIdAsync(ovetimeId);
+            var overtime = await _repository.GetByIdAsync(overtimeId);
 
             if (overtime == null)
                 throw new BusinessLogicException("Overtime does not exists.");
@@ -53,19 +55,24 @@ namespace AccuPay.Data.Services
         private static void SanitizeEntity(Overtime overtime)
         {
             if (overtime.OTStartTime == null)
-                throw new BusinessLogicException("Start Time cannot be empty.");
+                throw new BusinessLogicException("Start Time is required.");
 
             if (overtime.OTEndTime == null)
-                throw new BusinessLogicException("End Time cannot be empty.");
+                throw new BusinessLogicException("End Time is required.");
 
-            string[] invalidStatuses = { Overtime.StatusPending, Overtime.StatusApproved };
-            if (!invalidStatuses.Contains(overtime.Status))
+            if (overtime.EmployeeID == null)
+                throw new BusinessLogicException("Employee does not exists.");
+
+            string[] validStatuses = { Overtime.StatusPending, Overtime.StatusApproved };
+            if (validStatuses.Contains(overtime.Status) == false)
                 throw new BusinessLogicException("Status is not valid.");
 
             overtime.OTStartTime = overtime.OTStartTime.Value.StripSeconds();
             overtime.OTEndTime = overtime.OTEndTime.Value.StripSeconds();
             overtime.UpdateEndDate();
         }
+
+        #endregion CRUD
 
         public async Task<Overtime> GetByIdAsync(int overtimeId)
         {
