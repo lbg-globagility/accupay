@@ -66,10 +66,10 @@
       mat-row
       *matRowDef="let row; columns: displayedColumns"
       class="cursor-link"
-      (mouseover)="setHoveredRow(row.rowID)"
+      (mouseover)="setHoveredRow(row.id)"
       [class.active]="row.rowId == selectedRow"
       (mouseout)="selectedRow = null"
-      routerLink="/employees/{{ row.rowID }}"
+      routerLink="/employees/{{ row.id }}"
     ></tr>
   </table>
 
