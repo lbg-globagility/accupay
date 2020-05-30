@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Services.Imports;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using System;
@@ -12,8 +13,8 @@ namespace AccuPay.Data.Services
     {
         private const double HOURS_BUFFER = 4;
 
-        private List<ImportTimeAttendanceLog> _importedTimeAttendanceLogs;
-        private List<IGrouping<string, ImportTimeAttendanceLog>> _logsGroupedByEmployee;
+        private List<TimeLogImportModel> _importedTimeAttendanceLogs;
+        private List<IGrouping<string, TimeLogImportModel>> _logsGroupedByEmployee;
 
         private List<Employee> _employees;
         private List<ShiftSchedule> _employeeShifts;
@@ -21,7 +22,7 @@ namespace AccuPay.Data.Services
         private readonly int _organizationId;
         private readonly int _userId;
 
-        public TimeAttendanceHelper(List<ImportTimeAttendanceLog> importedTimeLogs,
+        public TimeAttendanceHelper(List<TimeLogImportModel> importedTimeLogs,
                                     List<Employee> employees,
                                     List<ShiftSchedule> employeeShifts,
                                     int organizationId,
@@ -32,12 +33,12 @@ namespace AccuPay.Data.Services
             _employeeShifts = employeeShifts;
             _organizationId = organizationId;
             _userId = userId;
-            _logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(_importedTimeAttendanceLogs);
+            _logsGroupedByEmployee = TimeLogImportModel.GroupByEmployee(_importedTimeAttendanceLogs);
 
             GetEmployeeObjectOfLogs();
         }
 
-        public List<ImportTimeAttendanceLog> Analyze()
+        public List<TimeLogImportModel> Analyze()
         {
             var dayLogRecords = GenerateDayLogRecords();
 
@@ -81,7 +82,7 @@ namespace AccuPay.Data.Services
             return _importedTimeAttendanceLogs;
         }
 
-        public List<ImportTimeAttendanceLog> Validate()
+        public List<TimeLogImportModel> Validate()
         {
             // NOTHING YET
 
@@ -213,7 +214,7 @@ namespace AccuPay.Data.Services
             return dayLogRecords;
         }
 
-        private DayLogRecord GenerateDayLogRecord(List<ImportTimeAttendanceLog> employeeLogs, List<ShiftSchedule> currentEmployeeShifts, DateTime currentDate)
+        private DayLogRecord GenerateDayLogRecord(List<TimeLogImportModel> employeeLogs, List<ShiftSchedule> currentEmployeeShifts, DateTime currentDate)
         {
             var currentShift = GetShift(currentEmployeeShifts, currentDate);
 
@@ -242,7 +243,7 @@ namespace AccuPay.Data.Services
                     FirstOrDefault();
         }
 
-        private List<ImportTimeAttendanceLog> GetTimeLogsFromBounds(TimePeriod shiftBounds, List<ImportTimeAttendanceLog> timeAttendanceLogs
+        private List<TimeLogImportModel> GetTimeLogsFromBounds(TimePeriod shiftBounds, List<TimeLogImportModel> timeAttendanceLogs
     )
         {
             return timeAttendanceLogs.Where(t =>
@@ -348,7 +349,7 @@ namespace AccuPay.Data.Services
         {
             public DateTime LogDate { get; set; }
 
-            public List<ImportTimeAttendanceLog> LogRecords { get; set; }
+            public List<TimeLogImportModel> LogRecords { get; set; }
 
             public DateTime ShiftTimeInBounds { get; set; }
 

@@ -16,6 +16,7 @@ using AccuPay.Web.Overtimes;
 using AccuPay.Web.Positions;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Shifts.Services;
+using AccuPay.Web.TimeLogs;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
 using Notisphere.Users.Services;
@@ -26,13 +27,13 @@ namespace AccuPay.Web
     {
         public static IServiceCollection AddWebServices(this IServiceCollection services)
         {
+            services.AddScoped<TokenService>();
             services.AddScoped<UserService>();
             services.AddScoped<AccountService>();
             services.AddScoped<AccountTokenService>();
-            services.AddScoped<CalendarService>();
-            services.AddScoped<BranchService>();
-            services.AddScoped<TokenService>();
             services.AddScoped<AllowanceService>();
+            services.AddScoped<BranchService>();
+            services.AddScoped<CalendarService>();
             services.AddScoped<DivisionService>();
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
@@ -43,6 +44,7 @@ namespace AccuPay.Web
             services.AddScoped<PositionService>();
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();
+            services.AddScoped<TimeLogService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();

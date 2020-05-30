@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
-import { TimeLogTableComponent } from './time-log-table/time-log-table.component';
-import { SharedModule } from '../shared/shared.module';
+import { SharedModule } from 'src/app/shared/shared.module';
+import { TimeLogListComponent } from './time-log-list/time-log-list.component';
 
 @NgModule({
-  declarations: [TimeLogTableComponent],
+  declarations: [TimeLogListComponent],
   imports: [SharedModule],
 })
 export class TimeLogsModule {}

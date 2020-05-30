@@ -1,10 +1,7 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.ValueObjects;
-using AccuPay.Web.Core.Extensions;
 using AccuPay.Web.TimeLogs;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -13,52 +10,25 @@ namespace AccuPay.Web.Controllers
     [ApiController]
     public class TimeLogsController : ControllerBase
     {
-        private readonly TimeLogService _timeLogService;
+        private readonly TimeLogService _service;
 
-        public TimeLogsController(TimeLogService timeLogService)
+        public TimeLogsController(TimeLogService service)
         {
-            _timeLogService = timeLogService;
+            _service = service;
         }
 
-        [HttpPost("filter")]
-        public async Task<PaginatedList<TimeLogDto>> fsdfsd([FromQuery] PageOptions options, [FromBody] TimeLogFilter body)
+        [HttpGet]
+        public async Task<ActionResult<PaginatedList<TimeLogDto>>> List([FromQuery] PageOptions options, string term)
         {
-            int variableOrganizationId = 5;//_currentUser.OrganizationId
-            TimePeriod timePeriod = new TimePeriod(body.StartDate, body.EndDate);
-            var employeeIds = body.EmployeeIds;
-
-            var query = await _timeLogService.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIds, timePeriod);
-
-            //if (!string.IsNullOrWhiteSpace(term))
-            //{
-            //    query = query.Where(s => $"{s.Employee.EmployeeNo}{s.Employee.FullNameWithMiddleInitialLastNameFirst}".Contains(term, StringComparison.OrdinalIgnoreCase));
-            //}
-
-            query = options.Sort switch
-            {
-                "name" => query.OrderBy(t => t.Employee.FullNameWithMiddleInitialLastNameFirst, options.Direction),
-                _ => query.OrderBy(t => t.Employee.FullNameWithMiddleInitialLastNameFirst)
-            };
-
-            var roles = query.Page(options).ToList();
-            var count = query.Count();
-
-            var dtos = roles.Select(s => TimeLogDto.Convert(s)).ToList();
-
-            return new PaginatedList<TimeLogDto>(dtos, count, options.PageIndex, options.PageSize);
+            return await _service.PaginatedList(options, term);
         }
 
-        //[HttpPost("filter")]
-        //public ActionResult Test([FromBody] TimeLogFilter body, [FromQuery] PageOptions options)
-        //{
-        //    return Ok();
-        //}
-    }
+        [HttpPost("import")]
+        public async Task<ActionResult> Import([FromForm] IFormFile file)
+        {
+            await _service.Import(file);
 
-    public class TimeLogFilter
-    {
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
-        public int[] EmployeeIds { get; set; }
+            return Ok();
+        }
     }
 }

@@ -92,10 +92,13 @@ namespace AccuPay.Web
 
             services.AddScoped<DivisionDataService>();
             services.AddScoped<EmployeeDutyScheduleDataService>();
-            services.AddScoped<PositionDataService>();
             services.AddScoped<LeaveDataService>();
+            services.AddScoped<PositionDataService>();
+            services.AddScoped<TimeLogDataService>();
 
             services.AddScoped<ShiftImportParser>();
+            services.AddScoped<TimeLogImportParser>();
+            services.AddScoped<TimeLogsReader>();
 
             return services;
         }

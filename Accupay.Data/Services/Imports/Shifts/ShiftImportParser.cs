@@ -112,9 +112,9 @@ namespace AccuPay.Data.Services.Imports
 
         public class ShiftImportParserOutput
         {
-            public IReadOnlyCollection<ShiftImportModel> ValidRecords { get; set; }
+            public IReadOnlyCollection<ShiftImportModel> ValidRecords { get; }
 
-            public IReadOnlyCollection<ShiftImportModel> InvalidRecords { get; set; }
+            public IReadOnlyCollection<ShiftImportModel> InvalidRecords { get; }
 
             public ShiftImportParserOutput(IReadOnlyCollection<ShiftImportModel> validRecords,
                                             IReadOnlyCollection<ShiftImportModel> invalidRecords)

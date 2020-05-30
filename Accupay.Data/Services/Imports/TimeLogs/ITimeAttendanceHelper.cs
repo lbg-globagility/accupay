@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Services.Imports;
 using System.Collections.Generic;
 
 namespace AccuPay.Data.Services
@@ -9,8 +10,8 @@ namespace AccuPay.Data.Services
 
         List<TimeAttendanceLog> GenerateTimeAttendanceLogs();
 
-        List<ImportTimeAttendanceLog> Analyze();
+        List<TimeLogImportModel> Analyze();
 
-        List<ImportTimeAttendanceLog> Validate();
+        List<TimeLogImportModel> Validate();
     }
 }

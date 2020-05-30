@@ -4,6 +4,7 @@ using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Shifts.Models;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.IO;
 using System.Linq;
@@ -82,13 +83,13 @@ namespace AccuPay.Web.Shifts.Services
             await _service.DeleteAsync(id);
         }
 
-        internal async Task Import(ImportShiftDto dto)
+        internal async Task Import(IFormFile file)
         {
-            if (Path.GetExtension(dto.File.FileName) != _importParser.XlsxExtension)
+            if (Path.GetExtension(file.FileName) != _importParser.XlsxExtension)
                 throw new InvalidFormatException();
 
             Stream stream = new MemoryStream();
-            await dto.File.CopyToAsync(stream);
+            await file.CopyToAsync(stream);
 
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");

@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
@@ -250,8 +251,8 @@ Public Class TimeLogsForm2
     End Function
 
     Private Async Sub NewTimeEntryAlternateLineImport()
-        Dim importer = New TimeLogsReader()
-        Dim importOutput = importer.Import(thefilepath)
+        Dim importer = MainServiceProvider.GetRequiredService(Of TimeLogsReader)
+        Dim importOutput = importer.Read(thefilepath)
 
         If importOutput.IsImportSuccess = False Then
             MessageBox.Show(importOutput.ErrorMessage)
@@ -265,7 +266,9 @@ Public Class TimeLogsForm2
             Return
         End If
 
-        Dim timeAttendanceHelper As ITimeAttendanceHelper = Await GetTimeAttendanceHelper(logs)
+        Dim timeLogsImportParser = MainServiceProvider.GetRequiredService(Of TimeLogImportParser)
+        Dim timeAttendanceHelper As ITimeAttendanceHelper = Await timeLogsImportParser.
+                                        GetHelper(logs, organizationId:=z_OrganizationID, userId:=z_User)
 
         'preview the logs here
         Dim previewDialog As New _
@@ -329,8 +332,8 @@ Public Class TimeLogsForm2
             Dim timeLogs = timeAttendanceHelper.GenerateTimeLogs()
             Dim timeAttendanceLogs = timeAttendanceHelper.GenerateTimeAttendanceLogs()
 
-            Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
-            Await timeLogRepository.SaveImportAsync(timeLogs, timeAttendanceLogs)
+            Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+            Await timeLogService.SaveImportAsync(timeLogs, timeAttendanceLogs)
 
             Dim importList = New List(Of UserActivityItem)
             For Each log In timeLogs
@@ -482,87 +485,6 @@ Public Class TimeLogsForm2
         MessageBoxManager.Unregister()
 
         Return time_logformat
-
-    End Function
-
-    Private Async Function GetTimeAttendanceHelper(logs As List(Of ImportTimeAttendanceLog)) _
-                            As Task(Of ITimeAttendanceHelper)
-
-        logs = logs.OrderBy(Function(l) l.DateTime).ToList
-
-        Dim logsGroupedByEmployee = ImportTimeAttendanceLog.GroupByEmployee(logs)
-        Dim employees As List(Of Employee) = Await GetEmployeesFromLogGroup(logsGroupedByEmployee)
-
-        Dim firstDate = logs.FirstOrDefault.DateTime.ToMinimumHourValue
-        Dim lastDate = logs.LastOrDefault.DateTime.ToMaximumHourValue
-
-        Dim timeAttendanceHelper As ITimeAttendanceHelper
-
-        Dim datePeriod As New TimePeriod(firstDate, lastDate)
-
-        If _useShiftSchedulePolicy Then
-
-            Dim employeeShifts As List(Of EmployeeDutySchedule) =
-                    Await GetEmployeeDutyShifts(datePeriod)
-
-            Dim employeeOvertimes As List(Of Overtime) =
-                    Await GetEmployeeOvertime(datePeriod)
-
-            timeAttendanceHelper = New TimeAttendanceHelperNew(logs,
-                                                               employees,
-                                                               employeeShifts,
-                                                               employeeOvertimes,
-                                                               organizationId:=z_OrganizationID,
-                                                               userId:=z_User)
-        Else
-
-            Dim employeeShifts As List(Of ShiftSchedule) =
-                    Await GetEmployeeShifts(datePeriod)
-
-            timeAttendanceHelper = New TimeAttendanceHelper(logs,
-                                                            employees,
-                                                            employeeShifts,
-                                                            organizationId:=z_OrganizationID,
-                                                            userId:=z_User)
-
-        End If
-
-        Return timeAttendanceHelper
-    End Function
-
-    Private Async Function GetEmployeeShifts(timePeriod As TimePeriod) As Task(Of List(Of ShiftSchedule))
-
-        Return (Await _shiftScheduleRepository.
-                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
-                ).ToList()
-    End Function
-
-    'new shift table
-    Private Async Function GetEmployeeDutyShifts(timePeriod As TimePeriod) As Task(Of List(Of EmployeeDutySchedule))
-
-        Return (Await _employeeDutyScheduleRepository.
-                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
-                        ).ToList()
-    End Function
-
-    Private Async Function GetEmployeeOvertime(timePeriod As TimePeriod) As Task(Of List(Of Overtime))
-
-        Return (Await _overtimeRepository.
-                        GetByDatePeriodAsync(z_OrganizationID, timePeriod)
-                ).ToList()
-    End Function
-
-    Private Async Function GetEmployeesFromLogGroup(logsGroupedByEmployee As List(Of IGrouping(Of String, ImportTimeAttendanceLog))) As Task(Of List(Of Employee))
-
-        If logsGroupedByEmployee.Count < 1 Then
-            Return New List(Of Employee)
-        End If
-
-        Dim employeeNumbersArray = logsGroupedByEmployee.Select(Function(x) x.Key).ToArray()
-
-        Dim employees = Await _employeeRepository.GetByMultipleEmployeeNumberAsync(employeeNumbersArray, z_OrganizationID)
-
-        Return employees.ToList()
 
     End Function
 
@@ -1298,8 +1220,9 @@ Public Class TimeLogsForm2
             Next
         Next
 
-        Dim timeLogRepository = MainServiceProvider.GetRequiredService(Of TimeLogRepository)
-        Await timeLogRepository.SaveImportAsync(timeLogs)
+        'this should also create TimeAttendanceLogs per log
+        Dim timeLogService = MainServiceProvider.GetRequiredService(Of TimeLogDataService)
+        Await timeLogService.SaveImportAsync(timeLogs)
 
         Return
 
