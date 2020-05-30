@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -46,27 +47,25 @@ Public Class AddDivisionLocationForm
 
         Const messageTitle As String = "New Division Location"
 
-        Try
-            Me.NewDivision.Name = txtDivisionName.Text.Trim
-
-            Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
-
-            Await divisionService.SaveAsync(Me.NewDivision)
-
-            _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
-
-            Me.IsSaved = True
-
-            Me.Close()
-        Catch ex As ArgumentException
-
-            MessageBoxHelper.ErrorMessage(ex.Message, messageTitle)
-        Catch ex As Exception
-
-            MessageBoxHelper.DefaultErrorMessage(messageTitle, ex)
-
-        End Try
+        Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
+            Async Function()
+                Await SaveDivisionLocation()
+            End Function)
 
     End Sub
+
+    Private Async Function SaveDivisionLocation() As Task
+        Me.NewDivision.Name = txtDivisionName.Text.Trim
+
+        Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+
+        Await divisionService.SaveAsync(Me.NewDivision)
+
+        _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
+
+        Me.IsSaved = True
+
+        Me.Close()
+    End Function
 
 End Class

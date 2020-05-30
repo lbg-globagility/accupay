@@ -68,7 +68,7 @@
           <div class="field">
             <p class="field-label">Automatic Overtime Filing</p>
             <p class="field-value">
-              {{ division.automaticOvertimeFiling | ifEmpty: "-" }}
+              {{ division.automaticOvertimeFiling ? "Yes" : "No" }}
             </p>
           </div>
         </div>

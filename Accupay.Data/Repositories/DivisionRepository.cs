@@ -1,8 +1,6 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -51,7 +49,7 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Division> GetByIdAsync(int id)
+        internal async Task<Division> GetByIdWithParentAsync(int id)
         {
             return await _context.Divisions
                                 .Include(x => x.ParentDivision)
@@ -62,14 +60,14 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public IEnumerable<Division> GetAll(int organizationId)
+        internal IEnumerable<Division> GetAll(int organizationId)
         {
             return _context.Divisions.
                             Where(d => d.OrganizationID == organizationId).
                             ToList();
         }
 
-        public async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
+        internal async Task<IEnumerable<Division>> GetAllAsync(int organizationId)
         {
             return await _context.Divisions.
                                 Where(d => d.OrganizationID == organizationId).
@@ -109,7 +107,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Division>(divisions, count);
         }
 
-        public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
+        internal async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
         {
             return await _context.Divisions.
                             Where(d => d.OrganizationID == organizationId).
@@ -121,7 +119,7 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        public List<string> GetDivisionTypeList()
+        internal List<string> GetDivisionTypeList()
         {
             return new List<string>()
             {

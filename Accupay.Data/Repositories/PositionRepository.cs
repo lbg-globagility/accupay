@@ -61,20 +61,13 @@ namespace AccuPay.Data.Repositories
                             FirstOrDefaultAsync();
         }
 
-        public async Task<Position> GetByNameAsync(int organizationId, string positionName)
+        internal async Task<Position> GetByNameAsync(int organizationId, string positionName)
         {
             return await _context.Positions
                             .Where(p => p.OrganizationID == organizationId)
                             .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase())
                             .AsNoTracking()
                             .FirstOrDefaultAsync();
-        }
-
-        public async Task<List<Position>> GetAllByNameAsync(string positionName)
-        {
-            return await _context.Positions.
-                Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase()).
-                ToListAsync();
         }
 
         #endregion Single entity
@@ -88,7 +81,7 @@ namespace AccuPay.Data.Repositories
                 ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Positions
                                 .Include(x => x.Division)

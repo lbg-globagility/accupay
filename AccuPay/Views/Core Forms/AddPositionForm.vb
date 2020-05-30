@@ -23,9 +23,7 @@ Public Class AddPositionForm
 
     Public Property LastPositionAdded As Position
 
-    Private _divisionRepository As DivisionRepository
-
-    Private _jobLevelRepository As JobLevelRepository
+    Private _divisionService As DivisionDataService
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -33,9 +31,7 @@ Public Class AddPositionForm
 
         InitializeComponent()
 
-        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-
-        _jobLevelRepository = MainServiceProvider.GetRequiredService(Of JobLevelRepository)
+        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -55,7 +51,7 @@ Public Class AddPositionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisions = Await _divisionRepository.GetAllAsync(z_OrganizationID)
+        Dim divisions = Await _divisionService.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 

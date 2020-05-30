@@ -32,7 +32,7 @@ namespace AccuPay.Web.Divisions
 
         public async Task<DivisionDto> GetById(int id)
         {
-            var division = await _service.GetByIdAsync(id);
+            var division = await _service.GetByIdWithParentAsync(id);
 
             return ConvertToDto(division);
         }
@@ -64,7 +64,7 @@ namespace AccuPay.Web.Divisions
         internal async Task<IEnumerable<DivisionDto>> GetAllParents()
         {
             int organizationId = 2;
-            IEnumerable<Division> parents = await _service.GettAllParentsAsync(organizationId);
+            IEnumerable<Division> parents = await _service.GetAllParentsAsync(organizationId);
 
             var dtos = parents.Select(x => ConvertToDto(x));
 
@@ -80,7 +80,7 @@ namespace AccuPay.Web.Divisions
         {
             // TODO: validations
 
-            var division = await _service.GetByIdAsync(id);
+            var division = await _service.GetByIdWithParentAsync(id);
             if (division == null) return null;
 
             int userId = 1;

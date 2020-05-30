@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeTreeView
@@ -235,7 +236,7 @@ Public Class EmployeeTreeView
 
         Private _organizationId As Integer
 
-        Private _divisionRepository As DivisionRepository
+        Private _divisionService As DivisionDataService
 
         Private _employeeRepository As EmployeeRepository
 
@@ -245,7 +246,7 @@ Public Class EmployeeTreeView
 
             If MainServiceProvider IsNot Nothing Then
 
-                _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+                _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
                 _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
             End If
@@ -272,7 +273,7 @@ Public Class EmployeeTreeView
 
         Private Function LoadDivisions() As IList(Of Division)
 
-            Return _divisionRepository.GetAll(z_OrganizationID).
+            Return _divisionService.GetAll(z_OrganizationID).
                                         OrderBy(Function(d) d.Name).
                                         ToList()
         End Function

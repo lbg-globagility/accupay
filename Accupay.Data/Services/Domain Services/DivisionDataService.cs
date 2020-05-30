@@ -6,7 +6,6 @@ using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
-using System.Drawing.Imaging;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -24,6 +23,52 @@ namespace AccuPay.Data.Services
             _listOfValueRepository = listOfValueRepository;
             _context = context;
         }
+
+        #region CRUD
+
+        public async Task SaveAsync(Division division)
+        {
+            if (division.OrganizationID == null)
+                throw new BusinessLogicException($"Organization is required.");
+
+            var doesExistQuery = _context.Divisions
+                                        .Where(d => d.Name.Trim().ToLower() ==
+                                                division.Name.ToTrimmedLowerCase())
+                                        .Where(d => d.ParentDivisionID == division.ParentDivisionID)
+                                        .Where(d => d.OrganizationID == division.OrganizationID);
+
+            if (isNewEntity(division.RowID) == false)
+            {
+                doesExistQuery = doesExistQuery.Where(d => division.RowID != d.RowID);
+            }
+
+            if (await doesExistQuery.AnyAsync())
+            {
+                if (division.IsRoot)
+                    throw new BusinessLogicException($"Division location already exists.");
+                else
+                    throw new BusinessLogicException($"Division name already exists under the selected division location.");
+            }
+
+            await _divisionRepository.SaveAsync(division);
+        }
+
+        public async Task DeleteAsync(int divisionId)
+        {
+            var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
+
+            // TODO: move this to repositories
+            if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
+                throw new BusinessLogicException("Division already has agency fees therefore cannot be deleted.");
+            else if (_context.Divisions.Any(d => d.ParentDivisionID == divisionId))
+                throw new BusinessLogicException("Division already has child divisions therefore cannot be deleted.");
+            else if (_context.Positions.Any(p => p.DivisionID == divisionId))
+                throw new BusinessLogicException("Division already has positions therefore cannot be deleted.");
+
+            await _divisionRepository.DeleteAsync(division);
+        }
+
+        #endregion CRUD
 
         public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {
@@ -82,59 +127,27 @@ namespace AccuPay.Data.Services
             }
         }
 
+        public async Task<Division> GetByIdWithParentAsync(int id)
+        {
+            return await _divisionRepository.GetByIdWithParentAsync(id);
+        }
+
+        public IEnumerable<Division> GetAll(int organizationId)
+        {
+            return _divisionRepository.GetAll(organizationId);
+        }
+
+        public Task<IEnumerable<Division>> GetAllAsync(int organizationId)
+        {
+            return _divisionRepository.GetAllAsync(organizationId);
+        }
+
         public async Task<PaginatedListResult<Division>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
         {
             return await _divisionRepository.GetPaginatedListAsync(options, organizationId, isRoot: false, searchTerm);
         }
 
-        public async Task<Division> GetByIdAsync(int id)
-        {
-            return await _divisionRepository.GetByIdAsync(id);
-        }
-
-        public async Task SaveAsync(Division division)
-        {
-            if (division.OrganizationID == null)
-                throw new BusinessLogicException($"Organization is required.");
-
-            var doesExistQuery = _context.Divisions
-                                        .Where(d => d.Name.Trim().ToLower() ==
-                                                division.Name.ToTrimmedLowerCase())
-                                        .Where(d => d.ParentDivisionID == division.ParentDivisionID)
-                                        .Where(d => d.OrganizationID == division.OrganizationID);
-
-            if (isNewEntity(division.RowID) == false)
-            {
-                doesExistQuery = doesExistQuery.Where(d => division.RowID != d.RowID);
-            }
-
-            if (await doesExistQuery.AnyAsync())
-            {
-                if (division.IsRoot)
-                    throw new BusinessLogicException($"Division location already exists.");
-                else
-                    throw new BusinessLogicException($"Division name already exists under the selected division location.");
-            }
-
-            await _divisionRepository.SaveAsync(division);
-        }
-
-        public async Task DeleteAsync(int divisionId)
-        {
-            var division = await _divisionRepository.GetByIdAsync(divisionId);
-
-            // TODO: move this to repositories
-            if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
-                throw new BusinessLogicException("Division already has agency fees therefore cannot be deleted.");
-            else if (_context.Divisions.Any(d => d.ParentDivisionID == divisionId))
-                throw new BusinessLogicException("Division already has child divisions therefore cannot be deleted.");
-            else if (_context.Positions.Any(p => p.DivisionID == divisionId))
-                throw new BusinessLogicException("Division already has positions therefore cannot be deleted.");
-
-            await _divisionRepository.DeleteAsync(division);
-        }
-
-        public async Task<IEnumerable<Division>> GettAllParentsAsync(int organizationId)
+        public async Task<IEnumerable<Division>> GetAllParentsAsync(int organizationId)
         {
             return await _divisionRepository.GetAllParentsAsync(organizationId);
         }

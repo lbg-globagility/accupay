@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Utilities
 Imports Microsoft.Extensions.DependencyInjection
@@ -199,14 +200,14 @@ Public Class MassOvertimePresenter
 
     Private _models As List(Of OvertimeModel)
 
-    Private _divisionRepository As DivisionRepository
+    Private _divisionService As DivisionDataService
 
     Private _employeeRepository As EmployeeRepository
 
     Public Sub New(view As MassOvertimeForm)
         _view = view
 
-        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
@@ -220,7 +221,7 @@ Public Class MassOvertimePresenter
 
     Private Function LoadDivisions() As IList(Of Division)
 
-        Return _divisionRepository.GetAll(z_OrganizationID).ToList
+        Return _divisionService.GetAll(z_OrganizationID).ToList()
     End Function
 
     Private Function LoadEmployees() As IList(Of Employee)

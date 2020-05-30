@@ -47,11 +47,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public IEnumerable<Division> Get()
+        public IEnumerable<Branch> Get()
         {
-            //return _branchRepository.GetAll();
-            int organizationId = 2;
-            return _divisionRepository.GetAll(organizationId);
+            return _branchRepository.GetAll();
         }
 
         [HttpDelete("{id}")]

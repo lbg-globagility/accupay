@@ -74,8 +74,8 @@ Public Class AddDivisionForm
 
     Private Async Function LoadDivisionList() As Task
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        Dim divisions = Await divisionRepository.GetAllParentsAsync(z_OrganizationID)
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim divisions = Await service.GetAllParentsAsync(z_OrganizationID)
 
         _parentDivisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -101,8 +101,8 @@ Public Class AddDivisionForm
 
     Private Sub GetDivisionTypes()
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        _divisionTypes = divisionRepository.GetDivisionTypeList
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        _divisionTypes = service.GetTypes().ToList()
 
     End Sub
 

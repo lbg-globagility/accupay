@@ -538,8 +538,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadDivisions() As Task
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        Dim divisions = Await divisionRepository.GetAllAsync(z_OrganizationID)
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Dim divisions = Await service.GetAllAsync(z_OrganizationID)
 
         _divisions = divisions.OrderBy(Function(d) d.Name).ToList
 
@@ -566,8 +566,8 @@ Public Class NewDivisionPositionForm
 
     Private Sub GetDivisionTypes()
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        _divisionTypes = divisionRepository.GetDivisionTypeList
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        _divisionTypes = service.GetTypes().ToList()
 
     End Sub
 
