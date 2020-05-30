@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-new-division',
   templateUrl: './new-division.component.html',
-  styleUrls: ['./new-division.component.scss']
+  styleUrls: ['./new-division.component.scss'],
 })
 export class NewDivisionComponent {
   constructor(

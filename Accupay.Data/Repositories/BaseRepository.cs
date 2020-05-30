@@ -2,7 +2,7 @@
 {
     public class BaseRepository
     {
-        public bool isNewEntity(int? id)
+        public bool IsNewEntity(int? id)
         {
             return id == null || id == int.MinValue;
         }

@@ -2,7 +2,7 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PersonalInfoTab
@@ -68,8 +68,8 @@ Public Class PersonalInfoTab
         Dim positionDtos = New List(Of PositionDto) From {
             New PositionDto(Nothing)}
 
-        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
+        Dim service = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Dim positions = Await service.GetAllAsync(z_OrganizationID)
 
         positionDtos.AddRange(positions.Select(Function(p) New PositionDto(p)))
 

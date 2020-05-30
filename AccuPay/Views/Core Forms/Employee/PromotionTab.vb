@@ -4,6 +4,7 @@ Imports System.Text.RegularExpressions
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -23,7 +24,7 @@ Public Class PromotionTab
 
     Private _currentPromotion As Promotion
 
-    Private _positionRepo As PositionRepository
+    Private _positionService As PositionDataService
 
     Private _salaryRepo As SalaryRepository
 
@@ -36,7 +37,7 @@ Public Class PromotionTab
         dgvPromotions.AutoGenerateColumns = False
 
         If MainServiceProvider IsNot Nothing Then
-            _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)
+            _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
             _salaryRepo = MainServiceProvider.GetRequiredService(Of SalaryRepository)
             _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
         End If
@@ -63,7 +64,7 @@ Public Class PromotionTab
         _promotions = Await promotionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _promotions = _promotions.OrderByDescending(Function(x) x.EffectiveDate).ToList()
 
-        _positions = Await _positionRepo.GetAllAsync(z_OrganizationID)
+        _positions = Await _positionService.GetAllAsync(z_OrganizationID)
         _positions = _positions.OrderBy(Function(x) x.Name).ToList()
 
         RemoveHandler dgvPromotions.SelectionChanged, AddressOf dgvPromotions_SelectionChanged

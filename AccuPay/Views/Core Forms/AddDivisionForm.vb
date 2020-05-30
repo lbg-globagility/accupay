@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -33,7 +34,7 @@ Public Class AddDivisionForm
 
     Private _listOfValueRepository As ListOfValueRepository
 
-    Private _positionRepository As PositionRepository
+    Private _positionService As PositionDataService
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -45,7 +46,7 @@ Public Class AddDivisionForm
 
         _payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
 
-        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -82,7 +83,7 @@ Public Class AddDivisionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positions = Await _positionRepository.GetAllAsync(z_OrganizationID)
+        Dim positions = Await _positionService.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -152,8 +153,10 @@ Public Class AddDivisionForm
 
     Private Async Function SaveDivision(sender As Object) As Task
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        Me.LastDivisionAdded = Await divisionRepository.SaveAsync(Me._newDivision, z_OrganizationID)
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Await service.SaveAsync(Me._newDivision)
+
+        Me.LastDivisionAdded = Me._newDivision
 
         _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newDivision.RowID.Value, z_OrganizationID)
 

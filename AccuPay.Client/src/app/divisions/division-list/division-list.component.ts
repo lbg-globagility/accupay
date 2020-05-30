@@ -12,14 +12,10 @@ import { PageEvent } from '@angular/material/paginator';
 @Component({
   selector: 'app-division-list',
   templateUrl: './division-list.component.html',
-  styleUrls: ['./division-list.component.scss']
+  styleUrls: ['./division-list.component.scss'],
 })
 export class DivisionListComponent implements OnInit {
-  readonly displayedColumns: string[] = [
-    'parentName',
-    'name',
-    'divisionType'
-  ];
+  readonly displayedColumns: string[] = ['parentName', 'name', 'divisionType'];
 
   placeholder: string;
 
@@ -65,7 +61,7 @@ export class DivisionListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.divisionService.getAll(options, this.searchTerm).subscribe((data) => {
+    this.divisionService.getList(options, this.searchTerm).subscribe((data) => {
       this.divisions = data.items;
       this.totalCount = data.totalCount;
       this.dataSource = new MatTableDataSource(this.divisions);

@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Division } from '../shared/division';
 import { BehaviorSubject } from 'rxjs';
 import { DivisionService } from '../division.service';

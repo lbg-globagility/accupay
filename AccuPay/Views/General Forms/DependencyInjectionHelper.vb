@@ -126,6 +126,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ProductService)
         services.AddTransient(Of SystemOwnerService)
 
+        services.AddTransient(Of DivisionDataService)
         services.AddTransient(Of EmployeeDutyScheduleDataService)
         services.AddTransient(Of LeaveDataService)
         services.AddTransient(Of PositionDataService)

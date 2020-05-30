@@ -8,9 +8,8 @@ describe('ViewDivisionComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ViewDivisionComponent ]
-    })
-    .compileComponents();
+      declarations: [ViewDivisionComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -3,7 +3,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Web.Divisions.Models;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,11 +11,11 @@ namespace AccuPay.Web.Divisions
 {
     public class DivisionService
     {
-        private readonly DivisionDataService _dataService;
+        private readonly DivisionDataService _service;
 
-        public DivisionService(DivisionDataService dataService)
+        public DivisionService(DivisionDataService service)
         {
-            _dataService = dataService;
+            _service = service;
         }
 
         public async Task<PaginatedList<DivisionDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -24,7 +23,7 @@ namespace AccuPay.Web.Divisions
             // TODO: sort and desc in repository
 
             int organizationId = 2;
-            var paginatedList = await _dataService.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -33,7 +32,7 @@ namespace AccuPay.Web.Divisions
 
         public async Task<DivisionDto> GetById(int id)
         {
-            var division = await _dataService.GetByIdAsync(id);
+            var division = await _service.GetByIdAsync(id);
 
             return ConvertToDto(division);
         }
@@ -44,53 +43,52 @@ namespace AccuPay.Web.Divisions
 
             int organizationId = 2;
             int userId = 1;
-            var division = new Division()
-            {
-                CreatedBy = userId,
-                OrganizationID = organizationId,
-            };
+            var division = Division.CreateEmptyDivision(organizationId: organizationId, userId: userId);
             ApplyChanges(dto, division);
 
-            await _dataService.SaveAsync(division, organizationId);
+            await _service.SaveAsync(division);
 
             return ConvertToDto(division);
         }
 
+        public async Task Delete(int id)
+        {
+            await _service.DeleteAsync(id);
+        }
+
         internal IEnumerable<string> GetTypes()
         {
-            return  _dataService.GetTypes();
+            return _service.GetTypes();
         }
 
         internal async Task<IEnumerable<DivisionDto>> GetAllParents()
         {
             int organizationId = 2;
-            IEnumerable<Division> parents = await _dataService.GettAllParentsAsync(organizationId);
+            IEnumerable<Division> parents = await _service.GettAllParentsAsync(organizationId);
 
             var dtos = parents.Select(x => ConvertToDto(x));
 
             return dtos;
-
         }
 
         internal async Task<IEnumerable<string>> GetSchedules()
         {
-            return await _dataService.GetSchedulesAsync();
+            return await _service.GetSchedulesAsync();
         }
 
         internal async Task<DivisionDto> Update(int id, UpdateDivisionDto dto)
         {
             // TODO: validations
 
-            var division = await _dataService.GetByIdAsync(id);
+            var division = await _service.GetByIdAsync(id);
             if (division == null) return null;
 
-            int organizationId = 2;
             int userId = 1;
             division.LastUpdBy = userId;
 
             ApplyChanges(dto, division);
 
-            await _dataService.SaveAsync(division, organizationId);
+            await _service.SaveAsync(division);
 
             return ConvertToDto(division);
         }

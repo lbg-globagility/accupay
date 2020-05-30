@@ -3,6 +3,7 @@ Option Strict On
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Utilities.Extensions
@@ -19,8 +20,8 @@ Public Class ImportEmployeeForm
     Private _okModels As List(Of EmployeeModel)
     Private _failModels As List(Of EmployeeModel)
 
-    Private _divisionRepository As DivisionRepository
-    Private _positionRepository As PositionRepository
+    Private _divisionService As DivisionDataService
+    Private _positionService As PositionDataService
     Private _userActivityRepository As UserActivityRepository
 
 #End Region
@@ -29,9 +30,9 @@ Public Class ImportEmployeeForm
 
         InitializeComponent()
 
-        _divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+        _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
-        _positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -376,16 +377,7 @@ Public Class ImportEmployeeForm
 
     Private Async Function AddPositionIdToModels(models As List(Of EmployeeModel)) As Task
 
-        Dim defaultDivision = Await _divisionRepository.
-                                        GetOrCreateDefaultDivisionAsync(
-                                                organizationId:=z_OrganizationID,
-                                                userId:=z_User)
-
-        If defaultDivision?.RowID Is Nothing Then
-            Throw New ArgumentException("Cannot create default division.")
-        End If
-
-        Dim existingPositions = (Await _positionRepository.GetAllAsync(z_OrganizationID)).ToList()
+        Dim existingPositions = (Await _positionService.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models
             Dim currentPosition = existingPositions.
@@ -397,7 +389,7 @@ Public Class ImportEmployeeForm
                 model.PositionId = currentPosition.RowID
             Else
 
-                currentPosition = Await _positionRepository.
+                currentPosition = Await _positionService.
                                     GetByNameOrCreateAsync(model.Position,
                                                            organizationId:=z_OrganizationID,
                                                            userId:=z_User)

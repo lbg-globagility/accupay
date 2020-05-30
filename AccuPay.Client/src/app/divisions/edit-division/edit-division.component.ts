@@ -9,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-edit-division',
   templateUrl: './edit-division.component.html',
-  styleUrls: ['./edit-division.component.scss']
+  styleUrls: ['./edit-division.component.scss'],
 })
 export class EditDivisionComponent implements OnInit {
   division: Division;
@@ -61,4 +61,3 @@ export class EditDivisionComponent implements OnInit {
     });
   }
 }
-

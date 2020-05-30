@@ -3,6 +3,7 @@
 Imports System.Text.RegularExpressions
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -28,7 +29,7 @@ Public Class AddPromotionForm
 
     Private _promotionRepo As PromotionRepository
 
-    Private _positionRepo As PositionRepository
+    Private _positionService As PositionDataService
 
     Private _salaryRepo As SalaryRepository
 
@@ -42,7 +43,7 @@ Public Class AddPromotionForm
 
         _employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _positionRepo = MainServiceProvider.GetRequiredService(Of PositionRepository)
+        _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
 
         _promotionRepo = MainServiceProvider.GetRequiredService(Of PromotionRepository)
 
@@ -59,7 +60,7 @@ Public Class AddPromotionForm
         Dim promotions = Await _promotionRepo.GetListByEmployeeAsync(_employee.RowID.Value)
         _latestPromotion = promotions.LastOrDefault
 
-        _positions = Await _positionRepo.GetAllAsync(z_OrganizationID)
+        _positions = Await _positionService.GetAllAsync(z_OrganizationID)
         _positions = _positions.OrderBy(Function(x) x.Name).ToList()
         cboPositionTo.DataSource = _positions
 

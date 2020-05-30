@@ -3,6 +3,7 @@ using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using Microsoft.EntityFrameworkCore.Internal;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +13,15 @@ namespace AccuPay.Data.Services
     {
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
+        private readonly DivisionDataService _divisionService;
 
-        public PositionDataService(PositionRepository positionRepository, EmployeeRepository employeeRepository)
+        public PositionDataService(PositionRepository positionRepository, EmployeeRepository employeeRepository, DivisionDataService divisionService)
         {
             _positionRepository = positionRepository;
 
             _employeeRepository = employeeRepository;
+
+            _divisionService = divisionService;
         }
 
         public async Task DeleteAsync(int positionId)
@@ -30,7 +34,7 @@ namespace AccuPay.Data.Services
             if ((await _employeeRepository.GetByPositionAsync(positionId)).Any())
                 throw new BusinessLogicException("Position already has at least one assigned employee therefore cannot be deleted.");
 
-            await _positionRepository.DeleteAsync(positionId);
+            await _positionRepository.DeleteAsync(position);
         }
 
         public async Task SaveAsync(Position position)
@@ -60,6 +64,33 @@ namespace AccuPay.Data.Services
             await _positionRepository.SaveAsync(position);
         }
 
+        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
+        {
+            var existingPosition = await _positionRepository.GetByNameAsync(organizationId, positionName);
+
+            if (existingPosition != null) return existingPosition;
+
+            var defaultDivision = await _divisionService.
+                                            GetOrCreateDefaultDivisionAsync(
+                                                    organizationId: organizationId,
+                                                    userId: userId);
+
+            if (defaultDivision?.RowID == null)
+                throw new BusinessLogicException("Cannot create default division.");
+
+            var position = new Position()
+            {
+                CreatedBy = userId,
+                OrganizationID = organizationId,
+                Name = positionName,
+                DivisionID = defaultDivision.RowID.Value
+            };
+
+            await SaveAsync(position);
+
+            return position;
+        }
+
         public async Task<Position> GetByIdAsync(int positionId)
         {
             return await _positionRepository.GetByIdAsync(positionId);
@@ -68,6 +99,11 @@ namespace AccuPay.Data.Services
         public async Task<Position> GetByIdWithDivisionAsync(int positionId)
         {
             return await _positionRepository.GetByIdWithDivisionAsync(positionId);
+        }
+
+        public async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
+        {
+            return await _positionRepository.GetAllAsync(organizationId);
         }
 
         public async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)

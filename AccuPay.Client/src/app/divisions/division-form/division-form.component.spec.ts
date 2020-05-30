@@ -8,9 +8,8 @@ describe('DivisionFormComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ DivisionFormComponent ]
-    })
-    .compileComponents();
+      declarations: [DivisionFormComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

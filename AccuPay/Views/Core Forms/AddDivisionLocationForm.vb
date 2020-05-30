@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -48,9 +49,9 @@ Public Class AddDivisionLocationForm
         Try
             Me.NewDivision.Name = txtDivisionName.Text.Trim
 
-            Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
+            Dim divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
-            Me.NewDivision = Await divisionRepository.SaveAsync(Me.NewDivision, z_OrganizationID)
+            Await divisionService.SaveAsync(Me.NewDivision)
 
             _userActivityRepository.RecordAdd(z_User, FormEntityName, Me.NewDivision.RowID.Value, z_OrganizationID)
 

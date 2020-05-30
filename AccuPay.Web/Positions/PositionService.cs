@@ -77,16 +77,16 @@ namespace AccuPay.Web.Positions
             position.Name = dto.Name;
         }
 
-        private static PositionDto ConvertToDto(Position overtime)
+        private static PositionDto ConvertToDto(Position position)
         {
-            if (overtime == null) return null;
+            if (position == null) return null;
 
             return new PositionDto()
             {
-                Id = overtime.RowID.Value,
-                Name = overtime.Name,
-                DivisionId = overtime.DivisionID.Value,
-                DivisionName = overtime.Division?.Name
+                Id = position.RowID.Value,
+                Name = position.Name,
+                DivisionId = position.DivisionID,
+                DivisionName = position.Division?.Name
             };
         }
     }

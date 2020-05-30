@@ -547,8 +547,8 @@ Public Class NewDivisionPositionForm
 
     Private Async Function LoadPositions() As Task
 
-        Dim positionRepository = MainServiceProvider.GetRequiredService(Of PositionRepository)
-        Dim positions = Await positionRepository.GetAllAsync(z_OrganizationID)
+        Dim service = MainServiceProvider.GetRequiredService(Of PositionDataService)
+        Dim positions = Await service.GetAllAsync(z_OrganizationID)
 
         _positions = positions.OrderBy(Function(p) p.Name).ToList
 
@@ -855,8 +855,8 @@ Public Class NewDivisionPositionForm
 
         Dim divisionName = Me._currentDivision.Name
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        Await divisionRepository.DeleteAsync(Me._currentDivision.RowID.Value)
+        Dim service = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Await service.DeleteAsync(Me._currentDivision.RowID.Value)
 
         If Me._currentDivision.IsRoot Then
 
@@ -1188,8 +1188,8 @@ Public Class NewDivisionPositionForm
         division.ParentDivision = Nothing
         division.LastUpdBy = z_User
 
-        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionRepository)
-        Await divisionRepository.SaveAsync(division, z_OrganizationID)
+        Dim divisionRepository = MainServiceProvider.GetRequiredService(Of DivisionDataService)
+        Await divisionRepository.SaveAsync(division)
 
         If isRoot Then
             RecordUpdateDivisionLocation()

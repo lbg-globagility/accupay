@@ -2,9 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -54,24 +52,6 @@ namespace AccuPay.Web.Controllers
             //return _branchRepository.GetAll();
             int organizationId = 2;
             return _divisionRepository.GetAll(organizationId);
-        }
-
-        [HttpPost]
-        public async Task<IActionResult> Post(Division division)
-        {
-            //await _branchRepository.CreateAsync(branch);
-            int organizationId = 2;
-            await _divisionRepository.SaveAsync(division, organizationId);
-            return Ok();
-        }
-
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Division division)
-        {
-            int organizationId = 2;
-            await _divisionRepository.SaveAsync(division, organizationId);
-            return Ok();
-            //await _branchRepository.UpdateAsync(branch);
         }
 
         [HttpDelete("{id}")]

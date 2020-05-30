@@ -19,10 +19,8 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        internal async Task DeleteAsync(int positionId)
+        internal async Task DeleteAsync(Position position)
         {
-            var position = await GetByIdAsync(positionId);
-
             _context.Remove(position);
 
             await _context.SaveChangesAsync();
@@ -30,7 +28,7 @@ namespace AccuPay.Data.Repositories
 
         internal async Task SaveAsync(Position position)
         {
-            if (isNewEntity(position.RowID))
+            if (IsNewEntity(position.RowID))
             {
                 _context.Positions.Add(position);
             }
@@ -79,29 +77,11 @@ namespace AccuPay.Data.Repositories
                 ToListAsync();
         }
 
-        public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)
-        {
-            var existingPosition = await GetByNameAsync(organizationId, positionName);
-
-            if (existingPosition != null) return existingPosition;
-
-            var position = new Position()
-            {
-                Name = positionName,
-                OrganizationID = organizationId,
-                CreatedBy = userId
-            };
-
-            await SaveAsync(position);
-
-            return position;
-        }
-
         #endregion Single entity
 
         #region List of entities
 
-        public async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
+        internal async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
         {
             return await _context.Positions.
                 Where(p => p.OrganizationID == organizationId).

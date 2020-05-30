@@ -6,7 +6,7 @@ namespace AccuPay.Web.Positions
 
         public string Name { get; set; }
 
-        public int DivisionId { get; set; }
+        public int? DivisionId { get; set; }
 
         public string DivisionName { get; set; }
     }

@@ -41,7 +41,6 @@ export class PositionFormComponent implements OnInit {
 
   private loadEmployees(): void {
     this.divisionService.getAll().subscribe((data) => {
-      console.log(data);
       this.divisions = data;
     });
   }

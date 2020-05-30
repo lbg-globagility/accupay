@@ -7,7 +7,7 @@ import { cloneDeep } from 'lodash';
 @Component({
   selector: 'app-division-form',
   templateUrl: './division-form.component.html',
-  styleUrls: ['./division-form.component.scss']
+  styleUrls: ['./division-form.component.scss'],
 })
 export class DivisionFormComponent implements OnInit {
   @Input()
@@ -25,24 +25,23 @@ export class DivisionFormComponent implements OnInit {
     parentId: [null, [Validators.required]],
     divisionType: [null],
     workDaysPerYear: [null, [Validators.required]],
-    automaticOvertimeFiling: [null],
+    automaticOvertimeFiling: [false],
     philHealthDeductionSchedule: [null, [Validators.required]],
     sssDeductionSchedule: [null, [Validators.required]],
     pagIBIGDeductionSchedule: [null, [Validators.required]],
-    withholdingTaxSchedule: [null, [Validators.required]],    
+    withholdingTaxSchedule: [null, [Validators.required]],
   });
 
   parentDivisions: Division[];
   divisionTypes: string[];
-  deductionSchedules : string[];
+  deductionSchedules: string[];
 
   constructor(
     private fb: FormBuilder,
-    private divisionService: DivisionService,
+    private divisionService: DivisionService
   ) {}
 
   ngOnInit(): void {
-    
     this.loadParentDivisions();
     this.loadDivisionTypes();
     this.loadDeductionSchedules();
@@ -50,7 +49,6 @@ export class DivisionFormComponent implements OnInit {
     if (this.division != null) {
       this.form.patchValue(this.division);
     }
-
   }
   private loadDeductionSchedules() {
     this.divisionService.getDeductionSchedules().subscribe((data) => {

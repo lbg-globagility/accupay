@@ -50,9 +50,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("types")]
-        public  ActionResult<IEnumerable<string>> GetTypes()
+        public ActionResult<IEnumerable<string>> GetTypes()
         {
-            var types =  _service.GetTypes();
+            var types = _service.GetTypes();
 
             if (types == null)
                 return NotFound();
@@ -70,8 +70,6 @@ namespace AccuPay.Web.Controllers
             else
                 return Ok(schedules);
         }
-
-
 
         [HttpPost]
         public async Task<ActionResult<DivisionDto>> Create([FromBody] CreateDivisionDto dto)
@@ -93,11 +91,11 @@ namespace AccuPay.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var leave = await _repository.GetByIdAsync(id);
+            var leave = await _service.GetById(id);
 
             if (leave == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }

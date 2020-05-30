@@ -10,15 +10,28 @@ import { PageOptions } from '../core/shared/page-options';
   providedIn: 'root',
 })
 export class DivisionService {
-  
   baseUrl = 'api/divisions';
 
   constructor(private httpClient: HttpClient) {}
 
-  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Division>> {
+  getList(
+    options: PageOptions,
+    term = ''
+  ): Observable<PaginatedList<Division>> {
     const params = options ? options.toObject() : null;
     params.term = term;
-    return this.httpClient.get<PaginatedList<Division>>(`${this.baseUrl}`, {params});
+
+    return this.httpClient.get<PaginatedList<Division>>(this.baseUrl, {
+      params,
+    });
+  }
+
+  getAll(): Observable<Division[]> {
+    return this.httpClient.get<PaginatedList<Division>>(this.baseUrl).pipe(
+      map((data) => {
+        return data.items;
+      })
+    );
   }
 
   getAllParents(): Observable<Division[]> {

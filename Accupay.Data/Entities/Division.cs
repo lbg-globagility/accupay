@@ -8,6 +8,9 @@ namespace AccuPay.Data.Entities
     [Table("division")]
     public class Division
     {
+        public const string DefaultLocationName = "Default Location";
+        public const string DefaultDivisionName = "Default Division";
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int? RowID { get; set; }

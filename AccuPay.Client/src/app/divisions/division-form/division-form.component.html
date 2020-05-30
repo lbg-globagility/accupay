@@ -43,13 +43,10 @@
               color="accent"
               class="col-lg-4"
             >
-              <mat-label>Type *</mat-label>
+              <mat-label>Type</mat-label>
               <mat-select matInput formControlName="divisionType">
                 <mat-option></mat-option>
-                <mat-option
-                  *ngFor="let type of divisionTypes"
-                  [value]="type"
-                >
+                <mat-option *ngFor="let type of divisionTypes" [value]="type">
                   {{ type }}
                 </mat-option>
               </mat-select>
@@ -72,7 +69,9 @@
               />
             </mat-form-field>
 
-            <mat-checkbox class="col-lg-4" formControlName="automaticOvertimeFiling"
+            <mat-checkbox
+              class="col-lg-4"
+              formControlName="automaticOvertimeFiling"
               >Automatic Overtime Filing</mat-checkbox
             >
           </div>
@@ -84,9 +83,15 @@
               class="col-lg-4"
             >
               <mat-label>Phil Health Deduction Schedule *</mat-label>
-              <mat-select matInput formControlName="philHealthDeductionSchedule">
+              <mat-select
+                matInput
+                formControlName="philHealthDeductionSchedule"
+              >
                 <mat-option></mat-option>
-                <mat-option *ngFor="let schedule of deductionSchedules" [value]="schedule">
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
                   {{ schedule }}
                 </mat-option>
               </mat-select>
@@ -101,7 +106,10 @@
               <mat-label>SSS Deduction Schedule *</mat-label>
               <mat-select matInput formControlName="sssDeductionSchedule">
                 <mat-option></mat-option>
-                <mat-option *ngFor="let schedule of deductionSchedules" [value]="schedule">
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
                   {{ schedule }}
                 </mat-option>
               </mat-select>
@@ -118,7 +126,10 @@
               <mat-label>Pag-IBIG Deduction Schedule *</mat-label>
               <mat-select matInput formControlName="pagIBIGDeductionSchedule">
                 <mat-option></mat-option>
-                <mat-option *ngFor="let schedule of deductionSchedules" [value]="schedule">
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
                   {{ schedule }}
                 </mat-option>
               </mat-select>
@@ -133,14 +144,16 @@
               <mat-label>Withholding Tax Schedule *</mat-label>
               <mat-select matInput formControlName="withholdingTaxSchedule">
                 <mat-option></mat-option>
-                <mat-option *ngFor="let schedule of deductionSchedules" [value]="schedule">
+                <mat-option
+                  *ngFor="let schedule of deductionSchedules"
+                  [value]="schedule"
+                >
                   {{ schedule }}
                 </mat-option>
               </mat-select>
               <mat-error>Please select a schedule</mat-error>
             </mat-form-field>
           </div>
-          
         </div>
       </div>
 

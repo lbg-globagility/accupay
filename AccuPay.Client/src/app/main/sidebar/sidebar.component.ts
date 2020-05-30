@@ -27,13 +27,13 @@ const menuItems: MenuItem[] = [
     icon: 'person',
   },
   {
-    label: 'Positions',
-    route: '/positions',
+    label: 'Divisions',
+    route: '/divisions',
     icon: 'person',
   },
   {
-    label: 'Divisions',
-    route: '/divisions',
+    label: 'Positions',
+    route: '/positions',
     icon: 'person',
   },
   {
