@@ -54,14 +54,17 @@ namespace AccuPay.Data.Services
 
         private static void SanitizeEntity(Overtime overtime)
         {
+            if (overtime.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
+            if (overtime.EmployeeID == null)
+                throw new BusinessLogicException("Employee does not exists.");
+
             if (overtime.OTStartTime == null)
                 throw new BusinessLogicException("Start Time is required.");
 
             if (overtime.OTEndTime == null)
                 throw new BusinessLogicException("End Time is required.");
-
-            if (overtime.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
 
             string[] validStatuses = { Overtime.StatusPending, Overtime.StatusApproved };
             if (validStatuses.Contains(overtime.Status) == false)

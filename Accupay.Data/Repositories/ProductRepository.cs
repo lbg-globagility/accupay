@@ -40,7 +40,7 @@ namespace AccuPay.Data.Repositories
             return await AddProductAsync(loanName, product, organizationId, userId, isTaxable);
         }
 
-        public async Task<Product> AddDecipilinaryTypeAsync(string name, int organizationId, int userId, string description)
+        public async Task<Product> AddDisciplinaryTypeAsync(string name, int organizationId, int userId, string description)
         {
             Product product = new Product
             {
@@ -52,6 +52,28 @@ namespace AccuPay.Data.Repositories
             return await AddProductAsync(name, product, organizationId, userId);
         }
 
+        public async Task<Product> AddLeaveTypeAsync(string leaveName, int organizationId, int userId)
+        {
+            Product product = new Product
+            {
+                Category = ProductConstant.LEAVE_TYPE_CATEGORY,
+            };
+
+            return await AddProductAsync(leaveName, product, organizationId, userId);
+        }
+
+        public async Task<Product> AddAllowanceTypeAsync(string allowanceName, int organizationId, int userId)
+        {
+            Product product = new Product
+            {
+                Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY,
+                ActiveData = true,
+                AllocateBelowSafetyFlag = '0'
+            };
+
+            return await AddProductAsync(allowanceName, product, organizationId, userId);
+        }
+
         public async Task<Product> AddLoanTypeAsync(string loanName, int organizationId, int userId)
         {
             Product product = new Product
@@ -60,16 +82,6 @@ namespace AccuPay.Data.Repositories
             };
 
             return await AddProductAsync(loanName, product, organizationId, userId);
-        }
-
-        public async Task<Product> AddAllowanceTypeAsync(string allowanceName, int organizationId, int userId)
-        {
-            Product product = new Product
-            {
-                Category = ProductConstant.ALLOWANCE_TYPE_CATEGORY,
-            };
-
-            return await AddProductAsync(allowanceName, product, organizationId, userId);
         }
 
         public async Task<Product> AddAdjustmentTypeAsync(string adjustmentName, int organizationId, int userId, AdjustmentType adjustmentType = AdjustmentType.Blank, string comments = "")
@@ -195,12 +207,31 @@ namespace AccuPay.Data.Repositories
             if (categoryId == null)
                 throw new ArgumentException("There was a problem on fetching the data. Please try again.");
 
-            var adjustmentType = await GetProductByNameAndCategory(typeName, categoryId.Value, organizationId);
+            var productType = await GetProductByNameAndCategory(typeName, categoryId.Value, organizationId);
 
-            if (adjustmentType == null)
-                adjustmentType = await AddAdjustmentTypeAsync(typeName, organizationId, userId);
+            if (productType == null)
+            {
+                switch (categoryName)
+                {
+                    case ProductConstant.ADJUSTMENT_TYPE_CATEGORY:
+                        productType = await AddAdjustmentTypeAsync(typeName, organizationId: organizationId, userId: userId);
+                        break;
 
-            return adjustmentType;
+                    case ProductConstant.LEAVE_TYPE_CATEGORY:
+                        productType = await AddLeaveTypeAsync(typeName, organizationId: organizationId, userId: userId);
+                        break;
+
+                    case ProductConstant.ALLOWANCE_TYPE_CATEGORY:
+                        productType = await AddAllowanceTypeAsync(typeName, organizationId: organizationId, userId: userId);
+                        break;
+
+                    case ProductConstant.LOAN_TYPE_CATEGORY:
+                        productType = await AddLoanTypeAsync(typeName, organizationId: organizationId, userId: userId);
+                        break;
+                }
+            }
+
+            return productType;
         }
 
         #endregion Single entity
@@ -380,6 +411,15 @@ namespace AccuPay.Data.Repositories
             }
 
             return categoryProduct;
+        }
+
+        internal async Task<bool> CheckIfAlreadyUsedInAllowancesAsync(string allowanceType)
+        {
+            return await _context.AllowanceItems.
+                                Include(x => x.Allowance).
+                                Include(x => x.Allowance.Product).
+                                Where(x => x.Allowance.Product.PartNo == allowanceType).
+                                AnyAsync();
         }
 
         private async Task<IEnumerable<Product>> GetProductsByCategory(int categoryId, int organizationId)

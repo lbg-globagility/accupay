@@ -132,7 +132,7 @@ Public Class NewProductDisciplinaryForm
                 If isChanged() Then
 
                     If _mode = FormMode.Creating Then
-                        Await _productRepo.AddDecipilinaryTypeAsync(txtName.Text,
+                        Await _productRepo.AddDisciplinaryTypeAsync(txtName.Text,
                                                                    z_OrganizationID,
                                                                    z_User,
                                                                    txtDescription.Text)

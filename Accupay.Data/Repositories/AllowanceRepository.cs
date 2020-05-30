@@ -1,5 +1,4 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
@@ -9,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class AllowanceRepository
+    public class AllowanceRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -20,65 +19,45 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task DeleteAsync(int id)
+        internal async Task DeleteAsync(Allowance allowance)
         {
-            var allowance = await GetByIdAsync(id);
-
             _context.Remove(allowance);
 
             await _context.SaveChangesAsync();
         }
 
-        public async Task SaveManyAsync(List<Allowance> allowances)
+        internal async Task SaveAsync(Allowance allowance)
         {
-            foreach (var allowance in allowances)
-            {
-                await SaveWithContextAsync(allowance);
-
-                await _context.SaveChangesAsync();
-            }
+            SaveFunction(allowance);
+            await _context.SaveChangesAsync();
         }
 
-        public async Task SaveAsync(Allowance allowance)
+        internal async Task SaveManyAsync(List<Allowance> allowances)
         {
-            await SaveWithContextAsync(allowance, deferSave: false);
+            allowances.ForEach(x => SaveFunction(x));
+            await _context.SaveChangesAsync();
         }
 
-        private async Task SaveWithContextAsync(Allowance allowance, bool deferSave = true)
+        private void SaveFunction(Allowance allowance)
         {
             if (allowance.Product != null)
             {
-                _context.Entry(allowance.Product).State = EntityState.Detached;
+                _context.Entry(allowance.Product).State = EntityState.Unchanged;
+
+                if (allowance.Product.CategoryEntity != null)
+                {
+                    _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Unchanged;
+                }
             }
 
-            await SaveAsyncFunction(allowance);
-
-            if (deferSave == false)
+            if (IsNewEntity(allowance.RowID))
             {
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task SaveAsyncFunction(Allowance allowance)
-        {
-            if (allowance.ProductID == null)
-                throw new BusinessLogicException("Allowance type cannot be empty.");
-
-            var product = await _context.Products.
-                                    Where(p => p.RowID == allowance.ProductID).
-                                    FirstOrDefaultAsync();
-
-            if (product == null)
-                throw new BusinessLogicException("The selected allowance type no longer exists.");
-
-            if (allowance.IsMonthly && !product.Fixed)
-                throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
-
-            // add or update the allowance
-            if (allowance.RowID == null)
                 _context.Allowances.Add(allowance);
+            }
             else
+            {
                 _context.Entry(allowance).State = EntityState.Modified;
+            }
         }
 
         #endregion CRUD
@@ -87,13 +66,13 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
-        public async Task<Allowance> GetByIdAsync(int id)
+        internal async Task<Allowance> GetByIdAsync(int id)
         {
             return await _context.Allowances
                                     .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        public async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
+        internal async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
         {
             return await _context.Allowances
                                 .Include(x => x.Employee)
@@ -101,7 +80,7 @@ namespace AccuPay.Data.Repositories
                                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        public async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,
+        internal async Task<Allowance> GetEmployeeEcolaAsync(int employeeId,
                                                         int organizationId,
                                                         TimePeriod timePeriod)
         {
@@ -118,7 +97,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
+        internal async Task<IEnumerable<Allowance>> GetByEmployeeWithProductAsync(int employeeId)
         {
             return await _context.Allowances.
                             Include(p => p.Product).
@@ -126,7 +105,7 @@ namespace AccuPay.Data.Repositories
                             ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<Allowance>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Allowances
                                 .Include(x => x.Employee)
@@ -155,7 +134,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Allowance>(allowances, count);
         }
 
-        public ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
+        internal ICollection<Allowance> GetByPayPeriodWithProduct(int organizationId,
                                                                 TimePeriod timePeriod)
         {
             return CreateBaseQueryByTimePeriod(organizationId,
@@ -163,7 +142,7 @@ namespace AccuPay.Data.Repositories
                                             ToList();
         }
 
-        public async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId,
+        internal async Task<ICollection<Allowance>> GetByPayPeriodWithProductAsync(int organizationId,
                                                                                 TimePeriod timePeriod)
         {
             return await CreateBaseQueryByTimePeriod(organizationId,
@@ -175,7 +154,7 @@ namespace AccuPay.Data.Repositories
 
         #region Others
 
-        public List<string> GetFrequencyList()
+        internal List<string> GetFrequencyList()
         {
             return new List<string>()
             {
@@ -186,18 +165,9 @@ namespace AccuPay.Data.Repositories
             };
         }
 
-        public async Task<bool> CheckIfAlreadyUsed(int id)
+        internal async Task<bool> CheckIfAlreadyUsedAsync(int id)
         {
             return await _context.AllowanceItems.AnyAsync(a => a.AllowanceID == id);
-        }
-
-        public async Task<bool> CheckIfAlreadyUsed(string allowanceName)
-        {
-            return await _context.AllowanceItems.
-                                Include(x => x.Allowance).
-                                Include(x => x.Allowance.Product).
-                                Where(x => x.Allowance.Product.PartNo == allowanceName).
-                                AnyAsync();
         }
 
         #endregion Others

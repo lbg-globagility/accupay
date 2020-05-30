@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -25,7 +26,7 @@ Public Class AddAllowanceForm
 
     Private _productRepository As ProductRepository
 
-    Private _allowanceRepository As AllowanceRepository
+    Private _allowanceService As AllowanceDataService
 
     Private _userActivityRepository As UserActivityRepository
 
@@ -35,7 +36,7 @@ Public Class AddAllowanceForm
 
         _currentEmployee = employee
 
-        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        _allowanceService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
@@ -154,7 +155,7 @@ Public Class AddAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveAsync(Me._newAllowance)
+                Await _allowanceService.SaveAsync(Me._newAllowance)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newAllowance.RowID.Value, z_OrganizationID)
 
@@ -187,7 +188,7 @@ Public Class AddAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        cboallowfreq.DataSource = _allowanceRepository.GetFrequencyList()
+        cboallowfreq.DataSource = _allowanceService.GetFrequencyList()
 
     End Sub
 

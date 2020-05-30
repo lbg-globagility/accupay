@@ -53,7 +53,7 @@ Namespace Benchmark
 
             Dim timePeriod = New TimePeriod(payDateFrom, payDateTo)
 
-            Dim productService = MainServiceProvider.GetRequiredService(Of ProductService)
+            Dim productService = MainServiceProvider.GetRequiredService(Of ProductDataService)
             Return Await productService.GetOrCreateEmployeeEcola(
                                             employeeId:=employeeId,
                                             organizationId:=z_OrganizationID,

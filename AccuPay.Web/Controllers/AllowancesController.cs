@@ -1,10 +1,8 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Web.Allowances.Models;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Products;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,12 +13,10 @@ namespace AccuPay.Web.Controllers
     public class AllowancesController : ControllerBase
     {
         private readonly AllowanceService _service;
-        private readonly AllowanceRepository _repository;
 
-        public AllowancesController(AllowanceService allowanceService, AllowanceRepository repository)
+        public AllowancesController(AllowanceService service)
         {
-            _service = allowanceService;
-            _repository = repository;
+            _service = service;
         }
 
         [HttpGet]
@@ -60,11 +56,11 @@ namespace AccuPay.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var allowance = await _repository.GetByIdAsync(id);
+            var allowance = await _service.GetById(id);
 
             if (allowance == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }
@@ -78,7 +74,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet("frequencylist")]
         public ActionResult<ICollection<string>> GetFrequencyList()
         {
-            return _repository.GetFrequencyList();
+            return _service.GetFrequencyList();
         }
     }
 }

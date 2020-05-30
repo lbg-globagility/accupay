@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class ProductService
+    public class ProductDataService
     {
-        private readonly AllowanceRepository _allowanceRepository;
+        private readonly AllowanceDataService _allowanceService;
         private readonly ProductRepository _productRepository;
+        private readonly AllowanceRepository _allowanceRepository;
 
-        public ProductService(AllowanceRepository allowanceRepository,
-                            ProductRepository productRepository)
+        public ProductDataService(ProductRepository productRepository,
+                                AllowanceRepository allowanceRepository,
+                                AllowanceDataService allowanceService)
         {
-            _allowanceRepository = allowanceRepository;
             _productRepository = productRepository;
+            _allowanceService = allowanceService;
+            _allowanceRepository = allowanceRepository;
         }
 
         public async Task<Allowance> GetOrCreateEmployeeEcola(int employeeId,
@@ -27,8 +30,8 @@ namespace AccuPay.Data.Services
                                                             decimal amount = 0)
         {
             var ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
-                                                                            organizationId: organizationId,
-                                                                            timePeriod: timePeriod);
+                                                                                organizationId: organizationId,
+                                                                                timePeriod: timePeriod);
 
             if (ecolaAllowance == null)
             {
@@ -48,14 +51,19 @@ namespace AccuPay.Data.Services
                 ecolaAllowance.CreatedBy = userId;
                 ecolaAllowance.OrganizationID = organizationId;
 
-                await _allowanceRepository.SaveAsync(ecolaAllowance);
+                await _allowanceService.SaveAsync(ecolaAllowance);
 
                 ecolaAllowance = await _allowanceRepository.GetEmployeeEcolaAsync(employeeId: employeeId,
-                                                                            organizationId: organizationId,
-                                                                            timePeriod: timePeriod);
+                                                                                organizationId: organizationId,
+                                                                                timePeriod: timePeriod);
             }
 
             return ecolaAllowance;
+        }
+
+        public async Task<bool> CheckIfAlreadyUsedInAllowancesAsync(string allowanceType)
+        {
+            return await _productRepository.CheckIfAlreadyUsedInAllowancesAsync(allowanceType);
         }
     }
 }

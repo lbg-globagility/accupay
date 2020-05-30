@@ -511,14 +511,14 @@ Public Class SalaryTab
 
         If _ecolaAllowanceId IsNot Nothing Then
 
-            Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+            Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
-            Dim ecolaAllowance = Await allowanceRepository.GetByIdAsync(_ecolaAllowanceId.Value)
+            Dim ecolaAllowance = Await service.GetByIdAsync(_ecolaAllowanceId.Value)
 
             ecolaAllowance.Amount = txtEcola.Text.ToDecimal
             ecolaAllowance.LastUpdBy = z_User
 
-            Await allowanceRepository.SaveAsync(ecolaAllowance)
+            Await service.SaveAsync(ecolaAllowance)
 
         End If
     End Function

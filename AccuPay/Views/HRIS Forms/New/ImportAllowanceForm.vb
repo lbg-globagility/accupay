@@ -2,6 +2,7 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Utils
@@ -21,7 +22,7 @@ Public Class ImportAllowanceForm
 
     Public IsSaved As Boolean
 
-    Private _allowanceRepository As AllowanceRepository
+    Private _allowanceService As AllowanceDataService
 
     Private _employeeRepository As EmployeeRepository
 
@@ -33,7 +34,7 @@ Public Class ImportAllowanceForm
 
         InitializeComponent()
 
-        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        _allowanceService = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -47,7 +48,7 @@ Public Class ImportAllowanceForm
 
         Me.IsSaved = False
 
-        Me._allowanceFrequencyList = _allowanceRepository.GetFrequencyList()
+        Me._allowanceFrequencyList = _allowanceService.GetFrequencyList()
 
         Me._allowanceTypeList = (Await _productRepository.GetAllowanceTypesAsync(z_OrganizationID)).ToList()
 
@@ -222,7 +223,7 @@ Public Class ImportAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Await _allowanceRepository.SaveManyAsync(_allowances)
+                Await _allowanceService.SaveManyAsync(_allowances)
 
                 Dim importList = New List(Of UserActivityItem)
                 For Each item In _allowances

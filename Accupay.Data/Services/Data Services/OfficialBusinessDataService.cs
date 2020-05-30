@@ -50,6 +50,12 @@ namespace AccuPay.Data.Services
 
         private async Task SanitizeEntity(OfficialBusiness officialBusiness)
         {
+            if (officialBusiness.OrganizationID == null)
+                throw new BusinessLogicException("Organization is required.");
+
+            if (officialBusiness.EmployeeID == null)
+                throw new BusinessLogicException("Employee does not exists.");
+
             if (officialBusiness.StartDate == null)
                 throw new BusinessLogicException("Start Date is required.");
 
@@ -58,9 +64,6 @@ namespace AccuPay.Data.Services
 
             if (officialBusiness.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
-
-            if (officialBusiness.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
 
             string[] invalidStatuses = { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved };
             if (!invalidStatuses.Contains(officialBusiness.Status) == false)

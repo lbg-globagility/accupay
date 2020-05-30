@@ -1,5 +1,5 @@
 ﻿Imports AccuPay.Data.Helpers
-Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -10,13 +10,13 @@ Public Class ProductControlForm
 
     Public Property IsSaved As Boolean
 
-    Private ReadOnly _allowanceRepository As AllowanceRepository
+    Private ReadOnly _productDataService As ProductDataService
 
     Sub New()
 
         InitializeComponent()
 
-        _allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        _productDataService = MainServiceProvider.GetRequiredService(Of ProductDataService)
 
     End Sub
 
@@ -425,7 +425,7 @@ Public Class ProductControlForm
         Dim prompt As DialogResult
 
         If n_categname = ProductConstant.ALLOWANCE_TYPE_CATEGORY AndAlso
-            Await _allowanceRepository.CheckIfAlreadyUsed(allowanceName) Then
+            Await _productDataService.CheckIfAlreadyUsedInAllowancesAsync(allowanceName) Then
 
             MessageBoxHelper.Warning("Cannot delete an allowance item that is already used in a generated payroll.")
             Return

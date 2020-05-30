@@ -4,6 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
@@ -189,8 +190,8 @@ Public Class EmployeeAllowanceForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
 
-                                            Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
-                                            Await allowanceRepository.SaveManyAsync(changedAllowances)
+                                            Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                                            Await service.SaveManyAsync(changedAllowances)
 
                                             For Each item In changedAllowances
                                                 RecordUpdate(item)
@@ -330,9 +331,9 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
+        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
 
-        Dim currentAllowance = Await allowanceRepository.GetByIdAsync(Me._currentAllowance.RowID.Value)
+        Dim currentAllowance = Await service.GetByIdAsync(Me._currentAllowance.RowID.Value)
 
         If currentAllowance Is Nothing Then
 
@@ -347,7 +348,7 @@ Public Class EmployeeAllowanceForm
             Return
         End If
 
-        Dim allowanceIsAlreadyUsed = Await allowanceRepository.CheckIfAlreadyUsed(Me._currentAllowance.RowID.Value)
+        Dim allowanceIsAlreadyUsed = Await service.CheckIfAlreadyUsedAsync(Me._currentAllowance.RowID.Value)
 
         If allowanceIsAlreadyUsed Then
 
@@ -368,8 +369,8 @@ Public Class EmployeeAllowanceForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
-                                                Await allowanceRepository.DeleteAsync(Me._currentAllowance.RowID.Value)
+                                                Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+                                                Await service.DeleteAsync(Me._currentAllowance.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User,
                                                                                      FormEntityName,
@@ -433,8 +434,8 @@ Public Class EmployeeAllowanceForm
 
     Private Sub LoadFrequencyList()
 
-        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
-        cboallowfreq.DataSource = allowanceRepository.GetFrequencyList()
+        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        cboallowfreq.DataSource = service.GetFrequencyList()
 
     End Sub
 
@@ -458,8 +459,8 @@ Public Class EmployeeAllowanceForm
     Private Async Function LoadAllowances(currentEmployee As Employee) As Task
         If currentEmployee?.RowID Is Nothing Then Return
 
-        Dim allowanceRepository = MainServiceProvider.GetRequiredService(Of AllowanceRepository)
-        Dim allowances = (Await allowanceRepository.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
+        Dim service = MainServiceProvider.GetRequiredService(Of AllowanceDataService)
+        Dim allowances = (Await service.GetByEmployeeWithProductAsync(currentEmployee.RowID.Value)).
                                 OrderByDescending(Function(a) a.EffectiveStartDate).
                                 ThenBy(Function(a) a.Type).
                                 ToList
