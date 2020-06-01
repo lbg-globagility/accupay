@@ -3,6 +3,8 @@ using AccuPay.Data.Services;
 using AccuPay.Web.Payroll;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -11,11 +13,13 @@ namespace AccuPay.Web.Controllers
     [ApiController]
     public class PayperiodsController : ControllerBase
     {
-        private readonly PayperiodService _service;
+        private readonly PayperiodService _payperiodService;
+        private readonly PaystubService _paystubService;
 
-        public PayperiodsController(PayperiodService service)
+        public PayperiodsController(PayperiodService payperiodService, PaystubService paystubService)
         {
-            _service = service;
+            _payperiodService = payperiodService;
+            _paystubService = paystubService;
         }
 
         [HttpPost]
@@ -24,7 +28,7 @@ namespace AccuPay.Web.Controllers
         {
             try
             {
-                var result = await _service.Start(resources, dto);
+                var result = await _payperiodService.Start(resources, dto);
 
                 return result;
             }
@@ -37,19 +41,26 @@ namespace AccuPay.Web.Controllers
         [HttpGet("latest")]
         public async Task<ActionResult<PayperiodDto>> GetLatest()
         {
-            return await _service.GetLatest();
+            return await _payperiodService.GetLatest();
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<PayperiodDto>> GetById(int id)
         {
-            return await _service.GetById(id);
+            return await _payperiodService.GetById(id);
+        }
+
+        [HttpGet("{id}/paystubs")]
+        public async Task<ActionResult<ICollection<PaystubDto>>> GetPaystubs(int id)
+        {
+            var dtos = await _paystubService.GetByPayperiod(id);
+            return dtos.ToList();
         }
 
         [HttpGet]
         public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
         {
-            return await _service.List(options);
+            return await _payperiodService.List(options);
         }
     }
 }

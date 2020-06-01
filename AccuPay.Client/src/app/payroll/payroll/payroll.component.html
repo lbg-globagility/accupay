@@ -1,0 +1,40 @@
+<h1>Payroll</h1>
+
+<mat-card>
+  <div>
+    <h3>Latest payroll</h3>
+    <p>
+      {{ latestPayperiod?.cutoffStart | date }} to
+      {{ latestPayperiod?.cutoffEnd | date }}
+    </p>
+    <p>
+      {{ latestPayperiod.status }}
+    </p>
+  </div>
+  <mat-card-actions align="end">
+    <button mat-button routerLink="/payroll/{{ latestPayperiod?.id }}">
+      VIEW
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<h3>List of payperiods</h3>
+
+<table mat-table [dataSource]="dataSource" class="mat-elevation-z1 w-full">
+  <ng-container matColumnDef="cutoff">
+    <th mat-header-cell *matHeaderCellDef>Cutoff</th>
+    <td mat-cell *matCellDef="let payperiod">
+      {{ payperiod.cutoffStart | date }} to {{ payperiod.cutoffEnd | date }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="status">
+    <th mat-header-cell *matHeaderCellDef>Status</th>
+    <td mat-cell *matCellDef="let payperiod">
+      {{ payperiod.status }}
+    </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>

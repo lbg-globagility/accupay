@@ -76,6 +76,11 @@ const menuItems: MenuItem[] = [
     route: '/positions',
     icon: 'person',
   },
+  {
+    label: 'Payroll',
+    route: '/payroll',
+    icon: 'person',
+  },
 ];
 
 @Component({

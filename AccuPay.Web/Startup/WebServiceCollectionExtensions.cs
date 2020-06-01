@@ -45,6 +45,7 @@ namespace AccuPay.Web
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();
             services.AddScoped<PayperiodService>();
+            services.AddScoped<PaystubService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();

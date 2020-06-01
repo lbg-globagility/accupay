@@ -58,6 +58,8 @@ import { CalendarListComponent } from 'src/app/calendars/calendar-list/calendar-
 import { NewCalendarComponent } from 'src/app/calendars/new-calendar/new-calendar.component';
 import { EditCalendarComponent } from 'src/app/calendars/edit-calendar/edit-calendar.component';
 import { ViewCalendarComponent } from 'src/app/calendars/view-calendar/view-calendar.component';
+import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
+import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 
 const routes: Routes = [
   {
@@ -271,6 +273,14 @@ const routes: Routes = [
       {
         path: 'calendars/:id/edit',
         component: EditCalendarComponent,
+      },
+      {
+        path: 'payroll',
+        component: PayrollComponent,
+      },
+      {
+        path: 'payroll/:id',
+        component: ViewPayperiodComponent,
       },
     ],
     canActivate: [AuthGuard],
