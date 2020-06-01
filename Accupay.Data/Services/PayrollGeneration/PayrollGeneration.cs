@@ -319,7 +319,7 @@ namespace AccuPay.Data.Services
             }
         }
 
-        public void ComputePayroll(PayrollResources resources,
+        private void ComputePayroll(PayrollResources resources,
                                     int userId,
                                     string currentSystemOwner,
                                     ListOfValueCollection settings,
