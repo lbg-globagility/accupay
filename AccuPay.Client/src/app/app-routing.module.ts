@@ -62,6 +62,8 @@ import { ViewDivisionComponent } from 'src/app/divisions/view-division/view-divi
 import { NewDivisionComponent } from 'src/app/divisions/new-division/new-division.component';
 import { EditDivisionComponent } from 'src/app/divisions/edit-division/edit-division.component';
 import { TimeLogListComponent } from 'src/app/time-logs/time-log-list/time-log-list.component';
+import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
+import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 
 const routes: Routes = [
   {
@@ -291,6 +293,14 @@ const routes: Routes = [
       {
         path: 'calendars/:id/edit',
         component: EditCalendarComponent,
+      },
+      {
+        path: 'payroll',
+        component: PayrollComponent,
+      },
+      {
+        path: 'payroll/:id',
+        component: ViewPayperiodComponent,
       },
     ],
     canActivate: [AuthGuard],

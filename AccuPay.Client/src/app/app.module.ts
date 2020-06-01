@@ -21,6 +21,7 @@ import { BranchesModule } from 'src/app/branches/branches.module';
 import { TimeLogsModule } from './time-logs/time-logs.module';
 import { PositionsModule } from './positions/positions.module';
 import { CalendarsModule } from 'src/app/calendars/calendars.module';
+import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
 
 
@@ -47,6 +48,7 @@ import { DivisionsModule } from './divisions/divisions.module';
     CalendarsModule,
     TimeLogsModule,
     PositionsModule,
+    PayrollModule,
     DivisionsModule,
   ],
   providers: [
