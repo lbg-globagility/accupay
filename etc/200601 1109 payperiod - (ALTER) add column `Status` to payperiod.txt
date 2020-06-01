@@ -1,0 +1,2 @@
+ALTER TABLE `payperiod`
+	ADD COLUMN `Status` VARCHAR(50) NOT NULL DEFAULT 'Pending' AFTER `IsClosed`;
