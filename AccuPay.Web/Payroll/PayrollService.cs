@@ -1,4 +1,8 @@
+using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Payroll
@@ -7,9 +11,12 @@ namespace AccuPay.Web.Payroll
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
 
-        public PayrollService(DbContextOptionsService dbContextOptionsService)
+        private readonly PayPeriodRepository _payperiodRepository;
+
+        public PayrollService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository)
         {
             _dbContextOptionsService = dbContextOptionsService;
+            _payperiodRepository = payperiodRepository;
         }
 
         public async Task<PayrollResultDto> Start(PayrollResources resources, StartPayrollDto startDto)
@@ -42,6 +49,41 @@ namespace AccuPay.Web.Payroll
             };
 
             return resultDto;
+        }
+
+        public async Task<PayrollDto> GetById(int payperiodId)
+        {
+            var payperiod = await _payperiodRepository.GetByIdAsync(payperiodId);
+
+            return ConvertToDto(payperiod);
+        }
+
+        public async Task<PayrollDto> GetLatest()
+        {
+            var payperiod = await _payperiodRepository.GetLatest(1);
+
+            return ConvertToDto(payperiod);
+        }
+
+        public async Task<PaginatedList<PayrollDto>> List(PageOptions options)
+        {
+            var (payperiods, total) = await _payperiodRepository.ListByOrganization(1, 1, options);
+            var dtos = payperiods.Select(t => ConvertToDto(t)).ToList();
+
+            return new PaginatedList<PayrollDto>(dtos, total, 1, 1);
+        }
+
+        private PayrollDto ConvertToDto(PayPeriod t)
+        {
+            var dto = new PayrollDto()
+            {
+                PayperiodId = t.RowID,
+                CutoffStart = t.PayFromDate,
+                CutoffEnd = t.PayToDate,
+                Status = t.Status.ToString()
+            };
+
+            return dto;
         }
     }
 }

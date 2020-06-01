@@ -1,3 +1,4 @@
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Web.Payroll;
 using Microsoft.AspNetCore.Mvc;
@@ -33,22 +34,22 @@ namespace AccuPay.Web.Controllers
             }
         }
 
-        [HttpGet("{latest}")]
-        public async Task<ActionResult> GetLatest()
+        [HttpGet("latest")]
+        public async Task<ActionResult<PayrollDto>> GetLatest()
         {
-            throw new NotImplementedException();
+            return await _service.GetLatest();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult> GetById()
+        public async Task<ActionResult<PayrollDto>> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _service.GetById(id);
         }
 
         [HttpGet]
-        public async Task<ActionResult> List()
+        public async Task<ActionResult<PaginatedList<PayrollDto>>> List([FromQuery] PageOptions options)
         {
-            throw new NotImplementedException();
+            return await _service.List(options);
         }
     }
 }

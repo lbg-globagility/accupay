@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -43,6 +44,15 @@ namespace AccuPay.Data.Repositories
         public async Task<PayPeriod> GetByIdAsync(int id)
         {
             return await _context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == id);
+        }
+
+        public async Task<PayPeriod> GetLatest(int organizationId)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.Status != PayPeriodStatus.Pending)
+                .Where(p => p.OrganizationID == organizationId)
+                .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<PayPeriod> GetCurrentProcessing(int organizationId)
@@ -161,6 +171,21 @@ namespace AccuPay.Data.Repositories
                                                                     year: year,
                                                                     payFrequencyId: payFrequencyId).
                             ToListAsync();
+        }
+
+        public async Task<(ICollection<PayPeriod> payperiods, int total)> ListByOrganization(int organizationId,
+                                                                                             int payfrequencyId,
+                                                                                             PageOptions options)
+        {
+            var query = _context.PayPeriods
+                .Where(t => t.OrganizationID == organizationId)
+                .Where(t => t.Status != PayPeriodStatus.Pending)
+                .Where(t => t.PayFrequencyID == payfrequencyId);
+
+            var payperiods = await query.Page(options).ToListAsync();
+            var total = await query.CountAsync();
+
+            return (payperiods, total);
         }
 
         #endregion List of entities
