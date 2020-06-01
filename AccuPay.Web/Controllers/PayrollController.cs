@@ -10,30 +10,22 @@ namespace AccuPay.Web.Controllers
     [ApiController]
     public class PayrollController : ControllerBase
     {
-        private readonly PayrollResources _payrollResources;
-        private readonly DbContextOptionsService _dbContextOptionsService;
+        private readonly PayrollService _service;
 
-        public PayrollController(PayrollResources resources, DbContextOptionsService dbContextOptionsService)
+        public PayrollController(PayrollService service)
         {
-            _payrollResources = resources;
-            _dbContextOptionsService = dbContextOptionsService;
+            _service = service;
         }
 
         [HttpPost]
-        public async Task<ActionResult> Start([FromBody] StartPayrollDto dto)
+        public async Task<ActionResult<PayrollResultDto>> Start([FromServices] PayrollResources resources,
+                                                                [FromBody] StartPayrollDto dto)
         {
             try
             {
-                await _payrollResources.Load(241, 1, 1, dto.CutoffStart, dto.CutoffEnd);
+                var result = await _service.Start(resources, dto);
 
-                var employees = _payrollResources.Employees;
-                foreach (var employee in employees)
-                {
-                    var generation = new PayrollGeneration(_dbContextOptionsService);
-                    generation.DoProcess(employee, _payrollResources, 1, 1);
-                }
-
-                return Ok();
+                return result;
             }
             catch (Exception)
             {

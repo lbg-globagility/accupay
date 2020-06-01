@@ -1,7 +1,7 @@
-using AccuPay.Data.Services;
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.Branches;
+using AccuPay.Web.Calendars;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Emails;
@@ -13,6 +13,7 @@ using AccuPay.Web.Loans;
 using AccuPay.Web.OfficialBusinesses;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
+using AccuPay.Web.Payroll;
 using AccuPay.Web.Positions;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Shifts.Services;
@@ -29,7 +30,7 @@ namespace AccuPay.Web
             services.AddScoped<UserService>();
             services.AddScoped<AccountService>();
             services.AddScoped<AccountTokenService>();
-            services.AddScoped<AccuPay.Web.Calendars.CalendarService>();
+            services.AddScoped<CalendarService>();
             services.AddScoped<BranchService>();
             services.AddScoped<TokenService>();
             services.AddScoped<AllowanceService>();
@@ -43,6 +44,7 @@ namespace AccuPay.Web
             services.AddScoped<PositionService>();
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();
+            services.AddScoped<PayrollService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();
@@ -53,8 +55,6 @@ namespace AccuPay.Web
             services.AddScoped<ViewRenderService>();
             services.AddScoped<UserEmailService>();
             services.AddScoped<UserTokenService>();
-
-            services.AddTransient<PayrollResources>();
 
             return services;
         }
