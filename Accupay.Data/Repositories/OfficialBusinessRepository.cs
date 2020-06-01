@@ -39,6 +39,11 @@ namespace AccuPay.Data.Repositories
 
         private void SaveFunction(OfficialBusiness officialBusiness)
         {
+            if (officialBusiness.Employee != null)
+            {
+                _context.Entry(officialBusiness.Employee).State = EntityState.Unchanged;
+            }
+
             if (IsNewEntity(officialBusiness.RowID))
             {
                 _context.OfficialBusinesses.Add(officialBusiness);

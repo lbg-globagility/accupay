@@ -53,6 +53,11 @@ namespace AccuPay.Data.Repositories
 
         private void SaveFunction(Overtime overtime)
         {
+            if (overtime.Employee != null)
+            {
+                _context.Entry(overtime.Employee).State = EntityState.Unchanged;
+            }
+
             if (IsNewEntity(overtime.RowID))
             {
                 _context.Overtimes.Add(overtime);

@@ -2,9 +2,9 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Infrastructure.Services.Excel
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Globagility.AccuPay.Loans
 Imports Microsoft.Extensions.DependencyInjection
@@ -26,7 +26,7 @@ Public Class ImportLoansForm
 
     Private _listOfValueRepository As ListOfValueRepository
 
-    Private _loanScheduleRepository As LoanScheduleRepository
+    Private _loanService As LoanDataService
 
     Private _productRepository As ProductRepository
 
@@ -40,7 +40,7 @@ Public Class ImportLoansForm
 
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
@@ -257,16 +257,10 @@ Public Class ImportLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim loansWithOutEmployeeObject = _loans.CloneListJson()
-
-                For Each loan In loansWithOutEmployeeObject
-                    loan.Employee = Nothing
-                Next
-
-                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject)
+                Await _loanService.SaveManyAsync(_loans)
 
                 Dim importList = New List(Of UserActivityItem)
-                For Each item In loansWithOutEmployeeObject
+                For Each item In _loans
                     importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",

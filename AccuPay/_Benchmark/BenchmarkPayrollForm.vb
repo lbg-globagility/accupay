@@ -63,7 +63,7 @@ Public Class BenchmarkPayrollForm
 
     Private _salaryRepository As SalaryRepository
 
-    Private _loanScheduleRepository As LoanScheduleRepository
+    Private _loanService As LoanDataService
 
     Sub New()
 
@@ -75,7 +75,7 @@ Public Class BenchmarkPayrollForm
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
         _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
@@ -285,7 +285,7 @@ Public Class BenchmarkPayrollForm
             Return False
         End If
 
-        Dim _pagibigLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+        Dim _pagibigLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
 
         If _pagibigLoans.Count > 1 Then
 
@@ -296,7 +296,7 @@ Public Class BenchmarkPayrollForm
 
         End If
 
-        Dim _sssLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+        Dim _sssLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
 
         If _sssLoans.Count > 1 Then
 

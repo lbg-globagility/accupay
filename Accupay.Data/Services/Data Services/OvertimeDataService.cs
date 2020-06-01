@@ -58,7 +58,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Organization is required.");
 
             if (overtime.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
+                throw new BusinessLogicException("Employee is required.");
 
             if (overtime.OTStartTime == null)
                 throw new BusinessLogicException("Start Time is required.");

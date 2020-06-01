@@ -130,6 +130,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of DivisionDataService)
         services.AddTransient(Of EmployeeDutyScheduleDataService)
         services.AddTransient(Of LeaveDataService)
+        services.AddTransient(Of LoanDataService)
         services.AddTransient(Of OfficialBusinessDataService)
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PositionDataService)
@@ -171,7 +172,8 @@ Public Class DependencyInjectionHelper
         dbContextOptionsBuilder.
             UseMySql(mysql_conn_text).
             UseLoggerFactory(dbCommandConsoleLoggerFactory).
-            EnableSensitiveDataLogging()
+            EnableSensitiveDataLogging().
+            UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
     End Sub
 
 End Class

@@ -1,4 +1,5 @@
 ﻿Imports System.Threading.Tasks
+Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -402,6 +403,46 @@ Public Class MetroLogin
             .Show()
 
         End With
+
+    End Sub
+
+    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+
+        '_loanService.TryAsync()
+
+        'Console.WriteLine("Nice")
+
+        Try
+            Dim loan = New LoanSchedule
+            loan.BonusID = Nothing
+            loan.Comments = "12sdfdsf"
+            loan.Created = Date.Now
+            loan.CreatedBy = 5
+            loan.DedEffectiveDateFrom = Date.Now
+            loan.DeductionAmount = 2000.0
+            loan.DeductionPercentage = 12.0
+            loan.DeductionSchedule = "End of the month"
+            loan.Employee = Nothing
+            loan.EmployeeID = 350
+            loan.LastUpd = Nothing
+            loan.LastUpdBy = Nothing
+            loan.LoanName = "Company Loan"
+            loan.LoanNumber = "1212"
+            loan.LoanTransactions = Nothing
+            loan.LoanType = Nothing
+            loan.LoanTypeID = 115
+            loan.OrganizationID = 2
+            loan.RowID = 1805
+            loan.Status = "On hold"
+            loan.TotalBalanceLeft = 11200.0
+            loan.TotalLoanAmount = 11200.0
+
+            Dim loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+            Await loanService.SaveManyAsync(New List(Of LoanSchedule)() {loan})
+            Console.WriteLine("Nice")
+        Catch ex As Exception
+            Debugger.Break()
+        End Try
 
     End Sub
 

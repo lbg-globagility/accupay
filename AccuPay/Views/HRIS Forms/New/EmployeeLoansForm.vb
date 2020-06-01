@@ -3,6 +3,7 @@
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
@@ -265,8 +266,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function() As Task
-                Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-                Await loanScheduleRepository.SaveManyAsync(changedLoans)
+                Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                Await service.SaveManyAsync(changedLoans)
 
                 For Each item In changedLoans
                     RecordUpdate(item)
@@ -407,9 +408,8 @@ Public Class EmployeeLoansForm
             Return
         End If
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-        Dim currentLoanSchedule = Await loanScheduleRepository.
-                                            GetByIdAsync(Me._currentLoan.RowID.Value)
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        Dim currentLoanSchedule = Await service.GetByIdAsync(Me._currentLoan.RowID.Value)
 
         If currentLoanSchedule Is Nothing Then
 
@@ -438,7 +438,7 @@ Public Class EmployeeLoansForm
             End If
         Else
 
-            Dim loanTransactions = Await loanScheduleRepository.
+            Dim loanTransactions = Await service.
                 GetLoanTransactionsWithPayPeriodAsync(Me._currentLoan.RowID.Value)
 
             If loanTransactions.Count > 0 Then
@@ -470,8 +470,8 @@ Public Class EmployeeLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                     Async Function()
-                                        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-                                        Await loanScheduleRepository.DeleteAsync(Me._currentLoan.RowID.Value)
+                                        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+                                        Await service.DeleteAsync(Me._currentLoan.RowID.Value)
 
                                         _userActivityRepository.RecordDelete(z_User,
                                                                              FormEntityName,
@@ -550,8 +550,8 @@ Public Class EmployeeLoansForm
 
     Private Sub LoadLoanStatus()
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-        Dim statusList = loanScheduleRepository.GetStatusList()
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        Dim statusList = service.GetStatusList()
 
         statusList.Remove(LoanSchedule.STATUS_COMPLETE)
 
@@ -589,9 +589,8 @@ Public Class EmployeeLoansForm
         Dim cancelledChecked = chkCancelledFilter.Checked
         Dim completeChecked = chkCompleteFilter.Checked
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-        Dim loanSchedules = Await loanScheduleRepository.
-                                    GetByEmployeeAsync(currentEmployee.RowID.Value)
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        Dim loanSchedules = Await service.GetByEmployeeAsync(currentEmployee.RowID.Value)
 
         loanSchedules = loanSchedules.
                                 OrderByDescending(Function(l) l.DedEffectiveDateFrom).
@@ -653,9 +652,9 @@ Public Class EmployeeLoansForm
         Dim currentLoanSchedule As LoanSchedule = GetSelectedLoan()
         If currentLoanSchedule Is Nothing Then Return
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
         Me._currentLoanTransactions = New List(Of LoanTransaction) _
-            (Await loanScheduleRepository.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
+            (Await service.GetLoanTransactionsWithPayPeriodAsync(currentLoanSchedule.RowID.Value))
 
         LoanHistoryGridView.DataSource = Me._currentLoanTransactions
 

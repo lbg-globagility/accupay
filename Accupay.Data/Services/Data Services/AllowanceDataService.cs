@@ -52,7 +52,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Organization is required.");
 
             if (allowance.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
+                throw new BusinessLogicException("Employee is required.");
 
             if (_repository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
                 throw new BusinessLogicException("Invalid frequency.");
@@ -60,18 +60,18 @@ namespace AccuPay.Data.Services
             if (allowance.ProductID == null)
                 throw new BusinessLogicException("Allowance type is required.");
 
+            if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
+                throw new BusinessLogicException("Start date cannot be greater than end date.");
+
+            if (allowance.Amount < 0)
+                throw new BusinessLogicException("Amount cannot be less than 0.");
+
             var product = await _context.Products.
                                     Where(p => p.RowID == allowance.ProductID).
                                     FirstOrDefaultAsync();
 
             if (product == null)
                 throw new BusinessLogicException("The selected allowance type no longer exists.");
-
-            if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
-                throw new BusinessLogicException("Start date cannot be greater than end date.");
-
-            if (allowance.Amount < 0)
-                throw new BusinessLogicException("Amount cannot be less than 0.");
 
             if (allowance.IsMonthly && !product.Fixed)
                 throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");

@@ -22,7 +22,6 @@ namespace AccuPay.Data.Repositories
         internal async Task DeleteAsync(Allowance allowance)
         {
             _context.Remove(allowance);
-
             await _context.SaveChangesAsync();
         }
 
@@ -40,6 +39,11 @@ namespace AccuPay.Data.Repositories
 
         private void SaveFunction(Allowance allowance)
         {
+            if (allowance.Employee != null)
+            {
+                _context.Entry(allowance.Employee).State = EntityState.Unchanged;
+            }
+
             if (allowance.Product != null)
             {
                 _context.Entry(allowance.Product).State = EntityState.Unchanged;
