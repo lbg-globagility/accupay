@@ -22,16 +22,23 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult> Start([FromBody] StartPayrollDto dto)
         {
-            await _payrollResources.Load(1, 1, 241, dto.CutoffStart, dto.CutoffEnd);
-
-            var employees = _payrollResources.Employees;
-            foreach (var employee in employees)
+            try
             {
-                var generation = new PayrollGeneration(_dbContextOptionsService);
-                generation.DoProcess(employee, _payrollResources, 1, 1);
-            }
+                await _payrollResources.Load(241, 1, 1, dto.CutoffStart, dto.CutoffEnd);
 
-            return BadRequest();
+                var employees = _payrollResources.Employees;
+                foreach (var employee in employees)
+                {
+                    var generation = new PayrollGeneration(_dbContextOptionsService);
+                    generation.DoProcess(employee, _payrollResources, 1, 1);
+                }
+
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{latest}")]
