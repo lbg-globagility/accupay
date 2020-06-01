@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,10 +10,12 @@ namespace AccuPay.Web.Organizations
     public class OrganizationService
     {
         private readonly OrganizationRepository _repository;
+        private readonly ICurrentUser _currentUser;
 
-        public OrganizationService(OrganizationRepository repository)
+        public OrganizationService(OrganizationRepository repository, ICurrentUser currentUser)
         {
             _repository = repository;
+            _currentUser = currentUser;
         }
 
         public async Task<OrganizationDto> GetById(int organizationId)
@@ -45,7 +48,7 @@ namespace AccuPay.Web.Organizations
 
         public async Task<PaginatedList<OrganizationDto>> List(PageOptions options)
         {
-            var (organizations, total) = await _repository.List(options);
+            var (organizations, total) = await _repository.List(options, _currentUser.ClientId);
             var dtos = organizations.Select(t => ConvertToDto(t)).ToList();
 
             return new PaginatedList<OrganizationDto>(dtos, total, 1, 1);

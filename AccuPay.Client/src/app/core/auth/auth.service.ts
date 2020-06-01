@@ -11,6 +11,8 @@ const TOKEN_KEY = 'token';
   providedIn: 'root',
 })
 export class AuthService {
+  private baseUrl = 'api/account';
+
   redirectUrl: string;
 
   private accountSource$ = new ReplaySubject<Account>(1);
@@ -24,6 +26,35 @@ export class AuthService {
 
     return this.httpClient
       .post<LoginResult>('/api/account/login', credentials)
+      .pipe(
+        map(({ token }) => {
+          const hasToken = token != null;
+
+          if (hasToken) {
+            localStorage.setItem(TOKEN_KEY, token);
+          }
+
+          this.getAccount().subscribe((account) => {
+            this.accountSource$.next(account);
+          });
+
+          return null;
+        }),
+        catchError((response: HttpErrorResponse) => {
+          if (400 <= response.status && response.status < 500) {
+            return throwError('BadCredentials');
+          } else {
+            return throwError('Server error');
+          }
+        })
+      );
+  }
+
+  changeOrganization(organizationId: number) {
+    return this.httpClient
+      .post<LoginResult>(`${this.baseUrl}/change-organization`, {
+        organizationId,
+      })
       .pipe(
         map(({ token }) => {
           const hasToken = token != null;

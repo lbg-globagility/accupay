@@ -15,8 +15,6 @@ namespace AccuPay.Data.Entities
 
         public string LastName { get; set; }
 
-        public int? OrganizationId { get; set; }
-
         public int ClientId { get; set; }
 
         public AspNetUserStatus Status { get; set; }

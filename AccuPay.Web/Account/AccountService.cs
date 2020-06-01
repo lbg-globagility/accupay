@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -14,18 +15,21 @@ namespace AccuPay.Web.Account
         private readonly AccountTokenService _accountTokenService;
         private readonly UserTokenService _userTokenService;
         private readonly OrganizationRepository _organizationRepository;
+        private readonly ICurrentUser _currentUser;
 
         public AccountService(UserManager<AspNetUser> users,
                               SignInManager<AspNetUser> signIn,
                               AccountTokenService accountTokenService,
                               UserTokenService userTokenService,
-                              OrganizationRepository organizationRepository)
+                              OrganizationRepository organizationRepository,
+                              ICurrentUser currentUser)
         {
             _users = users;
             _signIn = signIn;
             _accountTokenService = accountTokenService;
             _userTokenService = userTokenService;
             _organizationRepository = organizationRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<string> Login(string username, string password)
@@ -43,6 +47,21 @@ namespace AccuPay.Web.Account
             if (organization is null)
             {
                 throw LoginException.NoOrganization();
+            }
+
+            var token = _accountTokenService.CreateAccessToken(user, organization);
+
+            return token;
+        }
+
+        public async Task<string> ChangeOrganization(int organizationId)
+        {
+            var user = await _users.FindByIdAsync(_currentUser.UserId.ToString());
+            var organization = await _organizationRepository.GetByIdAsync(organizationId);
+
+            if (organization.ClientId != _currentUser.ClientId)
+            {
+                throw new Exception("User has no permission to acess organization");
             }
 
             var token = _accountTokenService.CreateAccessToken(user, organization);
