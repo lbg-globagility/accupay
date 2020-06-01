@@ -2,9 +2,9 @@ using System;
 
 namespace AccuPay.Web.Payroll
 {
-    public class PayrollDto
+    public class PayperiodDto
     {
-        public int? PayperiodId { get; set; }
+        public int? Id { get; set; }
 
         public DateTime CutoffStart { get; set; }
 

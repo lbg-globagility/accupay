@@ -9,11 +9,11 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class PayrollController : ControllerBase
+    public class PayperiodsController : ControllerBase
     {
-        private readonly PayrollService _service;
+        private readonly PayperiodService _service;
 
-        public PayrollController(PayrollService service)
+        public PayperiodsController(PayperiodService service)
         {
             _service = service;
         }
@@ -35,19 +35,19 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("latest")]
-        public async Task<ActionResult<PayrollDto>> GetLatest()
+        public async Task<ActionResult<PayperiodDto>> GetLatest()
         {
             return await _service.GetLatest();
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<PayrollDto>> GetById(int id)
+        public async Task<ActionResult<PayperiodDto>> GetById(int id)
         {
             return await _service.GetById(id);
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<PayrollDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
         {
             return await _service.List(options);
         }

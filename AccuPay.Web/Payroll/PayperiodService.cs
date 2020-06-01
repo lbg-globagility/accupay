@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Web.Payroll
 {
-    public class PayrollService
+    public class PayperiodService
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
 
         private readonly PayPeriodRepository _payperiodRepository;
 
-        public PayrollService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository)
+        public PayperiodService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _payperiodRepository = payperiodRepository;
@@ -51,33 +51,33 @@ namespace AccuPay.Web.Payroll
             return resultDto;
         }
 
-        public async Task<PayrollDto> GetById(int payperiodId)
+        public async Task<PayperiodDto> GetById(int payperiodId)
         {
             var payperiod = await _payperiodRepository.GetByIdAsync(payperiodId);
 
             return ConvertToDto(payperiod);
         }
 
-        public async Task<PayrollDto> GetLatest()
+        public async Task<PayperiodDto> GetLatest()
         {
             var payperiod = await _payperiodRepository.GetLatest(1);
 
             return ConvertToDto(payperiod);
         }
 
-        public async Task<PaginatedList<PayrollDto>> List(PageOptions options)
+        public async Task<PaginatedList<PayperiodDto>> List(PageOptions options)
         {
             var (payperiods, total) = await _payperiodRepository.ListByOrganization(1, 1, options);
             var dtos = payperiods.Select(t => ConvertToDto(t)).ToList();
 
-            return new PaginatedList<PayrollDto>(dtos, total, 1, 1);
+            return new PaginatedList<PayperiodDto>(dtos, total, 1, 1);
         }
 
-        private PayrollDto ConvertToDto(PayPeriod t)
+        private PayperiodDto ConvertToDto(PayPeriod t)
         {
-            var dto = new PayrollDto()
+            var dto = new PayperiodDto()
             {
-                PayperiodId = t.RowID,
+                Id = t.RowID,
                 CutoffStart = t.PayFromDate,
                 CutoffEnd = t.PayToDate,
                 Status = t.Status.ToString()
