@@ -157,28 +157,28 @@ namespace AccuPay.Data.Services
             // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoanSchedules()
             await LoadPayPeriod();
 
-            await Task.WhenAll(new[] {
-                    LoadActualTimeEntries(),
-                    LoadAllowances(),
-                    LoadBpiInsuranceProduct(),
-                    LoadDivisionMinimumWages(),
-                    LoadEmployees(),
-                    LoadFilingStatuses(),
-                    LoadLeaves(),
-                    LoadListOfValueCollection().
-                            ContinueWith(async (x)=> { await LoadCalendarCollection(); }),
-                    LoadPaystubs().
-                            ContinueWith(async (x)=> { await LoadLoanSchedules(); }),
-                    LoadPhilHealthBrackets(),
-                    LoadPreviousPaystubs(),
-                    LoadSalaries(),
-                    LoadSickLeaveProduct(),
-                    LoadSocialSecurityBrackets(),
-                    LoadSystemOwner(),
-                    LoadTimeEntries(),
-                    LoadVacationLeaveProduct(),
-                    LoadWithholdingTaxBrackets()
-                });
+            await LoadActualTimeEntries();
+            await LoadAllowances();
+            await LoadBpiInsuranceProduct();
+            await LoadDivisionMinimumWages();
+            await LoadEmployees();
+            await LoadFilingStatuses();
+            await LoadLeaves();
+            await LoadListOfValueCollection();
+            // LoadCalendarCollection() should be executed following list of values
+            await LoadCalendarCollection();
+            await LoadPaystubs();
+            // LoadSchedules() should be executed following paystubs
+            await LoadLoanSchedules();
+            await LoadPhilHealthBrackets();
+            await LoadPreviousPaystubs();
+            await LoadSalaries();
+            await LoadSickLeaveProduct();
+            await LoadSocialSecurityBrackets();
+            await LoadSystemOwner();
+            await LoadTimeEntries();
+            await LoadVacationLeaveProduct();
+            await LoadWithholdingTaxBrackets();
         }
 
         private async Task LoadAllowances()
