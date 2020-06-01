@@ -28,9 +28,16 @@ export class PayperiodService {
     return this.httpClient.get<Payperiod>(`${this.baseUrl}/${payperiodId}`);
   }
 
-  getPaystubs(payperiodId: number): Observable<Paystub> {
+  getPaystubs(payperiodId: number): Observable<Paystub[]> {
     return this.httpClient.get<Paystub[]>(
       `${this.baseUrl}/${payperiodId}/paystubs`
+    );
+  }
+
+  calculate(payperiodId: number): Observable<void> {
+    return this.httpClient.post<void>(
+      `${this.baseUrl}/${payperiodId}/calculate`,
+      {}
     );
   }
 

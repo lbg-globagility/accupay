@@ -23,12 +23,27 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<PayrollResultDto>> Start([FromServices] PayrollResources resources,
-                                                                [FromBody] StartPayrollDto dto)
+        public async Task<ActionResult<PayperiodDto>> Start([FromBody] StartPayrollDto dto)
         {
             try
             {
-                var result = await _payperiodService.Start(resources, dto);
+                var result = await _payperiodService.Start(dto);
+
+                return result;
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpPost("{id}/calculate")]
+        public async Task<ActionResult<PayrollResultDto>> Calculate([FromServices] PayrollResources resources,
+                                                                    int id)
+        {
+            try
+            {
+                var result = await _payperiodService.Calculate(resources, id);
 
                 return result;
             }

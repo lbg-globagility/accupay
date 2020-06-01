@@ -30,6 +30,12 @@ namespace AccuPay.Data.Repositories
             await ToggleCloseAsync(id, isClosed: true);
         }
 
+        public async Task Update(PayPeriod payperiod)
+        {
+            _context.Entry(payperiod).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         #endregion CRUD
 
         #region Queries
@@ -52,6 +58,14 @@ namespace AccuPay.Data.Repositories
                 .Where(p => p.Status != PayPeriodStatus.Pending)
                 .Where(p => p.OrganizationID == organizationId)
                 .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<PayPeriod> GetByCutoffDates(DateTime cutoffStart, DateTime cutoffEnd)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.PayFromDate == cutoffStart)
+                .Where(p => p.PayToDate == cutoffEnd)
                 .FirstOrDefaultAsync();
         }
 

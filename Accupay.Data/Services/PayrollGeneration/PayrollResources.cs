@@ -141,21 +141,20 @@ namespace AccuPay.Data.Services
         }
 
         public async Task Load(int payPeriodId,
-                                int organizationId,
-                                int userId,
-                                DateTime payDateFrom,
-                                DateTime payDateTo)
+                               int organizationId,
+                               int userId)
         {
             _payPeriodId = payPeriodId;
             _organizationId = organizationId;
             _userId = userId;
-            _payDateFrom = payDateFrom;
-            _payDateTo = payDateTo;
-
-            _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
 
             // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoanSchedules()
             await LoadPayPeriod();
+
+            _payDateFrom = PayPeriod.PayFromDate;
+            _payDateTo = PayPeriod.PayToDate;
+
+            _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
 
             await LoadActualTimeEntries();
             await LoadAllowances();

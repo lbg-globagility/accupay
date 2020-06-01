@@ -4,6 +4,8 @@ import { ActivatedRoute } from '@angular/router';
 import { Payperiod } from 'src/app/payroll/shared/payperiod';
 import { MatTableDataSource } from '@angular/material/table';
 import { Paystub } from 'src/app/payroll/shared/paystub';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -15,7 +17,7 @@ export class ViewPayperiodComponent implements OnInit {
 
   payperiod: Payperiod;
 
-  paystubs: Paystub;
+  paystubs: Paystub[];
 
   readonly displayedColumns = ['employee', 'netPay'];
 
@@ -23,7 +25,9 @@ export class ViewPayperiodComponent implements OnInit {
 
   constructor(
     private payperiodService: PayperiodService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private snackbar: MatSnackBar,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
@@ -43,5 +47,16 @@ export class ViewPayperiodComponent implements OnInit {
       .subscribe((paystubs) => (this.paystubs = paystubs));
   }
 
-  calculate() {}
+  calculate() {
+    this.snackbar.open('Calculating payroll');
+
+    this.payperiodService.calculate(this.payperiodId).subscribe({
+      next: () => {
+        this.snackbar.open('Finished calculating payroll.', 'OK');
+        this.loadPaystubs();
+      },
+      error: (err) =>
+        this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
+    });
+  }
 }

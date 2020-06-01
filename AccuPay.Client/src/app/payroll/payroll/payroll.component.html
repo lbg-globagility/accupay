@@ -1,5 +1,7 @@
 <h1>Payroll</h1>
 
+<button mat-raised-button (click)="startPayroll()">START PAYROLL</button>
+
 <mat-card>
   <div>
     <h3>Latest payroll</h3>
@@ -8,7 +10,7 @@
       {{ latestPayperiod?.cutoffEnd | date }}
     </p>
     <p>
-      {{ latestPayperiod.status }}
+      {{ latestPayperiod?.status }}
     </p>
   </div>
   <mat-card-actions align="end">

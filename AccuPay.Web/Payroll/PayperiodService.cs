@@ -1,4 +1,5 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -19,9 +20,19 @@ namespace AccuPay.Web.Payroll
             _payperiodRepository = payperiodRepository;
         }
 
-        public async Task<PayrollResultDto> Start(PayrollResources resources, StartPayrollDto startDto)
+        public async Task<PayperiodDto> Start(StartPayrollDto dto)
         {
-            await resources.Load(241, 11, 1, startDto.CutoffStart, startDto.CutoffEnd);
+            var payperiod = await _payperiodRepository.GetByCutoffDates(dto.CutoffStart, dto.CutoffEnd);
+            payperiod.Status = PayPeriodStatus.Open;
+
+            await _payperiodRepository.Update(payperiod);
+
+            return ConvertToDto(payperiod);
+        }
+
+        public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
+        {
+            await resources.Load(payperiodId, 11, 1);
 
             var successes = 0;
             var failures = 0;
