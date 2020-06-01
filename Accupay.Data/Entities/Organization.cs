@@ -30,5 +30,7 @@ namespace AccuPay.Data.Entities
         public bool IsAgency { get; set; }
 
         public int? PrimaryAddressId { get; set; }
+
+        public int ClientId { get; set; }
     }
 }

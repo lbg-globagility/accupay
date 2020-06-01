@@ -1,4 +1,5 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Repositories;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Identity;
 using System;
@@ -12,16 +13,19 @@ namespace AccuPay.Web.Account
         private readonly SignInManager<AspNetUser> _signIn;
         private readonly AccountTokenService _accountTokenService;
         private readonly UserTokenService _userTokenService;
+        private readonly OrganizationRepository _organizationRepository;
 
         public AccountService(UserManager<AspNetUser> users,
                               SignInManager<AspNetUser> signIn,
                               AccountTokenService accountTokenService,
-                              UserTokenService userTokenService)
+                              UserTokenService userTokenService,
+                              OrganizationRepository organizationRepository)
         {
             _users = users;
             _signIn = signIn;
             _accountTokenService = accountTokenService;
             _userTokenService = userTokenService;
+            _organizationRepository = organizationRepository;
         }
 
         public async Task<string> Login(string username, string password)
@@ -34,7 +38,14 @@ namespace AccuPay.Web.Account
                 throw LoginException.CredentialsMismatch();
             }
 
-            var token = _accountTokenService.CreateAccessToken(user);
+            var organization = await _organizationRepository.GetFirst(user.ClientId);
+
+            if (organization is null)
+            {
+                throw LoginException.NoOrganization();
+            }
+
+            var token = _accountTokenService.CreateAccessToken(user, organization);
 
             return token;
         }

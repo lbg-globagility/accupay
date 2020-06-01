@@ -21,6 +21,13 @@ namespace AccuPay.Data.Repositories
             return _context.Organizations.FirstOrDefault(x => x.RowID == id);
         }
 
+        public async Task<Organization> GetFirst(int clientId)
+        {
+            return await _context.Organizations
+                .Where(o => o.ClientId == clientId)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Organization> GetByIdAsync(int id)
         {
             return await _context.Organizations.FirstOrDefaultAsync(x => x.RowID == id);
