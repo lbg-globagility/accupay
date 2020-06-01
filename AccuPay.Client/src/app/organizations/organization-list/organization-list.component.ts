@@ -30,7 +30,7 @@ export class OrganizationListComponent implements OnInit {
   loadOrganizations() {
     const options = new PageOptions(this.pageIndex, this.pageSize);
 
-    this.organizationService.getAll(options).subscribe((data) => {
+    this.organizationService.list(options).subscribe((data) => {
       this.dataSource = new MatTableDataSource<Organization>(data.items);
       this.totalCount = data.totalCount;
     });
