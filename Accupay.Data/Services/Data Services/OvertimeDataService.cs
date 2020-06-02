@@ -47,7 +47,10 @@ namespace AccuPay.Data.Services
 
         public async Task SaveManyAsync(List<Overtime> overtimes)
         {
-            overtimes.ForEach(x => SanitizeEntity(x));
+            foreach (var overtime in overtimes)
+            {
+                SanitizeEntity(overtime);
+            }
 
             await _repository.SaveManyAsync(overtimes);
         }

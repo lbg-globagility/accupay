@@ -39,28 +39,28 @@ namespace AccuPay.Data.Repositories
 
         private void SaveFunction(Allowance allowance)
         {
-            if (allowance.Employee != null)
-            {
-                _context.Entry(allowance.Employee).State = EntityState.Unchanged;
-            }
-
-            if (allowance.Product != null)
-            {
-                _context.Entry(allowance.Product).State = EntityState.Unchanged;
-
-                if (allowance.Product.CategoryEntity != null)
-                {
-                    _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Unchanged;
-                }
-            }
-
             if (IsNewEntity(allowance.RowID))
             {
-                _context.Allowances.Add(allowance);
+                _context.Set<Allowance>().Add(allowance);
             }
             else
             {
                 _context.Entry(allowance).State = EntityState.Modified;
+            }
+
+            if (allowance.Employee != null)
+            {
+                _context.Entry(allowance.Employee).State = EntityState.Detached;
+            }
+
+            if (allowance.Product != null)
+            {
+                _context.Entry(allowance.Product).State = EntityState.Detached;
+
+                if (allowance.Product.CategoryEntity != null)
+                {
+                    _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Detached;
+                }
             }
         }
 

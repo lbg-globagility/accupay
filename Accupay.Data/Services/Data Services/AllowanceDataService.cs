@@ -41,7 +41,10 @@ namespace AccuPay.Data.Services
 
         public async Task SaveManyAsync(List<Allowance> allowances)
         {
-            allowances.ForEach(async (x) => await SanitizeEntity(x));
+            foreach (var allowance in allowances)
+            {
+                await SanitizeEntity(allowance);
+            }
 
             await _repository.SaveManyAsync(allowances);
         }
@@ -66,9 +69,9 @@ namespace AccuPay.Data.Services
             if (allowance.Amount < 0)
                 throw new BusinessLogicException("Amount cannot be less than 0.");
 
-            var product = await _context.Products.
-                                    Where(p => p.RowID == allowance.ProductID).
-                                    FirstOrDefaultAsync();
+            var product = await _context.Products
+                                        .Where(p => p.RowID == allowance.ProductID)
+                                        .FirstOrDefaultAsync();
 
             if (product == null)
                 throw new BusinessLogicException("The selected allowance type no longer exists.");

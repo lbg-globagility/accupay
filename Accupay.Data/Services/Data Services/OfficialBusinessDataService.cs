@@ -43,7 +43,10 @@ namespace AccuPay.Data.Services
 
         public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
         {
-            officialBusinesses.ForEach(async (x) => await SanitizeEntity(x));
+            foreach (var officialBusiness in officialBusinesses)
+            {
+                await SanitizeEntity(officialBusiness);
+            }
 
             await _repository.SaveManyAsync(officialBusinesses);
         }
@@ -65,8 +68,8 @@ namespace AccuPay.Data.Services
             if (officialBusiness.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
 
-            string[] invalidStatuses = { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved };
-            if (!invalidStatuses.Contains(officialBusiness.Status) == false)
+            string[] validStatuses = { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved };
+            if (validStatuses.Contains(officialBusiness.Status) == false)
                 throw new BusinessLogicException("Status is not valid.");
 
             var doesExistQuery = _context.OfficialBusinesses

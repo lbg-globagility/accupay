@@ -79,11 +79,14 @@ namespace AccuPay.Data.Services
             await _loanRepository.SaveAsync(loan);
         }
 
-        public async Task SaveManyAsync(List<LoanSchedule> loan)
+        public async Task SaveManyAsync(List<LoanSchedule> loans)
         {
-            loan.ForEach(async (x) => await SanitizeEntity(x));
+            foreach (var loan in loans)
+            {
+                await SanitizeEntity(loan);
+            }
 
-            await _loanRepository.SaveManyAsync(loan);
+            await _loanRepository.SaveManyAsync(loans);
         }
 
         private async Task SanitizeEntity(LoanSchedule loan)
@@ -151,16 +154,14 @@ namespace AccuPay.Data.Services
 
         private async Task SanitizeProperties(LoanSchedule loan)
         {
-            //if (string.IsNullOrWhiteSpace(loan.LoanName))
-            //{
-            var loanName = (await _productRepository
+            if (string.IsNullOrWhiteSpace(loan.LoanName))
+            {
+                var loanName = (await _productRepository
                                     .GetByIdAsync(loan.LoanTypeID.Value))
                                     ?.PartNo;
 
-            var oldLoan = await _loanRepository.GetByIdAsync(loan.RowID.Value);
-
-            loan.LoanName = loanName;
-            //}
+                loan.LoanName = loanName;
+            }
 
             await ValidationForBenchmark(loan);
 

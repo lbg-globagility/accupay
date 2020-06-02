@@ -172,8 +172,7 @@ Public Class DependencyInjectionHelper
         dbContextOptionsBuilder.
             UseMySql(mysql_conn_text).
             UseLoggerFactory(dbCommandConsoleLoggerFactory).
-            EnableSensitiveDataLogging().
-            UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+            EnableSensitiveDataLogging()
     End Sub
 
 End Class
