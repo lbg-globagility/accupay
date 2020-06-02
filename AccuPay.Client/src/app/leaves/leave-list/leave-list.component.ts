@@ -8,23 +8,41 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Leave } from 'src/app/leaves/shared/leave';
 import { LeaveService } from 'src/app/leaves/leave.service';
+import {
+  state,
+  trigger,
+  transition,
+  animate,
+  style,
+} from '@angular/animations';
 
 @Component({
   selector: 'app-leave-list',
   templateUrl: './leave-list.component.html',
   styleUrls: ['./leave-list.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition(
+        'expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
+      ),
+    ]),
+  ],
 })
 export class LeaveListComponent implements OnInit {
   readonly displayedColumns: string[] = [
     'employeeNumber',
-    'employeeName',
+    // 'employeeName',
     'leaveType',
     'date',
     'time',
     'status',
+    'actions',
   ];
 
-  placeholder: string;
+  expandedLeave: Leave;
 
   searchTerm: string;
 
@@ -99,5 +117,13 @@ export class LeaveListComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getLeaveList();
+  }
+
+  toggleExpansion(leave: Leave) {
+    if (this.expandedLeave === leave) {
+      this.expandedLeave = null;
+    } else {
+      this.expandedLeave = leave;
+    }
   }
 }
