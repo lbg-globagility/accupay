@@ -62,6 +62,10 @@ import { ViewDivisionComponent } from 'src/app/divisions/view-division/view-divi
 import { NewDivisionComponent } from 'src/app/divisions/new-division/new-division.component';
 import { EditDivisionComponent } from 'src/app/divisions/edit-division/edit-division.component';
 import { TimeLogListComponent } from 'src/app/time-logs/time-log-list/time-log-list.component';
+import { ViewTimeLogComponent } from 'src/app/time-logs/view-time-log/view-time-log.component';
+import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
+import { NewTimeLogComponent } from 'src/app/time-logs/new-time-log/new-time-log.component';
+
 
 const routes: Routes = [
   {
@@ -243,6 +247,18 @@ const routes: Routes = [
       {
         path: 'time-logs',
         component: TimeLogListComponent,
+      },
+      {
+        path: 'time-logs/new',
+        component: NewTimeLogComponent,
+      },
+      {
+        path: 'time-logs/:id',
+        component: ViewTimeLogComponent,
+      },
+      {
+        path: 'time-logs/:id/edit',
+        component: EditTimeLogComponent,
       },
       {
         path: 'divisions',

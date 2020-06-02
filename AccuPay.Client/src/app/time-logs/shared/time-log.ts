@@ -7,6 +7,6 @@ export interface TimeLog {
   date: Date;
   startTime: Date;
   endTime: Date;
-  branchId: Date;
+  branchId: number;
   branchName: string;
 }
