@@ -6,10 +6,14 @@ import { NewOfficialBusinessComponent } from './new-official-business/new-offici
 import { EditOfficialBusinessComponent } from './edit-official-business/edit-official-business.component';
 import { OfficialBusinessFormComponent } from './official-business-form/official-business-form.component';
 
-
-
 @NgModule({
-  declarations: [OfficialBusinessListComponent, ViewOfficialBusinessComponent, NewOfficialBusinessComponent, EditOfficialBusinessComponent, OfficialBusinessFormComponent],
-  imports: [SharedModule]
+  declarations: [
+    OfficialBusinessListComponent,
+    ViewOfficialBusinessComponent,
+    NewOfficialBusinessComponent,
+    EditOfficialBusinessComponent,
+    OfficialBusinessFormComponent,
+  ],
+  imports: [SharedModule],
 })
-export class OfficialBusinessesModule { }
+export class OfficialBusinessesModule {}
