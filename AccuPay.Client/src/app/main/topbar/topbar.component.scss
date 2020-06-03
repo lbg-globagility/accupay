@@ -1,4 +1,4 @@
-@import '~@angular/material/theming';
+@import "~@angular/material/theming";
 
 :host {
   display: block;
@@ -7,6 +7,11 @@
 
 mat-toolbar {
   background: white;
+  min-height: 56px;
+}
+
+mat-toolbar-row {
+  height: 56px;
 }
 
 .__spacer {
