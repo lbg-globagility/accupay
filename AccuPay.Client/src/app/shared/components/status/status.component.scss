@@ -30,6 +30,13 @@
 @include create-status2("leave", "Closed", app-color(status, blue));
 @include create-status2("leave", "Completed", app-color(status, blue));
 
+@include create-status2(
+  "officialBusiness",
+  "Approved",
+  app-color(status, green)
+);
+@include create-status2("officialBusiness", "Pending", app-color(status, red));
+
 @include create-status2("Recall", "Unsent", app-color(status, red));
 @include create-status2("Recall", "Incomplete", app-color(status, yellow));
 @include create-status2("Recall", "Open", app-color(status, green));

@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-new-official-business',
@@ -14,7 +15,8 @@ export class NewOfficialBusinessComponent {
   constructor(
     private officialBusinessService: OfficialBusinessService,
     private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialogRef<NewOfficialBusinessComponent>
   ) {}
 
   onSave(officialBusiness: OfficialBusiness): void {
@@ -29,7 +31,7 @@ export class NewOfficialBusinessComponent {
   }
 
   onCancel(): void {
-    this.router.navigate(['official-businesses']);
+    this.dialog.close();
   }
 
   private displaySuccess() {
