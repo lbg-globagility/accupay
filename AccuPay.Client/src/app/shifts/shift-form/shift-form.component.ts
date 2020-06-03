@@ -3,7 +3,6 @@ import { Shift } from '../shared/shift';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
-import { ShiftService } from '../shift.service';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import { cloneDeep } from 'lodash';
@@ -30,8 +29,8 @@ export class ShiftFormComponent implements OnInit {
     date: [null, [Validators.required]],
     startTime: [null, Validators.required],
     endTime: [null, Validators.required],
-    breakStartTime: [null, Validators.required],
-    breakLength: [null, Validators.required],
+    breakStartTime: [null],
+    breakLength: [0, Validators.required],
     isOffset: [false],
   });
 
@@ -40,9 +39,18 @@ export class ShiftFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private employeeService: EmployeeService,
-    private shiftService: ShiftService,
     private timeParser: TimeParser
-  ) {}
+  ) {
+    this.form
+      .get('breakStartTime')
+      .valueChanges.subscribe(() => {
+        if (!this.form.get('breakStartTime').value) {
+          this.form.get('breakLength').disable();
+        } else {
+          this.form.get('breakLength').enable();
+        }
+      });
+  }
 
   ngOnInit(): void {
     if (this.shift != null) {

@@ -105,7 +105,7 @@ namespace AccuPay.Web.Shifts.Services
         {
             shift.StartTime = dto.StartTime.TimeOfDay;
             shift.EndTime = dto.EndTime.TimeOfDay;
-            shift.BreakStartTime = dto.BreakStartTime.TimeOfDay;
+            shift.BreakStartTime = dto.BreakStartTime?.TimeOfDay;
             shift.BreakLength = dto.BreakLength;
             shift.IsRestDay = dto.isOffset;
 
