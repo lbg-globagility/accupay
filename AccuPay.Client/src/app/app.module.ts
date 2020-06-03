@@ -23,6 +23,7 @@ import { PositionsModule } from './positions/positions.module';
 import { CalendarsModule } from 'src/app/calendars/calendars.module';
 import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
+import { TimeEntryModule } from './time-entry/time-entry.module';
 
 
 @NgModule({
@@ -50,6 +51,7 @@ import { DivisionsModule } from './divisions/divisions.module';
     PositionsModule,
     PayrollModule,
     DivisionsModule,
+    TimeEntryModule,
   ],
   providers: [
     {

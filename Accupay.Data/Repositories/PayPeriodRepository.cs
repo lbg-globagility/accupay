@@ -194,7 +194,8 @@ namespace AccuPay.Data.Repositories
             var query = _context.PayPeriods
                 .Where(t => t.OrganizationID == organizationId)
                 .Where(t => t.Status != PayPeriodStatus.Pending)
-                .Where(t => t.PayFrequencyID == payfrequencyId);
+                .Where(t => t.PayFrequencyID == payfrequencyId)
+                .OrderByDescending(t => t.PayFromDate);
 
             var payperiods = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();

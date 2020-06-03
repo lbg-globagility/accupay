@@ -47,6 +47,10 @@ const menuItems: MenuItem[] = [
     icon: 'access_time',
     items: [
       {
+        label: 'Time Entry',
+        route: '/time-entry',
+      },
+      {
         label: 'Shifts',
         route: '/shifts',
       },

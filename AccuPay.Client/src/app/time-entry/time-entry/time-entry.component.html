@@ -1,0 +1,50 @@
+<h1>Time Entry</h1>
+
+<div class="row middle-md">
+  <div class="col-md-5">
+    <mat-form-field appearance="outline" color="accent" class="col-lg-12">
+      <mat-label>Pay Period</mat-label>
+      <mat-select select [(value)]="selectedPayPeriod">
+        <mat-option></mat-option>
+        <mat-option
+          *ngFor="let payperiod of payPeriods"
+          placeholder="Select a Pay Period"
+          [value]="payperiod"
+        >
+          {{ payperiod.cutoffStart | date }} - {{ payperiod.cutoffEnd | date }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- <mat-form-field color="accent" class="w-full">
+      <mat-icon matPrefix class="m-align-middle">search</mat-icon>
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        [placeholder]="placeholder"
+        name="shifts"
+      />
+      <button
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field> -->
+  </div>
+  <div class="col-md-3"></div>
+  <div class="col-md-4">
+    <button mat-raised-button color="accent" class="new-btn">
+      VIEW
+    </button>
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      style="margin-left: 10px;"
+      (click)="generateTimeEntries()"
+    >
+      GENERATE
+    </button>
+  </div>
+</div>

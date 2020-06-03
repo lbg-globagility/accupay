@@ -17,6 +17,7 @@ using AccuPay.Web.Payroll;
 using AccuPay.Web.Positions;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Shifts.Services;
+using AccuPay.Web.TimeEntries;
 using AccuPay.Web.TimeLogs;
 using AccuPay.Web.Users;
 using Microsoft.Extensions.DependencyInjection;
@@ -48,6 +49,7 @@ namespace AccuPay.Web
             services.AddScoped<TimeLogService>();
             services.AddScoped<PayperiodService>();
             services.AddScoped<PaystubService>();
+            services.AddScoped<TimeEntryService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();
