@@ -18,8 +18,6 @@ Public Class AddLoanScheduleForm
 
     Private _newLoanSchedule As New LoanSchedule()
 
-    Private _systemOwnerService As SystemOwnerService
-
     Private _loanTypeList As List(Of Product)
 
     Private _deductionSchedulesList As List(Of String)
@@ -30,12 +28,14 @@ Public Class AddLoanScheduleForm
 
     Public Property ShowBalloonSuccess As Boolean
 
+    Private _systemOwnerService As SystemOwnerService
+
+    Private _userActivityRepository As UserActivityRepository
+
     Sub New(employee As Employee)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _currentEmployee = employee
 
         Me.IsSaved = False
@@ -43,6 +43,8 @@ Public Class AddLoanScheduleForm
         Me.NewLoanTypes = New List(Of Product)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
 
@@ -182,12 +184,11 @@ Public Class AddLoanScheduleForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
 
-                Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-                Dim userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
+                Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-                Await loanScheduleRepository.SaveAsync(Me._newLoanSchedule)
+                Await service.SaveAsync(Me._newLoanSchedule)
 
-                userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
+                _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLoanSchedule.RowID.Value, z_OrganizationID)
 
                 Me.IsSaved = True
 
@@ -294,8 +295,8 @@ Public Class AddLoanScheduleForm
 
     Private Sub LoadLoanStatus()
 
-        Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
-        Dim statusList = loanScheduleRepository.GetStatusList()
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        Dim statusList = service.GetStatusList()
 
         statusList.Remove(LoanSchedule.STATUS_CANCELLED)
         statusList.Remove(LoanSchedule.STATUS_COMPLETE)

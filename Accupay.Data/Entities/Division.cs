@@ -1,19 +1,14 @@
 ﻿using AccuPay.Data.Helpers;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("division")]
-    public class Division
+    public class Division : BaseEntity
     {
         public const string DefaultLocationName = "Default Location";
         public const string DefaultDivisionName = "Default Division";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
@@ -122,9 +117,6 @@ namespace AccuPay.Data.Entities
         public virtual Position DivisionHead { get; set; }
 
         public int? PayFrequencyID { get; set; }
-
-        [ForeignKey("PayFrequencyID")]
-        public virtual PayFrequency PayFrequency { get; set; }
 
         public int? DivisionUniqueID { get; set; }
 

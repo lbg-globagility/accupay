@@ -1,9 +1,10 @@
 import Swal from 'sweetalert2';
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { Leave } from 'src/app/leaves/shared/leave';
+import { Component, ViewChild } from '@angular/core';
 import { LeaveService } from 'src/app/leaves/leave.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { MatDialogRef } from '@angular/material/dialog';
+import { LoadingState } from 'src/app/core/states/loading-state';
+import { LeaveFormComponent } from 'src/app/leaves/leave-form/leave-form.component';
 
 @Component({
   selector: 'app-new-leave',
@@ -11,24 +12,37 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./new-leave.component.scss'],
 })
 export class NewLeaveComponent {
+  @ViewChild(LeaveFormComponent)
+  leaveForm: LeaveFormComponent;
+
+  savingState: LoadingState = new LoadingState();
+
   constructor(
     private leaveService: LeaveService,
-    private router: Router,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialogRef<NewLeaveComponent>
   ) {}
 
-  onSave(leave: Leave): void {
-    this.leaveService.create(leave).subscribe(
-      (result) => {
-        this.displaySuccess();
-        this.router.navigate(['leaves', result.id]);
-      },
-      (err) => this.errorHandler.badRequest(err, 'Failed to create leave.')
-    );
-  }
+  onSave(): void {
+    if (!this.leaveForm.valid) {
+      return;
+    }
 
-  onCancel(): void {
-    this.router.navigate(['leaves']);
+    this.savingState.changeToLoading();
+
+    const leave = this.leaveForm.value;
+
+    this.leaveService.create(leave).subscribe({
+      next: (result) => {
+        this.savingState.changeToSuccess();
+        this.displaySuccess();
+        this.dialog.close(true);
+      },
+      error: (err) => {
+        this.savingState.changeToError();
+        this.errorHandler.badRequest(err, 'Failed to create leave.');
+      },
+    });
   }
 
   private displaySuccess() {

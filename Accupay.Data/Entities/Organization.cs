@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AccuPay.Infrastructure.Services.Excel;
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -30,5 +31,10 @@ namespace AccuPay.Data.Entities
         public bool IsAgency { get; set; }
 
         public int? PrimaryAddressId { get; set; }
+
+        public int ClientId { get; set; }
+
+        [Column("NoPurpose")]
+        public bool IsInActive { get; set; }
     }
 }

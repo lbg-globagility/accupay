@@ -8,58 +8,23 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class OfficialBusinessRepository : BaseRepository
+    public class OfficialBusinessRepository : SavableRepository<OfficialBusiness>
     {
-        private readonly PayrollContext _context;
-
-        public OfficialBusinessRepository(PayrollContext context)
+        public OfficialBusinessRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(OfficialBusiness officialBusiness)
+        protected override void DetachNavigationProperties(OfficialBusiness officialBusiness)
         {
-            _context.Remove(officialBusiness);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveAsync(OfficialBusiness officialBusiness)
-        {
-            SaveFunction(officialBusiness);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
-        {
-            officialBusinesses.ForEach(x => SaveFunction(x));
-            await _context.SaveChangesAsync();
-        }
-
-        private void SaveFunction(OfficialBusiness officialBusiness)
-        {
-            if (IsNewEntity(officialBusiness.RowID))
+            if (officialBusiness.Employee != null)
             {
-                _context.OfficialBusinesses.Add(officialBusiness);
-            }
-            else
-            {
-                _context.Entry(officialBusiness).State = EntityState.Modified;
+                _context.Entry(officialBusiness.Employee).State = EntityState.Detached;
             }
         }
-
-        #endregion CRUD
 
         #region Queries
 
         #region Single entity
-
-        internal async Task<OfficialBusiness> GetByIdAsync(int id)
-        {
-            return await _context.OfficialBusinesses
-                                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
 
         internal async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
         {

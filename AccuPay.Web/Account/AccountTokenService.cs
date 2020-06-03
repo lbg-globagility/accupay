@@ -21,12 +21,13 @@ namespace AccuPay.Web.Account
             return _tokenService.Decode(encodedToken);
         }
 
-        public string CreateAccessToken(AspNetUser user)
+        public string CreateAccessToken(AspNetUser user, Organization organization)
         {
             var claims = new List<Claim>()
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-                new Claim(CustomClaimTypes.CompanyId, user.OrganizationId.ToString())
+                new Claim(CustomClaimTypes.CompanyId, organization.RowID.ToString()),
+                new Claim(CustomClaimTypes.ClientId, user.ClientId.ToString())
             };
 
             return _tokenService.Encode(

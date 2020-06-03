@@ -9,9 +9,12 @@ namespace AccuPay.Web.Account
         }
 
         public static LoginException CredentialsMismatch() =>
-            new LoginException("CredentialsMismatch");
+            new LoginException(nameof(CredentialsMismatch));
 
         public static LoginException AccountDeactivated() =>
-            new LoginException("AccountDeactivated");
+            new LoginException(nameof(AccountDeactivated));
+
+        public static LoginException NoOrganization() =>
+            new LoginException(nameof(NoOrganization));
     }
 }

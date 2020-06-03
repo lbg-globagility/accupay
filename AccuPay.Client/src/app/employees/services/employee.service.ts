@@ -27,11 +27,13 @@ export class EmployeeService {
   }
 
   getAll(): Observable<Employee[]> {
-    return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute).pipe(
-      map((data) => {
-        return data.items;
-      })
-    );
+    return this.httpClient
+      .get<PaginatedList<Employee>>(`${this.apiRoute}?all=true`)
+      .pipe(
+        map((data) => {
+          return data.items;
+        })
+      );
   }
 
   getById(id: number): Observable<Employee> {

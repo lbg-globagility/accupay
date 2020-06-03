@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Helpers;
+﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -43,6 +44,8 @@ namespace AccuPay.Data.Entities
         public int Half { get; set; }
 
         public int OrdinalValue { get; set; }
+
+        public PayPeriodStatus Status { get; set; }
 
         public bool SSSWeeklyContribSched { get; set; }
         public bool PhHWeeklyContribSched { get; set; }

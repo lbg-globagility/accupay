@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class PositionDataService : BaseDataService
+    public class PositionDataService : BaseDataService<Position>
     {
         private readonly PositionRepository _positionRepository;
         private readonly EmployeeRepository _employeeRepository;
         private readonly DivisionDataService _divisionService;
 
-        public PositionDataService(PositionRepository positionRepository, EmployeeRepository employeeRepository, DivisionDataService divisionService)
+        public PositionDataService(PositionRepository positionRepository, EmployeeRepository employeeRepository, DivisionDataService divisionService) : base(positionRepository)
         {
             _positionRepository = positionRepository;
 
@@ -37,7 +37,7 @@ namespace AccuPay.Data.Services
             await _positionRepository.DeleteAsync(position);
         }
 
-        public async Task SaveAsync(Position position)
+        protected override async Task SanitizeEntity(Position position)
         {
             if (position.DivisionID == null)
                 throw new BusinessLogicException("Division is required.");
@@ -60,8 +60,6 @@ namespace AccuPay.Data.Services
                     throw new BusinessLogicException("Position name already exists!");
                 }
             }
-
-            await _positionRepository.SaveAsync(position);
         }
 
         public async Task<Position> GetByNameOrCreateAsync(string positionName, int organizationId, int userId)

@@ -117,19 +117,6 @@ Public Class AddOfficialBusinessForm
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
     End Sub
 
-    Private Function ValidateSave(newOfficialBusiness As OfficialBusiness) As Boolean
-
-        Dim validationErrorMessage = newOfficialBusiness.Validate()
-
-        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-            MessageBoxHelper.ErrorMessage(validationErrorMessage)
-            Return False
-        End If
-
-        Return True
-
-    End Function
-
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
         If Me._newOfficialBusiness Is Nothing Then Return
 
@@ -153,8 +140,6 @@ Public Class AddOfficialBusinessForm
     Private Async Sub btnAdd_Click(sender As Object, e As EventArgs) Handles btnAddAndNew.Click, btnAddAndClose.Click
 
         ForceDataBindingsCommit()
-
-        If ValidateSave(Me._newOfficialBusiness) = False Then Return
 
         Await FunctionUtils.TryCatchFunctionAsync("New Official Business",
             Async Function()

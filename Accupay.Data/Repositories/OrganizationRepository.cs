@@ -21,6 +21,14 @@ namespace AccuPay.Data.Repositories
             return _context.Organizations.FirstOrDefault(x => x.RowID == id);
         }
 
+        public async Task<Organization> GetFirst(int clientId)
+        {
+            return await _context.Organizations
+                .Where(o => o.ClientId == clientId)
+                .Where(o => o.IsInActive == false)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task<Organization> GetByIdAsync(int id)
         {
             return await _context.Organizations.FirstOrDefaultAsync(x => x.RowID == id);
@@ -38,9 +46,11 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(ICollection<Organization> organizations, int total)> List(PageOptions options)
+        public async Task<(ICollection<Organization> organizations, int total)> List(PageOptions options, int clientId)
         {
-            var query = _context.Organizations.AsQueryable();
+            var query = _context.Organizations
+                .Where(t => t.ClientId == clientId)
+                .Where(o => o.IsInActive == false);
 
             var organizations = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();

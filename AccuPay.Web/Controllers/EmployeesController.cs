@@ -5,7 +5,6 @@ using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 

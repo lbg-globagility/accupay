@@ -12,7 +12,7 @@ Namespace Benchmark
 
     Public Class BenchmarkPayrollHelper
 
-        Private _loanScheduleRepository As LoanScheduleRepository
+        Private _loanService As LoanDataService
         Private _productRepository As ProductRepository
 
         Private _pagibigLoanId As Integer
@@ -40,7 +40,7 @@ Namespace Benchmark
 
         Private Sub New()
 
-            _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+            _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
             _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
@@ -117,7 +117,7 @@ Namespace Benchmark
         ''' </summary>
         Public Async Function CleanEmployee(employeeId As Integer) As Task
 
-            Await _loanScheduleRepository.
+            Await _loanService.
                     DeleteAllLoansExceptGovernmentLoansAsync(employeeId:=employeeId,
                                                             pagibigLoanId:=_pagibigLoanId,
                                                             ssLoanId:=_sssLoanId)

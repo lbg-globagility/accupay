@@ -1,20 +1,15 @@
 ﻿using AccuPay.Utilities.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeeovertime")]
-    public class Overtime
+    public class Overtime : BaseEntity
     {
         public const string StatusApproved = "Approved";
 
         public const string StatusPending = "Pending";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 

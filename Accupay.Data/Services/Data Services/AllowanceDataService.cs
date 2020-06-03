@@ -9,18 +9,16 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class AllowanceDataService
+    public class AllowanceDataService : BaseDataService<Allowance>
     {
         private readonly AllowanceRepository _repository;
         private readonly PayrollContext _context;
 
-        public AllowanceDataService(AllowanceRepository repository, PayrollContext context)
+        public AllowanceDataService(AllowanceRepository repository, PayrollContext context) : base(repository)
         {
             _repository = repository;
             _context = context;
         }
-
-        #region CRUD
 
         public async Task DeleteAsync(int allowanceId)
         {
@@ -32,27 +30,16 @@ namespace AccuPay.Data.Services
             await _repository.DeleteAsync(allowance);
         }
 
-        public async Task SaveAsync(Allowance allowance)
+        protected override async Task SanitizeEntity(Allowance allowance)
         {
-            await SanitizeEntity(allowance);
+            if (allowance.IsOneTime)
+                allowance.EffectiveEndDate = allowance.EffectiveStartDate;
 
-            await _repository.SaveAsync(allowance);
-        }
-
-        public async Task SaveManyAsync(List<Allowance> allowances)
-        {
-            allowances.ForEach(async (x) => await SanitizeEntity(x));
-
-            await _repository.SaveManyAsync(allowances);
-        }
-
-        private async Task SanitizeEntity(Allowance allowance)
-        {
             if (allowance.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
 
             if (allowance.EmployeeID == null)
-                throw new BusinessLogicException("Employee does not exists.");
+                throw new BusinessLogicException("Employee is required.");
 
             if (_repository.GetFrequencyList().Contains(allowance.AllowanceFrequency) == false)
                 throw new BusinessLogicException("Invalid frequency.");
@@ -60,24 +47,24 @@ namespace AccuPay.Data.Services
             if (allowance.ProductID == null)
                 throw new BusinessLogicException("Allowance type is required.");
 
-            var product = await _context.Products.
-                                    Where(p => p.RowID == allowance.ProductID).
-                                    FirstOrDefaultAsync();
-
-            if (product == null)
-                throw new BusinessLogicException("The selected allowance type no longer exists.");
-
             if (allowance.EffectiveEndDate != null && allowance.EffectiveStartDate > allowance.EffectiveEndDate)
                 throw new BusinessLogicException("Start date cannot be greater than end date.");
 
             if (allowance.Amount < 0)
                 throw new BusinessLogicException("Amount cannot be less than 0.");
 
+            var product = await _context.Products
+                                        .Where(p => p.RowID == allowance.ProductID)
+                                        .FirstOrDefaultAsync();
+
+            if (product == null)
+                throw new BusinessLogicException("The selected allowance type no longer exists.");
+
             if (allowance.IsMonthly && !product.Fixed)
                 throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
         }
 
-        #endregion CRUD
+        #region Queries
 
         public async Task<Allowance> GetByIdAsync(int allowanceId)
         {
@@ -108,5 +95,7 @@ namespace AccuPay.Data.Services
         {
             return await _repository.CheckIfAlreadyUsedAsync(allowanceId);
         }
+
+        #endregion Queries
     }
 }

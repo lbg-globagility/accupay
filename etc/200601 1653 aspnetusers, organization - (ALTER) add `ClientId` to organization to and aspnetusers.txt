@@ -1,0 +1,21 @@
+INSERT INTO `client` (`Name`)
+VALUES ('Default');
+
+SET @lastInsertId = LAST_INSERT_ID();
+
+ALTER TABLE `aspnetusers`
+	ADD COLUMN `ClientId` INT NOT NULL AFTER `UpdatedById`;
+UPDATE `aspnetusers`
+	SET `ClientId` = @lastInsertId;
+ALTER TABLE `aspnetusers`
+	ADD CONSTRAINT `FK_aspnetusers_client_ClientId` FOREIGN KEY (`ClientId`) REFERENCES `client` (`Id`);
+	
+ALTER TABLE `organization`
+	ADD COLUMN `ClientId` INT NOT NULL AFTER `IsAgency`;
+UPDATE `organization`
+	SET `ClientId` = @lastInsertId;
+ALTER TABLE `organization`
+	ADD CONSTRAINT `FK_organization_client_ClientId` FOREIGN KEY (`ClientId`) REFERENCES `client` (`Id`);
+
+ALTER TABLE `aspnetusers`
+	DROP COLUMN `OrganizationId`;

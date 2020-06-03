@@ -1,0 +1,38 @@
+<h2>Start Payroll</h2>
+
+<form [formGroup]="form">
+  <div class="row">
+    <mat-form-field appearance="outline" color="accent" class="col-lg-12">
+      <mat-label>Cutoff Start</mat-label>
+      <input
+        matInput
+        [matDatepicker]="cutoffStart"
+        formControlName="cutoffStart"
+      />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="cutoffStart"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #cutoffStart></mat-datepicker>
+      <mat-error>Cutoff start is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="outline" color="accent" class="col-lg-12">
+      <mat-label>Cutoff End</mat-label>
+      <input matInput [matDatepicker]="cutoffEnd" formControlName="cutoffEnd" />
+      <mat-datepicker-toggle
+        matSuffix
+        [for]="cutoffEnd"
+      ></mat-datepicker-toggle>
+      <mat-datepicker #cutoffEnd></mat-datepicker>
+      <mat-error>Cutoff end is required</mat-error>
+    </mat-form-field>
+  </div>
+</form>
+
+<mat-dialog-actions align="end">
+  <button mat-button color="accent" (click)="start()">START</button>
+  <button mat-button [mat-dialog-close]="null">CANCEL</button>
+</mat-dialog-actions>

@@ -65,7 +65,8 @@ import { TimeLogListComponent } from 'src/app/time-logs/time-log-list/time-log-l
 import { ViewTimeLogComponent } from 'src/app/time-logs/view-time-log/view-time-log.component';
 import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
 import { NewTimeLogComponent } from 'src/app/time-logs/new-time-log/new-time-log.component';
-
+import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
+import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 
 const routes: Routes = [
   {
@@ -123,18 +124,6 @@ const routes: Routes = [
       {
         path: 'leaves',
         component: LeaveListComponent,
-      },
-      {
-        path: 'leaves/new',
-        component: NewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id',
-        component: ViewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id/edit',
-        component: EditLeaveComponent,
       },
       {
         path: 'official-businesses',
@@ -307,6 +296,14 @@ const routes: Routes = [
       {
         path: 'calendars/:id/edit',
         component: EditCalendarComponent,
+      },
+      {
+        path: 'payroll',
+        component: PayrollComponent,
+      },
+      {
+        path: 'payroll/:id',
+        component: ViewPayperiodComponent,
       },
     ],
     canActivate: [AuthGuard],

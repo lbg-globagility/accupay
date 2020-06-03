@@ -168,6 +168,12 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
+        internal async Task<Product> GetByIdAsync(int id)
+        {
+            return await _context.Products
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
         public async Task<Product> GetOrCreateAdjustmentTypeAsync(string adjustmentTypeName, int organizationId, int userId)
         {
             return await GetOrCreateTypeAsync(categoryName: ProductConstant.ADJUSTMENT_TYPE_CATEGORY,

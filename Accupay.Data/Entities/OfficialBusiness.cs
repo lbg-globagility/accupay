@@ -1,21 +1,15 @@
 ﻿using AccuPay.Utilities.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeeofficialbusiness")]
-    public class OfficialBusiness
+    public class OfficialBusiness : BaseEntity
     {
         public const string StatusApproved = "Approved";
 
         public const string StatusPending = "Pending";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
@@ -102,35 +96,6 @@ namespace AccuPay.Data.Entities
             {
                 EndDate = EndTime < StartTime ? ProperStartDate.AddDays(1) : StartDate;
             }
-        }
-
-        public string Validate()
-        {
-            if (StartDate == null && EndDate == null)
-                return "Start Date and End Date cannot be both empty.";
-
-            if (StartDate != null && StartTime == null)
-                return "Start Time cannot be empty if Start Date has value.";
-
-            if (EndDate != null && EndTime == null)
-                return "End Time cannot be empty if End Date has value.";
-
-            if (StartTime != null && StartDate == null)
-                return "Start Date cannot be empty if Start Time has value.";
-
-            if (EndTime != null && EndDate == null)
-                return "End Date cannot be empty if End Time has value.";
-
-            if (StartDate != null && EndDate != null && StartDate.Value.Date.Add(StartTime.Value.StripSeconds()) >= EndDate.Value.Date.Add(EndTime.Value.StripSeconds()))
-                return "Start date and time cannot be greater than or equal to End date and time.";
-
-            if (new string[] { StatusPending, StatusApproved }.Contains(Status) == false)
-            {
-                return "Status is not valid.";
-            }
-
-            // Means no error
-            return null;
         }
     }
 }
