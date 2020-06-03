@@ -123,18 +123,6 @@ const routes: Routes = [
         component: LeaveListComponent,
       },
       {
-        path: 'leaves/new',
-        component: NewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id',
-        component: ViewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id/edit',
-        component: EditLeaveComponent,
-      },
-      {
         path: 'official-businesses',
         component: OfficialBusinessListComponent,
       },

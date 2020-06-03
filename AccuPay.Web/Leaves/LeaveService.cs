@@ -110,6 +110,7 @@ namespace AccuPay.Web.Leaves
             return new LeaveDto()
             {
                 Id = leave.RowID.Value,
+                EmployeeId = leave.EmployeeID,
                 EmployeeNumber = leave.Employee?.EmployeeNo,
                 EmployeeName = leave.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = leave.Employee?.EmployeeType,
