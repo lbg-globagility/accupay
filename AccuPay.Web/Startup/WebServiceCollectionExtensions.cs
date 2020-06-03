@@ -13,6 +13,7 @@ using AccuPay.Web.Loans;
 using AccuPay.Web.OfficialBusinesses;
 using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
+using AccuPay.Web.Payroll;
 using AccuPay.Web.Positions;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Shifts.Services;
@@ -45,6 +46,8 @@ namespace AccuPay.Web
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();
             services.AddScoped<TimeLogService>();
+            services.AddScoped<PayperiodService>();
+            services.AddScoped<PaystubService>();
 
             services.AddScoped<JwtConfiguration>();
             services.AddScoped<EmailConfiguration>();

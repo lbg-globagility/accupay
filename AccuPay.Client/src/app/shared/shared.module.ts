@@ -5,10 +5,12 @@ import { MaterialModule } from 'src/app/shared/material.module';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
+import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
+import { StatusComponent } from 'src/app/shared/components/status/status.component';
 
 @NgModule({
   declarations: [
-    // StatusComponent,
+    StatusComponent,
     // LocalePipe,
     // SanitizerPipe,
     // BytesPipe,
@@ -19,7 +21,7 @@ import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
     // UserMiniInfoComponent,
     // ImageResizerDialogComponent,
     // PreviewDialogComponent,
-    // ImgFallbackDirective,
+    ImgFallbackDirective,
   ],
   imports: [
     CommonModule,
@@ -36,8 +38,8 @@ import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
-    // ImgFallbackDirective,
-    // StatusComponent,
+    ImgFallbackDirective,
+    StatusComponent,
     // UserMiniInfoComponent,
     CommonModule,
     FormsModule,

@@ -141,44 +141,43 @@ namespace AccuPay.Data.Services
         }
 
         public async Task Load(int payPeriodId,
-                                int organizationId,
-                                int userId,
-                                DateTime payDateFrom,
-                                DateTime payDateTo)
+                               int organizationId,
+                               int userId)
         {
             _payPeriodId = payPeriodId;
             _organizationId = organizationId;
             _userId = userId;
-            _payDateFrom = payDateFrom;
-            _payDateTo = payDateTo;
-
-            _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
 
             // LoadPayPeriod() should be executed before LoadSocialSecurityBrackets() and LoadLoanSchedules()
             await LoadPayPeriod();
 
-            await Task.WhenAll(new[] {
-                    LoadActualTimeEntries(),
-                    LoadAllowances(),
-                    LoadBpiInsuranceProduct(),
-                    LoadDivisionMinimumWages(),
-                    LoadEmployees(),
-                    LoadFilingStatuses(),
-                    LoadLeaves(),
-                    LoadListOfValueCollection().
-                            ContinueWith(async (x)=> { await LoadCalendarCollection(); }),
-                    LoadPaystubs().
-                            ContinueWith(async (x)=> { await LoadLoanSchedules(); }),
-                    LoadPhilHealthBrackets(),
-                    LoadPreviousPaystubs(),
-                    LoadSalaries(),
-                    LoadSickLeaveProduct(),
-                    LoadSocialSecurityBrackets(),
-                    LoadSystemOwner(),
-                    LoadTimeEntries(),
-                    LoadVacationLeaveProduct(),
-                    LoadWithholdingTaxBrackets()
-                });
+            _payDateFrom = PayPeriod.PayFromDate;
+            _payDateTo = PayPeriod.PayToDate;
+
+            _payPeriodSpan = new TimePeriod(_payDateFrom, _payDateTo);
+
+            await LoadActualTimeEntries();
+            await LoadAllowances();
+            await LoadBpiInsuranceProduct();
+            await LoadDivisionMinimumWages();
+            await LoadEmployees();
+            await LoadFilingStatuses();
+            await LoadLeaves();
+            await LoadListOfValueCollection();
+            // LoadCalendarCollection() should be executed following list of values
+            await LoadCalendarCollection();
+            await LoadPaystubs();
+            // LoadSchedules() should be executed following paystubs
+            await LoadLoanSchedules();
+            await LoadPhilHealthBrackets();
+            await LoadPreviousPaystubs();
+            await LoadSalaries();
+            await LoadSickLeaveProduct();
+            await LoadSocialSecurityBrackets();
+            await LoadSystemOwner();
+            await LoadTimeEntries();
+            await LoadVacationLeaveProduct();
+            await LoadWithholdingTaxBrackets();
         }
 
         private async Task LoadAllowances()

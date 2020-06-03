@@ -1,0 +1,58 @@
+@import "styles/variables";
+
+@mixin create-status($status, $color) {
+  [data-status="#{$status}"] {
+    background: $color;
+  }
+}
+
+@mixin create-status2($type, $status, $color) {
+  [data-type="#{$type}"][data-status="#{$status}"] {
+    background: $color;
+  }
+}
+
+:host {
+  display: inline-block;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: white;
+  text-align: center;
+  font-size: 0.8rem;
+}
+
+@include create-status2("leave", "Pending", app-color(status, red));
+@include create-status2("leave", "Approved", app-color(status, green));
+@include create-status2("leave", "Open", app-color(status, green));
+@include create-status2("leave", "Closed", app-color(status, blue));
+@include create-status2("leave", "Completed", app-color(status, blue));
+
+@include create-status2("Recall", "Unsent", app-color(status, red));
+@include create-status2("Recall", "Incomplete", app-color(status, yellow));
+@include create-status2("Recall", "Open", app-color(status, green));
+@include create-status2("Recall", "Closed", app-color(status, blue));
+@include create-status2("Recall", "Completed", app-color(status, blue));
+
+@include create-status2("Organization", "Pending", app-color(status, yellow));
+@include create-status2("Organization", "Verified", app-color(status, green));
+
+@include create-status2("RecallProvider", "Unsent", app-color(status, yellow));
+@include create-status2("RecallProvider", "Open", app-color(status, green));
+@include create-status2("RecallProvider", "Completed", app-color(status, blue));
+
+@include create-status2("User", "Pending", app-color(status, yellow));
+@include create-status2("User", "Active", app-color(status, green));
+@include create-status2("User", "Deactivated", app-color(status, red));
+@include create-status2("User", "Unregistered", app-color(status, blue));
+
+@include create-status("Pending", #f1c40f);
+@include create-status("Verified", #16a085);
+@include create-status("Active", #16a085);
+@include create-status("Deactivated", #f44336);
+
+@include create-status2("Task", "Unsent", app-color(status, red));
+@include create-status2("Task", "Open", app-color(status, green));
+@include create-status2("Task", "Completed", app-color(status, blue));

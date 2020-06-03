@@ -10,15 +10,12 @@ namespace AccuPay.Web.Controllers
     public class AccountController : ControllerBase
     {
         private readonly AccountService _accountService;
-        private readonly UserService _userService;
         private readonly UserTokenService _userTokenService;
 
         public AccountController(AccountService accountService,
-                                 UserService userService,
                                  UserTokenService userTokenService)
         {
             _accountService = accountService;
-            _userService = userService;
             _userTokenService = userTokenService;
         }
 
@@ -28,6 +25,21 @@ namespace AccuPay.Web.Controllers
             try
             {
                 var token = await _accountService.Login(dto.Email, dto.Password);
+
+                return new AccessTokenDto() { Token = token };
+            }
+            catch (LoginException ex)
+            {
+                return BadRequest(new { ErrorType = ex.Message });
+            }
+        }
+
+        [HttpPost("change-organization")]
+        public async Task<ActionResult<AccessTokenDto>> ChangeOrganization([FromBody] ChangeOrganizationDto dto)
+        {
+            try
+            {
+                var token = await _accountService.ChangeOrganization(dto.OrganizationId);
 
                 return new AccessTokenDto() { Token = token };
             }

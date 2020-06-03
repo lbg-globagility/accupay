@@ -1,4 +1,4 @@
-@import 'styles/variables';
+@import "styles/variables";
 
 /** Don't remove comment below, or else grid layout will not work in IE */
 /* autoprefixer grid: autoplace */
@@ -15,23 +15,27 @@
 .layout {
   display: grid;
   height: 100%;
+  overflow: hidden;
 
   grid-template-rows: auto 1fr;
   grid-template-columns: 200px 1fr;
   grid-template-areas:
-    'topbar topbar'
-    'sidebar content';
+    "topbar topbar"
+    "sidebar content";
 }
 
 .topbar {
   grid-area: topbar;
+  z-index: 1;
 }
 
 .sidebar {
   grid-area: sidebar;
+  overflow: auto;
 }
 
 .content {
   grid-area: content;
+  overflow: auto;
   padding: $app-space-2;
 }

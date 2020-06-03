@@ -12,79 +12,96 @@ interface MenuItem {
 
 const menuItems: MenuItem[] = [
   {
-    label: 'Organizations',
-    route: '/organizations',
-    icon: 'person',
+    label: 'HR',
+    icon: 'supervisor_account',
+    items: [
+      {
+        label: 'Employees',
+        route: '/employees',
+      },
+      {
+        label: 'Divisions',
+        route: '/divisions',
+      },
+      {
+        label: 'Positions',
+        route: '/positions',
+      },
+      {
+        label: 'Organizations',
+        route: '/organizations',
+      },
+      {
+        label: 'Branches',
+        route: '/branches',
+      },
+      {
+        label: 'Calendars',
+        route: '/calendars',
+        icon: 'person',
+      },
+    ],
   },
   {
-    label: 'Branches',
-    route: '/branches',
-    icon: 'person',
+    label: 'Timekeeping',
+    icon: 'access_time',
+    items: [
+      {
+        label: 'Shifts',
+        route: '/shifts',
+      },
+      {
+        label: 'Time Logs',
+        route: '/time-logs',
+      },
+      {
+        label: 'Overtimes',
+        route: '/overtimes',
+      },
+      {
+        label: 'Leaves',
+        route: '/leaves',
+      },
+      {
+        label: 'Official Business',
+        route: '/official-businesses',
+      },
+    ],
   },
   {
-    label: 'Calendars',
-    route: '/calendars',
-    icon: 'person',
+    label: 'Payroll',
+    icon: 'payments',
+    items: [
+      {
+        label: 'Payroll',
+        route: '/payroll',
+      },
+      {
+        label: 'Salaries',
+        route: '/salaries',
+        icon: 'person',
+      },
+      {
+        label: 'Allowances',
+        route: '/allowances',
+        icon: 'person',
+      },
+      {
+        label: 'Loans',
+        route: '/loans',
+        icon: 'person',
+      },
+    ],
   },
   {
-    label: 'Divisions',
-    route: '/divisions',
-    icon: 'person',
-  },
-  {
-    label: 'Positions',
-    route: '/positions',
-    icon: 'person',
-  },
-  {
-    label: 'Employees',
-    route: '/employees',
-    icon: 'person',
-  },
-  {
-    label: 'Users',
-    route: '/users',
-    icon: 'person',
-  },
-  {
-    label: 'Salaries',
-    route: '/salaries',
-    icon: 'person',
-  },
-  {
-    label: 'Leaves',
-    route: '/leaves',
-    icon: 'person',
-  },
-  {
-    label: 'Official Business',
-    route: '/official-businesses',
-    icon: 'person',
-  },
-  {
-    label: 'Overtimes',
-    route: '/overtimes',
-    icon: 'person',
-  },
-  {
-    label: 'Shifts',
-    route: '/shifts',
-    icon: 'person',
-  },
-  {
-    label: 'Time Logs',
-    route: '/time-logs',
-    icon: 'person',
-  },
-  {
-    label: 'Allowances',
-    route: '/allowances',
-    icon: 'person',
-  },
-  {
-    label: 'Loans',
-    route: '/loans',
-    icon: 'person',
+    label: 'Security',
+    icon: 'security',
+    items: [
+      {
+        label: 'Users',
+        route: '/users',
+      },
+    ],
   },
 ];
 
