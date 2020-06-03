@@ -74,9 +74,9 @@ Public Class ImportOvertimeForm
 
         For Each record In records
             'TODO: this is an N+1 query problem. Refactor this
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-            If employee Is Nothing Then
+            If employee?.RowID Is Nothing Then
 
                 record.ErrorMessage = "Employee number does not exist."
                 rejectedRecords.Add(record)
@@ -86,29 +86,31 @@ Public Class ImportOvertimeForm
 
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
-            record.EmployeeID = employee.EmployeeNo
+            record.EmployeeNumber = employee.EmployeeNo
 
-            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+            Dim overtime = ConvertToOvertime(record, employee.RowID.Value)
 
+            If overtime Is Nothing Then
+
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
+                rejectedRecords.Add(record)
                 Continue For
-
             End If
 
-            'For database
-            Dim newOvertime = New Overtime With {
-                .RowID = Nothing,
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .EmployeeID = employee.RowID,
-                .OTStartDate = record.StartDate.Value,
-                .OTEndDate = record.EndDate.Value,
-                .OTStartTime = record.StartTime,
-                .OTEndTime = record.EndTime,
-                .Status = Overtime.StatusApproved
-            }
+            Dim validationErrorMessage = ValidateOvertime(overtime)
+
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                record.ErrorMessage = validationErrorMessage
+                rejectedRecords.Add(record)
+                Continue For
+            End If
 
             acceptedRecords.Add(record)
-            _overtimes.Add(newOvertime)
+            _overtimes.Add(overtime)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
@@ -123,63 +125,34 @@ Public Class ImportOvertimeForm
 
     End Sub
 
-    Private Function CheckIfRecordIsValid(record As OvertimeRowRecord, rejectedRecords As List(Of OvertimeRowRecord)) As Boolean
+    Private Function ConvertToOvertime(record As OvertimeRowRecord, employeeId As Integer) As Overtime
 
-        'Start Date and End Date is not nullable for Overtime so this validations
-        'will not be checked by the overtime Class
         If record.StartDate Is Nothing Then
 
-            record.ErrorMessage = "Effective Start Date cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Start Date cannot be empty."
+            Return Nothing
         End If
 
         If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
 
-            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+            Return Nothing
         End If
 
-        If record.EndDate Is Nothing Then
-
-            record.ErrorMessage = "Effective End Date cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        Dim overtime = record.ToOvertime()
-
-        If overtime Is Nothing Then
-            record.ErrorMessage = "Cannot parse data."
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        Dim validationErrorMessage = ValidateOvertime(overtime)
-
-        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-            record.ErrorMessage = validationErrorMessage
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        Return True
+        Return record.ToOvertime(employeeId)
     End Function
 
-    Private Function ValidateOvertime(overtime As Overtime) As String
-        If overtime.OTStartTime Is Nothing Then Return "Start Time cannot be empty."
+    Private Function ValidateOvertime(ByVal overtime As Overtime) As String
+        If overtime.OrganizationID Is Nothing Then Return "Organization is required."
+        If overtime.EmployeeID Is Nothing Then Return "Employee is required."
+        If overtime.OTStartTime Is Nothing Then Return "Start Time is required."
+        If overtime.OTEndTime Is Nothing Then Return "End Time is required."
 
-        If overtime.OTEndTime Is Nothing Then Return "End Time cannot be empty."
-
-        If overtime.OTStartDate.Date.Add(overtime.OTStartTime.Value.StripSeconds()) >=
-                    overtime.OTEndDate.Date.Add(overtime.OTEndTime.Value.StripSeconds()) Then
-
-            Return "Start date and time cannot be greater than or equal to End date and time."
+        If {Overtime.StatusPending, Overtime.StatusApproved}.Contains(overtime.Status) = False Then
+            Return "Status is not valid."
         End If
 
-        Dim validStatuses = {Overtime.StatusPending, Overtime.StatusApproved}
-        If validStatuses.Contains(overtime.Status) = False Then Return "Status is not valid."
+        If overtime.OTStartTime = overtime.OTEndTime Then Return "End Time cannot be equal to Start Time"
 
         Return Nothing
     End Function

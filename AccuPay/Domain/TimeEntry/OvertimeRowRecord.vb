@@ -2,7 +2,6 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Infrastructure.Services.Excel
-Imports AccuPay.Utilities
 
 Public Class OvertimeRowRecord
     Implements IExcelRowRecord
@@ -11,7 +10,7 @@ Public Class OvertimeRowRecord
     Public Property EmployeeFullName As String
 
     <ColumnName("Employee ID")>
-    Public Property EmployeeID As String
+    Public Property EmployeeNumber As String
 
     <ColumnName("Effective start date")>
     Public Property StartDate As Date?
@@ -28,33 +27,24 @@ Public Class OvertimeRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
-    Public ReadOnly Property EndDate As Date?
-        Get
-            If StartDate.HasValue = False Then
-                Return Nothing
-            ElseIf StartTime.HasValue = False OrElse EndTime.HasValue = False Then
-                Return StartDate
-            ElseIf StartTime.HasValue = False AndAlso EndTime.HasValue = False Then
-                Return StartDate
-            Else
-                Return If(EndTime < StartTime, StartDate.Value.AddDays(1), StartDate)
-            End If
-        End Get
-    End Property
+    Public Function ToOvertime(employeeId As Integer) As Overtime
 
-    Public Function ToOvertime() As Overtime
+        If StartDate Is Nothing Then Return Nothing
 
-        If StartDate Is Nothing OrElse EndDate Is Nothing Then
-            Return Nothing
-        End If
-
-        Return New Overtime With {
+        Dim newOvertime = New Overtime With {
+            .RowID = Nothing,
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .EmployeeID = employeeId,
             .OTStartDate = StartDate.Value,
-            .OTEndDate = EndDate.Value,
             .OTStartTime = StartTime,
             .OTEndTime = EndTime,
-            .EmployeeID = ObjectUtils.ToNullableInteger(EmployeeID)
+            .Status = Overtime.StatusApproved
         }
+
+        newOvertime.UpdateEndDate()
+
+        Return newOvertime
     End Function
 
 End Class

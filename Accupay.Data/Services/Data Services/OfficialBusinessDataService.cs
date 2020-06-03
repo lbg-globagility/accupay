@@ -11,18 +11,16 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class OfficialBusinessDataService : BaseDataService
+    public class OfficialBusinessDataService : BaseDataService<OfficialBusiness>
     {
         private readonly OfficialBusinessRepository _repository;
         private readonly PayrollContext _context;
 
-        public OfficialBusinessDataService(OfficialBusinessRepository repository, PayrollContext context)
+        public OfficialBusinessDataService(OfficialBusinessRepository repository, PayrollContext context) : base(repository)
         {
             _repository = repository;
             _context = context;
         }
-
-        #region CRUD
 
         public async Task DeleteAsync(int officialBusinessId)
         {
@@ -34,24 +32,7 @@ namespace AccuPay.Data.Services
             await _repository.DeleteAsync(officialBusiness);
         }
 
-        public async Task SaveAsync(OfficialBusiness officialBusiness)
-        {
-            await SanitizeEntity(officialBusiness);
-
-            await _repository.SaveAsync(officialBusiness);
-        }
-
-        public async Task SaveManyAsync(List<OfficialBusiness> officialBusinesses)
-        {
-            foreach (var officialBusiness in officialBusinesses)
-            {
-                await SanitizeEntity(officialBusiness);
-            }
-
-            await _repository.SaveManyAsync(officialBusinesses);
-        }
-
-        private async Task SanitizeEntity(OfficialBusiness officialBusiness)
+        protected override async Task SanitizeEntity(OfficialBusiness officialBusiness)
         {
             if (officialBusiness.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
@@ -68,9 +49,11 @@ namespace AccuPay.Data.Services
             if (officialBusiness.EndTime == null)
                 throw new BusinessLogicException("End Time is required.");
 
-            string[] validStatuses = { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved };
-            if (validStatuses.Contains(officialBusiness.Status) == false)
+            if (new string[] { OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved }
+                            .Contains(officialBusiness.Status) == false)
+            {
                 throw new BusinessLogicException("Status is not valid.");
+            }
 
             var doesExistQuery = _context.OfficialBusinesses
                                     .Where(l => l.EmployeeID == officialBusiness.EmployeeID)
@@ -87,10 +70,13 @@ namespace AccuPay.Data.Services
             officialBusiness.StartTime = officialBusiness.StartTime.Value.StripSeconds();
             officialBusiness.EndTime = officialBusiness.EndTime.Value.StripSeconds();
 
+            if (officialBusiness.StartTime == officialBusiness.EndTime)
+                throw new BusinessLogicException("End Time cannot be equal to Start Time");
+
             officialBusiness.UpdateEndDate();
         }
 
-        #endregion CRUD
+        #region Queries
 
         public async Task<OfficialBusiness> GetByIdAsync(int officialBusinessId)
         {
@@ -116,5 +102,7 @@ namespace AccuPay.Data.Services
         {
             return _repository.GetStatusList();
         }
+
+        #endregion Queries
     }
 }

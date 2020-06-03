@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class LoanDataService : BaseDataService
+    public class LoanDataService : BaseDataService<LoanSchedule>
     {
         private readonly LoanScheduleRepository _loanRepository;
 
@@ -24,7 +24,7 @@ namespace AccuPay.Data.Services
         public LoanDataService(LoanScheduleRepository loanRepository,
                                 PayrollContext context,
                                 SystemOwnerService systemOwnerService,
-                                ProductRepository productRepository)
+                                ProductRepository productRepository) : base(loanRepository)
         {
             _loanRepository = loanRepository;
             _context = context;
@@ -33,17 +33,6 @@ namespace AccuPay.Data.Services
         }
 
         #region CRUD
-
-        public async Task TryAsync()
-        {
-            var loanName = (await _productRepository
-                                    .GetByIdAsync(115))
-                                    ;
-
-            var oldLoan = await _loanRepository.GetByIdAsync(1805);
-
-            Console.WriteLine(loanName);
-        }
 
         public async Task DeleteAsync(int loanId)
         {
@@ -72,24 +61,7 @@ namespace AccuPay.Data.Services
                                                             ssLoanId: ssLoanId);
         }
 
-        public async Task SaveAsync(LoanSchedule loan)
-        {
-            await SanitizeEntity(loan);
-
-            await _loanRepository.SaveAsync(loan);
-        }
-
-        public async Task SaveManyAsync(List<LoanSchedule> loans)
-        {
-            foreach (var loan in loans)
-            {
-                await SanitizeEntity(loan);
-            }
-
-            await _loanRepository.SaveManyAsync(loans);
-        }
-
-        private async Task SanitizeEntity(LoanSchedule loan)
+        protected override async Task SanitizeEntity(LoanSchedule loan)
         {
             Validate(loan);
 
@@ -104,6 +76,7 @@ namespace AccuPay.Data.Services
         private async Task SanitizeUpdate(LoanSchedule newLoan)
         {
             var oldLoan = await _loanRepository.GetByIdAsync(newLoan.RowID.Value);
+
             var loanTransactionsCount = await _context.LoanTransactions.
                                             CountAsync(l => l.LoanScheduleID == newLoan.RowID);
 
@@ -121,6 +94,7 @@ namespace AccuPay.Data.Services
             if (oldLoan.TotalBalanceLeft != oldLoan.TotalLoanAmount)// || loanTransactionsCount > 0)
             {
                 newLoan.TotalLoanAmount = oldLoan.TotalLoanAmount;
+                newLoan.TotalBalanceLeft = oldLoan.TotalBalanceLeft;
 
                 // recompute NoOfPayPeriod if TotalLoanAmount changed
                 newLoan.RecomputeTotalPayPeriod();
@@ -202,7 +176,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Loan type is required.");
 
             if (loan.TotalLoanAmount < 0)
-                throw new BusinessLogicException("Tota loan amount cannot be less than 0.");
+                throw new BusinessLogicException("Total loan amount cannot be less than 0.");
 
             if (loan.DeductionAmount < 0)
                 throw new BusinessLogicException("Deduction amount cannot be less than 0.");

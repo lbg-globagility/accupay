@@ -2,7 +2,6 @@
 
 Imports AccuPay.Data.Entities
 Imports AccuPay.Infrastructure.Services.Excel
-Imports AccuPay.Utilities
 
 Public Class OBRowRecord
     Implements IExcelRowRecord
@@ -11,7 +10,7 @@ Public Class OBRowRecord
     Public Property EmployeeFullName As String
 
     <ColumnName("Employee ID")>
-    Public Property EmployeeID As String
+    Public Property EmployeeNumber As String
 
     <ColumnName("Start Date")>
     Public Property StartDate As Date?
@@ -28,37 +27,24 @@ Public Class OBRowRecord
     <Ignore>
     Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
-    <Ignore>
-    Public Property Status As String
+    Friend Function ToOfficialBusiness(employeeId As Integer) As OfficialBusiness
 
-    Public ReadOnly Property EndDate As Date?
-        Get
-            If StartDate.HasValue = False Then
-                Return Nothing
-            ElseIf StartTime.HasValue = False OrElse EndTime.HasValue = False Then
-                Return StartDate
-            ElseIf StartTime.HasValue = False AndAlso EndTime.HasValue = False Then
-                Return StartDate
-            Else
-                Return If(EndTime < StartTime, StartDate.Value.AddDays(1), StartDate)
-            End If
-        End Get
-    End Property
+        If StartDate Is Nothing Then Return Nothing
 
-    Friend Function ToOfficialBusiness() As OfficialBusiness
-
-        If StartDate Is Nothing OrElse StartDate Is Nothing Then
-            Return Nothing
-        End If
-
-        Return New OfficialBusiness With {
+        Dim newOfficialBusiness = New OfficialBusiness With {
+            .RowID = Nothing,
+            .OrganizationID = z_OrganizationID,
+            .CreatedBy = z_User,
+            .EmployeeID = employeeId,
             .StartDate = StartDate.Value,
-            .EndDate = EndDate.Value,
             .StartTime = StartTime,
             .EndTime = EndTime,
-            .EmployeeID = ObjectUtils.ToNullableInteger(EmployeeID),
-            .Status = Status
+            .Status = OfficialBusiness.StatusApproved
         }
+
+        newOfficialBusiness.UpdateEndDate()
+
+        Return newOfficialBusiness
     End Function
 
 End Class

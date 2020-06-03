@@ -9,18 +9,16 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class AllowanceDataService
+    public class AllowanceDataService : BaseDataService<Allowance>
     {
         private readonly AllowanceRepository _repository;
         private readonly PayrollContext _context;
 
-        public AllowanceDataService(AllowanceRepository repository, PayrollContext context)
+        public AllowanceDataService(AllowanceRepository repository, PayrollContext context) : base(repository)
         {
             _repository = repository;
             _context = context;
         }
-
-        #region CRUD
 
         public async Task DeleteAsync(int allowanceId)
         {
@@ -32,25 +30,11 @@ namespace AccuPay.Data.Services
             await _repository.DeleteAsync(allowance);
         }
 
-        public async Task SaveAsync(Allowance allowance)
+        protected override async Task SanitizeEntity(Allowance allowance)
         {
-            await SanitizeEntity(allowance);
+            if (allowance.IsOneTime)
+                allowance.EffectiveEndDate = allowance.EffectiveStartDate;
 
-            await _repository.SaveAsync(allowance);
-        }
-
-        public async Task SaveManyAsync(List<Allowance> allowances)
-        {
-            foreach (var allowance in allowances)
-            {
-                await SanitizeEntity(allowance);
-            }
-
-            await _repository.SaveManyAsync(allowances);
-        }
-
-        private async Task SanitizeEntity(Allowance allowance)
-        {
             if (allowance.OrganizationID == null)
                 throw new BusinessLogicException("Organization is required.");
 
@@ -80,7 +64,7 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Only fixed allowance type are allowed for Monthly allowances.");
         }
 
-        #endregion CRUD
+        #region Queries
 
         public async Task<Allowance> GetByIdAsync(int allowanceId)
         {
@@ -111,5 +95,7 @@ namespace AccuPay.Data.Services
         {
             return await _repository.CheckIfAlreadyUsedAsync(allowanceId);
         }
+
+        #endregion Queries
     }
 }

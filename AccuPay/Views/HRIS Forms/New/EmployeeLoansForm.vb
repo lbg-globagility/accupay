@@ -197,9 +197,7 @@ Public Class EmployeeLoansForm
 
         Dim loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
 
-        If Me._currentLoanTransactions.Count = 0 AndAlso
-            (Me._currentLoan.Status IsNot LoanSchedule.STATUS_CANCELLED OrElse
-            Me._currentLoan.Status IsNot LoanSchedule.STATUS_COMPLETE) Then
+        If Me._currentLoanTransactions.Count = 0 AndAlso IsUnEditable() = False Then
 
             Me._currentLoan.RecomputeTotalPayPeriod()
 
@@ -209,6 +207,12 @@ Public Class EmployeeLoansForm
 
         Me._currentLoan.RecomputePayPeriodLeft()
     End Sub
+
+    Private Function IsUnEditable() As Boolean
+
+        Return Me._currentLoan.Status = LoanSchedule.STATUS_CANCELLED OrElse
+                    Me._currentLoan.Status = LoanSchedule.STATUS_COMPLETE
+    End Function
 
     Private Sub lnlAddLoanType_LinkClicked(sender As Object, e As LinkLabelLinkClickedEventArgs) Handles lnlAddLoanType.LinkClicked
 
@@ -710,14 +714,13 @@ Public Class EmployeeLoansForm
         Dim originalLoanSchedule = Me._changedLoans.
             FirstOrDefault(Function(l) Nullable.Equals(l.RowID, Me._currentLoan.RowID))
 
-        Dim isUneditable As Boolean = False
+        Dim unEditable As Boolean = False
 
         If originalLoanSchedule IsNot Nothing Then
-            isUneditable = originalLoanSchedule.Status = LoanSchedule.STATUS_CANCELLED OrElse
-            originalLoanSchedule.Status = LoanSchedule.STATUS_COMPLETE
+            unEditable = IsUnEditable()
         End If
 
-        DetailsTabLayout.Enabled = Not isUneditable
+        DetailsTabLayout.Enabled = Not unEditable
 
         txtLoanNumber.DataBindings.Clear()
         txtLoanNumber.DataBindings.Add("Text", Me._currentLoan, "LoanNumber")
@@ -727,7 +730,8 @@ Public Class EmployeeLoansForm
 
         txtTotalLoanAmount.DataBindings.Clear()
         txtTotalLoanAmount.DataBindings.Add("Text", Me._currentLoan, "TotalLoanAmount", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N2")
-        If Me._currentLoanTransactions IsNot Nothing AndAlso Me._currentLoanTransactions.Count > 0 Then
+        If (Me._currentLoanTransactions IsNot Nothing AndAlso Me._currentLoanTransactions.Count > 0) OrElse
+            Me._currentLoan.TotalBalanceLeft < Me._currentLoan.TotalLoanAmount Then
             txtTotalLoanAmount.Enabled = False
             txtLoanInterestPercentage.Enabled = False
         Else
@@ -740,9 +744,6 @@ Public Class EmployeeLoansForm
 
         dtpDateFrom.DataBindings.Clear()
         dtpDateFrom.DataBindings.Add("Value", Me._currentLoan, "DedEffectiveDateFrom")
-
-        txtNumberOfPayPeriod.DataBindings.Clear()
-        txtNumberOfPayPeriod.DataBindings.Add("Text", Me._currentLoan, "NoOfPayPeriod", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
 
         txtNumberOfPayPeriodLeft.DataBindings.Clear()
         txtNumberOfPayPeriodLeft.DataBindings.Add("Text", Me._currentLoan, "LoanPayPeriodLeft", True, DataSourceUpdateMode.OnPropertyChanged, Nothing, "N0")
@@ -760,7 +761,7 @@ Public Class EmployeeLoansForm
 
         txtLoanStatus.DataBindings.Clear()
         cmbLoanStatus.DataBindings.Clear()
-        If isUneditable Then
+        If unEditable Then
 
             txtLoanStatus.DataBindings.Add("Text", Me._currentLoan, "Status")
         Else
@@ -771,7 +772,7 @@ Public Class EmployeeLoansForm
         cmbDeductionSchedule.DataBindings.Clear()
         cmbDeductionSchedule.DataBindings.Add("Text", Me._currentLoan, "DeductionSchedule")
 
-        ToggleLoanStatusComboboxVisibility(Not isUneditable)
+        ToggleLoanStatusComboboxVisibility(Not unEditable)
 
     End Sub
 
@@ -814,9 +815,6 @@ Public Class EmployeeLoansForm
 
         dtpDateFrom.ResetText()
         dtpDateFrom.DataBindings.Clear()
-
-        txtNumberOfPayPeriod.Clear()
-        txtNumberOfPayPeriod.DataBindings.Clear()
 
         txtNumberOfPayPeriodLeft.Clear()
         txtNumberOfPayPeriodLeft.DataBindings.Clear()
@@ -876,7 +874,6 @@ Public Class EmployeeLoansForm
             newLoanSchedule.TotalLoanAmount <> oldLoanSchedule.TotalLoanAmount OrElse
             newLoanSchedule.TotalBalanceLeft <> oldLoanSchedule.TotalBalanceLeft OrElse
             newLoanSchedule.DedEffectiveDateFrom <> oldLoanSchedule.DedEffectiveDateFrom OrElse
-            newLoanSchedule.LoanPayPeriodLeft <> oldLoanSchedule.LoanPayPeriodLeft OrElse
             newLoanSchedule.DeductionAmount <> oldLoanSchedule.DeductionAmount OrElse
             newLoanSchedule.Status <> oldLoanSchedule.Status OrElse
             newLoanSchedule.DeductionPercentage <> oldLoanSchedule.DeductionPercentage OrElse

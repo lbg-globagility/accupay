@@ -9,60 +9,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class LoanScheduleRepository : BaseRepository
+    public class LoanScheduleRepository : SavableRepository<LoanSchedule>
     {
-        private readonly PayrollContext _context;
-
-        public LoanScheduleRepository(PayrollContext context)
+        public LoanScheduleRepository(PayrollContext context) : base(context)
         {
-            _context = context;
-        }
-
-        #region CRUD
-
-        internal async Task DeleteAsync(LoanSchedule loan)
-        {
-            _context.Remove(loan);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveAsync(LoanSchedule loan)
-        {
-            SaveFunction(loan);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveManyAsync(List<LoanSchedule> loans)
-        {
-            loans.ForEach(x => SaveFunction(x));
-            await _context.SaveChangesAsync();
-        }
-
-        private void SaveFunction(LoanSchedule loan)
-        {
-            if (loan.Employee != null)
-            {
-                _context.Entry(loan.Employee).State = EntityState.Unchanged;
-            }
-
-            if (loan.LoanType != null)
-            {
-                _context.Entry(loan.LoanType).State = EntityState.Unchanged;
-
-                if (loan.LoanType.CategoryEntity != null)
-                {
-                    _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Unchanged;
-                }
-            }
-
-            if (IsNewEntity(loan.RowID))
-            {
-                _context.LoanSchedules.Add(loan);
-            }
-            else
-            {
-                _context.Entry(loan).State = EntityState.Modified;
-            }
         }
 
         /// <summary>
@@ -85,18 +35,27 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        #endregion CRUD
+        protected override void DetachNavigationProperties(LoanSchedule loan)
+        {
+            if (loan.Employee != null)
+            {
+                _context.Entry(loan.Employee).State = EntityState.Detached;
+            }
+
+            if (loan.LoanType != null)
+            {
+                _context.Entry(loan.LoanType).State = EntityState.Detached;
+
+                if (loan.LoanType.CategoryEntity != null)
+                {
+                    _context.Entry(loan.LoanType.CategoryEntity).State = EntityState.Detached;
+                }
+            }
+        }
 
         #region Queries
 
         #region Single entity
-
-        internal async Task<LoanSchedule> GetByIdAsync(int id)
-        {
-            return await _context.LoanSchedules
-                                .AsNoTracking()
-                                .FirstOrDefaultAsync(l => l.RowID == id);
-        }
 
         internal async Task<LoanSchedule> GetByIdWithEmployeeAndProductAsync(int id)
         {

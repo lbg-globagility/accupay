@@ -23,11 +23,7 @@ Partial Class ImportAllowanceForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle6 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle7 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -36,6 +32,10 @@ Partial Class ImportAllowanceForm
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle14 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle5 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(ImportAllowanceForm))
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.ParsedTabControl = New System.Windows.Forms.TabPage()
@@ -44,25 +44,9 @@ Partial Class ImportAllowanceForm
         Me.SaveButton = New System.Windows.Forms.Button()
         Me.CancelDialogButton = New System.Windows.Forms.Button()
         Me.AllowancesDataGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.ok1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.ok7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.ErrorsTabControl = New System.Windows.Forms.TabPage()
         Me.RejectedRecordsGrid = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.errors1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.errors9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -85,6 +69,22 @@ Partial Class ImportAllowanceForm
         Me.DataGridViewTextBoxColumn19 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn20 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.ok7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors4 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors5 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors6 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors7 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors8 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.errors9 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.ParsedTabControl.SuspendLayout()
         CType(Me.AllowancesDataGrid, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -171,7 +171,7 @@ Partial Class ImportAllowanceForm
         Me.AllowancesDataGrid.BackgroundColor = System.Drawing.Color.White
         Me.AllowancesDataGrid.ColumnHeadersHeight = 34
         Me.AllowancesDataGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.AllowancesDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ok1, Me.ok2, Me.ok3, Me.ok4, Me.ok5, Me.ok6, Me.ok7})
+        Me.AllowancesDataGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.ok2, Me.ok1, Me.ok3, Me.ok4, Me.ok5, Me.ok6, Me.ok7})
         DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle3.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -188,61 +188,6 @@ Partial Class ImportAllowanceForm
         Me.AllowancesDataGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.AllowancesDataGrid.Size = New System.Drawing.Size(890, 367)
         Me.AllowancesDataGrid.TabIndex = 12
-        '
-        'ok1
-        '
-        Me.ok1.DataPropertyName = "EmployeeFullName"
-        Me.ok1.FillWeight = 150.0!
-        Me.ok1.HeaderText = "Employee Name"
-        Me.ok1.Name = "ok1"
-        Me.ok1.ReadOnly = True
-        '
-        'ok2
-        '
-        Me.ok2.DataPropertyName = "EmployeeID"
-        DataGridViewCellStyle1.NullValue = Nothing
-        Me.ok2.DefaultCellStyle = DataGridViewCellStyle1
-        Me.ok2.HeaderText = "Employee ID"
-        Me.ok2.Name = "ok2"
-        Me.ok2.ReadOnly = True
-        '
-        'ok3
-        '
-        Me.ok3.DataPropertyName = "Type"
-        Me.ok3.HeaderText = "Type"
-        Me.ok3.Name = "ok3"
-        Me.ok3.ReadOnly = True
-        '
-        'ok4
-        '
-        Me.ok4.DataPropertyName = "EffectiveStartDate"
-        Me.ok4.HeaderText = "Start date"
-        Me.ok4.Name = "ok4"
-        Me.ok4.ReadOnly = True
-        '
-        'ok5
-        '
-        Me.ok5.DataPropertyName = "EffectiveEndDate"
-        Me.ok5.HeaderText = "End date"
-        Me.ok5.Name = "ok5"
-        Me.ok5.ReadOnly = True
-        '
-        'ok6
-        '
-        Me.ok6.DataPropertyName = "AllowanceFrequency"
-        Me.ok6.HeaderText = "Frequency"
-        Me.ok6.Name = "ok6"
-        Me.ok6.ReadOnly = True
-        '
-        'ok7
-        '
-        Me.ok7.DataPropertyName = "Amount"
-        DataGridViewCellStyle2.Format = "N2"
-        DataGridViewCellStyle2.NullValue = Nothing
-        Me.ok7.DefaultCellStyle = DataGridViewCellStyle2
-        Me.ok7.HeaderText = "Amount"
-        Me.ok7.Name = "ok7"
-        Me.ok7.ReadOnly = True
         '
         'lblStatus
         '
@@ -278,7 +223,7 @@ Partial Class ImportAllowanceForm
         Me.RejectedRecordsGrid.BackgroundColor = System.Drawing.Color.White
         Me.RejectedRecordsGrid.ColumnHeadersHeight = 34
         Me.RejectedRecordsGrid.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.RejectedRecordsGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.errors1, Me.errors2, Me.errors3, Me.errors4, Me.errors5, Me.errors6, Me.errors7, Me.errors8, Me.errors9})
+        Me.RejectedRecordsGrid.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.errors1, Me.errors2, Me.errors4, Me.errors3, Me.errors5, Me.errors6, Me.errors7, Me.errors8, Me.errors9})
         DataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle6.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -297,77 +242,6 @@ Partial Class ImportAllowanceForm
         Me.RejectedRecordsGrid.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.RejectedRecordsGrid.Size = New System.Drawing.Size(890, 431)
         Me.RejectedRecordsGrid.TabIndex = 13
-        '
-        'errors1
-        '
-        Me.errors1.DataPropertyName = "LineNumber"
-        Me.errors1.FillWeight = 60.0!
-        Me.errors1.HeaderText = "Line Number"
-        Me.errors1.Name = "errors1"
-        Me.errors1.ReadOnly = True
-        '
-        'errors2
-        '
-        Me.errors2.DataPropertyName = "ErrorMessage"
-        Me.errors2.FillWeight = 180.0!
-        Me.errors2.HeaderText = "Reason"
-        Me.errors2.Name = "errors2"
-        Me.errors2.ReadOnly = True
-        '
-        'errors3
-        '
-        Me.errors3.DataPropertyName = "EmployeeFullName"
-        DataGridViewCellStyle4.NullValue = Nothing
-        Me.errors3.DefaultCellStyle = DataGridViewCellStyle4
-        Me.errors3.FillWeight = 150.0!
-        Me.errors3.HeaderText = "Employee Name"
-        Me.errors3.Name = "errors3"
-        Me.errors3.ReadOnly = True
-        '
-        'errors4
-        '
-        Me.errors4.DataPropertyName = "EmployeeID"
-        Me.errors4.HeaderText = "Employee ID"
-        Me.errors4.Name = "errors4"
-        Me.errors4.ReadOnly = True
-        '
-        'errors5
-        '
-        Me.errors5.DataPropertyName = "Type"
-        Me.errors5.HeaderText = "Type"
-        Me.errors5.Name = "errors5"
-        Me.errors5.ReadOnly = True
-        '
-        'errors6
-        '
-        Me.errors6.DataPropertyName = "EffectiveStartDate"
-        Me.errors6.HeaderText = "Start date"
-        Me.errors6.Name = "errors6"
-        Me.errors6.ReadOnly = True
-        '
-        'errors7
-        '
-        Me.errors7.DataPropertyName = "EffectiveEndDate"
-        Me.errors7.HeaderText = "End date"
-        Me.errors7.Name = "errors7"
-        Me.errors7.ReadOnly = True
-        '
-        'errors8
-        '
-        Me.errors8.DataPropertyName = "AllowanceFrequency"
-        Me.errors8.HeaderText = "Frequency"
-        Me.errors8.Name = "errors8"
-        Me.errors8.ReadOnly = True
-        '
-        'errors9
-        '
-        Me.errors9.DataPropertyName = "Amount"
-        DataGridViewCellStyle5.Format = "N2"
-        DataGridViewCellStyle5.NullValue = Nothing
-        Me.errors9.DefaultCellStyle = DataGridViewCellStyle5
-        Me.errors9.HeaderText = "Amount"
-        Me.errors9.Name = "errors9"
-        Me.errors9.ReadOnly = True
         '
         'DataGridViewTextBoxColumn1
         '
@@ -565,6 +439,132 @@ Partial Class ImportAllowanceForm
         Me.DataGridViewTextBoxColumn22.Name = "DataGridViewTextBoxColumn22"
         Me.DataGridViewTextBoxColumn22.Width = 71
         '
+        'ok2
+        '
+        Me.ok2.DataPropertyName = "EmployeeNumber"
+        DataGridViewCellStyle1.NullValue = Nothing
+        Me.ok2.DefaultCellStyle = DataGridViewCellStyle1
+        Me.ok2.HeaderText = "Employee ID"
+        Me.ok2.Name = "ok2"
+        Me.ok2.ReadOnly = True
+        '
+        'ok1
+        '
+        Me.ok1.DataPropertyName = "EmployeeFullName"
+        Me.ok1.FillWeight = 150.0!
+        Me.ok1.HeaderText = "Employee Name"
+        Me.ok1.Name = "ok1"
+        Me.ok1.ReadOnly = True
+        '
+        'ok3
+        '
+        Me.ok3.DataPropertyName = "Type"
+        Me.ok3.HeaderText = "Type"
+        Me.ok3.Name = "ok3"
+        Me.ok3.ReadOnly = True
+        '
+        'ok4
+        '
+        Me.ok4.DataPropertyName = "EffectiveStartDate"
+        Me.ok4.HeaderText = "Start date"
+        Me.ok4.Name = "ok4"
+        Me.ok4.ReadOnly = True
+        '
+        'ok5
+        '
+        Me.ok5.DataPropertyName = "EffectiveEndDate"
+        Me.ok5.HeaderText = "End date"
+        Me.ok5.Name = "ok5"
+        Me.ok5.ReadOnly = True
+        '
+        'ok6
+        '
+        Me.ok6.DataPropertyName = "AllowanceFrequency"
+        Me.ok6.HeaderText = "Frequency"
+        Me.ok6.Name = "ok6"
+        Me.ok6.ReadOnly = True
+        '
+        'ok7
+        '
+        Me.ok7.DataPropertyName = "Amount"
+        DataGridViewCellStyle2.Format = "N2"
+        DataGridViewCellStyle2.NullValue = Nothing
+        Me.ok7.DefaultCellStyle = DataGridViewCellStyle2
+        Me.ok7.HeaderText = "Amount"
+        Me.ok7.Name = "ok7"
+        Me.ok7.ReadOnly = True
+        '
+        'errors1
+        '
+        Me.errors1.DataPropertyName = "LineNumber"
+        Me.errors1.FillWeight = 60.0!
+        Me.errors1.HeaderText = "Line Number"
+        Me.errors1.Name = "errors1"
+        Me.errors1.ReadOnly = True
+        '
+        'errors2
+        '
+        Me.errors2.DataPropertyName = "ErrorMessage"
+        Me.errors2.FillWeight = 180.0!
+        Me.errors2.HeaderText = "Reason"
+        Me.errors2.Name = "errors2"
+        Me.errors2.ReadOnly = True
+        '
+        'errors4
+        '
+        Me.errors4.DataPropertyName = "EmployeeNumber"
+        Me.errors4.HeaderText = "Employee ID"
+        Me.errors4.Name = "errors4"
+        Me.errors4.ReadOnly = True
+        '
+        'errors3
+        '
+        Me.errors3.DataPropertyName = "EmployeeFullName"
+        DataGridViewCellStyle4.NullValue = Nothing
+        Me.errors3.DefaultCellStyle = DataGridViewCellStyle4
+        Me.errors3.FillWeight = 150.0!
+        Me.errors3.HeaderText = "Employee Name"
+        Me.errors3.Name = "errors3"
+        Me.errors3.ReadOnly = True
+        '
+        'errors5
+        '
+        Me.errors5.DataPropertyName = "Type"
+        Me.errors5.HeaderText = "Type"
+        Me.errors5.Name = "errors5"
+        Me.errors5.ReadOnly = True
+        '
+        'errors6
+        '
+        Me.errors6.DataPropertyName = "EffectiveStartDate"
+        Me.errors6.HeaderText = "Start date"
+        Me.errors6.Name = "errors6"
+        Me.errors6.ReadOnly = True
+        '
+        'errors7
+        '
+        Me.errors7.DataPropertyName = "EffectiveEndDate"
+        Me.errors7.HeaderText = "End date"
+        Me.errors7.Name = "errors7"
+        Me.errors7.ReadOnly = True
+        '
+        'errors8
+        '
+        Me.errors8.DataPropertyName = "AllowanceFrequency"
+        Me.errors8.HeaderText = "Frequency"
+        Me.errors8.Name = "errors8"
+        Me.errors8.ReadOnly = True
+        '
+        'errors9
+        '
+        Me.errors9.DataPropertyName = "Amount"
+        DataGridViewCellStyle5.Format = "N2"
+        DataGridViewCellStyle5.NullValue = Nothing
+        Me.errors9.DefaultCellStyle = DataGridViewCellStyle5
+        Me.errors9.HeaderText = "Amount"
+        Me.errors9.Name = "errors9"
+        Me.errors9.ReadOnly = True
+        '
         'ImportAllowanceForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -616,21 +616,21 @@ Partial Class ImportAllowanceForm
     Friend WithEvents DataGridViewTextBoxColumn11 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn12 As DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn15 As DataGridViewTextBoxColumn
-    Friend WithEvents errors1 As DataGridViewTextBoxColumn
-    Friend WithEvents errors2 As DataGridViewTextBoxColumn
-    Friend WithEvents errors3 As DataGridViewTextBoxColumn
-    Friend WithEvents errors4 As DataGridViewTextBoxColumn
-    Friend WithEvents errors5 As DataGridViewTextBoxColumn
-    Friend WithEvents errors6 As DataGridViewTextBoxColumn
-    Friend WithEvents errors7 As DataGridViewTextBoxColumn
-    Friend WithEvents errors8 As DataGridViewTextBoxColumn
-    Friend WithEvents errors9 As DataGridViewTextBoxColumn
-    Friend WithEvents ok1 As DataGridViewTextBoxColumn
+    Friend WithEvents btnDownloadTemplate As Button
     Friend WithEvents ok2 As DataGridViewTextBoxColumn
+    Friend WithEvents ok1 As DataGridViewTextBoxColumn
     Friend WithEvents ok3 As DataGridViewTextBoxColumn
     Friend WithEvents ok4 As DataGridViewTextBoxColumn
     Friend WithEvents ok5 As DataGridViewTextBoxColumn
     Friend WithEvents ok6 As DataGridViewTextBoxColumn
     Friend WithEvents ok7 As DataGridViewTextBoxColumn
-    Friend WithEvents btnDownloadTemplate As Button
+    Friend WithEvents errors1 As DataGridViewTextBoxColumn
+    Friend WithEvents errors2 As DataGridViewTextBoxColumn
+    Friend WithEvents errors4 As DataGridViewTextBoxColumn
+    Friend WithEvents errors3 As DataGridViewTextBoxColumn
+    Friend WithEvents errors5 As DataGridViewTextBoxColumn
+    Friend WithEvents errors6 As DataGridViewTextBoxColumn
+    Friend WithEvents errors7 As DataGridViewTextBoxColumn
+    Friend WithEvents errors8 As DataGridViewTextBoxColumn
+    Friend WithEvents errors9 As DataGridViewTextBoxColumn
 End Class

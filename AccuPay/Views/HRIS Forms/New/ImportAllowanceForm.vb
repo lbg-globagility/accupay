@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -91,9 +92,9 @@ Public Class ImportAllowanceForm
 
         For Each record In records
             Dim employee = Await _employeeRepository.
-                                GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
+                                GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-            If employee Is Nothing Then
+            If employee?.RowID Is Nothing Then
 
                 record.ErrorMessage = "Employee number does not exist."
                 rejectedRecords.Add(record)
@@ -103,81 +104,30 @@ Public Class ImportAllowanceForm
 
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
-            record.EmployeeID = employee.EmployeeNo
+            record.EmployeeNumber = employee.EmployeeNo
 
-            If String.IsNullOrWhiteSpace(record.Type) Then
+            Dim allowance = Await ConvertToAllowance(record, employee.RowID.Value)
 
-                record.ErrorMessage = "Name of allowance/allowance type cannot be blank."
+            If allowance Is Nothing Then
 
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
                 rejectedRecords.Add(record)
-
                 Continue For
-
             End If
 
-            Dim allowanceType = Await _productRepository.GetOrCreateAllowanceTypeAsync(record.Type, z_OrganizationID, z_User)
+            Dim validationErrorMessage = ValidateAllowance(allowance, record.AllowanceType)
 
-            If allowanceType Is Nothing Then
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
 
-                record.ErrorMessage = "Cannot get or create allowance type. Please contact " & My.Resources.AppCreator
-
+                record.ErrorMessage = validationErrorMessage
                 rejectedRecords.Add(record)
-
                 Continue For
-
             End If
 
-            record.Type = allowanceType.PartNo 'For displaying on datagrid view
-
-            If record.EffectiveStartDate Is Nothing Then
-
-                record.ErrorMessage = "Effective Start Date cannot be blank."
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            Dim allowanceFrequency = Me._allowanceFrequencyList.
-                FirstOrDefault(Function(a) a.Equals(record.AllowanceFrequency, StringComparison.InvariantCultureIgnoreCase))
-
-            If allowanceFrequency Is Nothing Then
-
-                record.ErrorMessage = "The frequency '" & record.AllowanceFrequency & "' is not valid."
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            If record.Amount Is Nothing Then
-
-                record.ErrorMessage = "Allowance amount cannot be blank."
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            'For database
-            Dim allowance = New Allowance With {
-                .RowID = Nothing,
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .EmployeeID = employee.RowID,
-                .AllowanceFrequency = allowanceFrequency,
-                .Amount = record.Amount.Value,
-                .EffectiveStartDate = record.EffectiveStartDate.Value,
-                .EffectiveEndDate = record.EffectiveEndDate,
-                .ProductID = allowanceType.RowID
-            }
             _allowances.Add(allowance)
-
-            'For displaying on datagrid view
-            record.AllowanceFrequency = allowanceFrequency
             acceptedRecords.Add(record)
         Next
 
@@ -192,6 +142,89 @@ Public Class ImportAllowanceForm
         RejectedRecordsGrid.DataSource = rejectedRecords
 
     End Sub
+
+    Private Async Function ConvertToAllowance(record As AllowanceRowRecord, employeeId As Integer) As Task(Of Allowance)
+
+        If record.EffectiveStartDate Is Nothing Then
+
+            record.ErrorMessage = "Start Date cannot be empty."
+            Return Nothing
+        End If
+
+        If record.EffectiveStartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+            Return Nothing
+        End If
+
+        If record.EffectiveEndDate IsNot Nothing AndAlso record.EffectiveEndDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+            Return Nothing
+        End If
+
+        'Type
+        If String.IsNullOrWhiteSpace(record.Type) Then
+
+            record.ErrorMessage = "Name of allowance/allowance type cannot be blank."
+            Return Nothing
+
+        End If
+
+        'TODO: this is an N+1 query problem. Refactor this
+        Dim allowanceType = Await _productRepository.GetOrCreateAllowanceTypeAsync(record.Type, z_OrganizationID, z_User)
+
+        If allowanceType Is Nothing Then
+
+            record.ErrorMessage = "Cannot get or create allowance type. Please contact " & My.Resources.AppCreator
+            Return Nothing
+
+        End If
+        record.Type = allowanceType.PartNo
+        record.AllowanceType = allowanceType
+
+        'Frequency
+        Dim allowanceFrequency = Me._allowanceFrequencyList.
+                FirstOrDefault(Function(a) a.Equals(record.AllowanceFrequency, StringComparison.InvariantCultureIgnoreCase))
+
+        If allowanceFrequency Is Nothing Then
+
+            record.ErrorMessage = "The frequency '" & record.AllowanceFrequency & "' is not valid."
+            Return Nothing
+
+        End If
+
+        record.AllowanceFrequency = allowanceFrequency
+
+        'Amount
+        If record.Amount Is Nothing Then
+
+            record.ErrorMessage = "Allowance amount cannot be blank."
+            Return Nothing
+
+        End If
+
+        Return record.ToAllowance(employeeId)
+    End Function
+
+    Private Function ValidateAllowance(allowance As Allowance, allowanceType As Product) As String
+
+        If allowance.OrganizationID Is Nothing Then Return "Organization is required."
+
+        If allowance.EmployeeID Is Nothing Then Return "Employee is required."
+
+        If _allowanceService.GetFrequencyList().Contains(allowance.AllowanceFrequency) = False Then Return "Invalid frequency."
+
+        If allowance.ProductID Is Nothing Then Return "Allowance type is required."
+
+        If allowance.EffectiveEndDate IsNot Nothing AndAlso allowance.EffectiveStartDate > allowance.EffectiveEndDate Then Return "Start date cannot be greater than end date."
+
+        If allowance.Amount < 0 Then Return "Amount cannot be less than 0."
+
+        If allowance.IsMonthly AndAlso Not allowanceType.Fixed Then Return "Only fixed allowance type are allowed for Monthly allowances."
+
+        Return Nothing
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then

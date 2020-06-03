@@ -10,22 +10,10 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class OvertimeRepository : BaseRepository
+    public class OvertimeRepository : SavableRepository<Overtime>
     {
-        private readonly PayrollContext _context;
-
-        public OvertimeRepository(PayrollContext context)
+        public OvertimeRepository(PayrollContext context) : base(context)
         {
-            _context = context;
-        }
-
-        #region CRUD
-
-        internal async Task DeleteAsync(Overtime overtime)
-        {
-            _context.Remove(overtime);
-
-            await _context.SaveChangesAsync();
         }
 
         internal async Task DeleteManyAsync(IEnumerable<int> ids)
@@ -39,32 +27,13 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        internal async Task SaveAsync(Overtime overtime)
-        {
-            SaveFunction(overtime);
-            await _context.SaveChangesAsync();
-        }
+        #region CRUD
 
-        internal async Task SaveManyAsync(List<Overtime> overtimes)
-        {
-            overtimes.ForEach(x => SaveFunction(x));
-            await _context.SaveChangesAsync();
-        }
-
-        private void SaveFunction(Overtime overtime)
+        protected override void DetachNavigationProperties(Overtime overtime)
         {
             if (overtime.Employee != null)
             {
-                _context.Entry(overtime.Employee).State = EntityState.Unchanged;
-            }
-
-            if (IsNewEntity(overtime.RowID))
-            {
-                _context.Overtimes.Add(overtime);
-            }
-            else
-            {
-                _context.Entry(overtime).State = EntityState.Modified;
+                _context.Entry(overtime.Employee).State = EntityState.Detached;
             }
         }
 
@@ -73,11 +42,6 @@ namespace AccuPay.Data.Repositories
         #region Queries
 
         #region Single entity
-
-        internal async Task<Overtime> GetByIdAsync(int id)
-        {
-            return await _context.Overtimes.FirstOrDefaultAsync(l => l.RowID == id);
-        }
 
         internal async Task<Overtime> GetByIdWithEmployeeAsync(int id)
         {

@@ -73,10 +73,9 @@ Public Class ImportOBForm
 
         For Each record In records
             'TODO: this is an N+1 query problem. Refactor this
-            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeID, z_OrganizationID)
-            record.Status = OfficialBusiness.StatusApproved
+            Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-            If employee Is Nothing Then
+            If employee?.RowID Is Nothing Then
                 record.ErrorMessage = "Employee number does not exist."
                 rejectedRecords.Add(record)
                 Continue For
@@ -84,45 +83,31 @@ Public Class ImportOBForm
 
             'For displaying on datagrid view; placed here in case record is rejected soon
             record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
-            record.EmployeeID = employee.EmployeeNo
+            record.EmployeeNumber = employee.EmployeeNo
 
-            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
+            Dim officialBusiness = ConvertToOfficialBusiness(record, employee.RowID.Value)
 
-                Continue For
+            If officialBusiness Is Nothing Then
 
-            End If
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
 
-            If Not record.StartDate.HasValue Then
-                record.ErrorMessage = "No start date"
-                rejectedRecords.Add(record)
-                Continue For
-            ElseIf Not record.EndDate.HasValue Then
-                record.ErrorMessage = "No end date"
+                End If
                 rejectedRecords.Add(record)
                 Continue For
             End If
 
-            If record.StartTime Is Nothing And record.EndTime Is Nothing Then
-                record.ErrorMessage = "No start and end time"
+            Dim validationErrorMessage = ValidateOfficialBusiness(officialBusiness)
+
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
+
+                record.ErrorMessage = validationErrorMessage
                 rejectedRecords.Add(record)
                 Continue For
             End If
-
-            'For database
-            Dim officialbus = New OfficialBusiness With {
-                .RowID = Nothing,
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .EmployeeID = employee.RowID,
-                .StartDate = record.StartDate.Value,
-                .EndDate = record.EndDate.Value,
-                .StartTime = record.StartTime,
-                .EndTime = record.EndTime,
-                .Status = record.Status
-            }
 
             acceptedRecords.Add(record)
-            _officialBusinesses.Add(officialbus)
+            _officialBusinesses.Add(officialBusiness)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
@@ -136,6 +121,40 @@ Public Class ImportOBForm
         RejectedRecordsGrid.DataSource = rejectedRecords
 
     End Sub
+
+    Private Function ConvertToOfficialBusiness(record As OBRowRecord, employeeId As Integer) As OfficialBusiness
+
+        If record.StartDate Is Nothing Then
+
+            record.ErrorMessage = "Start Date cannot be empty."
+            Return Nothing
+        End If
+
+        If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
+
+            record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+            Return Nothing
+        End If
+
+        Return record.ToOfficialBusiness(employeeId)
+    End Function
+
+    Private Function ValidateOfficialBusiness(officialBusiness As OfficialBusiness) As String
+
+        If officialBusiness.OrganizationID Is Nothing Then Return "Organization is required."
+        If officialBusiness.EmployeeID Is Nothing Then Return "Employee is required."
+        If officialBusiness.StartDate Is Nothing Then Return "Start Date is required."
+        If officialBusiness.StartTime Is Nothing Then Return "Start Time is required."
+        If officialBusiness.EndTime Is Nothing Then Return "End Time is required."
+
+        If {OfficialBusiness.StatusPending, OfficialBusiness.StatusApproved}.Contains(officialBusiness.Status) = False Then
+            Return "Status is not valid."
+        End If
+
+        If officialBusiness.StartTime = officialBusiness.EndTime Then Return "End Time cannot be equal to Start Time"
+
+        Return Nothing
+    End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
         If errorCount > 0 Then
@@ -198,26 +217,5 @@ Public Class ImportOBForm
         DownloadTemplateHelper.DownloadExcel(ExcelTemplates.OfficialBusiness)
 
     End Sub
-
-    Private Function CheckIfRecordIsValid(record As OBRowRecord, rejectedRecords As List(Of OBRowRecord)) As Boolean
-
-        Dim officialBusiness = record.ToOfficialBusiness()
-
-        If officialBusiness Is Nothing Then
-            record.ErrorMessage = "Cannot parse data."
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        Dim validationErrorMessage = officialBusiness.Validate()
-
-        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-            record.ErrorMessage = validationErrorMessage
-            rejectedRecords.Add(record)
-            Return False
-        End If
-
-        Return True
-    End Function
 
 End Class
