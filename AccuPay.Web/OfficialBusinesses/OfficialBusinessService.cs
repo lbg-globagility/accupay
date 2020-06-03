@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,17 +11,19 @@ namespace AccuPay.Web.OfficialBusinesses
     public class OfficialBusinessService
     {
         private readonly OfficialBusinessDataService _service;
+        private readonly ICurrentUser _currentUser;
 
-        public OfficialBusinessService(OfficialBusinessDataService service)
+        public OfficialBusinessService(OfficialBusinessDataService service, ICurrentUser currentUser)
         {
             _service = service;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
+            int organizationId = _currentUser.OrganizationId;
             var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
