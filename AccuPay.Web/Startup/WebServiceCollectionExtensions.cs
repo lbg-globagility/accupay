@@ -43,6 +43,7 @@ namespace AccuPay.Web
             services.AddScoped<OfficialBusinessService>();
             services.AddScoped<OvertimeService>();
             services.AddScoped<OrganizationService>();
+            services.AddScoped<PermissionService>();
             services.AddScoped<PositionService>();
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();

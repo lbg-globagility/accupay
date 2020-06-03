@@ -72,6 +72,7 @@ namespace AccuPay.Data
         internal virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         internal virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
         internal virtual DbSet<PaystubItem> PaystubItems { get; set; }
+        internal virtual DbSet<Permission> Permissions { get; set; }
         internal virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PositionView> PositionViews { get; set; }
