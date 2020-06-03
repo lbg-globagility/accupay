@@ -7,6 +7,8 @@ import { OvertimeService } from 'src/app/overtimes/overtime.service';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-overtime-form',
@@ -35,6 +37,9 @@ export class OvertimeFormComponent implements OnInit {
   });
 
   employees: Employee[];
+
+  filteredEmployees: Observable<Employee[]>;
+
   statusList: string[];
 
   constructor(
@@ -45,6 +50,12 @@ export class OvertimeFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+
+    this.filteredEmployees = this.form.get('employeeId').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+
     this.loadOvertimeStatusList();
 
     if (this.overtime != null) {
@@ -59,6 +70,35 @@ export class OvertimeFormComponent implements OnInit {
     });
   }
 
+  get valid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
+  }
+
+  get value(): Overtime {
+    const overtime = cloneDeep(this.form.value as Overtime);
+
+    overtime.startTime = this.timeParser.parse(
+      moment(overtime.startDate),
+      overtime.startTime
+    );
+    overtime.endTime = this.timeParser.parse(
+      moment(overtime.startDate),
+      overtime.endTime
+    );
+
+    return overtime;
+  }
+
+  displayEmployee = (employeeId: number) => {
+    const employee = this.employees?.find((t) => t.id === employeeId);
+    if (employee == null) {
+      return null;
+    }
+
+    return `${employee.employeeNo} - ${employee.lastName} ${employee.firstName}`;
+  };
+
   private loadOvertimeStatusList(): void {
     this.overtimeService.getStatusList().subscribe((data) => {
       this.statusList = data;
@@ -71,33 +111,30 @@ export class OvertimeFormComponent implements OnInit {
     });
   }
 
-  onSave(): void {
-    if (!this.form.valid) {
+  private _filter(value: string) {
+    console.log('filter');
+
+    if (typeof value !== 'string') {
       return;
     }
 
-    const overtime = cloneDeep(this.form.value as Overtime);
+    const filterValue = value.toLowerCase();
 
-    console.log(overtime);
-    overtime.startTime = this.timeParser.parse(
-      moment(overtime.startDate),
-      overtime.startTime
+    return this.employees?.filter(
+      (employee) =>
+        employee.employeeNo?.toLowerCase().includes(filterValue) ||
+        employee.firstName?.toLowerCase().includes(filterValue) ||
+        employee.lastName?.toLowerCase().includes(filterValue)
     );
-    overtime.endTime = this.timeParser.parse(
-      moment(overtime.startDate),
-      overtime.endTime
-    );
-    console.log(overtime);
-
-    if (!overtime.startTime || !overtime.endTime) {
-      overtime.startTime = null;
-      overtime.endTime = null;
-    }
-
-    this.save.emit(overtime);
   }
 
-  onCancel(): void {
-    this.cancel.emit();
+  private disableTimeInputs(checked: boolean): void {
+    if (checked) {
+      this.form.get('startTime').disable();
+      this.form.get('endTime').disable();
+    } else {
+      this.form.get('startTime').enable();
+      this.form.get('endTime').enable();
+    }
   }
 }
