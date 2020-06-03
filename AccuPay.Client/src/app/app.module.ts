@@ -23,7 +23,7 @@ import { PositionsModule } from './positions/positions.module';
 import { CalendarsModule } from 'src/app/calendars/calendars.module';
 import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
-
+import { RolesModule } from 'src/app/roles/roles.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,6 +50,7 @@ import { DivisionsModule } from './divisions/divisions.module';
     PositionsModule,
     PayrollModule,
     DivisionsModule,
+    RolesModule,
   ],
   providers: [
     {

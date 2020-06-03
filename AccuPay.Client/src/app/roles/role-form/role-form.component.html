@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <mat-card>
+    <mat-card-content>
+      <h2 class="mat-title">Details</h2>
+      <div class="row">
+        <mat-form-field appearance="fill" class="col-lg-6">
+          <mat-label>Name *</mat-label>
+          <input matInput type="text" formControlName="name" />
+          <mat-error>Name is required</mat-error>
+        </mat-form-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+</form>
