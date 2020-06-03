@@ -157,6 +157,11 @@ namespace AccuPay.Data
             modelBuilder.Entity<PayPeriod>()
                 .Property(t => t.Status)
                 .HasConversion(new EnumToStringConverter<PayPeriodStatus>());
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(t => t.Role)
+                .WithMany(t => t.Permissions)
+                .HasForeignKey(t => t.RoleId);
         }
     }
 }

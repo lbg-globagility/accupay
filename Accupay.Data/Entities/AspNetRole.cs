@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace AccuPay.Data.Entities
 {
@@ -7,9 +9,12 @@ namespace AccuPay.Data.Entities
     {
         public int ClientId { get; set; }
 
+        public virtual ICollection<RolePermission> Permissions { get; set; }
+
         public AspNetRole()
         {
             Id = Guid.NewGuid();
+            Permissions = new Collection<RolePermission>();
         }
     }
 }
