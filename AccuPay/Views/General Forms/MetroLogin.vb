@@ -406,66 +406,6 @@ Public Class MetroLogin
 
     End Sub
 
-    Private Async Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
-
-        '_loanService.TryAsync()
-
-        Dim loanService2 = MainServiceProvider.GetRequiredService(Of LoanDataService)
-        Dim a = Await loanService2.GetByIdAsync(1706)
-        'Console.WriteLine("Nice")
-
-        Dim loan = New LoanSchedule
-        loan.BonusID = Nothing
-        loan.Comments = Nothing
-        loan.Created = Date.Now
-        loan.CreatedBy = 5
-        loan.DedEffectiveDateFrom = Date.Now
-        loan.DeductionAmount = 1384.35
-        loan.DeductionPercentage = 0.00
-        loan.DeductionSchedule = "End of the month"
-        loan.Employee = Nothing
-        loan.EmployeeID = 93
-        loan.LastUpd = Date.Now
-        loan.LastUpdBy = 5
-        loan.LoanName = "SSS Salary Loan"
-        loan.LoanNumber = ""
-        loan.LoanTransactions = Nothing
-        loan.LoanType = Nothing
-        loan.LoanTypeID = 174
-        loan.OrganizationID = 2
-        loan.RowID = 1706
-        loan.Status = "In Progress"
-        loan.TotalBalanceLeft = 23533.95
-
-        Try
-            loan.TotalLoanAmount = 29071.35
-
-            Dim loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-            Dim loans = New List(Of LoanSchedule)
-            loans.Add(loan)
-            Await loanService.SaveManyAsync(loans)
-            loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-            Await loanService.SaveAsync(loan)
-            Console.WriteLine("Nice")
-        Catch ex As Exception
-            Debugger.Break()
-        End Try
-
-        Await FunctionUtils.TryCatchFunctionAsync("sdf",
-            Async Function()
-                Dim loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Dim loans = New List(Of LoanSchedule)
-                loans.Add(loan)
-                Await loanService.SaveManyAsync(loans)
-                loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
-                Await loanService.SaveAsync(loan)
-                Console.WriteLine("Nice")
-            End Function)
-
-        MessageBox.Show("Niuce")
-
-    End Sub
-
 End Class
 
 Friend Class EncryptString

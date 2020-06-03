@@ -35,7 +35,6 @@ Partial Class MetroLogin
         Me.MetroLabel3 = New MetroFramework.Controls.MetroLabel()
         Me.PhotoImages = New System.Windows.Forms.PictureBox()
         Me.MetroLink1 = New MetroFramework.Controls.MetroLink()
-        Me.Button1 = New System.Windows.Forms.Button()
         CType(Me.MetroStyleManager1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PhotoImages, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
@@ -141,21 +140,11 @@ Partial Class MetroLogin
         Me.MetroLink1.Text = "Forgot password?"
         Me.MetroLink1.UseSelectable = True
         '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(287, 64)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 20
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        '
         'MetroLogin
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(544, 371)
-        Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.MetroLink1)
         Me.Controls.Add(Me.PhotoImages)
         Me.Controls.Add(Me.MetroLabel3)
@@ -190,5 +179,4 @@ Partial Class MetroLogin
     Friend WithEvents MetroLabel3 As MetroFramework.Controls.MetroLabel
     Friend WithEvents PhotoImages As System.Windows.Forms.PictureBox
     Friend WithEvents MetroLink1 As MetroFramework.Controls.MetroLink
-    Friend WithEvents Button1 As Button
 End Class
