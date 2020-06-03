@@ -3,6 +3,7 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -10,14 +11,19 @@ namespace AccuPay.Web.Payroll
 {
     public class PayperiodService
     {
+        // this should be replaced
+        private const int DesktopUserId = 1;
+
         private readonly DbContextOptionsService _dbContextOptionsService;
 
         private readonly PayPeriodRepository _payperiodRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public PayperiodService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository)
+        public PayperiodService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository, ICurrentUser currentUser)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _payperiodRepository = payperiodRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<PayperiodDto> Start(StartPayrollDto dto)
@@ -32,7 +38,7 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
         {
-            await resources.Load(payperiodId, 11, 1);
+            await resources.Load(payperiodId, _currentUser.OrganizationId, DesktopUserId);
 
             var successes = 0;
             var failures = 0;
@@ -41,7 +47,7 @@ namespace AccuPay.Web.Payroll
             foreach (var employee in employees)
             {
                 var generation = new PayrollGeneration(_dbContextOptionsService);
-                var result = generation.DoProcess(employee, resources, 1, 1);
+                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, DesktopUserId);
 
                 if (result.Status == PayrollGeneration.ResultStatus.Success)
                 {
@@ -71,14 +77,14 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayperiodDto> GetLatest()
         {
-            var payperiod = await _payperiodRepository.GetLatest(1);
+            var payperiod = await _payperiodRepository.GetLatest(_currentUser.OrganizationId);
 
             return ConvertToDto(payperiod);
         }
 
         public async Task<PaginatedList<PayperiodDto>> List(PageOptions options)
         {
-            var (payperiods, total) = await _payperiodRepository.ListByOrganization(1, 1, options);
+            var (payperiods, total) = await _payperiodRepository.ListByOrganization(_currentUser.OrganizationId, PayrollTools.PayFrequencySemiMonthlyId, options);
             var dtos = payperiods.Select(t => ConvertToDto(t)).ToList();
 
             return new PaginatedList<PayperiodDto>(dtos, total, 1, 1);
@@ -86,6 +92,8 @@ namespace AccuPay.Web.Payroll
 
         private PayperiodDto ConvertToDto(PayPeriod t)
         {
+            if (t == null) return null;
+
             var dto = new PayperiodDto()
             {
                 Id = t.RowID,
