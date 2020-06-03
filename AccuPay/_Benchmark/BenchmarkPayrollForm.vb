@@ -176,9 +176,7 @@ Public Class BenchmarkPayrollForm
 
                 Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
                                                      organizationId:=z_OrganizationID,
-                                                     userId:=z_User,
-                                                     payDateFrom:=paypFrom,
-                                                     payDateTo:=paypTo)
+                                                     userId:=z_User)
 
                 resourcesTask.Wait()
 

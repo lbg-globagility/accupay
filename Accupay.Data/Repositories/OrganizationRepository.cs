@@ -25,6 +25,7 @@ namespace AccuPay.Data.Repositories
         {
             return await _context.Organizations
                 .Where(o => o.ClientId == clientId)
+                .Where(o => o.IsInActive == false)
                 .FirstOrDefaultAsync();
         }
 
@@ -48,7 +49,8 @@ namespace AccuPay.Data.Repositories
         public async Task<(ICollection<Organization> organizations, int total)> List(PageOptions options, int clientId)
         {
             var query = _context.Organizations
-                .Where(t => t.ClientId == clientId);
+                .Where(t => t.ClientId == clientId)
+                .Where(o => o.IsInActive == false);
 
             var organizations = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();

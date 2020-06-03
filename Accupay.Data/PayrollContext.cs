@@ -141,6 +141,11 @@ namespace AccuPay.Data
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });
 
+            modelBuilder.Entity<Organization>()
+                .Property(x => x.IsInActive)
+                .IsUnicode(false)
+                .HasConversion(typeof(string));
+
             modelBuilder.Entity<AspNetUser>()
                 .Property(t => t.Id)
                 .HasConversion(new GuidToBigEndianBytesConverter());
