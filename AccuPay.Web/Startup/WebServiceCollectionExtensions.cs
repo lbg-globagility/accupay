@@ -39,6 +39,7 @@ namespace AccuPay.Web
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
             services.AddScoped<LoanService>();
+            services.AddScoped<RoleService>();
             services.AddScoped<OfficialBusinessService>();
             services.AddScoped<OvertimeService>();
             services.AddScoped<OrganizationService>();
