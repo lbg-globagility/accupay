@@ -19,7 +19,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<AspNetRole> GetById(Guid roleId)
         {
-            var role = await _context.Roles.Include(t => t.Permissions)
+            var role = await _context.Roles.Include(t => t.RolePermissions)
                 .FirstOrDefaultAsync(t => t.Id == roleId);
 
             return role;

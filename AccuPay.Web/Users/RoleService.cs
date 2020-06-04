@@ -79,6 +79,7 @@ namespace AccuPay.Web.Users
         private async Task MapRolePermissions(AspNetRole role, ICollection<RolePermissionDto> rolePermissionDtos)
         {
             var permissions = await _permissionRepository.GetAll();
+
             foreach (var permission in permissions)
             {
                 var rolePermissionDto = rolePermissionDtos
@@ -86,17 +87,15 @@ namespace AccuPay.Web.Users
 
                 if (rolePermissionDto != null)
                 {
-                    var rolePermission = new RolePermission();
-                    rolePermission.PermissionId = permission.Id;
-                    rolePermission.Read = rolePermissionDto.Read;
-                    rolePermission.Create = rolePermissionDto.Create;
-                    rolePermission.Update = rolePermissionDto.Update;
-                    rolePermission.Delete = rolePermission.Delete;
-
-                    role.Permissions.Add(rolePermission);
+                    role.SetPermission(permission,
+                                       rolePermissionDto.Read,
+                                       rolePermissionDto.Create,
+                                       rolePermissionDto.Update,
+                                       rolePermissionDto.Delete);
                 }
                 else
                 {
+                    role.RemovePermission(permission);
                 }
             }
         }
@@ -109,7 +108,7 @@ namespace AccuPay.Web.Users
                 Name = role.Name
             };
 
-            dto.RolePermissions = role.Permissions?
+            dto.RolePermissions = role.RolePermissions?
                 .Select(t => ConvertToDto(t)).ToList();
 
             return dto;

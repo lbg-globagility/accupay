@@ -21,7 +21,7 @@ export class RoleService {
     return this.httpClient.post<Role>(`${this.baseUrl}`, role);
   }
 
-  udpate(roleId: string, role: Role): Observable<Role> {
+  update(roleId: string, role: Role): Observable<Role> {
     return this.httpClient.put<Role>(`${this.baseUrl}/${roleId}`, role);
   }
 

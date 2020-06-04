@@ -13,7 +13,7 @@ import { RoleService } from 'src/app/roles/services/role.service';
   styleUrls: ['./role-list.component.scss'],
 })
 export class RoleListComponent implements OnInit {
-  readonly displayedColumns: string[] = ['name'];
+  readonly displayedColumns: string[] = ['name', 'actions'];
 
   searchTerm: string;
 

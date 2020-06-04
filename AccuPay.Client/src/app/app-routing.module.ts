@@ -66,6 +66,7 @@ import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
 import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 import { NewRoleComponent } from 'src/app/roles/new-role/new-role.component';
 import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
+import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
 
 const routes: Routes = [
   {
@@ -111,6 +112,10 @@ const routes: Routes = [
       {
         path: 'roles/new',
         component: NewRoleComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
       },
       {
         path: 'salaries',

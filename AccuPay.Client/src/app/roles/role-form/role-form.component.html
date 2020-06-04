@@ -1,7 +1,7 @@
 <form [formGroup]="form">
   <mat-card>
     <mat-card-content>
-      <h2 class="mat-title">Details</h2>
+      <h2 mat-card-title>Details</h2>
       <div class="row">
         <mat-form-field appearance="fill" class="col-lg-6">
           <mat-label>Name *</mat-label>
@@ -9,6 +9,34 @@
           <mat-error>Name is required</mat-error>
         </mat-form-field>
       </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-4">
+    <h3 mat-card-title>Permissions</h3>
+    <mat-card-content>
+      <table formArrayName="rolePermissions">
+        <tr
+          *ngFor="let permission of rolePermissions.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <td class="pr-8">
+            {{ permission.get("name").value }}
+          </td>
+          <td class="px-4">
+            <mat-checkbox formControlName="read">Read</mat-checkbox>
+          </td>
+          <td class="px-4">
+            <mat-checkbox formControlName="create">Create</mat-checkbox>
+          </td>
+          <td class="px-4">
+            <mat-checkbox formControlName="update">Update</mat-checkbox>
+          </td>
+          <td class="px-4">
+            <mat-checkbox formControlName="delete">Delete</mat-checkbox>
+          </td>
+        </tr>
+      </table>
     </mat-card-content>
   </mat-card>
 </form>

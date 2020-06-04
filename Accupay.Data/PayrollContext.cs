@@ -160,7 +160,7 @@ namespace AccuPay.Data
 
             modelBuilder.Entity<RolePermission>()
                 .HasOne(t => t.Role)
-                .WithMany(t => t.Permissions)
+                .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
         }
     }
