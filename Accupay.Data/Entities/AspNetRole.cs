@@ -18,6 +18,32 @@ namespace AccuPay.Data.Entities
             RolePermissions = new Collection<RolePermission>();
         }
 
+        public bool HasPermission(string permissionName, string action)
+        {
+            var rolePermission = RolePermissions.FirstOrDefault(p => p.Permission.Name == permissionName);
+
+            if (action == "read")
+            {
+                return rolePermission.Read;
+            }
+            else if (action == "update")
+            {
+                return rolePermission.Update;
+            }
+            else if (action == "delete")
+            {
+                return rolePermission.Delete;
+            }
+            else if (action == "create")
+            {
+                return rolePermission.Create;
+            }
+            else
+            {
+                return false;
+            }
+        }
+
         public void SetPermission(Permission permission, bool read, bool create, bool update, bool delete)
         {
             var rolePermission = RolePermissions.FirstOrDefault(p => p.PermissionId == permission.Id);
