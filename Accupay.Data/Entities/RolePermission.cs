@@ -17,6 +17,8 @@ namespace AccuPay.Data.Entities
 
         public int PermissionId { get; set; }
 
+        public virtual Permission Permission { get; set; }
+
         public bool Read { get; set; }
 
         public bool Create { get; set; }

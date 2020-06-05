@@ -40,6 +40,11 @@ namespace AccuPay.Web.Users
         {
             var role = await _roleRepository.GetByUserAndOrganization(_currentUser.UserId, _currentUser.OrganizationId);
 
+            if (role is null)
+            {
+                return null;
+            }
+
             return ConvertToDto(role);
         }
 
@@ -180,6 +185,7 @@ namespace AccuPay.Web.Users
             var dto = new RolePermissionDto()
             {
                 PermissionId = rolePermission.PermissionId,
+                PermissionName = rolePermission.Permission?.Name,
                 Read = rolePermission.Read,
                 Create = rolePermission.Create,
                 Update = rolePermission.Update,

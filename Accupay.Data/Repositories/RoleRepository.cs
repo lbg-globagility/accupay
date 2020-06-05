@@ -41,7 +41,9 @@ namespace AccuPay.Data.Repositories
 
             if (userRole is null) return null;
 
-            var role = await _context.Roles.Include(t => t.RolePermissions)
+            var role = await _context.Roles
+                .Include(t => t.RolePermissions)
+                    .ThenInclude(t => t.Permission)
                 .FirstOrDefaultAsync(t => t.Id == userRole.RoleId);
 
             return role;

@@ -2,6 +2,8 @@ namespace AccuPay.Web.Users
 {
     public class RolePermissionDto
     {
+        public string PermissionName { get; set; }
+
         public int PermissionId { get; set; }
 
         public bool Read { get; set; }
