@@ -130,18 +130,6 @@ const routes: Routes = [
         component: OfficialBusinessListComponent,
       },
       {
-        path: 'official-businesses/new',
-        component: NewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id',
-        component: ViewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id/edit',
-        component: EditOfficialBusinessComponent,
-      },
-      {
         path: 'overtimes',
         component: OvertimeListComponent,
       },
