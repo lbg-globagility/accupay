@@ -16,6 +16,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatRadioModule } from '@angular/material/radio';
 
 import {
   MatMomentDateModule,
@@ -42,7 +43,7 @@ import {
     MatPaginatorModule,
     // MatProgressBarModule,
     MatProgressSpinnerModule,
-    // MatRadioModule,
+    MatRadioModule,
     MatSelectModule,
     MatSidenavModule,
     MatSnackBarModule,

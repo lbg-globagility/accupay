@@ -67,6 +67,10 @@ import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-
 import { NewTimeLogComponent } from 'src/app/time-logs/new-time-log/new-time-log.component';
 import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
 import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
+import { NewRoleComponent } from 'src/app/roles/new-role/new-role.component';
+import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
+import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
+import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
 
 const routes: Routes = [
   {
@@ -104,6 +108,22 @@ const routes: Routes = [
       {
         path: 'users/:id/edit',
         component: EditUserComponent,
+      },
+      {
+        path: 'roles',
+        component: RoleListComponent,
+      },
+      {
+        path: 'roles/new',
+        component: NewRoleComponent,
+      },
+      {
+        path: 'user-access',
+        component: UserRolesComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
       },
       {
         path: 'salaries',

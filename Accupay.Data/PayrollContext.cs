@@ -15,7 +15,7 @@ namespace AccuPay.Data
             AspNetRole,
             Guid,
             IdentityUserClaim<Guid>,
-            IdentityUserRole<Guid>,
+            UserRole,
             IdentityUserLogin<Guid>,
             IdentityRoleClaim<Guid>,
             IdentityUserToken<Guid>>
@@ -72,6 +72,7 @@ namespace AccuPay.Data
         internal virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         internal virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
         internal virtual DbSet<PaystubItem> PaystubItems { get; set; }
+        internal virtual DbSet<Permission> Permissions { get; set; }
         internal virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PositionView> PositionViews { get; set; }
@@ -161,6 +162,11 @@ namespace AccuPay.Data
             modelBuilder.Entity<PayPeriod>()
                 .Property(t => t.Status)
                 .HasConversion(new EnumToStringConverter<PayPeriodStatus>());
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(t => t.Role)
+                .WithMany(t => t.RolePermissions)
+                .HasForeignKey(t => t.RoleId);
         }
     }
 }

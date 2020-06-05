@@ -37,6 +37,12 @@
 );
 @include create-status2("officialBusiness", "Pending", app-color(status, red));
 
+@include create-status2("overtime", "Pending", app-color(status, red));
+@include create-status2("overtime", "Approved", app-color(status, green));
+@include create-status2("overtime", "Open", app-color(status, green));
+@include create-status2("overtime", "Closed", app-color(status, blue));
+@include create-status2("overtime", "Completed", app-color(status, blue));
+
 @include create-status2("Recall", "Unsent", app-color(status, red));
 @include create-status2("Recall", "Incomplete", app-color(status, yellow));
 @include create-status2("Recall", "Open", app-color(status, green));

@@ -96,15 +96,14 @@ export class OfficialBusinessListComponent implements OnInit {
       });
   }
 
-  applyFilter(searchTerm: string) {
-    this.searchTerm = searchTerm;
+  applyFilter() {
     this.pageIndex = 0;
     this.modelChanged.next();
   }
 
   clearSearchBox() {
     this.searchTerm = '';
-    this.applyFilter(this.searchTerm);
+    this.applyFilter();
   }
 
   sortData(sort: Sort) {
