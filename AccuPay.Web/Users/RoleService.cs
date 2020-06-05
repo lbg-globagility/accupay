@@ -5,6 +5,7 @@ using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -33,6 +34,66 @@ namespace AccuPay.Web.Users
             var role = await _roleRepository.GetById(roleId);
 
             return ConvertToDto(role);
+        }
+
+        public async Task<RoleDto> GetCurrentRole()
+        {
+            var role = await _roleRepository.GetByUserAndOrganization(_currentUser.UserId, _currentUser.OrganizationId);
+
+            return ConvertToDto(role);
+        }
+
+        public async Task<ICollection<UserRoleDto>> GetUserRoles()
+        {
+            var userRoles = await _roleRepository.GetUserRoles(_currentUser.OrganizationId);
+            var dtos = userRoles.Select(t => ConvertToDto(t)).ToList();
+
+            return dtos;
+        }
+
+        public async Task UpdateUserRoles(ICollection<UpdateUserRoleDto> dtos)
+        {
+            var userRoles = await _roleRepository.GetUserRoles(_currentUser.OrganizationId);
+            var roles = await _roleRepository.GetAll();
+
+            var added = new Collection<UserRole>();
+            var updated = new Collection<UserRole>();
+            var deleted = new Collection<UserRole>();
+
+            foreach (var dto in dtos)
+            {
+                var existingUserRole = userRoles.FirstOrDefault(u => u.UserId == dto.UserId);
+
+                // If RoleId is defined then the user will still have a role,
+                // otherwise we need to delete the user role.
+                if (dto.RoleId.HasValue)
+                {
+                    var role = roles.FirstOrDefault(r => r.Id == dto.RoleId);
+
+                    if (existingUserRole is null)
+                    {
+                        var newUserRole = new UserRole(dto.UserId,
+                                                       role.Id,
+                                                       _currentUser.OrganizationId);
+
+                        added.Add(newUserRole);
+                    }
+                    else
+                    {
+                        existingUserRole.RoleId = role.Id;
+                        updated.Add(existingUserRole);
+                    }
+                }
+                else
+                {
+                    if (existingUserRole != null)
+                    {
+                        deleted.Add(existingUserRole);
+                    }
+                }
+            }
+
+            await _roleRepository.UpdateUserRoles(added, updated, deleted);
         }
 
         public async Task<RoleDto> Create(CreateRoleDto dto)
@@ -123,6 +184,17 @@ namespace AccuPay.Web.Users
                 Create = rolePermission.Create,
                 Update = rolePermission.Update,
                 Delete = rolePermission.Delete
+            };
+
+            return dto;
+        }
+
+        private UserRoleDto ConvertToDto(UserRole userRole)
+        {
+            var dto = new UserRoleDto()
+            {
+                UserId = userRole.UserId,
+                RoleId = userRole.RoleId
             };
 
             return dto;

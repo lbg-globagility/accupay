@@ -2,6 +2,8 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -33,6 +35,21 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<RoleDto>> Update(Guid id, [FromBody] UpdateRoleDto dto)
         {
             return await _roleService.Update(id, dto);
+        }
+
+        [HttpGet("user-roles")]
+        public async Task<ActionResult<ICollection<UserRoleDto>>> GetUserRoles()
+        {
+            var dtos = await _roleService.GetUserRoles();
+            return dtos.ToList();
+        }
+
+        [HttpPut("user-roles")]
+        public async Task<ActionResult> UpdateUserRoles([FromBody] ICollection<UpdateUserRoleDto> dtos)
+        {
+            await _roleService.UpdateUserRoles(dtos);
+
+            return Ok();
         }
 
         [HttpGet]

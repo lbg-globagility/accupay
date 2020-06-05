@@ -25,6 +25,56 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
+        public async Task<ICollection<AspNetRole>> GetAll()
+        {
+            var roles = await _context.Roles.Include(t => t.RolePermissions)
+                .ToListAsync();
+
+            return roles;
+        }
+
+        public async Task<AspNetRole> GetByUserAndOrganization(Guid userId, int organizationId)
+        {
+            var userRole = await _context.UserRoles
+                .Where(t => t.UserId == userId && t.OrganizationId == organizationId)
+                .FirstOrDefaultAsync();
+
+            if (userRole is null) return null;
+
+            var role = await _context.Roles.Include(t => t.RolePermissions)
+                .FirstOrDefaultAsync(t => t.Id == userRole.RoleId);
+
+            return role;
+        }
+
+        public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
+        {
+            var userRoles = await _context.UserRoles
+                .Where(t => t.OrganizationId == organizationId)
+                .ToListAsync();
+
+            return userRoles;
+        }
+
+        public async Task UpdateUserRoles(ICollection<UserRole> added,
+                                          ICollection<UserRole> updated,
+                                          ICollection<UserRole> deleted)
+        {
+            foreach (var userRole in added)
+            {
+                _context.UserRoles.Add(userRole);
+            }
+
+            foreach (var userRole in updated)
+            {
+                _context.Entry(userRole).State = EntityState.Modified;
+            }
+
+            _context.UserRoles.RemoveRange(deleted);
+
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<(ICollection<AspNetRole> roles, int total)> List(PageOptions options, int clientId)
         {
             var query = _context.Roles

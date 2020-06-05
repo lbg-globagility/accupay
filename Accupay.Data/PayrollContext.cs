@@ -15,7 +15,7 @@ namespace AccuPay.Data
             AspNetRole,
             Guid,
             IdentityUserClaim<Guid>,
-            IdentityUserRole<Guid>,
+            UserRole,
             IdentityUserLogin<Guid>,
             IdentityRoleClaim<Guid>,
             IdentityUserToken<Guid>>

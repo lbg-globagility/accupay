@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { AllowancesModule } from 'src/app/allowances/allowances.module';
 import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
@@ -32,6 +33,7 @@ import { RolesModule } from 'src/app/roles/roles.module';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxPermissionsModule.forRoot(),
     AccountsModule,
     MainModule,
     AllowancesModule,

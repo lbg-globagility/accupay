@@ -15,6 +15,7 @@ namespace AccuPay.Web.Account
         private readonly AccountTokenService _accountTokenService;
         private readonly UserTokenService _userTokenService;
         private readonly OrganizationRepository _organizationRepository;
+        private readonly RoleRepository _roleRepository;
         private readonly ICurrentUser _currentUser;
 
         public AccountService(UserManager<AspNetUser> users,
@@ -22,6 +23,7 @@ namespace AccuPay.Web.Account
                               AccountTokenService accountTokenService,
                               UserTokenService userTokenService,
                               OrganizationRepository organizationRepository,
+                              RoleRepository roleRepository,
                               ICurrentUser currentUser)
         {
             _users = users;
@@ -29,6 +31,7 @@ namespace AccuPay.Web.Account
             _accountTokenService = accountTokenService;
             _userTokenService = userTokenService;
             _organizationRepository = organizationRepository;
+            _roleRepository = roleRepository;
             _currentUser = currentUser;
         }
 
