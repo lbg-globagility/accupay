@@ -7,13 +7,13 @@
       <mat-label>Search</mat-label>
       <input
         matInput
-        (keyup)="applyFilter($event.target.value)"
-        [placeholder]="placeholder"
+        (keyup)="applyFilter()"
+        placeholder="Search"
         name="officialBusinesses"
-        [(ngModel)]="clearSearch"
+        [(ngModel)]="searchTerm"
       />
       <button
-        *ngIf="clearSearch"
+        *ngIf="searchTerm"
         matSuffix
         mat-icon-button
         aria-label="Clear"
