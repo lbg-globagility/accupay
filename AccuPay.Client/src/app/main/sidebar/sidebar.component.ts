@@ -106,8 +106,8 @@ const menuItems: MenuItem[] = [
         route: '/roles',
       },
       {
-        label: 'Permissions',
-        route: '/permissions',
+        label: 'User Access',
+        route: '/user-access',
       },
     ],
   },

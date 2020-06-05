@@ -7,6 +7,8 @@ import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import { forkJoin } from 'rxjs';
 import { LoadingState } from 'src/app/core/states/loading-state';
 import { UserRole } from 'src/app/roles/shared/user-role';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-user-roles',
@@ -14,13 +16,17 @@ import { UserRole } from 'src/app/roles/shared/user-role';
   styleUrls: ['./user-roles.component.scss'],
 })
 export class UserRolesComponent implements OnInit {
+  readonly defaultColumns: string[] = ['user', 'none'];
+
+  displayedColumns: string[] = [];
+
   loadingState: LoadingState = new LoadingState();
+
+  savingState: LoadingState = new LoadingState();
 
   form: FormGroup = this.fb.group({
     users: this.fb.array([]),
   });
-
-  displayedColumns: string[] = ['user', 'none'];
 
   users: User[] = [];
 
@@ -33,10 +39,17 @@ export class UserRolesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private userService: UserService,
-    private roleService: RoleService
+    private roleService: RoleService,
+    private errorHandler: ErrorHandler
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
+    this.loadingState.changeToLoading();
+
     const $users = this.userService.getAll();
     const $roles = this.roleService.getAll();
     const $userRoles = this.roleService.getUserRoles();
@@ -52,19 +65,31 @@ export class UserRolesComponent implements OnInit {
   }
 
   save() {
+    this.savingState.changeToLoading();
+
     const value = this.form.value;
 
-    this.roleService.updateUserRoles(value.users).subscribe();
-    console.log(value);
+    this.roleService.updateUserRoles(value.users).subscribe({
+      next: () => {
+        this.displaySuccess();
+        this.savingState.changeToSuccess();
+      },
+      error: (err) => {
+        this.savingState.changeToError();
+        this.errorHandler.badRequest(err, 'Failed to update user roles');
+      },
+    });
   }
 
   private setupRoles(roles: Role[]) {
     this.roles = roles;
     const roleNames = roles.map((r) => r.name);
-    this.displayedColumns.push(...roleNames);
+    this.displayedColumns = this.defaultColumns.concat(...roleNames);
   }
 
   private setupUsers(users: User[], userRoles: UserRole[]) {
+    this.userControls.clear();
+
     this.users = users;
 
     const matchedUsers = users.map((user) => ({
@@ -82,5 +107,19 @@ export class UserRolesComponent implements OnInit {
         roleId: [userRole?.roleId],
       })
     );
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Successfully updated user roles!',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
+  }
+
+  cancel() {
+    this.loadData();
   }
 }

@@ -1,70 +1,64 @@
 <h1 class="mat-headline">User Access</h1>
 
-<!-- <div class="mat-elevation-z1 w-full">
-  <table mat-table [dataSource]="users" class="w-full">
-    <ng-container matColumnDef="user">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>User</th>
-      <td mat-cell *matCellDef="let user">
-        {{ user.firstName | ifEmpty }}
-      </td>
-    </ng-container>
-
-    <ng-container matColumnDef="none">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>None</th>
-      <td mat-cell *matCellDef="let user">
-        <mat-radio-button [name]="user.id"></mat-radio-button>
-      </td>
-    </ng-container>
-
-    <ng-container *ngFor="let role of roles" [matColumnDef]="role.name">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>{{ role.name }}</th>
-      <td mat-cell *matCellDef="let user">
-        <mat-radio-button [name]="user.id"></mat-radio-button>
-      </td>
-    </ng-container>
-
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
-</div> -->
+<div *ngIf="loadingState.isLoading" class="flex justify-center">
+  <mat-spinner></mat-spinner>
+</div>
 
 <form *ngIf="loadingState.isSuccess" [formGroup]="form">
   <div class="mat-elevation-z1 w-full">
-    <table mat-table [dataSource]="users" class="w-full" formArrayName="users">
+    <mat-table [dataSource]="users" class="w-full" formArrayName="users">
       <ng-container matColumnDef="user">
-        <th mat-header-cell *matHeaderCellDef>User</th>
-        <td mat-cell *matCellDef="let user; let i = index">
+        <mat-header-cell *matHeaderCellDef>User</mat-header-cell>
+        <mat-cell *matCellDef="let user; let i = index">
           {{ user.firstName | ifEmpty }}
-        </td>
+        </mat-cell>
       </ng-container>
 
       <ng-container matColumnDef="none">
-        <th mat-header-cell *matHeaderCellDef>None</th>
-        <td mat-cell *matCellDef="let user; let i = index" [formGroupName]="i">
+        <mat-header-cell *matHeaderCellDef class="justify-center"
+          >None</mat-header-cell
+        >
+        <mat-cell
+          *matCellDef="let user; let i = index"
+          [formGroupName]="i"
+          class="justify-center"
+        >
           <mat-radio-group [name]="user.id" formControlName="roleId">
             <mat-radio-button></mat-radio-button>
           </mat-radio-group>
-        </td>
+        </mat-cell>
       </ng-container>
 
       <ng-container *ngFor="let role of roles" [matColumnDef]="role.name">
-        <th mat-header-cell *matHeaderCellDef>
+        <mat-header-cell *matHeaderCellDef class="justify-center">
           {{ role.name }}
-        </th>
-        <td mat-cell *matCellDef="let user; let i = index" [formGroupName]="i">
+        </mat-header-cell>
+        <mat-cell
+          *matCellDef="let user; let i = index"
+          [formGroupName]="i"
+          class="justify-center"
+        >
           <mat-radio-group [name]="user.id" formControlName="roleId">
             <mat-radio-button [value]="role.id"></mat-radio-button>
           </mat-radio-group>
-        </td>
+        </mat-cell>
       </ng-container>
 
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
+      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+      <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+    </mat-table>
   </div>
 
-  <div>
-    <button mat-raised-button (click)="save()" color="primary">SAVE</button>
-    <!-- <button mat-raised-button (click)="save()">CANCEL</button> -->
+  <div class="mt-2">
+    <button
+      mat-raised-button
+      (click)="save()"
+      [disabled]="savingState.isLoading"
+      color="primary"
+      class="mr-2"
+    >
+      SAVE CHANGES
+    </button>
+    <button mat-raised-button (click)="cancel()">CANCEL CHANGES</button>
   </div>
 </form>

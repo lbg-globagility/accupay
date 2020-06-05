@@ -115,7 +115,7 @@ const routes: Routes = [
         component: NewRoleComponent,
       },
       {
-        path: 'permissions',
+        path: 'user-access',
         component: UserRolesComponent,
       },
       {
