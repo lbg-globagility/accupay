@@ -1,10 +1,12 @@
 import Swal from 'sweetalert2';
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, OnInit, Inject, ViewChild } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Overtime } from 'src/app/overtimes/shared/overtime';
 import { OvertimeService } from 'src/app/overtimes/overtime.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { OvertimeFormComponent } from 'src/app/overtimes/overtime-form/overtime-form.component';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-edit-overtime',
@@ -12,41 +14,55 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./edit-overtime.component.scss'],
 })
 export class EditOvertimeComponent implements OnInit {
+  @ViewChild(OvertimeFormComponent)
+  overtimeForm: OvertimeFormComponent;
+
   overtime: Overtime;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-  overtimeId = Number(this.route.snapshot.paramMap.get('id'));
+  savingState: LoadingState = new LoadingState();
+
+  overtimeId: number;
 
   constructor(
     private overtimeService: OvertimeService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private errorHandler: ErrorHandler
-  ) {}
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialogRef<EditOvertimeComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any
+  ) {
+    this.overtimeId = data.overtimeId;
+  }
 
   ngOnInit(): void {
     this.loadOvertime();
   }
 
-  onSave(overtime: Overtime): void {
-    this.overtimeService.update(overtime, this.overtimeId).subscribe(
-      () => {
-        this.displaySuccess();
-        this.router.navigate(['overtimes', this.overtimeId]);
-      },
-      (err) => this.errorHandler.badRequest(err, 'Failed to update overtime.')
-    );
-  }
+  onSave(): void {
+    if (!this.overtimeForm.valid) {
+      return;
+    }
 
-  onCancel(): void {
-    this.router.navigate(['overtimes', this.overtimeId]);
+    this.savingState.changeToLoading();
+
+    const leave = this.overtimeForm.value;
+
+    this.overtimeService.update(leave, this.overtimeId).subscribe({
+      next: () => {
+        this.savingState.changeToSuccess();
+        this.displaySuccess();
+        this.dialog.close(true);
+      },
+      error: (err) => {
+        this.savingState.changeToError();
+        this.errorHandler.badRequest(err, 'Failed to update overtime.');
+      },
+    });
   }
 
   private loadOvertime(): void {
     this.overtimeService.get(this.overtimeId).subscribe((data) => {
       this.overtime = data;
-
       this.isLoading.next(true);
     });
   }
