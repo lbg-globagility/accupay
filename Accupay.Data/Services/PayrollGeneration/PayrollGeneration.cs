@@ -922,11 +922,11 @@ namespace AccuPay.Data.Services
                 this.OvertimePay = totalTimeEntries.OvertimePay;
                 this.ActualOvertimePay = totalTimeEntries.ActualOvertimePay;
 
-                this.NightDiffHours = totalTimeEntries.NightDiffHours;
+                this.NightDiffHours = totalTimeEntries.NightDifferentialHours;
                 this.NightDiffPay = totalTimeEntries.NightDiffPay;
                 this.ActualNightDiffPay = totalTimeEntries.ActualNightDiffPay;
 
-                this.NightDiffOvertimeHours = totalTimeEntries.NightDiffOvertimeHours;
+                this.NightDiffOvertimeHours = totalTimeEntries.NightDifferentialOvertimeHours;
                 this.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay;
                 this.ActualNightDiffOvertimePay = totalTimeEntries.ActualNightDiffOvertimePay;
 

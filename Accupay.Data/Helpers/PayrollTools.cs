@@ -17,6 +17,7 @@ namespace AccuPay.Data.Helpers
 
         public const int SemiMonthlyPayPeriodsPerMonth = 2;
 
+        // TODO: Transfer this and PayFrequencyWeeklyId to PayFrequency entity
         public const int PayFrequencySemiMonthlyId = 1;
 
         public const int PayFrequencyWeeklyId = 4;

@@ -686,10 +686,10 @@ namespace AccuPay.Data.Services
                 paystubModel.OvertimeHours = AccuMath.CommercialRound(totalTimeEntries.OvertimeHours);
                 paystubModel.OvertimePay = totalTimeEntries.OvertimePay;
 
-                paystubModel.NightDiffHours = AccuMath.CommercialRound(totalTimeEntries.NightDiffHours);
+                paystubModel.NightDiffHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialHours);
                 paystubModel.NightDiffPay = totalTimeEntries.NightDiffPay;
 
-                paystubModel.NightDiffOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.NightDiffOvertimeHours);
+                paystubModel.NightDiffOvertimeHours = AccuMath.CommercialRound(totalTimeEntries.NightDifferentialOvertimeHours);
                 paystubModel.NightDiffOvertimePay = totalTimeEntries.NightDiffOvertimePay;
 
                 paystubModel.SpecialHolidayHours = AccuMath.CommercialRound(totalTimeEntries.SpecialHolidayHours);

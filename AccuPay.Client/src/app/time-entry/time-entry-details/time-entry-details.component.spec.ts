@@ -1,19 +1,19 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ViewPayPeriodComponent } from './view-payperiod.component';
+import { TimeEntryDetailsComponent } from './time-entry-details.component';
 
-describe('ViewPayPeriodComponent', () => {
-  let component: ViewPayPeriodComponent;
-  let fixture: ComponentFixture<ViewPayPeriodComponent>;
+describe('TimeEntryComponent', () => {
+  let component: TimeEntryDetailsComponent;
+  let fixture: ComponentFixture<TimeEntryDetailsComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ViewPayPeriodComponent],
+      declarations: [TimeEntryDetailsComponent],
     }).compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ViewPayPeriodComponent);
+    fixture = TestBed.createComponent(TimeEntryDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

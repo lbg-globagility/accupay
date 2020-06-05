@@ -14,8 +14,6 @@ Public Class SalaryTab
 
     Private Const FormEntityName As String = "Salary"
 
-    Dim _systemOwnerService As SystemOwnerService
-
     Private _mode As FormMode = FormMode.Empty
 
     Private _employee As Employee
@@ -27,6 +25,23 @@ Public Class SalaryTab
     Private _isSystemOwnerBenchMark As Boolean
 
     Private _ecolaAllowance As Allowance
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
+
+    Public Sub New()
+        InitializeComponent()
+        dgvSalaries.AutoGenerateColumns = False
+
+        If MainServiceProvider IsNot Nothing Then
+
+            _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+        End If
+
+    End Sub
 
     Public Property BasicSalary As Decimal
         Get
@@ -56,17 +71,6 @@ Public Class SalaryTab
             End If
         End Set
     End Property
-
-    Public Sub New()
-        InitializeComponent()
-        dgvSalaries.AutoGenerateColumns = False
-
-        If MainServiceProvider IsNot Nothing Then
-
-            _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
-        End If
-
-    End Sub
 
     Public Async Function SetEmployee(employee As Employee) As Task
 
@@ -102,10 +106,7 @@ Public Class SalaryTab
 
             Dim errorMessage = "Cannot retrieve ECOLA data. Please contact Globagility Inc. to fix this."
 
-            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-
-            Dim currentPayPeriod = Await payPeriodService.
-                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+            Dim currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
             If currentPayPeriod Is Nothing OrElse employeeId Is Nothing Then
                 MessageBoxHelper.ErrorMessage(errorMessage)

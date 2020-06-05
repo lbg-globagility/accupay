@@ -1,9 +1,6 @@
 ﻿using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
-using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,46 +9,16 @@ namespace AccuPay.Data.Services
     public class PayPeriodService
     {
         private readonly PayrollContext _context;
+        private readonly PayPeriodRepository _repository;
         private readonly SystemOwnerService _systemOwnerService;
-        private readonly PayPeriodRepository _payPeriodRepository;
 
         public PayPeriodService(PayrollContext context,
-                                SystemOwnerService systemOwnerService,
-                                PayPeriodRepository payPeriodRepository)
+                                PayPeriodRepository repository,
+                                SystemOwnerService systemOwnerService)
         {
             _context = context;
+            _repository = repository;
             _systemOwnerService = systemOwnerService;
-            _payPeriodRepository = payPeriodRepository;
-        }
-
-        public async Task<IPayPeriod> GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(int organizationId,
-                                                            IEnumerable<IPayPeriod> payperiods = null)
-        {
-            // replace this with a policy
-            // fourlinq can use this feature also
-            // for clients that has the same attendance and payroll period
-            var isBenchmarkOwner = _systemOwnerService.GetCurrentSystemOwner() ==
-                                            SystemOwnerService.Benchmark;
-
-            var currentDay = DateTime.Today.ToMinimumHourValue();
-
-            if (payperiods == null || payperiods.Count() == 0)
-            {
-                payperiods = await _payPeriodRepository.GetAllSemiMonthlyAsync(organizationId);
-            }
-
-            if (isBenchmarkOwner)
-            {
-                return payperiods.
-                        Where(p => currentDay >= p.PayFromDate && currentDay <= p.PayToDate).
-                        LastOrDefault();
-            }
-            else
-            {
-                return payperiods.
-                        Where(p => p.PayToDate < currentDay).
-                        LastOrDefault();
-            }
         }
 
         public async Task<FunctionResult> ValidatePayPeriodActionAsync(int? payPeriodId, int organizationId)
@@ -67,14 +34,15 @@ namespace AccuPay.Data.Services
                 return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
             }
 
-            var payPeriod = await _context.PayPeriods.
-                            FirstOrDefaultAsync(p => p.RowID == payPeriodId);
+            var payPeriod = await _repository.GetByIdAsync(payPeriodId.Value);
 
             if (payPeriod == null)
             {
                 return FunctionResult.Failed("Pay period does not exists. Please refresh the form.");
             }
 
+            // TODO: this should be queried from _repository
+            // remove _context from this class
             var otherProcessingPayPeriod = await _context.Paystubs.
                                                         Include(p => p.PayPeriod).
                                                         Where(p => p.PayPeriod.RowID != payPeriodId).

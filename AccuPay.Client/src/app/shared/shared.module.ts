@@ -5,6 +5,7 @@ import { MaterialModule } from 'src/app/shared/material.module';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
+import { IfZeroPipe } from 'src/app/core/pipes/if-zero.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 
@@ -16,6 +17,7 @@ import { StatusComponent } from 'src/app/shared/components/status/status.compone
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
+    IfZeroPipe,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
@@ -38,6 +40,7 @@ import { StatusComponent } from 'src/app/shared/components/status/status.compone
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
+    IfZeroPipe,
     ImgFallbackDirective,
     StatusComponent,
     // UserMiniInfoComponent,

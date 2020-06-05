@@ -1,14 +1,15 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Payperiod } from 'src/app/payroll/shared/payperiod';
+import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Paystub } from 'src/app/payroll/shared/paystub';
+import { PageOptions } from 'src/app/core/shared/page-options';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PayperiodService {
+export class PayPeriodService {
   private baseUrl = 'api/payperiods';
 
   constructor(private httpClient: HttpClient) {}
@@ -20,28 +21,35 @@ export class PayperiodService {
     });
   }
 
-  getLatest(): Observable<Payperiod> {
-    return this.httpClient.get<Payperiod>(`${this.baseUrl}/latest`);
+  getLatest(): Observable<PayPeriod> {
+    return this.httpClient.get<PayPeriod>(`${this.baseUrl}/latest`);
   }
 
-  getById(payperiodId: number): Observable<Payperiod> {
-    return this.httpClient.get<Payperiod>(`${this.baseUrl}/${payperiodId}`);
+  getById(payPeriodId: number): Observable<PayPeriod> {
+    return this.httpClient.get<PayPeriod>(`${this.baseUrl}/${payPeriodId}`);
   }
 
-  getPaystubs(payperiodId: number): Observable<Paystub[]> {
+  getPaystubs(payPeriodId: number): Observable<Paystub[]> {
     return this.httpClient.get<Paystub[]>(
-      `${this.baseUrl}/${payperiodId}/paystubs`
+      `${this.baseUrl}/${payPeriodId}/paystubs`
     );
   }
 
-  calculate(payperiodId: number): Observable<void> {
+  calculate(payPeriodId: number): Observable<void> {
     return this.httpClient.post<void>(
-      `${this.baseUrl}/${payperiodId}/calculate`,
+      `${this.baseUrl}/${payPeriodId}/calculate`,
       {}
     );
   }
 
-  list(): Observable<PaginatedList<Payperiod>> {
-    return this.httpClient.get<PaginatedList<Payperiod>>(`${this.baseUrl}`);
+  GetList(
+    options: PageOptions,
+    term = ''
+  ): Observable<PaginatedList<PayPeriod>> {
+    const params = options ? options.toObject() : null;
+    params.term = term;
+    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
+      params,
+    });
   }
 }

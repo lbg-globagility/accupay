@@ -66,8 +66,9 @@ import { ViewTimeLogComponent } from 'src/app/time-logs/view-time-log/view-time-
 import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
 import { NewTimeLogComponent } from 'src/app/time-logs/new-time-log/new-time-log.component';
 import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
-import { ViewPayperiodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
+import { ViewPayPeriodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 import { TimeEntryComponent } from 'src/app/time-entry/time-entry/time-entry.component';
+import { TimeEntryDetailsComponent } from 'src/app/time-entry/time-entry-details/time-entry-details.component';
 
 const routes: Routes = [
   {
@@ -161,6 +162,10 @@ const routes: Routes = [
       {
         path: 'time-entry',
         component: TimeEntryComponent,
+      },
+      {
+        path: 'time-entry/:id',
+        component: TimeEntryDetailsComponent,
       },
       {
         path: 'shifts',
@@ -308,7 +313,7 @@ const routes: Routes = [
       },
       {
         path: 'payroll/:id',
-        component: ViewPayperiodComponent,
+        component: ViewPayPeriodComponent,
       },
     ],
     canActivate: [AuthGuard],

@@ -84,23 +84,18 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PaginatedList<PayperiodDto>> List(PageOptions options)
         {
-            var (payperiods, total) = await _payperiodRepository.ListByOrganization(_currentUser.OrganizationId, PayrollTools.PayFrequencySemiMonthlyId, options);
-            var dtos = payperiods.Select(t => ConvertToDto(t)).ToList();
+            var paginatedList = await _payperiodRepository.GetPaginatedListAsync(options, _currentUser.OrganizationId);
+            var dtos = paginatedList.List.Select(t => ConvertToDto(t)).ToList();
 
-            return new PaginatedList<PayperiodDto>(dtos, total, 1, 1);
+            return new PaginatedList<PayperiodDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
         private PayperiodDto ConvertToDto(PayPeriod t)
         {
             if (t == null) return null;
 
-            var dto = new PayperiodDto()
-            {
-                Id = t.RowID,
-                CutoffStart = t.PayFromDate,
-                CutoffEnd = t.PayToDate,
-                Status = t.Status.ToString()
-            };
+            var dto = new PayperiodDto();
+            dto.ApplyData(t);
 
             return dto;
         }

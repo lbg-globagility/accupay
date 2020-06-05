@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { Payperiod } from 'src/app/payroll/shared/payperiod';
-import { PayperiodService } from 'src/app/payroll/services/payperiod.service';
+import { PayPeriod } from 'src/app/payroll/shared/payperiod';
+import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { StartPayrollDialogComponent } from 'src/app/payroll/start-payroll-dialog/start-payroll-dialog.component';
 import { filter, map, mergeMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
+import { PageOptions } from 'src/app/core/shared/page-options';
+import { Sort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-payroll',
@@ -13,14 +15,25 @@ import { Router } from '@angular/router';
   styleUrls: ['./payroll.component.scss'],
 })
 export class PayrollComponent implements OnInit {
-  latestPayperiod: Payperiod;
+  latestPayperiod: PayPeriod;
 
   readonly displayedColumns = ['cutoff', 'status'];
 
-  dataSource: MatTableDataSource<Payperiod>;
+  dataSource: MatTableDataSource<PayPeriod>;
+
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  totalPages: number;
+  totalCount: number;
+  searchTerm: string;
+
+  sort: Sort = {
+    active: 'lastName',
+    direction: '',
+  };
 
   constructor(
-    private payperiodService: PayperiodService,
+    private payperiodService: PayPeriodService,
     private router: Router,
     private dialog: MatDialog
   ) {}
@@ -37,9 +50,20 @@ export class PayrollComponent implements OnInit {
   }
 
   loadList() {
-    this.payperiodService.list().subscribe((data) => {
-      this.dataSource = new MatTableDataSource(data.items);
-    });
+    const options = new PageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.sort.active,
+      this.sort.direction
+    );
+
+    this.payperiodService
+      .GetList(options, this.searchTerm)
+      .subscribe((data) => {
+        this.totalPages = data.totalPages;
+        this.totalCount = data.totalCount;
+        this.dataSource = new MatTableDataSource(data.items);
+      });
   }
 
   startPayroll() {

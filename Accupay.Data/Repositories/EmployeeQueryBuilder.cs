@@ -114,6 +114,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Employee> FirstOrDefaultAsync(int organizationId)
         {
+            ResolveOrganizationIdQuery(organizationId);
             return await _query.FirstOrDefaultAsync();
         }
 

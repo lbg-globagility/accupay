@@ -71,7 +71,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<OfficialBusiness>(officialBusinesses, count);
         }
 
-        internal IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
         {
             return _context.OfficialBusinesses.
                             Where(l => l.OrganizationID == organizationId).

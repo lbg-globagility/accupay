@@ -22,20 +22,17 @@ namespace AccuPay.Data.Services
 
         private readonly PayrollContext _context;
         private readonly PolicyHelper _policy;
-        private readonly PayPeriodService _payPeriodService;
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
 
         public LeaveDataService(PayrollContext context,
-                            PolicyHelper policy,
-                            PayPeriodService payPeriodService,
-                            EmployeeRepository employeeRepository,
-                            PayPeriodRepository payPeriodRepository)
+                                PolicyHelper policy,
+                                EmployeeRepository employeeRepository,
+                                PayPeriodRepository payPeriodRepository)
         {
             _context = context;
             _policy = policy;
-            _payPeriodService = payPeriodService;
             _employeeRepository = employeeRepository;
             _payPeriodRepository = payPeriodRepository;
         }
@@ -279,11 +276,10 @@ namespace AccuPay.Data.Services
         {
             decimal newBalance = newAllowance;
 
-            var currentPayPeriod = await _payPeriodService.
-                                            GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(organizationId);
+            var currentPayPeriod = await _payPeriodRepository.GetCurrentPayPeriodAsync(organizationId);
 
             var firstPayPeriodOfTheYear = await _payPeriodRepository.GetFirstPayPeriodOfTheYear(
-                                                                        (PayPeriod)currentPayPeriod,
+                                                                        currentPayPeriod,
                                                                         organizationId);
 
             var firstDayOfTheWorkingYear = firstPayPeriodOfTheYear?.PayFromDate;

@@ -25,7 +25,6 @@ import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
 import { TimeEntryModule } from './time-entry/time-entry.module';
 
-
 @NgModule({
   declarations: [AppComponent],
   imports: [

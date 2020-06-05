@@ -111,7 +111,7 @@ namespace AccuPay.Data.Repositories
                             ToListAsync();
         }
 
-        internal IEnumerable<Overtime> GetByDatePeriod(int organizationId,
+        public IEnumerable<Overtime> GetByDatePeriod(int organizationId,
                                                     TimePeriod timePeriod,
                                                     OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {

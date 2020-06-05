@@ -1,4 +1,6 @@
+using AccuPay.Data.Helpers;
 using AccuPay.Web.TimeEntries;
+using AccuPay.Web.TimeEntries.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -15,7 +17,19 @@ namespace AccuPay.Web.Controllers
             _service = service;
         }
 
-        [HttpPost("generate/{payPeriodId}")]
+        [HttpGet("{payPeriodId}")]
+        public async Task<ActionResult<TimeEntryPayPeriodDto>> Details(int payPeriodId)
+        {
+            return await _service.GetDetails(payPeriodId);
+        }
+
+        [HttpGet("{payPeriodId}/employees")]
+        public async Task<ActionResult<PaginatedList<TimeEntryEmployeeDto>>> List(int payPeriodId, [FromQuery] PageOptions options, string term)
+        {
+            return await _service.PaginatedEmployeeList(payPeriodId, options, term);
+        }
+
+        [HttpPost("{payPeriodId}/generate")]
         public async Task<ActionResult> Generate(int payPeriodId)
         {
             await _service.Generate(payPeriodId);

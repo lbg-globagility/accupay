@@ -7,86 +7,88 @@ namespace AccuPay.Web.Employees.Models
     {
         public static EmployeeDto Convert(Employee employee)
         {
-            if (employee == null)
-            {
-                return new EmployeeDto();
-            }
-            return FromEmployeeToDto(employee);
+            var dto = new EmployeeDto();
+            if (employee == null) return dto;
+
+            dto.ApplyData(employee);
+
+            return dto;
         }
 
-        internal static EmployeeDto FromEmployeeToDto(Employee employee)
+        protected void ApplyData(Employee employee)
         {
-            return new EmployeeDto()
-            {
-                Id = employee.RowID,
-                PositionID = employee.PositionID,
-                PayFrequencyID = employee.PayFrequencyID,
-                Salutation = employee.Salutation,
-                FirstName = employee.FirstName,
-                MiddleName = employee.MiddleName,
-                LastName = employee.LastName,
-                Surname = employee.Surname,
-                EmployeeNo = employee.EmployeeNo,
-                TinNo = employee.TinNo,
-                SssNo = employee.SssNo,
-                HdmfNo = employee.HdmfNo,
-                PhilHealthNo = employee.PhilHealthNo,
-                EmploymentStatus = employee.EmploymentStatus,
-                EmailAddress = employee.EmailAddress,
-                WorkPhone = employee.WorkPhone,
-                HomePhone = employee.HomePhone,
-                MobilePhone = employee.MobilePhone,
-                HomeAddress = employee.HomeAddress,
-                Nickname = employee.Nickname,
-                JobTitle = employee.JobTitle,
-                Gender = employee.Gender,
-                EmployeeType = employee.EmployeeType,
-                MaritalStatus = employee.MaritalStatus,
-                BirthDate = employee.BirthDate,
-                StartDate = employee.StartDate,
-                TerminationDate = employee.TerminationDate,
-                NoOfDependents = employee.NoOfDependents,
-                UndertimeOverride = employee.UndertimeOverride,
-                OvertimeOverride = employee.OvertimeOverride,
-                NewEmployeeFlag = employee.NewEmployeeFlag,
-                LeaveBalance = employee.LeaveBalance,
-                SickLeaveBalance = employee.SickLeaveBalance,
-                MaternityLeaveBalance = employee.MaternityLeaveBalance,
-                OtherLeaveBalance = employee.OtherLeaveBalance,
-                VacationLeaveAllowance = employee.VacationLeaveAllowance,
-                SickLeaveAllowance = employee.SickLeaveAllowance,
-                MaternityLeaveAllowance = employee.MaternityLeaveAllowance,
-                OtherLeaveAllowance = employee.OtherLeaveAllowance,
-                LeavePerPayPeriod = employee.LeavePerPayPeriod,
-                SickLeavePerPayPeriod = employee.SickLeavePerPayPeriod,
-                MaternityLeavePerPayPeriod = employee.MaternityLeavePerPayPeriod,
-                OtherLeavePerPayPeriod = employee.OtherLeavePerPayPeriod,
-                AlphalistExempted = employee.AlphalistExempted,
-                WorkDaysPerYear = employee.WorkDaysPerYear,
-                DayOfRest = employee.DayOfRest,
-                AtmNo = employee.AtmNo,
-                BankName = employee.BankName,
-                CalcHoliday = employee.CalcHoliday,
-                CalcSpecialHoliday = employee.CalcSpecialHoliday,
-                CalcNightDiff = employee.CalcNightDiff,
-                CalcNightDiffOT = employee.CalcNightDiffOT,
-                CalcRestDay = employee.CalcRestDay,
-                CalcRestDayOT = employee.CalcRestDayOT,
-                DateRegularized = employee.DateRegularized,
-                DateEvaluated = employee.DateEvaluated,
-                RevealInPayroll = employee.RevealInPayroll,
-                LateGracePeriod = employee.LateGracePeriod,
-                OffsetBalance = employee.OffsetBalance,
-                AgencyID = employee.AgencyID,
-                AdvancementPoints = employee.AdvancementPoints,
-                BPIInsurance = employee.BPIInsurance,
-            };
+            if (employee == null) return;
+
+            Id = employee.RowID;
+            PositionID = employee.PositionID;
+            PayFrequencyID = employee.PayFrequencyID;
+            Salutation = employee.Salutation;
+            FullName = employee.FullNameWithMiddleInitialLastNameFirst;
+            FirstName = employee.FirstName;
+            MiddleName = employee.MiddleName;
+            LastName = employee.LastName;
+            Surname = employee.Surname;
+            EmployeeNo = employee.EmployeeNo;
+            TinNo = employee.TinNo;
+            SssNo = employee.SssNo;
+            HdmfNo = employee.HdmfNo;
+            PhilHealthNo = employee.PhilHealthNo;
+            EmploymentStatus = employee.EmploymentStatus;
+            EmailAddress = employee.EmailAddress;
+            WorkPhone = employee.WorkPhone;
+            HomePhone = employee.HomePhone;
+            MobilePhone = employee.MobilePhone;
+            HomeAddress = employee.HomeAddress;
+            Nickname = employee.Nickname;
+            JobTitle = employee.JobTitle;
+            Gender = employee.Gender;
+            EmployeeType = employee.EmployeeType;
+            MaritalStatus = employee.MaritalStatus;
+            BirthDate = employee.BirthDate;
+            StartDate = employee.StartDate;
+            TerminationDate = employee.TerminationDate;
+            NoOfDependents = employee.NoOfDependents;
+            UndertimeOverride = employee.UndertimeOverride;
+            OvertimeOverride = employee.OvertimeOverride;
+            NewEmployeeFlag = employee.NewEmployeeFlag;
+            LeaveBalance = employee.LeaveBalance;
+            SickLeaveBalance = employee.SickLeaveBalance;
+            MaternityLeaveBalance = employee.MaternityLeaveBalance;
+            OtherLeaveBalance = employee.OtherLeaveBalance;
+            VacationLeaveAllowance = employee.VacationLeaveAllowance;
+            SickLeaveAllowance = employee.SickLeaveAllowance;
+            MaternityLeaveAllowance = employee.MaternityLeaveAllowance;
+            OtherLeaveAllowance = employee.OtherLeaveAllowance;
+            LeavePerPayPeriod = employee.LeavePerPayPeriod;
+            SickLeavePerPayPeriod = employee.SickLeavePerPayPeriod;
+            MaternityLeavePerPayPeriod = employee.MaternityLeavePerPayPeriod;
+            OtherLeavePerPayPeriod = employee.OtherLeavePerPayPeriod;
+            AlphalistExempted = employee.AlphalistExempted;
+            WorkDaysPerYear = employee.WorkDaysPerYear;
+            DayOfRest = employee.DayOfRest;
+            AtmNo = employee.AtmNo;
+            BankName = employee.BankName;
+            CalcHoliday = employee.CalcHoliday;
+            CalcSpecialHoliday = employee.CalcSpecialHoliday;
+            CalcNightDiff = employee.CalcNightDiff;
+            CalcNightDiffOT = employee.CalcNightDiffOT;
+            CalcRestDay = employee.CalcRestDay;
+            CalcRestDayOT = employee.CalcRestDayOT;
+            DateRegularized = employee.DateRegularized;
+            DateEvaluated = employee.DateEvaluated;
+            RevealInPayroll = employee.RevealInPayroll;
+            LateGracePeriod = employee.LateGracePeriod;
+            OffsetBalance = employee.OffsetBalance;
+            AgencyID = employee.AgencyID;
+            AdvancementPoints = employee.AdvancementPoints;
+            BPIInsurance = employee.BPIInsurance;
         }
 
         public int? Id { get; set; }
         public int? PositionID { get; set; }
         public int? PayFrequencyID { get; set; }
         public string Salutation { get; set; }
+        public string FullName { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }

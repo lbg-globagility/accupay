@@ -24,13 +24,24 @@ Public Class selectPayPeriod
 
     Private _payPeriodDataList As List(Of PayPeriodStatusData)
 
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _payPeriodService As PayPeriodService
+
+    Sub New()
+
+        InitializeComponent()
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
+    End Sub
+
     Private Async Sub selectPayPeriod_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         linkPrev.Text = "← " & (_currentYear - 1)
         linkNxt.Text = (_currentYear + 1) & " →"
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        _currentlyWorkedOnPayPeriod = Await payPeriodService.
-                                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         Dim payfrqncy As New AutoCompleteStringCollection
 
@@ -282,10 +293,8 @@ Public Class selectPayPeriod
 
             With dgvpaypers.CurrentRow
 
-                Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-
                 Dim payPeriodId = ObjectUtils.ToNullableInteger(.Cells("Column1").Value)
-                Dim validate = Await payPeriodService.ValidatePayPeriodActionAsync(
+                Dim validate = Await _payPeriodService.ValidatePayPeriodActionAsync(
                                             ObjectUtils.ToNullableInteger(.Cells("Column1").Value),
                                             z_OrganizationID)
 

@@ -55,29 +55,33 @@ Public Class BenchmarkPayrollForm
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
-    Private _listOfValueService As ListOfValueService
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _overtimeRateService As OvertimeRateService
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _salaryRepository As SalaryRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private ReadOnly _listOfValueService As ListOfValueService
 
-    Private _loanService As LoanDataService
+    Private ReadOnly _loanService As LoanDataService
+
+    Private ReadOnly _overtimeRateService As OvertimeRateService
 
     Sub New()
 
         InitializeComponent()
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
-
-        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
-
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
         _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
-        _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -354,9 +358,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        _currentPayPeriod = Await payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        _currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function

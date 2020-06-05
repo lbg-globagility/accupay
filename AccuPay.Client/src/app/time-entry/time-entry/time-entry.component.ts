@@ -1,10 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { PayperiodService } from 'src/app/payroll/services/payperiod.service';
-import { Payperiod } from 'src/app/payroll/shared/payperiod';
+import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
+import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { TimeEntryService } from '../time-entry.service';
 import { LoadingState } from 'src/app/core/states/loading-state';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+import { Sort } from '@angular/material/sort';
+import { auditTime } from 'rxjs/operators';
+import { Employee } from '../shared/employee';
+import { MatTableDataSource } from '@angular/material/table';
+import { Subject } from 'rxjs';
+import { Constants } from 'src/app/core/shared/constants';
+import { PageOptions } from 'src/app/core/shared/page-options';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-time-entry',
@@ -12,52 +21,81 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./time-entry.component.scss'],
 })
 export class TimeEntryComponent implements OnInit {
-  payPeriods: Payperiod[];
+  readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
-  selectedPayPeriod: Payperiod;
+  latestPayPeriod: PayPeriod;
+
+  dataSource: MatTableDataSource<PayPeriod>;
+
+  payPeriods: PayPeriod[];
+
+  selectedPayPeriod: PayPeriod;
 
   savingState: LoadingState = new LoadingState();
 
-  constructor(
-    private payperiodService: PayperiodService,
-    private timeEntryService: TimeEntryService,
-    private errorHandler: ErrorHandler,
-    private snackBar: MatSnackBar
-  ) {}
+  sort: Sort = {
+    active: 'lastName',
+    direction: '',
+  };
+
+  modelChanged: Subject<any>;
+  employees: Employee[];
+
+  pageIndex: number = 0;
+  pageSize: number = 10;
+  totalPages: number;
+  totalCount: number;
+  searchTerm: string;
+
+  selectedRow: number;
+
+  constructor(private payPeriodService: PayPeriodService) {
+    // this.modelChanged = new Subject();
+    // this.modelChanged
+    //   .pipe(auditTime(Constants.ThrottleTime))
+    //   .subscribe(() => this.load());
+  }
 
   ngOnInit(): void {
-    this.loadPayPeriods();
+    this.loadLatest();
+    this.loadList();
   }
 
-  loadPayPeriods(): void {
-    this.payperiodService.list().subscribe((data) => {
-      this.payPeriods = data.items;
-    });
+  loadLatest() {
+    this.payPeriodService
+      .getLatest()
+      .subscribe((payPeriod) => (this.latestPayPeriod = payPeriod));
   }
 
-  generateTimeEntries() {
-    const payperiodId = this.selectedPayPeriod?.id;
+  loadList() {
+    const options = new PageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.sort.active,
+      this.sort.direction
+    );
 
-    if (!payperiodId) {
-      this.snackBar.open('Please select a payperiod first.', null, {
-        duration: 5000,
-        panelClass: ['mat-toolbar', 'mat-warn'],
+    this.payPeriodService
+      .GetList(options, this.searchTerm)
+      .subscribe((data) => {
+        this.totalPages = data.totalPages;
+        this.totalCount = data.totalCount;
+        this.dataSource = new MatTableDataSource(data.items);
       });
+  }
 
-      return;
-    }
+  sortData(sort: Sort) {
+    this.sort = sort;
+    this.modelChanged.next();
+  }
 
-    console.log(payperiodId);
+  setHoveredRow(id: number) {
+    this.selectedRow = id;
+  }
 
-    this.snackBar.open('Generating time entries');
-
-    this.timeEntryService.generate(payperiodId).subscribe({
-      next: (result) => {
-        this.snackBar.open('Finished generating time entries.', 'OK');
-      },
-      error: (err) => {
-        this.errorHandler.badRequest(err, 'Failed to generate time entries');
-      },
-    });
+  onPageChanged(pageEvent: PageEvent) {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.loadList();
   }
 }

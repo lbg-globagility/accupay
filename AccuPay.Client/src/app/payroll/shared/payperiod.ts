@@ -1,4 +1,4 @@
-export interface Payperiod {
+export interface PayPeriod {
   id: number;
   cutoffStart: Date;
   cutoffEnd: Date;
