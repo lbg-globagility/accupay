@@ -27,22 +27,22 @@ namespace AccuPay.Web.Employees.Models
                 LastName = employee.LastName,
                 Surname = employee.Surname,
                 EmployeeNo = employee.EmployeeNo,
-                TinNo = employee.TinNo,
+                Tin = employee.TinNo,
                 SssNo = employee.SssNo,
-                HdmfNo = employee.HdmfNo,
                 PhilHealthNo = employee.PhilHealthNo,
+                PagIbigNo = employee.HdmfNo,
                 EmploymentStatus = employee.EmploymentStatus,
                 EmailAddress = employee.EmailAddress,
                 WorkPhone = employee.WorkPhone,
-                HomePhone = employee.HomePhone,
-                MobilePhone = employee.MobilePhone,
-                HomeAddress = employee.HomeAddress,
+                LandlineNo = employee.HomePhone,
+                MobileNo = employee.MobilePhone,
+                Address = employee.HomeAddress,
                 Nickname = employee.Nickname,
                 JobTitle = employee.JobTitle,
                 Gender = employee.Gender,
                 EmployeeType = employee.EmployeeType,
                 MaritalStatus = employee.MaritalStatus,
-                BirthDate = employee.BirthDate,
+                Birthdate = employee.BirthDate,
                 StartDate = employee.StartDate,
                 TerminationDate = employee.TerminationDate,
                 NoOfDependents = employee.NoOfDependents,
@@ -92,22 +92,22 @@ namespace AccuPay.Web.Employees.Models
         public string LastName { get; set; }
         public string Surname { get; set; }
         public string EmployeeNo { get; set; }
-        public string TinNo { get; set; }
+        public string Tin { get; set; }
         public string SssNo { get; set; }
-        public string HdmfNo { get; set; }
+        public string PagIbigNo { get; set; }
         public string PhilHealthNo { get; set; }
         public string EmploymentStatus { get; set; }
         public string EmailAddress { get; set; }
         public string WorkPhone { get; set; }
-        public string HomePhone { get; set; }
-        public string MobilePhone { get; set; }
-        public string HomeAddress { get; set; }
+        public string LandlineNo { get; set; }
+        public string MobileNo { get; set; }
+        public string Address { get; set; }
         public string Nickname { get; set; }
         public string JobTitle { get; set; }
         public string Gender { get; set; }
         public string EmployeeType { get; set; }
         public string MaritalStatus { get; set; }
-        public DateTime BirthDate { get; set; }
+        public DateTime Birthdate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime? TerminationDate { get; set; }
         public int? NoOfDependents { get; set; }

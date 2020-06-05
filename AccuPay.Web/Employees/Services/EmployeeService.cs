@@ -2,7 +2,6 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Employees.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,10 +10,40 @@ namespace AccuPay.Web.Employees.Services
     public class EmployeeService
     {
         private readonly EmployeeRepository _employeeRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public EmployeeService(EmployeeRepository employeeRepository)
+        public EmployeeService(EmployeeRepository employeeRepository, ICurrentUser currentUser)
         {
             _employeeRepository = employeeRepository;
+            _currentUser = currentUser;
+        }
+
+        internal async Task<Employee> Create(CreateEmployeeDto dto)
+        {
+            var employee = new Employee();
+            employee.OrganizationID = _currentUser.OrganizationId;
+            // this should intercepted, base on Globagility's Client ID
+            // and the current User who made the http request
+            employee.CreatedBy = 1;
+
+            employee.EmployeeNo = dto.EmployeeNo;
+            employee.FirstName = dto.FirstName;
+            employee.LastName = dto.LastName;
+            employee.BirthDate = dto.Birthdate;
+
+            employee.HomeAddress = dto.Address;
+            employee.HomePhone = dto.LandlineNo;
+            employee.MobilePhone = dto.MobileNo;
+            employee.EmailAddress = dto.EmailAddress;
+
+            employee.TinNo = dto.Tin;
+            employee.SssNo = dto.SssNo;
+            employee.PhilHealthNo = dto.PhilHealthNo;
+            employee.HdmfNo = dto.PagIbigNo;
+
+            await Save(employee);
+
+            return employee;
         }
 
         internal async Task<Employee> Update(int id, EmployeeDto dto)
@@ -32,26 +61,9 @@ namespace AccuPay.Web.Employees.Services
             return employee;
         }
 
-        internal async Task<Employee> Create(EmployeeDto dto)
-        {
-            var employee = new Employee();
-
-            // this should intercepted, base on Globagility's Client ID
-            // and the current User who made the http request
-            employee.OrganizationID = 2;
-            employee.CreatedBy = 1;
-
-            ApplyUpdate(dto, employee);
-
-            await Save(employee);
-
-            return employee;
-        }
-
         private async Task Save(Employee employee)
         {
-            List<Employee> employees = new List<Employee>() { employee };
-            await _employeeRepository.SaveManyAsync(employees);
+            await _employeeRepository.SaveAsync(employee);
         }
 
         private static void ApplyUpdate(EmployeeDto dto, Employee employee)
@@ -64,22 +76,22 @@ namespace AccuPay.Web.Employees.Services
             employee.LastName = dto.LastName;
             employee.Surname = dto.Surname;
             employee.EmployeeNo = dto.EmployeeNo;
-            employee.TinNo = dto.TinNo;
+            employee.TinNo = dto.Tin;
             employee.SssNo = dto.SssNo;
-            employee.HdmfNo = dto.HdmfNo;
+            employee.HdmfNo = dto.PagIbigNo;
             employee.PhilHealthNo = dto.PhilHealthNo;
             employee.EmploymentStatus = dto.EmploymentStatus;
             employee.EmailAddress = dto.EmailAddress;
             employee.WorkPhone = dto.WorkPhone;
-            employee.HomePhone = dto.HomePhone;
-            employee.MobilePhone = dto.MobilePhone;
-            employee.HomeAddress = dto.HomeAddress;
+            employee.HomePhone = dto.LandlineNo;
+            employee.MobilePhone = dto.MobileNo;
+            employee.HomeAddress = dto.Address;
             employee.Nickname = dto.Nickname;
             employee.JobTitle = dto.JobTitle;
             employee.Gender = dto.Gender;
             employee.EmployeeType = dto.EmployeeType;
             employee.MaritalStatus = dto.MaritalStatus;
-            employee.BirthDate = dto.BirthDate;
+            employee.BirthDate = dto.Birthdate;
             employee.StartDate = dto.StartDate;
             employee.TerminationDate = dto.TerminationDate;
             employee.NoOfDependents = dto.NoOfDependents;

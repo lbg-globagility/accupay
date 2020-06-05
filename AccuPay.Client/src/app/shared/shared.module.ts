@@ -8,6 +8,7 @@ import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
+import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
+    DisplayFieldComponent,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
@@ -41,6 +43,7 @@ import { NgxPermissionsModule } from 'ngx-permissions';
     IfEmptyPipe,
     ImgFallbackDirective,
     StatusComponent,
+    DisplayFieldComponent,
     // UserMiniInfoComponent,
     NgxPermissionsModule,
     CommonModule,

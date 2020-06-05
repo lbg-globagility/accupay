@@ -22,8 +22,18 @@ export class EmployeeFormComponent implements OnInit {
 
   form: FormGroup = this.fb.group({
     employeeNo: [null, Validators.required],
-    lastName: [null, Validators.required],
     firstName: [null, Validators.required],
+    lastName: [null, Validators.required],
+    middleName: [],
+    birthdate: [, Validators.required],
+    address: [],
+    landlineNo: [],
+    mobileNo: [],
+    emailAddress: [],
+    tin: [],
+    sssNo: [],
+    philHealthNo: [],
+    pagIbigNo: [],
   });
 
   constructor(private fb: FormBuilder) {}
