@@ -28,8 +28,6 @@ export class EditOfficialBusinessComponent implements OnInit {
 
   constructor(
     private officialBusinessService: OfficialBusinessService,
-    private route: ActivatedRoute,
-    private router: Router,
     private errorHandler: ErrorHandler,
     private dialog: MatDialogRef<EditOfficialBusinessComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
