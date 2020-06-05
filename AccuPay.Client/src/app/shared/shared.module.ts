@@ -7,6 +7,7 @@ import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { StatusComponent } from 'src/app/shared/components/status/status.compone
     ImgFallbackDirective,
     StatusComponent,
     // UserMiniInfoComponent,
+    NgxPermissionsModule,
     CommonModule,
     FormsModule,
     RouterModule,

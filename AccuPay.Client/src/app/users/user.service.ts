@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { User } from 'src/app/users/shared/user';
+import { map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -17,8 +18,10 @@ export class UserService {
     return this.httpClient.get<User>(`${this.baseUrl}/${id}`);
   }
 
-  getAll(): Observable<PaginatedList<User>> {
-    return this.httpClient.get<PaginatedList<User>>(`${this.baseUrl}?all=true`);
+  getAll(): Observable<User[]> {
+    return this.httpClient
+      .get<PaginatedList<User>>(`${this.baseUrl}?all=true`)
+      .pipe(map((data) => data.items));
   }
 
   getByOrganization(
