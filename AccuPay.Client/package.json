@@ -25,6 +25,7 @@
     "flexboxgrid": "^6.3.1",
     "jwt-decode": "^2.2.0",
     "moment": "^2.26.0",
+    "ngx-permissions": "^7.0.3",
     "normalize-scss": "^7.0.1",
     "rxjs": "~6.5.4",
     "sweetalert2": "^9.11.0",

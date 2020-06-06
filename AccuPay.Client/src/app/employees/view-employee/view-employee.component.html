@@ -1,13 +1,84 @@
-<div>
-  <h1>View Employee</h1>
-  <div>
-    <button mat-raised-button type="button" color="accent" (click)="routeToEditPage()">
-      EDIT EMPLOYEE
+<div class="row">
+  <div class="col-lg-9">
+    <h1 class="mat-headline">View Employee</h1>
+  </div>
+  <div class="col-lg-3 flex items-start justify-end">
+    <button
+      mat-raised-button
+      type="button"
+      color="accent"
+      (click)="routeToEditPage()"
+      class="m-with-icon"
+    >
+      <mat-icon>edit</mat-icon>EDIT
     </button>
   </div>
 </div>
 
 <ng-container *ngIf="isLoading | async">
-  <app-employee-form [employee]="employee" [uncontrollable]="true">
-  </app-employee-form>
+  <mat-card>
+    <h3 class="mat-title">Personal Information</h3>
+    <mat-card-content>
+      <div class="row">
+        <app-display-field label="Employee No" class="col-lg-3">
+          {{ employee.employeeNo }}
+        </app-display-field>
+        <app-display-field label="First Name" class="col-lg-3">
+          {{ employee.firstName }}
+        </app-display-field>
+        <app-display-field label="Last Name" class="col-lg-3">
+          {{ employee.lastName }}
+        </app-display-field>
+        <app-display-field label="Middle Name" class="col-lg-3">
+          {{ employee.middleName | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="Birthdate" class="col-lg-3">
+          {{ employee.birthdate | date }}
+        </app-display-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-4">
+    <h3 class="mat-title">Contact Details</h3>
+    <mat-card-content>
+      <div class="row">
+        <app-display-field label="Address" class="col-lg-3">
+          {{ employee.address | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="Landline No" class="col-lg-3">
+          {{ employee.landlineNo | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="Mobile No" class="col-lg-3">
+          {{ employee.mobileNo | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="Email Address" class="col-lg-3">
+          {{ employee.emailAddress | ifEmpty }}
+        </app-display-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card class="mt-4">
+    <h3 class="mat-title">Identification</h3>
+    <mat-card-content>
+      <div class="row">
+        <app-display-field label="TIN" class="col-lg-3">
+          {{ employee.tin | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="SSS No" class="col-lg-3">
+          {{ employee.sssNo | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="PhilHealth No" class="col-lg-3">
+          {{ employee.philHealthNo | ifEmpty }}
+        </app-display-field>
+        <app-display-field label="Pag-IBIG No" class="col-lg-3">
+          {{ employee.pagIbigNo | ifEmpty }}
+        </app-display-field>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- <app-employee-form [employee]="employee" [uncontrollable]="true">
+  </app-employee-form> -->
 </ng-container>

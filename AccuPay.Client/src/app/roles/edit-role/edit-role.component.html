@@ -1,0 +1,18 @@
+<h1 class="mat-headline">Edit Role</h1>
+
+<ng-container *ngIf="role">
+  <app-role-form [role]="role"></app-role-form>
+</ng-container>
+
+<div class="mt-4">
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+    class="mr-2"
+    [disabled]="savingState.isLoading"
+  >
+    SAVE CHANGES
+  </button>
+  <button mat-raised-button (click)="cancel()">CANCEL</button>
+</div>

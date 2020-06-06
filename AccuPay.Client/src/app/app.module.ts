@@ -6,6 +6,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MainModule } from 'src/app/main/main.module';
 import { AccountsModule } from 'src/app/accounts/accounts.module';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { NgxPermissionsModule } from 'ngx-permissions';
 import { AllowancesModule } from 'src/app/allowances/allowances.module';
 import { EmployeesModule } from './employees/employees.module';
 import { LeavesModule } from 'src/app/leaves/leaves.module';
@@ -24,6 +25,7 @@ import { CalendarsModule } from 'src/app/calendars/calendars.module';
 import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
 import { TimeEntryModule } from './time-entry/time-entry.module';
+import { RolesModule } from 'src/app/roles/roles.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -32,6 +34,7 @@ import { TimeEntryModule } from './time-entry/time-entry.module';
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxPermissionsModule.forRoot(),
     AccountsModule,
     MainModule,
     AllowancesModule,
@@ -51,6 +54,7 @@ import { TimeEntryModule } from './time-entry/time-entry.module';
     PayrollModule,
     DivisionsModule,
     TimeEntryModule,
+    RolesModule,
   ],
   providers: [
     {

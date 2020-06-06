@@ -1,0 +1,15 @@
+<h1 class="mat-headline">New Role</h1>
+
+<app-role-form></app-role-form>
+
+<div class="mt-4">
+  <button mat-raised-button (click)="cancel()" class="mr-2">CANCEL</button>
+  <button
+    mat-raised-button
+    color="primary"
+    (click)="save()"
+    [disabled]="savingState.isLoading"
+  >
+    CREATE ROLE
+  </button>
+</div>

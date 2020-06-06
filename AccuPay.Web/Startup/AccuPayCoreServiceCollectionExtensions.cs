@@ -48,6 +48,7 @@ namespace AccuPay.Web
             services.AddScoped<PaystubEmailHistoryRepository>();
             services.AddScoped<PaystubEmailRepository>();
             services.AddScoped<PaystubRepository>();
+            services.AddScoped<PermissionRepository>();
             services.AddScoped<PhilHealthBracketRepository>();
             services.AddScoped<PositionRepository>();
             services.AddScoped<PositionViewQueryBuilder>();
@@ -55,6 +56,7 @@ namespace AccuPay.Web
             services.AddScoped<PreviousEmployerRepository>();
             services.AddScoped<ProductRepository>();
             services.AddScoped<PromotionRepository>();
+            services.AddScoped<RoleRepository>();
             services.AddScoped<SalaryRepository>();
             services.AddScoped<ShiftRepository>();
             services.AddScoped<ShiftScheduleRepository>();

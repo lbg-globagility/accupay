@@ -11,12 +11,15 @@ namespace AccuPay.Web.Controllers
     {
         private readonly AccountService _accountService;
         private readonly UserTokenService _userTokenService;
+        private readonly RoleService _roleService;
 
         public AccountController(AccountService accountService,
-                                 UserTokenService userTokenService)
+                                 UserTokenService userTokenService,
+                                 RoleService roleService)
         {
             _accountService = accountService;
             _userTokenService = userTokenService;
+            _roleService = roleService;
         }
 
         [HttpPost("login")]
@@ -47,6 +50,14 @@ namespace AccuPay.Web.Controllers
             {
                 return BadRequest(new { ErrorType = ex.Message });
             }
+        }
+
+        [HttpGet("current-role")]
+        public async Task<ActionResult<RoleDto>> GetCurrentRole()
+        {
+            var dto = await _roleService.GetCurrentRole();
+
+            return dto;
         }
 
         [HttpGet("verify")]

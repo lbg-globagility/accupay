@@ -69,6 +69,10 @@ import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
 import { ViewPayPeriodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
 import { TimeEntryComponent } from 'src/app/time-entry/time-entry/time-entry.component';
 import { TimeEntryDetailsComponent } from 'src/app/time-entry/time-entry-details/time-entry-details.component';
+import { NewRoleComponent } from 'src/app/roles/new-role/new-role.component';
+import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
+import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
+import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
 
 const routes: Routes = [
   {
@@ -108,6 +112,22 @@ const routes: Routes = [
         component: EditUserComponent,
       },
       {
+        path: 'roles',
+        component: RoleListComponent,
+      },
+      {
+        path: 'roles/new',
+        component: NewRoleComponent,
+      },
+      {
+        path: 'user-access',
+        component: UserRolesComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
+      },
+      {
         path: 'salaries',
         component: SalaryListComponent,
       },
@@ -130,18 +150,6 @@ const routes: Routes = [
       {
         path: 'official-businesses',
         component: OfficialBusinessListComponent,
-      },
-      {
-        path: 'official-businesses/new',
-        component: NewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id',
-        component: ViewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id/edit',
-        component: EditOfficialBusinessComponent,
       },
       {
         path: 'overtimes',

@@ -105,6 +105,14 @@ const menuItems: MenuItem[] = [
         label: 'Users',
         route: '/users',
       },
+      {
+        label: 'Roles',
+        route: '/roles',
+      },
+      {
+        label: 'User Access',
+        route: '/user-access',
+      },
     ],
   },
 ];

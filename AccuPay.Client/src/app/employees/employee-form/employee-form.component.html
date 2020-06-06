@@ -1,64 +1,103 @@
 <form [formGroup]="form" (ngSubmit)="onSave()">
-  <mat-card>
-    <mat-card-content>
-      <div class="row middle-md">
-        <div class="col-md-12">
+  <div class="row">
+    <div class="col-lg-6">
+      <mat-card>
+        <mat-card-content>
+          <h3 class="font-medium mb-4">Personal Information</h3>
           <div class="row">
-            <ng-container *ngIf="uncontrollable === false">
-              <mat-form-field
-                class="col-md-8"
-                appearance="outline"
-                color="accent"
-              >
-                <mat-label>Employee ID *</mat-label>
-                <input matInput formControlName="employeeNo" />
-              </mat-form-field>
-
-              <mat-form-field
-                class="col-md-6"
-                appearance="outline"
-                color="accent"
-              >
-                <mat-label>Last Name *</mat-label>
-                <input matInput formControlName="lastName" />
-              </mat-form-field>
-
-              <mat-form-field
-                class="col-md-6"
-                appearance="outline"
-                color="accent"
-              >
-                <mat-label>First Name *</mat-label>
-                <input matInput formControlName="firstName" />
-              </mat-form-field>
-            </ng-container>
-
-            <ng-container *ngIf="uncontrollable">
-              <mat-form-field class="col-md-8 m-no-underline">
-                <mat-label>Employee ID</mat-label>
-                <input matInput [value]="getValue('employeeNo')" readonly />
-              </mat-form-field>
-
-              <mat-form-field class="col-md-6 m-no-underline">
-                <mat-label>Last Name</mat-label>
-                <input matInput [value]="getValue('lastName')" readonly />
-              </mat-form-field>
-
-              <mat-form-field class="col-md-6 m-no-underline">
-                <mat-label>First Name</mat-label>
-                <input matInput [value]="getValue('firstName')" readonly />
-              </mat-form-field>
-            </ng-container>
+            <mat-form-field class="col-lg-4" appearance="fill">
+              <mat-label>First Name *</mat-label>
+              <input matInput formControlName="firstName" />
+              <mat-error>First name is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-lg-4" appearance="fill">
+              <mat-label>Last Name *</mat-label>
+              <input matInput formControlName="lastName" />
+              <mat-error>Last name is required</mat-error>
+            </mat-form-field>
+            <mat-form-field class="col-lg-4" appearance="fill">
+              <mat-label>Middle Name</mat-label>
+              <input matInput formControlName="middleName" />
+            </mat-form-field>
           </div>
-        </div>
-      </div>
-    </mat-card-content>
+          <div class="row">
+            <mat-form-field class="col-lg-4" appearance="fill">
+              <mat-label>Employee No *</mat-label>
+              <input matInput formControlName="employeeNo" />
+            </mat-form-field>
+            <mat-form-field class="col-lg-4" appearance="fill">
+              <mat-label>Birthdate *</mat-label>
+              <input
+                matInput
+                [matDatepicker]="birthdate"
+                formControlName="birthdate"
+              />
+              <mat-datepicker-toggle
+                matSuffix
+                [for]="birthdate"
+              ></mat-datepicker-toggle>
+              <mat-datepicker #birthdate></mat-datepicker>
+              <mat-error>Birthdate is required</mat-error>
+            </mat-form-field>
+          </div>
 
-    <mat-card-actions [ngClass]="{ 'is-hidden': uncontrollable }">
-      <button mat-button type="button" color="accent" (click)="cancel.emit()">
-        CANCEL
-      </button>
-      <button mat-raised-button type="submit" color="accent">FINISH</button>
-    </mat-card-actions>
-  </mat-card>
+          <h3 class="font-medium mb-4">Contact Details</h3>
+          <div class="row">
+            <mat-form-field class="col-lg-12" appearance="fill">
+              <mat-label>Address</mat-label>
+              <input matInput formControlName="address" />
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Landline No</mat-label>
+              <input matInput formControlName="landlineNo" />
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Mobile No</mat-label>
+              <input matInput formControlName="mobileNo" />
+            </mat-form-field>
+          </div>
+          <div class="row">
+            <mat-form-field class="col-lg-12" appearance="fill">
+              <mat-label>Email Address</mat-label>
+              <input matInput formControlName="emailAddress" />
+            </mat-form-field>
+          </div>
+
+          <h3 class="font-medium mb-4">Identification</h3>
+          <div class="row">
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>TIN</mat-label>
+              <input matInput formControlName="tin" />
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>SSS No</mat-label>
+              <input matInput formControlName="sssNo" />
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Philhealth No</mat-label>
+              <input matInput formControlName="philHealthNo" />
+            </mat-form-field>
+            <mat-form-field class="col-lg-6" appearance="fill">
+              <mat-label>Pag-IBIG No</mat-label>
+              <input matInput formControlName="pagIbigNo" />
+            </mat-form-field>
+          </div>
+        </mat-card-content>
+
+        <mat-card-actions>
+          <button mat-raised-button type="submit" color="accent">FINISH</button>
+          <button
+            mat-button
+            type="button"
+            color="accent"
+            (click)="cancel.emit()"
+          >
+            CANCEL
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
 </form>

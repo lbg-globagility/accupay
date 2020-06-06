@@ -1,0 +1,10 @@
+ALTER TABLE `aspnetroles`
+	ADD COLUMN `ClientId` INT NOT NULL AFTER `UpdatedById`;
+ALTER TABLE `aspnetroles`
+  DROP INDEX `RoleNameIndex`;
+ALTER TABLE `aspnetroles`
+	ADD CONSTRAINT `FK_aspnetroles_client` FOREIGN KEY (`ClientId`) REFERENCES `client` (`Id`);
+
+ALTER TABLE `aspnetroles`
+	DROP COLUMN `OrganizationId`,
+	DROP COLUMN `Organization_ID`;
