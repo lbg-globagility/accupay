@@ -11,7 +11,7 @@ namespace AccuPay.Web.Core.Auth
             Task.FromResult(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
 
         public Task<AuthorizationPolicy> GetFallbackPolicyAsync() =>
-            Task.FromResult(new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build());
+            Task.FromResult<AuthorizationPolicy>(null);
 
         public Task<AuthorizationPolicy> GetPolicyAsync(string policyName)
         {
