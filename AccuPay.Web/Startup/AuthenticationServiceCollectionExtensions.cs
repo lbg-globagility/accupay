@@ -48,8 +48,8 @@ namespace AccuPay.Web
 
             services.AddAuthorization();
 
-            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
+            //services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            //services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 
