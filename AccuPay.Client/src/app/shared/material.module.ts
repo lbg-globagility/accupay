@@ -18,6 +18,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import {
   MatMomentDateModule,
@@ -53,7 +54,7 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    // MatTooltipModule,
+    MatTooltipModule,
     MatExpansionModule,
   ],
   providers: [
