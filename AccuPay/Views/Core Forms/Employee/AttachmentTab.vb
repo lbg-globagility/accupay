@@ -59,6 +59,8 @@ Public Class AttachmentTab
 
         RemoveHandler dgvAttachments.SelectionChanged, AddressOf dgvAttachments_SelectionChanged
 
+        pbAttachment.Image = Nothing
+
         dgvAttachments.DataSource = _attachments
 
         If _attachments.Count > 0 Then
