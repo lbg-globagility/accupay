@@ -8,69 +8,33 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class AllowanceRepository : BaseRepository
+    public class AllowanceRepository : SavableRepository<Allowance>
     {
-        private readonly PayrollContext _context;
-
-        public AllowanceRepository(PayrollContext context)
+        public AllowanceRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(Allowance allowance)
+        protected override void DetachNavigationProperties(Allowance allowance)
         {
-            _context.Remove(allowance);
+            if (allowance.Employee != null)
+            {
+                _context.Entry(allowance.Employee).State = EntityState.Detached;
+            }
 
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveAsync(Allowance allowance)
-        {
-            SaveFunction(allowance);
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveManyAsync(List<Allowance> allowances)
-        {
-            allowances.ForEach(x => SaveFunction(x));
-            await _context.SaveChangesAsync();
-        }
-
-        private void SaveFunction(Allowance allowance)
-        {
             if (allowance.Product != null)
             {
-                _context.Entry(allowance.Product).State = EntityState.Unchanged;
+                _context.Entry(allowance.Product).State = EntityState.Detached;
 
                 if (allowance.Product.CategoryEntity != null)
                 {
-                    _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Unchanged;
+                    _context.Entry(allowance.Product.CategoryEntity).State = EntityState.Detached;
                 }
             }
-
-            if (IsNewEntity(allowance.RowID))
-            {
-                _context.Allowances.Add(allowance);
-            }
-            else
-            {
-                _context.Entry(allowance).State = EntityState.Modified;
-            }
         }
-
-        #endregion CRUD
 
         #region Queries
 
         #region Single entity
-
-        internal async Task<Allowance> GetByIdAsync(int id)
-        {
-            return await _context.Allowances
-                                    .FirstOrDefaultAsync(l => l.RowID == id);
-        }
 
         internal async Task<Allowance> GetByIdWithEmployeeAndProductAsync(int id)
         {

@@ -75,6 +75,62 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(organizationId);
         }
 
+        public async Task<PaginatedListResult<Employee>> GetPaginatedListWithTimeEntryAsync(PageOptions options, int organizationId, int payPeriodId, string searchTerm = "")
+        {
+            return await BaseGetPaginatedListAsync(options,
+                                                    organizationId: organizationId,
+                                                    payPeriodId: payPeriodId,
+                                                    hasTimeEntries: true,
+                                                    searchTerm: searchTerm);
+        }
+
+        private async Task<PaginatedListResult<Employee>> BaseGetPaginatedListAsync(PageOptions options, int organizationId, int? payPeriodId = null, bool hasTimeEntries = false, bool hasPaystubs = false, string searchTerm = "")
+        {
+            var query = _context.Employees
+                                .Where(x => x.OrganizationID == organizationId)
+                                .OrderByDescending(x => x.LastName)
+                                .ThenBy(x => x.FirstName)
+                                .ThenBy(x => x.EmployeeNo)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LastName, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.EmployeeNo, searchTerm));
+            }
+
+            if (payPeriodId.HasValue)
+            {
+                if (hasPaystubs)
+                {
+                    query = query.Where(e => e.Paystubs.Where(p => p.PayPeriodID == payPeriodId).Any());
+                }
+
+                if (hasTimeEntries)
+                {
+                    var payPeriod = await _context.PayPeriods
+                                                .FirstOrDefaultAsync(x => x.RowID == payPeriodId);
+
+                    // we dont need the Include to use TimeEntries in a query
+                    // we use Include TimeEntries because we needs its data
+                    query = query.Include(x => x.TimeEntries);
+
+                    query = query.Where(e => e.TimeEntries.Where(t => t.Date >= payPeriod.PayFromDate)
+                                                            .Where(t => t.Date <= payPeriod.PayToDate)
+                                                            .Any());
+                }
+            }
+
+            var employees = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Employee>(employees, count);
+        }
+
         public async Task<IEnumerable<Employee>> GetAllWithPayrollAsync(int payPeriodId,
                                                                     int organizationId)
         {

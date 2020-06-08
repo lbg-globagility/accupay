@@ -1,7 +1,6 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Web.Organizations;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers

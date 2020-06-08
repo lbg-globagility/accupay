@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -29,6 +30,12 @@ namespace AccuPay.Data.Repositories
             await ToggleCloseAsync(id, isClosed: true);
         }
 
+        public async Task Update(PayPeriod payperiod)
+        {
+            _context.Entry(payperiod).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
         #endregion CRUD
 
         #region Queries
@@ -45,6 +52,25 @@ namespace AccuPay.Data.Repositories
             return await _context.PayPeriods.FirstOrDefaultAsync(x => x.RowID == id);
         }
 
+        /// <summary>
+        /// Get the latest payperiod that was Closed or Open based on Status property. (Used in Web)
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetLatest(int organizationId)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.Status != PayPeriodStatus.Pending)
+                .Where(p => p.OrganizationID == organizationId)
+                .OrderByDescending(p => p.PayFromDate)
+                .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// This returns the current "PROCESSING" pay period based on IsClosed and paystub count. (Used in desktop)
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
         public async Task<PayPeriod> GetCurrentProcessing(int organizationId)
         {
             return await _context.PayPeriods.
@@ -53,6 +79,41 @@ namespace AccuPay.Data.Repositories
                             Where(p => p.OrganizationID == organizationId).
                             Where(p => p.Paystubs.Any()).
                             FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// This returns the current pay period based on date today regardless of the Status and IsClosed property.
+        /// </summary>
+        /// <param name="organizationId"></param>
+        /// <returns></returns>
+        public async Task<PayPeriod> GetCurrentPayPeriodAsync(int organizationId)
+        {
+            var currentDay = DateTime.Now;
+            var isFirstHalf = currentDay.Day <= 15;
+
+            var query = _context.PayPeriods
+                                .Where(p => p.OrganizationID == organizationId)
+                                .Where(p => p.Year == currentDay.Year)
+                                .Where(p => p.Month == currentDay.Month);
+
+            if (isFirstHalf)
+            {
+                query = query.Where(x => x.IsFirstHalf);
+            }
+            else
+            {
+                query = query.Where(x => x.IsEndOfTheMonth);
+            }
+
+            return await query.FirstOrDefaultAsync();
+        }
+
+        public async Task<PayPeriod> GetByCutoffDates(DateTime cutoffStart, DateTime cutoffEnd)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.PayFromDate == cutoffStart)
+                .Where(p => p.PayToDate == cutoffEnd)
+                .FirstOrDefaultAsync();
         }
 
         public PayPeriod GetNextPayPeriod(int payPeriodId)
@@ -161,6 +222,30 @@ namespace AccuPay.Data.Repositories
                                                                     year: year,
                                                                     payFrequencyId: payFrequencyId).
                             ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.PayPeriods
+                                    .Where(t => t.OrganizationID == organizationId)
+                                    .Where(t => t.Status != PayPeriodStatus.Pending)
+                                    .Where(t => t.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
+                                    .OrderByDescending(t => t.PayFromDate)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.PayFromDate.ToString(), searchTerm) ||
+                    EF.Functions.Like(x.PayToDate.ToString(), searchTerm));
+            }
+
+            var payperiods = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<PayPeriod>(payperiods, count);
         }
 
         #endregion List of entities

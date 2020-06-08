@@ -1,12 +1,12 @@
 ﻿Option Strict On
 
+Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
 Imports AccuPay.Infrastructure.Services.Excel
-Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
-Imports Globagility.AccuPay.Loans
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
 
@@ -26,7 +26,7 @@ Public Class ImportLoansForm
 
     Private _listOfValueRepository As ListOfValueRepository
 
-    Private _loanScheduleRepository As LoanScheduleRepository
+    Private _loanService As LoanDataService
 
     Private _productRepository As ProductRepository
 
@@ -40,7 +40,7 @@ Public Class ImportLoansForm
 
         _listOfValueRepository = MainServiceProvider.GetRequiredService(Of ListOfValueRepository)
 
-        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
 
@@ -90,6 +90,7 @@ Public Class ImportLoansForm
 
         _loans = New List(Of LoanSchedule)
 
+        Dim acceptedRecords As New List(Of LoanRowRecord)
         Dim rejectedRecords As New List(Of LoanRowRecord)
 
         For Each record In records
@@ -97,7 +98,7 @@ Public Class ImportLoansForm
             'TODO: this is an N+1 query problem. Refactor this
             Dim employee = Await _employeeRepository.GetByEmployeeNumberAsync(record.EmployeeNumber, z_OrganizationID)
 
-            If employee Is Nothing Then
+            If employee?.RowID Is Nothing Then
 
                 record.ErrorMessage = "Employee number does not exists in the database."
 
@@ -106,125 +107,139 @@ Public Class ImportLoansForm
                 Continue For
             End If
 
-            If String.IsNullOrWhiteSpace(record.LoanName) Then
+            'For displaying on datagrid view; placed here in case record is rejected soon
+            record.EmployeeFullName = employee.FullNameWithMiddleInitialLastNameFirst
+            record.EmployeeNumber = employee.EmployeeNo
 
-                record.ErrorMessage = "Loan Type/Name cannot be blank."
+            Dim loan = Await ConvertToLoan(record, employee.RowID.Value)
 
+            If loan Is Nothing Then
+
+                If String.IsNullOrWhiteSpace(record.ErrorMessage) Then
+                    record.ErrorMessage = "Cannot parse data."
+
+                End If
                 rejectedRecords.Add(record)
-
                 Continue For
             End If
 
-            Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(record.LoanName,
-                                                                    organizationId:=z_OrganizationID,
-                                                                    userId:=z_User)
+            Dim validationErrorMessage = ValidateLoan(loan)
 
-            If loanType Is Nothing Then
+            If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
 
-                record.ErrorMessage = "Cannot get or create loan type. Please contact " & My.Resources.AppCreator
-
+                record.ErrorMessage = validationErrorMessage
                 rejectedRecords.Add(record)
-
                 Continue For
-
             End If
 
-            If CheckIfRecordIsValid(record, rejectedRecords) = False Then
-
-                Continue For
-
-            End If
-
-            Dim deductionSchedule = Me._deductionSchedulesList.
-                FirstOrDefault(Function(d) d.Equals(record.DeductionSchedule, StringComparison.InvariantCultureIgnoreCase))
-
-            If deductionSchedule Is Nothing Then
-
-                record.ErrorMessage = "Selected Deduction frequency is not in the choices."
-
-                rejectedRecords.Add(record)
-
-                Continue For
-
-            End If
-
-            'TODO: use a ViewModel instead of showing the entity to the gridview
-            'problems with detaching Employee
-            Dim newLoanSchedule = New LoanSchedule With {
-                .RowID = Nothing,
-                .OrganizationID = z_OrganizationID,
-                .CreatedBy = z_User,
-                .EmployeeID = employee.RowID,
-                .Employee = employee,
-                .LoanNumber = record.LoanNumber,
-                .Comments = record.Comments,
-                .TotalLoanAmount = record.TotalLoanAmount.Value,
-                .TotalBalanceLeft = record.TotalBalanceLeft.Value,
-                .DedEffectiveDateFrom = record.StartDate.Value,
-                .DeductionAmount = record.DeductionAmount.Value,
-                .DeductionPercentage = 0,
-                .LoanName = record.LoanName,
-                .LoanTypeID = loanType.RowID,
-                .Status = LoanSchedule.STATUS_IN_PROGRESS,
-                .DeductionSchedule = deductionSchedule
-            }
-
-            newLoanSchedule.RecomputeTotalPayPeriod()
-            newLoanSchedule.RecomputePayPeriodLeft()
-
-            _loans.Add(newLoanSchedule)
+            _loans.Add(loan)
+            acceptedRecords.Add(record)
         Next
 
         UpdateStatusLabel(rejectedRecords.Count)
 
-        ParsedTabControl.Text = $"Ok ({Me._loans.Count})"
+        ParsedTabControl.Text = $"Ok ({acceptedRecords.Count})"
         ErrorsTabControl.Text = $"Errors ({rejectedRecords.Count})"
 
         SaveButton.Enabled = _loans.Count > 0
 
-        LoansDataGrid.DataSource = _loans
+        LoansDataGrid.DataSource = acceptedRecords
         RejectedRecordsGrid.DataSource = rejectedRecords
 
     End Sub
 
-    Private Function CheckIfRecordIsValid(record As LoanRowRecord, rejectedRecords As List(Of LoanRowRecord)) As Boolean
+    Private Function ValidateLoan(loan As LoanSchedule) As String
+
+        If loan.Status = LoanSchedule.STATUS_COMPLETE Then Return "Loan schedule is already completed."
+
+        If loan.OrganizationID Is Nothing Then Return "Organization is required."
+
+        If loan.EmployeeID Is Nothing Then Return "Employee is required."
+
+        If loan.LoanTypeID Is Nothing Then Return "Loan type is required."
+
+        If loan.TotalLoanAmount < 0 Then Return "Total loan amount cannot be less than 0."
+
+        If loan.DeductionAmount < 0 Then Return "Deduction amount cannot be less than 0."
+
+        If String.IsNullOrWhiteSpace(loan.DeductionSchedule) Then Return "Deduction schedule is required."
+
+        Return Nothing
+    End Function
+
+    Private Async Function ConvertToLoan(record As LoanRowRecord, employeeId As Integer) As Task(Of LoanSchedule)
 
         If record.StartDate Is Nothing Then
 
-            record.ErrorMessage = "Start date cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Start Date cannot be empty."
+            Return Nothing
         End If
 
         If record.StartDate < Data.Helpers.PayrollTools.MinimumMicrosoftDate Then
 
-            record.ErrorMessage = "dates cannot be earlier than January 1, 1753."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Dates cannot be earlier than January 1, 1753."
+            Return Nothing
         End If
 
-        If record.TotalLoanAmount Is Nothing Then
+        'Type
+        If String.IsNullOrWhiteSpace(record.LoanName) Then
 
-            record.ErrorMessage = "Total loan amount cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Loan Type/Name cannot be blank."
+            Return Nothing
         End If
 
+        Dim loanType = Await Me._productRepository.GetOrCreateLoanTypeAsync(record.LoanName,
+                                                                organizationId:=z_OrganizationID,
+                                                                userId:=z_User)
+
+        If loanType Is Nothing Then
+
+            record.ErrorMessage = "Cannot get or create loan type. Please contact " & My.Resources.AppCreator
+            Return Nothing
+
+        End If
+
+        record.LoanName = loanType.PartNo
+        record.LoanType = loanType
+
+        'Total Balance
         If record.TotalBalanceLeft Is Nothing Then
 
             record.ErrorMessage = "Loan balance cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
+            Return Nothing
         End If
 
+        'Deduction Schedule
+        Dim deductionSchedule = Me._deductionSchedulesList.
+            FirstOrDefault(Function(d) d.Equals(record.DeductionSchedule, StringComparison.InvariantCultureIgnoreCase))
+
+        If deductionSchedule Is Nothing Then
+
+            record.ErrorMessage = "Selected Deduction frequency is not in the choices."
+            Return Nothing
+
+        End If
+
+        record.DeductionSchedule = deductionSchedule
+
+        'Deduction Amount
+        If record.TotalLoanAmount Is Nothing Then
+
+            record.ErrorMessage = "Total loan amount cannot be blank."
+            Return Nothing
+
+        End If
+
+        'Amount
         If record.DeductionAmount Is Nothing Then
 
-            record.ErrorMessage = "Deduction amount cannot be empty."
-            rejectedRecords.Add(record)
-            Return False
+            record.ErrorMessage = "Deduction amount cannot be blank."
+            Return Nothing
+
         End If
 
-        Return True
+        Return record.ToLoan(employeeId)
+
     End Function
 
     Private Sub UpdateStatusLabel(errorCount As Integer)
@@ -257,16 +272,10 @@ Public Class ImportLoansForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
             Async Function()
-                Dim loansWithOutEmployeeObject = _loans.CloneListJson()
-
-                For Each loan In loansWithOutEmployeeObject
-                    loan.Employee = Nothing
-                Next
-
-                Await _loanScheduleRepository.SaveManyAsync(loansWithOutEmployeeObject)
+                Await _loanService.SaveManyAsync(_loans)
 
                 Dim importList = New List(Of UserActivityItem)
-                For Each item In loansWithOutEmployeeObject
+                For Each item In _loans
                     importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new {FormEntityName.ToLower()}.",

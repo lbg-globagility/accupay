@@ -39,7 +39,8 @@ namespace AccuPay.Web
         {
             dbContextOptionsBuilder
                 .UseMySql(configuration.GetConnectionString("accupaydb"))
-                .EnableSensitiveDataLogging();
+                .EnableSensitiveDataLogging()
+                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
         }
     }
 }

@@ -19,6 +19,19 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
+        public class CompositeKey
+        {
+            public int EmployeeId { get; set; }
+            public DateTime Date { get; set; }
+
+            public CompositeKey(int employeeId, DateTime date)
+            {
+                EmployeeId = employeeId;
+
+                Date = date;
+            }
+        }
+
         #region CRUD
 
         public async Task ChangeManyAsync(List<TimeLog> addedTimeLogs,
@@ -50,6 +63,18 @@ namespace AccuPay.Data.Repositories
                 _context.TimeLogs.RemoveRange(deletedTimeLogs);
             }
 
+            await _context.SaveChangesAsync();
+        }
+
+        internal async Task UpdateAsync(TimeLog timeLog)
+        {
+            _context.Entry(timeLog).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+        }
+
+        internal async Task DeleteAsync(TimeLog timeLog)
+        {
+            _context.Remove(timeLog);
             await _context.SaveChangesAsync();
         }
 
@@ -85,6 +110,13 @@ namespace AccuPay.Data.Repositories
 
             await _context.SaveChangesAsync();
         }
+
+        internal async Task CreateAsync(TimeLog timeLog)
+        {
+            _context.TimeLogs.Add(timeLog);
+            await _context.SaveChangesAsync();
+        }
+
 
         #endregion CRUD
 
@@ -142,6 +174,28 @@ namespace AccuPay.Data.Repositories
             var count = await query.CountAsync();
 
             return new PaginatedListResult<TimeLog>(timeLogs, count);
+        }
+
+        internal async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
+        {
+            return await _context.TimeLogs
+                                .Include(b => b.Branch)
+                                .Include(x => x.Employee)
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        internal async Task<TimeLog> GetByIdAsync(int id)
+        {
+            return await _context.TimeLogs
+                                .FirstOrDefaultAsync(l => l.RowID == id);
+        }
+
+        internal async Task<TimeLog> GetByIdAsync(CompositeKey key)
+        {
+            return await _context.TimeLogs
+                                .Where(x => x.EmployeeID == key.EmployeeId)
+                                .Where(x => x.LogDate == key.Date)
+                                .FirstOrDefaultAsync();
         }
 
         private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod timePeriod, PayrollContext context)

@@ -1,4 +1,5 @@
 using AccuPay.Data.Entities;
+using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Identity;
 using Notisphere.Users.Services;
 using System;
@@ -15,11 +16,13 @@ namespace AccuPay.Web.Users
 
         private readonly UserManager<AspNetUser> _users;
         private readonly UserEmailService _emailService;
+        private readonly ICurrentUser _currentUser;
 
-        public UserService(UserManager<AspNetUser> users, UserEmailService emailService)
+        public UserService(UserManager<AspNetUser> users, UserEmailService emailService, ICurrentUser currentUser)
         {
             _users = users;
             _emailService = emailService;
+            _currentUser = currentUser;
         }
 
         public async Task<UserDto> Create(CreateUserDto dto)
@@ -29,7 +32,8 @@ namespace AccuPay.Web.Users
                 FirstName = dto.FirstName,
                 LastName = dto.LastName,
                 Email = dto.Email,
-                UserName = dto.Email
+                UserName = dto.Email,
+                ClientId = _currentUser.ClientId
             };
 
             var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);

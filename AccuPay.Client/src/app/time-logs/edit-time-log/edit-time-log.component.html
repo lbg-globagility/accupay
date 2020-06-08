@@ -1,0 +1,9 @@
+<h1>Edit Time-Log</h1>
+
+<ng-container *ngIf="isLoading | async">
+  <app-time-log-form
+    [timeLog]="timeLog"
+    (save)="onSave($event)"
+    (cancel)="onCancel()"
+  ></app-time-log-form>
+</ng-container>

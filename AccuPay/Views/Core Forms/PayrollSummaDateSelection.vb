@@ -5,6 +5,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -28,6 +29,16 @@ Public Class PayrollSummaDateSelection
     Dim paypTo As Object = Nothing
 
     Private _currentlyWorkedOnPayPeriod As IPayPeriod
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Sub New()
+
+        InitializeComponent()
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
+    End Sub
 
     Public ReadOnly Property PayPeriodFromID As Integer?
         Get
@@ -190,10 +201,7 @@ Public Class PayrollSummaDateSelection
         linkPrev.Text = "← " & (yearnow - 1)
         linkNxt.Text = (yearnow + 1) & " →"
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-
-        _currentlyWorkedOnPayPeriod = Await payPeriodService.
-                                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        _currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         DateFromLabel.Text = ""
         DateToLabel.Text = ""

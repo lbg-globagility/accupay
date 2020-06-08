@@ -21,39 +21,43 @@ Public Class BenchmarkPaystubForm
 
     Private _textBoxDelayedAction As New DelayedAction(Of Boolean)
 
-    Private _overtimeRateService As OvertimeRateService
-
-    Private _adjustmentRepository As AdjustmentRepository
-
-    Private _employeeRepository As EmployeeRepository
-
-    Private _paystubRepository As PaystubRepository
-
-    Private _productRepository As ProductRepository
-
-    Private _salaryRepository As SalaryRepository
-
     Private _pagibigLoanId As Integer?
 
     Private _sssLoanId As Integer?
 
     Private _overtimeRate As OvertimeRate
 
+    Private ReadOnly _adjustmentRepository As AdjustmentRepository
+
+    Private ReadOnly _employeeRepository As EmployeeRepository
+
+    Private ReadOnly _paystubRepository As PaystubRepository
+
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _productRepository As ProductRepository
+
+    Private ReadOnly _salaryRepository As SalaryRepository
+
+    Private ReadOnly _overtimeRateService As OvertimeRateService
+
     Sub New()
 
         InitializeComponent()
 
-        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
-
         _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
 
         _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
 
         _productRepository = MainServiceProvider.GetRequiredService(Of ProductRepository)
+
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -131,11 +135,7 @@ Public Class BenchmarkPaystubForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-
-        _currentPayPeriod = Await payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        _currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function

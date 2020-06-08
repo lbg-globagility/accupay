@@ -1,0 +1,144 @@
+<mat-card *ngIf="timeLog">
+    <mat-card-content>
+      <div class="row">
+        <!-- Employee Name -->
+        <div class="col-lg-4 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Name</p>
+            <p class="field-value">{{ timeLog.employeeName }}</p>
+          </div>
+        </div>
+  
+        <!-- Employee Number -->
+        <div class="col-lg-4 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Number</p>
+            <p class="field-value">{{ timeLog.employeeNumber }}</p>
+          </div>
+        </div>
+  
+        <!-- Employee Type -->
+        <div class="col-lg-4 mb-4">
+          <div class="field">
+            <p class="field-label">Employee Type</p>
+            <p class="field-value">{{ timeLog.employeeType }}</p>
+          </div>
+        </div>
+      </div>
+  
+      <div class="row">
+        <div class="col-lg-4 mb-4 readonly-field">
+          <div class="field">
+            <p class="field-label">Date</p>
+            <p class="field-value">
+              {{ timeLog.date | date }}
+            </p>
+          </div>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+  
+  <form [formGroup]="form" (ngSubmit)="onSave()">
+    <mat-card>
+      <mat-card-content>
+        <div class="row">
+          <div class="col-md-12">
+            <div class="row" *ngIf="!timeLog">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-8"
+              >
+                <mat-label>Employee *</mat-label>
+                <mat-select matInput formControlName="employeeId">
+                  <mat-option></mat-option>
+                  <mat-option
+                    *ngFor="let employee of employees"
+                    [value]="employee.id"
+                  >
+                    {{ employee.employeeNo }} - {{ employee.lastName }},
+                    {{ employee.firstName }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>Please select an employee</mat-error>
+              </mat-form-field>
+            </div>
+  
+            <div class="row" *ngIf="!timeLog">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Date *</mat-label>
+                <input matInput [matDatepicker]="date" formControlName="date" />
+                <mat-datepicker-toggle
+                  matSuffix
+                  [for]="date"
+                ></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+              </mat-form-field>
+            </div>
+  
+            <div class="row">
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>Start Time *</mat-label>
+                <input
+                  matInput
+                  type="time"
+                  autocomplete="off"
+                  formControlName="startTime"
+                />
+              </mat-form-field>
+  
+              <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-4"
+              >
+                <mat-label>End Time *</mat-label>
+                <input
+                  matInput
+                  type="time"
+                  autocomplete="off"
+                  formControlName="endTime"
+                />
+              </mat-form-field>
+            </div>
+  
+            <div class="row">
+                <mat-form-field
+                appearance="outline"
+                color="accent"
+                class="col-lg-8"
+              >
+                <mat-label>Branch *</mat-label>
+                <mat-select matInput formControlName="branchId">
+                  <mat-option></mat-option>
+                  <mat-option
+                    *ngFor="let branch of branches"
+                    [value]="branch.id"
+                  >
+                    {{ branch.name }}
+                  </mat-option>
+                </mat-select>
+                <mat-error>Please select a branch</mat-error>
+              </mat-form-field>
+            </div>
+            
+          </div>
+        </div>
+  
+        <button mat-button type="button" color="accent" (click)="onCancel()">
+          CANCEL
+        </button>
+        <button mat-raised-button type="submit" color="accent">FINISH</button>
+      </mat-card-content>
+    </mat-card>
+  </form>
+  

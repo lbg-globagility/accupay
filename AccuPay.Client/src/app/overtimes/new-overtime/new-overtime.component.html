@@ -1,8 +1,17 @@
-<h1>New Overtime</h1>
+<h1 mat-dialog-title>New Overtime</h1>
 
-<ng-container>
-  <app-overtime-form
-    (save)="onSave($event)"
-    (cancel)="onCancel()"
-  ></app-overtime-form>
-</ng-container>
+<div mat-dialog-content>
+  <app-overtime-form></app-overtime-form>
+</div>
+
+<div mat-card-actions align="end">
+  <button
+    mat-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="savingState.isLoading"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>

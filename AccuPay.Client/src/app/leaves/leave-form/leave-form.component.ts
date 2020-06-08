@@ -7,6 +7,8 @@ import { LeaveService } from 'src/app/leaves/leave.service';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-leave-form',
@@ -37,6 +39,9 @@ export class LeaveFormComponent implements OnInit {
   });
 
   employees: Employee[];
+
+  filteredEmployees: Observable<Employee[]>;
+
   leaveTypes: string[];
   statusList: string[];
 
@@ -45,13 +50,18 @@ export class LeaveFormComponent implements OnInit {
     private employeeService: EmployeeService,
     private leaveService: LeaveService,
     private timeParser: TimeParser
-  ) {
+  ) {}
+
+  ngOnInit(): void {
     this.form.get('isWholeDay').valueChanges.subscribe((checked: boolean) => {
       this.disableTimeInputs(checked);
     });
-  }
 
-  ngOnInit(): void {
+    this.filteredEmployees = this.form.get('employeeId').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+
     this.loadLeaveTypes();
     this.loadLeaveStatusList();
 
@@ -69,29 +79,12 @@ export class LeaveFormComponent implements OnInit {
     });
   }
 
-  private loadLeaveTypes(): void {
-    this.leaveService.getLeaveTypes().subscribe((data) => {
-      this.leaveTypes = data;
-    });
+  get valid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
   }
 
-  private loadLeaveStatusList(): void {
-    this.leaveService.getStatusList().subscribe((data) => {
-      this.statusList = data;
-    });
-  }
-
-  private loadEmployees(): void {
-    this.employeeService.getAll().subscribe((data) => {
-      this.employees = data;
-    });
-  }
-
-  onSave(): void {
-    if (!this.form.valid) {
-      return;
-    }
-
+  get value(): Leave {
     const leave = cloneDeep(this.form.value as Leave);
 
     leave.startTime = this.timeParser.parse(
@@ -112,11 +105,51 @@ export class LeaveFormComponent implements OnInit {
       leave.endTime = null;
     }
 
-    this.save.emit(leave);
+    return leave;
   }
 
-  onCancel(): void {
-    this.cancel.emit();
+  displayEmployee = (employeeId: number) => {
+    const employee = this.employees?.find((t) => t.id === employeeId);
+    if (employee == null) {
+      return null;
+    }
+
+    return `${employee.employeeNo} - ${employee.lastName} ${employee.firstName}`;
+  };
+
+  private loadLeaveTypes(): void {
+    this.leaveService.getLeaveTypes().subscribe((data) => {
+      this.leaveTypes = data;
+    });
+  }
+
+  private loadLeaveStatusList(): void {
+    this.leaveService.getStatusList().subscribe((data) => {
+      this.statusList = data;
+    });
+  }
+
+  private loadEmployees(): void {
+    this.employeeService.getAll().subscribe((data) => {
+      this.employees = data;
+    });
+  }
+
+  private _filter(value: string) {
+    console.log('filter');
+
+    if (typeof value !== 'string') {
+      return;
+    }
+
+    const filterValue = value.toLowerCase();
+
+    return this.employees?.filter(
+      (employee) =>
+        employee.employeeNo?.toLowerCase().includes(filterValue) ||
+        employee.firstName?.toLowerCase().includes(filterValue) ||
+        employee.lastName?.toLowerCase().includes(filterValue)
+    );
   }
 
   private disableTimeInputs(checked: boolean): void {

@@ -1,21 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeeloanschedule")]
-    public class LoanSchedule
+    public class LoanSchedule : BaseEntity
     {
         public const string STATUS_IN_PROGRESS = "In Progress";
         public const string STATUS_ON_HOLD = "On hold";
         public const string STATUS_CANCELLED = "Cancelled";
         public const string STATUS_COMPLETE = "Complete";
-
-        [Key]
-        public int? RowID { get; set; }
 
         public int? OrganizationID { get; set; }
 
@@ -68,11 +64,6 @@ namespace AccuPay.Data.Entities
 
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
-
-        public string EmployeeFullName =>
-                        $"{Employee?.LastName}, {Employee?.FirstName} {Employee?.MiddleInitial}";
-
-        public string EmployeeNumber => Employee?.EmployeeNo;
 
         /// <summary>
         /// Recomputes TotalPayPeriod. Call this everytime TotalLoanAmount has changed.

@@ -112,9 +112,7 @@ Partial Class EmployeeLoansForm
         Me.lblLoanInterestPercentage = New System.Windows.Forms.Label()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.txtLoanInterestPercentage = New System.Windows.Forms.TextBox()
-        Me.lblNumberOfPayPeriod = New System.Windows.Forms.Label()
         Me.lblDeductionSchedule = New System.Windows.Forms.Label()
-        Me.txtNumberOfPayPeriod = New System.Windows.Forms.TextBox()
         Me.cmbDeductionSchedule = New System.Windows.Forms.ComboBox()
         Me.tbpHistory = New System.Windows.Forms.TabPage()
         Me.LoanHistoryGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
@@ -203,11 +201,11 @@ Partial Class EmployeeLoansForm
         Me.pnlSearch.Size = New System.Drawing.Size(352, 56)
         Me.pnlSearch.TabIndex = 141
         '
-        'searchTextBox
+        'SearchTextBox
         '
         Me.SearchTextBox.Location = New System.Drawing.Point(80, 16)
         Me.SearchTextBox.MaxLength = 50
-        Me.SearchTextBox.Name = "searchTextBox"
+        Me.SearchTextBox.Name = "SearchTextBox"
         Me.SearchTextBox.Size = New System.Drawing.Size(259, 22)
         Me.SearchTextBox.TabIndex = 64
         '
@@ -220,7 +218,7 @@ Partial Class EmployeeLoansForm
         Me.lblSearch.Text = "Search"
         Me.lblSearch.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
-        'employeesDataGridView
+        'EmployeesDataGridView
         '
         Me.EmployeesDataGridView.AllowUserToAddRows = False
         Me.EmployeesDataGridView.AllowUserToDeleteRows = False
@@ -244,7 +242,7 @@ Partial Class EmployeeLoansForm
         Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
         Me.EmployeesDataGridView.MultiSelect = False
-        Me.EmployeesDataGridView.Name = "employeesDataGridView"
+        Me.EmployeesDataGridView.Name = "EmployeesDataGridView"
         Me.EmployeesDataGridView.ReadOnly = True
         Me.EmployeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
         Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
@@ -505,11 +503,11 @@ Partial Class EmployeeLoansForm
         Me.DetailsTabControl.Size = New System.Drawing.Size(825, 274)
         Me.DetailsTabControl.TabIndex = 5
         '
-        'tbpDetails
+        'DetailsTabLayout
         '
         Me.DetailsTabLayout.Controls.Add(Me.LoanDetailsTabLayout)
         Me.DetailsTabLayout.Location = New System.Drawing.Point(4, 22)
-        Me.DetailsTabLayout.Name = "tbpDetails"
+        Me.DetailsTabLayout.Name = "DetailsTabLayout"
         Me.DetailsTabLayout.Padding = New System.Windows.Forms.Padding(3)
         Me.DetailsTabLayout.Size = New System.Drawing.Size(817, 248)
         Me.DetailsTabLayout.TabIndex = 0
@@ -542,9 +540,7 @@ Partial Class EmployeeLoansForm
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanStatus, 1, 4)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblLoanInterestPercentage, 1, 6)
         Me.LoanDetailsTabLayout.Controls.Add(Me.Panel3, 1, 7)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.lblNumberOfPayPeriod, 2, 8)
         Me.LoanDetailsTabLayout.Controls.Add(Me.lblDeductionSchedule, 1, 8)
-        Me.LoanDetailsTabLayout.Controls.Add(Me.txtNumberOfPayPeriod, 2, 9)
         Me.LoanDetailsTabLayout.Controls.Add(Me.cmbDeductionSchedule, 1, 9)
         Me.LoanDetailsTabLayout.Location = New System.Drawing.Point(3, 3)
         Me.LoanDetailsTabLayout.Name = "LoanDetailsTabLayout"
@@ -774,7 +770,7 @@ Partial Class EmployeeLoansForm
         '
         'txtNumberOfPayPeriodLeft
         '
-        Me.txtNumberOfPayPeriodLeft.BackColor = System.Drawing.Color.White
+        Me.txtNumberOfPayPeriodLeft.BackColor = System.Drawing.SystemColors.Window
         Me.txtNumberOfPayPeriodLeft.Enabled = False
         Me.txtNumberOfPayPeriodLeft.Location = New System.Drawing.Point(287, 19)
         Me.txtNumberOfPayPeriodLeft.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
@@ -894,18 +890,6 @@ Partial Class EmployeeLoansForm
         Me.txtLoanInterestPercentage.Size = New System.Drawing.Size(195, 22)
         Me.txtLoanInterestPercentage.TabIndex = 362
         '
-        'lblNumberOfPayPeriod
-        '
-        Me.lblNumberOfPayPeriod.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.lblNumberOfPayPeriod.AutoSize = True
-        Me.lblNumberOfPayPeriod.Location = New System.Drawing.Point(554, 195)
-        Me.lblNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 0, 3, 0)
-        Me.lblNumberOfPayPeriod.Name = "lblNumberOfPayPeriod"
-        Me.lblNumberOfPayPeriod.Size = New System.Drawing.Size(95, 13)
-        Me.lblNumberOfPayPeriod.TabIndex = 369
-        Me.lblNumberOfPayPeriod.Text = "No. of Pay Period"
-        Me.lblNumberOfPayPeriod.Visible = False
-        '
         'lblDeductionSchedule
         '
         Me.lblDeductionSchedule.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
@@ -916,17 +900,6 @@ Partial Class EmployeeLoansForm
         Me.lblDeductionSchedule.Size = New System.Drawing.Size(111, 13)
         Me.lblDeductionSchedule.TabIndex = 375
         Me.lblDeductionSchedule.Text = "Deduction Schedule"
-        '
-        'txtNumberOfPayPeriod
-        '
-        Me.txtNumberOfPayPeriod.Enabled = False
-        Me.txtNumberOfPayPeriod.Location = New System.Drawing.Point(554, 211)
-        Me.txtNumberOfPayPeriod.Margin = New System.Windows.Forms.Padding(20, 3, 3, 3)
-        Me.txtNumberOfPayPeriod.Name = "txtNumberOfPayPeriod"
-        Me.txtNumberOfPayPeriod.ShortcutsEnabled = False
-        Me.txtNumberOfPayPeriod.Size = New System.Drawing.Size(195, 22)
-        Me.txtNumberOfPayPeriod.TabIndex = 358
-        Me.txtNumberOfPayPeriod.Visible = False
         '
         'cmbDeductionSchedule
         '
@@ -949,7 +922,7 @@ Partial Class EmployeeLoansForm
         Me.tbpHistory.Text = "Loan History"
         Me.tbpHistory.UseVisualStyleBackColor = True
         '
-        'loanHistoryGridView
+        'LoanHistoryGridView
         '
         Me.LoanHistoryGridView.AllowUserToAddRows = False
         Me.LoanHistoryGridView.AllowUserToDeleteRows = False
@@ -967,7 +940,7 @@ Partial Class EmployeeLoansForm
         Me.LoanHistoryGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.LoanHistoryGridView.Location = New System.Drawing.Point(24, 0)
         Me.LoanHistoryGridView.MultiSelect = False
-        Me.LoanHistoryGridView.Name = "loanHistoryGridView"
+        Me.LoanHistoryGridView.Name = "LoanHistoryGridView"
         Me.LoanHistoryGridView.ReadOnly = True
         Me.LoanHistoryGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
         Me.LoanHistoryGridView.Size = New System.Drawing.Size(764, 242)
@@ -1155,11 +1128,11 @@ Partial Class EmployeeLoansForm
         'LoanListBindingSource
         '
         '
-        'cbShowAll
+        'ShowAllCheckBox
         '
         Me.ShowAllCheckBox.AutoSize = True
         Me.ShowAllCheckBox.Location = New System.Drawing.Point(8, 97)
-        Me.ShowAllCheckBox.Name = "cbShowAll"
+        Me.ShowAllCheckBox.Name = "ShowAllCheckBox"
         Me.ShowAllCheckBox.Size = New System.Drawing.Size(128, 17)
         Me.ShowAllCheckBox.TabIndex = 148
         Me.ShowAllCheckBox.Text = "Show All Employees"
@@ -1438,9 +1411,7 @@ Partial Class EmployeeLoansForm
     Friend WithEvents cmbLoanStatus As ComboBox
     Friend WithEvents txtDeductionAmount As TextBox
     Friend WithEvents lblDeductionAmount As Label
-    Friend WithEvents txtNumberOfPayPeriod As TextBox
     Friend WithEvents lblDateFrom As Label
-    Friend WithEvents lblNumberOfPayPeriod As Label
     Friend WithEvents lblLoanStatus As Label
     Friend WithEvents txtRemarks As TextBox
     Friend WithEvents lblRemarks As Label

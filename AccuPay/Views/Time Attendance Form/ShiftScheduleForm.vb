@@ -46,13 +46,17 @@ Public Class ShiftScheduleForm
         End Set
     End Property
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
+
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
 #End Region
 
     Sub New()
 
         InitializeComponent()
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _userActivityRepo = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
     End Sub
@@ -982,9 +986,7 @@ Public Class ShiftScheduleForm
             AddHandler c.KeyPress, AddressOf EnterKeySameAsTabKey_KeyPress
         Next
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        Dim currentlyWorkedOnPayPeriod = Await payPeriodService.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

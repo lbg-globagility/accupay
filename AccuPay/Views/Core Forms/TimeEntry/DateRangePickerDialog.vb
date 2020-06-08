@@ -31,19 +31,18 @@ Public Class DateRangePickerDialog
 
     Private ReadOnly _removePayPeriodValidation As Boolean
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
     Sub New(Optional passedPayPeriod As IPayPeriod = Nothing, Optional removePayPeriodValidation As Boolean = False)
 
-        ' This call is required by the designer.
         InitializeComponent()
 
-        ' Add any initialization after the InitializeComponent() call.
         _passedPayPeriod = passedPayPeriod
 
         _removePayPeriodValidation = removePayPeriodValidation
 
         _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+
     End Sub
 
     Public ReadOnly Property Start As Date
@@ -85,10 +84,7 @@ Public Class DateRangePickerDialog
 
         If _passedPayPeriod Is Nothing Then
 
-            Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-            currentPayPeriod = Await payPeriodService.GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(
-                                                                z_OrganizationID,
-                                                                New List(Of IPayPeriod)(_payperiods))
+            currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
         Else
             currentPayPeriod = _passedPayPeriod
 

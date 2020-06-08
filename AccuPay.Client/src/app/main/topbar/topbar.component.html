@@ -8,6 +8,17 @@
 
     <img appImgFallback class="__organization-logo" />
 
+    <button mat-button [matMenuTriggerFor]="organizationMenu">
+      Organization
+    </button>
+    <mat-menu #organizationMenu="matMenu">
+      <ng-container *ngFor="let organization of organizations">
+        <button mat-menu-item (click)="changeOrganization(organization)">
+          {{ organization.name }}
+        </button>
+      </ng-container>
+    </mat-menu>
+
     <button mat-button [matMenuTriggerFor]="accountMenu">John Doe</button>
     <mat-menu #accountMenu="matMenu">
       <button mat-menu-item routerLink="/myaccount">My Account</button>

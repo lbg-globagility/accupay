@@ -1,5 +1,4 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
 using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -13,12 +12,10 @@ namespace AccuPay.Web.Controllers
     public class LoansController : ControllerBase
     {
         private readonly LoanService _service;
-        private readonly LoanScheduleRepository _repository;
 
-        public LoansController(LoanService service, LoanScheduleRepository repository)
+        public LoansController(LoanService service)
         {
             _service = service;
-            _repository = repository;
         }
 
         [HttpGet]
@@ -58,11 +55,11 @@ namespace AccuPay.Web.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> Delete(int id)
         {
-            var officalBusiness = await _repository.GetByIdAsync(id);
+            var loan = await _service.GetById(id);
 
-            if (officalBusiness == null) return NotFound();
+            if (loan == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }
@@ -76,7 +73,7 @@ namespace AccuPay.Web.Controllers
         [HttpGet("statuslist")]
         public ActionResult<ICollection<string>> GetStatusList()
         {
-            return _repository.GetStatusList();
+            return _service.GetStatusList();
         }
 
         [HttpGet("deductionsechedules")]

@@ -1,7 +1,9 @@
 using AccuPay.Data;
 using AccuPay.Data.Entities;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -45,6 +47,9 @@ namespace AccuPay.Web
                 });
 
             services.AddAuthorization();
+
+            services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+            services.AddScoped<IAuthorizationHandler, PermissionHandler>();
 
             JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
 

@@ -10,5 +10,7 @@ namespace AccuPay.Web.Core.Auth
         Guid UserId { get; }
 
         int OrganizationId { get; }
+
+        int ClientId { get; }
     }
 }

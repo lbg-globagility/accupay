@@ -144,6 +144,25 @@ namespace AccuPay.Data.Repositories
         }
 
         /// <summary>
+        ///         ''' Gets holidays of a calendar that is from and to the given date range
+        ///         ''' </summary>
+        ///         ''' <param name="calendarId"></param>
+        ///         ''' <param name="from"></param>
+        ///         ''' <param name="[to]"></param>
+        ///         ''' <returns></returns>
+        public async Task<ICollection<CalendarDay>> GetHolidays(int calendarId,
+                                                                DateTime from,
+                                                                DateTime to)
+        {
+            return await _context.CalendarDays.
+                                Include(t => t.DayType).
+                                Where(t => !t.IsRegularDay).
+                                Where(t => from <= t.Date && t.Date <= to).
+                                Where(t => t.CalendarID == calendarId).
+                                ToListAsync();
+        }
+
+        /// <summary>
         ///         ''' Gets all days of a calendar
         ///         ''' </summary>
         ///         ''' <param name="calendarId"></param>

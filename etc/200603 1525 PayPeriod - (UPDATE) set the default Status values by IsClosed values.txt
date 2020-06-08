@@ -1,0 +1,9 @@
+UPDATE payperiod
+SET `Status` = 'Closed'
+WHERE `IsClosed` = TRUE;
+
+UPDATE payperiod
+SET `Status` = 'Pending'
+WHERE `IsClosed` = FALSE;
+
+/* Update the current pay period with "Open" Status */

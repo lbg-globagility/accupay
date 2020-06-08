@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Enums;
+using AccuPay.Data.Services;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -101,7 +102,9 @@ namespace AccuPay.Data.Entities
         [ForeignKey("PayFrequencyID")]
         public virtual PayFrequency PayFrequency { get; set; }
 
-        public virtual ICollection<Salary> Salaries { get; set; }
+        public virtual ICollection<TimeEntry> TimeEntries { get; set; }
+
+        public virtual ICollection<Paystub> Paystubs { get; set; }
 
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
@@ -154,5 +157,16 @@ namespace AccuPay.Data.Entities
         public bool IsTerminated => EmploymentStatus.Trim().ToUpper() == "TERMINATED";
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
+
+        public TotalTimeEntryHours TotalTimeEntryHours
+        {
+            get
+            {
+                if (TimeEntries == null)
+                    throw new ArgumentException("Time entries cannot be null");
+
+                return TotalTimeEntryCalculator.CalculateHours(TimeEntries);
+            }
+        }
     }
 }

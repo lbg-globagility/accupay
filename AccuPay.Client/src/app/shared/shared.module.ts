@@ -5,21 +5,28 @@ import { MaterialModule } from 'src/app/shared/material.module';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
+import { IfZeroPipe } from 'src/app/core/pipes/if-zero.pipe';
+import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
+import { StatusComponent } from 'src/app/shared/components/status/status.component';
+import { NgxPermissionsModule } from 'ngx-permissions';
+import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
 
 @NgModule({
   declarations: [
-    // StatusComponent,
+    StatusComponent,
     // LocalePipe,
     // SanitizerPipe,
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
+    IfZeroPipe,
+    DisplayFieldComponent,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
     // ImageResizerDialogComponent,
     // PreviewDialogComponent,
-    // ImgFallbackDirective,
+    ImgFallbackDirective,
   ],
   imports: [
     CommonModule,
@@ -36,9 +43,12 @@ import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
     // BytesPipe,
     // CoalescePipe,
     IfEmptyPipe,
-    // ImgFallbackDirective,
-    // StatusComponent,
+    IfZeroPipe,
+    ImgFallbackDirective,
+    StatusComponent,
+    DisplayFieldComponent,
     // UserMiniInfoComponent,
+    NgxPermissionsModule,
     CommonModule,
     FormsModule,
     RouterModule,

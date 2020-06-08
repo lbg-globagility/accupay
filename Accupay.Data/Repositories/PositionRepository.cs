@@ -8,50 +8,28 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class PositionRepository : BaseRepository
+    public class PositionRepository : SavableRepository<Position>
     {
-        private readonly PayrollContext _context;
-
-        public PositionRepository(PayrollContext context)
+        public PositionRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(Position position)
+        protected override void DetachNavigationProperties(Position entity)
         {
-            _context.Remove(position);
-
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveAsync(Position position)
-        {
-            if (IsNewEntity(position.RowID))
+            if (entity.Division != null)
             {
-                _context.Positions.Add(position);
-            }
-            else
-            {
-                _context.Entry(position).State = EntityState.Modified;
+                _context.Entry(entity.Division).State = EntityState.Detached;
             }
 
-            await _context.SaveChangesAsync();
+            if (entity.JobLevel != null)
+            {
+                _context.Entry(entity.JobLevel).State = EntityState.Detached;
+            }
         }
-
-        #endregion CRUD
 
         #region Queries
 
         #region Single entity
-
-        internal async Task<Position> GetByIdAsync(int positionId)
-        {
-            return await _context.Positions.
-                            Where(p => p.RowID == positionId).
-                            FirstOrDefaultAsync();
-        }
 
         internal async Task<Position> GetByIdWithDivisionAsync(int positionId)
         {

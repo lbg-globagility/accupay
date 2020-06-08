@@ -9,6 +9,7 @@ import { TimeLog } from 'src/app/time-logs/shared/time-log';
   providedIn: 'root',
 })
 export class TimeLogService {
+  
   baseUrl = 'api/timelogs';
 
   constructor(private httpClient: HttpClient) {}
@@ -19,6 +20,23 @@ export class TimeLogService {
     return this.httpClient.get<PaginatedList<TimeLog>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  get(id: number): Observable<TimeLog> {
+    return this.httpClient.get<TimeLog>(`${this.baseUrl}/${id}`);
+  }
+
+  delete(id: number): Observable<TimeLog> {
+    return this.httpClient.delete<TimeLog>(`${this.baseUrl}/${id}`);
+  }
+
+  update(timeLog: TimeLog, id: number): Observable<TimeLog> {
+    return this.httpClient.put<TimeLog>(`${this.baseUrl}/${id}`, timeLog);
+  }
+
+  create(timeLog: TimeLog): Observable<TimeLog> {
+    console.log(timeLog)
+    return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);
   }
 
   import(file: File): Observable<TimeLog> {

@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Shared;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,15 +11,15 @@ namespace AccuPay.Web.Loans
 {
     public class LoanService
     {
-        private readonly LoanScheduleRepository _loanRepository;
+        private readonly LoanDataService _loanService;
         private readonly ProductRepository _productRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
 
-        public LoanService(LoanScheduleRepository loanRepository,
+        public LoanService(LoanDataService loanService,
                             ProductRepository productRepository,
                             ListOfValueRepository listOfValueRepository)
         {
-            _loanRepository = loanRepository;
+            _loanService = loanService;
             _productRepository = productRepository;
             _listOfValueRepository = listOfValueRepository;
         }
@@ -28,7 +29,7 @@ namespace AccuPay.Web.Loans
             // TODO: sort and desc in repository
 
             int organizationId = 2;
-            var paginatedList = await _loanRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _loanService.GetPaginatedListAsync(options, organizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -37,17 +38,13 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> GetById(int id)
         {
-            var officialBusiness = await _loanRepository.GetByIdWithEmployeeAndProductAsync(id);
+            var officialBusiness = await _loanService.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
 
         public async Task<LoanDto> Create(CreateLoanDto dto)
         {
-            // TODO: validations
-            // validations on what to edit on Create
-            // in progress and on hold status only
-
             int organizationId = 2;
             int userId = 1;
             var loanSchedule = new LoanSchedule()
@@ -59,28 +56,34 @@ namespace AccuPay.Web.Loans
             };
             ApplyChanges(dto, loanSchedule);
 
-            await _loanRepository.SaveAsync(loanSchedule);
+            await _loanService.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
         }
 
         public async Task<LoanDto> Update(int id, UpdateLoanDto dto)
         {
-            // TODO: validations
-            // validations on what to edit on Update
-
-            var loanSchedule = await _loanRepository.GetByIdAsync(id);
+            var loanSchedule = await _loanService.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
             int userId = 1;
             loanSchedule.LastUpdBy = userId;
 
             ApplyChanges(dto, loanSchedule);
-            //loanSchedule.TotalBalanceLeft = dto.TotalBalanceLeft;
 
-            await _loanRepository.SaveAsync(loanSchedule);
+            await _loanService.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _loanService.DeleteAsync(id);
+        }
+
+        public List<string> GetStatusList()
+        {
+            return _loanService.GetStatusList();
         }
 
         public async Task<List<DropDownItem>> GetLoanTypes()

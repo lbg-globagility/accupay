@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Organization } from 'src/app/accounts/shared/organization';
+import { Role } from 'src/app/roles/shared/role';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,10 @@ export class AccountService {
 
   getOrganization(): Observable<Organization> {
     return this.httpClient.get<Organization>(`${this.api}/organization`);
+  }
+
+  getCurrentRole(): Observable<Role> {
+    return this.httpClient.get<Role>(`${this.api}/current-role`);
   }
 
   updateOrganization(organization: Organization): Observable<Organization> {

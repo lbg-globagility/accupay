@@ -7,43 +7,23 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class DivisionRepository : BaseRepository
+    public class DivisionRepository : SavableRepository<Division>
     {
         public const string DIVISION_TYPE_DEPARTMENT = "Department";
         public const string DIVISION_TYPE_BRANCH = "Branch";
         public const string DIVISION_TYPE_SUB_BRANCH = "Sub branch";
 
-        private readonly PayrollContext _context;
-
-        public DivisionRepository(PayrollContext context)
+        public DivisionRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
-        #region CRUD
-
-        internal async Task DeleteAsync(Division division)
+        protected override void DetachNavigationProperties(Division entity)
         {
-            _context.Remove(division);
-
-            await _context.SaveChangesAsync();
-        }
-
-        internal async Task SaveAsync(Division division)
-        {
-            if (IsNewEntity(division.RowID))
+            if (entity.ParentDivision != null)
             {
-                _context.Divisions.Add(division);
+                _context.Entry(entity.ParentDivision).State = EntityState.Detached;
             }
-            else
-            {
-                _context.Entry(division).State = EntityState.Modified;
-            }
-
-            await _context.SaveChangesAsync();
         }
-
-        #endregion CRUD
 
         #region Queries
 

@@ -33,15 +33,17 @@ Public Class TimeLogsForm2
 
     Private _originalDates As TimePeriod
 
-    Private _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
+    Private ReadOnly _employeeDutyScheduleRepository As EmployeeDutyScheduleRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _overtimeRepository As OvertimeRepository
+    Private ReadOnly _overtimeRepository As OvertimeRepository
 
-    Private _shiftScheduleRepository As ShiftScheduleRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _shiftScheduleRepository As ShiftScheduleRepository
+
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Enum TimeLogsFormat
         Optimized = 0
@@ -59,6 +61,8 @@ Public Class TimeLogsForm2
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
         _overtimeRepository = MainServiceProvider.GetRequiredService(Of OvertimeRepository)
+
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _shiftScheduleRepository = MainServiceProvider.GetRequiredService(Of ShiftScheduleRepository)
 
@@ -772,9 +776,7 @@ Public Class TimeLogsForm2
 
         _useShiftSchedulePolicy = GetShiftSchedulePolicy()
 
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        Dim currentlyWorkedOnPayPeriod = Await payPeriodService.
-                                                GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         If currentlyWorkedOnPayPeriod IsNot Nothing Then
 

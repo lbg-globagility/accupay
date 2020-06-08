@@ -4,6 +4,7 @@ using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.IO;
 using System.Linq;
@@ -32,6 +33,61 @@ namespace AccuPay.Web.TimeLogs
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
             return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        internal async Task<ActionResult<TimeLogDto>> Create(CreateTimeLogDto dto)
+        {
+            // TODO: validations
+            int organizationId = 2;
+            int userId = 1;
+
+            var timeLog = new TimeLog
+            {
+                OrganizationID = organizationId,
+                CreatedBy = userId,
+                EmployeeID = dto.EmployeeId,
+                LogDate = dto.Date
+            };
+
+            ApplyChanges(dto, timeLog);
+
+            await _service.CreateAsync(timeLog);
+
+            return ConvertToDto(timeLog);
+        }
+
+        internal async Task<TimeLogDto> Update(int id, UpdateTimeLogDto dto)
+        {
+            // TODO: validations
+            var timeLog = await _service.GetByIdAsync(id);
+            if (timeLog == null) return null;
+
+            timeLog.LastUpdBy = 1;
+
+            ApplyChanges(dto, timeLog);
+
+            await _service.UpdateAsync(timeLog);
+
+            return ConvertToDto(timeLog);
+        }
+
+        internal async Task<TimeLogDto> GetByIdWithEmployeeAsync(int id)
+        {
+            var timelog = await _service.GetByIdWithEmployeeAsync(id);
+
+            return ConvertToDto(timelog);
+        }
+
+        internal async Task<TimeLogDto> GetByIdAsync(int id)
+        {
+            var timelog = await _service.GetByIdAsync(id);
+
+            return ConvertToDto(timelog);
+        }
+
+        internal async Task Delete(int id)
+        {
+            await _service.DeleteAsync(id);
         }
 
         internal async Task Import(IFormFile file)
@@ -72,6 +128,13 @@ namespace AccuPay.Web.TimeLogs
                 BranchId = timeLog.BranchID,
                 BranchName = timeLog.Branch?.Name
             };
+        }
+
+        private static void ApplyChanges(CrudTimeLogDto dto, TimeLog timeLog)
+        {
+            timeLog.BranchID = dto.BranchId;
+            timeLog.TimeInFull = dto.StartTime;
+            timeLog.TimeOutFull = dto.EndTime;
         }
     }
 }

@@ -55,29 +55,33 @@ Public Class BenchmarkPayrollForm
 
     Private Const MoneyFormat As String = "#,##0.0000"
 
-    Private _listOfValueService As ListOfValueService
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _overtimeRateService As OvertimeRateService
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _salaryRepository As SalaryRepository
 
-    Private _salaryRepository As SalaryRepository
+    Private ReadOnly _listOfValueService As ListOfValueService
 
-    Private _loanScheduleRepository As LoanScheduleRepository
+    Private ReadOnly _loanService As LoanDataService
+
+    Private ReadOnly _overtimeRateService As OvertimeRateService
 
     Sub New()
 
         InitializeComponent()
 
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
-
-        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
-
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
-        _loanScheduleRepository = MainServiceProvider.GetRequiredService(Of LoanScheduleRepository)
+        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
 
         _salaryRepository = MainServiceProvider.GetRequiredService(Of SalaryRepository)
+
+        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
+
+        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+
+        _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
         _salaries = New List(Of Salary)
         _employees = New List(Of Employee)
@@ -176,9 +180,7 @@ Public Class BenchmarkPayrollForm
 
                 Dim resourcesTask = resources.Load(payPeriodId:=payPeriodId,
                                                      organizationId:=z_OrganizationID,
-                                                     userId:=z_User,
-                                                     payDateFrom:=paypFrom,
-                                                     payDateTo:=paypTo)
+                                                     userId:=z_User)
 
                 resourcesTask.Wait()
 
@@ -285,7 +287,7 @@ Public Class BenchmarkPayrollForm
             Return False
         End If
 
-        Dim _pagibigLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+        Dim _pagibigLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
 
         If _pagibigLoans.Count > 1 Then
 
@@ -296,7 +298,7 @@ Public Class BenchmarkPayrollForm
 
         End If
 
-        Dim _sssLoans = Await _loanScheduleRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+        Dim _sssLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
 
         If _sssLoans.Count > 1 Then
 
@@ -356,9 +358,7 @@ Public Class BenchmarkPayrollForm
     End Sub
 
     Private Async Function GetCutOffPeriod() As Task
-        Dim payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        _currentPayPeriod = Await payPeriodService.
-                                    GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID)
+        _currentPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
         UpdateCutOffLabel()
     End Function

@@ -740,10 +740,8 @@ Public Class PayStubForm
                 End If
 
                 Dim resourcesTask = resources.Load(payPeriodId:=Integer.Parse(paypRowID),
-                                                     organizationId:=z_OrganizationID,
-                                                     userId:=z_User,
-                                                     payDateFrom:=CDate(paypFrom),
-                                                     payDateTo:=CDate(paypTo))
+                                                   organizationId:=z_OrganizationID,
+                                                   userId:=z_User)
 
                 resourcesTask.Wait()
 

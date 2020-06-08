@@ -1,5 +1,6 @@
 ﻿using AccuPay.Data.Data.EntityFrameworkCore;
 using AccuPay.Data.Entities;
+using AccuPay.Data.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -14,7 +15,7 @@ namespace AccuPay.Data
             AspNetRole,
             Guid,
             IdentityUserClaim<Guid>,
-            IdentityUserRole<Guid>,
+            UserRole,
             IdentityUserLogin<Guid>,
             IdentityRoleClaim<Guid>,
             IdentityUserToken<Guid>>
@@ -43,6 +44,7 @@ namespace AccuPay.Data
         internal virtual DbSet<CalendarDay> CalendarDays { get; set; }
         internal virtual DbSet<Category> Categories { get; set; }
         internal virtual DbSet<Certification> Certifications { get; set; }
+        internal virtual DbSet<Client> Clients { get; set; }
         internal virtual DbSet<DayType> DayTypes { get; set; }
         internal virtual DbSet<DisciplinaryAction> DisciplinaryActions { get; set; }
         internal virtual DbSet<Division> Divisions { get; set; }
@@ -70,6 +72,7 @@ namespace AccuPay.Data
         internal virtual DbSet<PaystubEmail> PaystubEmails { get; set; }
         internal virtual DbSet<PaystubEmailHistory> PaystubEmailHistories { get; set; }
         internal virtual DbSet<PaystubItem> PaystubItems { get; set; }
+        internal virtual DbSet<Permission> Permissions { get; set; }
         internal virtual DbSet<PhilHealthBracket> PhilHealthBrackets { get; set; }
         internal virtual DbSet<Position> Positions { get; set; }
         internal virtual DbSet<PositionView> PositionViews { get; set; }
@@ -139,6 +142,11 @@ namespace AccuPay.Data
             modelBuilder.Entity<TardinessRecord>().
                 HasKey(t => new { t.EmployeeId, t.Year });
 
+            modelBuilder.Entity<Organization>()
+                .Property(x => x.IsInActive)
+                .IsUnicode(false)
+                .HasConversion(typeof(string));
+
             modelBuilder.Entity<AspNetUser>()
                 .Property(t => t.Id)
                 .HasConversion(new GuidToBigEndianBytesConverter());
@@ -150,6 +158,15 @@ namespace AccuPay.Data
             modelBuilder.Entity<AspNetRole>()
                 .Property(t => t.Id)
                 .HasConversion(new GuidToBigEndianBytesConverter());
+
+            modelBuilder.Entity<PayPeriod>()
+                .Property(t => t.Status)
+                .HasConversion(new EnumToStringConverter<PayPeriodStatus>());
+
+            modelBuilder.Entity<RolePermission>()
+                .HasOne(t => t.Role)
+                .WithMany(t => t.RolePermissions)
+                .HasForeignKey(t => t.RoleId);
         }
     }
 }

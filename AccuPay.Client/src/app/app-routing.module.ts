@@ -62,6 +62,17 @@ import { ViewDivisionComponent } from 'src/app/divisions/view-division/view-divi
 import { NewDivisionComponent } from 'src/app/divisions/new-division/new-division.component';
 import { EditDivisionComponent } from 'src/app/divisions/edit-division/edit-division.component';
 import { TimeLogListComponent } from 'src/app/time-logs/time-log-list/time-log-list.component';
+import { ViewTimeLogComponent } from 'src/app/time-logs/view-time-log/view-time-log.component';
+import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
+import { NewTimeLogComponent } from 'src/app/time-logs/new-time-log/new-time-log.component';
+import { PayrollComponent } from 'src/app/payroll/payroll/payroll.component';
+import { ViewPayPeriodComponent } from 'src/app/payroll/view-payperiod/view-payperiod.component';
+import { TimeEntryComponent } from 'src/app/time-entry/time-entry/time-entry.component';
+import { TimeEntryDetailsComponent } from 'src/app/time-entry/time-entry-details/time-entry-details.component';
+import { NewRoleComponent } from 'src/app/roles/new-role/new-role.component';
+import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
+import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
+import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
 
 const routes: Routes = [
   {
@@ -101,6 +112,22 @@ const routes: Routes = [
         component: EditUserComponent,
       },
       {
+        path: 'roles',
+        component: RoleListComponent,
+      },
+      {
+        path: 'roles/new',
+        component: NewRoleComponent,
+      },
+      {
+        path: 'user-access',
+        component: UserRolesComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
+      },
+      {
         path: 'salaries',
         component: SalaryListComponent,
       },
@@ -121,32 +148,8 @@ const routes: Routes = [
         component: LeaveListComponent,
       },
       {
-        path: 'leaves/new',
-        component: NewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id',
-        component: ViewLeaveComponent,
-      },
-      {
-        path: 'leaves/:id/edit',
-        component: EditLeaveComponent,
-      },
-      {
         path: 'official-businesses',
         component: OfficialBusinessListComponent,
-      },
-      {
-        path: 'official-businesses/new',
-        component: NewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id',
-        component: ViewOfficialBusinessComponent,
-      },
-      {
-        path: 'official-businesses/:id/edit',
-        component: EditOfficialBusinessComponent,
       },
       {
         path: 'overtimes',
@@ -163,6 +166,14 @@ const routes: Routes = [
       {
         path: 'overtimes/:id/edit',
         component: EditOvertimeComponent,
+      },
+      {
+        path: 'time-entry',
+        component: TimeEntryComponent,
+      },
+      {
+        path: 'time-entry/:id',
+        component: TimeEntryDetailsComponent,
       },
       {
         path: 'shifts',
@@ -245,6 +256,18 @@ const routes: Routes = [
         component: TimeLogListComponent,
       },
       {
+        path: 'time-logs/new',
+        component: NewTimeLogComponent,
+      },
+      {
+        path: 'time-logs/:id',
+        component: ViewTimeLogComponent,
+      },
+      {
+        path: 'time-logs/:id/edit',
+        component: EditTimeLogComponent,
+      },
+      {
         path: 'divisions',
         component: DivisionListComponent,
       },
@@ -291,6 +314,14 @@ const routes: Routes = [
       {
         path: 'calendars/:id/edit',
         component: EditCalendarComponent,
+      },
+      {
+        path: 'payroll',
+        component: PayrollComponent,
+      },
+      {
+        path: 'payroll/:id',
+        component: ViewPayPeriodComponent,
       },
     ],
     canActivate: [AuthGuard],

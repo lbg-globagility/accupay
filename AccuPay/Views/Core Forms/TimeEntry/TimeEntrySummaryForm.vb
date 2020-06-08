@@ -57,19 +57,19 @@ Public Class TimeEntrySummaryForm
 
     Private _formHasLoaded As Boolean = False
 
-    Private _policy As PolicyHelper
+    Private ReadOnly _policy As PolicyHelper
 
-    Private _payPeriodService As PayPeriodService
+    Private ReadOnly _payPeriodService As PayPeriodService
 
-    Private _breakTimeBracketRepository As BreakTimeBracketRepository
+    Private ReadOnly _breakTimeBracketRepository As BreakTimeBracketRepository
 
-    Private _employeeRepository As EmployeeRepository
+    Private ReadOnly _employeeRepository As EmployeeRepository
 
-    Private _payPeriodRepository As PayPeriodRepository
+    Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
-    Private _timeAttendanceLogRepository As TimeAttendanceLogRepository
+    Private ReadOnly _timeAttendanceLogRepository As TimeAttendanceLogRepository
 
-    Private _userRepository As UserRepository
+    Private ReadOnly _userRepository As UserRepository
 
     Sub New()
 
@@ -234,9 +234,7 @@ Public Class TimeEntrySummaryForm
         If _selectedPayPeriod Is Nothing Then
             Dim dateToday = DateTime.Today
 
-            Dim currentlyWorkedOnPayPeriod = Await _payPeriodService.
-                        GetCurrentlyWorkedOnPayPeriodByCurrentYearAsync(z_OrganizationID,
-                                                                    New List(Of IPayPeriod)(_payPeriods))
+            Dim currentlyWorkedOnPayPeriod = Await _payPeriodRepository.GetCurrentPayPeriodAsync(z_OrganizationID)
 
             _selectedPayPeriod = _payPeriods.FirstOrDefault(Function(p) Nullable.Equals(p.RowID, currentlyWorkedOnPayPeriod.RowID))
 

@@ -1,0 +1,117 @@
+<h1>Time Entry Details</h1>
+
+<ng-container>
+  <app-time-entry-summary-details
+    [payPeriodId]="payPeriod.id"
+    [canGenerate]="true"
+    (afterGenerate)="afterGenerate()"
+  ></app-time-entry-summary-details>
+</ng-container>
+
+<div class="mat-elevation-z1">
+  <table
+    mat-table
+    matSort
+    #table
+    [dataSource]="dataSource"
+    (matSortChange)="sortData($event)"
+    class="users w-full"
+  >
+    <ng-container matColumnDef="employeeNo">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee ID</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.employeeNo | ifEmpty: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="fullName">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee Name</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.fullName }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Regular Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.regularHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="absentHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Absent Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.absentHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lateHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Late Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.lateHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="undertimeHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>UT Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.undertimeHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="leaveHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>Leave Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.leaveHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimeHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>OT Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.overtimeHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDifferentialHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>ND Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{ employee.totalTimeEntry.nightDifferentialHours | ifZero: "-" }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDifferentialOvertimeHours">
+      <th mat-header-cell mat-sort-header *matHeaderCellDef>ND OT Hrs</th>
+      <td mat-cell *matCellDef="let employee">
+        {{
+          employee.totalTimeEntry.nightDifferentialOvertimeHours | ifZero: "-"
+        }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+      class="cursor-link"
+      (mouseover)="setHoveredRow(row.id)"
+      [class.active]="row.rowId == selectedRow"
+      (mouseout)="selectedRow = null"
+    ></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No users were found.
+  </div>
+
+  <mat-paginator
+    #paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]"
+    [length]="totalCount"
+    [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

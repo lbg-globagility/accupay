@@ -5,7 +5,6 @@ using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -16,16 +15,14 @@ namespace AccuPay.Web.Controllers
     public class EmployeesController : ControllerBase
     {
         private readonly EmployeeService _employeeService;
-        private readonly ICurrentUser _currentUser;
 
         public EmployeesController(EmployeeService employeeService, ICurrentUser currentUser)
         {
             _employeeService = employeeService;
-            _currentUser = currentUser;
         }
 
         [HttpPost]
-        public async Task<ActionResult<EmployeeDto>> Create([FromBody] EmployeeDto dto)
+        public async Task<ActionResult<EmployeeDto>> Create([FromBody] CreateEmployeeDto dto)
         {
             var employee = await _employeeService.Create(dto);
             var employeeDto = EmployeeDto.Convert(employee);

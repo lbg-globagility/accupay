@@ -1,0 +1,151 @@
+<mat-expansion-panel [expanded]="panelOpenState">
+  <mat-expansion-panel-header>
+    <mat-panel-title>
+      <h3>
+        {{ payPeriod?.cutoffStart | date }} to
+        {{ payPeriod?.cutoffEnd | date }} - ({{ payPeriod?.status }})
+      </h3>
+    </mat-panel-title>
+  </mat-expansion-panel-header>
+
+  <div class="col-md-12">
+    <div class="row">
+      <!-- Employees with shift -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with generated time entries</p>
+          <p class="field-value">
+            {{ payPeriod.timeEntryCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with shift -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with shift</p>
+          <p class="field-value">
+            {{ payPeriod.shiftCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with time logs -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with time logs</p>
+          <p class="field-value">
+            {{ payPeriod.timeLogCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Employees with leaves -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed leaves</p>
+          <p class="field-value">
+            {{ payPeriod.leaveCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with official business -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed official business</p>
+          <p class="field-value">
+            {{ payPeriod.officialBusinessCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with overtime -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with filed overtime</p>
+          <p class="field-value">
+            {{ payPeriod.overtimeCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <!-- Employees with absences -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with absences</p>
+          <p class="field-value">
+            {{ payPeriod.absentCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with lates -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with lates</p>
+          <p class="field-value">
+            {{ payPeriod.lateCount }}
+          </p>
+        </div>
+      </div>
+      <!-- Employees with undertimes -->
+      <div class="col-lg-4 mb-4">
+        <div class="field">
+          <p class="field-label">Employees with undertimes</p>
+          <p class="field-value">
+            {{ payPeriod.undertimeCount }}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- <div class="col-md-12">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="field">
+          <p class="field-label mb-2">Holidays</p>
+          <p class="field-value">
+            Thursday, April 9
+          </p>
+          <p class="field-value mb-2">
+            Araw ng Kagitingan & Maundy Thursday (Double Holiday)
+          </p>
+          <p class="field-value">
+            Friday, April 10
+          </p>
+          <p class="field-value mb-2">
+            Good Friday (Regulary Holiday) April 11 - Holy Saturday (Special
+            Non-Working Holiday)
+          </p>
+          <p class="field-value">
+            Saturday, April 11
+          </p>
+          <p class="field-value mb-2">
+            Araw ng Kagitingan & Maundy Thursday (Double Holiday)
+          </p>
+        </div>
+      </div>
+    </div>
+  </div> -->
+</mat-expansion-panel>
+<mat-card>
+  <mat-card-actions class="col-lg-8">
+    <button
+      mat-raised-button
+      color="accent"
+      class="new-btn"
+      *ngIf="canGenerate && payPeriod?.status == 'Open'"
+      style="margin-left: 10px;"
+      (click)="onGenerate()"
+    >
+      GENERATE
+    </button>
+    <button
+      mat-button
+      *ngIf="!canGenerate"
+      routerLink="/time-entry/{{ payPeriod?.id }}"
+    >
+      VIEW FULL SUMMARY
+    </button>
+  </mat-card-actions>
+</mat-card>

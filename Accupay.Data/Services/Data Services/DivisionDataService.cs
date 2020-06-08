@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
-    public class DivisionDataService : BaseDataService
+    public class DivisionDataService : BaseDataService<Division>
     {
         private readonly DivisionRepository _divisionRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
         private readonly PayrollContext _context;
 
-        public DivisionDataService(DivisionRepository repository, ListOfValueRepository listOfValueRepository, PayrollContext context)
+        public DivisionDataService(DivisionRepository repository, ListOfValueRepository listOfValueRepository, PayrollContext context) : base(repository)
         {
             _divisionRepository = repository;
             _listOfValueRepository = listOfValueRepository;
@@ -26,7 +26,22 @@ namespace AccuPay.Data.Services
 
         #region CRUD
 
-        public async Task SaveAsync(Division division)
+        public async Task DeleteAsync(int divisionId)
+        {
+            var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
+
+            // TODO: move this to repositories
+            if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
+                throw new BusinessLogicException("Division already has agency fees therefore cannot be deleted.");
+            else if (_context.Divisions.Any(d => d.ParentDivisionID == divisionId))
+                throw new BusinessLogicException("Division already has child divisions therefore cannot be deleted.");
+            else if (_context.Positions.Any(p => p.DivisionID == divisionId))
+                throw new BusinessLogicException("Division already has positions therefore cannot be deleted.");
+
+            await _divisionRepository.DeleteAsync(division);
+        }
+
+        protected override async Task SanitizeEntity(Division division)
         {
             if (division.OrganizationID == null)
                 throw new BusinessLogicException($"Organization is required.");
@@ -49,23 +64,6 @@ namespace AccuPay.Data.Services
                 else
                     throw new BusinessLogicException($"Division name already exists under the selected division location.");
             }
-
-            await _divisionRepository.SaveAsync(division);
-        }
-
-        public async Task DeleteAsync(int divisionId)
-        {
-            var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
-
-            // TODO: move this to repositories
-            if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
-                throw new BusinessLogicException("Division already has agency fees therefore cannot be deleted.");
-            else if (_context.Divisions.Any(d => d.ParentDivisionID == divisionId))
-                throw new BusinessLogicException("Division already has child divisions therefore cannot be deleted.");
-            else if (_context.Positions.Any(p => p.DivisionID == divisionId))
-                throw new BusinessLogicException("Division already has positions therefore cannot be deleted.");
-
-            await _divisionRepository.DeleteAsync(division);
         }
 
         #endregion CRUD
