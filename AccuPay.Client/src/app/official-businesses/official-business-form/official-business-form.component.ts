@@ -2,11 +2,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Employee } from 'src/app/employees/shared/employee';
 import { EmployeeService } from 'src/app/employees/services/employee.service';
-import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
-import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
 import * as moment from 'moment';
 import { cloneDeep } from 'lodash';
+import { Observable } from 'rxjs';
+import { startWith, map } from 'rxjs/operators';
+import { OfficialBusiness } from '../shared/official-business';
+import { OfficialBusinessService } from '../official-business.service';
 
 @Component({
   selector: 'app-official-business-form',
@@ -35,6 +37,10 @@ export class OfficialBusinessFormComponent implements OnInit {
   });
 
   employees: Employee[];
+
+  filteredEmployees: Observable<Employee[]>;
+
+  leaveTypes: string[];
   statusList: string[];
 
   constructor(
@@ -45,6 +51,11 @@ export class OfficialBusinessFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.filteredEmployees = this.form.get('employeeId').valueChanges.pipe(
+      startWith(''),
+      map((value) => this._filter(value))
+    );
+
     this.loadOfficialBusinessStatusList();
 
     if (this.officialBusiness != null) {
@@ -59,6 +70,35 @@ export class OfficialBusinessFormComponent implements OnInit {
     });
   }
 
+  get valid(): boolean {
+    this.form.markAllAsTouched();
+    return this.form.valid;
+  }
+
+  get value(): OfficialBusiness {
+    const officialBusiness = cloneDeep(this.form.value as OfficialBusiness);
+
+    officialBusiness.startTime = this.timeParser.parse(
+      moment(officialBusiness.startDate),
+      officialBusiness.startTime
+    );
+    officialBusiness.endTime = this.timeParser.parse(
+      moment(officialBusiness.startDate),
+      officialBusiness.endTime
+    );
+
+    return officialBusiness;
+  }
+
+  displayEmployee = (employeeId: number) => {
+    const employee = this.employees?.find((t) => t.id === employeeId);
+    if (employee == null) {
+      return null;
+    }
+
+    return `${employee.employeeNo} - ${employee.lastName} ${employee.firstName}`;
+  };
+
   private loadOfficialBusinessStatusList(): void {
     this.officialBusinessService.getStatusList().subscribe((data) => {
       this.statusList = data;
@@ -71,31 +111,20 @@ export class OfficialBusinessFormComponent implements OnInit {
     });
   }
 
-  onSave(): void {
-    if (!this.form.valid) {
+  private _filter(value: string) {
+    console.log('filter');
+
+    if (typeof value !== 'string') {
       return;
     }
 
-    const officialBusiness = cloneDeep(this.form.value as OfficialBusiness);
+    const filterValue = value.toLowerCase();
 
-    officialBusiness.startTime = this.timeParser.parse(
-      moment(officialBusiness.startDate),
-      officialBusiness.startTime
+    return this.employees?.filter(
+      (employee) =>
+        employee.employeeNo?.toLowerCase().includes(filterValue) ||
+        employee.firstName?.toLowerCase().includes(filterValue) ||
+        employee.lastName?.toLowerCase().includes(filterValue)
     );
-    officialBusiness.endTime = this.timeParser.parse(
-      moment(officialBusiness.startDate),
-      officialBusiness.endTime
-    );
-
-    if (!officialBusiness.startTime || !officialBusiness.endTime) {
-      officialBusiness.startTime = null;
-      officialBusiness.endTime = null;
-    }
-
-    this.save.emit(officialBusiness);
-  }
-
-  onCancel(): void {
-    this.cancel.emit();
   }
 }

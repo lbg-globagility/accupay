@@ -1,8 +1,12 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
+using AccuPay.Web.Files.Services;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Employees.Services
@@ -11,20 +15,57 @@ namespace AccuPay.Web.Employees.Services
     {
         private readonly EmployeeRepository _employeeRepository;
         private readonly ICurrentUser _currentUser;
+        private readonly GenerateDefaultImageService _generateDefaultImageService;
+        private readonly IFilesystem _filesystem;
+        private readonly FileRepository _fileRepository;
 
-        public EmployeeService(EmployeeRepository employeeRepository, ICurrentUser currentUser)
+        public EmployeeService(EmployeeRepository employeeRepository,
+            ICurrentUser currentUser,
+            GenerateDefaultImageService generateDefaultImageService,
+            IFilesystem filesystem,
+            FileRepository fileRepository)
         {
             _employeeRepository = employeeRepository;
             _currentUser = currentUser;
+            _generateDefaultImageService = generateDefaultImageService;
+            _filesystem = filesystem;
+            _fileRepository = fileRepository;
         }
 
-        internal async Task<Employee> Create(CreateEmployeeDto dto)
+        public async Task<PaginatedList<EmployeeDto>> PaginatedList(PageOptions options, string searchTerm)
         {
-            var employee = new Employee();
-            employee.OrganizationID = _currentUser.OrganizationId;
+            var paginatedList = await _employeeRepository.GetPaginatedListAsync(options,
+                                                                             _currentUser.OrganizationId,
+                                                                             searchTerm);
+
+            var dtos = paginatedList.List.Select(e => EmployeeDto.Convert(e));
+
+            return new PaginatedList<EmployeeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<EmployeeDto> GetById(int id)
+        {
+            var employee = await GetEmployeeByIdAsync(id);
+            return EmployeeDto.Convert(employee);
+        }
+
+        private async Task<Employee> GetEmployeeByIdAsync(int id)
+        {
+            return await _employeeRepository.GetByIdAsync(id);
+        }
+
+        public async Task<string> GetImagePathById(int id)
+        {
+            return await _employeeRepository.GetImagePathByIdAsync(id);
+        }
+
+        public async Task<EmployeeDto> Update(int id, EmployeeDto dto)
+        {
+            var employee = await GetEmployeeByIdAsync(id);
+
             // this should intercepted, base on Globagility's Client ID
             // and the current User who made the http request
-            employee.CreatedBy = 1;
+            employee.LastUpdBy = 1;
 
             employee.EmployeeNo = dto.EmployeeNo;
             employee.FirstName = dto.FirstName;
@@ -43,22 +84,40 @@ namespace AccuPay.Web.Employees.Services
 
             await Save(employee);
 
-            return employee;
+            return EmployeeDto.Convert(employee);
         }
 
-        internal async Task<Employee> Update(int id, EmployeeDto dto)
+        public async Task<EmployeeDto> Create(CreateEmployeeDto dto)
         {
-            var employee = await GetEmployeeById(id);
+            //var employee = await GetEmployeeByIdAsync(id);
+            var employee = new Employee()
+            {
+                EmployeeNo = dto.EmployeeNo,
+                FirstName = dto.FirstName,
+                LastName = dto.LastName,
+                MiddleName = dto.MiddleName,
+                BirthDate = dto.Birthdate,
+                HomeAddress = dto.Address,
+                HomePhone = dto.LandlineNo,
+                MobilePhone = dto.MobileNo,
+                EmailAddress = dto.EmailAddress,
+                TinNo = dto.Tin,
+                SssNo = dto.SssNo,
+                PhilHealthNo = dto.PhilHealthNo,
+                HdmfNo = dto.PagIbigNo
+            };
 
-            // this should intercepted, base on Globagility's Client ID
-            // and the current User who made the http request
-            employee.LastUpdBy = 1;
-
-            ApplyUpdate(dto, employee);
+            employee.OrganizationID = _currentUser.OrganizationId;
+            employee.CreatedBy = 1;
 
             await Save(employee);
 
-            return employee;
+            employee.OriginalImageId = (await CreateOriginalImageIdAsync(employee)).Id;
+            //employee.OriginalImage = await CreateOriginalImageIdAsync(employee);
+
+            await _employeeRepository.Attach(employee);
+
+            return EmployeeDto.Convert(employee);
         }
 
         private async Task Save(Employee employee)
@@ -66,87 +125,26 @@ namespace AccuPay.Web.Employees.Services
             await _employeeRepository.SaveAsync(employee);
         }
 
-        private static void ApplyUpdate(EmployeeDto dto, Employee employee)
+        public async Task<File> CreateOriginalImageIdAsync(Employee employee)
         {
-            employee.PositionID = dto.PositionID;
-            employee.PayFrequencyID = dto.PayFrequencyID;
-            employee.Salutation = dto.Salutation;
-            employee.FirstName = dto.FirstName;
-            employee.MiddleName = dto.MiddleName;
-            employee.LastName = dto.LastName;
-            employee.Surname = dto.Surname;
-            employee.EmployeeNo = dto.EmployeeNo;
-            employee.TinNo = dto.Tin;
-            employee.SssNo = dto.SssNo;
-            employee.HdmfNo = dto.PagIbigNo;
-            employee.PhilHealthNo = dto.PhilHealthNo;
-            employee.EmploymentStatus = dto.EmploymentStatus;
-            employee.EmailAddress = dto.EmailAddress;
-            employee.WorkPhone = dto.WorkPhone;
-            employee.HomePhone = dto.LandlineNo;
-            employee.MobilePhone = dto.MobileNo;
-            employee.HomeAddress = dto.Address;
-            employee.Nickname = dto.Nickname;
-            employee.JobTitle = dto.JobTitle;
-            employee.Gender = dto.Gender;
-            employee.EmployeeType = dto.EmployeeType;
-            employee.MaritalStatus = dto.MaritalStatus;
-            employee.BirthDate = dto.Birthdate;
-            employee.StartDate = dto.StartDate;
-            employee.TerminationDate = dto.TerminationDate;
-            employee.NoOfDependents = dto.NoOfDependents;
-            employee.UndertimeOverride = dto.UndertimeOverride;
-            employee.OvertimeOverride = dto.OvertimeOverride;
-            employee.NewEmployeeFlag = dto.NewEmployeeFlag;
-            employee.LeaveBalance = dto.LeaveBalance;
-            employee.SickLeaveBalance = dto.SickLeaveBalance;
-            employee.MaternityLeaveBalance = dto.MaternityLeaveBalance;
-            employee.OtherLeaveBalance = dto.OtherLeaveBalance;
-            employee.VacationLeaveAllowance = dto.VacationLeaveAllowance;
-            employee.SickLeaveAllowance = dto.SickLeaveAllowance;
-            employee.MaternityLeaveAllowance = dto.MaternityLeaveAllowance;
-            employee.OtherLeaveAllowance = dto.OtherLeaveAllowance;
-            employee.LeavePerPayPeriod = dto.LeavePerPayPeriod;
-            employee.SickLeavePerPayPeriod = dto.SickLeavePerPayPeriod;
-            employee.MaternityLeavePerPayPeriod = dto.MaternityLeavePerPayPeriod;
-            employee.OtherLeavePerPayPeriod = dto.OtherLeavePerPayPeriod;
-            employee.AlphalistExempted = dto.AlphalistExempted;
-            employee.WorkDaysPerYear = dto.WorkDaysPerYear;
-            employee.DayOfRest = dto.DayOfRest;
-            employee.AtmNo = dto.AtmNo;
-            employee.BankName = dto.BankName;
-            employee.CalcHoliday = dto.CalcHoliday;
-            employee.CalcSpecialHoliday = dto.CalcSpecialHoliday;
-            employee.CalcNightDiff = dto.CalcNightDiff;
-            employee.CalcNightDiffOT = dto.CalcNightDiffOT;
-            employee.CalcRestDay = dto.CalcRestDay;
-            employee.CalcRestDayOT = dto.CalcRestDayOT;
-            employee.DateRegularized = dto.DateRegularized;
-            employee.DateEvaluated = dto.DateEvaluated;
-            employee.RevealInPayroll = dto.RevealInPayroll;
-            employee.LateGracePeriod = dto.LateGracePeriod;
-            employee.OffsetBalance = dto.OffsetBalance;
-            employee.AgencyID = dto.AgencyID;
-            employee.AdvancementPoints = dto.AdvancementPoints;
-            employee.BPIInsurance = dto.BPIInsurance;
-        }
+            using var virtualFile = _generateDefaultImageService.Create(employee);
+            var path = $"Employee/{employee.RowID.Value.ToString()}/{virtualFile.Filename}";
 
-        private async Task<Employee> GetEmployeeById(int id)
-        {
-            return await _employeeRepository.GetByIdAsync(id);
-        }
+            await _filesystem.Move(virtualFile.Stream, path);
 
-        internal async Task<EmployeeDto> GeyByIdAsync(int id)
-        {
-            var employee = await GetEmployeeById(id);
-            var dto = EmployeeDto.Convert(employee);
+            var file = new File(
+                key: virtualFile.Filename,
+                path: path,
+                filename: virtualFile.Filename,
+                mediaType: "image/jpeg",
+                size: virtualFile.Size);
 
-            return dto;
-        }
+            //file.CreatedById = _currentUser.UserId;
+            //file.UpdatedById = file.CreatedById;
 
-        internal async Task<IEnumerable<Employee>> GetAllAsync(int organizationId)
-        {
-            return await _employeeRepository.GetAllAsync(organizationId);
+            await _fileRepository.Create(file);
+
+            return file;
         }
     }
 }

@@ -80,6 +80,12 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
+        public EmployeeQueryBuilder IncludeImage()
+        {
+            _query = _query.Include(x => x.OriginalImage);
+            return this;
+        }
+
         #endregion Builder Methods
 
         public List<Employee> ToList(int organizationId)
