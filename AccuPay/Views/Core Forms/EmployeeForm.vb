@@ -528,9 +528,9 @@ Public Class EmployeeForm
 
     Public q_employee As String = "SELECT e.RowID," &
         "e.EmployeeID 'Employee ID'," &
+        "e.LastName 'Last Name'," &
         "e.FirstName 'First Name'," &
         "e.MiddleName 'Middle Name'," &
-        "e.LastName 'Last Name'," &
         "e.Surname," &
         "e.Nickname," &
         "e.MaritalStatus 'Marital Status'," &
@@ -622,7 +622,7 @@ Public Class EmployeeForm
 
     Dim employeepix As New DataTable
 
-    Sub loademployee(Optional q_empsearch As String = Nothing)
+    Sub loademployee()
         PopulateEmployeeGrid()
 
         emp_rcount = dgvEmp.RowCount
@@ -635,7 +635,7 @@ Public Class EmployeeForm
 
             Task.Factory.StartNew(Sub()
 
-                                      Dim all_emp As New SQLQueryToDatatable(q_employee)
+                                      Dim all_emp As New SQLQueryToDatatable($"{q_employee} ORDER BY e.LastName, e.FirstName")
 
                                       Dim catchdt As New DataTable
                                       catchdt = all_emp.ResultTable
@@ -2680,7 +2680,7 @@ Public Class EmployeeForm
         If TabControl2.SelectedIndex = 0 Then
             PopulateEmployeeGrid()
         Else
-            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
+            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
             If isKPressSimple = 1 Then
                 If txtSimple.Text.Trim.Length = 0 Then
                     SimpleEmployeeFilter(sql)
@@ -2898,14 +2898,12 @@ Public Class EmployeeForm
             Case 7 : colName = "e.EmployeeID='" 'NoOfDependents
             Case 8 : colName = "e.Birthdate='"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@birthDate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.LastName, e.FirstName", dict)
             Case 9 : colName = "e.Startdate='"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@startdate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.LastName, e.FirstName", dict)
             Case 10 : colName = "e.JobTitle='"
             Case 11 : colName = "pos.PositionName='" 'e.PositionID
             Case 12 : colName = "e.Salutation='"
@@ -2920,9 +2918,8 @@ Public Class EmployeeForm
             Case 21 : colName = "e.EmailAddress='"
             Case 22 : colName = "e.Gender=LEFT('"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "',1) ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@gender", txtSimple.Text}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.LastName, e.FirstName", dict)
             Case 23 : colName = "e.EmploymentStatus='"
             Case 24 : colName = "pf.PayFrequencyType='"
 
@@ -2937,8 +2934,7 @@ Public Class EmployeeForm
         End Select
 
         If s = 0 Then
-            'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "' ORDER BY e.RowID DESC", dgvEmp)
-            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
+            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
             SimpleEmployeeFilter(sql)
         End If
     End Sub
