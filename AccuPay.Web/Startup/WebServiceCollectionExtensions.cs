@@ -8,6 +8,7 @@ using AccuPay.Web.Core.Emails;
 using AccuPay.Web.Core.Views;
 using AccuPay.Web.Divisions;
 using AccuPay.Web.Employees.Services;
+using AccuPay.Web.Files.Services;
 using AccuPay.Web.Leaves;
 using AccuPay.Web.Loans;
 using AccuPay.Web.OfficialBusinesses;
@@ -62,6 +63,8 @@ namespace AccuPay.Web
             services.AddScoped<ViewRenderService>();
             services.AddScoped<UserEmailService>();
             services.AddScoped<UserTokenService>();
+
+            services.AddScoped<GenerateDefaultImageService>();
 
             return services;
         }

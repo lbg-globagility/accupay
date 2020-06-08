@@ -106,6 +106,11 @@ namespace AccuPay.Data.Entities
 
         public virtual ICollection<Paystub> Paystubs { get; set; }
 
+        public int? OriginalImageId { get; set; }
+
+        [ForeignKey("OriginalImageId")]
+        public virtual File OriginalImage { get; set; }
+
         public string MiddleInitial
             => string.IsNullOrEmpty(MiddleName) ? null : MiddleName.Substring(0, 1);
 
