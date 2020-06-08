@@ -3,6 +3,8 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Core.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +39,41 @@ namespace AccuPay.Web.Leaves
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
             return new PaginatedList<LeaveDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<PaginatedList<LeaveBalanceDto>> GetLeaveBalance(PageOptions options, string searchTerm)
+        {
+            var paginatedList = await _service.GetLeaveBalance(options,
+                                                          //_currentUser.OrganizationId,
+                                                          2,
+                                                          searchTerm);
+
+            var dtos = paginatedList.List.GroupBy(x => x.EmployeeID).Select(x => new LeaveBalanceDto
+            {
+                EmployeeId = x.Key,
+                Id = x.FirstOrDefault().EmployeeID.Value,
+                EmployeeName = x.FirstOrDefault().LastTransaction?.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeNumber = x.FirstOrDefault().LastTransaction?.Employee?.EmployeeNo,
+                EmployeeType = x.FirstOrDefault().LastTransaction?.Employee?.EmployeeType,
+                SickLeave = x.FirstOrDefault(y => y.Product.PartNo == ProductConstant.SICK_LEAVE)?.LastTransaction.Balance ?? 0,
+                VacationLeave = x.FirstOrDefault(y => y.Product.PartNo == ProductConstant.VACATION_LEAVE)?.LastTransaction.Balance ?? 0
+            }).ToList();
+
+            return new PaginatedList<LeaveBalanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<PaginatedList<LeaveLedgerDto>> PaginatedListLedger(PageOptions options, int id, string type)
+        {
+            // TODO: sort and desc in repository
+            var paginatedList = await _service.GetPaginatedListLedger(options,
+                                                                             //_currentUser.OrganizationId,
+                                                                             2,
+                                                                             id,
+                                                                             type);
+
+            var dtos = paginatedList.List.Select(x => ConvertToLedgerDto(x));
+
+            return new PaginatedList<LeaveLedgerDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
         public async Task<LeaveDto> GetById(int id)
@@ -123,6 +160,24 @@ namespace AccuPay.Web.Leaves
                 Status = leave.Status,
                 Reason = leave.Reason,
                 Comments = leave.Comments
+            };
+        }
+
+        private static LeaveLedgerDto ConvertToLedgerDto(LeaveTransaction transaction)
+        {
+            if (transaction == null) return null;
+
+            return new LeaveLedgerDto()
+            {
+                Id = transaction.RowID.Value,
+                EmployeeId = transaction.EmployeeID,
+                EmployeeNumber = transaction.Employee?.EmployeeNo,
+                EmployeeName = transaction.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeType = transaction.Employee?.EmployeeType,
+                TransactionType = transaction.Type,
+                Date = transaction.TransactionDate,
+                Amount = transaction.Amount,
+                Balance = transaction.Balance
             };
         }
     }

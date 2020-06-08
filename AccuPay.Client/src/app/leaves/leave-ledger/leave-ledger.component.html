@@ -1,0 +1,53 @@
+<h1 class="mat-headline">Leave Ledger</h1>
+
+<div class="mat-elevation-z1">
+  <table
+    mat-table
+    matSort
+    #table
+    [dataSource]="dataSource"
+    class="users w-full"
+  >
+
+  <ng-container matColumnDef="date">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Date</th>
+    <td mat-cell *matCellDef="let ledger">{{ ledger.date | date }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="type">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Type</th>
+    <td mat-cell *matCellDef="let ledger">{{ ledger.transactionType }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="amount">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Amount</th>
+    <td mat-cell *matCellDef="let ledger">{{ ledger.amount }}</td>
+  </ng-container>
+
+  <ng-container matColumnDef="balance">
+    <th mat-header-cell mat-sort-header *matHeaderCellDef>Balance</th>
+    <td mat-cell *matCellDef="let ledger">{{ ledger.balance }}</td>
+  </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns"
+    ></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No ledger were found.
+  </div>
+
+  <mat-paginator
+    #paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [pageSizeOptions]="[10, 5, 25, 100]"
+    [length]="totalCount"
+    [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

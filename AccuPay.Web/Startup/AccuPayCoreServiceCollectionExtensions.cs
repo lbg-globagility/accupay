@@ -37,6 +37,7 @@ namespace AccuPay.Web
             services.AddScoped<JobCategoryRepository>();
             services.AddScoped<JobLevelRepository>();
             services.AddScoped<LeaveRepository>();
+            services.AddScoped<LeaveLedgerRepository>();
             services.AddScoped<ListOfValueRepository>();
             services.AddScoped<LoanScheduleRepository>();
             services.AddScoped<LoanTransactionRepository>();
