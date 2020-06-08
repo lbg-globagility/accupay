@@ -14,13 +14,14 @@ import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-over
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { 
-  trigger, 
-  state, 
+import {
+  trigger,
+  state,
   style,
-  transition, 
-  animate
- } from '@angular/animations';
+  transition,
+  animate,
+} from '@angular/animations';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-overtime-list',
@@ -49,6 +50,10 @@ export class OvertimeListComponent implements OnInit {
   expandedOvertime: Overtime;
 
   searchTerm: string;
+
+  dateFrom: Moment;
+
+  dateTo: Moment;
 
   modelChanged: Subject<any>;
 
@@ -88,10 +93,12 @@ export class OvertimeListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.overtimeService.getAll(options, this.searchTerm).subscribe((data) => {
-      this.totalCount = data.totalCount;
-      this.dataSource = new MatTableDataSource(data.items);
-    });
+    this.overtimeService
+      .getAll(options, this.searchTerm, this.dateFrom, this.dateTo)
+      .subscribe((data) => {
+        this.totalCount = data.totalCount;
+        this.dataSource = new MatTableDataSource(data.items);
+      });
   }
 
   clearSearchBox(): void {

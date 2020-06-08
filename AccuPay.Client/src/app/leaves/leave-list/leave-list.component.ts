@@ -21,6 +21,7 @@ import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.compone
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-leave-list',
@@ -50,6 +51,10 @@ export class LeaveListComponent implements OnInit {
   expandedLeave: Leave;
 
   searchTerm: string;
+
+  dateFrom: Moment;
+
+  dateTo: Moment;
 
   modelChanged: Subject<any>;
 
@@ -89,10 +94,12 @@ export class LeaveListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.leaveService.getAll(options, this.searchTerm).subscribe((data) => {
-      this.totalCount = data.totalCount;
-      this.dataSource = new MatTableDataSource(data.items);
-    });
+    this.leaveService
+      .getAll(options, this.searchTerm, this.dateFrom, this.dateTo)
+      .subscribe((data) => {
+        this.totalCount = data.totalCount;
+        this.dataSource = new MatTableDataSource(data.items);
+      });
   }
 
   clearSearchBox(): void {

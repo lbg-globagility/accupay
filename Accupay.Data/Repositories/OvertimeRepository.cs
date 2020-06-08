@@ -4,6 +4,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -61,16 +62,20 @@ namespace AccuPay.Data.Repositories
                                 ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options,
+                                                                                 int organizationId,
+                                                                                 string searchTerm = "",
+                                                                                 DateTime? dateFrom = null,
+                                                                                 DateTime? dateTo = null)
         {
             var query = _context.Overtimes
-                                .Include(x => x.Employee)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderByDescending(x => x.OTStartDate)
-                                .ThenBy(x => x.OTStartTime)
-                                .ThenBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderByDescending(x => x.OTStartDate)
+                    .ThenBy(x => x.OTStartTime)
+                    .ThenBy(x => x.Employee.LastName)
+                    .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -80,6 +85,15 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            if (dateFrom.HasValue)
+            {
+                query = query.Where(t => dateFrom.Value.Date <= t.OTStartDate);
+            }
+            if (dateTo.HasValue)
+            {
+                query = query.Where(t => t.OTStartDate <= dateTo.Value.Date);
             }
 
             var overtimes = await query.Page(options).ToListAsync();

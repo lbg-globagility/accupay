@@ -19,12 +19,15 @@ namespace AccuPay.Web.OfficialBusinesses
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<OfficialBusinessDto>> PaginatedList(PageOptions options, OfficialBusinessFilter filter)
         {
             // TODO: sort and desc in repository
-
             int organizationId = _currentUser.OrganizationId;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options,
+                                                                     organizationId,
+                                                                     filter.Term,
+                                                                     filter.DateFrom,
+                                                                     filter.DateTo);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
