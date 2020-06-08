@@ -26,13 +26,13 @@ Public Class DisciplinaryActionTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _disciplinaryActionRepo As DisciplinaryActionRepository
+    Private ReadOnly _disciplinaryActionRepo As DisciplinaryActionRepository
 
-    Private _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As ListOfValueRepository
 
-    Private _productRepo As ProductRepository
+    Private ReadOnly _productRepo As ProductRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -219,7 +219,7 @@ Public Class DisciplinaryActionTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Disciplinary Action",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldDisciplinaryAction = _currentDiscAction.CloneJson()
                     Dim currentFinding As Product = CType(cboFinding.SelectedItem, Product)
 
@@ -305,7 +305,7 @@ Public Class DisciplinaryActionTab
 
     End Sub
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
         With _currentDiscAction
             If .FindingName <> cboFinding.Text OrElse
                     .Action <> cboAction.Text OrElse

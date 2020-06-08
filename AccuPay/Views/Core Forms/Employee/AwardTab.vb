@@ -20,7 +20,7 @@ Public Class AwardTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -216,7 +216,7 @@ Public Class AwardTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Award",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldAward = _currentAward.CloneJson()
 
                     With _currentAward
@@ -245,7 +245,7 @@ Public Class AwardTab
         Return False
     End Function
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
         If _currentAward.AwardType <> txtAwardType.Text OrElse
                 _currentAward.AwardDescription <> txtDescription.Text OrElse
                 _currentAward.AwardDate <> dtpAwardDate.Value Then

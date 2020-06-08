@@ -1337,7 +1337,7 @@ Public Class EmployeeForm
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} position from '{oldEmployee.Position.Name}' to '{cboPosit.Text}'."
+                        .Description = $"Updated {entityName} position from '{oldEmployee.Position?.Name}' to '{cboPosit.Text}'."
                         })
         End If
         'If oldEmployee.Agency.Name <> cboAgency.Text Then
@@ -2099,6 +2099,8 @@ Public Class EmployeeForm
                 End If
 
                 Dim selectedTab = tabctrlemp.SelectedTab
+                Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                 If selectedTab Is tbpempchklist Then
 
@@ -2115,59 +2117,38 @@ Public Class EmployeeForm
                     SetEmployee()
 
                 ElseIf selectedTab Is tbpAwards Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await AwardTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpCertifications Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await CertificationTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpDiscipAct Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await DisciplinaryActionTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpEducBG Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await EducationalBackgroundTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpPrevEmp Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await PreviousEmployerTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpPromotion Then 'Promotion
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+                ElseIf selectedTab Is tbpPromotion Then
 
                     Await PromotionTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpBonus Then 'Bonus
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+                ElseIf selectedTab Is tbpBonus Then
 
                     Await BonusTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpAttachment Then 'Attachment
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+                ElseIf selectedTab Is tbpAttachment Then
 
-                    Await AttachmentTab.SetEmployee(employee, Me)
+                    Await AttachmentTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpNewSalary Then
-
-                    'transferred here so this function will not fetch data from database
-                    'even if the other tabs dont need the employee entity
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await SalaryTab.SetEmployee(employee)
                 End If
@@ -2418,6 +2399,10 @@ Public Class EmployeeForm
 
         pbemppic.Image = Nothing
         File.Delete(Path.GetTempPath & "tmpfileEmployeeImage.jpg")
+        cboPayFreq.SelectedValue = _payFrequencies.
+                                    Where(Function(p) p.IsSemiMonthly).
+                                    Select(Function(p) p.RowID).
+                                    FirstOrDefault()
 
         LeaveBalanceTextBox.Text = 0
         txtNumDepen.Text = 0
@@ -3594,9 +3579,7 @@ Public Class EmployeeForm
 
             Dim payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
             Dim payFrequencies = Await payFrequencyRepository.GetAllAsync()
-            _payFrequencies = payFrequencies.
-                                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
-                                    p.RowID = PayFrequencyType.Weekly).ToList
+            _payFrequencies = payFrequencies.Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly).ToList()
 
             cboPayFreq.ValueMember = "RowID"
             cboPayFreq.DisplayMember = "Type"
@@ -4502,13 +4485,6 @@ Public Class EmployeeForm
             Label149.Text = label_gender
         End If
 
-    End Sub
-
-    Private Async Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
-        Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-        Dim employee = Await employeeRepository.GetByIdAsync(CInt(publicEmpRowID))
-        Dim dialog = New ViewLeaveLedgerDialog(employee)
-        dialog.ShowDialog()
     End Sub
 
     Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click

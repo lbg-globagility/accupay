@@ -44,25 +44,8 @@ namespace AccuPay.Data.Entities
 
         public decimal? NewAmount { get; set; }
 
-        public string CompensationToYesNo
-        {
-            get
-            {
-                if (CompensationChange == "0")
-                {
-                    return "No";
-                }
-                else
-                    return "Yes";
-            }
-        }
+        public string CompensationToYesNo => CompensationChange == "0" ? "No" : "Yes";
 
-        public decimal? BasicPay
-        {
-            get
-            {
-                return SalaryEntity?.BasicSalary;
-            }
-        }
+        public decimal? BasicPay => SalaryEntity?.BasicSalary;
     }
 }

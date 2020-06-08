@@ -14,8 +14,6 @@ Public Class SalaryTab
 
     Private Const FormEntityName As String = "Salary"
 
-    Dim _systemOwnerService As SystemOwnerService
-
     Private _mode As FormMode = FormMode.Empty
 
     Private _employee As Employee
@@ -27,6 +25,8 @@ Public Class SalaryTab
     Private _isSystemOwnerBenchMark As Boolean
 
     Private _ecolaAllowance As Allowance
+
+    Private ReadOnly _systemOwnerService As SystemOwnerService
 
     Public Property BasicSalary As Decimal
         Get

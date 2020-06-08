@@ -11,6 +11,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class PreviousEmployerTab
 
     Private Const FormEntityName As String = "Previous Employer"
+
     Private _employee As Employee
 
     Private _previousEmployers As IEnumerable(Of PreviousEmployer)
@@ -19,7 +20,7 @@ Public Class PreviousEmployerTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -263,7 +264,7 @@ Public Class PreviousEmployerTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Previous Employer",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldPrevEmployer = _currentPrevEmployer.CloneJson()
 
                     With _currentPrevEmployer
@@ -432,7 +433,7 @@ Public Class PreviousEmployerTab
         userActivity.ShowDialog()
     End Sub
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
         With _currentPrevEmployer
             If txtName.Text <> .Name OrElse
                 txtTradeName.Text <> .TradeName OrElse

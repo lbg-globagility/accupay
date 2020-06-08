@@ -11,6 +11,7 @@ Imports Microsoft.Extensions.DependencyInjection
 Public Class EducationalBackgroundTab
 
     Private Const FormEntityName As String = "Educational Background"
+
     Private _employee As Employee
 
     Private _educationalBackgrounds As IEnumerable(Of EducationalBackground)
@@ -19,7 +20,7 @@ Public Class EducationalBackgroundTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -234,7 +235,7 @@ Public Class EducationalBackgroundTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Educational Background",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldEducBg = _currentEducBg.CloneJson()
 
                     With _currentEducBg
@@ -333,7 +334,7 @@ Public Class EducationalBackgroundTab
 
     End Sub
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
         With _currentEducBg
 
             If .Type <> cboType.SelectedItem.ToString OrElse

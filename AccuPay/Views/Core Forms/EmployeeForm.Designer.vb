@@ -127,7 +127,6 @@ Partial Class EmployeeForm
         Me.txtEmpIDChk = New System.Windows.Forms.TextBox()
         Me.tbpEmployee = New System.Windows.Forms.TabPage()
         Me.SplitContainer2 = New System.Windows.Forms.SplitContainer()
-        Me.DisplayLeaveHistoryButton = New System.Windows.Forms.Button()
         Me.Panel4 = New System.Windows.Forms.Panel()
         Me.BPIinsuranceText = New System.Windows.Forms.TextBox()
         Me.BPIinsuranceLabel = New System.Windows.Forms.Label()
@@ -1329,6 +1328,7 @@ Partial Class EmployeeForm
         '
         Me.cboPosit.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Suggest
         Me.cboPosit.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
+        Me.cboPosit.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPosit.Location = New System.Drawing.Point(399, 32)
         Me.cboPosit.Name = "cboPosit"
         Me.cboPosit.Size = New System.Drawing.Size(168, 21)
@@ -1514,7 +1514,6 @@ Partial Class EmployeeForm
         'SplitContainer2.Panel1
         '
         Me.SplitContainer2.Panel1.AutoScroll = True
-        Me.SplitContainer2.Panel1.Controls.Add(Me.DisplayLeaveHistoryButton)
         Me.SplitContainer2.Panel1.Controls.Add(Me.Panel4)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceText)
         Me.SplitContainer2.Panel1.Controls.Add(Me.BPIinsuranceLabel)
@@ -1640,15 +1639,6 @@ Partial Class EmployeeForm
         Me.SplitContainer2.SplitterDistance = 418
         Me.SplitContainer2.SplitterWidth = 7
         Me.SplitContainer2.TabIndex = 114
-        '
-        'DisplayLeaveHistoryButton
-        '
-        Me.DisplayLeaveHistoryButton.Location = New System.Drawing.Point(784, 368)
-        Me.DisplayLeaveHistoryButton.Name = "DisplayLeaveHistoryButton"
-        Me.DisplayLeaveHistoryButton.Size = New System.Drawing.Size(75, 23)
-        Me.DisplayLeaveHistoryButton.TabIndex = 543
-        Me.DisplayLeaveHistoryButton.Text = "Button2"
-        Me.DisplayLeaveHistoryButton.UseVisualStyleBackColor = True
         '
         'Panel4
         '
@@ -2328,6 +2318,7 @@ Partial Class EmployeeForm
         '
         'txtothrbal
         '
+        Me.txtothrbal.Enabled = False
         Me.txtothrbal.Location = New System.Drawing.Point(115, 83)
         Me.txtothrbal.Name = "txtothrbal"
         Me.txtothrbal.Size = New System.Drawing.Size(84, 20)
@@ -2381,6 +2372,7 @@ Partial Class EmployeeForm
         'txtmlbal
         '
         Me.txtmlbal.BackColor = System.Drawing.Color.White
+        Me.txtmlbal.Enabled = False
         Me.txtmlbal.Location = New System.Drawing.Point(115, 57)
         Me.txtmlbal.MaxLength = 50
         Me.txtmlbal.Name = "txtmlbal"
@@ -2400,6 +2392,7 @@ Partial Class EmployeeForm
         'txtvlbal
         '
         Me.txtvlbal.BackColor = System.Drawing.Color.White
+        Me.txtvlbal.Enabled = False
         Me.txtvlbal.Location = New System.Drawing.Point(115, 5)
         Me.txtvlbal.MaxLength = 50
         Me.txtvlbal.Name = "txtvlbal"
@@ -2428,6 +2421,7 @@ Partial Class EmployeeForm
         'txtslbal
         '
         Me.txtslbal.BackColor = System.Drawing.Color.White
+        Me.txtslbal.Enabled = False
         Me.txtslbal.Location = New System.Drawing.Point(115, 31)
         Me.txtslbal.MaxLength = 50
         Me.txtslbal.Name = "txtslbal"
@@ -10019,5 +10013,4 @@ Partial Class EmployeeForm
     Friend WithEvents WorkOrderToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents Panel4 As Panel
     Friend WithEvents Print201ReportToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents DisplayLeaveHistoryButton As Button
 End Class
