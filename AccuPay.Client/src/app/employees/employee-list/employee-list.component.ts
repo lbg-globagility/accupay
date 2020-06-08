@@ -17,14 +17,11 @@ import { PageEvent } from '@angular/material/paginator';
 export class EmployeeListComponent implements OnInit {
   readonly displayedColumns: string[] = ['employeeNo', 'lastName', 'firstName'];
 
-  totalPages: number;
-  totalCount: number;
-  term: string;
-  employees: Employee[];
-
-  placeholder: string;
-
   dataSource: MatTableDataSource<Employee>;
+
+  totalCount: number;
+
+  searchTerm: string;
 
   modelChanged: Subject<any>;
 
@@ -32,65 +29,36 @@ export class EmployeeListComponent implements OnInit {
 
   pageSize = 10;
 
-  organizations: string[] = [];
-
-  selectedOrganization = '';
-
   sort: Sort = {
     active: 'lastName',
     direction: '',
   };
 
-  clearSearch = '';
-
-  selectedRow: number;
-
   constructor(private employeeService: EmployeeService) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
-      .subscribe(() => this.load());
+      .subscribe(() => this.loadEmployees());
   }
 
   ngOnInit(): void {
-    this.load();
+    this.loadEmployees();
   }
 
-  load() {
-    const options = new PageOptions(
-      this.pageIndex,
-      this.pageSize,
-      this.sort.active,
-      this.sort.direction
-    );
+  clearSearchBox() {
+    this.searchTerm = '';
+    this.applyFilter();
+  }
 
-    this.employeeService.getList(options, this.term).subscribe(async (data) => {
-      await setTimeout(() => {
-        this.employees = data.items;
-
-        this.totalPages = data.totalPages;
-        this.totalCount = data.totalCount;
-
-        this.dataSource = new MatTableDataSource(this.employees);
-      });
-    });
+  applyFilter() {
+    this.pageIndex = 0;
+    this.modelChanged.next();
   }
 
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.load();
-  }
-
-  clearSearchBox() {
-    this.clearSearch = '';
-    this.applyFilter(this.clearSearch);
-  }
-
-  applyFilter(term: string) {
-    this.term = term;
-    this.pageIndex = 0;
-    this.modelChanged.next();
+    this.loadEmployees();
   }
 
   sortData(sort: Sort) {
@@ -98,7 +66,17 @@ export class EmployeeListComponent implements OnInit {
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
+  private loadEmployees() {
+    const options = new PageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.sort.active,
+      this.sort.direction
+    );
+
+    this.employeeService.getList(options, this.searchTerm).subscribe((data) => {
+      this.dataSource = new MatTableDataSource(data.items);
+      this.totalCount = data.totalCount;
+    });
   }
 }

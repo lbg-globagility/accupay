@@ -7,13 +7,13 @@
       <mat-label>Search</mat-label>
       <input
         matInput
-        (keyup)="applyFilter($event.target.value)"
-        [placeholder]="placeholder"
-        name="users"
-        [(ngModel)]="clearSearch"
+        (keyup)="applyFilter()"
+        placeholder="Search by name or employee no"
+        name="employee"
+        [(ngModel)]="searchTerm"
       />
       <button
-        *ngIf="clearSearch"
+        *ngIf="searchTerm"
         matSuffix
         mat-icon-button
         aria-label="Clear"
@@ -34,30 +34,28 @@
 <div class="mat-elevation-z1">
   <table
     mat-table
-    matSort
-    #table
     [dataSource]="dataSource"
     (matSortChange)="sortData($event)"
-    class="users w-full"
+    class="w-full"
   >
     <ng-container matColumnDef="employeeNo">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee ID</th>
+      <th mat-header-cell *matHeaderCellDef>Employee No</th>
       <td mat-cell *matCellDef="let employee">
-        {{ employee.employeeNo | ifEmpty: "-" }}
+        {{ employee.employeeNo | ifEmpty }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="lastName">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>Last Name</th>
+      <th mat-header-cell *matHeaderCellDef>Last Name</th>
       <td mat-cell *matCellDef="let employee">
-        {{ employee.lastName | ifEmpty: "-" }}
+        {{ employee.lastName | ifEmpty }}
       </td>
     </ng-container>
 
     <ng-container matColumnDef="firstName">
-      <th mat-header-cell mat-sort-header *matHeaderCellDef>First Name</th>
+      <th mat-header-cell *matHeaderCellDef>First Name</th>
       <td mat-cell *matCellDef="let employee">
-        {{ employee.firstName | ifEmpty: "-" }}
+        {{ employee.firstName | ifEmpty }}
       </td>
     </ng-container>
 
@@ -65,20 +63,15 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      class="cursor-link"
-      (mouseover)="setHoveredRow(row.id)"
-      [class.active]="row.rowId == selectedRow"
-      (mouseout)="selectedRow = null"
       routerLink="/employees/{{ row.id }}"
     ></tr>
   </table>
 
   <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
-    No users were found.
+    No employees were found.
   </div>
 
   <mat-paginator
-    #paginator
     [pageIndex]="pageIndex"
     [pageSize]="pageSize"
     [pageSizeOptions]="[10, 5, 25, 100]"
