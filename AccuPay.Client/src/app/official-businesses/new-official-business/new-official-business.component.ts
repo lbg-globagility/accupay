@@ -1,12 +1,10 @@
-import Swal from 'sweetalert2';
 import { Component, ViewChild } from '@angular/core';
-import { Router } from '@angular/router';
-import { OfficialBusiness } from 'src/app/official-businesses/shared/official-business';
-import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
-import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { MatDialogRef } from '@angular/material/dialog';
 import { OfficialBusinessFormComponent } from '../official-business-form/official-business-form.component';
 import { LoadingState } from 'src/app/core/states/loading-state';
+import { OfficialBusinessService } from '../official-business.service';
+import { MatDialogRef } from '@angular/material/dialog';
+import Swal from 'sweetalert2';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 
 @Component({
   selector: 'app-new-official-business',
@@ -25,12 +23,14 @@ export class NewOfficialBusinessComponent {
     private dialog: MatDialogRef<NewOfficialBusinessComponent>
   ) {}
 
-  onSave(officialBusiness: OfficialBusiness): void {
+  onSave(): void {
     if (!this.officialBusinessForm.form.valid) {
       return;
     }
 
     this.savingState.changeToLoading();
+
+    const officialBusiness = this.officialBusinessForm.value;
 
     this.officialBusinessService.create(officialBusiness).subscribe(
       (x) => {

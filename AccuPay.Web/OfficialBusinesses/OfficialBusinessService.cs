@@ -40,7 +40,7 @@ namespace AccuPay.Web.OfficialBusinesses
 
         public async Task<OfficialBusinessDto> Create(CreateOfficialBusinessDto dto)
         {
-            int organizationId = 2;
+            int organizationId = _currentUser.OrganizationId;
             int userId = 1;
             var officialBusiness = new OfficialBusiness()
             {
