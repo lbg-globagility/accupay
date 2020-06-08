@@ -3,8 +3,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
-using AccuPay.Web.Core.Extensions;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,8 +42,7 @@ namespace AccuPay.Web.Leaves
         public async Task<PaginatedList<LeaveBalanceDto>> GetLeaveBalance(PageOptions options, string searchTerm)
         {
             var paginatedList = await _service.GetLeaveBalance(options,
-                                                          //_currentUser.OrganizationId,
-                                                          2,
+                                                          _currentUser.OrganizationId,
                                                           searchTerm);
 
             var dtos = paginatedList.List.GroupBy(x => x.EmployeeID).Select(x => new LeaveBalanceDto
@@ -66,8 +63,7 @@ namespace AccuPay.Web.Leaves
         {
             // TODO: sort and desc in repository
             var paginatedList = await _service.GetPaginatedListLedger(options,
-                                                                             //_currentUser.OrganizationId,
-                                                                             2,
+                                                                             _currentUser.OrganizationId,
                                                                              id,
                                                                              type);
 
