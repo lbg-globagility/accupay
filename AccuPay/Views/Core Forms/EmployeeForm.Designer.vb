@@ -310,8 +310,6 @@ Partial Class EmployeeForm
         Me.EducationalBackgroundTab = New AccuPay.EducationalBackgroundTab()
         Me.tbpPrevEmp = New System.Windows.Forms.TabPage()
         Me.PreviousEmployerTab = New AccuPay.PreviousEmployerTab()
-        Me.tbpPromotion = New System.Windows.Forms.TabPage()
-        Me.PromotionTab = New AccuPay.PromotionTab()
         Me.tbpBonus = New System.Windows.Forms.TabPage()
         Me.BonusTab = New AccuPay.BonusTab()
         Me.tbpAttachment = New System.Windows.Forms.TabPage()
@@ -954,7 +952,6 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.SuspendLayout
         Me.tbpEducBG.SuspendLayout
         Me.tbpPrevEmp.SuspendLayout
-        Me.tbpPromotion.SuspendLayout
         Me.tbpBonus.SuspendLayout
         Me.tbpAttachment.SuspendLayout
         Me.tbpNewSalary.SuspendLayout
@@ -1377,7 +1374,6 @@ Partial Class EmployeeForm
         Me.tabctrlemp.Controls.Add(Me.tbpDiscipAct)
         Me.tabctrlemp.Controls.Add(Me.tbpEducBG)
         Me.tabctrlemp.Controls.Add(Me.tbpPrevEmp)
-        Me.tabctrlemp.Controls.Add(Me.tbpPromotion)
         Me.tabctrlemp.Controls.Add(Me.tbpBonus)
         Me.tabctrlemp.Controls.Add(Me.tbpAttachment)
         Me.tabctrlemp.Controls.Add(Me.tbpNewSalary)
@@ -3400,26 +3396,6 @@ Partial Class EmployeeForm
         Me.PreviousEmployerTab.Name = "PreviousEmployerTab"
         Me.PreviousEmployerTab.Size = New System.Drawing.Size(854, 480)
         Me.PreviousEmployerTab.TabIndex = 0
-        '
-        'tbpPromotion
-        '
-        Me.tbpPromotion.AccessibleDescription = "Employee Promotion"
-        Me.tbpPromotion.Controls.Add(Me.PromotionTab)
-        Me.tbpPromotion.Location = New System.Drawing.Point(4, 4)
-        Me.tbpPromotion.Name = "tbpPromotion"
-        Me.tbpPromotion.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpPromotion.Size = New System.Drawing.Size(860, 486)
-        Me.tbpPromotion.TabIndex = 8
-        Me.tbpPromotion.Text = "PROMOT"
-        Me.tbpPromotion.UseVisualStyleBackColor = True
-        '
-        'PromotionTab
-        '
-        Me.PromotionTab.BackColor = System.Drawing.Color.White
-        Me.PromotionTab.Location = New System.Drawing.Point(0, 0)
-        Me.PromotionTab.Name = "PromotionTab"
-        Me.PromotionTab.Size = New System.Drawing.Size(905, 552)
-        Me.PromotionTab.TabIndex = 0
         '
         'tbpBonus
         '
@@ -9090,7 +9066,6 @@ Partial Class EmployeeForm
         Me.tbpDiscipAct.ResumeLayout(False)
         Me.tbpEducBG.ResumeLayout(False)
         Me.tbpPrevEmp.ResumeLayout(False)
-        Me.tbpPromotion.ResumeLayout(False)
         Me.tbpBonus.ResumeLayout(False)
         Me.tbpAttachment.ResumeLayout(False)
         Me.tbpNewSalary.ResumeLayout(False)
@@ -9370,7 +9345,6 @@ Partial Class EmployeeForm
     Friend WithEvents btnAudittrail As System.Windows.Forms.ToolStripButton
     Friend WithEvents tbpEducBG As System.Windows.Forms.TabPage
     Friend WithEvents tbpPrevEmp As System.Windows.Forms.TabPage
-    Friend WithEvents tbpPromotion As System.Windows.Forms.TabPage
     Friend WithEvents ToolStrip9 As System.Windows.Forms.ToolStrip
     Friend WithEvents btnNewEduc As System.Windows.Forms.ToolStripButton
     Friend WithEvents ToolStripButton5 As System.Windows.Forms.ToolStripButton
@@ -9791,7 +9765,6 @@ Partial Class EmployeeForm
     Friend WithEvents CertificationTab As CertificationTab
     Friend WithEvents DisciplinaryActionTab As DisciplinaryActionTab
     Friend WithEvents PreviousEmployerTab As PreviousEmployerTab
-    Friend WithEvents PromotionTab As PromotionTab
     Friend WithEvents AttachmentTab As AttachmentTab
     Friend WithEvents ToolStripButton22 As ToolStripButton
     Friend WithEvents ToolStripButton35 As ToolStripButton

@@ -478,10 +478,6 @@ Public Class EmployeeForm
         Return tabctrlemp.TabPages.IndexOf(tbpPrevEmp)
     End Function
 
-    Public Function GetPromotionTabPageIndex() As Integer
-        Return tabctrlemp.TabPages.IndexOf(tbpPromotion)
-    End Function
-
     Public Function GetBonusTabPageIndex() As Integer
         Return tabctrlemp.TabPages.IndexOf(tbpBonus)
     End Function
@@ -1892,7 +1888,6 @@ Public Class EmployeeForm
             tabctrlemp.TabPages.Remove(tbpDiscipAct)
             tabctrlemp.TabPages.Remove(tbpEducBG)
             tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpPromotion)
             tabctrlemp.TabPages.Remove(tbpBonus)
             tabctrlemp.TabPages.Remove(tbpAttachment)
 
@@ -1945,7 +1940,6 @@ Public Class EmployeeForm
             tabctrlemp.TabPages.Remove(tbpCertifications)
             tabctrlemp.TabPages.Remove(tbpEducBG)
             tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpPromotion)
             tabctrlemp.TabPages.Remove(tbpDiscipAct)
             tabctrlemp.TabPages.Remove(tbpNewSalary)
             tabctrlemp.TabPages.Remove(tbpBonus)
@@ -2135,10 +2129,6 @@ Public Class EmployeeForm
                 ElseIf selectedTab Is tbpPrevEmp Then
 
                     Await PreviousEmployerTab.SetEmployee(employee)
-
-                ElseIf selectedTab Is tbpPromotion Then
-
-                    Await PromotionTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpBonus Then
 
@@ -4207,22 +4197,6 @@ Public Class EmployeeForm
 
 #End Region 'Previous Employer
 
-#Region "Promotion"
-
-    Sub tbpPromotion_Enter(sender As Object, e As EventArgs) Handles tbpPromotion.Enter
-
-        UpdateTabPageText()
-
-        tbpPromotion.Text = "PROMOTION               "
-
-        Label25.Text = "PROMOTION"
-
-        dgvEmp_SelectionChanged(sender, e)
-
-    End Sub
-
-#End Region 'Promotion
-
 #Region "Salary"
 
     Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
@@ -4284,7 +4258,6 @@ Public Class EmployeeForm
         tbpDiscipAct.Text = "DISCIP"
         tbpEducBG.Text = "EDUC"
         tbpPrevEmp.Text = "PREV EMP"
-        tbpPromotion.Text = "PROMOT"
         tbpBonus.Text = "BONUS"
         tbpAttachment.Text = "ATTACH"
         tbpNewSalary.Text = "SALARY"

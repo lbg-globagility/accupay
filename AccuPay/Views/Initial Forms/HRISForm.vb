@@ -219,16 +219,6 @@ Public Class HRISForm
         EmployeeForm.tbpPrevEmp.Focus()
     End Sub
 
-    Private Sub ToolStripMenuItem3_Click(sender As Object, e As EventArgs) Handles PromotionToolStripMenuItem.Click
-
-        Dim index = EmployeeForm.GetPromotionTabPageIndex
-
-        EmployeeForm.tabctrlemp.SelectedIndex = index
-        EmployeeForm.tabIndx = index
-        ChangeForm(EmployeeForm, "Employee Promotion")
-        EmployeeForm.tbpPromotion.Focus()
-    End Sub
-
     Private Sub ToolStripMenuItem10_Click(sender As Object, e As EventArgs) Handles BonusToolStripMenuItem.Click
 
         Dim index = EmployeeForm.GetBonusTabPageIndex
