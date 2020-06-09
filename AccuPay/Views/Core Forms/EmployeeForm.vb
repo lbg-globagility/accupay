@@ -10,6 +10,7 @@ Imports AccuPay.Utilities.Extensions
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
+Imports File = System.IO.File
 
 Public Class EmployeeForm
 
