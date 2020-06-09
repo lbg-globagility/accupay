@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,15 +10,19 @@ namespace AccuPay.Web.Positions
     public class PositionService
     {
         private readonly PositionDataService _service;
+        private readonly ICurrentUser _currentUser;
 
-        public PositionService(PositionDataService service) => _service = service;
+        public PositionService(PositionDataService service, ICurrentUser currentUser)
+        {
+            _service = service;
+            _currentUser = currentUser;
+        }
 
         public async Task<PaginatedList<PositionDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -33,12 +38,11 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> Create(CreatePositionDto dto)
         {
-            int organizationId = 2;
             int userId = 1;
             var overtime = new Position()
             {
                 CreatedBy = userId,
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
 

@@ -2,6 +2,7 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shared;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,22 +15,26 @@ namespace AccuPay.Web.Loans
         private readonly LoanDataService _loanService;
         private readonly ProductRepository _productRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
+        private readonly ICurrentUser _currentUser;
 
         public LoanService(LoanDataService loanService,
                             ProductRepository productRepository,
-                            ListOfValueRepository listOfValueRepository)
+                            ListOfValueRepository listOfValueRepository,
+                            ICurrentUser currentUser)
         {
             _loanService = loanService;
             _productRepository = productRepository;
             _listOfValueRepository = listOfValueRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<LoanDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _loanService.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _loanService.GetPaginatedListAsync(options,
+                                                                        _currentUser.OrganizationId,
+                                                                        searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -45,13 +50,12 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> Create(CreateLoanDto dto)
         {
-            int organizationId = 2;
             int userId = 1;
             var loanSchedule = new LoanSchedule()
             {
                 EmployeeID = dto.EmployeeId,
                 CreatedBy = userId,
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
                 TotalBalanceLeft = dto.TotalLoanAmount
             };
             ApplyChanges(dto, loanSchedule);
@@ -88,8 +92,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<List<DropDownItem>> GetLoanTypes()
         {
-            int organizationId = 2;
-            var leaveTypes = await _productRepository.GetLoanTypesAsync(organizationId);
+            var leaveTypes = await _productRepository.GetLoanTypesAsync(_currentUser.OrganizationId);
 
             return leaveTypes
                     .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))
