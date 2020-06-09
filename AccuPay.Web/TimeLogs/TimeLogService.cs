@@ -3,6 +3,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
+using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -16,19 +17,22 @@ namespace AccuPay.Web.TimeLogs
     {
         private TimeLogDataService _service;
         private readonly TimeLogImportParser _importParser;
+        private readonly ICurrentUser _currentUser;
 
-        public TimeLogService(TimeLogDataService service, TimeLogImportParser importParser)
+        public TimeLogService(TimeLogDataService service,
+                              TimeLogImportParser importParser,
+                              ICurrentUser currentUser)
         {
             _service = service;
             _importParser = importParser;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<TimeLogDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -38,12 +42,11 @@ namespace AccuPay.Web.TimeLogs
         internal async Task<ActionResult<TimeLogDto>> Create(CreateTimeLogDto dto)
         {
             // TODO: validations
-            int organizationId = 2;
             int userId = 1;
 
             var timeLog = new TimeLog
             {
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
                 CreatedBy = userId,
                 EmployeeID = dto.EmployeeId,
                 LogDate = dto.Date
@@ -104,9 +107,8 @@ namespace AccuPay.Web.TimeLogs
             if (fileStream?.Name == null)
                 throw new Exception("Unable to parse text file.");
 
-            int organizationId = 2;
             int userId = 1;
-            var parsedResult = await _importParser.Parse(fileStream.Name, organizationId: organizationId, userId: userId);
+            var parsedResult = await _importParser.Parse(fileStream.Name, organizationId: _currentUser.OrganizationId, userId: userId);
 
             await _service.SaveImportAsync(parsedResult.GeneratedTimeLogs, parsedResult.GeneratedTimeAttendanceLogs);
         }

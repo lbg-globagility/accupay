@@ -3,6 +3,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Allowances.Models;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Products;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,19 +15,24 @@ namespace AccuPay.Web.Allowances.Services
     {
         private readonly ProductRepository _productRepository;
         private readonly AllowanceDataService _allowanceService;
+        private readonly ICurrentUser _currentUser;
 
-        public AllowanceService(AllowanceDataService allowanceService, ProductRepository productRepository)
+        public AllowanceService(AllowanceDataService allowanceService,
+                                ProductRepository productRepository,
+                                ICurrentUser currentUser)
         {
             _productRepository = productRepository;
             _allowanceService = allowanceService;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<AllowanceDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _allowanceService.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _allowanceService.GetPaginatedListAsync(options,
+                                                                              _currentUser.OrganizationId,
+                                                                              searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -44,7 +50,7 @@ namespace AccuPay.Web.Allowances.Services
         {
             var allowance = new Allowance
             {
-                OrganizationID = 5,
+                OrganizationID = _currentUser.OrganizationId,
                 CreatedBy = 1,
                 EmployeeID = dto.EmployeeId
             };
@@ -76,8 +82,7 @@ namespace AccuPay.Web.Allowances.Services
 
         public async Task<List<ProductDto>> GetAllowanceTypes()
         {
-            int organizationId = 2;
-            var leaveTypes = await _productRepository.GetAllowanceTypesAsync(organizationId);
+            var leaveTypes = await _productRepository.GetAllowanceTypesAsync(_currentUser.OrganizationId);
 
             return leaveTypes
                     .Where(x => !string.IsNullOrWhiteSpace(x.PartNo))

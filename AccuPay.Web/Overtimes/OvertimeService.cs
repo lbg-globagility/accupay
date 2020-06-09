@@ -41,13 +41,12 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(CreateOvertimeDto dto)
         {
-            int organizationId = 2;
             int userId = 1;
             var overtime = new Overtime()
             {
                 EmployeeID = dto.EmployeeId,
                 CreatedBy = userId,
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
 
