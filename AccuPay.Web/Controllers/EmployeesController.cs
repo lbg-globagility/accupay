@@ -61,9 +61,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("employee-image")]
-        public async Task<ActionResult> GenerateEmployeesImage()
+        public async Task<ActionResult> GenerateEmployeesImages()
         {
-            await _employeeService.GenerateUsersImage();
+            await _employeeService.GenerateEmployeesImages();
 
             return Ok();
         }

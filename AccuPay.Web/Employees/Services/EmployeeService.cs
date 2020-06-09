@@ -148,7 +148,7 @@ namespace AccuPay.Web.Employees.Services
             return file;
         }
 
-        public async Task GenerateUsersImage()
+        public async Task GenerateEmployeesImages()
         {
             var employees = await _employeeRepository.GetEmployeesWithoutImageAsync(_currentUser.OrganizationId);
 
