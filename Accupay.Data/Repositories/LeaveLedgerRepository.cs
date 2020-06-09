@@ -32,16 +32,16 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<LeaveTransaction>> GetPaginatedListLedger(PageOptions options, int organizationId, int id, string type = null)
+        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type = null)
         {
             var query = context.LeaveTransactions
-                                .Include(x => x.Employee)
-                                .Include(x => x.LeaveLedger)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .Where(x => x.EmployeeID == id)
-                                .Where(x => x.LeaveLedger.Product.PartNo == type)
-                                .OrderByDescending(x => x.TransactionDate)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Include(x => x.LeaveLedger)
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.EmployeeID == id)
+                .Where(x => x.LeaveLedger.Product.PartNo == type)
+                .OrderByDescending(x => x.TransactionDate)
+                .AsQueryable();
 
             var transaction = await query.Page(options).ToListAsync();
             var count = await query.CountAsync();

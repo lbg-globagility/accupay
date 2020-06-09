@@ -59,17 +59,16 @@ namespace AccuPay.Web.Leaves
             return new PaginatedList<LeaveBalanceDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
-        public async Task<PaginatedList<LeaveLedgerDto>> PaginatedListLedger(PageOptions options, int id, string type)
+        public async Task<PaginatedList<LeaveTransactionDto>> ListTransactions(PageOptions options, int id, string type)
         {
-            // TODO: sort and desc in repository
-            var paginatedList = await _service.GetPaginatedListLedger(options,
-                                                                             _currentUser.OrganizationId,
-                                                                             id,
-                                                                             type);
+            var paginatedList = await _service.ListTransactions(options,
+                                                                _currentUser.OrganizationId,
+                                                                id,
+                                                                type);
 
             var dtos = paginatedList.List.Select(x => ConvertToLedgerDto(x));
 
-            return new PaginatedList<LeaveLedgerDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return new PaginatedList<LeaveTransactionDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
         public async Task<LeaveDto> GetById(int id)
@@ -159,17 +158,18 @@ namespace AccuPay.Web.Leaves
             };
         }
 
-        private static LeaveLedgerDto ConvertToLedgerDto(LeaveTransaction transaction)
+        private static LeaveTransactionDto ConvertToLedgerDto(LeaveTransaction transaction)
         {
             if (transaction == null) return null;
 
-            return new LeaveLedgerDto()
+            return new LeaveTransactionDto()
             {
                 Id = transaction.RowID.Value,
                 EmployeeId = transaction.EmployeeID,
-                EmployeeNumber = transaction.Employee?.EmployeeNo,
+                EmployeeNo = transaction.Employee?.EmployeeNo,
                 EmployeeName = transaction.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = transaction.Employee?.EmployeeType,
+                Description = transaction.Description,
                 TransactionType = transaction.Type,
                 Date = transaction.TransactionDate,
                 Amount = transaction.Amount,

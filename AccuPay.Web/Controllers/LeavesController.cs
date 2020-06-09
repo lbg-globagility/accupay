@@ -84,13 +84,10 @@ namespace AccuPay.Web.Controllers
             return await _service.GetLeaveBalance(options, term);
         }
 
-
         [HttpGet("ledger/{id}")]
-        public async Task<ActionResult<PaginatedList<LeaveLedgerDto>>> GetLedger([FromQuery] PageOptions options,  string type, int id)
+        public async Task<ActionResult<PaginatedList<LeaveTransactionDto>>> GetLedger([FromQuery] PageOptions options, string type, int id)
         {
-            return await _service.PaginatedListLedger(options, id, type);
+            return await _service.ListTransactions(options, id, type);
         }
-
-
     }
 }

@@ -16,7 +16,7 @@ import { LeaveBalance } from '../shared/leave-balance';
 @Component({
   selector: 'app-leave-balance',
   templateUrl: './leave-balance.component.html',
-  styleUrls: ['./leave-balance.component.scss']
+  styleUrls: ['./leave-balance.component.scss'],
 })
 export class LeaveBalanceComponent implements OnInit {
   readonly displayedColumns: string[] = [
@@ -25,15 +25,13 @@ export class LeaveBalanceComponent implements OnInit {
     'sickLeaveBalance',
   ];
 
-  totalPages: number;
-
-  totalCount: number;
-
   term: string;
 
   placeholder: string;
 
   dataSource: MatTableDataSource<LeaveBalance>;
+
+  totalCount: number;
 
   modelChanged: Subject<any>;
 
@@ -46,16 +44,13 @@ export class LeaveBalanceComponent implements OnInit {
     direction: '',
   };
 
-  clearSearch = '';
-
   selectedRow: number;
 
   constructor(
     private leaveService: LeaveService,
     private employeeService: EmployeeService,
-    private dialog: MatDialog,
-    ){
-
+    private dialog: MatDialog
+  ) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -76,7 +71,6 @@ export class LeaveBalanceComponent implements OnInit {
 
     this.leaveService.getBalance(options, this.term).subscribe(async (data) => {
       setTimeout(() => {
-        this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;
         this.dataSource = new MatTableDataSource(data.items);
       });
@@ -113,7 +107,7 @@ export class LeaveBalanceComponent implements OnInit {
       .open(LeaveLedgerComponent, {
         data: {
           employeeId: leaveBalance.employeeId,
-          type: type,
+          type,
         },
       })
       .afterClosed()

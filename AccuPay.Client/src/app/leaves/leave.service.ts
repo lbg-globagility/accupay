@@ -4,14 +4,13 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Leave } from 'src/app/leaves/shared/leave';
-import { LeaveLedger } from './shared/leave-ledger';
+import { LeaveTransaction } from './shared/leave-transaction';
 import { LeaveBalance } from './shared/leave-balance';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LeaveService {
-
   baseUrl = 'api/leaves';
 
   constructor(private httpClient: HttpClient) {}
@@ -24,20 +23,33 @@ export class LeaveService {
     });
   }
 
-  getBalance(options: PageOptions, term = ''): Observable<PaginatedList<LeaveBalance>> {
+  getBalance(
+    options: PageOptions,
+    term = ''
+  ): Observable<PaginatedList<LeaveBalance>> {
     const params = options ? options.toObject() : null;
     params.term = term;
-    return this.httpClient.get<PaginatedList<LeaveBalance>>(`${this.baseUrl}/ledger`, {
-      params,
-    });
+    return this.httpClient.get<PaginatedList<LeaveBalance>>(
+      `${this.baseUrl}/ledger`,
+      {
+        params,
+      }
+    );
   }
 
-  getLedger(options: PageOptions, id: number, type = ''): Observable<PaginatedList<LeaveLedger>> {
+  getLedger(
+    options: PageOptions,
+    id: number,
+    type = ''
+  ): Observable<PaginatedList<LeaveTransaction>> {
     const params = options ? options.toObject() : null;
     params.type = type;
-    return this.httpClient.get<PaginatedList<LeaveLedger>>(`${this.baseUrl}/ledger/${id}`, {
-      params,
-    });
+    return this.httpClient.get<PaginatedList<LeaveTransaction>>(
+      `${this.baseUrl}/ledger/${id}`,
+      {
+        params,
+      }
+    );
   }
 
   get(id: number): Observable<Leave> {

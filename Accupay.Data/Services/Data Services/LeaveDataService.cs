@@ -443,9 +443,9 @@ namespace AccuPay.Data.Services
 
         #endregion ForceUpdateLeaveAllowanceAsync
 
-        public async Task<PaginatedListResult<LeaveTransaction>> GetPaginatedListLedger(PageOptions options, int organizationId, int id, string type)
+        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
         {
-            return await _leaveLedgerRepository.GetPaginatedListLedger(options, organizationId, id, type);
+            return await _leaveLedgerRepository.ListTransactions(options, organizationId, id, type);
         }
 
         public async Task<PaginatedListResult<LeaveLedger>> GetLeaveBalance(PageOptions options, int organizationId, string searchTerm)
@@ -460,7 +460,7 @@ namespace AccuPay.Data.Services
                                 .Where(x => ids.Contains(x.EmployeeID))
                                 .ToList();
 
-            var count =  distinctId.Count();
+            var count = distinctId.Count();
 
             return new PaginatedListResult<LeaveLedger>(query, count);
         }
