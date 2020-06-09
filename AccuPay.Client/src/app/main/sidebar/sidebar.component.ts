@@ -65,6 +65,10 @@ const menuItems: MenuItem[] = [
       {
         label: 'Leaves',
         route: '/leaves',
+      },    
+      {
+        label: 'Leave Balance',
+        route: '/leave-balance',
       },
       {
         label: 'Official Business',

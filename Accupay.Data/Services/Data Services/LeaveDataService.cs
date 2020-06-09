@@ -25,16 +25,19 @@ namespace AccuPay.Data.Services
 
         private readonly EmployeeRepository _employeeRepository;
         private readonly PayPeriodRepository _payPeriodRepository;
+        private readonly LeaveLedgerRepository _leaveLedgerRepository;
 
         public LeaveDataService(PayrollContext context,
                                 PolicyHelper policy,
                                 EmployeeRepository employeeRepository,
-                                PayPeriodRepository payPeriodRepository)
+                                PayPeriodRepository payPeriodRepository,
+                                LeaveLedgerRepository leaveLedgerRepository)
         {
             _context = context;
             _policy = policy;
             _employeeRepository = employeeRepository;
             _payPeriodRepository = payPeriodRepository;
+            _leaveLedgerRepository = leaveLedgerRepository;
         }
 
         #region SaveManyAsync
@@ -439,5 +442,27 @@ namespace AccuPay.Data.Services
         }
 
         #endregion ForceUpdateLeaveAllowanceAsync
+
+        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type)
+        {
+            return await _leaveLedgerRepository.ListTransactions(options, organizationId, id, type);
+        }
+
+        public async Task<PaginatedListResult<LeaveLedger>> GetLeaveBalance(PageOptions options, int organizationId, string searchTerm)
+        {
+            var leaveBalances = await _leaveLedgerRepository.GetLeaveBalance(organizationId, searchTerm);
+
+            var distinctId = leaveBalances.Select(x => x.EmployeeID).Distinct().AsQueryable();
+
+            var ids = distinctId.Page(options).ToList();
+
+            var query = leaveBalances
+                                .Where(x => ids.Contains(x.EmployeeID))
+                                .ToList();
+
+            var count = distinctId.Count();
+
+            return new PaginatedListResult<LeaveLedger>(query, count);
+        }
     }
 }
