@@ -59,5 +59,13 @@ namespace AccuPay.Web.Controllers
         {
             return await _employeeService.PaginatedList(options, term);
         }
+
+        [HttpGet("employee-image")]
+        public async Task<ActionResult> GenerateEmployeesImage()
+        {
+            await _employeeService.GenerateUsersImage();
+
+            return Ok();
+        }
     }
 }

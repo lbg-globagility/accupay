@@ -245,6 +245,16 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(null);
         }
 
+        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync(int organizationId)
+        {
+            return await _context.Employees
+                                 .Include(x => x.OriginalImage)
+                                 .Where(x => x.OrganizationID == organizationId)
+                                 .Where(x => x.Image == null)
+                                 .Where(x => x.OriginalImageId == null)
+                                 .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Single entity
