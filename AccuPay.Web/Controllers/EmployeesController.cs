@@ -1,11 +1,10 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Web.Core.Auth;
-using AccuPay.Web.Core.Extensions;
+using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
+using System.IO;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -16,7 +15,7 @@ namespace AccuPay.Web.Controllers
     {
         private readonly EmployeeService _employeeService;
 
-        public EmployeesController(EmployeeService employeeService, ICurrentUser currentUser)
+        public EmployeesController(EmployeeService employeeService)
         {
             _employeeService = employeeService;
         }
@@ -24,54 +23,49 @@ namespace AccuPay.Web.Controllers
         [HttpPost]
         public async Task<ActionResult<EmployeeDto>> Create([FromBody] CreateEmployeeDto dto)
         {
-            var employee = await _employeeService.Create(dto);
-            var employeeDto = EmployeeDto.Convert(employee);
-
-            return employeeDto;
+            return await _employeeService.Create(dto);
         }
 
         [HttpPut("{id}")]
         public async Task<ActionResult<EmployeeDto>> Update(int id, [FromBody] EmployeeDto dto)
         {
-            var employee = await _employeeService.Update(id, dto);
-            var employeeDto = EmployeeDto.Convert(employee);
-
-            return employeeDto;
+            return await _employeeService.Update(id, dto);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<EmployeeDto>> GeyById(int id)
         {
-            var dto = await _employeeService.GeyByIdAsync(id);
+            return await _employeeService.GetById(id); ;
+        }
 
-            return dto;
+        [HttpGet("{id}/image")]
+        [AllowAnonymous]
+        public async Task<ActionResult<Stream>> GetImage(int id, [FromServices] IFilesystem filesystem)
+        {
+            var path = await _employeeService.GetImagePathById(id);
+
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return NotFound("Employee image not found.");
+            }
+
+            var stream = await filesystem.Get(path);
+
+            return stream;
         }
 
         [HttpGet]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] PageOptions options, string term = "")
         {
-            int variableOrganizationId = 2;//_currentUser.OrganizationId
-            var query = await _employeeService.GetAllAsync(variableOrganizationId);
+            return await _employeeService.PaginatedList(options, term);
+        }
 
-            if (!string.IsNullOrWhiteSpace(term))
-            {
-                query = query.Where(x =>
-                                    EF.Functions.Like(x.EmployeeNo, term) ||
-                                    EF.Functions.Like(x.FullNameWithMiddleInitialLastNameFirst, term));
-            }
+        [HttpGet("employee-image")]
+        public async Task<ActionResult> GenerateEmployeesImages()
+        {
+            await _employeeService.GenerateEmployeesImages();
 
-            query = options.Sort switch
-            {
-                "name" => query.OrderBy(t => t.FullNameWithMiddleInitialLastNameFirst, options.Direction),
-                _ => query.OrderBy(t => t.FullNameWithMiddleInitialLastNameFirst)
-            };
-
-            var roles = query.Page(options).ToList();
-            var count = query.Count();
-
-            var dtos = roles.Select(s => EmployeeDto.Convert(s)).ToList();
-
-            return new PaginatedList<EmployeeDto>(dtos, count, options.PageIndex, options.PageSize);
+            return Ok();
         }
     }
 }

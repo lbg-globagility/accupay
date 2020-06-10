@@ -52,6 +52,7 @@ namespace AccuPay.Data
         internal virtual DbSet<EducationalBackground> EducationalBackgrounds { get; set; }
         internal virtual DbSet<Employee> Employees { get; set; }
         internal virtual DbSet<EmployeeDutySchedule> EmployeeDutySchedules { get; set; }
+        internal virtual DbSet<File> Files { get; set; }
         internal virtual DbSet<FilingStatusType> FilingStatusTypes { get; set; }
         internal virtual DbSet<JobCategory> JobCategories { get; set; }
         internal virtual DbSet<JobLevel> JobLevels { get; set; }
@@ -167,6 +168,9 @@ namespace AccuPay.Data
                 .HasOne(t => t.Role)
                 .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
         }
     }
 }

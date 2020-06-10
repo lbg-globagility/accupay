@@ -3,6 +3,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shifts.Models;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -16,19 +17,24 @@ namespace AccuPay.Web.Shifts.Services
     {
         private readonly EmployeeDutyScheduleDataService _service;
         private readonly ShiftImportParser _importParser;
+        private readonly ICurrentUser _currentUser;
 
-        public ShiftService(EmployeeDutyScheduleDataService service, ShiftImportParser importParser)
+        public ShiftService(EmployeeDutyScheduleDataService service,
+                            ShiftImportParser importParser,
+                            ICurrentUser currentUser)
         {
             _service = service;
             _importParser = importParser;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<ShiftDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options,
+                                                                    _currentUser.OrganizationId,
+                                                                    searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -45,12 +51,11 @@ namespace AccuPay.Web.Shifts.Services
         internal async Task<ShiftDto> Create(CreateShiftDto dto)
         {
             // TODO: validations
-            int organizationId = 2;
             int userId = 1;
 
             var shift = new EmployeeDutySchedule
             {
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
                 CreatedBy = userId,
                 EmployeeID = dto.EmployeeId,
                 DateSched = dto.Date
@@ -94,11 +99,10 @@ namespace AccuPay.Web.Shifts.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int organizationId = 2;
             int userId = 1;
-            var parsedResult = await _importParser.Parse(stream, organizationId);
+            var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
-            await _service.BatchApply(parsedResult.ValidRecords, organizationId: organizationId, userId: userId);
+            await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);
         }
 
         private static void ApplyChanges(CrudShiftDto dto, EmployeeDutySchedule shift)

@@ -10,6 +10,7 @@ import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgf
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
+import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { DisplayFieldComponent } from 'src/app/shared/components/display-field/d
     // CoalescePipe,
     IfEmptyPipe,
     IfZeroPipe,
+    AmountPipe,
     DisplayFieldComponent,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
@@ -44,6 +46,7 @@ import { DisplayFieldComponent } from 'src/app/shared/components/display-field/d
     // CoalescePipe,
     IfEmptyPipe,
     IfZeroPipe,
+    AmountPipe,
     ImgFallbackDirective,
     StatusComponent,
     DisplayFieldComponent,

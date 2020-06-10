@@ -32,6 +32,35 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
+        public async Task Attach(Employee employee)
+        {
+            _context.Employees.Attach(employee);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        {
+            var query = _context.Employees
+                                .Include(e => e.Position)
+                                .Where(e => e.OrganizationID == organizationId)
+                                .OrderBy(e => e.FullNameLastNameFirst)
+                                .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.FullNameWithMiddleInitialLastNameFirst, searchTerm) ||
+                    EF.Functions.Like(x.EmployeeNo, searchTerm));
+            }
+
+            var employees = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<Employee>(employees, count);
+        }
+
         public async Task SaveManyAsync(List<Employee> employees)
         {
             var updated = employees.Where(e => e.RowID.HasValue).ToList();
@@ -216,6 +245,15 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(null);
         }
 
+        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync(int organizationId)
+        {
+            return await _context.Employees
+                                 .Include(x => x.OriginalImage)
+                                 .Where(x => x.OrganizationID == organizationId)
+                                 .Where(x => x.OriginalImageId == null)
+                                 .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Single entity
@@ -248,6 +286,16 @@ namespace AccuPay.Data.Repositories
             return await builder.
                             ByEmployeeNumber(employeeNumber).
                             FirstOrDefaultAsync(organizationId);
+        }
+
+        public async Task<string> GetImagePathByIdAsync(int employeeId)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            var employee = await builder.
+                IncludeImage().
+                GetByIdAsync(employeeId, null);
+
+            return employee.OriginalImage?.Path;
         }
 
         #endregion Single entity

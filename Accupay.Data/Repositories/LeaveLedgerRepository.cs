@@ -1,5 +1,7 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -28,6 +30,49 @@ namespace AccuPay.Data.Repositories
                 .Where(t => t.LeaveLedgerID == leaveLedgerId)
                 .OrderByDescending(t => t.TransactionDate)
                 .ToListAsync();
+        }
+
+        public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type = null)
+        {
+            var query = context.LeaveTransactions
+                .Include(x => x.Employee)
+                .Include(x => x.LeaveLedger)
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.EmployeeID == id)
+                .Where(x => x.LeaveLedger.Product.PartNo == type)
+                .OrderByDescending(x => x.TransactionDate)
+                .AsQueryable();
+
+            var transaction = await query.Page(options).ToListAsync();
+            var count = await query.CountAsync();
+
+            return new PaginatedListResult<LeaveTransaction>(transaction, count);
+        }
+
+        public async Task<IEnumerable<LeaveLedger>> GetLeaveBalance(int organizationId, string searchTerm = null)
+        {
+            var balanceList = await context.LeaveLedgers
+                                .Include(x => x.LastTransaction.Employee)
+                                .Include(x => x.Product)
+                                .Where(x => x.OrganizationID == organizationId)
+                                .Where(x => x.Product.PartNo == ProductConstant.VACATION_LEAVE || x.Product.PartNo == ProductConstant.SICK_LEAVE)
+                                .Where(x => x.LastTransactionID != null)
+                                .OrderBy(x => x.LastTransaction.Employee.LastName)
+                                .ThenBy(x => x.LastTransaction.Employee.FirstName)
+                                .ToListAsync();
+
+            var query = balanceList.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.LastTransaction.Employee.FullNameWithMiddleInitialLastNameFirst, searchTerm) ||
+                    EF.Functions.Like(x.EmployeeID.ToString(), searchTerm));
+            }
+
+            return query;
         }
     }
 }

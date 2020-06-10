@@ -5,6 +5,8 @@ import { ViewLeaveComponent } from './view-leave/view-leave.component';
 import { EditLeaveComponent } from './edit-leave/edit-leave.component';
 import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { NewLeaveComponent } from './new-leave/new-leave.component';
+import { LeaveBalanceComponent } from './leave-balance/leave-balance.component';
+import { LeaveLedgerComponent } from './leave-ledger/leave-ledger.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +15,8 @@ import { NewLeaveComponent } from './new-leave/new-leave.component';
     EditLeaveComponent,
     LeaveFormComponent,
     NewLeaveComponent,
+    LeaveBalanceComponent,
+    LeaveLedgerComponent,
   ],
   imports: [SharedModule],
 })

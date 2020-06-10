@@ -1,5 +1,6 @@
 using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Middlewares;
+using AccuPay.Web.Core.Startup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -31,6 +32,7 @@ namespace AccuPay.Web
             services.AddAuthenticationService(new JwtConfiguration(Configuration));
             services.AddWebServices();
             services.AddEmailService(new EmailConfiguration(Configuration));
+            services.AddFilesystem(Configuration);
 
             services.AddMvc();
 

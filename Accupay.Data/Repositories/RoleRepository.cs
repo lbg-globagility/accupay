@@ -59,20 +59,14 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task UpdateUserRoles(ICollection<UserRole> added,
-                                          ICollection<UserRole> updated,
                                           ICollection<UserRole> deleted)
         {
+            _context.UserRoles.RemoveRange(deleted);
+
             foreach (var userRole in added)
             {
                 _context.UserRoles.Add(userRole);
             }
-
-            foreach (var userRole in updated)
-            {
-                _context.Entry(userRole).State = EntityState.Modified;
-            }
-
-            _context.UserRoles.RemoveRange(deleted);
 
             await _context.SaveChangesAsync();
         }

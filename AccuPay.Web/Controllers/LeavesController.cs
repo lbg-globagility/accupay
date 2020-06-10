@@ -21,9 +21,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<PaginatedList<LeaveDto>>> List([FromQuery] PageOptions options, string term)
+        public async Task<ActionResult<PaginatedList<LeaveDto>>> List([FromQuery] PageOptions options, [FromQuery] LeaveFilter filter)
         {
-            return await _service.PaginatedList(options, term);
+            return await _service.PaginatedList(options, filter);
         }
 
         [HttpGet("{id}")]
@@ -76,6 +76,18 @@ namespace AccuPay.Web.Controllers
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _repository.GetStatusList();
+        }
+
+        [HttpGet("ledger")]
+        public async Task<ActionResult<PaginatedList<LeaveBalanceDto>>> GetLeaveBalance([FromQuery] PageOptions options, string term)
+        {
+            return await _service.GetLeaveBalance(options, term);
+        }
+
+        [HttpGet("ledger/{id}")]
+        public async Task<ActionResult<PaginatedList<LeaveTransactionDto>>> GetLedger([FromQuery] PageOptions options, string type, int id)
+        {
+            return await _service.ListTransactions(options, id, type);
         }
     }
 }

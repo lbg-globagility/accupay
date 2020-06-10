@@ -21,6 +21,7 @@ import { EditOfficialBusinessComponent } from '../edit-official-business/edit-of
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { Moment } from 'moment';
 
 @Component({
   selector: 'app-official-business-list',
@@ -49,6 +50,10 @@ export class OfficialBusinessListComponent implements OnInit {
   expandedOfficialBusiness: OfficialBusiness;
 
   searchTerm: string;
+
+  dateFrom: Moment;
+
+  dateTo: Moment;
 
   modelChanged: Subject<any>;
 
@@ -89,7 +94,7 @@ export class OfficialBusinessListComponent implements OnInit {
     );
 
     this.officialBusinessService
-      .getAll(options, this.searchTerm)
+      .getAll(options, this.searchTerm, this.dateFrom, this.dateTo)
       .subscribe((data) => {
         this.totalCount = data.totalCount;
         this.dataSource = new MatTableDataSource(data.items);

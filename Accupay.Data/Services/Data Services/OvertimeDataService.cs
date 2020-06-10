@@ -85,9 +85,13 @@ namespace AccuPay.Data.Services
             return await _repository.GetByEmployeeAsync(employeeId);
         }
 
-        public async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options,
+                                                                               int organizationId,
+                                                                               string searchTerm = "",
+                                                                               DateTime? dateFrom = null,
+                                                                               DateTime? dateTo = null)
         {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm, dateFrom, dateTo);
         }
 
         public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,

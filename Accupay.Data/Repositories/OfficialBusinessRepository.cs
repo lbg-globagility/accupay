@@ -2,6 +2,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -44,16 +45,20 @@ namespace AccuPay.Data.Repositories
                                 ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        internal async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options,
+                                                                                         int organizationId,
+                                                                                         string searchTerm = "",
+                                                                                         DateTime? dateFrom = null,
+                                                                                         DateTime? dateTo = null)
         {
             var query = _context.OfficialBusinesses
-                                .Include(x => x.Employee)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderByDescending(x => x.StartDate)
-                                .ThenBy(x => x.StartTime)
-                                .ThenBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderByDescending(x => x.StartDate)
+                .ThenBy(x => x.StartTime)
+                .ThenBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -63,6 +68,15 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            if (dateFrom.HasValue)
+            {
+                query = query.Where(x => dateFrom.Value.Date <= x.StartDate);
+            }
+            if (dateTo.HasValue)
+            {
+                query = query.Where(x => x.StartDate <= dateTo.Value.Date);
             }
 
             var officialBusinesses = await query.Page(options).ToListAsync();

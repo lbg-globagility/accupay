@@ -73,6 +73,7 @@ import { NewRoleComponent } from 'src/app/roles/new-role/new-role.component';
 import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
 import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
 import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
+import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balance.component';
 
 const routes: Routes = [
   {
@@ -146,6 +147,10 @@ const routes: Routes = [
       {
         path: 'leaves',
         component: LeaveListComponent,
+      },
+      {
+        path: 'leave-balance',
+        component: LeaveBalanceComponent,
       },
       {
         path: 'official-businesses',

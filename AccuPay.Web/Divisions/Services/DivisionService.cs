@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Divisions.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -12,18 +13,19 @@ namespace AccuPay.Web.Divisions
     public class DivisionService
     {
         private readonly DivisionDataService _service;
+        private readonly ICurrentUser _currentuser;
 
-        public DivisionService(DivisionDataService service)
+        public DivisionService(DivisionDataService service, ICurrentUser currentuser)
         {
             _service = service;
+            _currentuser = currentuser;
         }
 
         public async Task<PaginatedList<DivisionDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, _currentuser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -39,9 +41,8 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
-            int organizationId = 2;
             int userId = 1;
-            var division = Division.CreateEmptyDivision(organizationId: organizationId, userId: userId);
+            var division = Division.CreateEmptyDivision(organizationId: _currentuser.OrganizationId, userId: userId);
             ApplyChanges(dto, division);
 
             await _service.SaveAsync(division);
@@ -61,8 +62,7 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<IEnumerable<DivisionDto>> GetAllParents()
         {
-            int organizationId = 2;
-            IEnumerable<Division> parents = await _service.GetAllParentsAsync(organizationId);
+            IEnumerable<Division> parents = await _service.GetAllParentsAsync(_currentuser.OrganizationId);
 
             var dtos = parents.Select(x => ConvertToDto(x));
 

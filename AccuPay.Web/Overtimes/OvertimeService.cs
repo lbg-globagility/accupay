@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
+using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,18 +11,21 @@ namespace AccuPay.Web.Overtimes
     public class OvertimeService
     {
         private readonly OvertimeDataService _service;
+        private readonly ICurrentUser _currentUser;
 
-        public OvertimeService(OvertimeDataService service)
+        public OvertimeService(OvertimeDataService service, ICurrentUser currentUser)
         {
             _service = service;
+            _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, OvertimeFilter filter)
         {
-            // TODO: sort and desc in repository
-
-            int organizationId = 2;
-            var paginatedList = await _service.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options,
+                                                                     _currentUser.OrganizationId,
+                                                                     filter.Term,
+                                                                     filter.DateFrom,
+                                                                     filter.DateTo);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -37,13 +41,12 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(CreateOvertimeDto dto)
         {
-            int organizationId = 2;
             int userId = 1;
             var overtime = new Overtime()
             {
                 EmployeeID = dto.EmployeeId,
                 CreatedBy = userId,
-                OrganizationID = organizationId,
+                OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
 

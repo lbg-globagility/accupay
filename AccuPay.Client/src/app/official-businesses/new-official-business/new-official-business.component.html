@@ -1,8 +1,17 @@
-<h1>New Official Business</h1>
+<h1 mat-dialog-title>New Official Business</h1>
 
-<ng-container>
-  <app-official-business-form
-    (save)="onSave($event)"
-    (cancel)="onCancel()"
-  ></app-official-business-form>
-</ng-container>
+<div mat-dialog-content>
+  <app-official-business-form></app-official-business-form>
+</div>
+
+<div mat-card-actions align="end">
+  <button
+    mat-button
+    color="primary"
+    (click)="onSave()"
+    [disabled]="savingState.isLoading"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>
