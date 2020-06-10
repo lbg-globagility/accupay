@@ -81,5 +81,11 @@ namespace AccuPay.Web.Controllers
         {
             return await _service.GetDeductionSchedules();
         }
+
+        [HttpGet("history/{id}")]
+        public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory([FromQuery] PageOptions options, int id)
+        {
+            return await _service.GetLoanHistory(options, id);
+        }
     }
 }

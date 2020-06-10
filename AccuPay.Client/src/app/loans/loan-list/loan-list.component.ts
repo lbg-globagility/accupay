@@ -1,4 +1,4 @@
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 import { Component, OnInit } from '@angular/core';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatTableDataSource } from '@angular/material/table';
@@ -8,6 +8,8 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Loan } from 'src/app/loans/shared/loan';
 import { LoanService } from 'src/app/loans/loan.service';
+import { MatDialog } from '@angular/material/dialog';
+import { LoanHistoryComponent } from '../loan-history/loan-history.component';
 
 @Component({
   selector: 'app-loan-list',
@@ -23,6 +25,7 @@ export class LoanListComponent implements OnInit {
     'startDate',
     'totalLoanAmount',
     'totalBalanceLeft',
+    'actions',
   ];
 
   placeholder: string;
@@ -50,7 +53,7 @@ export class LoanListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private loanService: LoanService) {
+  constructor(private loanService: LoanService, private dialog: MatDialog) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -100,5 +103,17 @@ export class LoanListComponent implements OnInit {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getLoanList();
+  }
+
+  viewHistory(loan: Loan) {
+    this.dialog
+      .open(LoanHistoryComponent, {
+        data: {
+          loanId: loan.id,
+        },
+      })
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => this.getLoanList());
   }
 }
