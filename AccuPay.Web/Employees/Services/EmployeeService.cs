@@ -5,6 +5,7 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Files.Services;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -145,6 +146,18 @@ namespace AccuPay.Web.Employees.Services
             await _fileRepository.Create(file);
 
             return file;
+        }
+
+        public async Task GenerateEmployeesImages()
+        {
+            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync(_currentUser.OrganizationId);
+
+            foreach (var employee in employees)
+            {
+                employee.OriginalImage = await CreateOriginalImageIdAsync(employee);
+
+                await _employeeRepository.SaveAsync(employee);
+            }
         }
     }
 }
