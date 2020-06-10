@@ -22,6 +22,21 @@ namespace AccuPay.Data.Repositories
                     ToList();
         }
 
+        public async Task<IEnumerable<IGrouping<int?, TimeEntry>>> GetTimexzEntriesByEmployeeIds(
+            int organizationId,
+            TimePeriod timePeriod,
+            IEnumerable<int?> employeeIds)
+        {
+            var query = CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Where(t => employeeIds.Contains(t.EmployeeID));
+
+            var timeEntries = await query.ToListAsync();
+            var timeEntriesByEmployee = timeEntries
+                .GroupBy(t => t.EmployeeID);
+
+            return timeEntriesByEmployee;
+        }
+
         public async Task<IEnumerable<TimeEntry>> GetByDatePeriodAsync(int organizationId,
                                                                         TimePeriod timePeriod)
         {
@@ -33,9 +48,10 @@ namespace AccuPay.Data.Repositories
                                                                                 int employeeId,
                                                                                 TimePeriod timePeriod)
         {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                        Where(x => x.EmployeeID == employeeId).
-                        ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .Where(x => x.EmployeeID == employeeId)
+                .OrderBy(x => x.Date)
+                .ToListAsync();
         }
 
         private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId,

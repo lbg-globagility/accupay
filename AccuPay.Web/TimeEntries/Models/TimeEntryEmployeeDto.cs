@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Services;
 using AccuPay.Web.Employees.Models;
+using System.Collections.Generic;
 
 namespace AccuPay.Web.TimeEntries
 {
@@ -8,7 +9,7 @@ namespace AccuPay.Web.TimeEntries
     {
         public TotalTimeEntryHours TotalTimeEntry { get; private set; }
 
-        internal new static TimeEntryEmployeeDto Convert(Employee employee)
+        internal static TimeEntryEmployeeDto Convert(Employee employee, IEnumerable<TimeEntry> timeEntries)
         {
             if (employee == null) return null;
 
@@ -16,7 +17,7 @@ namespace AccuPay.Web.TimeEntries
 
             dto.ApplyData(employee);
 
-            dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(employee.TimeEntries);
+            dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(timeEntries);
 
             return dto;
         }
