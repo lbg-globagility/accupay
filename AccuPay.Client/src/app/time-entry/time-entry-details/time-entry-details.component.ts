@@ -12,6 +12,7 @@ import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
+import { TimeEntry } from 'src/app/time-entry/shared/time-entry';
 
 @Component({
   selector: 'app-time-entry-details',
@@ -22,8 +23,7 @@ export class TimeEntryDetailsComponent implements OnInit {
   payPeriodId = Number(this.route.snapshot.paramMap.get('id'));
 
   readonly displayedColumns: string[] = [
-    'employeeNo',
-    'fullName',
+    'employee',
     'regularHours',
     'absentHours',
     'lateHours',
@@ -44,16 +44,19 @@ export class TimeEntryDetailsComponent implements OnInit {
   };
 
   dataSource: MatTableDataSource<Employee>;
+
+  totalCount: number;
+
+  timeEntries: TimeEntry[];
+
+  expandedEmployee: Employee;
+
   modelChanged: Subject<any>;
-  employees: Employee[];
 
   pageIndex: number = 0;
   pageSize: number = 10;
-  totalPages: number;
-  totalCount: number;
-  term: string;
 
-  selectedRow: number;
+  term: string;
 
   constructor(
     private payPeriodService: PayPeriodService,
@@ -87,15 +90,21 @@ export class TimeEntryDetailsComponent implements OnInit {
 
     this.timeEntryService
       .getEmployees(this.payPeriodId, options, this.term)
-      .subscribe(async (data) => {
-        await setTimeout(() => {
-          this.employees = data.items;
+      .subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.items);
+        this.totalCount = data.totalCount;
+      });
+  }
 
-          this.totalPages = data.totalPages;
-          this.totalCount = data.totalCount;
+  loadTimeEntries() {
+    if (this.expandedEmployee == null) {
+      return;
+    }
 
-          this.dataSource = new MatTableDataSource(this.employees);
-        });
+    this.timeEntryService
+      .getTimeEntries(this.payPeriodId, this.expandedEmployee.id)
+      .subscribe((timeEntries) => {
+        this.timeEntries = timeEntries;
       });
   }
 
@@ -108,13 +117,16 @@ export class TimeEntryDetailsComponent implements OnInit {
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
-  }
-
   onPageChanged(pageEvent: PageEvent) {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadEmployees();
+  }
+
+  toggleExpansion(employee: Employee) {
+    this.expandedEmployee =
+      this.expandedEmployee === employee ? null : employee;
+
+    this.loadTimeEntries();
   }
 }
