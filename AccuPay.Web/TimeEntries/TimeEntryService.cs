@@ -1,3 +1,4 @@
+using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -5,6 +6,7 @@ using AccuPay.Data.ValueObjects;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeEntries.Models;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -74,6 +76,20 @@ namespace AccuPay.Web.TimeEntries
             return new PaginatedList<TimeEntryEmployeeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
+        public async Task<ICollection<TimeEntryDto>> GetTimeEntries(int payPeriodId, int employeeId)
+        {
+            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
+
+            var timeEntries = await _timeEntryRepository.GetByEmployeeAndDatePeriodAsync(
+                _currentUser.OrganizationId,
+                employeeId,
+                new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate));
+
+            var dtos = timeEntries.Select(t => ConvertToDto(t)).ToList();
+
+            return dtos;
+        }
+
         public async Task<TimeEntryPayPeriodDto> GetDetails(int payPeriodId)
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
@@ -139,6 +155,24 @@ namespace AccuPay.Web.TimeEntries
             dto.AbsentCount = absentCount;
             dto.LateCount = lateCount;
             dto.UndertimeCount = undertimeCount;
+
+            return dto;
+        }
+
+        private TimeEntryDto ConvertToDto(TimeEntry timeEntry)
+        {
+            var dto = new TimeEntryDto()
+            {
+                Id = timeEntry.RowID.Value,
+                Date = timeEntry.Date,
+                WorkHours = timeEntry.WorkHours,
+                OvertimeHours = timeEntry.OvertimeHours,
+                NightDiffHours = timeEntry.NightDiffHours,
+                NightDiffOTHours = timeEntry.NightDiffOTHours,
+                LateHours = timeEntry.LateHours,
+                UndertimeHours = timeEntry.UndertimeHours,
+                AbsentHours = timeEntry.AbsentHours
+            };
 
             return dto;
         }

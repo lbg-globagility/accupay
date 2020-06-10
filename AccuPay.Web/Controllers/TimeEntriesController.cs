@@ -2,6 +2,8 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.TimeEntries;
 using AccuPay.Web.TimeEntries.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -27,6 +29,13 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<PaginatedList<TimeEntryEmployeeDto>>> List(int payPeriodId, [FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedEmployeeList(payPeriodId, options, term);
+        }
+
+        [HttpGet("{payPeriodId}/employees/{employeeId}")]
+        public async Task<ActionResult<ICollection<TimeEntryDto>>> GetAllTimeEntries(int payPeriodId, int employeeId)
+        {
+            var dtos = await _service.GetTimeEntries(payPeriodId, employeeId);
+            return dtos.ToList();
         }
 
         [HttpPost("{payPeriodId}/generate")]
