@@ -250,7 +250,6 @@ namespace AccuPay.Data.Repositories
             return await _context.Employees
                                  .Include(x => x.OriginalImage)
                                  .Where(x => x.OrganizationID == organizationId)
-                                 .Where(x => x.Image == null)
                                  .Where(x => x.OriginalImageId == null)
                                  .ToListAsync();
         }
