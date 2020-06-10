@@ -4,7 +4,9 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
+Imports AccuPay.Data.Repositories.PaystubRepository
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
@@ -62,6 +64,12 @@ Public Class PayStubForm
 
     Private _systemOwnerService As SystemOwnerService
 
+    Private _paystubRepository As PaystubRepository
+
+    Private _agencyFeeRepository As AgencyFeeRepository
+
+    Private _employeeRepository As EmployeeRepository
+
     Sub New()
 
         InitializeComponent()
@@ -73,6 +81,12 @@ Public Class PayStubForm
         _policy = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
+
+        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
+
+        _agencyFeeRepository = MainServiceProvider.GetRequiredService(Of AgencyFeeRepository)
+
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -624,9 +638,9 @@ Public Class PayStubForm
 
                 'End If
 
-                txttotabsentamt.Text = "0.00"
-                txttottardiamt.Text = "0.00"
-                txttotutamt.Text = "0.00"
+                txtAbsenceDeduction.Text = "0.00"
+                txtLateDeduction.Text = "0.00"
+                txtUndertimeDeduction.Text = "0.00"
 
                 If ValNoComma(paypRowID) > 0 Then
                     '# ####################################################### #
@@ -640,13 +654,13 @@ Public Class PayStubForm
                     If tabEarned.SelectedIndex = 0 Then
                         TabPage1_Enter1(TabPage1, New EventArgs)
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        TabPage4_Enter(TabPage4, New EventArgs)
+                        TabPage4_Enter1(TabPage4, New EventArgs)
                     End If
                 Else
 
-                    txtgrosssal.Text = ""
-                    txtnetsal.Text = ""
-                    txttaxabsal.Text = ""
+                    txtGrossPay.Text = ""
+                    txtNetPay.Text = ""
+                    txtTotalTaxableSalary.Text = ""
 
                     Try
                         For Each txtbxctrl In SplitContainer1.Panel2.Controls.OfType(Of TextBox).ToList()
@@ -658,7 +672,7 @@ Public Class PayStubForm
                     If tabEarned.SelectedIndex = 0 Then
                         TabPage1_Enter1(TabPage1, New EventArgs)
                     ElseIf tabEarned.SelectedIndex = 1 Then
-                        TabPage4_Enter(TabPage4, New EventArgs)
+                        TabPage4_Enter1(TabPage4, New EventArgs)
                     End If
                 End If
 
@@ -672,7 +686,7 @@ Public Class PayStubForm
             txtFName.Text = ""
             txtEmpID.Text = ""
 
-            txtBasicPay.Text = ""
+            txtBasicRate.Text = ""
 
             txttotreghrs.Text = ""
             txttotregamt.Text = ""
@@ -694,34 +708,34 @@ Public Class PayStubForm
 
             lblSubtotal.Text = ""
 
-            txtemptotallow.Text = ""
-            txtTotTaxabAllow.Text = ""
+            txtTotalAllowance.Text = ""
+            txtTotalTaxableAllowance.Text = ""
 
-            txtgrosssal.Text = ""
+            txtGrossPay.Text = ""
 
-            txttotabsent.Text = ""
-            txttotabsentamt.Text = ""
+            txtAbsentHours.Text = ""
+            txtAbsenceDeduction.Text = ""
 
-            txttottardi.Text = ""
-            txttottardiamt.Text = ""
+            txtLateHours.Text = ""
+            txtLateDeduction.Text = ""
 
-            txttotut.Text = ""
-            txttotutamt.Text = ""
+            txtUndertimeHours.Text = ""
+            txtUndertimeDeduction.Text = ""
 
             lblsubtotmisc.Text = ""
 
-            txtempsss.Text = ""
-            txtempphh.Text = ""
-            txtemphdmf.Text = ""
+            txtSssEmployeeShare.Text = ""
+            txtPhilHealthEmployeeShare.Text = ""
+            txtHdmfEmployeeShare.Text = ""
 
-            txtemptotloan.Text = ""
-            txtemptotbon.Text = ""
+            txtTotalLoans.Text = ""
+            txtTotalBonus.Text = ""
 
-            txttaxabsal.Text = ""
-            txtempwtax.Text = ""
-            txtnetsal.Text = ""
+            txtTotalTaxableSalary.Text = ""
+            txtWithholdingTax.Text = ""
+            txtNetPay.Text = ""
 
-            txtPaidLeave.Text = ""
+            txtLeavePay.Text = ""
             txtThirteenthMonthPay.Text = ""
             txtTotalNetPay.Text = ""
 
@@ -729,7 +743,7 @@ Public Class PayStubForm
 
     End Sub
 
-    Sub GeneratePayroll(Optional PayFreqRowID As Object = Nothing)
+    Sub GeneratePayroll()
 
         Dim resources = MainServiceProvider.GetRequiredService(Of PayrollResources)
 
@@ -1355,174 +1369,105 @@ Public Class PayStubForm
     End Sub
 
     Private Sub TabPage1_Enter1(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
+
+        TabPage1.Text = TabPage1.Text.Trim
+        TabPage1.Text = TabPage1.Text & Space(15)
+        TabPage4.Text = TabPage4.Text.Trim
+
         For Each txtbxctrl In TabPage1.Controls.OfType(Of TextBox).ToList()
             txtbxctrl.Text = "0.00"
         Next
 
         Dim EmployeeRowID = dgvemployees.Tag
 
-        Dim _params = New Object() {orgztnID,
-                                    EmployeeRowID,
-                                    paypFrom,
-                                    paypTo}
+        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
+            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+            Return
+        End If
 
-        Dim n_SQLQueryToDatatable As _
-            New SQL("CALL VIEW_paystubitem_declared(?OrganizID, ?EmpRowID, ?pay_date_from, ?pay_date_to);",
-                    _params)
+        Dim employee = _employeeRepository.GetById(EmployeeRowID)
+        If employee Is Nothing Then Return
 
-        Dim paystubactual = n_SQLQueryToDatatable.GetFoundRows.Tables(0)
+        Dim paystub = GetPaystub(employee.RowID)
+        If paystub Is Nothing Then Return
 
-        Dim txtbxField = Panel6.Controls.OfType(Of TextBox).Where(Function(txbx) String.IsNullOrWhiteSpace(txbx.AccessibleDescription) = False)
+        Dim datePeriod = GetPayPeriodDates()
+        If datePeriod Is Nothing Then Return
 
-        For Each drow As DataRow In paystubactual.Rows
+        Dim salary = _employeeRepository.GetCurrentSalary(employee.RowID, datePeriod.Start)
+        If salary Is Nothing Then Return
 
-            Dim psaItems = New SQL("CALL VIEW_paystubitem('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
+        Dim basicRate = If(employee.IsDaily, salary.BasicSalary, salary.BasicSalary / 2)
 
-            Dim strdouble = ValNoComma(drow("TrueSalary")) / ValNoComma(drow("PAYFREQUENCYDIVISOR")) 'BasicPay
+        txtBasicRate.Text = FormatNumber(basicRate, 2)
 
-            txtBasicPay.Text = FormatNumber(ValNoComma(strdouble), 2)
+        txtRegularHours.Text = FormatNumber(paystub.RegularHours, 2)
+        txtOvertimeHours.Text = FormatNumber(paystub.OvertimeHours, 2)
+        txtNightDiffHours.Text = FormatNumber(paystub.NightDiffHours, 2)
+        txtNightDiffOvertimeHours.Text = FormatNumber(paystub.NightDiffOvertimeHours, 2)
 
-            txtRegularHours.Text = ValNoComma(drow("RegularHours"))
+        txtRegularPay.Text = FormatNumber(paystub.RegularPay, 2)
+        txtOvertimePay.Text = FormatNumber(paystub.OvertimePay, 2)
+        txtNightDiffPay.Text = FormatNumber(paystub.NightDiffPay, 2)
+        txtNightDiffOvertimePay.Text = FormatNumber(paystub.NightDiffOvertimePay, 2)
 
-            If drow("EmployeeType").ToString = "Fixed" Then
-                txtRegularPay.Text = FormatNumber(ValNoComma(strdouble), 2)
-            ElseIf drow("EmployeeType").ToString = "Monthly" Then
-                Dim basicPay = ValNoComma(drow("BasicPay"))
-                Dim deductions = 0.0
+        'Deductions
+        txtAbsentHours.Text = FormatNumber(paystub.AbsentHours, 2)
+        txtLateHours.Text = FormatNumber(paystub.LateHours, 2)
+        txtUndertimeHours.Text = FormatNumber(paystub.UndertimeHours, 2)
 
-                If drow("FirstTimeSalary").ToString = "True" Then
-                    basicPay = ValNoComma(drow("RegularPay"))
-                Else
-                    basicPay = ValNoComma(drow("BasicPay"))
-                    deductions = ValNoComma(drow("LateDeduction")) +
-                    ValNoComma(drow("UndertimeDeduction")) +
-                    ValNoComma(drow("Absent")) '+
-                    'ValNoComma(drow("HolidayPay"))
-                End If
+        txtAbsenceDeduction.Text = FormatNumber(paystub.AbsenceDeduction, 2)
+        txtLateDeduction.Text = FormatNumber(paystub.LateDeduction, 2)
+        txtUndertimeDeduction.Text = FormatNumber(paystub.UndertimeDeduction, 2)
 
-                txtRegularPay.Text = FormatNumber(basicPay - deductions, 2)
-            ElseIf drow("EmployeeType").ToString = "Daily" Then
-                txtRegularPay.Text = FormatNumber(ValNoComma(drow("RegularPay")), 2)
-            End If
+        'Holidays and leave
+        txtRegularHolidayHours.Text = FormatNumber(paystub.RegularHolidayHours, 2)
+        txtRegularHolidayOTHours.Text = FormatNumber(paystub.RegularHolidayOTHours, 2)
+        txtSpecialHolidayHours.Text = FormatNumber(paystub.SpecialHolidayHours, 2)
+        txtSpecialHolidayOTHours.Text = FormatNumber(paystub.SpecialHolidayOTHours, 2)
+        txtRestDayHours.Text = FormatNumber(paystub.RestDayHours, 2)
+        txtLeaveHours.Text = FormatNumber(paystub.LeaveHours, 2)
 
-            txtOvertimeHours.Text = ValNoComma(drow("OvertimeHours"))
-            txtOvertimePay.Text = FormatNumber(ValNoComma(drow("OvertimePay")), 2)
+        txtRegularHolidayPay.Text = FormatNumber(paystub.RegularHolidayPay, 2)
+        txtRegularHolidayOTPay.Text = FormatNumber(paystub.RegularHolidayOTPay, 2)
+        txtSpecialHolidayPay.Text = FormatNumber(paystub.SpecialHolidayPay, 2)
+        txtSpecialHolidayOTPay.Text = FormatNumber(paystub.SpecialHolidayOTPay, 2)
+        txtRestDayPay.Text = FormatNumber(paystub.RestDayPay, 2)
+        txtLeavePay.Text = FormatNumber(paystub.LeavePay, 2)
 
-            txtNightDiffHours.Text = ValNoComma(drow("NightDiffHours"))
-            txtNightDiffPay.Text = FormatNumber(ValNoComma(drow("NightDiffPay")), 2)
+        'Allowance, Bonus and Gross Pay
+        txtTotalAllowance.Text = FormatNumber(paystub.TotalAllowance, 2)
+        txtTotalTaxableAllowance.Text = FormatNumber(paystub.TotalTaxableAllowance, 2)
 
-            txtNightDiffOvertimeHours.Text = ValNoComma(drow("NightDiffOvertimeHours"))
-            txtNightDiffOvertimePay.Text = FormatNumber(ValNoComma(drow("NightDiffOvertimePay")), 2)
+        txtTotalBonus.Text = FormatNumber(paystub.TotalBonus, 2)
+        txtGrossPay.Text = FormatNumber(paystub.GrossPay, 2)
 
-            txtRestDayHours.Text = ValNoComma(drow("RestDayHours"))
-            txtRestDayAmount.Text = FormatNumber(ValNoComma(drow("RestDayPay")), 2)
+        'Government Deductions
+        txtSssEmployeeShare.Text = FormatNumber(paystub.SssEmployeeShare, 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(paystub.PhilHealthEmployeeShare, 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(paystub.HdmfEmployeeShare, 2)
 
-            txtHolidayHours.Text = 0.0
-            txtHolidayPay.Text = FormatNumber(ValNoComma(drow("HolidayPay")), 2)
+        'Other Deductions
+        txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)
+        txtWithholdingTax.Text = FormatNumber(paystub.WithholdingTax, 2)
 
-            Dim sumallbasic = ValNoComma(drow("RegularPay")) +
-                          ValNoComma(drow("OvertimePay")) +
-                          ValNoComma(drow("NightDiffPay")) +
-                          ValNoComma(drow("NightDiffOvertimePay")) +
-                          ValNoComma(drow("HolidayPay"))
+        txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
+        txtTotalAdjustments.Text = FormatNumber(paystub.TotalAdjustments, 2)
 
-            If drow("EmployeeType").ToString = "Fixed" Then
-                lblSubtotal.Text = FormatNumber(ValNoComma(strdouble), 2)
-            ElseIf drow("EmployeeType").ToString = "Monthly" Then
-                Dim thebasicpay = ValNoComma(drow("BasicPay"))
-                Dim thelessamounts = ValNoComma(0)
+        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(organizationId:=z_OrganizationID,
+                                                                   timePeriod:=datePeriod,
+                                                                   employeeId:=employee.RowID)
+        txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
-                If drow("FirstTimeSalary").ToString = "True" Then
-                    thebasicpay = ValNoComma(drow("RegularPay"))
-                    lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
-                Else
-                    thebasicpay = ValNoComma(drow("BasicPay"))
-                    thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("Absent"))
-                    'Dim all_regular = (thebasicpay - (thelessamounts + ValNoComma(drow("HolidayPay"))))
-                    Dim all_regular = (thebasicpay - thelessamounts)
-                    lblSubtotal.Text =
-                    FormatNumber(all_regular + ValNoComma(drow("HolidayPay")) +
-                                 ValNoComma(drow("OvertimePay")) +
-                                 ValNoComma(drow("NightDiffPay")) +
-                                 ValNoComma(drow("NightDiffOvertimePay")), 2)
-                End If
-            Else
-                lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
+        '13th month and Net Pay
+        Dim thirteenthMonthPay = If(paystub.ThirteenthMonthPay?.Amount, 0)
+        txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
 
-            End If
+        Dim totalNetSalary = paystub.NetPay + totalAgencyFee
+        txtNetPay.Text = FormatNumber(totalNetSalary, 2)
+        txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
-            'Absent
-            txttotabsent.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
-            txttotabsentamt.Text = FormatNumber(ValNoComma((drow("Absent"))), 2)
-            'Tardiness / late
-            txttottardi.Text = ValNoComma(drow("LateHours"))
-            txttottardiamt.Text = FormatNumber(ValNoComma((drow("LateDeduction"))), 2)
-            'Undertime
-            txttotut.Text = ValNoComma(drow("UndertimeHours"))
-            txttotutamt.Text = FormatNumber(ValNoComma((drow("UndertimeDeduction"))), 2)
-
-            Dim miscsubtotal = ValNoComma(drow("Absent")) + ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction"))
-            lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
-
-            'Allowance
-            txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
-
-            'Taxable Allowance
-            txtTotTaxabAllow.Text = FormatNumber(ValNoComma((drow("TotalTaxableAllowance"))), 2)
-
-            txtGrandTotalAllow.Text = FormatNumber(ValNoComma(drow("TotalAllowance")) + ValNoComma(drow("TotalTaxableAllowance")), 2)
-
-            'Bonus
-            txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
-            'Gross
-            txtgrosssal.Text = FormatNumber(ValNoComma((drow("TotalGrossSalary"))), 2)
-
-            'SSS
-            txtempsss.Text = FormatNumber(ValNoComma((drow("TotalEmpSSS"))), 2)
-            'PhilHealth
-            txtempphh.Text = FormatNumber(ValNoComma((drow("TotalEmpPhilhealth"))), 2)
-            'PAGIBIG
-            txtemphdmf.Text = FormatNumber(ValNoComma((drow("TotalEmpHDMF"))), 2)
-
-            'Taxable salary
-            txttaxabsal.Text = FormatNumber(ValNoComma((drow("TotalTaxableSalary"))), 2)
-            'Withholding taxS
-            txtempwtax.Text = FormatNumber(ValNoComma((drow("TotalEmpWithholdingTax"))), 2)
-            'Loans
-            txtemptotloan.Text = FormatNumber(ValNoComma((drow("TotalLoans"))), 2)
-            'Adjustments
-            txtTotalAdjustments.Text = FormatNumber(ValNoComma((drow("TotalAdjustments"))), 2)
-
-            Dim totalAgencyFee = ValNoComma(drow("TotalAgencyFee"))
-            txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
-
-            Dim thirteenthMonthPay = ValNoComma(drow("ThirteenthMonthPay"))
-            txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
-
-            Dim totalNetSalary = ValNoComma(drow("TotalNetSalary")) + totalAgencyFee
-            'Net
-            txtnetsal.Text = FormatNumber(totalNetSalary, 2)
-
-            Dim totalNetPay = totalNetSalary + thirteenthMonthPay
-            txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
-
-            txtPaidLeave.Text = FormatNumber(ValNoComma(drow("PaidLeaveAmount")), 2)
-
-            For Each txtbx In txtbxField
-                txtbx.Text = If(IsDBNull(drow(txtbx.AccessibleDescription)), 0.0, drow(txtbx.AccessibleDescription))
-            Next
-
-            Exit For
-        Next
-
-        paystubactual.Dispose()
-        UpdateAdjustmentDetails(Convert.ToInt16(DirectCast(sender, TabPage).Tag))
-    End Sub
-
-    Private Sub TabPage1_Enter(sender As Object, e As EventArgs) Handles TabPage1.Enter 'DECLARED
-        TabPage1.Text = TabPage1.Text.Trim
-        TabPage1.Text = TabPage1.Text & Space(15)
-        TabPage4.Text = TabPage4.Text.Trim
+        UpdateAdjustmentDetails(Convert.ToInt16(TabPage1.Tag))
     End Sub
 
     Private Sub TabPage4_Enter1(sender As Object, e As EventArgs) Handles TabPage4.Enter 'UNDECLARED / ACTUAL
@@ -1536,175 +1481,118 @@ Public Class PayStubForm
 
         Dim EmployeeRowID = dgvemployees.Tag
 
-        Dim _params = New Object() {
-            orgztnID,
-            EmployeeRowID,
-            paypFrom,
-            paypTo
-        }
+        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
+            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+            Return
+        End If
 
-        Dim n_SQLQueryToDatatable = New SQL("CALL VIEW_paystubitem_actual(?OrganizID, ?EmpRowID, ?pay_date_from, ?pay_date_to);", _params)
+        Dim employee = _employeeRepository.GetById(EmployeeRowID)
+        If employee Is Nothing Then Return
 
-        Dim paystubactual As New DataTable
+        Dim paystub = GetPaystub(employee.RowID)
+        If paystub Is Nothing Then Return
 
-        paystubactual = n_SQLQueryToDatatable.GetFoundRows.Tables(0)
+        Dim datePeriod = GetPayPeriodDates()
+        If datePeriod Is Nothing Then Return
 
-        'Dim psaItems As New DataTable
+        Dim salary = _employeeRepository.GetCurrentSalary(employee.RowID, datePeriod.Start)
+        If salary Is Nothing Then Return
 
-        Dim txtbxField = Panel6.Controls.OfType(Of TextBox).Where(Function(txbx) String.IsNullOrWhiteSpace(txbx.AccessibleDescription) = False)
+        Dim basicRate = If(employee.IsDaily, salary.TotalSalary, salary.TotalSalary / 2)
 
-        For Each drow As DataRow In paystubactual.Rows
+        txtBasicRateActual.Text = FormatNumber(basicRate, 2)
 
-            'psaItems = New SQL("CALL VIEW_paystubitemundeclared('" & ValNoComma(drow("RowID")) & "');").GetFoundRows.Tables(0)
+        txtRegularHoursActual.Text = FormatNumber(paystub.RegularHours, 2)
+        txtOvertimeHoursActual.Text = FormatNumber(paystub.OvertimeHours, 2)
+        txtNightDiffHoursActual.Text = FormatNumber(paystub.NightDiffHours, 2)
+        NightDiffOvertimeHoursActual.Text = FormatNumber(paystub.NightDiffOvertimeHours, 2)
 
-            Dim strdouble = ValNoComma(drow("BasicPay")) 'BasicPay
+        txtRegularPayActual.Text = FormatNumber(paystub.Actual?.RegularPay, 2)
+        txtOvertimePayActual.Text = FormatNumber(paystub.Actual?.OvertimePay, 2)
+        txtNightDiffPayActual.Text = FormatNumber(paystub.Actual?.NightDiffPay, 2)
+        txtNightDiffOvertimePayActual.Text = FormatNumber(paystub.Actual?.NightDiffOvertimePay, 2)
 
-            ' Basic Pay
-            txtempbasicpay_U.Text = FormatNumber(ValNoComma(strdouble), 2)
+        'Deductions
+        txtAbsentHoursActual.Text = FormatNumber(paystub.AbsentHours, 2)
+        txtLateHoursActual.Text = FormatNumber(paystub.LateHours, 2)
+        txtUndertimeHoursActual.Text = FormatNumber(paystub.UndertimeHours, 2)
 
-            ' Regular hours
-            txthrswork_U.Text = ValNoComma(drow("RegularHours"))
+        txtAbsenceDeductionActual.Text = FormatNumber(paystub.Actual?.AbsenceDeduction, 2)
+        txtLateDeductionActual.Text = FormatNumber(paystub.Actual?.LateDeduction, 2)
+        txtUndertimeDeductionActual.Text = FormatNumber(paystub.Actual?.UndertimeDeduction, 2)
 
-            ' Regular pay
-            If drow("EmployeeType").ToString = "Fixed" Then
+        'Holidays and leave
+        txtRegularHolidayHours.Text = FormatNumber(paystub.RegularHolidayHours, 2)
+        txtRegularHolidayOTHours.Text = FormatNumber(paystub.RegularHolidayOTHours, 2)
+        txtSpecialHolidayHours.Text = FormatNumber(paystub.SpecialHolidayHours, 2)
+        txtSpecialHolidayOTHours.Text = FormatNumber(paystub.SpecialHolidayOTHours, 2)
+        txtRestDayHours.Text = FormatNumber(paystub.RestDayHours, 2)
+        txtLeaveHours.Text = FormatNumber(paystub.LeaveHours, 2)
 
-                txthrsworkamt_U.Text = FormatNumber(ValNoComma(strdouble), 2)
+        txtRegularHolidayPay.Text = FormatNumber(paystub.Actual?.RegularHolidayPay, 2)
+        txtRegularHolidayOTPay.Text = FormatNumber(paystub.Actual?.RegularHolidayOTPay, 2)
+        txtSpecialHolidayPay.Text = FormatNumber(paystub.Actual?.SpecialHolidayPay, 2)
+        txtSpecialHolidayOTPay.Text = FormatNumber(paystub.Actual?.SpecialHolidayOTPay, 2)
+        txtRestDayPay.Text = FormatNumber(paystub.Actual?.RestDayPay, 2)
+        txtLeavePay.Text = FormatNumber(paystub.Actual?.LeavePay, 2)
 
-            ElseIf drow("EmployeeType").ToString = "Monthly" Then
+        'Allowance, Bonus and Gross Pay
+        txtTotalAllowance.Text = FormatNumber(paystub.TotalAllowance, 2)
+        txtTotalTaxableAllowance.Text = FormatNumber(paystub.TotalTaxableAllowance, 2)
 
-                Dim thebasicpay = ValNoComma(drow("BasicPay"))
-                Dim thelessamounts = ValNoComma(0)
+        txtTotalBonus.Text = FormatNumber(paystub.TotalBonus, 2)
+        txtGrossPay.Text = FormatNumber(paystub.Actual?.GrossPay, 2)
 
-                If drow("FirstTimeSalary").ToString = "True" Then
-                    thebasicpay = ValNoComma(drow("RegularPay"))
-                Else
-                    thebasicpay = ValNoComma(drow("RegularPay"))
-                End If
+        'Government Deductions
+        txtSssEmployeeShare.Text = FormatNumber(paystub.SssEmployeeShare, 2)
+        txtPhilHealthEmployeeShare.Text = FormatNumber(paystub.PhilHealthEmployeeShare, 2)
+        txtHdmfEmployeeShare.Text = FormatNumber(paystub.HdmfEmployeeShare, 2)
 
-                txthrsworkamt_U.Text = FormatNumber((thebasicpay - thelessamounts), 2)
-            Else
-                txthrsworkamt_U.Text = FormatNumber(ValNoComma((drow("RegularPay"))), 2)
-            End If
+        'Other Deductions
+        txtTotalTaxableSalary.Text = FormatNumber(paystub.TaxableIncome, 2)
+        txtWithholdingTax.Text = FormatNumber(paystub.WithholdingTax, 2)
 
-            ' Over time
-            txttotothrs_U.Text = ValNoComma(drow("OvertimeHours"))
-            txttototamt_U.Text = FormatNumber(ValNoComma((drow("OvertimePay"))), 2)
+        txtTotalLoans.Text = FormatNumber(paystub.TotalLoans, 2)
+        txtTotalAdjustments.Text = FormatNumber(paystub.Actual?.TotalAdjustments, 2)
 
-            ' Night differential
-            txttotnightdiffhrs_U.Text = ValNoComma(drow("NightDiffHours"))
-            txttotnightdiffamt_U.Text = FormatNumber(ValNoComma((drow("NightDiffPay"))), 2)
+        Dim totalAgencyFee = _agencyFeeRepository.GetPaystubAmount(organizationId:=z_OrganizationID,
+                                                                   timePeriod:=datePeriod,
+                                                                   employeeId:=employee.RowID)
+        txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
 
-            ' Night differential Overtime
-            txttotnightdiffothrs_U.Text = ValNoComma(drow("NightDiffOvertimeHours"))
-            txttotnightdiffotamt_U.Text = FormatNumber(ValNoComma((drow("NightDiffOvertimePay"))), 2)
+        '13th month and Net Pay
+        Dim thirteenthMonthPay = If(paystub.ThirteenthMonthPay?.Amount, 0)
+        txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
 
-            If drow("EmployeeType").ToString = "Fixed" Then
-                lblSubtotal.Text = FormatNumber(ValNoComma(strdouble), 2)
-            ElseIf drow("EmployeeType").ToString = "Monthly" Then
+        Dim totalNetSalary = paystub.Actual?.NetPay + totalAgencyFee
+        txtNetPay.Text = FormatNumber(totalNetSalary, 2)
+        txtTotalNetPay.Text = FormatNumber(totalNetSalary + thirteenthMonthPay, 2)
 
-                Dim thebasicpay = ValNoComma(drow("BasicPay"))
-                Dim thelessamounts = ValNoComma(0)
-
-                If drow("FirstTimeSalary").ToString = "True" Then
-                    thebasicpay = ValNoComma(drow("RegularPay"))
-
-                    lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
-                Else
-                    thebasicpay = ValNoComma(drow("BasicPay"))
-                    thelessamounts = ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction")) + ValNoComma(drow("AbsenceDeduction"))
-
-                    Dim all_regular = (thebasicpay - thelessamounts)
-                    lblSubtotal.Text = FormatNumber(
-                        all_regular +
-                        ValNoComma(drow("SpecialHolidayPay")) +
-                        ValNoComma(drow("SpecialHolidayOTPay")) +
-                        ValNoComma(drow("RegularHolidayPay")) +
-                        ValNoComma(drow("RegularHolidayOTPay")) +
-                        ValNoComma(drow("OvertimePay")) +
-                        ValNoComma(drow("NightDiffPay")) +
-                        ValNoComma(drow("NightDiffOvertimePay")),
-                        2)
-                End If
-            Else
-                lblSubtotal.Text = FormatNumber(ValNoComma(drow("TotalDayPay")), 2)
-            End If
-
-            'Absent
-            txttotabsent_U.Text = FormatNumber(ValNoComma((drow("AbsentHours"))), 2)
-            txttotabsentamt_U.Text = FormatNumber(ValNoComma((drow("AbsenceDeduction"))), 2)
-
-            'Tardiness / late
-            txttottardi_U.Text = ValNoComma(drow("LateHours"))
-            txttottardiamt_U.Text = FormatNumber(ValNoComma((drow("LateDeduction"))), 2)
-
-            'Undertime
-            txttotut_U.Text = ValNoComma(drow("UndertimeHours"))
-            txttotutamt_U.Text = FormatNumber(ValNoComma((drow("UndertimeDeduction"))), 2)
-
-            Dim miscsubtotal = ValNoComma(drow("AbsenceDeduction")) + ValNoComma(drow("LateDeduction")) + ValNoComma(drow("UndertimeDeduction"))
-            lblsubtotmisc.Text = FormatNumber(ValNoComma((miscsubtotal)), 2)
-
-            'Allowance
-            txtemptotallow.Text = FormatNumber(ValNoComma((drow("TotalAllowance"))), 2)
-
-            'Taxable Allowance
-            txtTotTaxabAllow.Text = FormatNumber(ValNoComma((drow("TotalTaxableAllowance"))), 2)
-
-            txtGrandTotalAllow.Text = FormatNumber(ValNoComma(drow("TotalAllowance")) + ValNoComma(drow("TotalTaxableAllowance")), 2)
-
-            'Bonus
-            txtemptotbon.Text = FormatNumber(ValNoComma((drow("TotalBonus"))), 2)
-            'Gross
-            txtgrosssal.Text = FormatNumber(ValNoComma((drow("TotalGrossSalary"))), 2)
-
-            ' SSS
-            txtempsss.Text = FormatNumber(ValNoComma((drow("TotalEmpSSS"))), 2)
-            ' PhilHealth
-            txtempphh.Text = FormatNumber(ValNoComma((drow("TotalEmpPhilhealth"))), 2)
-            ' PAGIBIG
-            txtemphdmf.Text = FormatNumber(ValNoComma((drow("TotalEmpHDMF"))), 2)
-
-            ' Taxable salary
-            txttaxabsal.Text = FormatNumber(ValNoComma((drow("TotalTaxableSalary"))), 2)
-            ' Withholding taxS
-            txtempwtax.Text = FormatNumber(ValNoComma((drow("TotalEmpWithholdingTax"))), 2)
-            ' Loans
-            txtemptotloan.Text = FormatNumber(ValNoComma((drow("TotalLoans"))), 2)
-            ' Adjustments
-            txtTotalAdjustments.Text = FormatNumber(ValNoComma((drow("TotalAdjustments"))), 2)
-
-            ' Agency fee
-            Dim totalAgencyFee = ValNoComma(drow("TotalAgencyFee"))
-            txtAgencyFee.Text = FormatNumber(totalAgencyFee, 2)
-
-            Dim thirteenthMonthPay = ValNoComma(drow("ThirteenthMonthPay"))
-            txtThirteenthMonthPay.Text = FormatNumber(thirteenthMonthPay, 2)
-
-            Dim totalNetSalary = ValNoComma(drow("TotalNetSalary")) + totalAgencyFee
-            'Net
-            txtnetsal.Text = FormatNumber(totalNetSalary, 2)
-
-            Dim totalNetPay = totalNetSalary + thirteenthMonthPay
-            txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
-
-            txtPaidLeave.Text = FormatNumber(ValNoComma(drow("LeavePay")), 2)
-
-            For Each txtbx In txtbxField
-                txtbx.Text = If(IsDBNull(drow(txtbx.AccessibleDescription)), 0.0, drow(txtbx.AccessibleDescription))
-            Next
-
-            Exit For
-        Next
-
-        paystubactual.Dispose()
-
-        UpdateAdjustmentDetails(Convert.ToInt16(DirectCast(sender, TabPage).Tag))
+        Dim totalNetPay = totalNetSalary + thirteenthMonthPay
+        txtTotalNetPay.Text = FormatNumber(totalNetPay, 2)
 
     End Sub
 
-    Private Sub TabPage4_Enter(sender As Object, e As EventArgs) 'Handles TabPage4.Enter 'UNDECLARED
-        TabPage4_Enter1(TabPage4, New EventArgs)
-    End Sub
+    Private Function GetPaystub(EmployeeRowID As Object) As Paystub
+        If ObjectUtils.ToNullableInteger(EmployeeRowID) Is Nothing OrElse
+            ObjectUtils.ToNullableInteger(paypRowID) Is Nothing Then
+            Return Nothing
+        End If
+
+        Return _paystubRepository.GetByCompositeKeyWithActual(
+                    New EmployeeCompositeKey(employeeId:=EmployeeRowID, payPeriodId:=paypRowID))
+    End Function
+
+    Private Function GetPayPeriodDates() As TimePeriod
+        Dim dateFrom = ObjectUtils.ToNullableDateTime(paypFrom)
+        Dim dateTo = ObjectUtils.ToNullableDateTime(paypTo)
+
+        If dateFrom Is Nothing OrElse dateTo Is Nothing Then
+            Return Nothing
+        End If
+
+        Return New TimePeriod(dateFrom, dateTo)
+    End Function
 
     Private Sub btndiscardchanges_Click(sender As Object, e As EventArgs) Handles btndiscardchanges.Click
         UpdateAdjustmentDetails(Convert.ToInt16(tabEarned.SelectedIndex)) 'Josh
@@ -1769,9 +1657,7 @@ Public Class PayStubForm
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                     Async Function()
 
-                        Dim paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
-
-                        Await paystubRepository.DeleteAsync(New PaystubRepository.EmployeeCompositeKey(
+                        Await _paystubRepository.DeleteAsync(New EmployeeCompositeKey(
                                                                 employeeId:=employeeId.Value,
                                                                 payPeriodId:=payPeriodId.Value),
                                                             z_User)
@@ -1794,22 +1680,34 @@ Public Class PayStubForm
     End Sub
 
     Private Sub setProperInterfaceBaseOnCurrentSystemOwner()
-        Static _bool As Boolean =
-            (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
-        If _bool Then
+        If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000 Then
             Dim str_empty As String = String.Empty
             TabPage1.Text = str_empty
             TabPage4.Text = str_empty
             AddHandler tabEarned.Selecting, AddressOf tabEarned_Selecting
+
+        End If
+
+        If _systemOwnerService.GetCurrentSystemOwner() <> SystemOwnerService.Goldwings Then
+            Label13.Visible = False
+            Label43.Visible = False
+            txtTotalBonus.Visible = False
+            btntotbon.Visible = False
+            lblGrossIncomeDivider.Visible = False
+
+            Dim newPositionY = 496
+            lblGrossIncome.Location = New Point(lblGrossIncome.Location.X, newPositionY)
+            lblGrossIncomePesoSign.Location = New Point(lblGrossIncomePesoSign.Location.X, newPositionY)
+            txtGrossPay.Location = New Point(txtGrossPay.Location.X, newPositionY)
         End If
     End Sub
 
     Private Sub tabEarned_Selecting(sender As Object, e As TabControlCancelEventArgs)
 
-        Static _bool As Boolean =
+        Static isCinemaUser As Boolean =
             (_systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Cinema2000)
 
-        e.Cancel = _bool
+        e.Cancel = isCinemaUser
 
     End Sub
 
@@ -1990,8 +1888,8 @@ Public Class PayStubForm
 
             Await FunctionUtils.TryCatchFunctionAsync("Delete Paystub",
                   Async Function()
-                      Dim paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
-                      Await paystubRepository.DeleteByPeriodAsync(payPeriodId:=payperiodId.Value,
+
+                      Await _paystubRepository.DeleteByPeriodAsync(payPeriodId:=payperiodId.Value,
                                                                   userId:=z_User)
 
                       Await RefreshForm()

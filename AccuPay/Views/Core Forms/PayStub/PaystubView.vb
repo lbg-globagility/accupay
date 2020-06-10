@@ -22,18 +22,6 @@ Public Class PaystubView
 
     Private WithEvents _adjustmentSource As BindingSource
 
-    Private ReadOnly _payPeriodRepository As PayPeriodRepository
-
-    Private ReadOnly _paystubRepository As PaystubRepository
-
-    Private ReadOnly _adjustmentService As AdjustmentService
-
-    Private ReadOnly _listOfValueService As ListOfValueService
-
-    Private ReadOnly _payPeriodService As PayPeriodService
-
-    Private ReadOnly _systemOwnerService As SystemOwnerService
-
     Sub New()
 
         InitializeComponent()
@@ -41,14 +29,6 @@ Public Class PaystubView
         _adjustmentSource = New BindingSource With {
             .AllowNew = True
         }
-
-        _payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        _paystubRepository = MainServiceProvider.GetRequiredService(Of PaystubRepository)
-
-        _adjustmentService = MainServiceProvider.GetRequiredService(Of AdjustmentService)
-        _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
-        _payPeriodService = MainServiceProvider.GetRequiredService(Of PayPeriodService)
-        _systemOwnerService = MainServiceProvider.GetRequiredService(Of SystemOwnerService)
 
     End Sub
 
