@@ -1,56 +1,165 @@
-<table mat-table [dataSource]="dataSource" class="w-full">
-  <ng-container matColumnDef="date">
-    <th mat-header-cell *matHeaderCellDef>Date</th>
-    <td mat-cell *matCellDef="let timeEntry">{{ timeEntry.date | date }}</td>
-  </ng-container>
+<div style="overflow-x: auto;">
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="w-full"
+    style="white-space: nowrap;"
+  >
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let timeEntry">{{ timeEntry.date | date }}</td>
+    </ng-container>
 
-  <ng-container matColumnDef="workHours">
-    <th mat-header-cell *matHeaderCellDef>Work Hours</th>
-    <td mat-cell *matCellDef="let timeEntry"></td>
-  </ng-container>
+    <ng-container matColumnDef="shift">
+      <th mat-header-cell *matHeaderCellDef>Shift</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.shift?.start | date: "shortTime" }} -
+        {{ timeEntry.shift?.end | date: "shortTime" }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="overtimeHours">
-    <th mat-header-cell *matHeaderCellDef>OT Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.overtimeHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="timeLog">
+      <th mat-header-cell *matHeaderCellDef>Logged Time</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.timeLog?.start | date: "shortTime" }} -
+        {{ timeEntry.timeLog?.end | date: "shortTime" }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="nightDiffHours">
-    <th mat-header-cell *matHeaderCellDef>ND Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.nightDiffHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="officialBusiness">
+      <th mat-header-cell *matHeaderCellDef>Filed OB</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.officialBusiness?.start | date: "shortTime" }} -
+        {{ timeEntry.officialBusiness?.end | date: "shortTime" }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="nightDiffOTHours">
-    <th mat-header-cell *matHeaderCellDef>NDOT Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.nightDiffOTHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="regularHours">
+      <th mat-header-cell *matHeaderCellDef>Regular Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHours | ifZero }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="lateHours">
-    <th mat-header-cell *matHeaderCellDef>Late Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.lateHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="leave">
+      <th mat-header-cell *matHeaderCellDef>Filed Leave</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.leave?.start | date: "shortTime" }} -
+        {{ timeEntry.leave?.end | date: "shortTime" }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="undertimeHours">
-    <th mat-header-cell *matHeaderCellDef>UT Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.undertimeHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="leaveHours">
+      <th mat-header-cell *matHeaderCellDef>Leave Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.leaveHours | ifZero }}
+      </td>
+    </ng-container>
 
-  <ng-container matColumnDef="absentHours">
-    <th mat-header-cell *matHeaderCellDef>Absent Hours</th>
-    <td mat-cell *matCellDef="let timeEntry">
-      {{ timeEntry.absentHours | ifZero }}
-    </td>
-  </ng-container>
+    <ng-container matColumnDef="leavePay">
+      <th mat-header-cell *matHeaderCellDef>Leave Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.leavePay | ifZero }}
+      </td>
+    </ng-container>
 
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
+    <ng-container matColumnDef="overtimes">
+      <th mat-header-cell *matHeaderCellDef>Filed Overtimes</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        <ul>
+          <li *ngFor="let overtime of timeEntry.overtimes">
+            {{ overtime.start | date: "shortTime" }} -
+            {{ overtime.end | date: "shortTime" }}
+          </li>
+        </ul>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimeHours">
+      <th mat-header-cell *matHeaderCellDef>OT Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.overtimeHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimePay">
+      <th mat-header-cell *matHeaderCellDef>OT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.overtimePay | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffHours">
+      <th mat-header-cell *matHeaderCellDef>ND Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffPay">
+      <th mat-header-cell *matHeaderCellDef>ND Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffPay | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffOTHours">
+      <th mat-header-cell *matHeaderCellDef>NDOT Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffOTHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffOTPay">
+      <th mat-header-cell *matHeaderCellDef>NDOT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffOTPay | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lateHours">
+      <th mat-header-cell *matHeaderCellDef>Late Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.lateHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lateDeduction">
+      <th mat-header-cell *matHeaderCellDef>Late Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.lateDeduction | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="undertimeHours">
+      <th mat-header-cell *matHeaderCellDef>UT Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.undertimeHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="undertimeDeduction">
+      <th mat-header-cell *matHeaderCellDef>UT Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.undertimeDeduction | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="absentHours">
+      <th mat-header-cell *matHeaderCellDef>Absent Hours</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.absentHours | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="absentDeduction">
+      <th mat-header-cell *matHeaderCellDef>Absent Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.absentDeduction | ifZero }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+</div>

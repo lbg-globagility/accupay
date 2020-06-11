@@ -19,18 +19,29 @@ export class TimeEntryTableComponent implements OnChanges {
 
   readonly displayedColumns = [
     'date',
-    'workHours',
+    'shift',
+    'timeLog',
+    'officialBusiness',
+    'regularHours',
+    'leave',
+    'leaveHours',
+    'leavePay',
+    'overtimes',
     'overtimeHours',
+    'overtimePay',
     'nightDiffHours',
+    'nightDiffPay',
     'nightDiffOTHours',
+    'nightDiffOTPay',
     'lateHours',
+    'lateDeduction',
     'undertimeHours',
+    'undertimeDeduction',
     'absentHours',
+    'absentDeduction',
   ];
 
   dataSource: MatTableDataSource<TimeEntry>;
-
-  constructor() {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.dataSource = new MatTableDataSource(this.timeEntries);

@@ -77,14 +77,16 @@ namespace AccuPay.Data.Services
             {
                 timeEntryList.Add(new TimeEntryData()
                 {
+                    Id = timeEntry.RowID.Value,
                     EmployeeId = timeEntry.EmployeeID.Value,
                     Date = timeEntry.Date,
                     TimeEntry = timeEntry,
                     Shift = shifts.FirstOrDefault(x => x.EmployeeID == timeEntry.EmployeeID && x.DateSched == timeEntry.Date),
                     TimeLog = timeLogs.FirstOrDefault(x => x.EmployeeID == timeEntry.EmployeeID && x.LogDate == timeEntry.Date),
-                    Overtime = overtimes.FirstOrDefault(x => x.EmployeeID == timeEntry.EmployeeID && x.OTStartDate == timeEntry.Date),
+                    Overtimes = overtimes.Where(x => x.EmployeeID == timeEntry.EmployeeID && x.OTStartDate == timeEntry.Date).ToList(),
                     OfficialBusiness = officialBusinesses.FirstOrDefault(x => x.EmployeeID == timeEntry.EmployeeID && x.StartDate == timeEntry.Date),
                     Leave = leaves.FirstOrDefault(x => x.EmployeeID == timeEntry.EmployeeID && x.StartDate == timeEntry.Date),
+                    Branch = branches.FirstOrDefault(x => x.RowID == timeEntry.BranchID)
                 });
             }
 

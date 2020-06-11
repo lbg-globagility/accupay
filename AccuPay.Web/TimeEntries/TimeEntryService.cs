@@ -89,8 +89,7 @@ namespace AccuPay.Web.TimeEntries
                 employeeId,
                 new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate));
 
-            return null;
-            //return list.Select(x => );
+            return list.Select(x => TimeEntryDto.Convert(x)).ToList();
         }
 
         public async Task<TimeEntryPayPeriodDto> GetDetails(int payPeriodId)
@@ -158,24 +157,6 @@ namespace AccuPay.Web.TimeEntries
             dto.AbsentCount = absentCount;
             dto.LateCount = lateCount;
             dto.UndertimeCount = undertimeCount;
-
-            return dto;
-        }
-
-        private TimeEntryDto ConvertToDto(TimeEntry timeEntry)
-        {
-            var dto = new TimeEntryDto()
-            {
-                Id = timeEntry.RowID.Value,
-                Date = timeEntry.Date,
-                WorkHours = timeEntry.WorkHours,
-                OvertimeHours = timeEntry.OvertimeHours,
-                NightDiffHours = timeEntry.NightDiffHours,
-                NightDiffOTHours = timeEntry.NightDiffOTHours,
-                LateHours = timeEntry.LateHours,
-                UndertimeHours = timeEntry.UndertimeHours,
-                AbsentHours = timeEntry.AbsentHours
-            };
 
             return dto;
         }
