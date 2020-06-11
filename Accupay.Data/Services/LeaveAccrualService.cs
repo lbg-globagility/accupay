@@ -190,39 +190,50 @@ namespace AccuPay.Data.Services
                 .Where(t => t.RowID == ledger.LastTransactionID)
                 .FirstOrDefaultAsync();
 
-            DateTime nextAccrualDate;
-            if (lastTransaction == null)
-                nextAccrualDate = employee.StartDate.AddMonths(1).AddDays(1);
-            else
-                nextAccrualDate = lastTransaction.TransactionDate.AddMonths(1);
+            var currentDate = DateTime.Today;
 
-            var currentDate = DateTime.Now;
-
-            // Check if the current date is still too early to update the ledger
-            if (currentDate < nextAccrualDate)
-                return;
-
-            var leaveHours = _calculator.Calculate2(employee, nextAccrualDate, employee.VacationLeaveAllowance, lastAccrual);
-
-            if (leaveHours == 0)
-                return;
-
-            var newTransaction = new LeaveTransaction()
+            while (true)
             {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employee.RowID,
-                CreatedBy = z_User,
-                OrganizationID = z_OrganizationID,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = nextAccrualDate,
-                Amount = leaveHours,
-                Description = "Accrual",
-                Balance = (lastTransaction?.Balance ?? 0) + leaveHours
-            };
+                DateTime nextAccrualDate;
+                if (lastAccrual == null)
+                    nextAccrualDate = employee.StartDate.AddMonths(1).AddDays(1);
+                else
+                    nextAccrualDate = lastAccrual.TransactionDate.AddMonths(1);
 
-            employee.LeaveBalance += leaveHours;
-            context.LeaveTransactions.Add(newTransaction);
-            ledger.LastTransaction = newTransaction;
+                var finalAccrualDate = employee.StartDate.AddMonths(12).AddDays(1);
+
+                // Check if the current date is still too early to update the ledger
+                if (currentDate < nextAccrualDate)
+                    return;
+
+                // If the next accrual date is past the final accrual, then we stop
+                // accruing the employee
+                if (finalAccrualDate < nextAccrualDate)
+                    return;
+
+                var leaveHours = _calculator.Calculate2(employee, nextAccrualDate, employee.VacationLeaveAllowance, lastAccrual);
+
+                if (leaveHours == 0)
+                    return;
+
+                var newTransaction = new LeaveTransaction()
+                {
+                    LeaveLedgerID = ledger.RowID,
+                    EmployeeID = employee.RowID,
+                    CreatedBy = z_User,
+                    OrganizationID = z_OrganizationID,
+                    Type = LeaveTransactionType.Credit,
+                    TransactionDate = nextAccrualDate,
+                    Amount = leaveHours,
+                    Description = "Accrual",
+                    Balance = (lastTransaction?.Balance ?? 0) + leaveHours
+                };
+
+                employee.LeaveBalance += leaveHours;
+                context.LeaveTransactions.Add(newTransaction);
+                ledger.LastTransaction = newTransaction;
+                lastAccrual = newTransaction;
+            }
         }
 
         private async Task UpdateSickLeaveLedger2(PayrollContext context, Employee employee, int z_OrganizationID, int z_User)
