@@ -52,11 +52,11 @@ namespace AccuPay.Data.Repositories
         {
             int? paystubId = null;
 
-            paystubId = _context.Paystubs.
-                 Where(x => x.EmployeeID == key.EmployeeId).
-                 Where(x => x.PayPeriodID == key.PayPeriodId).
-                 Select(x => x.RowID).
-                 FirstOrDefault();
+            paystubId = _context.Paystubs
+                 .Where(x => x.EmployeeID == key.EmployeeId)
+                 .Where(x => x.PayPeriodID == key.PayPeriodId)
+                 .Select(x => x.RowID)
+                 .FirstOrDefault();
 
             if (paystubId == null)
             {
@@ -77,10 +77,10 @@ namespace AccuPay.Data.Repositories
 
         public async Task DeleteByPeriodAsync(int payPeriodId, int userId)
         {
-            var payStubIds = await _context.Paystubs.
-                                            Where(x => x.PayPeriodID == payPeriodId).
-                                            Select(x => x.RowID.Value).
-                                            ToListAsync();
+            var payStubIds = await _context.Paystubs
+                                            .Where(x => x.PayPeriodID == payPeriodId)
+                                            .Select(x => x.RowID.Value)
+                                            .ToListAsync();
 
             foreach (int id in payStubIds)
             {
@@ -102,29 +102,28 @@ namespace AccuPay.Data.Repositories
 
         private async Task DeleteAsyncWithContext(int id, int userId)
         {
-            var paystub = await _context.Paystubs.
-                                            Include(x => x.LoanTransactions).
-                                                ThenInclude(x => x.LoanSchedule).
-                                            Include(x => x.LeaveTransactions).
-                                                ThenInclude(x => x.LeaveLedger).
+            var paystub = await _context.Paystubs
+                                            .Include(x => x.LoanTransactions)
+                                               .ThenInclude(x => x.LoanSchedule)
+                                            .Include(x => x.LeaveTransactions)
+                                                .ThenInclude(x => x.LeaveLedger)
 
-                                            Include(x => x.Adjustments).
-                                            Include(x => x.ActualAdjustments).
-                                            Include(x => x.PaystubItems).
-                                            Include(x => x.PaystubEmails).
-                                            Include(x => x.PaystubEmailHistories).
+                                            .Include(x => x.Adjustments)
+                                            .Include(x => x.ActualAdjustments)
+                                            .Include(x => x.PaystubItems)
+                                            .Include(x => x.PaystubEmails)
+                                            .Include(x => x.PaystubEmailHistories)
 
-                                            Include(x => x.ThirteenthMonthPay).
-                                            Include(x => x.Actual).
-                                            Where(x => x.RowID == id).
-                                            FirstOrDefaultAsync();
+                                            .Include(x => x.ThirteenthMonthPay)
+                                            .Include(x => x.Actual)
+                                            .Where(x => x.RowID == id)
+                                            .FirstOrDefaultAsync();
 
             // Some of this are already deleted cascadingly if we delete the paystub but the
-            // aggregate rot should handle the delete of of all the entities in its aggregate.
+            // aggregate root should handle the delete of of all the entities in its aggregate.
             // AND some database from other clients have cascade constraint, some have not.
 
-            // Deleting of paystub bonus is not yet supported. Bonus will be disabled since
-            // no AccuPay clients are using it.
+            // Deleting of paystub bonus is not yet supported. TODO and test it
 
             ResetLoanBalances(paystub.LoanTransactions, userId);
             _context.LoanTransactions.RemoveRange(paystub.LoanTransactions);
@@ -151,19 +150,30 @@ namespace AccuPay.Data.Repositories
 
         #region Queries
 
+        public Paystub GetByCompositeKeyWithActual(EmployeeCompositeKey key)
+        {
+            return _context.Paystubs
+                            .AsNoTracking()
+                            .Include(x => x.ThirteenthMonthPay)
+                            .Include(x => x.Actual)
+                            .Where(x => x.EmployeeID == key.EmployeeId)
+                            .Where(x => x.PayPeriodID == key.PayPeriodId)
+                            .FirstOrDefault();
+        }
+
         public async Task<Paystub> GetByCompositeKeyFullPaystubAsync(EmployeeCompositeKey key)
         {
-            return await CreateBaseQueryWithFullPaystub(_context).
-                            Where(x => x.EmployeeID == key.EmployeeId).
-                            Where(x => x.PayPeriodID == key.PayPeriodId).
-                            FirstOrDefaultAsync();
+            return await CreateBaseQueryWithFullPaystub()
+                            .Where(x => x.EmployeeID == key.EmployeeId)
+                            .Where(x => x.PayPeriodID == key.PayPeriodId)
+                            .FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetByPayPeriodFullPaystubAsync(int payPeriodId)
         {
-            return await CreateBaseQueryWithFullPaystub(_context).
-                            Where(x => x.PayPeriodID == payPeriodId).
-                            ToListAsync();
+            return await CreateBaseQueryWithFullPaystub()
+                            .Where(x => x.PayPeriodID == payPeriodId)
+                            .ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetPreviousCutOffPaystubsAsync(
@@ -172,27 +182,27 @@ namespace AccuPay.Data.Repositories
         {
             var previousCutoffEnd = currentCuttOffStart.AddDays(-1);
 
-            return await _context.Paystubs.
-                            Where(x => x.PayToDate == previousCutoffEnd).
-                            Where(x => x.OrganizationID == organizationId).
-                            ToListAsync();
+            return await _context.Paystubs
+                            .Where(x => x.PayToDate == previousCutoffEnd)
+                            .Where(x => x.OrganizationID == organizationId)
+                            .ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetAllWithEmployeeAsync(DateCompositeKey key)
         {
-            return await _context.Paystubs.
-                            Where(x => x.PayFromdate == key.PayFromDate).
-                            Where(x => x.PayToDate == key.PayToDate).
-                            Where(x => x.OrganizationID == key.OrganizationId).
-                            ToListAsync();
+            return await _context.Paystubs
+                            .Where(x => x.PayFromDate == key.PayFromDate)
+                            .Where(x => x.PayToDate == key.PayToDate)
+                            .Where(x => x.OrganizationID == key.OrganizationId)
+                            .ToListAsync();
         }
 
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeAsync(int payPeriodId)
         {
-            return await _context.Paystubs.
-                            Include(x => x.Employee).
-                            Where(x => x.PayPeriodID == payPeriodId).
-                            ToListAsync();
+            return await _context.Paystubs
+                            .Include(x => x.Employee)
+                            .Where(x => x.PayPeriodID == payPeriodId)
+                            .ToListAsync();
         }
 
         /// <summary>
@@ -202,10 +212,10 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAsync(int payPeriodId)
         {
-            return await _context.Paystubs.
-                            Include(x => x.Employee.Position.Division).
-                            Where(x => x.PayPeriodID == payPeriodId).
-                            ToListAsync();
+            return await _context.Paystubs
+                            .Include(x => x.Employee.Position.Division)
+                            .Where(x => x.PayPeriodID == payPeriodId)
+                            .ToListAsync();
         }
 
         /// <summary>
@@ -217,36 +227,36 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<IEnumerable<Paystub>> GetByPayPeriodWithEmployeeDivisionAndThirteenthMonthPayDetailsAsync(int payPeriodId)
         {
-            return await _context.Paystubs.
-                            Include(x => x.Employee.Position.Division).
-                            Include(x => x.ThirteenthMonthPay).
-                            Include(x => x.AllowanceItems).
-                            Where(x => x.PayPeriodID == payPeriodId).
-                            ToListAsync();
+            return await _context.Paystubs
+                            .Include(x => x.Employee.Position.Division)
+                            .Include(x => x.ThirteenthMonthPay)
+                            .Include(x => x.AllowanceItems)
+                            .Where(x => x.PayPeriodID == payPeriodId)
+                            .ToListAsync();
         }
 
         #region Child data
 
         public async Task<IEnumerable<AllowanceItem>> GetAllowanceItems(int paystubId)
         {
-            var paystub = await _context.Paystubs.
-                            Include(x => x.AllowanceItems).
-                                ThenInclude(x => x.Allowance).
-                                    ThenInclude(x => x.Product).
-                            Where(x => x.RowID == paystubId).
-                            FirstOrDefaultAsync();
+            var paystub = await _context.Paystubs
+                            .Include(x => x.AllowanceItems)
+                                .ThenInclude(x => x.Allowance)
+                                    .ThenInclude(x => x.Product)
+                            .Where(x => x.RowID == paystubId)
+                            .FirstOrDefaultAsync();
 
             return paystub.AllowanceItems;
         }
 
         public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctions(int paystubId)
         {
-            var paystub = await _context.Paystubs.
-                            Include(x => x.LoanTransactions).
-                                ThenInclude(x => x.LoanSchedule).
-                                    ThenInclude(x => x.LoanType).
-                            Where(x => x.RowID == paystubId).
-                            FirstOrDefaultAsync();
+            var paystub = await _context.Paystubs
+                            .Include(x => x.LoanTransactions)
+                                .ThenInclude(x => x.LoanSchedule)
+                                    .ThenInclude(x => x.LoanType)
+                            .Where(x => x.RowID == paystubId)
+                            .FirstOrDefaultAsync();
 
             return paystub.LoanTransactions;
         }
@@ -271,10 +281,10 @@ namespace AccuPay.Data.Repositories
                                                     ToArray();
 
             var leaveLedgerIds = groupedLeaves.Select(x => x.Key.RowID.Value).ToArray();
-            var allLeaveTransactions = _context.LeaveTransactions.
-                                    Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value)).
-                                    Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false).
-                                    ToList();
+            var allLeaveTransactions = _context.LeaveTransactions
+                                    .Where(x => leaveLedgerIds.Contains(x.LeaveLedgerID.Value))
+                                    .Where(x => toBeDeletedleaveTransactionIds.Contains(x.RowID.Value) == false)
+                                    .ToList();
 
             foreach (var leaveGroup in groupedLeaves)
             {
@@ -285,25 +295,25 @@ namespace AccuPay.Data.Repositories
                 // get the last transaction
                 if (leaveTransactions.Any())
                 {
-                    var lastTransactionDate = leaveTransactions.
-                                                OrderByDescending(x => x.TransactionDate).
-                                                Select(x => x.TransactionDate).
-                                                First();
+                    var lastTransactionDate = leaveTransactions
+                                                .OrderByDescending(x => x.TransactionDate)
+                                                .Select(x => x.TransactionDate)
+                                                .First();
 
-                    var lastTransactions = leaveTransactions.
-                                                Where(x => x.TransactionDate == lastTransactionDate);
+                    var lastTransactions = leaveTransactions
+                                                .Where(x => x.TransactionDate == lastTransactionDate);
 
-                    var lastDebitTransaction = lastTransactions.
-                                                Where(x => x.Type.ToTrimmedLowerCase() ==
-                                                    LeaveTransactionType.Debit.ToTrimmedLowerCase()).
-                                                OrderBy(x => x.Balance).
-                                                FirstOrDefault();
+                    var lastDebitTransaction = lastTransactions
+                                                .Where(x => x.Type.ToTrimmedLowerCase() ==
+                                                    LeaveTransactionType.Debit.ToTrimmedLowerCase())
+                                                .OrderBy(x => x.Balance)
+                                                .FirstOrDefault();
 
-                    var lastCreditTransaction = lastTransactions.
-                                                Where(x => x.Type.ToTrimmedLowerCase() ==
-                                                    LeaveTransactionType.Credit.ToTrimmedLowerCase()).
-                                                OrderByDescending(x => x.Created).
-                                                FirstOrDefault();
+                    var lastCreditTransaction = lastTransactions
+                                                .Where(x => x.Type.ToTrimmedLowerCase() ==
+                                                    LeaveTransactionType.Credit.ToTrimmedLowerCase())
+                                                .OrderByDescending(x => x.Created)
+                                                .FirstOrDefault();
 
                     // If there is a Credit Transaction on the last transaction date, check if
                     // what transaction was created last: is it the last debit transaction or
@@ -341,12 +351,12 @@ namespace AccuPay.Data.Repositories
                             // then another transaction that resulted to 24 balance, the system should choose
                             // the 24 balance as the latest because it is the lowest balance after the credit.
 
-                            var debitTransactionsAfterCredit = lastTransactions.
-                                                        Where(x => x.Type.ToTrimmedLowerCase() ==
-                                                            LeaveTransactionType.Debit.ToTrimmedLowerCase()).
-                                                        Where(x => x.Created >= lastCreditTransaction.Created).
-                                                        OrderBy(x => x.Balance).
-                                                        FirstOrDefault();
+                            var debitTransactionsAfterCredit = lastTransactions
+                                                        .Where(x => x.Type.ToTrimmedLowerCase() ==
+                                                            LeaveTransactionType.Debit.ToTrimmedLowerCase())
+                                                        .Where(x => x.Created >= lastCreditTransaction.Created)
+                                                        .OrderBy(x => x.Balance)
+                                                        .FirstOrDefault();
 
                             if (debitTransactionsAfterCredit != null)
                             {
@@ -387,21 +397,21 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        private IQueryable<Paystub> CreateBaseQueryWithFullPaystub(PayrollContext context)
+        private IQueryable<Paystub> CreateBaseQueryWithFullPaystub()
         {
-            return context.Paystubs.Include(p => p.Adjustments).
-                                        ThenInclude(a => a.Product).
-                                    Include(p => p.ActualAdjustments).
-                                        ThenInclude(a => a.Product).
+            return _context.Paystubs.Include(p => p.Adjustments)
+                                        .ThenInclude(a => a.Product)
+                                    .Include(p => p.ActualAdjustments)
+                                        .ThenInclude(a => a.Product)
 
-                                    Include(p => p.LoanTransactions).
-                                        ThenInclude(a => a.LoanSchedule).
-                                            ThenInclude(a => a.LoanType).
+                                    .Include(p => p.LoanTransactions)
+                                        .ThenInclude(a => a.LoanSchedule)
+                                            .ThenInclude(a => a.LoanType)
 
                                     // Allowance not included yet since it is not needed currently
-                                    Include(p => p.AllowanceItems).
-                                    Include(p => p.ThirteenthMonthPay).
-                                    Include(p => p.Actual);
+                                    .Include(p => p.AllowanceItems)
+                                    .Include(p => p.ThirteenthMonthPay)
+                                    .Include(p => p.Actual);
         }
     }
 }

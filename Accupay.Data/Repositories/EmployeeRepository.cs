@@ -253,6 +253,12 @@ namespace AccuPay.Data.Repositories
 
         #region Single entity
 
+        public Employee GetById(int employeeId)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return builder.GetById(employeeId, null);
+        }
+
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
             var builder = new EmployeeQueryBuilder(_context);
@@ -293,13 +299,24 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
         {
+            return await CreateBaseQueryCurrentSalary(employeeId, date)
+                            .FirstOrDefaultAsync();
+        }
+
+        public Salary GetCurrentSalary(int employeeId, DateTime? date = null)
+        {
+            return CreateBaseQueryCurrentSalary(employeeId, date)
+                            .FirstOrDefault();
+        }
+
+        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? date = null)
+        {
             date = date ?? DateTime.Now;
 
-            return await _context.Salaries.
-                            Where(x => x.EmployeeID == employeeId).
-                            Where(x => x.EffectiveFrom <= date).
-                            OrderByDescending(x => x.EffectiveFrom).
-                            FirstOrDefaultAsync();
+            return _context.Salaries
+                            .Where(x => x.EmployeeID == employeeId)
+                            .Where(x => x.EffectiveFrom <= date)
+                            .OrderByDescending(x => x.EffectiveFrom);
         }
 
         public async Task<decimal> GetVacationLeaveBalance(int employeeId)

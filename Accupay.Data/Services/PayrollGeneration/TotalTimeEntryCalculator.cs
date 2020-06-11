@@ -44,6 +44,7 @@ namespace AccuPay.Data.Services
             SpecialHolidayOTHours = timeEntries.Sum(t => t.SpecialHolidayOTHours);
             RegularHolidayHours = timeEntries.Sum(t => t.RegularHolidayHours);
             RegularHolidayOTHours = timeEntries.Sum(t => t.RegularHolidayOTHours);
+            LeaveHours = timeEntries.Sum(t => t.TotalLeaveHours);
             LateHours = timeEntries.Sum(t => t.LateHours);
             UndertimeHours = timeEntries.Sum(t => t.UndertimeHours);
             AbsentHours = timeEntries.Sum(t => t.AbsentHours);

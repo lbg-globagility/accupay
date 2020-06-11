@@ -9,7 +9,9 @@ Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class CertificationTab
+
     Private Const FormEntityName As String = "Certification"
+
     Private _employee As Employee
 
     Private _certifications As IEnumerable(Of Certification)
@@ -18,7 +20,7 @@ Public Class CertificationTab
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -211,7 +213,7 @@ Public Class CertificationTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Certification",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldCertification = _currentCertification.CloneJson()
 
                     With _currentCertification
@@ -299,7 +301,7 @@ Public Class CertificationTab
 
     End Sub
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
         If _currentCertification.CertificationType <> txtCertificationType.Text OrElse
                 _currentCertification.IssuingAuthority <> txtIssuingAuthority.Text OrElse
                 _currentCertification.CertificationNo <> txtCertificationNo.Text OrElse

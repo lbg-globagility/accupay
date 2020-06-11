@@ -24,9 +24,9 @@ Public Class BonusTab
 
     Private _frequencies As List(Of String)
 
-    Private _productRepo As ProductRepository
+    Private ReadOnly _productRepo As ProductRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 

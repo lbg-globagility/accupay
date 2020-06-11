@@ -59,7 +59,6 @@ namespace AccuPay.Data.Services
                 }
             }
 
-            paystub.Actual.TotalEarnings = AccuMath.CommercialRound(totalEarnings);
             paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalAllowance);
             paystub.Actual.TotalAdjustments = AccuMath.CommercialRound(paystub.TotalAdjustments + paystub.ActualAdjustments.Sum(a => a.Amount));
             paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions + paystub.Actual.TotalAdjustments);

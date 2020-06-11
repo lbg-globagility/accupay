@@ -28,20 +28,8 @@ namespace AccuPay.Data.Entities
         [Column("PayFrequencyType")]
         public string Type { get; set; }
 
-        public bool IsWeekly
-        {
-            get
-            {
-                return Type.ToUpper() == WeeklyType;
-            }
-        }
+        public bool IsWeekly => Type.ToUpper() == WeeklyType;
 
-        public bool IsSemiMonthly
-        {
-            get
-            {
-                return Type.ToUpper() == SemiMonthlyType;
-            }
-        }
+        public bool IsSemiMonthly => Type.ToUpper() == SemiMonthlyType;
     }
 }

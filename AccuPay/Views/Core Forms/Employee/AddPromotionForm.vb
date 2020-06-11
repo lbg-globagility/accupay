@@ -187,7 +187,7 @@ Public Class AddPromotionForm
 
     Private Sub ClearForm()
         If _latestPromotion Is Nothing Then
-            lblPositionFrom.Text = _employee.Position.Name
+            lblPositionFrom.Text = _employee.Position?.Name
         Else
             lblPositionFrom.Text = _latestPromotion.PositionTo
         End If
