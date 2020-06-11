@@ -253,6 +253,11 @@ namespace AccuPay.Data.Services
             return await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loanScheduleId);
         }
 
+        public async Task<PaginatedListResult<LoanTransaction>> GetPaginatedLoanHistoryList(PageOptions options, int loanId)
+        {
+            return await _loanRepository.GetLoanTransactionsAsync(options, loanId);
+        }
+
         public List<string> GetStatusList()
         {
             return _loanRepository.GetStatusList();

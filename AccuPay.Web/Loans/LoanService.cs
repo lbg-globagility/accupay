@@ -4,6 +4,8 @@ using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shared;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -78,6 +80,25 @@ namespace AccuPay.Web.Loans
             await _loanService.SaveAsync(loanSchedule);
 
             return ConvertToDto(loanSchedule);
+        }
+
+        public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory(PageOptions options, int loanId)
+        {
+            var currentLoanTransactions = await _loanService.GetPaginatedLoanHistoryList(options, loanId);
+
+            var dtos = currentLoanTransactions.List.Select(x => new LoanHistoryDto
+            {
+                Id = x.RowID.Value,
+                EmployeeId = x.EmployeeID,
+                EmployeeName = x.LoanSchedule.Employee.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeNo = x.LoanSchedule.Employee.EmployeeNo,
+                EmployeeType = x.LoanSchedule.Employee.EmployeeType,
+                DeductionDate = x.PayPeriodPayToDate.Value,
+                Amount = x.Amount,
+                Balance = x.TotalBalance
+            });
+
+            return new PaginatedList<LoanHistoryDto>(dtos, currentLoanTransactions.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
         public async Task Delete(int id)
