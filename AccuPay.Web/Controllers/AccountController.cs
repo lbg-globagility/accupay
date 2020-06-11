@@ -1,4 +1,5 @@
 using AccuPay.Web.Account;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -40,6 +41,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("change-organization")]
+        [Permission(PermissionTypes.AccountUpdate)]
         public async Task<ActionResult<AccessTokenDto>> ChangeOrganization([FromBody] ChangeOrganizationDto dto)
         {
             try
@@ -55,6 +57,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("current-role")]
+        [Permission(PermissionTypes.AccountRead)]
         public async Task<ActionResult<RoleDto>> GetCurrentRole()
         {
             var dto = await _roleService.GetCurrentRole();
@@ -63,6 +66,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("verify")]
+        [Permission(PermissionTypes.AccountRead)]
         public async Task<ActionResult> Verify([FromQuery] string token)
         {
             var claims = _userTokenService.DecodeRegistrationToken(token);
@@ -72,6 +76,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("register")]
+        [Permission(PermissionTypes.AccountCreate)]
         public async Task<ActionResult<UserDto>> Register([FromBody] VerifyRegistrationDto dto)
         {
             var userDto = await _accountService.Register(dto);

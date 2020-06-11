@@ -1,4 +1,5 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Mvc;
@@ -19,12 +20,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.EmployeeLoanRead)]
         public async Task<ActionResult<PaginatedList<LoanDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.EmployeeLoanRead)]
         public async Task<ActionResult<LoanDto>> GetById(int id)
         {
             var overtime = await _service.GetById(id);
@@ -36,12 +39,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.EmployeeLoanCreate)]
         public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
+        [Permission(PermissionTypes.EmployeeLoanUpdate)]
         public async Task<ActionResult<LoanDto>> Update(int id, [FromBody] UpdateLoanDto dto)
         {
             var leave = await _service.Update(id, dto);
@@ -53,6 +58,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Permission(PermissionTypes.EmployeeLoanDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var loan = await _service.GetById(id);
@@ -65,18 +71,21 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("types")]
+        [Permission(PermissionTypes.EmployeeLoanRead)]
         public async Task<ActionResult<ICollection<DropDownItem>>> GetLoanTypes()
         {
             return await _service.GetLoanTypes();
         }
 
         [HttpGet("statuslist")]
+        [Permission(PermissionTypes.EmployeeLoanRead)]
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _service.GetStatusList();
         }
 
         [HttpGet("deductionsechedules")]
+        [Permission(PermissionTypes.EmployeeLoanRead)]
         public async Task<ActionResult<ICollection<string>>> GetDeductionSchedules()
         {
             return await _service.GetDeductionSchedules();

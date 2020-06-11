@@ -1,4 +1,5 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Positions;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -17,18 +18,21 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.PositionRead)]
         public async Task<ActionResult<PaginatedList<PositionDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.PositionCreate)]
         public async Task<ActionResult<PositionDto>> Create([FromBody] CreatePositionDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
+        [Permission(PermissionTypes.PositionUpdate)]
         public async Task<ActionResult<PositionDto>> Update(int id, [FromBody] UpdatePositionDto dto)
         {
             var overtime = await _service.Update(id, dto);
@@ -40,6 +44,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.PositionRead)]
         public async Task<ActionResult<PositionDto>> GetById(int id)
         {
             var position = await _service.GetById(id);
@@ -51,6 +56,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Permission(PermissionTypes.PositionDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var position = await _service.GetById(id);

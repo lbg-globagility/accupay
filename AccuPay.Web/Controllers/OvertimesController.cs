@@ -1,4 +1,5 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
@@ -18,12 +19,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.EmployeeOvertimeRead)]
         public async Task<ActionResult<PaginatedList<OvertimeDto>>> List([FromQuery] PageOptions options, [FromQuery] OvertimeFilter filter)
         {
             return await _service.PaginatedList(options, filter);
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.EmployeeOvertimeRead)]
         public async Task<ActionResult<OvertimeDto>> GetById(int id)
         {
             var overtime = await _service.GetById(id);
@@ -35,12 +38,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.EmployeeOvertimeCreate)]
         public async Task<ActionResult<OvertimeDto>> Create([FromBody] CreateOvertimeDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
+        [Permission(PermissionTypes.EmployeeOvertimeUpdate)]
         public async Task<ActionResult<OvertimeDto>> Update(int id, [FromBody] UpdateOvertimeDto dto)
         {
             var overtime = await _service.Update(id, dto);
@@ -52,6 +57,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Permission(PermissionTypes.EmployeeOvertimeDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var overtime = await _service.GetById(id);
@@ -64,6 +70,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("statuslist")]
+        [Permission(PermissionTypes.EmployeeOvertimeRead)]
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _service.GetStatusList();

@@ -1,5 +1,6 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -22,6 +23,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.UserCreate)]
         public async Task<ActionResult<UserDto>> Create([FromBody] CreateUserDto dto)
         {
             var userDto = await _service.Create(dto);
@@ -30,6 +32,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.UserRead)]
         public async Task<ActionResult<UserDto>> GetById(Guid id)
         {
             var userDto = await _service.GetById(id);
@@ -38,6 +41,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("{id}")]
+        [Permission(PermissionTypes.UserUpdate)]
         public async Task<ActionResult<UserDto>> Update(Guid id, [FromBody] UpdateUserDto dto)
         {
             var userDto = await _service.Update(id, dto);
@@ -46,6 +50,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.UserRead)]
         public async Task<ActionResult<PaginatedList<UserDto>>> List([FromForm] PageOptions options, string term)
         {
             var (users, count) = await _repository.List(options, term);
