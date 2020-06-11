@@ -1,3 +1,4 @@
+using AccuPay.Data.Helpers;
 using AccuPay.Web.EmploymentPolicies.Models;
 using AccuPay.Web.EmploymentPolicies.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -31,9 +32,9 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<ICollection<EmploymentPolicyDto>> GetAll()
+        public async Task<PaginatedList<EmploymentPolicyDto>> List([FromQuery] PageOptions options)
         {
-            throw new NotImplementedException();
+            return await _service.List(options);
         }
     }
 }
