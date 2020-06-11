@@ -158,8 +158,8 @@ namespace AccuPay.Data.Services
         {
             try
             {
-                await UpdateVacationLeaveLedger2(context, employee, z_OrganizationID, z_User);
-                await UpdateSickLeaveLedger2(context, employee, z_OrganizationID, z_User);
+                await UpdateLeaveLedger(context, employee, employee.VacationLeaveAllowance, ProductConstant.VACATION_LEAVE, z_OrganizationID, z_User);
+                await UpdateLeaveLedger(context, employee, employee.SickLeaveAllowance, ProductConstant.SICK_LEAVE, z_OrganizationID, z_User);
 
                 await context.SaveChangesAsync();
             }
@@ -168,11 +168,17 @@ namespace AccuPay.Data.Services
             }
         }
 
-        private async Task UpdateVacationLeaveLedger2(PayrollContext context, Employee employee, int z_OrganizationID, int z_User)
+        private async Task UpdateLeaveLedger(
+            PayrollContext context,
+            Employee employee,
+            decimal leaveAllowance,
+            string leaveTypeName,
+            int organizationId,
+            int userId)
         {
             var leaveType = await context.Products
-                .Where(p => p.PartNo == ProductConstant.VACATION_LEAVE)
-                .Where(p => p.OrganizationID == z_OrganizationID)
+                .Where(p => p.PartNo == leaveTypeName)
+                .Where(p => p.OrganizationID == organizationId)
                 .FirstOrDefaultAsync();
 
             var ledger = await context.LeaveLedgers.
@@ -190,86 +196,50 @@ namespace AccuPay.Data.Services
                 .Where(t => t.RowID == ledger.LastTransactionID)
                 .FirstOrDefaultAsync();
 
-            DateTime nextAccrualDate;
-            if (lastTransaction == null)
-                nextAccrualDate = employee.StartDate.AddMonths(1).AddDays(1);
-            else
-                nextAccrualDate = lastTransaction.TransactionDate.AddMonths(1);
+            var currentDate = DateTime.Today;
 
-            var currentDate = DateTime.Now;
-
-            // Check if the current date is still too early to update the ledger
-            if (currentDate < nextAccrualDate)
-                return;
-
-            var leaveHours = _calculator.Calculate2(employee, nextAccrualDate, employee.VacationLeaveAllowance, lastAccrual);
-
-            if (leaveHours == 0)
-                return;
-
-            var newTransaction = new LeaveTransaction()
+            while (true)
             {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employee.RowID,
-                CreatedBy = z_User,
-                OrganizationID = z_OrganizationID,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = nextAccrualDate,
-                Amount = leaveHours,
-                Description = "Accrual",
-                Balance = (lastTransaction?.Balance ?? 0) + leaveHours
-            };
+                var nextAccrualDate = lastAccrual == null
+                    ? employee.StartDate.AddMonths(1).AddDays(1)
+                    : lastAccrual.TransactionDate.AddMonths(1);
+                
+                var finalAccrualDate = employee.StartDate.AddMonths(12).AddDays(1);
 
-            employee.LeaveBalance += leaveHours;
-            context.LeaveTransactions.Add(newTransaction);
-            ledger.LastTransaction = newTransaction;
-        }
+                // Check if the current date is still too early to update the ledger
+                if (currentDate < nextAccrualDate)
+                    return;
 
-        private async Task UpdateSickLeaveLedger2(PayrollContext context, Employee employee, int z_OrganizationID, int z_User)
-        {
-            var leaveType = await context.Products
-                .Where(p => p.PartNo == ProductConstant.SICK_LEAVE)
-                .Where(p => p.OrganizationID == z_OrganizationID)
-                .FirstOrDefaultAsync();
+                // If the next accrual date is past the final accrual, then we stop
+                // accruing the employee
+                if (finalAccrualDate < nextAccrualDate)
+                    return;
 
-            var ledger = await context.LeaveLedgers
-                .Where(l => l.EmployeeID == employee.RowID)
-                .Where(l => l.ProductID == leaveType.RowID)
-                .FirstOrDefaultAsync();
+                var leaveHours = _calculator.Calculate2(employee, nextAccrualDate, leaveAllowance, lastAccrual);
 
-            var lastAccrual = await context.LeaveTransactions
-                .Where(t => t.LeaveLedgerID == ledger.RowID)
-                .Where(t => t.Description == "Accrual")
-                .OrderByDescending(t => t.TransactionDate)
-                .FirstOrDefaultAsync();
+                if (leaveHours == 0)
+                    return;
 
-            var lastTransaction = await context.LeaveTransactions
-                .Where(t => t.RowID == ledger.LastTransactionID)
-                .FirstOrDefaultAsync();
+                var newTransaction = new LeaveTransaction()
+                {
+                    LeaveLedgerID = ledger.RowID,
+                    EmployeeID = employee.RowID,
+                    CreatedBy = userId,
+                    OrganizationID = organizationId,
+                    Type = LeaveTransactionType.Credit,
+                    TransactionDate = nextAccrualDate,
+                    Amount = leaveHours,
+                    Description = "Accrual",
+                    Balance = (lastTransaction?.Balance ?? 0) + leaveHours
+                };
 
-            var leaveHours = _calculator.Calculate2(employee, DateTime.Now, employee.VacationLeaveAllowance, lastAccrual);
+                employee.LeaveBalance += leaveHours;
+                context.LeaveTransactions.Add(newTransaction);
+                ledger.LastTransaction = newTransaction;
 
-            if (leaveHours == 0)
-            {
-                return;
+                lastTransaction = newTransaction;
+                lastAccrual = newTransaction;
             }
-
-            var newTransaction = new LeaveTransaction()
-            {
-                LeaveLedgerID = ledger.RowID,
-                EmployeeID = employee.RowID,
-                CreatedBy = z_User,
-                OrganizationID = z_OrganizationID,
-                Type = LeaveTransactionType.Credit,
-                TransactionDate = DateTime.Now,
-                Amount = leaveHours,
-                Description = "Accrual",
-                Balance = lastTransaction.Balance + leaveHours
-            };
-
-            employee.SickLeaveBalance += leaveHours;
-            context.LeaveTransactions.Add(newTransaction);
-            ledger.LastTransaction = newTransaction;
         }
     }
 }

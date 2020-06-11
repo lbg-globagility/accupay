@@ -139,7 +139,7 @@ Public Class MDIPrimaryForm
         Dim listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
         Dim collection = Await listOfValueService.CreateAsync("LeavePolicy")
 
-        If collection.GetBoolean("AutomaticAccrual") Then
+        If collection.GetBoolean("LeavePolicy.AutomaticAccrual") Then
             Dim unused = Task.Run(
                 Async Function()
 
