@@ -16,67 +16,35 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public ICollection<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                    ToList();
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
         }
 
-        public async Task<IEnumerable<IGrouping<int?, TimeEntry>>> GetTimexzEntriesByEmployeeIds(
+        public async Task<ICollection<TimeEntry>> GetByDatePeriodAsync(
             int organizationId,
-            TimePeriod timePeriod,
-            IEnumerable<int?> employeeIds)
+            TimePeriod datePeriod)
         {
-            var query = CreateBaseQueryByDatePeriod(organizationId, timePeriod)
-                .Where(t => employeeIds.Contains(t.EmployeeID));
-
-            var timeEntries = await query.ToListAsync();
-            var timeEntriesByEmployee = timeEntries
-                .GroupBy(t => t.EmployeeID);
-
-            return timeEntriesByEmployee;
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
-        public async Task<IEnumerable<TimeEntry>> GetFullTimeEntryByEmployeeAndDate(
+        public async Task<ICollection<TimeEntry>> GetByEmployeeAndDatePeriodAsync(
             int organizationId,
             int employeeId,
-            TimePeriod timePeriod)
+            TimePeriod datePeriod)
         {
-            var query = from a in _context.TimeEntries
-                        join b in _context.TimeLogs
-                        on new { a.Date, a.EmployeeID } equals new { Date = b.LogDate, b.EmployeeID }
-                        select a;
-
-            var timeEntries = await query.ToListAsync();
-
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
-                .ToListAsync();
-        }
-
-        public async Task<IEnumerable<TimeEntry>> GetByDatePeriodAsync(int organizationId,
-                                                                        TimePeriod timePeriod)
-        {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                        ToListAsync();
-        }
-
-        public async Task<IEnumerable<TimeEntry>> GetByEmployeeAndDatePeriodAsync(int organizationId,
-                                                                                int employeeId,
-                                                                                TimePeriod timePeriod)
-        {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
                 .Where(x => x.EmployeeID == employeeId)
                 .OrderBy(x => x.Date)
                 .ToListAsync();
         }
 
-        private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId,
-                                                                    TimePeriod timePeriod)
+        private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.TimeEntries.
-                    Where(x => x.OrganizationID == organizationId).
-                    Where(x => timePeriod.Start <= x.Date).
-                    Where(x => x.Date <= timePeriod.End);
+            return _context.TimeEntries
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => datePeriod.Start <= x.Date)
+                .Where(x => x.Date <= datePeriod.End);
         }
     }
 }

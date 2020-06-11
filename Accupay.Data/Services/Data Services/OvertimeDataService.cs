@@ -95,13 +95,13 @@ namespace AccuPay.Data.Services
         }
 
         public IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
-                                                                TimePeriod timePeriod,
                                                                 List<int> employeeIdList,
+                                                                TimePeriod timePeriod,
                                                                 OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
             return _repository.GetByEmployeeIDsAndDatePeriod(organizationId,
-                                                            timePeriod,
                                                             employeeIdList,
+                                                            timePeriod,
                                                             overtimeStatus);
         }
 

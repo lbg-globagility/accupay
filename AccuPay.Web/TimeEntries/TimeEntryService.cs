@@ -25,6 +25,7 @@ namespace AccuPay.Web.TimeEntries
         private readonly TimeLogRepository _timeLogRepository;
         private readonly TimeEntryRepository _timeEntryRepository;
         private readonly EmployeeDutyScheduleRepository _shiftRepository;
+        private readonly TimeEntryDataService _dataService;
 
         public TimeEntryService(EmployeeRepository employeeRepository,
                                 PayPeriodRepository payPeriodRepository,
@@ -36,7 +37,8 @@ namespace AccuPay.Web.TimeEntries
                                 OfficialBusinessRepository officialBusinessRepository,
                                 TimeLogRepository timeLogRepository,
                                 TimeEntryRepository timeEntryRepository,
-                                EmployeeDutyScheduleRepository shiftRepository)
+                                EmployeeDutyScheduleRepository shiftRepository,
+                                TimeEntryDataService dataService)
         {
             _employeeRepository = employeeRepository;
             _payPeriodRepository = payPeriodRepository;
@@ -49,6 +51,7 @@ namespace AccuPay.Web.TimeEntries
             _timeLogRepository = timeLogRepository;
             _timeEntryRepository = timeEntryRepository;
             _shiftRepository = shiftRepository;
+            _dataService = dataService;
         }
 
         public async Task Generate(int payPeriodId)
@@ -66,24 +69,13 @@ namespace AccuPay.Web.TimeEntries
 
         public async Task<PaginatedList<TimeEntryEmployeeDto>> PaginatedEmployeeList(int payPeriodId, PageOptions options, string searchTerm)
         {
-            var paginatedList = await _employeeRepository.GetPaginatedListWithTimeEntryAsync(options,
-                                                                                            organizationId: _currentUser.OrganizationId,
-                                                                                            payPeriodId: payPeriodId,
-                                                                                            searchTerm);
+            var paginatedList = await _employeeRepository.GetPaginatedListWithTimeEntryAsync(
+                options,
+                organizationId: _currentUser.OrganizationId,
+                payPeriodId: payPeriodId,
+                searchTerm);
 
-            var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
-            var employeeIds = paginatedList.List.Select(t => t.RowID);
-            var timeEntries = await _timeEntryRepository.GetTimexzEntriesByEmployeeIds(
-                _currentUser.OrganizationId,
-                new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate),
-                employeeIds);
-
-            var dtos = paginatedList.List
-                .Select(x => TimeEntryEmployeeDto.Convert(
-                    x,
-                    timeEntries
-                        .FirstOrDefault(t => t.Key == x.RowID)))
-                .ToList();
+            var dtos = paginatedList.List.Select(x => TimeEntryEmployeeDto.Convert(x));
 
             return new PaginatedList<TimeEntryEmployeeDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
@@ -92,14 +84,13 @@ namespace AccuPay.Web.TimeEntries
         {
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
-            var timeEntries = await _timeEntryRepository.GetByEmployeeAndDatePeriodAsync(
+            var list = await _dataService.GetEmployeeTimeEntries(
                 _currentUser.OrganizationId,
                 employeeId,
                 new TimePeriod(payPeriod.PayFromDate, payPeriod.PayToDate));
 
-            var dtos = timeEntries.Select(t => ConvertToDto(t)).ToList();
-
-            return dtos;
+            return null;
+            //return list.Select(x => );
         }
 
         public async Task<TimeEntryPayPeriodDto> GetDetails(int payPeriodId)

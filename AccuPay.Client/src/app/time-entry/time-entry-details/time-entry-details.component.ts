@@ -7,7 +7,7 @@ import { Sort } from '@angular/material/sort';
 import { auditTime } from 'rxjs/operators';
 import { Employee } from '../shared/employee';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
@@ -21,6 +21,8 @@ import { TimeEntry } from 'src/app/time-entry/shared/time-entry';
 })
 export class TimeEntryDetailsComponent implements OnInit {
   payPeriodId = Number(this.route.snapshot.paramMap.get('id'));
+
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   readonly displayedColumns: string[] = [
     'employee',
@@ -39,7 +41,7 @@ export class TimeEntryDetailsComponent implements OnInit {
   savingState: LoadingState = new LoadingState();
 
   sort: Sort = {
-    active: 'employeeName',
+    active: 'employee',
     direction: '',
   };
 
@@ -77,6 +79,8 @@ export class TimeEntryDetailsComponent implements OnInit {
   private loadPayPeriod(): void {
     this.payPeriodService.getById(this.payPeriodId).subscribe((data) => {
       this.payPeriod = data;
+
+      this.isLoading.next(true);
     });
   }
 
