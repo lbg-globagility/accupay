@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Payroll;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PayperiodsController : ControllerBase
     {
         private readonly PayperiodService _payperiodService;

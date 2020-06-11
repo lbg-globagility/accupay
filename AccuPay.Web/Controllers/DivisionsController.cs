@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Divisions;
 using AccuPay.Web.Divisions.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class DivisionsController : ControllerBase
     {
         private readonly DivisionService _service;

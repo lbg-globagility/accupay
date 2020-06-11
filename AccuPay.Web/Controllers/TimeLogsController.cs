@@ -1,6 +1,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.TimeLogs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -9,6 +10,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class TimeLogsController : ControllerBase
     {
         private readonly TimeLogService _service;
@@ -19,14 +21,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        [Permission(PermissionTypes.EmployeeTimeLogRead)]
+        [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<PaginatedList<TimeLogDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
         }
 
         [HttpGet("{id}")]
-        [Permission(PermissionTypes.EmployeeTimeLogRead)]
+        [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<TimeLogDto>> GetById(int id)
         {
             var timelog = await _service.GetByIdWithEmployeeAsync(id);
@@ -38,14 +40,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        [Permission(PermissionTypes.EmployeeTimeLogCreate)]
+        [Permission(PermissionTypes.TimeLogCreate)]
         public async Task<ActionResult<TimeLogDto>> Create([FromBody] CreateTimeLogDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        [Permission(PermissionTypes.EmployeeTimeLogUpdate)]
+        [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult<TimeLogDto>> Update(int id, [FromBody] UpdateTimeLogDto dto)
         {
             var timeLog = await _service.Update(id, dto);
@@ -57,7 +59,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Permission(PermissionTypes.EmployeeTimeLogDelete)]
+        [Permission(PermissionTypes.TimeLogDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var timelog = await _service.GetByIdAsync(id);
@@ -70,7 +72,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("import")]
-        [Permission(PermissionTypes.EmployeeTimeLogCreate)]
+        [Permission(PermissionTypes.TimeLogCreate)]
         public async Task<ActionResult> Import([FromForm] IFormFile file)
         {
             await _service.Import(file);

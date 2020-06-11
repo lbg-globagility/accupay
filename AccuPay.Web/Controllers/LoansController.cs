@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Loans;
 using AccuPay.Web.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LoansController : ControllerBase
     {
         private readonly LoanService _service;
@@ -20,14 +22,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        [Permission(PermissionTypes.EmployeeLoanRead)]
+        [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult<PaginatedList<LoanDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
         }
 
         [HttpGet("{id}")]
-        [Permission(PermissionTypes.EmployeeLoanRead)]
+        [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult<LoanDto>> GetById(int id)
         {
             var overtime = await _service.GetById(id);
@@ -39,14 +41,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        [Permission(PermissionTypes.EmployeeLoanCreate)]
+        [Permission(PermissionTypes.LoanCreate)]
         public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        [Permission(PermissionTypes.EmployeeLoanUpdate)]
+        [Permission(PermissionTypes.LoanUpdate)]
         public async Task<ActionResult<LoanDto>> Update(int id, [FromBody] UpdateLoanDto dto)
         {
             var leave = await _service.Update(id, dto);
@@ -58,7 +60,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Permission(PermissionTypes.EmployeeLoanDelete)]
+        [Permission(PermissionTypes.LoanDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var loan = await _service.GetById(id);
@@ -71,21 +73,21 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("types")]
-        [Permission(PermissionTypes.EmployeeLoanRead)]
+        [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult<ICollection<DropDownItem>>> GetLoanTypes()
         {
             return await _service.GetLoanTypes();
         }
 
         [HttpGet("statuslist")]
-        [Permission(PermissionTypes.EmployeeLoanRead)]
+        [Permission(PermissionTypes.LoanRead)]
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _service.GetStatusList();
         }
 
         [HttpGet("deductionsechedules")]
-        [Permission(PermissionTypes.EmployeeLoanRead)]
+        [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult<ICollection<string>>> GetDeductionSchedules()
         {
             return await _service.GetDeductionSchedules();

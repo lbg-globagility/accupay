@@ -1,5 +1,6 @@
 using AccuPay.Web.Calendars;
 using AccuPay.Web.Core.Auth;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class CalendarsController : ControllerBase
     {
         private readonly CalendarService _service;

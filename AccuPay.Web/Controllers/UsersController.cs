@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
@@ -11,6 +12,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/users")]
     [ApiController]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly UserService _service;

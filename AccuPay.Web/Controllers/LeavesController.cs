@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Leaves;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class LeavesController : ControllerBase
     {
         private readonly LeaveService _service;
@@ -22,14 +24,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public async Task<ActionResult<PaginatedList<LeaveDto>>> List([FromQuery] PageOptions options, [FromQuery] LeaveFilter filter)
         {
             return await _service.PaginatedList(options, filter);
         }
 
         [HttpGet("{id}")]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public async Task<ActionResult<LeaveDto>> GetById(int id)
         {
             var leave = await _service.GetById(id);
@@ -41,14 +43,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        [Permission(PermissionTypes.EmployeeLeaveCreate)]
+        [Permission(PermissionTypes.LeaveCreate)]
         public async Task<ActionResult<LeaveDto>> Create([FromBody] CreateLeaveDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        [Permission(PermissionTypes.EmployeeLeaveUpdate)]
+        [Permission(PermissionTypes.LeaveUpdate)]
         public async Task<ActionResult<LeaveDto>> Update(int id, [FromBody] UpdateLeaveDto dto)
         {
             var leave = await _service.Update(id, dto);
@@ -60,7 +62,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Permission(PermissionTypes.EmployeeLeaveDelete)]
+        [Permission(PermissionTypes.LeaveDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var leave = await _repository.GetByIdAsync(id);
@@ -73,28 +75,28 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("types")]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public async Task<ActionResult<ICollection<string>>> GetLeaveTypes()
         {
             return await _service.GetLeaveTypes();
         }
 
         [HttpGet("statuslist")]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _repository.GetStatusList();
         }
 
         [HttpGet("ledger")]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public async Task<ActionResult<PaginatedList<LeaveBalanceDto>>> GetLeaveBalance([FromQuery] PageOptions options, string term)
         {
             return await _service.GetLeaveBalance(options, term);
         }
 
         [HttpGet("ledger/{id}")]
-        [Permission(PermissionTypes.EmployeeLeaveRead)]
+        [Permission(PermissionTypes.LeaveRead)]
         public async Task<ActionResult<PaginatedList<LeaveTransactionDto>>> GetLedger([FromQuery] PageOptions options, string type, int id)
         {
             return await _service.ListTransactions(options, id, type);

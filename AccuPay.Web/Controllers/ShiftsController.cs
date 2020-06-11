@@ -2,6 +2,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shifts.Models;
 using AccuPay.Web.Shifts.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -10,6 +11,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class ShiftsController : ControllerBase
     {
         private readonly ShiftService _service;
@@ -17,14 +19,14 @@ namespace AccuPay.Web.Controllers
         public ShiftsController(ShiftService shiftService) => _service = shiftService;
 
         [HttpGet]
-        [Permission(PermissionTypes.EmployeeShiftRead)]
+        [Permission(PermissionTypes.ShiftRead)]
         public async Task<ActionResult<PaginatedList<ShiftDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
         }
 
         [HttpGet("{id}")]
-        [Permission(PermissionTypes.EmployeeShiftRead)]
+        [Permission(PermissionTypes.ShiftRead)]
         public async Task<ActionResult<ShiftDto>> GetById(int id)
         {
             var shift = await _service.GetById(id);
@@ -36,7 +38,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        [Permission(PermissionTypes.EmployeeShiftCreate)]
+        [Permission(PermissionTypes.ShiftCreate)]
         public async Task<ActionResult<ShiftDto>> Create([FromBody] CreateShiftDto dto)
         {
             return await _service.Create(dto);
@@ -44,7 +46,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpPut("{id}")]
 
-        [Permission(PermissionTypes.EmployeeShiftUpdate)]
+        [Permission(PermissionTypes.ShiftUpdate)]
         public async Task<ActionResult<ShiftDto>> Update(int id, [FromBody] UpdateShiftDto dto)
         {
             var shift = await _service.Update(id, dto);
@@ -56,7 +58,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Permission(PermissionTypes.EmployeeShiftDelete)]
+        [Permission(PermissionTypes.ShiftDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var shift = await _service.GetById(id);
@@ -69,7 +71,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("import")]
-        [Permission(PermissionTypes.EmployeeShiftCreate)]
+        [Permission(PermissionTypes.ShiftCreate)]
         public async Task<ActionResult> Import([FromForm] IFormFile file)
         {
             await _service.Import(file);

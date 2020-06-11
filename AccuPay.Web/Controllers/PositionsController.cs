@@ -1,6 +1,7 @@
 using AccuPay.Data.Helpers;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Positions;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class PositionsController : ControllerBase
     {
         private readonly PositionService _service;

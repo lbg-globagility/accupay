@@ -32,50 +32,50 @@ namespace AccuPay.Web.Core.Auth
         public const string CalendarUpdate = "Calendar:update";
         public const string CalendarDelete = "Calendar:delete";
 
-        public const string EmployeeTimeEntryRead = "EmployeeTimeEntry:read";
-        public const string EmployeeTimeEntryCreate = "EmployeeTimeEntry:create";
-        public const string EmployeeTimeEntryUpdate = "EmployeeTimeEntry:update";
-        public const string EmployeeTimeEntryDelete = "EmployeeTimeEntry:delete";
+        public const string TimeEntryRead = "TimeEntry:read";
+        public const string TimeEntryCreate = "TimeEntry:create";
+        public const string TimeEntryUpdate = "TimeEntry:update";
+        public const string TimeEntryDelete = "TimeEntry:delete";
 
-        public const string EmployeeShiftRead = "EmployeeShift:read";
-        public const string EmployeeShiftCreate = "EmployeeShift:create";
-        public const string EmployeeShiftUpdate = "EmployeeShift:update";
-        public const string EmployeeShiftDelete = "EmployeeShift:delete";
+        public const string ShiftRead = "Shift:read";
+        public const string ShiftCreate = "Shift:create";
+        public const string ShiftUpdate = "Shift:update";
+        public const string ShiftDelete = "Shift:delete";
 
-        public const string EmployeeTimeLogRead = "EmployeeTimeLog:read";
-        public const string EmployeeTimeLogCreate = "EmployeeTimeLog:create";
-        public const string EmployeeTimeLogUpdate = "EmployeeTimeLog:update";
-        public const string EmployeeTimeLogDelete = "EmployeeTimeLog:delete";
+        public const string TimeLogRead = "TimeLog:read";
+        public const string TimeLogCreate = "TimeLog:create";
+        public const string TimeLogUpdate = "TimeLog:update";
+        public const string TimeLogDelete = "TimeLog:delete";
 
-        public const string EmployeeOvertimeRead = "EmployeeOvertime:read";
-        public const string EmployeeOvertimeCreate = "EmployeeOvertime:create";
-        public const string EmployeeOvertimeUpdate = "EmployeeOvertime:update";
-        public const string EmployeeOvertimeDelete = "EmployeeOvertime:delete";
+        public const string OvertimeRead = "Overtime:read";
+        public const string OvertimeCreate = "Overtime:create";
+        public const string OvertimeUpdate = "Overtime:update";
+        public const string OvertimeDelete = "Overtime:delete";
 
-        public const string EmployeeLeaveRead = "EmployeeLeave:read";
-        public const string EmployeeLeaveCreate = "EmployeeLeave:create";
-        public const string EmployeeLeaveUpdate = "EmployeeLeave:update";
-        public const string EmployeeLeaveDelete = "EmployeeLeave:delete";
+        public const string LeaveRead = "Leave:read";
+        public const string LeaveCreate = "Leave:create";
+        public const string LeaveUpdate = "Leave:update";
+        public const string LeaveDelete = "Leave:delete";
 
-        public const string EmployeeOfficialBusinessRead = "EmployeeOfficialBusiness:read";
-        public const string EmployeeOfficialBusinessCreate = "EmployeeOfficialBusiness:create";
-        public const string EmployeeOfficialBusinessUpdate = "EmployeeOfficialBusiness:update";
-        public const string EmployeeOfficialBusinessDelete = "EmployeeOfficialBusiness:delete";
+        public const string OfficialBusinessRead = "OfficialBusiness:read";
+        public const string OfficialBusinessCreate = "OfficialBusiness:create";
+        public const string OfficialBusinessUpdate = "OfficialBusiness:update";
+        public const string OfficialBusinessDelete = "OfficialBusiness:delete";
 
-        public const string EmployeeSalaryRead = "EmployeeSalary:read";
-        public const string EmployeeSalaryCreate = "EmployeeSalary:create";
-        public const string EmployeeSalaryUpdate = "EmployeeSalary:update";
-        public const string EmployeeSalaryDelete = "EmployeeSalary:delete";
+        public const string SalaryRead = "Salary:read";
+        public const string SalaryCreate = "Salary:create";
+        public const string SalaryUpdate = "Salary:update";
+        public const string SalaryDelete = "Salary:delete";
 
-        public const string EmployeeAllowanceRead = "EmployeeAllowance:read";
-        public const string EmployeeAllowanceCreate = "EmployeeAllowance:create";
-        public const string EmployeeAllowanceUpdate = "EmployeeAllowance:update";
-        public const string EmployeeAllowanceDelete = "EmployeeAllowance:delete";
+        public const string AllowanceRead = "Allowance:read";
+        public const string AllowanceCreate = "Allowance:create";
+        public const string AllowanceUpdate = "Allowance:update";
+        public const string AllowanceDelete = "Allowance:delete";
 
-        public const string EmployeeLoanRead = "EmployeeLoan:read";
-        public const string EmployeeLoanCreate = "EmployeeLoan:create";
-        public const string EmployeeLoanUpdate = "EmployeeLoan:update";
-        public const string EmployeeLoanDelete = "EmployeeLoan:delete";
+        public const string LoanRead = "Loan:read";
+        public const string LoanCreate = "Loan:create";
+        public const string LoanUpdate = "Loan:update";
+        public const string LoanDelete = "Loan:delete";
 
         public const string PayPeriodRead = "PayPeriod:read";
         public const string PayPeriodCreate = "PayPeriod:create";
