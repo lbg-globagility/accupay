@@ -1,0 +1,42 @@
+<h1 class="mat-headline">Loan History</h1>
+
+<div class="mat-elevation-z1">
+  <table mat-table [dataSource]="dataSource" class="w-full">
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let transaction">
+        {{ transaction.deductionDate | date }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="amount">
+      <th mat-header-cell *matHeaderCellDef>Amount</th>
+      <td mat-cell *matCellDef="let transaction" class="text-right">
+        {{ -transaction.amount | amount }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="balance">
+      <th mat-header-cell *matHeaderCellDef>Balance</th>
+      <td mat-cell *matCellDef="let transaction" class="text-right">
+        {{ transaction.balance | amount }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.data.length <= 0">
+    No transactions were found.
+  </div>
+
+  <mat-paginator
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
+    [length]="totalCount"
+    [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
+  >
+  </mat-paginator>
+</div>

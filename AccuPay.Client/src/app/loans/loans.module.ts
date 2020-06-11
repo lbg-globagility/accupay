@@ -5,9 +5,17 @@ import { ViewLoanComponent } from './view-loan/view-loan.component';
 import { NewLoanComponent } from './new-loan/new-loan.component';
 import { EditLoanComponent } from './edit-loan/edit-loan.component';
 import { LoanFormComponent } from './loan-form/loan-form.component';
+import { LoanHistoryComponent } from './loan-history/loan-history.component';
 
 @NgModule({
-  declarations: [LoanListComponent, ViewLoanComponent, NewLoanComponent, EditLoanComponent, LoanFormComponent],
+  declarations: [
+    LoanListComponent,
+    ViewLoanComponent,
+    NewLoanComponent,
+    EditLoanComponent,
+    LoanFormComponent,
+    LoanHistoryComponent,
+  ],
   imports: [SharedModule],
 })
 export class LoansModule {}

@@ -5,6 +5,7 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { SelectItem } from 'src/app/core/shared/select-item';
 import { Loan } from 'src/app/loans/shared/loan';
+import { LoanHistory } from './shared/loan-history';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,18 @@ export class LoanService {
 
   getDeductionSchedules(): Observable<string[]> {
     return this.httpClient.get<string[]>(`${this.baseUrl}/deductionsechedules`);
+  }
+
+  getHistory(
+    options: PageOptions,
+    id: number
+  ): Observable<PaginatedList<LoanHistory>> {
+    const params = options ? options.toObject() : null;
+    return this.httpClient.get<PaginatedList<LoanHistory>>(
+      `${this.baseUrl}/history/${id}`,
+      {
+        params,
+      }
+    );
   }
 }

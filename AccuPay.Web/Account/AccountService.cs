@@ -38,6 +38,12 @@ namespace AccuPay.Web.Account
         public async Task<string> Login(string username, string password)
         {
             var user = await _users.FindByNameAsync(username);
+
+            if (user == null)
+            {
+                throw LoginException.CredentialsMismatch();
+            }
+
             var result = await _signIn.PasswordSignInAsync(user, password, false, false);
 
             if (!result.Succeeded)
