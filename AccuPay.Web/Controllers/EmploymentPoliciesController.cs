@@ -2,8 +2,6 @@ using AccuPay.Data.Helpers;
 using AccuPay.Web.EmploymentPolicies.Models;
 using AccuPay.Web.EmploymentPolicies.Services;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers

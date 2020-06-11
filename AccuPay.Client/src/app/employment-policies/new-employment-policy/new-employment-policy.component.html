@@ -1,0 +1,84 @@
+<h1 class="mat-headline">Employment Policy</h1>
+
+<form [formGroup]="form">
+  <div>
+    <mat-form-field>
+      <mat-label>Name</mat-label>
+      <input matInput type="text" required formControlName="name" />
+      <mat-error>Name is required</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Work Days Per Year</mat-label>
+      <input matInput type="number" formControlName="workDaysPerYear" />
+    </mat-form-field>
+  </div>
+
+  <div>
+    <mat-form-field>
+      <mat-label>Grace Period</mat-label>
+      <input matInput type="number" formControlName="gracePeriod" />
+      <span matSuffix>mins</span>
+    </mat-form-field>
+  </div>
+
+  <mat-card>
+    <h3>Regular Holiday</h3>
+    <mat-card-content>
+      <div>
+        <mat-checkbox>Has regular holiday pay</mat-checkbox>
+      </div>
+      <div>
+        <mat-checkbox>Required to work last day for holiday pay</mat-checkbox>
+      </div>
+      <div>
+        <mat-radio-group>
+          <mat-radio-button>By hourly rate</mat-radio-button>
+          <mat-radio-button>By daily rate</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <h3>Rest Day</h3>
+    <div>
+      <mat-checkbox>Has rest day pay</mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox>Ignore shift</mat-checkbox>
+    </div>
+  </mat-card>
+
+  <mat-card>
+    <h3>Night Differential</h3>
+    <mat-card-content>
+      <div>
+        <mat-checkbox>Has night differential pay</mat-checkbox>
+      </div>
+      <div>
+        <mat-checkbox>Has night differential overtime pay</mat-checkbox>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <h3>Special Non-Working Holiday</h3>
+    <div>
+      <mat-checkbox>Has special non-working holiday pay?</mat-checkbox>
+    </div>
+  </mat-card>
+
+  <mat-card>
+    <div>
+      <mat-checkbox>Compute absences</mat-checkbox>
+    </div>
+  </mat-card>
+
+  <mat-checkbox>Compute lates</mat-checkbox>
+  <mat-checkbox>Compute undertime</mat-checkbox>
+
+  <button mat-raised-button color="primary" (click)="save()">SAVE</button>
+</form>
