@@ -37,6 +37,22 @@ namespace AccuPay.Data.Repositories
             return timeEntriesByEmployee;
         }
 
+        public async Task<IEnumerable<TimeEntry>> GetFullTimeEntryByEmployeeAndDate(
+            int organizationId,
+            int employeeId,
+            TimePeriod timePeriod)
+        {
+            var query = from a in _context.TimeEntries
+                        join b in _context.TimeLogs
+                        on new { a.Date, a.EmployeeID } equals new { Date = b.LogDate, b.EmployeeID }
+                        select a;
+
+            var timeEntries = await query.ToListAsync();
+
+            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod)
+                .ToListAsync();
+        }
+
         public async Task<IEnumerable<TimeEntry>> GetByDatePeriodAsync(int organizationId,
                                                                         TimePeriod timePeriod)
         {

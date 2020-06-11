@@ -8,6 +8,10 @@ namespace AccuPay.Web.TimeEntries.Models
 
         public DateTime Date { get; set; }
 
+        public TimeSpan TimeIn { get; set; }
+
+        public TimeSpan TimeOut { get; set; }
+
         public decimal WorkHours { get; set; }
 
         public decimal OvertimeHours { get; set; }
