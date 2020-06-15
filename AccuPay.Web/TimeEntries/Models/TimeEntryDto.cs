@@ -22,6 +22,12 @@ namespace AccuPay.Web.TimeEntries.Models
 
         public decimal RegularHours { get; set; }
 
+        public DatePeriodDto Leave { get; set; }
+
+        public decimal LeaveHours { get; set; }
+
+        public decimal LeavePay { get; set; }
+
         public List<DatePeriodDto> Overtimes { get; set; }
 
         public decimal OvertimeHours { get; set; }
@@ -40,6 +46,30 @@ namespace AccuPay.Web.TimeEntries.Models
 
         public decimal LateDeduction { get; set; }
 
+        public decimal RestDayHours { get; set; }
+
+        public decimal RestDayAmount { get; set; }
+
+        public decimal RestDayOTHours { get; set; }
+
+        public decimal RestDayOTPay { get; set; }
+
+        public decimal SpecialHolidayHours { get; set; }
+
+        public decimal SpecialHolidayPay { get; set; }
+
+        public decimal SpecialHolidayOTHours { get; set; }
+
+        public decimal SpecialHolidayOTPay { get; set; }
+
+        public decimal RegularHolidayHours { get; set; }
+
+        public decimal RegularHolidayPay { get; set; }
+
+        public decimal RegularHolidayOTHours { get; set; }
+
+        public decimal RegularHolidayOTPay { get; set; }
+
         public decimal UndertimeHours { get; set; }
 
         public decimal UndertimeDeduction { get; set; }
@@ -50,22 +80,40 @@ namespace AccuPay.Web.TimeEntries.Models
 
         internal static TimeEntryDto Convert(TimeEntryData data)
         {
+            var leaveIsWholeDay = data.Leave != null &&
+                                data.Leave.StartTimeFull == null && data.Leave?.EndTimeFull == null;
+
             return new TimeEntryDto()
             {
                 Id = data.Id,
                 EmployeeId = data.EmployeeId,
                 Date = data.Date,
-                Shift = new DatePeriodDto(data.Shift?.StartTimeFull, data.Shift?.EndTimeFull),
-                TimeLog = new DatePeriodDto(data.TimeLog?.TimeInFull, data.TimeLog?.TimeOutFull),
-                OfficialBusiness = new DatePeriodDto(data.OfficialBusiness?.StartTimeFull, data.OfficialBusiness?.EndTimeFull),
+                Shift = DatePeriodDto.Create(data.Shift?.StartTimeFull, data.Shift?.EndTimeFull),
+                TimeLog = DatePeriodDto.Create(data.TimeLog?.TimeInFull, data.TimeLog?.TimeOutFull),
+                OfficialBusiness = DatePeriodDto.Create(data.OfficialBusiness?.StartTimeFull, data.OfficialBusiness?.EndTimeFull),
                 RegularHours = data.TimeEntry.RegularHours,
-                Overtimes = data.Overtimes.Select(x => new DatePeriodDto(x.OTStartTimeFull, x.OTEndTimeFull)).ToList(),
+                Leave = DatePeriodDto.Create(data.Leave?.StartTimeFull, data.Leave?.EndTimeFull, leaveIsWholeDay),
+                LeaveHours = data.TimeEntry.TotalLeaveHours,
+                LeavePay = data.TimeEntry.LeavePay,
+                Overtimes = data.Overtimes.Select(x => DatePeriodDto.Create(x.OTStartTimeFull, x.OTEndTimeFull)).ToList(),
                 OvertimeHours = data.TimeEntry.OvertimeHours,
                 OvertimePay = data.TimeEntry.OvertimePay,
                 NightDiffHours = data.TimeEntry.NightDiffHours,
                 NightDiffPay = data.TimeEntry.NightDiffPay,
                 NightDiffOTHours = data.TimeEntry.NightDiffOTHours,
                 NightDiffOTPay = data.TimeEntry.NightDiffOTPay,
+                RestDayHours = data.TimeEntry.RestDayHours,
+                RestDayAmount = data.TimeEntry.RestDayPay,
+                RestDayOTHours = data.TimeEntry.RestDayOTHours,
+                RestDayOTPay = data.TimeEntry.RestDayOTPay,
+                SpecialHolidayHours = data.TimeEntry.SpecialHolidayHours,
+                SpecialHolidayPay = data.TimeEntry.SpecialHolidayPay,
+                SpecialHolidayOTHours = data.TimeEntry.SpecialHolidayOTHours,
+                SpecialHolidayOTPay = data.TimeEntry.SpecialHolidayOTPay,
+                RegularHolidayHours = data.TimeEntry.RegularHolidayHours,
+                RegularHolidayPay = data.TimeEntry.RegularHolidayPay,
+                RegularHolidayOTHours = data.TimeEntry.RegularHolidayOTHours,
+                RegularHolidayOTPay = data.TimeEntry.RegularHolidayOTPay,
                 LateHours = data.TimeEntry.LateHours,
                 LateDeduction = data.TimeEntry.LateDeduction,
                 UndertimeHours = data.TimeEntry.UndertimeHours,

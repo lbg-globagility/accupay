@@ -17,6 +17,18 @@ export interface TimeEntry {
   nightDiffPay: number;
   nightDiffOTHours: number;
   nightDiffOTPay: number;
+  restDayHours: number;
+  restDayAmount: number;
+  restDayOTHours: number;
+  restDayOTPay: number;
+  specialHolidayHours: number;
+  specialHolidayPay: number;
+  specialHolidayOTHours: number;
+  specialHolidayOTPay: number;
+  regularHolidayHours: number;
+  regularHolidayPay: number;
+  regularHolidayOTHours: number;
+  regularHolidayOTPay: number;
   lateHours: number;
   lateDeduction: number;
   undertimeHours: number;

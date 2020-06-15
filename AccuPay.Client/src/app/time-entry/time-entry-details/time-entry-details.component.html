@@ -112,14 +112,16 @@
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
       <tr
         mat-row
-        *matRowDef="let row; columns: displayedColumns"
+        *matRowDef="let row; columns: displayedColumns; let employee"
         appExpandableRowTrigger
         (click)="toggleExpansion(row)"
+        [ngClass]="{ 'row-outline': expandedEmployee === employee }"
       ></tr>
       <tr
         mat-row
-        *matRowDef="let row; columns: ['expandedDetail']"
+        *matRowDef="let row; columns: ['expandedDetail']; let employee"
         appExpandableRowContainer
+        [ngClass]="{ 'row-outline': expandedEmployee === employee }"
       ></tr>
     </table>
 

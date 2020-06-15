@@ -6,14 +6,23 @@ namespace AccuPay.Web.TimeEntries.Models
     {
         public DateTime? Start { get; }
         public DateTime? End { get; }
+        public bool IsWholeDay { get; }
 
-        public DatePeriodDto(DateTime? start, DateTime? end)
+        private DatePeriodDto(DateTime? start, DateTime? end, bool isWholeDay)
         {
-            if (start != null || end != null)
+            IsWholeDay = isWholeDay;
+            Start = start;
+            End = end;
+        }
+
+        public static DatePeriodDto Create(DateTime? start, DateTime? end, bool isWholeDay = false)
+        {
+            if (start == null && end == null && isWholeDay == false)
             {
-                Start = start;
-                End = end;
+                return null;
             }
+
+            return new DatePeriodDto(start, end, isWholeDay);
         }
     }
 }
