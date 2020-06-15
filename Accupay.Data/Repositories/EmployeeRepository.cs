@@ -145,7 +145,7 @@ namespace AccuPay.Data.Repositories
         {
             var query = _context.Employees
                 .Where(x => x.OrganizationID == organizationId)
-                .OrderByDescending(x => x.LastName)
+                .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName)
                 .ThenBy(x => x.EmployeeNo)
                 .AsQueryable();
