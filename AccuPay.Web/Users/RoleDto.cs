@@ -10,6 +10,8 @@ namespace AccuPay.Web.Users
 
         public string Name { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public ICollection<RolePermissionDto> RolePermissions { get; set; }
 
         public RoleDto()

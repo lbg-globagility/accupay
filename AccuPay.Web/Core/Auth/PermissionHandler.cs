@@ -21,6 +21,11 @@ namespace AccuPay.Web.Core.Auth
 
             if (role is null) return;
 
+            if (role.IsAdmin)
+            {
+                context.Succeed(requirement);
+            }
+
             if (role.HasPermission(requirement.Permission, requirement.Action))
             {
                 context.Succeed(requirement);

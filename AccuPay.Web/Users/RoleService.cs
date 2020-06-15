@@ -111,15 +111,17 @@ namespace AccuPay.Web.Users
         public async Task<RoleDto> Update(Guid roleId, UpdateRoleDto dto)
         {
             var role = await _roleRepository.GetById(roleId);
+
+            if (role.IsAdmin)
+            {
+                throw new Exception("`Admin` roles cannot be modified.");
+            }
+
             role.Name = dto.Name;
 
             await MapRolePermissions(role, dto.RolePermissions);
 
-            var result = await _roles.UpdateAsync(role);
-            if (!result.Succeeded)
-            {
-                throw new Exception();
-            }
+            await _roleRepository.Update(role);
 
             return ConvertToDto(role);
         }
@@ -161,7 +163,8 @@ namespace AccuPay.Web.Users
             var dto = new RoleDto()
             {
                 Id = role.Id,
-                Name = role.Name
+                Name = role.Name,
+                IsAdmin = role.IsAdmin
             };
 
             dto.RolePermissions = role.RolePermissions?

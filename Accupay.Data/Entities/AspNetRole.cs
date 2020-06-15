@@ -10,6 +10,8 @@ namespace AccuPay.Data.Entities
     {
         public int ClientId { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public virtual ICollection<RolePermission> RolePermissions { get; set; }
 
         public AspNetRole()
