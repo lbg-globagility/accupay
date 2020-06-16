@@ -188,6 +188,33 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<TimeLog>(timeLogs, count);
         }
 
+        internal async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployee(
+            int organizationId,
+            PageOptions options,
+            DateTime dateFrom,
+            DateTime dateTo)
+        {
+            // TODO: might want to use employeeRepository for this query
+            var query = _context.Employees
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName);
+
+            var employees =  await query.Page(options).ToListAsync();
+            var total = await query.CountAsync();
+
+            var employeeIds = employees.Select(x => x.RowID);
+
+            var timeLogs = await _context.TimeLogs
+                .Include(x => x.Branch)
+                .Where(x => employeeIds.Contains(x.EmployeeID))
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => dateFrom <= x.LogDate && x.LogDate <= dateTo)
+                .ToListAsync();
+
+            return (employees, total, timeLogs);
+        }
+
         internal async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.TimeLogs

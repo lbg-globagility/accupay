@@ -22,6 +22,15 @@ namespace AccuPay.Data.Services
             return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
 
+        public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog>)> ListByEmployee(
+            int organizationId,
+            PageOptions options,
+            DateTime dateFrom,
+            DateTime dateTo)
+        {
+            return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo);
+        }
+
         public async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
                                         IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {

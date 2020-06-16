@@ -7,6 +7,7 @@ using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -37,6 +38,14 @@ namespace AccuPay.Web.TimeLogs
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
             return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+        }
+
+        public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(PageOptions options, DateTime dateFrom, DateTime dateTo)
+        {
+            var (employees, total, timelogs) = await _service.ListByEmployee(_currentUser.OrganizationId, options, dateFrom, dateTo);
+            var dtos = employees.Select(t => ConvertToDto(t, timelogs)).ToList();
+
+            return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
         }
 
         internal async Task<ActionResult<TimeLogDto>> Create(CreateTimeLogDto dto)
@@ -137,6 +146,35 @@ namespace AccuPay.Web.TimeLogs
             timeLog.BranchID = dto.BranchId;
             timeLog.TimeInFull = dto.StartTime;
             timeLog.TimeOutFull = dto.EndTime;
+        }
+
+        private static EmployeeTimeLogsDto ConvertToDto(Employee employee, ICollection<TimeLog> timeLogs)
+        {
+            var dto = new EmployeeTimeLogsDto()
+            {
+                EmployeeId = employee.RowID,
+                EmployeeNo = employee.EmployeeNo,
+                FullName = employee.FullName,
+                TimeLogs = timeLogs
+                    .Where(t => t.EmployeeID == employee.RowID)
+                    .Select(t => ConvertToEmployeeTimeLogDto(t))
+                    .ToList()
+            };
+
+            return dto;
+        }
+
+        private static EmployeeTimeLogsDto.EmployeeTimeLogDto ConvertToEmployeeTimeLogDto(TimeLog timeLog)
+        {
+            var dto = new EmployeeTimeLogsDto.EmployeeTimeLogDto()
+            {
+                Id = timeLog.RowID,
+                Date = timeLog.LogDate,
+                StartTime = timeLog.TimeStampIn,
+                EndTime = timeLog.TimeStampOut,
+            };
+
+            return dto;
         }
     }
 }

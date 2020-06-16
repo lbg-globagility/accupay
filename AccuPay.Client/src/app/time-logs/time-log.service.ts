@@ -4,12 +4,12 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { TimeLog } from 'src/app/time-logs/shared/time-log';
+import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TimeLogService {
-  
   baseUrl = 'api/timelogs';
 
   constructor(private httpClient: HttpClient) {}
@@ -20,6 +20,22 @@ export class TimeLogService {
     return this.httpClient.get<PaginatedList<TimeLog>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  listByEmployee(
+    options: PageOptions,
+    dateFrom: Date,
+    dateTo: Date
+  ): Observable<PaginatedList<EmployeeTimeLogs>> {
+    const params = options ? options.toObject() : null;
+    params.dateFrom = dateFrom.toISOString();
+    params.dateTo = dateTo.toISOString();
+    return this.httpClient.get<PaginatedList<EmployeeTimeLogs>>(
+      `${this.baseUrl}/employees`,
+      {
+        params,
+      }
+    );
   }
 
   get(id: number): Observable<TimeLog> {
@@ -35,7 +51,7 @@ export class TimeLogService {
   }
 
   create(timeLog: TimeLog): Observable<TimeLog> {
-    console.log(timeLog)
+    console.log(timeLog);
     return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);
   }
 

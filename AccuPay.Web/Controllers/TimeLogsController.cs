@@ -4,6 +4,7 @@ using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -25,6 +26,16 @@ namespace AccuPay.Web.Controllers
         public async Task<ActionResult<PaginatedList<TimeLogDto>>> List([FromQuery] PageOptions options, string term)
         {
             return await _service.PaginatedList(options, term);
+        }
+
+        [HttpGet("employees")]
+        [Permission(PermissionTypes.TimeLogRead)]
+        public async Task<ActionResult<PaginatedList<EmployeeTimeLogsDto>>> ListByEmployee(
+            [FromQuery] PageOptions options,
+            DateTime dateFrom,
+            DateTime dateTo)
+        {
+            return await _service.ListByEmployee(options, dateFrom, dateTo);
         }
 
         [HttpGet("{id}")]

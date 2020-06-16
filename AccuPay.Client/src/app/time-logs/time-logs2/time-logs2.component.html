@@ -1,0 +1,61 @@
+<h1 class="mat-headline">
+  {{ dateFrom.format("MM/DD/YYYY") }} - {{ dateTo.format("MM/DD/YYYY") }}
+</h1>
+
+<div>
+  <mat-form-field appearance="standard">
+    <mat-label>Search</mat-label>
+    <input matInput type="text" />
+  </mat-form-field>
+</div>
+
+<div class="mat-elevation-z1">
+  <table mat-table [dataSource]="dataSource2" class="w-full">
+    <ng-container matColumnDef="employee">
+      <th mat-header-cell *matHeaderCellDef>Employee</th>
+      <td mat-cell *matCellDef="let employee">
+        <div class="flex items-center">
+          <img
+            class="block rounded-full"
+            height="40"
+            appImgFallback
+            src="/api/employees/{{ employee.employeeId }}/image"
+          />
+          <div class="ml-2">
+            <a routerLink="/employees/{{ employee.employeeId }}">
+              <div>{{ employee.fullName }}</div>
+            </a>
+            <div class="text-xs mt-2">#{{ employee.employeeNo }}</div>
+          </div>
+        </div>
+      </td>
+    </ng-container>
+
+    <ng-container *ngFor="let date of dates" [matColumnDef]="date.title">
+      <th mat-header-cell *matHeaderCellDef>
+        <p>{{ date.title }}</p>
+        <p>{{ date.dayOfWeek }}</p>
+      </th>
+      <td mat-cell *matCellDef="let employee">
+        <p class="text-xs">
+          {{ getTimeIn(employee, date.date) | date: "shortTime" }}
+        </p>
+        <p class="text-xs">
+          {{ getTimeOut(employee, date.date) | date: "shortTime" }}
+        </p>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <mat-paginator
+    [pageIndex]="1"
+    [pageSize]="25"
+    [pageSizeOptions]="[10, 5, 25, 100]"
+    [length]="100"
+    [showFirstLastButtons]="true"
+  >
+  </mat-paginator>
+</div>
