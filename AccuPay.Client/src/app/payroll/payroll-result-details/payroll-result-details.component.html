@@ -1,8 +1,18 @@
 <h1 class="mat-headline">Result</h1>
-<button mat-raised-button id="style" :focus (click)="filterButton('Success')">
+<button
+  mat-raised-button
+  id="style"
+  :focus
+  (click)="filterButton(successFilter)"
+>
   Success ({{ result.successes }})
 </button>
-<button mat-raised-button id="style" :focus (click)="filterButton('Error')">
+<button
+  mat-raised-button
+  id="style"
+  :focus
+  (click)="filterButton(failedFilter)"
+>
   Failed ({{ result.failures }})
 </button>
 <div class="scroll">
@@ -35,4 +45,8 @@
   <div class="app-empty-table" *ngIf="dataSource?.length <= 0">
     No result were found.
   </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onClose()">OK</button>
 </div>

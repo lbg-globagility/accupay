@@ -1,10 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { PayrollResultDetails } from '../shared/payroll-result-details';
 import { PayrollResult } from '../shared/payroll-result';
-import { Sort } from '@angular/material/sort';
-import { PayPeriodService } from '../services/payperiod.service';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { Subject } from 'rxjs';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-payroll-result-details',
@@ -12,13 +9,18 @@ import { Subject } from 'rxjs';
   styleUrls: ['./payroll-result-details.component.scss'],
 })
 export class PayrollResultDetailsComponent implements OnInit {
-  readonly displayedColumns: string[] = [
+  displayedColumns: string[] = [];
+
+  readonly displayedSuccessColumns: string[] = ['employeeNo', 'employeeName'];
+  readonly displayedFailedColumns: string[] = [
     'employeeNo',
     'employeeName',
     'description',
   ];
 
-  filter: string = 'Success';
+  readonly successFilter: string = 'Success';
+  readonly failedFilter: string = 'Error';
+  filter: string = this.successFilter;
 
   result: PayrollResult;
 
@@ -27,20 +29,30 @@ export class PayrollResultDetailsComponent implements OnInit {
   details: PayrollResultDetails[];
 
   constructor(
-    private payPeriodService: PayPeriodService,
+    private dialogRef: MatDialogRef<PayrollResultDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) private data: any
   ) {
     this.result = data.result;
   }
 
   ngOnInit(): void {
+    this.displayedColumns = this.displayedSuccessColumns;
     this.dataSource = this.result.details.filter(
       (x) => x.status === this.filter
     );
   }
 
   filterButton(filter: string): void {
+    if (filter == this.successFilter) {
+      this.displayedColumns = this.displayedSuccessColumns;
+    } else {
+      this.displayedColumns = this.displayedFailedColumns;
+    }
     this.filter = filter;
     this.dataSource = this.result.details.filter((x) => x.status === filter);
+  }
+
+  onClose(): void {
+    this.dialogRef.close();
   }
 }

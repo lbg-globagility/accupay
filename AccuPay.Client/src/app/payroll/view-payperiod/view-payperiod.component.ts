@@ -67,9 +67,9 @@ export class ViewPayPeriodComponent implements OnInit {
     this.payPeriodService.calculate(this.payPeriodId).subscribe({
       next: (data) => {
         this.payrollResult = data;
-        this.snackbar.open('Finished calculating payroll.', 'OK');
         this.loadPaystubs();
         this.showDetails();
+        this.snackbar.dismiss();
       },
       error: (err) =>
         this.errorHandler.badRequest(err, 'Failed to calculate payroll'),

@@ -4,7 +4,7 @@ import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { StartPayrollDialogComponent } from 'src/app/payroll/start-payroll-dialog/start-payroll-dialog.component';
-import { filter, map, mergeMap } from 'rxjs/operators';
+import { filter, mergeMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
@@ -34,7 +34,6 @@ export class PayrollComponent implements OnInit {
 
   constructor(
     private payperiodService: PayPeriodService,
-    private router: Router,
     private dialog: MatDialog
   ) {}
 
