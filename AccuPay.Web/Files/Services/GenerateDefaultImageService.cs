@@ -53,7 +53,7 @@ namespace AccuPay.Web.Files.Services
             stream.Position = 0;
 
             var randomId = DateTime.UtcNow.ToFileTime();
-            var filename = $"{employee.RowID.Value.ToString()}-{randomId}.jpg";
+            var filename = $"{employee.RowID.Value}-{randomId}.jpg";
 
             return new VirtualFile(filename, stream);
         }
@@ -108,7 +108,7 @@ namespace AccuPay.Web.Files.Services
         private ColorCombination PickColorCombination(Employee employee)
         {
             var colorCombinations = ColorCombination.ColorCombinations();
-            var code = GetCode(employee.EmailAddress, colorCombinations.Count);
+            var code = GetCode(employee.FullNameWithMiddleInitialLastNameFirst, colorCombinations.Count);
             var colorCombination = colorCombinations[code];
 
             return colorCombination;
