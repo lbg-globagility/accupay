@@ -1,17 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
-import { TimeEntryService } from '../time-entry.service';
-import { LoadingState } from 'src/app/core/states/loading-state';
-import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { Sort } from '@angular/material/sort';
-import { auditTime } from 'rxjs/operators';
 import { Employee } from '../shared/employee';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
-import { Constants } from 'src/app/core/shared/constants';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
 
@@ -31,10 +25,10 @@ export class TimeEntryComponent implements OnInit {
 
   selectedPayPeriod: PayPeriod;
 
-  savingState: LoadingState = new LoadingState();
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   sort: Sort = {
-    active: 'lastName',
+    active: 'cutoff',
     direction: '',
   };
 
@@ -49,12 +43,7 @@ export class TimeEntryComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private payPeriodService: PayPeriodService) {
-    // this.modelChanged = new Subject();
-    // this.modelChanged
-    //   .pipe(auditTime(Constants.ThrottleTime))
-    //   .subscribe(() => this.load());
-  }
+  constructor(private payPeriodService: PayPeriodService) {}
 
   ngOnInit(): void {
     this.loadLatest();
@@ -62,9 +51,11 @@ export class TimeEntryComponent implements OnInit {
   }
 
   loadLatest() {
-    this.payPeriodService
-      .getLatest()
-      .subscribe((payPeriod) => (this.latestPayPeriod = payPeriod));
+    this.payPeriodService.getLatest().subscribe((payPeriod) => {
+      this.latestPayPeriod = payPeriod;
+
+      this.isLoading.next(true);
+    });
   }
 
   loadList() {

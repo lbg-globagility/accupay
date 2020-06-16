@@ -103,15 +103,14 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Leave> GetByIdAsync(int id)
         {
-            return await _context.Leaves
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.Leaves.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         public async Task<Leave> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Leaves
-                                .Include(x => x.Employee)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
@@ -120,16 +119,17 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int employeeId)
         {
-            return await _context.Leaves.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
+            return await _context.Leaves
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        public async Task<PaginatedListResult<Leave>> GetPaginatedListAsync(PageOptions options,
-                                                                            int organizationId,
-                                                                            string searchTerm = "",
-                                                                            DateTime? dateFrom = null,
-                                                                            DateTime? dateTo = null)
+        public async Task<PaginatedListResult<Leave>> GetPaginatedListAsync(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             var query = _context.Leaves
                 .Include(x => x.Employee)
@@ -166,18 +166,24 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Leave>(leaves, count);
         }
 
-        public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByTimePeriod(organizationId, timePeriod).
-                            Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase()).
-                            ToList();
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                    .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
+                    .ToList();
         }
 
-        public async Task<IEnumerable<Leave>> GetByTimePeriodAsync(int organizationId,
-                                                                TimePeriod timePeriod)
+        public async Task<IEnumerable<Leave>> GetAllApprovedByEmployeeAndDatePeriod(int organizationId, int employeeId, TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId, timePeriod).
-                            ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                    .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
+                    .Where(x => x.EmployeeID == employeeId)
+                    .ToListAsync();
+        }
+
+        public async Task<IEnumerable<Leave>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
         public async Task<IEnumerable<Leave>> GetFilteredAllAsync(Expression<Func<Leave, bool>> filter)
@@ -204,13 +210,12 @@ namespace AccuPay.Data.Repositories
 
         #region Private helper methods
 
-        private IQueryable<Leave> CreateBaseQueryByTimePeriod(int organizationId,
-                                                            TimePeriod timePeriod)
+        private IQueryable<Leave> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.Leaves.
-                        Where(l => l.OrganizationID == organizationId).
-                        Where(l => timePeriod.Start <= l.StartDate).
-                        Where(l => l.EndDate <= timePeriod.End);
+            return _context.Leaves
+                .Where(l => l.OrganizationID == organizationId)
+                .Where(l => datePeriod.Start <= l.StartDate)
+                .Where(l => l.EndDate <= datePeriod.End);
         }
 
         #endregion Private helper methods

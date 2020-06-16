@@ -26,6 +26,7 @@ namespace AccuPay.Web.Employees.Models
             FirstName = employee.FirstName;
             MiddleName = employee.MiddleName;
             LastName = employee.LastName;
+            FullName = employee.FullName;
             Surname = employee.Surname;
             EmployeeNo = employee.EmployeeNo;
             Tin = employee.TinNo;

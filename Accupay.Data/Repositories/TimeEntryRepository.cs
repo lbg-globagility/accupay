@@ -16,35 +16,35 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public ICollection<TimeEntry> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                    ToList();
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
         }
 
-        public async Task<IEnumerable<TimeEntry>> GetByDatePeriodAsync(int organizationId,
-                                                                        TimePeriod timePeriod)
+        public async Task<ICollection<TimeEntry>> GetByDatePeriodAsync(
+            int organizationId,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                        ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
-        public async Task<IEnumerable<TimeEntry>> GetByEmployeeAndDatePeriodAsync(int organizationId,
-                                                                                int employeeId,
-                                                                                TimePeriod timePeriod)
+        public async Task<ICollection<TimeEntry>> GetByEmployeeAndDatePeriodAsync(
+            int organizationId,
+            int employeeId,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                        Where(x => x.EmployeeID == employeeId).
-                        ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(x => x.EmployeeID == employeeId)
+                .OrderBy(x => x.Date)
+                .ToListAsync();
         }
 
-        private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId,
-                                                                    TimePeriod timePeriod)
+        private IQueryable<TimeEntry> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.TimeEntries.
-                    Where(x => x.OrganizationID == organizationId).
-                    Where(x => timePeriod.Start <= x.Date).
-                    Where(x => x.Date <= timePeriod.End);
+            return _context.TimeEntries
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => datePeriod.Start <= x.Date)
+                .Where(x => x.Date <= datePeriod.End);
         }
     }
 }

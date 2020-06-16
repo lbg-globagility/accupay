@@ -8,7 +8,7 @@ namespace AccuPay.Web.TimeEntries
     {
         public TotalTimeEntryHours TotalTimeEntry { get; private set; }
 
-        internal new static TimeEntryEmployeeDto Convert(Employee employee)
+        public static new TimeEntryEmployeeDto Convert(Employee employee)
         {
             if (employee == null) return null;
 
@@ -16,7 +16,14 @@ namespace AccuPay.Web.TimeEntries
 
             dto.ApplyData(employee);
 
-            dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(employee.TimeEntries);
+            if (employee.TimeEntries == null)
+            {
+                dto.TotalTimeEntry = null;
+            }
+            else
+            {
+                dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(employee.TimeEntries);
+            }
 
             return dto;
         }

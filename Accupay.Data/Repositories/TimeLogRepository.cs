@@ -117,46 +117,58 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-
         #endregion CRUD
 
         #region Queries
 
-        public async Task<IEnumerable<TimeLog>> GetByEmployeeAndDateAsync(int employeeId, DateTime date)
+        public async Task<ICollection<TimeLog>> GetByEmployeeAndDateAsync(int employeeId, DateTime date)
         {
-            return await _context.TimeLogs.
-                        Where(x => x.EmployeeID == employeeId).
-                        Where(x => x.LogDate == date).
-                        ToListAsync();
+            return await _context.TimeLogs
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.LogDate == date)
+                .ToListAsync();
         }
 
-        public IEnumerable<TimeLog> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public ICollection<TimeLog> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(timePeriod, _context).
-                    Where(x => x.OrganizationID == organizationId).
-                    ToList();
+            return CreateBaseQueryByDatePeriod(datePeriod)
+                .Where(x => x.OrganizationID == organizationId)
+                .ToList();
         }
 
-        public async Task<IEnumerable<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
-                                                                                    int[] employeeIds,
-                                                                                    TimePeriod timePeriod)
+        public async Task<ICollection<TimeLog>> GetLatestByEmployeeAndDatePeriodAsync(
+            int employeeId,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByDatePeriod(timePeriod, _context).
-                        Include(x => x.Employee).
-                        Where(x => employeeIds.Contains(x.EmployeeID.Value)).
-                        ToListAsync();
+            return await CreateBaseQueryByDatePeriod(datePeriod)
+                .Where(x => x.EmployeeID == employeeId)
+                .OrderByDescending(x => x.LastUpd)
+                .GroupBy(x => x.LogDate)
+                .Select(x => x.FirstOrDefault())
+                .OrderBy(x => x.LogDate)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
+            int[] employeeIds,
+            TimePeriod datePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(datePeriod)
+                .Include(x => x.Employee)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
         }
 
         internal async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.TimeLogs
-                                .Include(x => x.Employee)
-                                .Include(x => x.Branch)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .ThenByDescending(x => x.LogDate)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Include(x => x.Branch)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .ThenByDescending(x => x.LogDate)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -179,30 +191,29 @@ namespace AccuPay.Data.Repositories
         internal async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.TimeLogs
-                                .Include(b => b.Branch)
-                                .Include(x => x.Employee)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(b => b.Branch)
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         internal async Task<TimeLog> GetByIdAsync(int id)
         {
-            return await _context.TimeLogs
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.TimeLogs.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         internal async Task<TimeLog> GetByIdAsync(CompositeKey key)
         {
             return await _context.TimeLogs
-                                .Where(x => x.EmployeeID == key.EmployeeId)
-                                .Where(x => x.LogDate == key.Date)
-                                .FirstOrDefaultAsync();
+                .Where(x => x.EmployeeID == key.EmployeeId)
+                .Where(x => x.LogDate == key.Date)
+                .FirstOrDefaultAsync();
         }
 
-        private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod timePeriod, PayrollContext context)
+        private IQueryable<TimeLog> CreateBaseQueryByDatePeriod(TimePeriod datePeriod)
         {
-            return context.TimeLogs.
-                        Where(x => timePeriod.Start <= x.LogDate).
-                        Where(x => x.LogDate <= timePeriod.End);
+            return _context.TimeLogs
+                .Where(x => datePeriod.Start <= x.LogDate)
+                .Where(x => x.LogDate <= datePeriod.End);
         }
 
         #endregion Queries

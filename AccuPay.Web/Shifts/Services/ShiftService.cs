@@ -128,8 +128,8 @@ namespace AccuPay.Web.Shifts.Services
                 EmployeeName = shift.Employee?.FullNameWithMiddleInitialLastNameFirst,
                 EmployeeType = shift.Employee?.EmployeeType,
                 Date = shift.DateSched,
-                StartTime = shift.ShiftStartTimeFull,
-                EndTime = shift.ShiftEndTimeFull,
+                StartTime = shift.StartTimeFull,
+                EndTime = shift.EndTimeFull,
                 BreakStartTime = shift.ShiftBreakStartTimeFull,
                 BreakLength = shift.BreakLength,
                 IsOffset = shift.IsRestDay

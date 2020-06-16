@@ -30,26 +30,27 @@ namespace AccuPay.Data.Repositories
         internal async Task<OfficialBusiness> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.OfficialBusinesses
-                                .Include(x => x.Employee)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        internal async Task<IEnumerable<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
+        internal async Task<ICollection<OfficialBusiness>> GetByEmployeeAsync(int employeeId)
         {
-            return await _context.OfficialBusinesses.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
+            return await _context.OfficialBusinesses
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(PageOptions options,
-                                                                                         int organizationId,
-                                                                                         string searchTerm = "",
-                                                                                         DateTime? dateFrom = null,
-                                                                                         DateTime? dateTo = null)
+        internal async Task<PaginatedListResult<OfficialBusiness>> GetPaginatedListAsync(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             var query = _context.OfficialBusinesses
                 .Include(x => x.Employee)
@@ -85,14 +86,26 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<OfficialBusiness>(officialBusinesses, count);
         }
 
-        public IEnumerable<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public ICollection<OfficialBusiness> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.OfficialBusinesses.
-                            Where(l => l.OrganizationID == organizationId).
-                            Where(l => timePeriod.Start <= l.StartDate).
-                            Where(l => l.EndDate <= timePeriod.End).
-                            Where(l => l.Status == OfficialBusiness.StatusApproved).
-                            ToList();
+            return CreateByQueryAllApprovedByDatePeriod(organizationId, datePeriod)
+                .ToList();
+        }
+
+        public async Task<ICollection<OfficialBusiness>> GetAllApprovedByEmployeeAndDatePeriodAsync(int organizationId, int employeeId, TimePeriod datePeriod)
+        {
+            return await CreateByQueryAllApprovedByDatePeriod(organizationId, datePeriod)
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
+        }
+
+        private IQueryable<OfficialBusiness> CreateByQueryAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
+        {
+            return _context.OfficialBusinesses
+                .Where(l => l.OrganizationID == organizationId)
+                .Where(l => datePeriod.Start <= l.StartDate)
+                .Where(l => l.EndDate <= datePeriod.End)
+                .Where(l => l.Status == OfficialBusiness.StatusApproved);
         }
 
         #endregion List of entities

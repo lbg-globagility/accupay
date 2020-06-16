@@ -19,9 +19,9 @@ namespace AccuPay.Data.Repositories
 
         internal async Task DeleteManyAsync(IEnumerable<int> ids)
         {
-            var overtimes = await _context.Overtimes.
-                Where(o => ids.Contains(o.RowID.Value)).
-                ToListAsync();
+            var overtimes = await _context.Overtimes
+                .Where(o => ids.Contains(o.RowID.Value))
+                .ToListAsync();
 
             _context.RemoveRange(overtimes);
 
@@ -47,26 +47,27 @@ namespace AccuPay.Data.Repositories
         internal async Task<Overtime> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Overtimes
-                                .Include(x => x.Employee)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        internal async Task<IEnumerable<Overtime>> GetByEmployeeAsync(int employeeId)
+        internal async Task<ICollection<Overtime>> GetByEmployeeAsync(int employeeId)
         {
-            return await _context.Overtimes.
-                                Where(l => l.EmployeeID == employeeId).
-                                ToListAsync();
+            return await _context.Overtimes
+                .Where(l => l.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(PageOptions options,
-                                                                                 int organizationId,
-                                                                                 string searchTerm = "",
-                                                                                 DateTime? dateFrom = null,
-                                                                                 DateTime? dateTo = null)
+        internal async Task<PaginatedListResult<Overtime>> GetPaginatedListAsync(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            DateTime? dateFrom = null,
+            DateTime? dateTo = null)
         {
             var query = _context.Overtimes
                 .Include(x => x.Employee)
@@ -102,37 +103,56 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Overtime>(overtimes, count);
         }
 
-        internal IEnumerable<Overtime> GetByEmployeeIDsAndDatePeriod(int organizationId,
-                                                                TimePeriod timePeriod,
-                                                                List<int> employeeIdList,
-                                                                OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        internal async Task<ICollection<Overtime>> GetByEmployeeAndDatePeriod(
+            int organizationId,
+            int employeeId,
+            TimePeriod datePeriod,
+            OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
-            return CreateBaseQueryByTimePeriod(organizationId,
-                                                timePeriod,
-                                                overtimeStatus).
-                            Where(ot => employeeIdList.Contains(ot.EmployeeID.Value)).
-                            ToList();
+            return await CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    datePeriod,
+                    overtimeStatus)
+                .Where(ot => ot.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        internal async Task<IEnumerable<Overtime>> GetByDatePeriodAsync(
-                                                        int organizationId,
-                                                        TimePeriod timePeriod,
-                                                        OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        internal ICollection<Overtime> GetByEmployeeIDsAndDatePeriod(
+            int organizationId,
+            List<int> employeeIdList,
+            TimePeriod datePeriod,
+            OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
-            return await CreateBaseQueryByTimePeriod(organizationId,
-                                                    timePeriod,
-                                                    overtimeStatus).
-                            ToListAsync();
+            return CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    datePeriod,
+                    overtimeStatus)
+                .Where(x => employeeIdList.Contains(x.EmployeeID.Value))
+                .ToList();
         }
 
-        public IEnumerable<Overtime> GetByDatePeriod(int organizationId,
-                                                    TimePeriod timePeriod,
-                                                    OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        internal async Task<ICollection<Overtime>> GetByDatePeriodAsync(
+            int organizationId,
+            TimePeriod datePeriod,
+            OvertimeStatus overtimeStatus = OvertimeStatus.All)
         {
-            return CreateBaseQueryByTimePeriod(organizationId,
-                                                timePeriod,
-                                                overtimeStatus).
-                        ToList();
+            return await CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    datePeriod,
+                    overtimeStatus)
+                .ToListAsync();
+        }
+
+        public ICollection<Overtime> GetByDatePeriod(
+            int organizationId,
+            TimePeriod datePeriod,
+            OvertimeStatus overtimeStatus = OvertimeStatus.All)
+        {
+            return CreateBaseQueryByTimePeriod(
+                    organizationId,
+                    datePeriod,
+                    overtimeStatus)
+                .ToList();
         }
 
         #endregion List of entities
@@ -154,26 +174,27 @@ namespace AccuPay.Data.Repositories
 
         #region Private helper methods
 
-        private IQueryable<Overtime> CreateBaseQueryByTimePeriod(int organizationId,
-                                                                        TimePeriod timePeriod,
-                                                                        OvertimeStatus overtimeStatus)
+        private IQueryable<Overtime> CreateBaseQueryByTimePeriod(
+            int organizationId,
+            TimePeriod datePeriod,
+            OvertimeStatus overtimeStatus)
         {
-            var baseQuery = _context.Overtimes.
-                                Where(ot => ot.OrganizationID == organizationId).
-                                Where(o => timePeriod.Start <= o.OTStartDate).
-                                Where(o => o.OTStartDate <= timePeriod.End);
+            var baseQuery = _context.Overtimes
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => datePeriod.Start <= x.OTStartDate)
+                .Where(x => x.OTStartDate <= datePeriod.End);
 
             switch (overtimeStatus)
             {
                 case OvertimeStatus.All: break;
 
                 case OvertimeStatus.Approved:
-                    baseQuery = baseQuery.Where(o => o.Status.Trim().ToLower() ==
+                    baseQuery = baseQuery.Where(x => x.Status.Trim().ToLower() ==
                                                 Overtime.StatusApproved.ToTrimmedLowerCase());
                     break;
 
                 case OvertimeStatus.Pending:
-                    baseQuery = baseQuery.Where(o => o.Status.Trim().ToLower() ==
+                    baseQuery = baseQuery.Where(x => x.Status.Trim().ToLower() ==
                                                 Overtime.StatusPending.ToTrimmedLowerCase());
                     break;
 

@@ -21,6 +21,13 @@ namespace AccuPay.Data.Repositories
             return await _context.Branches.FindAsync(id);
         }
 
+        public async Task<ICollection<Branch>> GetByMultipleIds(int[] ids)
+        {
+            return await _context.Branches
+                .Where(x => ids.Contains(x.RowID.Value))
+                .ToListAsync();
+        }
+
         public async Task DeleteAsync(Branch branch)
         {
             _context.Branches.Remove(branch);
