@@ -101,6 +101,7 @@ namespace AccuPay.Web
             services.AddScoped<OfficialBusinessDataService>();
             services.AddScoped<OvertimeDataService>();
             services.AddScoped<PositionDataService>();
+            services.AddScoped<TimeEntryDataService>();
             services.AddScoped<TimeLogDataService>();
 
             services.AddScoped<ShiftImportParser>();

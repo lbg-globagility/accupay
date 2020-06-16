@@ -236,8 +236,8 @@ Public Class MassOvertimePresenter
 
         Dim service = MainServiceProvider.GetRequiredService(Of OvertimeDataService)
         Dim overtimes = service.GetByEmployeeIDsAndDatePeriod(z_OrganizationID,
-                                                            New TimePeriod(dateFrom, dateTo),
-                                                            employeeIds)
+                                                            employeeIds,
+                                                            New TimePeriod(dateFrom, dateTo))
 
         Return overtimes.
             GroupBy(Function(o) o.EmployeeID).

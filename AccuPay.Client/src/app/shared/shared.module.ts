@@ -11,6 +11,9 @@ import { StatusComponent } from 'src/app/shared/components/status/status.compone
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
 import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
+import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row/expandable-row.component';
+import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
+import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
 
 @NgModule({
   declarations: [
@@ -23,6 +26,9 @@ import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
     IfZeroPipe,
     AmountPipe,
     DisplayFieldComponent,
+    ExpandableRowComponent,
+    ExpandableRowContainerDirective,
+    ExpandableRowTriggerDirective,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
@@ -50,6 +56,9 @@ import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
     ImgFallbackDirective,
     StatusComponent,
     DisplayFieldComponent,
+    ExpandableRowComponent,
+    ExpandableRowContainerDirective,
+    ExpandableRowTriggerDirective,
     // UserMiniInfoComponent,
     NgxPermissionsModule,
     CommonModule,

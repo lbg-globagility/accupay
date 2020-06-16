@@ -91,75 +91,86 @@ namespace AccuPay.Data.Repositories
 
         internal async Task<EmployeeDutySchedule> GetByIdAsync(int id)
         {
-            return await _context.EmployeeDutySchedules
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+            return await _context.EmployeeDutySchedules.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         internal async Task<EmployeeDutySchedule> GetByIdAsync(CompositeKey key)
         {
             return await _context.EmployeeDutySchedules
-                                .Where(x => x.EmployeeID == key.EmployeeId)
-                                .Where(x => x.DateSched == key.Date)
-                                .FirstOrDefaultAsync();
+                .Where(x => x.EmployeeID == key.EmployeeId)
+                .Where(x => x.DateSched == key.Date)
+                .FirstOrDefaultAsync();
         }
 
         internal async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.EmployeeDutySchedules
-                                .Include(x => x.Employee)
-                                .FirstOrDefaultAsync(l => l.RowID == id);
+                .Include(x => x.Employee)
+                .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        public IEnumerable<EmployeeDutySchedule> GetByDatePeriod(int organizationId,
-                                                                TimePeriod timePeriod)
+        public ICollection<EmployeeDutySchedule> GetByDatePeriod(
+            int organizationId,
+            TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                    ToList();
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToList();
         }
 
-        public async Task<IEnumerable<EmployeeDutySchedule>> GetByDatePeriodAsync(int organizationId,
-                                                                                TimePeriod timePeriod)
+        public async Task<ICollection<EmployeeDutySchedule>> GetByDatePeriodAsync(
+            int organizationId,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                        ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
-        public async Task<IEnumerable<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodAsync(
-                                                                                int organizationId,
-                                                                                int[] employeeIds,
-                                                                                TimePeriod timePeriod)
+        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
+            int organizationId,
+            int employeeId,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
-                                                                    employeeIds,
-                                                                    timePeriod).
-                ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(x => x.EmployeeID == employeeId)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
-                                                                                int organizationId,
-                                                                                int[] employeeIds,
-                                                                                TimePeriod timePeriod)
+        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodAsync(
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod datePeriod)
         {
-            return await CreateBaseQueryByMultipleEmployeeDatePeriod(organizationId,
-                                                                    employeeIds,
-                                                                    timePeriod).
-                Include(x => x.Employee).
-                ToListAsync();
+            return await CreateBaseQueryByMultipleEmployeeDatePeriod(
+                    organizationId,
+                    employeeIds,
+                    datePeriod)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod datePeriod)
+        {
+            return await CreateBaseQueryByMultipleEmployeeDatePeriod(
+                    organizationId,
+                    employeeIds,
+                    datePeriod)
+                .Include(x => x.Employee)
+                .ToListAsync();
         }
 
         internal async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.EmployeeDutySchedules
-                                .Include(x => x.Employee)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .ThenByDescending(x => x.DateSched)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .ThenByDescending(x => x.DateSched)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -183,21 +194,20 @@ namespace AccuPay.Data.Repositories
         #endregion Queries
 
         private IQueryable<EmployeeDutySchedule> CreateBaseQueryByMultipleEmployeeDatePeriod(
-                                                                                int organizationId,
-                                                                                int[] employeeIds,
-                                                                                TimePeriod timePeriod)
+            int organizationId,
+            int[] employeeIds,
+            TimePeriod datePeriod)
         {
-            return CreateBaseQueryByDatePeriod(organizationId, timePeriod).
-                    Where(x => employeeIds.Contains(x.EmployeeID.Value));
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value));
         }
 
-        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByDatePeriod(int organizationId,
-                                                                                    TimePeriod timePeriod)
+        private IQueryable<EmployeeDutySchedule> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.EmployeeDutySchedules.
-                            Where(l => l.OrganizationID == organizationId).
-                            Where(l => timePeriod.Start <= l.DateSched).
-                            Where(l => l.DateSched <= timePeriod.End);
+            return _context.EmployeeDutySchedules
+                .Where(l => l.OrganizationID == organizationId)
+                .Where(l => datePeriod.Start <= l.DateSched)
+                .Where(l => l.DateSched <= datePeriod.End);
         }
     }
 }
