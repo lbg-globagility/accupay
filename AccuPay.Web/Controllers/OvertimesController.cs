@@ -1,5 +1,7 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Overtimes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,6 +10,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class OvertimesController : ControllerBase
     {
         private readonly OvertimeService _service;
@@ -18,12 +21,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.OvertimeRead)]
         public async Task<ActionResult<PaginatedList<OvertimeDto>>> List([FromQuery] PageOptions options, [FromQuery] OvertimeFilter filter)
         {
             return await _service.PaginatedList(options, filter);
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.OvertimeRead)]
         public async Task<ActionResult<OvertimeDto>> GetById(int id)
         {
             var overtime = await _service.GetById(id);
@@ -35,12 +40,14 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.OvertimeCreate)]
         public async Task<ActionResult<OvertimeDto>> Create([FromBody] CreateOvertimeDto dto)
         {
             return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
+        [Permission(PermissionTypes.OvertimeUpdate)]
         public async Task<ActionResult<OvertimeDto>> Update(int id, [FromBody] UpdateOvertimeDto dto)
         {
             var overtime = await _service.Update(id, dto);
@@ -52,6 +59,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Permission(PermissionTypes.OvertimeDelete)]
         public async Task<ActionResult> Delete(int id)
         {
             var overtime = await _service.GetById(id);
@@ -64,6 +72,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet("statuslist")]
+        [Permission(PermissionTypes.OvertimeRead)]
         public ActionResult<ICollection<string>> GetStatusList()
         {
             return _service.GetStatusList();

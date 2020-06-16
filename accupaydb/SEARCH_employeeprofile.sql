@@ -24,9 +24,9 @@ DECLARE max_count_per_page INT(11) DEFAULT 50;
 
 SELECT e.RowID
         ,e.EmployeeID                                   `Employee ID`
+        ,e.LastName                                     `Last Name`
         ,e.FirstName                                    `First Name`
         ,e.MiddleName                                   `Middle Name`
-        ,e.LastName                                     `Last Name`
         ,e.Surname
         ,e.Nickname
         ,e.MaritalStatus                                `Marital Status`

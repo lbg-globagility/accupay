@@ -3,6 +3,8 @@ import { FormGroup, FormBuilder, Validators, FormArray } from '@angular/forms';
 import { Role } from 'src/app/roles/shared/role';
 import { PermissionService } from 'src/app/roles/services/permission.service';
 import { Permission } from 'src/app/roles/shared/permission';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-role-form',
@@ -30,11 +32,11 @@ export class RoleFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadPermissions();
-
-    if (this.role) {
-      this.form.patchValue(this.role);
-    }
+    this.loadPermissions().subscribe(() => {
+      if (this.role) {
+        this.patchValue();
+      }
+    });
   }
 
   get valid(): boolean {
@@ -46,31 +48,33 @@ export class RoleFormComponent implements OnInit {
     return this.form.value;
   }
 
-  private loadPermissions() {
-    this.permissionService.getAll().subscribe((permissions) => {
-      this.permissions = permissions;
-      this.addRolePermissions();
-    });
-  }
-
-  private addRolePermissions() {
-    this.permissions.forEach((p) => this.addRolePermission(p));
+  private loadPermissions(): Observable<void> {
+    return this.permissionService.getAll().pipe(
+      map((permissions) => {
+        this.permissions = permissions;
+        this.permissions.forEach((p) => this.addRolePermission(p));
+      })
+    );
   }
 
   private addRolePermission(permission: Permission) {
-    const rolePermission = this.role?.rolePermissions.find(
-      (t) => t.permissionId === permission.id
-    );
-
     this.rolePermissions.push(
       this.fb.group({
         name: [permission.name],
         permissionId: [permission.id],
-        read: [rolePermission?.read ?? false],
-        create: [rolePermission?.create ?? false],
-        update: [rolePermission?.update ?? false],
-        delete: [rolePermission?.delete ?? false],
+        read: [false],
+        create: [false],
+        update: [false],
+        delete: [false],
       })
     );
+  }
+
+  private patchValue() {
+    this.form.patchValue(this.role);
+
+    if (this.role.isAdmin) {
+      this.form.disable();
+    }
   }
 }

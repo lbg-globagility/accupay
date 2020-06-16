@@ -245,9 +245,24 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(null);
         }
 
+        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync(int organizationId)
+        {
+            return await _context.Employees
+                                 .Include(x => x.OriginalImage)
+                                 .Where(x => x.OrganizationID == organizationId)
+                                 .Where(x => x.OriginalImageId == null)
+                                 .ToListAsync();
+        }
+
         #endregion List of entities
 
         #region Single entity
+
+        public Employee GetById(int employeeId)
+        {
+            var builder = new EmployeeQueryBuilder(_context);
+            return builder.GetById(employeeId, null);
+        }
 
         public async Task<Employee> GetByIdAsync(int employeeId)
         {
@@ -289,13 +304,24 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Salary> GetCurrentSalaryAsync(int employeeId, DateTime? date = null)
         {
+            return await CreateBaseQueryCurrentSalary(employeeId, date)
+                            .FirstOrDefaultAsync();
+        }
+
+        public Salary GetCurrentSalary(int employeeId, DateTime? date = null)
+        {
+            return CreateBaseQueryCurrentSalary(employeeId, date)
+                            .FirstOrDefault();
+        }
+
+        private IOrderedQueryable<Salary> CreateBaseQueryCurrentSalary(int employeeId, DateTime? date = null)
+        {
             date = date ?? DateTime.Now;
 
-            return await _context.Salaries.
-                            Where(x => x.EmployeeID == employeeId).
-                            Where(x => x.EffectiveFrom <= date).
-                            OrderByDescending(x => x.EffectiveFrom).
-                            FirstOrDefaultAsync();
+            return _context.Salaries
+                            .Where(x => x.EmployeeID == employeeId)
+                            .Where(x => x.EffectiveFrom <= date)
+                            .OrderByDescending(x => x.EffectiveFrom);
         }
 
         public async Task<decimal> GetVacationLeaveBalance(int employeeId)

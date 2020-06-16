@@ -152,10 +152,13 @@ namespace AccuPay.Data.Services
                         LastUpdBy = userId,
                         EmployeeID = employee.RowID,
                         PayPeriodID = payPeriod.RowID,
-                        PayFromdate = payPeriod.PayFromDate,
+                        PayFromDate = payPeriod.PayFromDate,
                         PayToDate = payPeriod.PayToDate
                     };
+                }
 
+                if (paystub.Actual == null)
+                {
                     paystub.Actual = new PaystubActual()
                     {
                         OrganizationID = organizationId,
@@ -337,13 +340,9 @@ namespace AccuPay.Data.Services
         {
             if (currentSystemOwner != SystemOwnerService.Benchmark)
             {
-                ComputeBasicHoursAndPay(paystub, employee, salary, calendarCollection, timeEntries);
+                ComputeBasicHoursAndPay(paystub, employee, salary, calendarCollection, timeEntries: timeEntries, actualTimeEntries: actualTimeEntries);
 
-                ComputeHours(paystub,
-                            employee,
-                            salary,
-                            timeEntries: timeEntries,
-                            actualTimeEntries: actualTimeEntries);
+                ComputeHours(paystub, employee, salary, timeEntries: timeEntries, actualTimeEntries: actualTimeEntries);
 
                 ComputeTotalEarnings(paystub, employee, settings, payPeriod);
             }
@@ -448,9 +447,11 @@ namespace AccuPay.Data.Services
                                             Employee employee,
                                             Salary salary,
                                             CalendarCollection calendarCollection,
-                                            IReadOnlyCollection<TimeEntry> timeEntries)
+                                            IReadOnlyCollection<TimeEntry> timeEntries,
+                                            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)
         {
-            if (employee.IsMonthly || employee.IsFixed)
+            // Basic Hours
+            if (employee.IsPremiumInclusive)
             {
                 if (employee.WorkDaysPerYear > 0)
                 {
@@ -460,18 +461,19 @@ namespace AccuPay.Data.Services
 
                     paystub.BasicHours = workDaysPerPayPeriod * 8;
                 }
-
-                paystub.BasicPay = AccuMath.CommercialRound(salary.BasicSalary / 2);
             }
             else if (employee.IsDaily)
             {
-                ComputeBasicHoursForDay(paystub, calendarCollection, timeEntries);
-
-                paystub.BasicPay = timeEntries.Sum(t => t.BasicDayPay);
+                paystub.BasicHours = ComputeBasicHoursForDaily(calendarCollection, timeEntries);
             }
+
+            // Basic Pay
+            paystub.ComputeBasicPay(employee.IsDaily, salary.BasicSalary, timeEntries);
+
+            paystub.Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries);
         }
 
-        private void ComputeBasicHoursForDay(Paystub paystub, CalendarCollection calendarCollection, IReadOnlyCollection<TimeEntry> timeEntries)
+        private decimal ComputeBasicHoursForDaily(CalendarCollection calendarCollection, IReadOnlyCollection<TimeEntry> timeEntries)
         {
             var basicHours = 0M;
 
@@ -488,7 +490,7 @@ namespace AccuPay.Data.Services
                     basicHours += timeEntry.WorkHours;
             }
 
-            paystub.BasicHours = basicHours;
+            return basicHours;
         }
 
         private void ComputeHours(Paystub paystub,

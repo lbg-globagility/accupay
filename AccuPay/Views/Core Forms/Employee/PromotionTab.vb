@@ -24,11 +24,11 @@ Public Class PromotionTab
 
     Private _currentPromotion As Promotion
 
-    Private _positionService As PositionDataService
+    Private ReadOnly _positionService As PositionDataService
 
-    Private _salaryRepo As SalaryRepository
+    Private ReadOnly _salaryRepo As SalaryRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -231,7 +231,7 @@ Public Class PromotionTab
 
         Await FunctionUtils.TryCatchFunctionAsync("Save Promotion",
             Async Function()
-                If isChanged() Then
+                If IsChanged() Then
                     Dim oldPromotion = _currentPromotion.CloneJson()
 
                     With _currentPromotion
@@ -278,7 +278,13 @@ Public Class PromotionTab
 
         Dim promotionSalary = New Salary
 
-        If oldPromotion.CompensationToYesNo = "Yes" And
+        If oldPromotion.CompensationToYesNo = "No" And
+            _currentPromotion.CompensationToYesNo = "No" Then
+
+            _currentPromotion.EmployeeSalaryID = Nothing
+            Return
+
+        ElseIf oldPromotion.CompensationToYesNo = "Yes" And
             _currentPromotion.CompensationToYesNo = "No" Then
 
             Await _salaryRepo.DeleteAsync(_currentPromotion.EmployeeSalaryID.Value)
@@ -321,9 +327,7 @@ Public Class PromotionTab
 
         Await _salaryRepo.SaveAsync(promotionSalary)
 
-        With _currentPromotion
-            .EmployeeSalaryID = promotionSalary.RowID.Value
-        End With
+        _currentPromotion.EmployeeSalaryID = promotionSalary.RowID.Value
 
     End Function
 
@@ -388,7 +392,7 @@ Public Class PromotionTab
         _userActivityRepo.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeEdit, changes)
     End Sub
 
-    Private Function isChanged() As Boolean
+    Private Function IsChanged() As Boolean
 
         With _currentPromotion
             If .PositionTo <> cboPositionTo.Text OrElse

@@ -49,6 +49,13 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
+        public async Task Update(AspNetRole role)
+        {
+            _context.Entry(role).State = EntityState.Modified;
+            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
         {
             var userRoles = await _context.UserRoles
@@ -59,20 +66,14 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task UpdateUserRoles(ICollection<UserRole> added,
-                                          ICollection<UserRole> updated,
                                           ICollection<UserRole> deleted)
         {
+            _context.UserRoles.RemoveRange(deleted);
+
             foreach (var userRole in added)
             {
                 _context.UserRoles.Add(userRole);
             }
-
-            foreach (var userRole in updated)
-            {
-                _context.Entry(userRole).State = EntityState.Modified;
-            }
-
-            _context.UserRoles.RemoveRange(deleted);
 
             await _context.SaveChangesAsync();
         }

@@ -1,4 +1,5 @@
 using AccuPay.Web.Account;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class AccountController : ControllerBase
     {
         private readonly AccountService _accountService;

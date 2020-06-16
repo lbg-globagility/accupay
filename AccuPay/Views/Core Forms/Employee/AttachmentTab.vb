@@ -14,19 +14,17 @@ Public Class AttachmentTab
 
     Private _employee As Employee
 
-    Private _parentForm As Form
-
     Private _attachments As IEnumerable(Of Attachment)
 
     Private _currentAttachment As Attachment
 
     Private _mode As FormMode = FormMode.Empty
 
-    Private _attachmentRepo As AttachmentRepository
+    Private ReadOnly _attachmentRepo As AttachmentRepository
 
-    Private _listOfValRepo As ListOfValueRepository
+    Private ReadOnly _listOfValRepo As ListOfValueRepository
 
-    Private _userActivityRepo As UserActivityRepository
+    Private ReadOnly _userActivityRepo As UserActivityRepository
 
     Public Sub New()
 
@@ -43,11 +41,9 @@ Public Class AttachmentTab
 
     End Sub
 
-    Public Async Function SetEmployee(employee As Employee, parentForm As Form) As Task
+    Public Async Function SetEmployee(employee As Employee) As Task
 
         _employee = employee
-
-        _parentForm = parentForm
 
         txtFullname.Text = employee.FullNameWithMiddleInitial
         txtEmployeeID.Text = employee.EmployeeIdWithPositionAndEmployeeType
@@ -62,6 +58,8 @@ Public Class AttachmentTab
         _attachments = Await _attachmentRepo.GetListByEmployeeAsync(_employee.RowID.Value)
 
         RemoveHandler dgvAttachments.SelectionChanged, AddressOf dgvAttachments_SelectionChanged
+
+        pbAttachment.Image = Nothing
 
         dgvAttachments.DataSource = _attachments
 
@@ -101,7 +99,7 @@ Public Class AttachmentTab
     End Sub
 
     Private Sub SelectAttachment(attachment As Attachment)
-        If attachment IsNot Nothing Then
+        If attachment?.FileType IsNot Nothing Then
             _currentAttachment = attachment
 
             With _currentAttachment
@@ -127,7 +125,7 @@ Public Class AttachmentTab
     End Sub
 
     Private Sub ToolStripButton16_Click(sender As Object, e As EventArgs) Handles ToolStripButton16.Click
-        _parentForm.Close()
+        EmployeeForm.Close()
     End Sub
 
     Private Async Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click

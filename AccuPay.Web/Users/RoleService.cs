@@ -62,43 +62,33 @@ namespace AccuPay.Web.Users
             var roles = await _roleRepository.GetAll();
 
             var added = new Collection<UserRole>();
-            var updated = new Collection<UserRole>();
             var deleted = new Collection<UserRole>();
 
             foreach (var dto in dtos)
             {
                 var existingUserRole = userRoles.FirstOrDefault(u => u.UserId == dto.UserId);
 
-                // If RoleId is defined then the user will still have a role,
-                // otherwise we need to delete the user role.
-                if (dto.RoleId.HasValue)
-                {
-                    var role = roles.FirstOrDefault(r => r.Id == dto.RoleId);
-
-                    if (existingUserRole is null)
-                    {
-                        var newUserRole = new UserRole(dto.UserId,
-                                                       role.Id,
-                                                       _currentUser.OrganizationId);
-
-                        added.Add(newUserRole);
-                    }
-                    else
-                    {
-                        existingUserRole.RoleId = role.Id;
-                        updated.Add(existingUserRole);
-                    }
-                }
-                else
+                if (existingUserRole?.RoleId != dto?.RoleId)
                 {
                     if (existingUserRole != null)
                     {
                         deleted.Add(existingUserRole);
                     }
+
+                    if (dto.RoleId.HasValue)
+                    {
+                        var role = roles.FirstOrDefault(r => r.Id == dto.RoleId);
+
+                        var newUserRole = new UserRole(dto.UserId,
+                                                           role.Id,
+                                                           _currentUser.OrganizationId);
+
+                        added.Add(newUserRole);
+                    }
                 }
             }
 
-            await _roleRepository.UpdateUserRoles(added, updated, deleted);
+            await _roleRepository.UpdateUserRoles(added, deleted);
         }
 
         public async Task<RoleDto> Create(CreateRoleDto dto)
@@ -121,15 +111,17 @@ namespace AccuPay.Web.Users
         public async Task<RoleDto> Update(Guid roleId, UpdateRoleDto dto)
         {
             var role = await _roleRepository.GetById(roleId);
+
+            if (role.IsAdmin)
+            {
+                throw new Exception("`Admin` roles cannot be modified.");
+            }
+
             role.Name = dto.Name;
 
             await MapRolePermissions(role, dto.RolePermissions);
 
-            var result = await _roles.UpdateAsync(role);
-            if (!result.Succeeded)
-            {
-                throw new Exception();
-            }
+            await _roleRepository.Update(role);
 
             return ConvertToDto(role);
         }
@@ -171,7 +163,8 @@ namespace AccuPay.Web.Users
             var dto = new RoleDto()
             {
                 Id = role.Id,
-                Name = role.Name
+                Name = role.Name,
+                IsAdmin = role.IsAdmin
             };
 
             dto.RolePermissions = role.RolePermissions?

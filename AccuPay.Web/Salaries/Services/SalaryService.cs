@@ -1,6 +1,7 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Salaries.Models;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,18 +11,22 @@ namespace AccuPay.Web.Salaries.Services
     public class SalaryService
     {
         private readonly SalaryRepository _repository;
+        private readonly ICurrentUser _currentUser;
 
-        public SalaryService(SalaryRepository salaryRepository)
+        public SalaryService(SalaryRepository salaryRepository,
+                             ICurrentUser currentUser)
         {
             _repository = salaryRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<PaginatedList<SalaryDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            int organizationId = 2; // temporary OrganizationID
-            var paginatedList = await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
+            var paginatedList = await _repository.GetPaginatedListAsync(options,
+                                                                        _currentUser.OrganizationId,
+                                                                        searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -39,7 +44,7 @@ namespace AccuPay.Web.Salaries.Services
         {
             var salary = new Salary
             {
-                OrganizationID = 5,
+                OrganizationID = _currentUser.OrganizationId,
                 EmployeeID = dto.EmployeeId,
                 CreatedBy = 1
             };

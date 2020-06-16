@@ -479,10 +479,6 @@ Public Class EmployeeForm
         Return tabctrlemp.TabPages.IndexOf(tbpPrevEmp)
     End Function
 
-    Public Function GetPromotionTabPageIndex() As Integer
-        Return tabctrlemp.TabPages.IndexOf(tbpPromotion)
-    End Function
-
     Public Function GetBonusTabPageIndex() As Integer
         Return tabctrlemp.TabPages.IndexOf(tbpBonus)
     End Function
@@ -533,9 +529,9 @@ Public Class EmployeeForm
 
     Public q_employee As String = "SELECT e.RowID," &
         "e.EmployeeID 'Employee ID'," &
+        "e.LastName 'Last Name'," &
         "e.FirstName 'First Name'," &
         "e.MiddleName 'Middle Name'," &
-        "e.LastName 'Last Name'," &
         "e.Surname," &
         "e.Nickname," &
         "e.MaritalStatus 'Marital Status'," &
@@ -627,7 +623,7 @@ Public Class EmployeeForm
 
     Dim employeepix As New DataTable
 
-    Sub loademployee(Optional q_empsearch As String = Nothing)
+    Sub loademployee()
         PopulateEmployeeGrid()
 
         emp_rcount = dgvEmp.RowCount
@@ -640,7 +636,7 @@ Public Class EmployeeForm
 
             Task.Factory.StartNew(Sub()
 
-                                      Dim all_emp As New SQLQueryToDatatable(q_employee)
+                                      Dim all_emp As New SQLQueryToDatatable($"{q_employee} ORDER BY e.LastName, e.FirstName")
 
                                       Dim catchdt As New DataTable
                                       catchdt = all_emp.ResultTable
@@ -1338,7 +1334,7 @@ Public Class EmployeeForm
             changes.Add(New UserActivityItem() With
                         {
                         .EntityId = oldEmployee.RowID,
-                        .Description = $"Updated {entityName} position from '{oldEmployee.Position.Name}' to '{cboPosit.Text}'."
+                        .Description = $"Updated {entityName} position from '{oldEmployee.Position?.Name}' to '{cboPosit.Text}'."
                         })
         End If
         'If oldEmployee.Agency.Name <> cboAgency.Text Then
@@ -1893,7 +1889,6 @@ Public Class EmployeeForm
             tabctrlemp.TabPages.Remove(tbpDiscipAct)
             tabctrlemp.TabPages.Remove(tbpEducBG)
             tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpPromotion)
             tabctrlemp.TabPages.Remove(tbpBonus)
             tabctrlemp.TabPages.Remove(tbpAttachment)
 
@@ -1946,7 +1941,6 @@ Public Class EmployeeForm
             tabctrlemp.TabPages.Remove(tbpCertifications)
             tabctrlemp.TabPages.Remove(tbpEducBG)
             tabctrlemp.TabPages.Remove(tbpPrevEmp)
-            tabctrlemp.TabPages.Remove(tbpPromotion)
             tabctrlemp.TabPages.Remove(tbpDiscipAct)
             tabctrlemp.TabPages.Remove(tbpNewSalary)
             tabctrlemp.TabPages.Remove(tbpBonus)
@@ -2100,6 +2094,8 @@ Public Class EmployeeForm
                 End If
 
                 Dim selectedTab = tabctrlemp.SelectedTab
+                Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
+                Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                 If selectedTab Is tbpempchklist Then
 
@@ -2116,59 +2112,34 @@ Public Class EmployeeForm
                     SetEmployee()
 
                 ElseIf selectedTab Is tbpAwards Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await AwardTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpCertifications Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await CertificationTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpDiscipAct Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await DisciplinaryActionTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpEducBG Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await EducationalBackgroundTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpPrevEmp Then
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await PreviousEmployerTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpPromotion Then 'Promotion
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
-
-                    Await PromotionTab.SetEmployee(employee)
-
-                ElseIf selectedTab Is tbpBonus Then 'Bonus
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+                ElseIf selectedTab Is tbpBonus Then
 
                     Await BonusTab.SetEmployee(employee)
 
-                ElseIf selectedTab Is tbpAttachment Then 'Attachment
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
+                ElseIf selectedTab Is tbpAttachment Then
 
-                    Await AttachmentTab.SetEmployee(employee, Me)
+                    Await AttachmentTab.SetEmployee(employee)
 
                 ElseIf selectedTab Is tbpNewSalary Then
-
-                    'transferred here so this function will not fetch data from database
-                    'even if the other tabs dont need the employee entity
-                    Dim employeeID = ConvertToType(Of Integer?)(publicEmpRowID)
-                    Dim employee = GetCurrentEmployeeEntity(employeeID)
 
                     Await SalaryTab.SetEmployee(employee)
                 End If
@@ -2419,6 +2390,10 @@ Public Class EmployeeForm
 
         pbemppic.Image = Nothing
         File.Delete(Path.GetTempPath & "tmpfileEmployeeImage.jpg")
+        cboPayFreq.SelectedValue = _payFrequencies.
+                                    Where(Function(p) p.IsSemiMonthly).
+                                    Select(Function(p) p.RowID).
+                                    FirstOrDefault()
 
         LeaveBalanceTextBox.Text = 0
         txtNumDepen.Text = 0
@@ -2706,7 +2681,7 @@ Public Class EmployeeForm
         If TabControl2.SelectedIndex = 0 Then
             PopulateEmployeeGrid()
         Else
-            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
+            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
             If isKPressSimple = 1 Then
                 If txtSimple.Text.Trim.Length = 0 Then
                     SimpleEmployeeFilter(sql)
@@ -2924,14 +2899,12 @@ Public Class EmployeeForm
             Case 7 : colName = "e.EmployeeID='" 'NoOfDependents
             Case 8 : colName = "e.Birthdate='"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@birthDate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Birthdate=@birthDate ORDER BY e.LastName, e.FirstName", dict)
             Case 9 : colName = "e.Startdate='"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & Format(CDate(txtSimple.Text), "yyyy-MM-dd") & "' ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@startdate", Format(CDate(txtSimple.Text), "yyyy-MM-dd")}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Startdate=@startdate ORDER BY e.LastName, e.FirstName", dict)
             Case 10 : colName = "e.JobTitle='"
             Case 11 : colName = "pos.PositionName='" 'e.PositionID
             Case 12 : colName = "e.Salutation='"
@@ -2946,9 +2919,8 @@ Public Class EmployeeForm
             Case 21 : colName = "e.EmailAddress='"
             Case 22 : colName = "e.Gender=LEFT('"
                 s = 1
-                'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "',1) ORDER BY e.RowID DESC", dgvEmp)
                 Dim dict = New Dictionary(Of String, Object) From {{"@gender", txtSimple.Text}}
-                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.RowID DESC", dict)
+                SimpleEmployeeFilter($"{q_employee} AND e.Gender=@gender ORDER BY e.LastName, e.FirstName", dict)
             Case 23 : colName = "e.EmploymentStatus='"
             Case 24 : colName = "pf.PayFrequencyType='"
 
@@ -2963,8 +2935,7 @@ Public Class EmployeeForm
         End Select
 
         If s = 0 Then
-            'dgvRowAdder(q_employee & " AND " & colName & txtSimple.Text & "' ORDER BY e.RowID DESC", dgvEmp)
-            Dim sql = $"{q_employee} ORDER BY e.RowID DESC LIMIT {pagination},100;"
+            Dim sql = $"{q_employee} ORDER BY e.LastName, e.FirstName LIMIT {pagination},100;"
             SimpleEmployeeFilter(sql)
         End If
     End Sub
@@ -3595,9 +3566,7 @@ Public Class EmployeeForm
 
             Dim payFrequencyRepository = MainServiceProvider.GetRequiredService(Of PayFrequencyRepository)
             Dim payFrequencies = Await payFrequencyRepository.GetAllAsync()
-            _payFrequencies = payFrequencies.
-                                Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly OrElse
-                                    p.RowID = PayFrequencyType.Weekly).ToList
+            _payFrequencies = payFrequencies.Where(Function(p) p.RowID = PayFrequencyType.SemiMonthly).ToList()
 
             cboPayFreq.ValueMember = "RowID"
             cboPayFreq.DisplayMember = "Type"
@@ -4225,22 +4194,6 @@ Public Class EmployeeForm
 
 #End Region 'Previous Employer
 
-#Region "Promotion"
-
-    Sub tbpPromotion_Enter(sender As Object, e As EventArgs) Handles tbpPromotion.Enter
-
-        UpdateTabPageText()
-
-        tbpPromotion.Text = "PROMOTION               "
-
-        Label25.Text = "PROMOTION"
-
-        dgvEmp_SelectionChanged(sender, e)
-
-    End Sub
-
-#End Region 'Promotion
-
 #Region "Salary"
 
     Sub tbpNewSalary_Enter(sender As Object, e As EventArgs) Handles tbpNewSalary.Enter
@@ -4302,7 +4255,6 @@ Public Class EmployeeForm
         tbpDiscipAct.Text = "DISCIP"
         tbpEducBG.Text = "EDUC"
         tbpPrevEmp.Text = "PREV EMP"
-        tbpPromotion.Text = "PROMOT"
         tbpBonus.Text = "BONUS"
         tbpAttachment.Text = "ATTACH"
         tbpNewSalary.Text = "SALARY"
@@ -4503,13 +4455,6 @@ Public Class EmployeeForm
             Label149.Text = label_gender
         End If
 
-    End Sub
-
-    Private Async Sub DisplayLeaveHistoryButton_Click(sender As Object, e As EventArgs) Handles DisplayLeaveHistoryButton.Click
-        Dim employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-        Dim employee = Await employeeRepository.GetByIdAsync(CInt(publicEmpRowID))
-        Dim dialog = New ViewLeaveLedgerDialog(employee)
-        dialog.ShowDialog()
     End Sub
 
     Private Sub UserActivityEmployeeToolStripButton_Click(sender As Object, e As EventArgs) Handles UserActivityEmployeeToolStripButton.Click

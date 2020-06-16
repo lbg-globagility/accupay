@@ -1,4 +1,5 @@
 using AccuPay.Data.Helpers;
+using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Employees.Models;
 using AccuPay.Web.Employees.Services;
@@ -11,6 +12,7 @@ namespace AccuPay.Web.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class EmployeesController : ControllerBase
     {
         private readonly EmployeeService _employeeService;
@@ -21,18 +23,21 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
+        [Permission(PermissionTypes.EmployeeCreate)]
         public async Task<ActionResult<EmployeeDto>> Create([FromBody] CreateEmployeeDto dto)
         {
             return await _employeeService.Create(dto);
         }
 
         [HttpPut("{id}")]
+        [Permission(PermissionTypes.EmployeeUpdate)]
         public async Task<ActionResult<EmployeeDto>> Update(int id, [FromBody] EmployeeDto dto)
         {
             return await _employeeService.Update(id, dto);
         }
 
         [HttpGet("{id}")]
+        [Permission(PermissionTypes.EmployeeRead)]
         public async Task<ActionResult<EmployeeDto>> GeyById(int id)
         {
             return await _employeeService.GetById(id); ;
@@ -55,9 +60,19 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpGet]
+        [Permission(PermissionTypes.EmployeeRead)]
         public async Task<PaginatedList<EmployeeDto>> List([FromQuery] PageOptions options, string term = "")
         {
             return await _employeeService.PaginatedList(options, term);
+        }
+
+        [HttpGet("employee-image")]
+        [Permission(PermissionTypes.EmployeeUpdate)]
+        public async Task<ActionResult> GenerateEmployeesImages()
+        {
+            await _employeeService.GenerateEmployeesImages();
+
+            return Ok();
         }
     }
 }

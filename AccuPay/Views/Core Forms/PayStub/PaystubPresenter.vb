@@ -154,7 +154,7 @@ Public Class PaystubPresenter
             End If
 
             Return Await _employeeRepository.GetCurrentSalaryAsync(paystub.EmployeeID.Value,
-                                                                   paystub.PayFromdate)
+                                                                   paystub.PayFromDate)
         End Function
 
         Public Async Function GetTimeEntries(employeeID As Integer?, dateFrom As Date, dateTo As Date) As Task(Of IList(Of TimeEntry))

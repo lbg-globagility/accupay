@@ -168,6 +168,9 @@ namespace AccuPay.Data
                 .HasOne(t => t.Role)
                 .WithMany(t => t.RolePermissions)
                 .HasForeignKey(t => t.RoleId);
+
+            modelBuilder.Entity<UserRole>()
+                .HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
         }
     }
 }

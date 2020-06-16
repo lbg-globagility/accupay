@@ -140,7 +140,7 @@ Namespace Benchmark
                     .LastUpdBy = z_User,
                     .EmployeeID = employee.RowID,
                     .PayPeriodID = _currentPayPeriod.RowID,
-                    .PayFromdate = _currentPayPeriod.PayFromDate,
+                    .PayFromDate = _currentPayPeriod.PayFromDate,
                     .PayToDate = _currentPayPeriod.PayToDate
                 }
 
@@ -188,7 +188,9 @@ Namespace Benchmark
                 paystub.BasicHours = paystub.RegularHours + paystub.UndertimeHours + paystub.LateHours + paystub.AbsentHours
 
             End If
-            paystub.BasicPay = paystub.BasicHours * _employeeRate.HourlyRate
+
+            paystub.ComputeBasicPay(basicHours:=paystub.BasicHours,
+                                    hourlyRate:=_employeeRate.HourlyRate)
 
         End Sub
 

@@ -770,7 +770,6 @@ namespace AccuPay.Data.Services
                 {
                     var vacationLeavePerYearInDays = Employee.VacationLeaveAllowance / PayrollTools.WorkHoursPerDay;
                     var daysPerMonths = Employee.WorkDaysPerYear / PayrollTools.MonthsPerYear;
-                    var daysPerCutoff = daysPerMonths / PayrollTools.SemiMonthlyPayPeriodsPerMonth;
 
                     return AccuMath.CommercialRound(this.RegularPay * vacationLeavePerYearInDays / PayrollTools.MonthsPerYear / daysPerMonths);
                 }
