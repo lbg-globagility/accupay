@@ -6,6 +6,9 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Paystub } from 'src/app/payroll/shared/paystub';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { PayrollResult } from '../shared/payroll-result';
+import { MatDialog } from '@angular/material/dialog';
+import { PayrollResultDetailsComponent } from '../payroll-result-details/payroll-result-details.component';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -19,6 +22,8 @@ export class ViewPayPeriodComponent implements OnInit {
 
   paystubs: Paystub[];
 
+  payrollResult: PayrollResult;
+
   readonly displayedColumns = ['employee', 'netPay'];
 
   dataSource: MatTableDataSource<any>;
@@ -27,7 +32,8 @@ export class ViewPayPeriodComponent implements OnInit {
     private payPeriodService: PayPeriodService,
     private route: ActivatedRoute,
     private snackbar: MatSnackBar,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -47,13 +53,23 @@ export class ViewPayPeriodComponent implements OnInit {
       .subscribe((paystubs) => (this.paystubs = paystubs));
   }
 
+  showDetails() {
+    this.dialog.open(PayrollResultDetailsComponent, {
+      data: {
+        result: this.payrollResult,
+      },
+    });
+  }
+
   calculate() {
     this.snackbar.open('Calculating payroll');
 
     this.payPeriodService.calculate(this.payPeriodId).subscribe({
-      next: () => {
+      next: (data) => {
+        this.payrollResult = data;
         this.snackbar.open('Finished calculating payroll.', 'OK');
         this.loadPaystubs();
+        this.showDetails();
       },
       error: (err) =>
         this.errorHandler.badRequest(err, 'Failed to calculate payroll'),

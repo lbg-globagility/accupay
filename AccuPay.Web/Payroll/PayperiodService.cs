@@ -4,6 +4,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -42,12 +43,21 @@ namespace AccuPay.Web.Payroll
 
             var successes = 0;
             var failures = 0;
+            var details = new List<PayrollResultDetailsDto>();
 
             var employees = resources.Employees;
             foreach (var employee in employees)
             {
                 var generation = new PayrollGeneration(_dbContextOptionsService);
                 var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, DesktopUserId);
+
+                details.Add(new PayrollResultDetailsDto
+                {
+                    EmployeeNo = result.EmployeeNo,
+                    EmployeeName = result.FullName,
+                    Status = result.Status.ToString(),
+                    Description = result.Description
+                });
 
                 if (result.Status == PayrollGeneration.ResultStatus.Success)
                 {
@@ -62,7 +72,8 @@ namespace AccuPay.Web.Payroll
             var resultDto = new PayrollResultDto()
             {
                 Successes = successes,
-                Failures = failures
+                Failures = failures,
+                Details = details
             };
 
             return resultDto;
