@@ -2,6 +2,7 @@
 using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.ValueObjects;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -29,6 +30,14 @@ namespace AccuPay.Data.Services
             DateTime dateTo)
         {
             return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo);
+        }
+
+        public async Task<ICollection<TimeLog>> GetAll(
+            ICollection<int> employeeIds,
+            DateTime dateFrom,
+            DateTime dateTo)
+        {
+            return await _repository.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIds, new TimePeriod(dateFrom, dateTo));
         }
 
         public async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,

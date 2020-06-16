@@ -150,7 +150,7 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task<ICollection<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
-            int[] employeeIds,
+            IEnumerable<int> employeeIds,
             TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(datePeriod)

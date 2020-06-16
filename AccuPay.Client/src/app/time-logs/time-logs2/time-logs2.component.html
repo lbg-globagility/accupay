@@ -1,6 +1,4 @@
-<h1 class="mat-headline">
-  {{ dateFrom.format("MM/DD/YYYY") }} - {{ dateTo.format("MM/DD/YYYY") }}
-</h1>
+<h1 class="mat-headline">{{ dateFrom | date }} - {{ dateTo | date }}</h1>
 
 <div>
   <mat-form-field appearance="standard">
@@ -10,7 +8,7 @@
 </div>
 
 <div class="mat-elevation-z1">
-  <table mat-table [dataSource]="dataSource2" class="w-full">
+  <table mat-table [dataSource]="dataSource" class="w-full">
     <ng-container matColumnDef="employee">
       <th mat-header-cell *matHeaderCellDef>Employee</th>
       <td mat-cell *matCellDef="let employee">
@@ -31,18 +29,27 @@
       </td>
     </ng-container>
 
-    <ng-container *ngFor="let date of dates" [matColumnDef]="date.title">
+    <ng-container *ngFor="let header of headers" [matColumnDef]="header.title">
       <th mat-header-cell *matHeaderCellDef>
-        <p>{{ date.title }}</p>
-        <p>{{ date.dayOfWeek }}</p>
+        <p>{{ header.title }}</p>
+        <p>{{ header.dayOfWeek }}</p>
       </th>
       <td mat-cell *matCellDef="let employee">
         <p class="text-xs">
-          {{ getTimeIn(employee, date.date) | date: "shortTime" }}
+          {{ getTimeIn(employee, header.date) | date: "shortTime" | ifEmpty }}
         </p>
         <p class="text-xs">
-          {{ getTimeOut(employee, date.date) | date: "shortTime" }}
+          {{ getTimeOut(employee, header.date) | date: "shortTime" | ifEmpty }}
         </p>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="actions">
+      <th mat-header-cell *matHeaderCellDef>Actions</th>
+      <td mat-cell *matCellDef="let employee">
+        <button mat-icon-button (click)="edit(employee)">
+          <mat-icon>edit</mat-icon>
+        </button>
       </td>
     </ng-container>
 
@@ -51,11 +58,12 @@
   </table>
 
   <mat-paginator
-    [pageIndex]="1"
-    [pageSize]="25"
+    [pageIndex]="pageIndex"
+    [pageSize]="pageSize"
     [pageSizeOptions]="[10, 5, 25, 100]"
-    [length]="100"
+    [length]="totalCount"
     [showFirstLastButtons]="true"
+    (page)="onPageChanged($event)"
   >
   </mat-paginator>
 </div>

@@ -5,8 +5,15 @@ import * as moment from 'moment';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
+import { PageEvent } from '@angular/material/paginator';
+import { Subject } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
+import { Constants } from 'src/app/core/shared/constants';
+import { MatDialog } from '@angular/material/dialog';
+import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
+import { range } from 'src/app/core/functions/dates';
 
-interface TimeLogDate {
+interface DateHeader {
   title: string;
   date: Date;
   dayOfWeek: string;
@@ -18,59 +25,87 @@ interface TimeLogDate {
   styleUrls: ['./time-logs2.component.scss'],
 })
 export class TimeLogs2Component implements OnInit {
-  readonly defaultColumns = ['employee'];
-
   displayedColumns = ['employee'];
 
-  dateFrom: Moment = moment(new Date(2020, 1, 1));
+  dateFrom = new Date(2020, 1, 1);
 
-  dateTo: Moment = moment(new Date(2020, 1, 15));
+  dateTo = new Date(2020, 1, 15);
 
-  dates: TimeLogDate[] = [];
+  headers: DateHeader[] = [];
 
-  dataSource: any[] = [{}, {}, {}, {}, {}, {}];
+  pageIndex = 0;
 
-  dataSource2: MatTableDataSource<EmployeeTimeLogs> = new MatTableDataSource();
+  pageSize: number = 10;
 
-  constructor(private timeLogService: TimeLogService) {}
+  modelChanged: Subject<any>;
 
-  ngOnInit(): void {
-    const options = new PageOptions(1, 25, null, null);
+  dataSource: MatTableDataSource<EmployeeTimeLogs> = new MatTableDataSource();
 
-    this.timeLogService
-      .listByEmployee(options, this.dateFrom.toDate(), this.dateTo.toDate())
-      .subscribe((data) => {
-        this.dataSource2 = new MatTableDataSource(data.items);
-      });
+  totalCount: number;
 
-    const dates: TimeLogDate[] = [];
-
-    let current = this.dateFrom.clone();
-    const last = this.dateTo.add(1, 'days');
-    while (current.isBefore(last)) {
-      dates.push({
-        title: current.format('MM/DD'),
-        date: current.toDate(),
-        dayOfWeek: current.format('ddd'),
-      });
-
-      current = current.add(1, 'days');
-    }
-
-    this.dates = dates;
-    this.displayedColumns = [
-      ...this.defaultColumns,
-      ...this.dates.map((t) => t.title),
-    ];
+  constructor(
+    private timeLogService: TimeLogService,
+    private dialog: MatDialog
+  ) {
+    this.modelChanged = new Subject();
+    this.modelChanged
+      .pipe(auditTime(Constants.ThrottleTime))
+      .subscribe(() => this.loadTimeLogs());
   }
 
-  getTimeIn(employee: EmployeeTimeLogs, date: Date) {
+  ngOnInit(): void {
+    this.createDateHeaders();
+    this.loadTimeLogs();
+  }
+
+  getTimeIn(employee: EmployeeTimeLogs, date: Date): string {
     return employee.timeLogs.find((t) => t.date === date.toISOString())
       ?.startTime;
   }
 
-  getTimeOut(employee: EmployeeTimeLogs, date: Date) {
+  getTimeOut(employee: EmployeeTimeLogs, date: Date): string {
     return employee.timeLogs.find((t) => t.date === date.toISOString())
       ?.endTime;
+  }
+
+  onPageChanged(pageEvent: PageEvent): void {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.modelChanged.next();
+  }
+
+  edit(employee: EmployeeTimeLogs): void {
+    this.dialog.open(EditTimeLogComponent, {
+      data: {
+        employee,
+        dateFrom: this.dateFrom,
+        dateTo: this.dateTo,
+      },
+    });
+  }
+
+  private loadTimeLogs(): void {
+    const options = new PageOptions(this.pageIndex, this.pageSize);
+
+    this.timeLogService
+      .listByEmployee(options, this.dateFrom, this.dateTo)
+      .subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.items);
+        this.totalCount = data.totalCount;
+      });
+  }
+
+  private createDateHeaders(): void {
+    this.headers = range(this.dateFrom, this.dateTo).map((date) => ({
+      title: moment(date).format('MM/DD'),
+      date,
+      dayOfWeek: moment(date).format('ddd'),
+    }));
+
+    this.displayedColumns = [
+      'employee',
+      ...this.headers.map((t) => t.title),
+      'actions',
+    ];
   }
 }

@@ -50,6 +50,10 @@ export class TimeLogService {
     return this.httpClient.put<TimeLog>(`${this.baseUrl}/${id}`, timeLog);
   }
 
+  update2(timeLogs: any[]): Observable<void> {
+    return this.httpClient.post<void>(`${this.baseUrl}`, timeLogs);
+  }
+
   create(timeLog: TimeLog): Observable<TimeLog> {
     console.log(timeLog);
     return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);

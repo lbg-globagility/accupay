@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
@@ -19,14 +20,18 @@ namespace AccuPay.Web.TimeLogs
         private TimeLogDataService _service;
         private readonly TimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
+        private readonly TimeLogRepository _repository;
 
-        public TimeLogService(TimeLogDataService service,
-                              TimeLogImportParser importParser,
-                              ICurrentUser currentUser)
+        public TimeLogService(
+            TimeLogDataService service,
+            TimeLogImportParser importParser,
+            ICurrentUser currentUser,
+            TimeLogRepository repository)
         {
             _service = service;
             _importParser = importParser;
             _currentUser = currentUser;
+            _repository = repository;
         }
 
         public async Task<PaginatedList<TimeLogDto>> PaginatedList(PageOptions options, string searchTerm)
@@ -68,19 +73,62 @@ namespace AccuPay.Web.TimeLogs
             return ConvertToDto(timeLog);
         }
 
-        internal async Task<TimeLogDto> Update(int id, UpdateTimeLogDto dto)
+        internal async Task Update(ICollection<UpdateTimeLogDto> dtos)
         {
-            // TODO: validations
-            var timeLog = await _service.GetByIdAsync(id);
-            if (timeLog == null) return null;
+            var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
+            var dateFrom = dtos.Select(t => t.Date).Min();
+            var dateTo = dtos.Select(t => t.Date).Max();
 
-            timeLog.LastUpdBy = 1;
+            var timeLogs = await _service.GetAll(employeeIds, dateFrom, dateTo);
 
-            ApplyChanges(dto, timeLog);
+            var added = new List<TimeLog>();
+            var updated = new List<TimeLog>();
+            var deleted = new List<TimeLog>();
 
-            await _service.UpdateAsync(timeLog);
+            foreach (var dto in dtos)
+            {
+                var existingTimeLog = timeLogs
+                    .Where(t => t.LogDate == dto.Date)
+                    .Where(t => t.EmployeeID == dto.EmployeeId)
+                    .FirstOrDefault();
 
-            return ConvertToDto(timeLog);
+                var hasData = dto.StartTime != null || dto.EndTime != null;
+
+                if (existingTimeLog is null)
+                {
+                    if (hasData)
+                    {
+                        var newTimeLog = new TimeLog()
+                        {
+                            OrganizationID = _currentUser.OrganizationId,
+                            EmployeeID = dto.EmployeeId,
+                            CreatedBy = 1,
+                            LastUpdBy = 1,
+                            LogDate = dto.Date,
+                            TimeInFull = dto.StartTime,
+                            TimeOutFull = dto.EndTime
+                        };
+
+                        added.Add(newTimeLog);
+                    }
+                }
+                else
+                {
+                    if (hasData)
+                    {
+                        existingTimeLog.TimeInFull = dto.StartTime;
+                        existingTimeLog.TimeOutFull = dto.EndTime;
+
+                        updated.Add(existingTimeLog);
+                    }
+                    else
+                    {
+                        deleted.Add(existingTimeLog);
+                    }
+                }
+            }
+
+            await _repository.ChangeManyAsync(added, updated, deleted);
         }
 
         internal async Task<TimeLogDto> GetByIdWithEmployeeAsync(int id)
@@ -154,7 +202,7 @@ namespace AccuPay.Web.TimeLogs
             {
                 EmployeeId = employee.RowID,
                 EmployeeNo = employee.EmployeeNo,
-                FullName = employee.FullName,
+                FullName = employee.FullNameWithMiddleInitialLastNameFirst,
                 TimeLogs = timeLogs
                     .Where(t => t.EmployeeID == employee.RowID)
                     .Select(t => ConvertToEmployeeTimeLogDto(t))
@@ -170,8 +218,8 @@ namespace AccuPay.Web.TimeLogs
             {
                 Id = timeLog.RowID,
                 Date = timeLog.LogDate,
-                StartTime = timeLog.TimeStampIn,
-                EndTime = timeLog.TimeStampOut,
+                StartTime = timeLog.TimeInFull,
+                EndTime = timeLog.TimeOutFull,
             };
 
             return dto;
