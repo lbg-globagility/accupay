@@ -1,6 +1,5 @@
-using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -15,24 +14,15 @@ namespace AccuPay.Web.Payroll
             _repository = repository;
         }
 
-        public async Task<ICollection<PaystubDto>> GetByPayperiod(int payperiodId)
+        public async Task<PaginatedList<PaystubDto>> PaginatedList(
+            PageOptions options,
+            int payperiodId,
+            string searchTerm = "")
         {
-            var paystubs = await _repository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId);
-            var dtos = paystubs.Select(t => ConvertToDto(t)).ToList();
+            var paginatedList = await _repository.GetPaginatedListAsync(options, payperiodId, searchTerm);
+            var dtos = paginatedList.List.Select(t => PaystubDto.Convert(t.Employee, t)).ToList();
 
-            return dtos;
-        }
-
-        private PaystubDto ConvertToDto(Paystub paystub)
-        {
-            var dto = new PaystubDto();
-            dto.Id = paystub.RowID;
-            dto.NetPay = paystub.NetPay;
-
-            dto.Employee.FirstName = paystub.Employee.FirstName;
-            dto.Employee.LastName = paystub.Employee.LastName;
-
-            return dto;
+            return new PaginatedList<PaystubDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
     }
 }

@@ -9,6 +9,12 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { PayrollResult } from '../shared/payroll-result';
 import { MatDialog } from '@angular/material/dialog';
 import { PayrollResultDetailsComponent } from '../payroll-result-details/payroll-result-details.component';
+import { PageOptions } from 'src/app/core/shared/page-options';
+import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
+import { Subject } from 'rxjs';
+import { auditTime } from 'rxjs/operators';
+import { Constants } from 'src/app/core/shared/constants';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -20,13 +26,27 @@ export class ViewPayPeriodComponent implements OnInit {
 
   payPeriod: PayPeriod;
 
-  paystubs: Paystub[];
-
   payrollResult: PayrollResult;
 
-  readonly displayedColumns = ['employee', 'netPay'];
+  readonly displayedColumns = ['employee', 'grossPay', 'netPay'];
 
-  dataSource: MatTableDataSource<any>;
+  dataSource: MatTableDataSource<Paystub>;
+
+  totalCount: number;
+
+  sort: Sort = {
+    active: 'employee',
+    direction: '',
+  };
+
+  pageIndex: number = 0;
+  pageSize: number = 10;
+
+  searchTerm: string;
+
+  modelChanged: Subject<any>;
+
+  expandedPaystub: Paystub;
 
   constructor(
     private payPeriodService: PayPeriodService,
@@ -34,34 +54,47 @@ export class ViewPayPeriodComponent implements OnInit {
     private snackbar: MatSnackBar,
     private errorHandler: ErrorHandler,
     private dialog: MatDialog
-  ) {}
+  ) {
+    this.modelChanged = new Subject();
+    this.modelChanged
+      .pipe(auditTime(Constants.ThrottleTime))
+      .subscribe(() => this.loadPaystubs());
+  }
 
   ngOnInit(): void {
     this.loadPayPeriod();
     this.loadPaystubs();
   }
 
-  loadPayPeriod() {
+  loadPayPeriod(): void {
     this.payPeriodService
       .getById(this.payPeriodId)
       .subscribe((payPeriod) => (this.payPeriod = payPeriod));
   }
 
-  loadPaystubs() {
+  loadPaystubs(): void {
+    const options = new PageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.sort.active,
+      this.sort.direction
+    );
+
     this.payPeriodService
-      .getPaystubs(this.payPeriodId)
-      .subscribe((paystubs) => (this.paystubs = paystubs));
+      .getPaystubs(this.payPeriodId, options, this.searchTerm)
+      .subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.items);
+        this.totalCount = data.totalCount;
+      });
   }
 
-  showDetails() {
-    this.dialog.open(PayrollResultDetailsComponent, {
-      data: {
-        result: this.payrollResult,
-      },
-    });
+  onPageChanged(pageEvent: PageEvent): void {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.modelChanged.next();
   }
 
-  calculate() {
+  calculate(): void {
     this.snackbar.open('Calculating payroll');
 
     this.payPeriodService.calculate(this.payPeriodId).subscribe({
@@ -74,5 +107,17 @@ export class ViewPayPeriodComponent implements OnInit {
       error: (err) =>
         this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
     });
+  }
+
+  showDetails(): void {
+    this.dialog.open(PayrollResultDetailsComponent, {
+      data: {
+        result: this.payrollResult,
+      },
+    });
+  }
+
+  toggleExpansion(paystub: Paystub): void {
+    this.expandedPaystub = this.expandedPaystub === paystub ? null : paystub;
   }
 }

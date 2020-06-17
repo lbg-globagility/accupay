@@ -40,25 +40,25 @@ export class TimeEntryDetailsComponent implements OnInit {
 
   savingState: LoadingState = new LoadingState();
 
+  dataSource: MatTableDataSource<Employee>;
+
+  totalCount: number;
+
   sort: Sort = {
     active: 'employee',
     direction: '',
   };
 
-  dataSource: MatTableDataSource<Employee>;
+  pageIndex: number = 0;
+  pageSize: number = 10;
 
-  totalCount: number;
+  searchTerm: string;
 
   timeEntries: TimeEntry[];
 
   expandedEmployee: Employee;
 
   modelChanged: Subject<any>;
-
-  pageIndex: number = 0;
-  pageSize: number = 10;
-
-  term: string;
 
   constructor(
     private payPeriodService: PayPeriodService,
@@ -93,14 +93,15 @@ export class TimeEntryDetailsComponent implements OnInit {
     );
 
     this.timeEntryService
-      .getEmployees(this.payPeriodId, options, this.term)
+      .getEmployees(this.payPeriodId, options, this.searchTerm)
       .subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.items);
+        console.log(this.dataSource);
         this.totalCount = data.totalCount;
       });
   }
 
-  loadTimeEntries() {
+  loadTimeEntries(): void {
     if (this.expandedEmployee == null) {
       return;
     }
@@ -112,22 +113,22 @@ export class TimeEntryDetailsComponent implements OnInit {
       });
   }
 
-  afterGenerate() {
+  afterGenerate(): void {
     this.modelChanged.next();
   }
 
-  sortData(sort: Sort) {
+  sortData(sort: Sort): void {
     this.sort = sort;
     this.modelChanged.next();
   }
 
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.loadEmployees();
+    this.modelChanged.next();
   }
 
-  toggleExpansion(employee: Employee) {
+  toggleExpansion(employee: Employee): void {
     this.expandedEmployee =
       this.expandedEmployee === employee ? null : employee;
 

@@ -3,7 +3,7 @@ using System;
 
 namespace AccuPay.Web.Employees.Models
 {
-    public class EmployeeDto
+    public class EmployeeDto : BaseEmployeeDto
     {
         public static EmployeeDto Convert(Employee employee)
         {
@@ -15,9 +15,11 @@ namespace AccuPay.Web.Employees.Models
             return dto;
         }
 
-        protected void ApplyData(Employee employee)
+        protected override void ApplyData(Employee employee)
         {
             if (employee == null) return;
+
+            base.ApplyData(employee);
 
             Id = employee.RowID;
             PositionID = employee.PositionID;
@@ -26,9 +28,7 @@ namespace AccuPay.Web.Employees.Models
             FirstName = employee.FirstName;
             MiddleName = employee.MiddleName;
             LastName = employee.LastName;
-            FullName = employee.FullName;
             Surname = employee.Surname;
-            EmployeeNo = employee.EmployeeNo;
             Tin = employee.TinNo;
             SssNo = employee.SssNo;
             PhilHealthNo = employee.PhilHealthNo;
@@ -88,12 +88,10 @@ namespace AccuPay.Web.Employees.Models
         public int? PositionID { get; set; }
         public int? PayFrequencyID { get; set; }
         public string Salutation { get; set; }
-        public string FullName { get; set; }
         public string FirstName { get; set; }
         public string MiddleName { get; set; }
         public string LastName { get; set; }
         public string Surname { get; set; }
-        public string EmployeeNo { get; set; }
         public string Tin { get; set; }
         public string SssNo { get; set; }
         public string PagIbigNo { get; set; }

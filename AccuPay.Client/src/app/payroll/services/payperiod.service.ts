@@ -30,9 +30,19 @@ export class PayPeriodService {
     return this.httpClient.get<PayPeriod>(`${this.baseUrl}/${payPeriodId}`);
   }
 
-  getPaystubs(payPeriodId: number): Observable<Paystub[]> {
-    return this.httpClient.get<Paystub[]>(
-      `${this.baseUrl}/${payPeriodId}/paystubs`
+  getPaystubs(
+    payPeriodId: number,
+    options: PageOptions,
+    term: string = ''
+  ): Observable<PaginatedList<Paystub>> {
+    const params = options ? options.toObject() : null;
+    params.term = term;
+
+    return this.httpClient.get<PaginatedList<Paystub>>(
+      `${this.baseUrl}/${payPeriodId}/paystubs`,
+      {
+        params,
+      }
     );
   }
 
