@@ -201,12 +201,14 @@ namespace AccuPay.Data.Services
                         LogDate = logDate,
                         CreatedBy = _userId,
                         OrganizationID = _organizationId,
+                        Employee = currentEmployee,
                         EmployeeID = currentEmployee.RowID,
                         TimeIn = firstTimeIn,
                         TimeOut = finalTimeOut,
                         TimeStampIn = firstTimeStampIn,
                         TimeStampOut = finalTimeStampOut,
-                        BranchID = currentEmployee.BranchID
+                        BranchID = currentEmployee.BranchID,
+                        Branch = currentEmployee.Branch
                     });
                 }
             }

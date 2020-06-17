@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using static AccuPay.Data.Services.Imports.TimeLogImportParser;
 
 namespace AccuPay.Web.TimeLogs
 {
@@ -150,7 +151,7 @@ namespace AccuPay.Web.TimeLogs
             await _service.DeleteAsync(id);
         }
 
-        internal async Task Import(IFormFile file)
+        internal async Task<TimeLogImportResultDto> Import(IFormFile file)
         {
             if (Path.GetExtension(file.FileName) != TimeLogsReader.PreferredExtension)
                 throw new InvalidFormatException("Only .txt files are supported.");
@@ -167,7 +168,30 @@ namespace AccuPay.Web.TimeLogs
             int userId = 1;
             var parsedResult = await _importParser.Parse(fileStream.Name, organizationId: _currentUser.OrganizationId, userId: userId);
 
-            await _service.SaveImportAsync(parsedResult.GeneratedTimeLogs, parsedResult.GeneratedTimeAttendanceLogs);
+            var invalidDtos = parsedResult.InvalidRecords.Select(x => ConvertToImportDetailsDto(x));
+            var timeLogs = parsedResult.GeneratedTimeLogs.Select(x => ConvertToDto(x));
+
+            return new TimeLogImportResultDto()
+            {
+                InvalidRecords = invalidDtos,
+                GeneratedTimeLogs = timeLogs
+            };
+
+            //await _service.SaveImportAsync(parsedResult.GeneratedTimeLogs, parsedResult.GeneratedTimeAttendanceLogs);
+        }
+
+        private static TimeLogImportDetailsDto ConvertToImportDetailsDto(TimeLogImportModel parsedResult)
+        {
+            return new TimeLogImportDetailsDto()
+            {
+                EmployeeNumber = parsedResult.EmployeeNumber,
+                EmployeeName = parsedResult.EmployeeFullName,
+                DateAndTime = parsedResult.DateTime,
+                ErrorMessage = parsedResult.ErrorMessage,
+                LineContent = parsedResult.LineContent,
+                LineNumber = parsedResult.LineNumber,
+                Type = parsedResult.Type                
+            };            
         }
 
         private static TimeLogDto ConvertToDto(TimeLog timeLog)
@@ -176,7 +200,7 @@ namespace AccuPay.Web.TimeLogs
 
             return new TimeLogDto()
             {
-                Id = timeLog.RowID.Value,
+                Id = timeLog.RowID,
                 EmployeeId = timeLog.EmployeeID.Value,
                 EmployeeNumber = timeLog.Employee?.EmployeeNo,
                 EmployeeName = timeLog.Employee?.FullNameWithMiddleInitialLastNameFirst,

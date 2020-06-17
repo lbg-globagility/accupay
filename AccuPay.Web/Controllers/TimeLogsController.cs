@@ -83,11 +83,14 @@ namespace AccuPay.Web.Controllers
 
         [HttpPost("import")]
         [Permission(PermissionTypes.TimeLogCreate)]
-        public async Task<ActionResult> Import([FromForm] IFormFile file)
+        public async Task<ActionResult<TimeLogImportResultDto>> Import([FromForm] IFormFile file)
         {
-            await _service.Import(file);
+            var result = await _service.Import(file);
 
-            return Ok();
+            if (result == null)
+                return NotFound();
+            else
+                return result;
         }
     }
 }
