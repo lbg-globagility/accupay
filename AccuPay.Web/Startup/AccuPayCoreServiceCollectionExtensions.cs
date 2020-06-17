@@ -15,6 +15,7 @@ namespace AccuPay.Web
             services.AddScoped<AgencyFeeRepository>();
             services.AddScoped<AgencyRepository>();
             services.AddScoped<AllowanceRepository>();
+            services.AddScoped<AllowanceTypeRepository>();
             services.AddScoped<AspNetUserRepository>();
             services.AddScoped<AttachmentRepository>();
             services.AddScoped<AwardRepository>();

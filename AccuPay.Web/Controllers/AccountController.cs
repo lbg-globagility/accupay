@@ -1,6 +1,6 @@
 using AccuPay.Web.Account;
-using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -25,6 +25,7 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost("login")]
+        [AllowAnonymous]
         public async Task<ActionResult<AccessTokenDto>> Login([FromBody] LoginDto dto)
         {
             try

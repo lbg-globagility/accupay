@@ -26,6 +26,7 @@ import { PayrollModule } from 'src/app/payroll/payroll.module';
 import { DivisionsModule } from './divisions/divisions.module';
 import { TimeEntryModule } from './time-entry/time-entry.module';
 import { RolesModule } from 'src/app/roles/roles.module';
+import { AllowanceTypesModule } from './allowance-types/allowance-types.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -55,6 +56,7 @@ import { RolesModule } from 'src/app/roles/roles.module';
     DivisionsModule,
     TimeEntryModule,
     RolesModule,
+    AllowanceTypesModule,
   ],
   providers: [
     {

@@ -75,6 +75,7 @@ import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
 import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
 import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balance.component';
 import { TimeLogs2Component } from 'src/app/time-logs/time-logs2/time-logs2.component';
+import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
 
 const routes: Routes = [
   {
@@ -212,6 +213,10 @@ const routes: Routes = [
       {
         path: 'allowances/:id/edit',
         component: EditAllowanceComponent,
+      },
+      {
+        path: 'allowance-types',
+        component: AllowanceTypeListComponent,
       },
       {
         path: 'loans',
