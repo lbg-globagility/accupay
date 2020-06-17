@@ -4,6 +4,7 @@ export interface Paystub {
   employeeNo: number;
   fullName: number;
   payperiodId: number;
+  basicRate: number;
   basicHours: number;
   regularHours: number;
   regularPay: number;
@@ -39,7 +40,8 @@ export interface Paystub {
   totalBonus: number;
   totalAllowance: number;
   totalTaxableAllowance: number;
-  taxableIncome: number;
+  totalNonTaxableAllowance: number;
+  totalDeductions: number;
   withholdingTax: number;
   sssEmployeeShare: number;
   philHealthEmployeeShare: number;

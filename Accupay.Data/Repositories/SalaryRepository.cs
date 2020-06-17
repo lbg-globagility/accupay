@@ -71,38 +71,37 @@ namespace AccuPay.Data.Repositories
 
         public async Task<Salary> GetByIdAsync(int id)
         {
-            return await _context.Salaries
-                                .FirstOrDefaultAsync(x => x.RowID == id);
+            return await _context.Salaries.FirstOrDefaultAsync(x => x.RowID == id);
         }
 
         public async Task<Salary> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.Salaries
-                                .Include(x => x.Employee)
-                                .Where(x => x.RowID == id)
-                                .FirstOrDefaultAsync();
+                .Include(x => x.Employee)
+                .Where(x => x.RowID == id)
+                .FirstOrDefaultAsync();
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        public IEnumerable<Salary> GetByEmployee(int employeeId)
+        public ICollection<Salary> GetByEmployee(int employeeId)
         {
-            return _context.Salaries.
-                    Where(x => x.EmployeeID == employeeId).
-                    ToList();
+            return _context.Salaries
+                .Where(x => x.EmployeeID == employeeId)
+                .ToList();
         }
 
         public async Task<PaginatedListResult<Salary>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Salaries
-                                .Include(x => x.Employee)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderByDescending(x => x.EffectiveFrom)
-                                .ThenBy(x => x.Employee.LastName)
-                                .ThenBy(x => x.Employee.FirstName)
-                                .AsQueryable();
+                .Include(x => x.Employee)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderByDescending(x => x.EffectiveFrom)
+                .ThenBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -120,38 +119,45 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Salary>(salaries, count);
         }
 
-        public async Task<IEnumerable<Salary>> GetAll(int organizationId)
+        public async Task<ICollection<Salary>> GetAll(int organizationId)
         {
-            return await _context.Salaries.
-                Where(x => x.OrganizationID == organizationId).
-                ToListAsync();
+            return await _context.Salaries
+                .Where(x => x.OrganizationID == organizationId)
+                .ToListAsync();
         }
 
-        public IEnumerable<Salary> GetByCutOff(int organizationId, DateTime cutoffStart)
+        public ICollection<Salary> GetByCutOff(int organizationId, DateTime cutoffStart)
         {
-            return CreateBaseQueryByCutOff(organizationId, cutoffStart).
-                            ToList();
+            return CreateBaseQueryByCutOff(cutoffStart)
+                .Where(x => x.OrganizationID == organizationId)
+                .ToList();
         }
 
-        public async Task<IEnumerable<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffStart)
+        public async Task<ICollection<Salary>> GetByCutOffAsync(int organizationId, DateTime cutoffStart)
         {
-            return await CreateBaseQueryByCutOff(organizationId, cutoffStart).
-                            ToListAsync();
+            return await CreateBaseQueryByCutOff(cutoffStart)
+                .Where(x => x.OrganizationID == organizationId)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Salary>> GetByMultipleEmployeeAsync(int[] employeeIds, DateTime cutoffStart)
+        {
+            return await CreateBaseQueryByCutOff(cutoffStart)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
         }
 
         #endregion List of entities
 
         #endregion Queries
 
-        private IQueryable<Salary> CreateBaseQueryByCutOff(int organizationId,
-                                                        DateTime cutoffStart)
+        private IQueryable<Salary> CreateBaseQueryByCutOff(DateTime cutoffStart)
         {
-            return _context.Salaries.
-                            Where(x => x.OrganizationID == organizationId).
-                            Where(x => x.EffectiveFrom <= cutoffStart).
-                            OrderByDescending(x => x.EffectiveFrom).
-                            GroupBy(x => x.EmployeeID).
-                            Select(g => g.FirstOrDefault());
+            return _context.Salaries
+                .Where(x => x.EffectiveFrom <= cutoffStart)
+                .OrderByDescending(x => x.EffectiveFrom)
+                .GroupBy(x => x.EmployeeID)
+                .Select(g => g.FirstOrDefault());
         }
     }
 }

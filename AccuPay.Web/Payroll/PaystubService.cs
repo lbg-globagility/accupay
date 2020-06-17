@@ -1,5 +1,5 @@
 using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,20 +7,20 @@ namespace AccuPay.Web.Payroll
 {
     public class PaystubService
     {
-        private readonly PaystubRepository _repository;
+        private readonly PaystubDataService _service;
 
-        public PaystubService(PaystubRepository repository)
+        public PaystubService(PaystubDataService service)
         {
-            _repository = repository;
+            _service = service;
         }
 
         public async Task<PaginatedList<PaystubDto>> PaginatedList(
             PageOptions options,
-            int payperiodId,
+            int payPeriodId,
             string searchTerm = "")
         {
-            var paginatedList = await _repository.GetPaginatedListAsync(options, payperiodId, searchTerm);
-            var dtos = paginatedList.List.Select(t => PaystubDto.Convert(t.Employee, t)).ToList();
+            var paginatedList = await _service.GetPaginatedListAsync(options, payPeriodId, searchTerm);
+            var dtos = paginatedList.List.Select(t => PaystubDto.Convert(t)).ToList();
 
             return new PaginatedList<PaystubDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }

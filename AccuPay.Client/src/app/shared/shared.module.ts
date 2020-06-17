@@ -6,11 +6,13 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 import { IfZeroPipe } from 'src/app/core/pipes/if-zero.pipe';
+import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
+import { HasParenthesisPipe } from 'src/app/core/pipes/has-parenthesis.pipe';
+import { IndicateNegativePipe } from 'src/app/core/pipes/indicate-negative.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
-import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
 import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row/expandable-row.component';
 import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
 import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
@@ -25,6 +27,8 @@ import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expanda
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
+    HasParenthesisPipe,
+    IndicateNegativePipe,
     DisplayFieldComponent,
     ExpandableRowComponent,
     ExpandableRowContainerDirective,
@@ -53,6 +57,8 @@ import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expanda
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
+    HasParenthesisPipe,
+    IndicateNegativePipe,
     ImgFallbackDirective,
     StatusComponent,
     DisplayFieldComponent,

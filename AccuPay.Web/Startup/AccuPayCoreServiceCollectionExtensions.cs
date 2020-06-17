@@ -90,7 +90,6 @@ namespace AccuPay.Web
             services.AddScoped<AdjustmentService>();
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodService>();
-            services.AddScoped<ProductDataService>();
             services.AddScoped<SystemOwnerService>();
 
             services.AddScoped<AllowanceDataService>();
@@ -100,7 +99,9 @@ namespace AccuPay.Web
             services.AddScoped<LoanDataService>();
             services.AddScoped<OfficialBusinessDataService>();
             services.AddScoped<OvertimeDataService>();
+            services.AddScoped<PaystubDataService>();
             services.AddScoped<PositionDataService>();
+            services.AddScoped<ProductDataService>();
             services.AddScoped<TimeEntryDataService>();
             services.AddScoped<TimeLogDataService>();
 

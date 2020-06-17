@@ -1,28 +1,33 @@
-using AccuPay.Data.Entities;
+using AccuPay.Data.Services;
 using AccuPay.Web.Employees.Models;
 
 namespace AccuPay.Web.Payroll
 {
     public class PaystubDto : BaseEmployeeDto
     {
-        public static PaystubDto Convert(Employee employee, Paystub paystub)
+        public static PaystubDto Convert(PaystubData paystubData)
         {
             var dto = new PaystubDto();
-            if (employee == null) return dto;
+            if (paystubData?.Paystub?.Employee == null) return dto;
 
-            dto.ApplyData(employee, paystub);
+            dto.ApplyData(paystubData);
 
             return dto;
         }
 
-        protected void ApplyData(Employee employee, Paystub paystub)
+        protected void ApplyData(PaystubData paystubData)
         {
-            if (employee == null) return;
+            if (paystubData == null) return;
+
+            var paystub = paystubData?.Paystub;
+            var employee = paystubData?.Paystub?.Employee;
+
+            if (paystub?.Employee == null) return;
 
             base.ApplyData(employee);
+            if (paystub.EmployeeID != paystub?.Employee.RowID) return;
 
-            if (paystub == null) return;
-            if (paystub.EmployeeID != employee.RowID) return;
+            BasicRate = paystubData.BasicRate;
 
             Id = paystub.RowID.Value;
             EmployeeId = paystub.EmployeeID.Value;
@@ -60,7 +65,7 @@ namespace AccuPay.Web.Payroll
             TotalAdjustments = paystub.TotalAdjustments;
             TotalEarnings = paystub.TotalEarnings;
             TotalBonus = paystub.TotalBonus;
-            TotalAllowance = paystub.TotalAllowance;
+            TotalNonTaxableAllowance = paystub.TotalAllowance;
             TotalTaxableAllowance = paystub.TotalTaxableAllowance;
             TaxableIncome = paystub.TaxableIncome;
             WithholdingTax = paystub.WithholdingTax;
@@ -68,6 +73,7 @@ namespace AccuPay.Web.Payroll
             PhilHealthEmployeeShare = paystub.PhilHealthEmployeeShare;
             HdmfEmployeeShare = paystub.HdmfEmployeeShare;
             TotalLoans = paystub.TotalLoans;
+            TotalDeductions = paystub.NetDeductions;
             NetPay = paystub.NetPay;
         }
 
@@ -78,6 +84,8 @@ namespace AccuPay.Web.Payroll
         public int PayperiodId { get; set; }
 
         public decimal BasicHours { get; set; }
+
+        public decimal BasicRate { get; set; }
 
         public decimal RegularHours { get; set; }
 
@@ -143,7 +151,7 @@ namespace AccuPay.Web.Payroll
 
         public decimal TotalBonus { get; set; }
 
-        public decimal TotalAllowance { get; set; }
+        public decimal TotalNonTaxableAllowance { get; set; }
 
         public decimal TotalTaxableAllowance { get; set; }
 
@@ -158,6 +166,7 @@ namespace AccuPay.Web.Payroll
         public decimal HdmfEmployeeShare { get; set; }
 
         public decimal TotalLoans { get; set; }
+        public decimal TotalDeductions { get; set; }
 
         public decimal NetPay { get; set; }
     }
