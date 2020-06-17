@@ -1,3 +1,7 @@
+.mat-table.m-borders {
+  border: thin solid $app-border-color;
+}
+
 .mat-table.m-dark-headers {
   .mat-header-cell {
     font-size: 0.875rem;
