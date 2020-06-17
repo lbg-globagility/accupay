@@ -5,12 +5,13 @@ import { TimeLogService } from '../time-log.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import Swal from 'sweetalert2';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
 import * as moment from 'moment';
 import { range } from 'src/app/core/functions/dates';
 import { TimeParser } from 'src/app/core/shared/services/time-parser';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-edit-time-log',
@@ -19,6 +20,8 @@ import { TimeParser } from 'src/app/core/shared/services/time-parser';
 })
 export class EditTimeLogComponent implements OnInit {
   readonly displayedColumns: string[] = ['date', 'timeIn', 'timeOut'];
+
+  savingState: LoadingState = new LoadingState();
 
   employee: EmployeeTimeLogs;
 
@@ -38,6 +41,8 @@ export class EditTimeLogComponent implements OnInit {
     private fb: FormBuilder,
     private timeParser: TimeParser,
     private timeLogService: TimeLogService,
+    private dialogRef: MatDialogRef<EditTimeLogComponent>,
+    private errorHandler: ErrorHandler,
     @Inject(MAT_DIALOG_DATA) data: any
   ) {
     this.employee = data.employee;
@@ -50,6 +55,8 @@ export class EditTimeLogComponent implements OnInit {
   }
 
   save(): void {
+    this.savingState.changeToLoading();
+
     const value = this.form.value;
 
     const timeLogs = [];
@@ -64,9 +71,16 @@ export class EditTimeLogComponent implements OnInit {
       timeLogs.push(timeLog);
     }
 
-    this.timeLogService.update2(timeLogs).subscribe();
-
-    // console.log(timeLogs);
+    this.timeLogService.update2(timeLogs).subscribe({
+      next: () => {
+        this.savingState.changeToSuccess();
+        this.dialogRef.close(true);
+      },
+      error: (err) => {
+        this.savingState.changeToError();
+        this.errorHandler.badRequest(err, 'Failed to save time logs');
+      },
+    });
   }
 
   private initializeForm(): void {

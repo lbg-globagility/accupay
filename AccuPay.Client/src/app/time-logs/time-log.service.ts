@@ -25,11 +25,13 @@ export class TimeLogService {
   listByEmployee(
     options: PageOptions,
     dateFrom: Date,
-    dateTo: Date
+    dateTo: Date,
+    searchTerm: string
   ): Observable<PaginatedList<EmployeeTimeLogs>> {
     const params = options ? options.toObject() : null;
     params.dateFrom = dateFrom.toISOString();
     params.dateTo = dateTo.toISOString();
+    params.searchTerm = searchTerm;
     return this.httpClient.get<PaginatedList<EmployeeTimeLogs>>(
       `${this.baseUrl}/employees`,
       {

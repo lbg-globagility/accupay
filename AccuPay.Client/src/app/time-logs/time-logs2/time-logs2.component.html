@@ -1,10 +1,28 @@
 <h1 class="mat-headline">{{ dateFrom | date }} - {{ dateTo | date }}</h1>
 
-<div>
-  <mat-form-field appearance="standard">
-    <mat-label>Search</mat-label>
-    <input matInput type="text" />
-  </mat-form-field>
+<div class="row">
+  <div class="col-lg-3">
+    <mat-form-field appearance="standard" class="w-full m-with-icon">
+      <mat-icon matPrefix>search</mat-icon>
+      <mat-label>Search</mat-label>
+      <input
+        matInput
+        placeholder="Search by employee no, or full name"
+        name="leaves"
+        [(ngModel)]="searchTerm"
+        (ngModelChange)="applyFilter()"
+      />
+      <button
+        *ngIf="searchTerm"
+        matSuffix
+        mat-icon-button
+        aria-label="Clear"
+        (click)="clearSearchBox()"
+      >
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
 </div>
 
 <div class="mat-elevation-z1">

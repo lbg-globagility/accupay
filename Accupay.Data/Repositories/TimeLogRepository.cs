@@ -192,11 +192,24 @@ namespace AccuPay.Data.Repositories
             int organizationId,
             PageOptions options,
             DateTime dateFrom,
-            DateTime dateTo)
+            DateTime dateTo,
+            string searchTerm)
         {
             // TODO: might want to use employeeRepository for this query
             var query = _context.Employees
-                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.OrganizationID == organizationId);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.LastName, searchTerm));
+            }
+
+            query = query
                 .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName);
 

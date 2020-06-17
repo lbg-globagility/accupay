@@ -69,6 +69,12 @@
       border-top: none;
     }
   }
+
+  &.mat-form-field-appearance-fill {
+    .mat-form-field-infix {
+      border-top: none;
+    }
+  }
 }
 
 // deprecated

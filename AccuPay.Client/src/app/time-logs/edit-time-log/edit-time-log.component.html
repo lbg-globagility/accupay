@@ -1,6 +1,10 @@
-<h1 mat-dialog-title>Edit Time Logs</h1>
+<h2 mat-dialog-title>Edit Time Logs</h2>
 
 <div mat-dialog-content>
+  <app-display-field label="Employee">
+    {{ employee.fullName }}
+  </app-display-field>
+
   <form [formGroup]="form">
     <table
       mat-table
@@ -11,7 +15,12 @@
       <ng-container matColumnDef="date">
         <th mat-header-cell *matHeaderCellDef>Date</th>
         <td mat-cell *matCellDef="let control">
-          {{ control.get("date").value | date }}
+          <div class="px-2 text-center">
+            <p>{{ control.get("date").value | date: "shortDate" }}</p>
+            <p class="text-xs">
+              ({{ control.get("date").value | date: "EEE" }})
+            </p>
+          </div>
         </td>
       </ng-container>
 
@@ -23,7 +32,7 @@
           [formGroupName]="i"
         >
           <div class="pt-2 px-2">
-            <mat-form-field appearance="fill" class="m-no-margin">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
               <input matInput type="time" formControlName="timeIn" />
             </mat-form-field>
           </div>
@@ -38,7 +47,7 @@
           [formGroupName]="i"
         >
           <div class="pt-2 px-2">
-            <mat-form-field appearance="fill" class="m-no-margin">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
               <input matInput type="time" formControlName="timeOut" />
             </mat-form-field>
           </div>
@@ -52,6 +61,13 @@
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-flat-button color="primary" (click)="save()">SAVE</button>
-  <button mat-button>CANCEL</button>
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="savingState.isLoading"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+  <button mat-button mat-dialog-close>CANCEL</button>
 </div>

@@ -7,11 +7,12 @@ import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { PageEvent } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { MatDialog } from '@angular/material/dialog';
 import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
 import { range } from 'src/app/core/functions/dates';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 interface DateHeader {
   title: string;
@@ -39,13 +40,16 @@ export class TimeLogs2Component implements OnInit {
 
   modelChanged: Subject<any>;
 
+  searchTerm: string = '';
+
   dataSource: MatTableDataSource<EmployeeTimeLogs> = new MatTableDataSource();
 
   totalCount: number;
 
   constructor(
     private timeLogService: TimeLogService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private snackBar: MatSnackBar
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -68,6 +72,15 @@ export class TimeLogs2Component implements OnInit {
       ?.endTime;
   }
 
+  applyFilter(): void {
+    this.modelChanged.next();
+  }
+
+  clearSearchBox(): void {
+    this.searchTerm = '';
+    this.modelChanged.next();
+  }
+
   onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
@@ -75,20 +88,29 @@ export class TimeLogs2Component implements OnInit {
   }
 
   edit(employee: EmployeeTimeLogs): void {
-    this.dialog.open(EditTimeLogComponent, {
-      data: {
-        employee,
-        dateFrom: this.dateFrom,
-        dateTo: this.dateTo,
-      },
-    });
+    this.dialog
+      .open(EditTimeLogComponent, {
+        data: {
+          employee,
+          dateFrom: this.dateFrom,
+          dateTo: this.dateTo,
+        },
+      })
+      .afterClosed()
+      .pipe(filter((t) => t))
+      .subscribe(() => {
+        this.loadTimeLogs();
+        this.snackBar.open('Successful update', null, {
+          duration: 2000,
+        });
+      });
   }
 
   private loadTimeLogs(): void {
     const options = new PageOptions(this.pageIndex, this.pageSize);
 
     this.timeLogService
-      .listByEmployee(options, this.dateFrom, this.dateTo)
+      .listByEmployee(options, this.dateFrom, this.dateTo, this.searchTerm)
       .subscribe((data) => {
         this.dataSource = new MatTableDataSource(data.items);
         this.totalCount = data.totalCount;

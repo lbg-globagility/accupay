@@ -27,9 +27,10 @@ namespace AccuPay.Data.Services
             int organizationId,
             PageOptions options,
             DateTime dateFrom,
-            DateTime dateTo)
+            DateTime dateTo,
+            string searchTerm)
         {
-            return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo);
+            return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo, searchTerm);
         }
 
         public async Task<ICollection<TimeLog>> GetAll(
