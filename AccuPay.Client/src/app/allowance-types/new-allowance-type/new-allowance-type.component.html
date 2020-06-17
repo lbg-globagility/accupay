@@ -1,0 +1,21 @@
+<div mat-card>
+  <h1 mat-card-title>New Allowance Type</h1>
+
+  <div mat-card-content>
+    <app-allowance-type-form
+      [allowanceType]="newAllowanceType"
+    ></app-allowance-type-form>
+  </div>
+
+  <div mat-card-actions align="end">
+    <button
+      mat-button
+      color="primary"
+      (click)="onSave()"
+      [disabled]="savingState.isLoading"
+    >
+      SAVE
+    </button>
+    <button mat-button [mat-dialog-close]="false">CANCEL</button>
+  </div>
+</div>

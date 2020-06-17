@@ -12,7 +12,7 @@ export class IfZeroPipe extends DecimalPipe implements PipeTransform {
     numberFormat: string = null,
     defaultIfEmpty: string = this.emptyOutput
   ): any {
-    let input = Number(value);
+    const input = Number(value);
 
     if (isNaN(input) || input == 0) {
       const alternative = !defaultIfEmpty ? this.emptyOutput : defaultIfEmpty;

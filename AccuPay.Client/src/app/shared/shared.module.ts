@@ -16,6 +16,7 @@ import { DisplayFieldComponent } from 'src/app/shared/components/display-field/d
 import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row/expandable-row.component';
 import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
 import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
+import { YesNoPipe } from '../core/pipes/yes-no.pipe';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expanda
     AmountPipe,
     HasParenthesisPipe,
     IndicateNegativePipe,
+    YesNoPipe,
     DisplayFieldComponent,
     ExpandableRowComponent,
     ExpandableRowContainerDirective,
@@ -59,6 +61,7 @@ import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expanda
     AmountPipe,
     HasParenthesisPipe,
     IndicateNegativePipe,
+    YesNoPipe,
     ImgFallbackDirective,
     StatusComponent,
     DisplayFieldComponent,

@@ -35,6 +35,7 @@ namespace AccuPay.Data
         internal virtual DbSet<AgencyFee> AgencyFees { get; set; }
         internal virtual DbSet<Allowance> Allowances { get; set; }
         internal virtual DbSet<AllowanceItem> AllowanceItems { get; set; }
+        internal virtual DbSet<AllowanceType> AllowanceTypes { get; set; }
         internal virtual DbSet<Attachment> Attachments { get; set; }
         internal virtual DbSet<Award> Awards { get; set; }
         internal virtual DbSet<Bonus> Bonuses { get; set; }

@@ -1,5 +1,4 @@
 using AccuPay.Web.Account;
-using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
