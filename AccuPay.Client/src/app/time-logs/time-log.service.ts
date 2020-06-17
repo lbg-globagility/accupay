@@ -5,6 +5,7 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { TimeLog } from 'src/app/time-logs/shared/time-log';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
+import { TimeLogImportResult } from './shared/time-log-import-result';
 
 @Injectable({
   providedIn: 'root',
@@ -61,10 +62,13 @@ export class TimeLogService {
     return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);
   }
 
-  import(file: File): Observable<TimeLog> {
+  import(file: File): Observable<TimeLogImportResult> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post<TimeLog>(`${this.baseUrl}/import`, formData);
+    return this.httpClient.post<TimeLogImportResult>(
+      `${this.baseUrl}/import`,
+      formData
+    );
   }
 }
