@@ -43,56 +43,59 @@
       <ng-container matColumnDef="regularHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Regular Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.regularHours | ifZero }}
+          {{ employee.totalTimeEntry.regularHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="absentHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Absent Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.absentHours | ifZero }}
+          {{ employee.totalTimeEntry.absentHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="lateHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Late Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.lateHours | ifZero }}
+          {{ employee.totalTimeEntry.lateHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="undertimeHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>UT Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.undertimeHours | ifZero }}
+          {{ employee.totalTimeEntry.undertimeHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="leaveHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Leave Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.leaveHours | ifZero }}
+          {{ employee.totalTimeEntry.leaveHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="overtimeHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>OT Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.overtimeHours | ifZero }}
+          {{ employee.totalTimeEntry.overtimeHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="nightDifferentialHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>ND Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.nightDifferentialHours | ifZero }}
+          {{ employee.totalTimeEntry.nightDifferentialHours | ifZero: "1.0-2" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="nightDifferentialOvertimeHours">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>ND OT Hrs</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.totalTimeEntry.nightDifferentialOvertimeHours | ifZero }}
+          {{
+            employee.totalTimeEntry.nightDifferentialOvertimeHours
+              | ifZero: "1.0-2"
+          }}
         </td>
       </ng-container>
 
