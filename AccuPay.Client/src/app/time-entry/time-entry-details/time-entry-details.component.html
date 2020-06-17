@@ -14,10 +14,12 @@
       matSort
       [dataSource]="dataSource"
       (matSortChange)="sortData($event)"
-      class="w-full"
+      class="w-full table-fixed"
     >
       <ng-container matColumnDef="employee">
-        <th mat-header-cell mat-sort-header *matHeaderCellDef>Full Name</th>
+        <th mat-header-cell mat-sort-header *matHeaderCellDef class="w-1/6">
+          Full Name
+        </th>
         <td mat-cell *matCellDef="let employee">
           <div class="flex items-center">
             <img
@@ -99,6 +101,7 @@
           mat-cell
           *matCellDef="let employee"
           [attr.colspan]="displayedColumns.length"
+          class="m-no-padding"
         >
           <div app-expandable-row [expanded]="expandedEmployee === employee">
             <app-time-entry-table
