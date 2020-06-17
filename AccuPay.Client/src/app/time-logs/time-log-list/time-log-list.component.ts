@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Subject } from 'rxjs';
 import { MatTableDataSource } from '@angular/material/table';
 import { Sort } from '@angular/material/sort';
-import { auditTime } from 'rxjs/operators';
+import { auditTime, filter } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
@@ -10,6 +10,8 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { TimeLog } from 'src/app/time-logs/shared/time-log';
 import { TimeLogService } from 'src/app/time-logs/time-log.service';
 import Swal from 'sweetalert2';
+import { MatDialog } from '@angular/material/dialog';
+import { TimeLogImportResultComponent } from '../time-log-import-result/time-log-import-result.component';
 
 @Component({
   selector: 'app-time-log-list',
@@ -52,7 +54,8 @@ export class TimeLogListComponent implements OnInit {
 
   constructor(
     private timeLogService: TimeLogService,
-    private errorHandler: ErrorHandler
+    private errorHandler: ErrorHandler,
+    private dialog: MatDialog
   ) {
     this.modelChanged = new Subject();
     this.modelChanged
@@ -108,9 +111,19 @@ export class TimeLogListComponent implements OnInit {
   onImport(files: FileList) {
     const file = files[0];
     this.timeLogService.import(file).subscribe(
-      () => {
-        this.getTimeLogList();
-        this.displaySuccess();
+      (data) => {
+        this.dialog
+          .open(TimeLogImportResultComponent, {
+            data: {
+              result: data,
+            },
+          })
+          .afterClosed()
+          .pipe(filter((t) => t))
+          .subscribe(() => {
+            this.getTimeLogList();
+            this.displaySuccess();
+          });
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to import time logs.')
     );
