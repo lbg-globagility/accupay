@@ -74,6 +74,7 @@ import { RoleListComponent } from 'src/app/roles/role-list/role-list.component';
 import { EditRoleComponent } from 'src/app/roles/edit-role/edit-role.component';
 import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.component';
 import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balance.component';
+import { TimeLogs2Component } from 'src/app/time-logs/time-logs2/time-logs2.component';
 
 const routes: Routes = [
   {
@@ -258,7 +259,7 @@ const routes: Routes = [
       },
       {
         path: 'time-logs',
-        component: TimeLogListComponent,
+        component: TimeLogs2Component,
       },
       {
         path: 'time-logs/new',

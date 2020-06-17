@@ -150,7 +150,7 @@ namespace AccuPay.Data.Repositories
         }
 
         public async Task<ICollection<TimeLog>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
-            int[] employeeIds,
+            IEnumerable<int> employeeIds,
             TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(datePeriod)
@@ -186,6 +186,46 @@ namespace AccuPay.Data.Repositories
             var count = await query.CountAsync();
 
             return new PaginatedListResult<TimeLog>(timeLogs, count);
+        }
+
+        internal async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployee(
+            int organizationId,
+            PageOptions options,
+            DateTime dateFrom,
+            DateTime dateTo,
+            string searchTerm)
+        {
+            // TODO: might want to use employeeRepository for this query
+            var query = _context.Employees
+                .Where(x => x.OrganizationID == organizationId);
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                searchTerm = $"%{searchTerm}%";
+
+                query = query.Where(x =>
+                    EF.Functions.Like(x.EmployeeNo, searchTerm) ||
+                    EF.Functions.Like(x.FirstName, searchTerm) ||
+                    EF.Functions.Like(x.LastName, searchTerm));
+            }
+
+            query = query
+                .OrderBy(x => x.LastName)
+                .ThenBy(x => x.FirstName);
+
+            var employees =  await query.Page(options).ToListAsync();
+            var total = await query.CountAsync();
+
+            var employeeIds = employees.Select(x => x.RowID);
+
+            var timeLogs = await _context.TimeLogs
+                .Include(x => x.Branch)
+                .Where(x => employeeIds.Contains(x.EmployeeID))
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => dateFrom <= x.LogDate && x.LogDate <= dateTo)
+                .ToListAsync();
+
+            return (employees, total, timeLogs);
         }
 
         internal async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
