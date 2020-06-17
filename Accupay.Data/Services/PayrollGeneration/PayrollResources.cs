@@ -297,8 +297,8 @@ namespace AccuPay.Data.Services
             try
             {
                 Leaves = (await _leaveRepository.
-                        GetByTimePeriodAsync(organizationId: _organizationId,
-                                            timePeriod: _payPeriodSpan)).
+                        GetByDatePeriodAsync(organizationId: _organizationId,
+                                            datePeriod: _payPeriodSpan)).
                         ToList();
             }
             catch (Exception ex)

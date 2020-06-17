@@ -1,0 +1,351 @@
+<div>
+  <table
+    mat-table
+    [dataSource]="dataSource"
+    class="w-full"
+    style="width: 2000px;"
+  >
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef>Date</th>
+      <td mat-cell *matCellDef="let timeEntry">{{ timeEntry.date | date }}</td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="shift">
+      <th mat-header-cell *matHeaderCellDef>Shift</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.shift?.start | date: "shortTime" }} -
+        {{ timeEntry.shift?.end | date: "shortTime" }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="timeLog">
+      <th mat-header-cell *matHeaderCellDef>Time In/Out</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.timeLog?.start | date: "shortTime" }} -
+        {{ timeEntry.timeLog?.end | date: "shortTime" }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="officialBusiness">
+      <th mat-header-cell *matHeaderCellDef>Filed OB</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.officialBusiness?.start | date: "shortTime" }} -
+        {{ timeEntry.officialBusiness?.end | date: "shortTime" }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHours">
+      <th mat-header-cell *matHeaderCellDef>Regular Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.regularHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="leave">
+      <th mat-header-cell *matHeaderCellDef>Filed Leave</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        <ng-container *ngIf="!timeEntry.leave?.isWholeDay; else wholeDay">
+          {{ timeEntry.leave?.startTime | date: "shortTime" }} -
+          {{ timeEntry.leave?.endTime | date: "shortTime" }}
+        </ng-container>
+        <ng-template #wholeDay>
+          <span class="italic">Whole Day</span>
+        </ng-template>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="leaveHours">
+      <th mat-header-cell *matHeaderCellDef>Leave Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.leaveHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.leaveHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="leavePay">
+      <th mat-header-cell *matHeaderCellDef>Leave Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.leavePay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.leavePay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimes">
+      <th mat-header-cell *matHeaderCellDef>Filed OTs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        <ul>
+          <li *ngFor="let overtime of timeEntry.overtimes">
+            {{ overtime.start | date: "shortTime" }} -
+            {{ overtime.end | date: "shortTime" }}
+          </li>
+        </ul>
+        <span *ngIf="timeEntry.overtimes <= 0">
+          -
+        </span>
+      </td>
+      <td mat-footer-cell *matFooterCellDef></td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimeHours">
+      <th mat-header-cell *matHeaderCellDef>OT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.overtimeHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.overtimeHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="overtimePay">
+      <th mat-header-cell *matHeaderCellDef>OT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.overtimePay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.overtimePay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffHours">
+      <th mat-header-cell *matHeaderCellDef>ND Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.nightDiffHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffPay">
+      <th mat-header-cell *matHeaderCellDef>ND Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.nightDiffPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffOTHours">
+      <th mat-header-cell *matHeaderCellDef>NDOT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffOTHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.nightDiffOTHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="nightDiffOTPay">
+      <th mat-header-cell *matHeaderCellDef>NDOT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.nightDiffOTPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.nightDiffOTPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="restDayHours">
+      <th mat-header-cell *matHeaderCellDef>R.Day Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.restDayHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.restDayHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="restDayAmount">
+      <th mat-header-cell *matHeaderCellDef>R.Day Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.restDayAmount | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.restDayAmount | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="restDayOTHours">
+      <th mat-header-cell *matHeaderCellDef>R.DayOT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.restDayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.restDayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="restDayOTPay">
+      <th mat-header-cell *matHeaderCellDef>R.DayOT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.restDayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.restDayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="specialHolidayHours">
+      <th mat-header-cell *matHeaderCellDef>S.Hol Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.specialHolidayHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.specialHolidayHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="specialHolidayPay">
+      <th mat-header-cell *matHeaderCellDef>S.Hol Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.specialHolidayPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.specialHolidayPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="specialHolidayOTHours">
+      <th mat-header-cell *matHeaderCellDef>S.HolOT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.specialHolidayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.specialHolidayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="specialHolidayOTPay">
+      <th mat-header-cell *matHeaderCellDef>S.HolOT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.specialHolidayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.specialHolidayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHolidayHours">
+      <th mat-header-cell *matHeaderCellDef>R.Hol Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHolidayHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.regularHolidayHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHolidayPay">
+      <th mat-header-cell *matHeaderCellDef>R.Hol Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHolidayPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.regularHolidayPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHolidayOTHours">
+      <th mat-header-cell *matHeaderCellDef>R.HolOT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHolidayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.regularHolidayOTHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="regularHolidayOTPay">
+      <th mat-header-cell *matHeaderCellDef>R.HolOT Pay</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.regularHolidayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.regularHolidayOTPay | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lateHours">
+      <th mat-header-cell *matHeaderCellDef>Late Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.lateHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.lateHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="lateDeduction">
+      <th mat-header-cell *matHeaderCellDef>Late Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.lateDeduction | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.lateDeduction | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="undertimeHours">
+      <th mat-header-cell *matHeaderCellDef>UT Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.undertimeHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.undertimeHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="undertimeDeduction">
+      <th mat-header-cell *matHeaderCellDef>UT Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.undertimeDeduction | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.undertimeDeduction | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="absentHours">
+      <th mat-header-cell *matHeaderCellDef>Absent Hrs</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.absentHours | number: "1.0-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.absentHours | number: "1.0-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="absentDeduction">
+      <th mat-header-cell *matHeaderCellDef>Absent Deduc</th>
+      <td mat-cell *matCellDef="let timeEntry">
+        {{ timeEntry.absentDeduction | number: "1.2-2" | ifZero }}
+      </td>
+      <td mat-footer-cell *matFooterCellDef>
+        {{ totalColumn.absentDeduction | number: "1.2-2" | ifZero }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr
+      mat-row
+      *matRowDef="let row; columns: displayedColumns; let timeEntry"
+      [class.red-highlight]="timeEntry?.absentHours > 0"
+      [class.yellow-highlight]="timeEntry?.leaveHours > 0"
+      [ngClass]="'font-12'"
+    ></tr>
+    <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
+  </table>
+</div>

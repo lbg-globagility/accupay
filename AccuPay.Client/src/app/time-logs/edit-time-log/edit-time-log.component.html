@@ -1,9 +1,73 @@
-<h1>Edit Time-Log</h1>
+<h2 mat-dialog-title>Edit Time Logs</h2>
 
-<ng-container *ngIf="isLoading | async">
-  <app-time-log-form
-    [timeLog]="timeLog"
-    (save)="onSave($event)"
-    (cancel)="onCancel()"
-  ></app-time-log-form>
-</ng-container>
+<div mat-dialog-content>
+  <app-display-field label="Employee">
+    {{ employee.fullName }}
+  </app-display-field>
+
+  <form [formGroup]="form">
+    <table
+      mat-table
+      [dataSource]="timeLogsArray.controls"
+      class="m-borders"
+      formArrayName="timeLogs"
+    >
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef>Date</th>
+        <td mat-cell *matCellDef="let control">
+          <div class="px-2 text-center">
+            <p>{{ control.get("date").value | date: "shortDate" }}</p>
+            <p class="text-xs">
+              ({{ control.get("date").value | date: "EEE" }})
+            </p>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="timeIn">
+        <th mat-header-cell *matHeaderCellDef>Time In</th>
+        <td
+          mat-cell
+          *matCellDef="let timeLog; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="time" formControlName="timeIn" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="timeOut">
+        <th mat-header-cell *matHeaderCellDef>Time Out</th>
+        <td
+          mat-cell
+          *matCellDef="let timeLog; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="pt-2 px-2">
+            <mat-form-field appearance="fill" class="m-no-margin m-no-label">
+              <input matInput type="time" formControlName="timeOut" />
+            </mat-form-field>
+          </div>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </form>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-flat-button
+    color="primary"
+    [disabled]="savingState.isLoading"
+    (click)="save()"
+  >
+    SAVE
+  </button>
+  <button mat-button mat-dialog-close>CANCEL</button>
+</div>

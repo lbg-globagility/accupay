@@ -4,6 +4,8 @@ using AccuPay.Web.TimeLogs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -27,6 +29,17 @@ namespace AccuPay.Web.Controllers
             return await _service.PaginatedList(options, term);
         }
 
+        [HttpGet("employees")]
+        [Permission(PermissionTypes.TimeLogRead)]
+        public async Task<ActionResult<PaginatedList<EmployeeTimeLogsDto>>> ListByEmployee(
+            [FromQuery] PageOptions options,
+            DateTime dateFrom,
+            DateTime dateTo,
+            string searchTerm)
+        {
+            return await _service.ListByEmployee(options, dateFrom, dateTo, searchTerm);
+        }
+
         [HttpGet("{id}")]
         [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<TimeLogDto>> GetById(int id)
@@ -39,23 +52,20 @@ namespace AccuPay.Web.Controllers
                 return timelog;
         }
 
+        //[HttpPost]
+        //[Permission(PermissionTypes.TimeLogCreate)]
+        //public async Task<ActionResult<TimeLogDto>> Create([FromBody] CreateTimeLogDto dto)
+        //{
+        //    return await _service.Create(dto);
+        //}
+
         [HttpPost]
-        [Permission(PermissionTypes.TimeLogCreate)]
-        public async Task<ActionResult<TimeLogDto>> Create([FromBody] CreateTimeLogDto dto)
-        {
-            return await _service.Create(dto);
-        }
-
-        [HttpPut("{id}")]
         [Permission(PermissionTypes.TimeLogUpdate)]
-        public async Task<ActionResult<TimeLogDto>> Update(int id, [FromBody] UpdateTimeLogDto dto)
+        public async Task<ActionResult> Update([FromBody] ICollection<UpdateTimeLogDto> dtos)
         {
-            var timeLog = await _service.Update(id, dto);
+            await _service.Update(dtos);
 
-            if (timeLog == null)
-                return NotFound();
-            else
-                return timeLog;
+            return Ok();
         }
 
         [HttpDelete("{id}")]
