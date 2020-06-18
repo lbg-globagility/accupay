@@ -1,52 +1,80 @@
-<h1 class="mat-headline">Result</h1>
-<button
-  mat-raised-button
-  id="style"
-  :focus
-  (click)="filterButton(successFilter)"
->
-  Success ({{ result.successes }})
-</button>
-<button
-  mat-raised-button
-  id="style"
-  :focus
-  (click)="filterButton(failedFilter)"
->
-  Failed ({{ result.failures }})
-</button>
-<div class="scroll">
-  <table mat-table [dataSource]="dataSource" class="w-full">
-    <ng-container matColumnDef="employeeNo">
-      <th mat-header-cell *matHeaderCellDef>Employee No</th>
-      <td mat-cell *matCellDef="let result">
-        {{ result.employeeNo }}
-      </td>
-    </ng-container>
+<h2 mat-dialog-title>Result</h2>
 
-    <ng-container matColumnDef="employeeName">
-      <th mat-header-cell *matHeaderCellDef>Name</th>
-      <td mat-cell *matCellDef="let result">
-        {{ result.employeeName }}
-      </td>
-    </ng-container>
+<div mat-dialog-content>
+  <mat-tab-group>
+    <mat-tab>
+      <ng-template mat-tab-label>Success ({{ result.successes }})</ng-template>
+      <table mat-table [dataSource]="successDataSource" class="w-full">
+        <ng-container matColumnDef="employee">
+          <th mat-header-cell *matHeaderCellDef>Employee</th>
+          <td mat-cell *matCellDef="let result">
+            <div class="flex items-center">
+              <img
+                class="block rounded-full"
+                height="40"
+                appImgFallback
+                src="/api/employees/{{ result?.employeeId }}/image"
+              />
+              <div class="ml-2">
+                <div>{{ result.employeeName | ifEmpty }}</div>
+                <div class="text-xs mt-2">
+                  #{{ result.employeeNo | ifEmpty }}
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
 
-    <ng-container matColumnDef="description">
-      <th mat-header-cell *matHeaderCellDef>Description</th>
-      <td mat-cell *matCellDef="let result">
-        {{ result.description }}
-      </td>
-    </ng-container>
+        <tr mat-header-row *matHeaderRowDef="displayedSuccessColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedSuccessColumns"></tr>
+      </table>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+      <div class="app-empty-table" *ngIf="successDataSource?.length <= 0">
+        No result were found.
+      </div>
+    </mat-tab>
 
-  <div class="app-empty-table" *ngIf="dataSource?.length <= 0">
-    No result were found.
-  </div>
+    <mat-tab>
+      <ng-template mat-tab-label>Errors ({{ result.errors }})</ng-template>
+      <table mat-table [dataSource]="errorDataSource" class="w-full">
+        <ng-container matColumnDef="employee">
+          <th mat-header-cell *matHeaderCellDef>Employee</th>
+          <td mat-cell *matCellDef="let result">
+            <div class="flex items-center">
+              <img
+                class="block rounded-full"
+                height="40"
+                appImgFallback
+                src="/api/employees/{{ result?.employeeId }}/image"
+              />
+              <div class="ml-2">
+                <div>{{ result.employeeName | ifEmpty }}</div>
+                <div class="text-xs mt-2">
+                  #{{ result.employeeNo | ifEmpty }}
+                </div>
+              </div>
+            </div>
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Description</th>
+          <td mat-cell *matCellDef="let result">
+            {{ result.description }}
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedErrorColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedErrorColumns"></tr>
+      </table>
+
+      <div class="app-empty-table" *ngIf="errorDataSource?.length <= 0">
+        No result were found.
+      </div>
+    </mat-tab>
+  </mat-tab-group>
 </div>
 
 <div mat-dialog-actions align="end">
-  <button mat-raised-button (click)="onClose()">OK</button>
+  <button mat-button mat-dialog-close color="primary">OK</button>
 </div>

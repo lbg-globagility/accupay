@@ -1,11 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace AccuPay.Web.Payroll
 {
     public class PayrollResultDetailsDto
     {
+        public int EmployeeId { get; set; }
+
         public string EmployeeNo { get; set; }
 
         public string EmployeeName { get; set; }
