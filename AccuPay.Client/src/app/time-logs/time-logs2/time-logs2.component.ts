@@ -13,6 +13,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditTimeLogComponent } from 'src/app/time-logs/edit-time-log/edit-time-log.component';
 import { range } from 'src/app/core/functions/dates';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { TimeLogImportResultComponent } from '../time-log-import-result/time-log-import-result.component';
+import Swal from 'sweetalert2';
 
 interface DateHeader {
   title: string;
@@ -49,6 +52,7 @@ export class TimeLogs2Component implements OnInit {
   constructor(
     private timeLogService: TimeLogService,
     private dialog: MatDialog,
+    private errorHandler: ErrorHandler,
     private snackBar: MatSnackBar
   ) {
     this.modelChanged = new Subject();
@@ -106,6 +110,27 @@ export class TimeLogs2Component implements OnInit {
       });
   }
 
+  onImport(files: FileList) {
+    const file = files[0];
+    this.timeLogService.import(file).subscribe(
+      (data) => {
+        this.dialog
+          .open(TimeLogImportResultComponent, {
+            data: {
+              result: data,
+            },
+          })
+          .afterClosed()
+          .pipe(filter((t) => t))
+          .subscribe(() => {
+            this.loadTimeLogs();
+            this.displaySuccess();
+          });
+      },
+      (err) => this.errorHandler.badRequest(err, 'Failed to import time logs.')
+    );
+  }
+
   private loadTimeLogs(): void {
     const options = new PageOptions(this.pageIndex, this.pageSize);
 
@@ -129,5 +154,15 @@ export class TimeLogs2Component implements OnInit {
       ...this.headers.map((t) => t.title),
       'actions',
     ];
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Successfully imported new time logs!',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
   }
 }

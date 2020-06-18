@@ -4,6 +4,8 @@ import { TimeLogImportResult } from '../shared/time-log-import-result';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { TimeLogService } from '../time-log.service';
 import Swal from 'sweetalert2';
+import { TimeLog } from '../shared/time-log';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-time-log-import-result',
@@ -24,13 +26,19 @@ export class TimeLogImportResultComponent implements OnInit {
     'time',
   ];
 
-  displayedColumns: string[] = this.displayedColumnsTimeLog;
+  pageIndexSuccess = 0;
 
-  type: string;
+  pageSizeSuccess: number = 10;
+
+  pageIndexInvalid = 0;
+
+  pageSizeInvalid: number = 10;
 
   result: TimeLogImportResult;
 
-  dataSource: any;
+  dataSourceSuccess: TimeLog[];
+
+  dataSourceInvalid: TimeLogImportDetails[];
 
   constructor(
     private dialog: MatDialogRef<TimeLogImportResult>,
@@ -42,20 +50,47 @@ export class TimeLogImportResultComponent implements OnInit {
 
   ngOnInit(): void {
     console.log(this.result);
-    this.dataSource = this.result.generatedTimeLogs;
+    this.pageTimeLogsCompute(this.result.generatedTimeLogs);
+    this.pageInvalidCompute(this.result.invalidRecords);
   }
 
-  successButton(): void {
-    this.dataSource = this.result.generatedTimeLogs;
-    this.displayedColumns = this.displayedColumnsTimeLog;
+  onPageChangedSuccess(pageEvent: PageEvent, dataSource: any) {
+    this.pageIndexSuccess = pageEvent.pageIndex;
+    this.pageSizeSuccess = pageEvent.pageSize;
+
+    this.pageTimeLogsCompute(dataSource);
   }
 
-  errorButton(): void {
-    this.dataSource = this.result.invalidRecords;
-    this.displayedColumns = this.displayedColumnsInvalid;
+  onPageChangedInvalid(pageEvent: PageEvent, dataSource: any) {
+    this.pageIndexInvalid = pageEvent.pageIndex;
+    this.pageSizeInvalid = pageEvent.pageSize;
+
+    this.pageInvalidCompute(dataSource);
+  }
+
+  pageTimeLogsCompute(dataSource: any): void {
+    var pageRange = this.pageIndexSuccess * this.pageSizeSuccess;
+
+    this.dataSourceSuccess = dataSource.slice(
+      pageRange,
+      pageRange + this.pageSizeSuccess
+    );
+  }
+
+  pageInvalidCompute(dataSource: any): void {
+    var pageRange = this.pageIndexInvalid * this.pageSizeInvalid;
+
+    this.dataSourceInvalid = dataSource.slice(
+      pageRange,
+      pageRange + this.pageSizeInvalid
+    );
   }
 
   onSave(): void {
-    this.dialog.close(true);
+    this.timeLogService.update2(this.dataSourceSuccess).subscribe({
+      next: (result) => {
+        this.dialog.close(true);
+      },
+    });
   }
 }
