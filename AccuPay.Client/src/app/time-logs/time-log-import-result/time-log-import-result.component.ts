@@ -14,16 +14,16 @@ import { PageEvent } from '@angular/material/paginator';
 })
 export class TimeLogImportResultComponent implements OnInit {
   readonly displayedColumnsInvalid: string[] = [
-    'errorMessage',
-    'lineContent',
     'lineNumber',
+    'lineContent',
+    'errorMessage',
   ];
 
   readonly displayedColumnsTimeLog: string[] = [
-    'employeeNumber',
-    'employeeName',
+    'employee',
     'date',
-    'time',
+    'timeIn',
+    'timeOut',
   ];
 
   pageIndexSuccess = 0;
