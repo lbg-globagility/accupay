@@ -22,7 +22,7 @@ Public Class DefaultPayslipFullOvertimeBreakdownProvider
         Dim dataService = MainServiceProvider.GetRequiredService(Of PaystubPayslipModelDataService)
         Dim paystubModels = Await dataService.GetData(z_OrganizationID, payPeriod)
 
-        Dim report As New Payslip.DefaulltPayslipFullOvertimeBreakdown
+        Dim report As New DefaulltPayslipFullOvertimeBreakdown
         report.SetDataSource(paystubModels)
 
         Dim detailsSection = report.ReportDefinition.Sections(1)

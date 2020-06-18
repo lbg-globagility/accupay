@@ -1,13 +1,13 @@
 Option Strict On
 
 Imports AccuPay.Benchmark
+Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
 Imports AccuPay.Infrastructure.Services.Excel
-Imports AccuPay.Payslip
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Extensions.Logging

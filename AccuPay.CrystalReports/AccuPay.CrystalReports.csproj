@@ -51,6 +51,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DefaulltPayslipFullOvertimeBreakdown.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Payslip\DefaultPayslipFormat.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -86,6 +92,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Payslip\DefaultPayslipFormat.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaultPayslipFormat.cs</LastGenOutput>

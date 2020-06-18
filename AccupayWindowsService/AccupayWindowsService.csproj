@@ -83,13 +83,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccuPay.CrystalReports\AccuPay.CrystalReports.csproj">
+      <Project>{1AF57D61-BC13-40E1-A0BC-BBDFDD223B7E}</Project>
+      <Name>AccuPay.CrystalReports</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
       <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>AccuPay.Data</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Accupay.Payslip\AccuPay.Payslip.vbproj">
-      <Project>{d36db97b-ffc0-4dbb-a13c-a1c75a016256}</Project>
-      <Name>AccuPay.Payslip</Name>
     </ProjectReference>
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj">
       <Project>{a729d2f1-8a99-434e-8e7e-145716306579}</Project>

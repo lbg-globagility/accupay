@@ -1,7 +1,7 @@
-﻿using AccuPay.Data;
+﻿using AccuPay.CrystalReports.Payslip;
+using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
-using AccuPay.Payslip;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System.Configuration;

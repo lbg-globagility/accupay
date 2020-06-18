@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
 Imports System.IO
-Imports AccuPay.Data.Repositories
 
 'Imports AccuPay.Payslip
 Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.Data.Repositories
 Imports CrystalDecisions.Shared
 Imports GlobagilityShared.EmailSender
 Imports PdfSharp.Pdf

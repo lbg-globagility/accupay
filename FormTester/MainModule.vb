@@ -1,5 +1,6 @@
 ﻿Option Strict On
 
+Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -42,8 +43,7 @@ Module MainModule
         services.AddScoped(Of PayPeriodRepository)
         services.AddScoped(Of AddressRepository)
         services.AddScoped(Of SystemOwnerService)
-        services.AddScoped(Of AccuPay.Payslip.PayslipCreator)
-        services.AddScoped(Of AccuPay.CrystalReports.Payslip.PayslipCreator)
+        services.AddScoped(Of PayslipCreator)
 
         services.AddScoped(Of PaystubEmailRepository)
         services.AddScoped(Of Form1)

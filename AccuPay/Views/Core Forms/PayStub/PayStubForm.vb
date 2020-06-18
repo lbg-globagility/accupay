@@ -1,13 +1,13 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
+Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Repositories.PaystubRepository
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
-Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports log4net

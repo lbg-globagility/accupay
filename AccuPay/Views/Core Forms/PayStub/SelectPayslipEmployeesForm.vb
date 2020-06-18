@@ -1,10 +1,10 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
+Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Payslip
 Imports AccuPay.Utilities
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
