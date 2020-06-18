@@ -73,155 +73,145 @@ namespace AccuPay.Data.Services
                                     ToList();
             try
             {
-                GeneratePayStub(resources,
-                                organizationId: organizationId,
-                                userId: userId,
-                                currentSystemOwner,
-                                settings,
-                                calendarCollection,
-                                payPeriod,
-                                paystub: paystub,
-                                employee: employee,
-                                salary: salary,
-                                previousPaystub: previousPaystub,
-                                bpiInsuranceProduct: bpiInsuranceProduct,
-                                sickLeaveProduct: sickLeaveProduct,
-                                vacationLeaveProduct: vacationLeaveProduct,
-                                loanSchedules: loanSchedules,
-                                previousTimeEntries: previousTimeEntries,
-                                timeEntries: timeEntries,
-                                actualTimeEntries: actualTimeEntries,
-                                allowances: allowances,
-                                leaves: leaves);
+                var result = GeneratePayStub(
+                    resources,
+                    organizationId: organizationId,
+                    userId: userId,
+                    currentSystemOwner,
+                    settings,
+                    calendarCollection,
+                    payPeriod,
+                    paystub: paystub,
+                    employee: employee,
+                    salary: salary,
+                    previousPaystub: previousPaystub,
+                    bpiInsuranceProduct: bpiInsuranceProduct,
+                    sickLeaveProduct: sickLeaveProduct,
+                    vacationLeaveProduct: vacationLeaveProduct,
+                    loanSchedules: loanSchedules,
+                    previousTimeEntries: previousTimeEntries,
+                    timeEntries: timeEntries,
+                    actualTimeEntries: actualTimeEntries,
+                    allowances: allowances,
+                    leaves: leaves);
 
-                return new Result(employee.EmployeeNo,
-                            employee.FullNameWithMiddleInitialLastNameFirst,
-                            ResultStatus.Success,
-                            "");
-            }
-            catch (Exception ex)
-            {
-                //logger.Error("DoProcess", ex);
-
-                return new Result(employee.EmployeeNo,
-                                employee.FullNameWithMiddleInitialLastNameFirst,
-                                ResultStatus.Error,
-                                ex.Message);
-            }
-        }
-
-        private void GeneratePayStub(PayrollResources resources,
-                                    int organizationId,
-                                    int userId,
-                                    string currentSystemOwner,
-                                    ListOfValueCollection settings,
-                                    CalendarCollection calendarCollection,
-                                    PayPeriod payPeriod,
-                                    Paystub paystub,
-                                    Employee employee,
-                                    Salary salary,
-                                    Paystub previousPaystub,
-                                    Product bpiInsuranceProduct,
-                                    Product sickLeaveProduct,
-                                    Product vacationLeaveProduct,
-                                    IReadOnlyCollection<LoanSchedule> loanSchedules,
-                                    IReadOnlyCollection<TimeEntry> previousTimeEntries,
-                                    IReadOnlyCollection<TimeEntry> timeEntries,
-                                    IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
-                                    IReadOnlyCollection<Allowance> allowances,
-                                    IReadOnlyCollection<Leave> leaves)
-        {
-            try
-            {
-                if (salary == null)
-                    throw new PayrollException("Employee has no salary for this cutoff.");
-
-                if ((!timeEntries.Any()) && (employee.IsDaily || employee.IsMonthly))
-                    throw new PayrollException("No time entries.");
-
-                if (employee.Position == null)
-                    throw new PayrollException("Employee has no job position set.");
-
-                if (paystub == null)
-                {
-                    paystub = new Paystub()
-                    {
-                        OrganizationID = organizationId,
-                        Created = DateTime.Now,
-                        CreatedBy = userId,
-                        LastUpdBy = userId,
-                        EmployeeID = employee.RowID,
-                        PayPeriodID = payPeriod.RowID,
-                        PayFromDate = payPeriod.PayFromDate,
-                        PayToDate = payPeriod.PayToDate
-                    };
-                }
-
-                if (paystub.Actual == null)
-                {
-                    paystub.Actual = new PaystubActual()
-                    {
-                        OrganizationID = organizationId,
-                        EmployeeID = employee.RowID,
-                        PayPeriodID = payPeriod.RowID,
-                        PayFromDate = payPeriod.PayFromDate,
-                        PayToDate = payPeriod.PayToDate
-                    };
-                }
-
-                ResetLoanSchedules(loanSchedules, paystub, userId);
-
-                var allowanceItems = CreateAllowanceItems(userId,
-                                                        settings,
-                                                        calendarCollection,
-                                                        payPeriod,
-                                                        paystub,
-                                                        employee,
-                                                        previousTimeEntries: previousTimeEntries,
-                                                        timeEntries: timeEntries,
-                                                        allowances);
-
-                var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules);
-
-                ComputePayroll(resources,
-                                userId: userId,
-                                currentSystemOwner,
-                                settings,
-                                calendarCollection,
-                                payPeriod,
-                                paystub: paystub,
-                                employee: employee,
-                                salary: salary,
-                                previousPaystub: previousPaystub,
-                                loanTransactions: loanTransactions,
-                                timeEntries: timeEntries,
-                                actualTimeEntries: actualTimeEntries,
-                                allowances: allowances,
-                                allowanceItems: allowanceItems.ToList());
-
-                SavePayroll(userId: userId,
-                            currentSystemOwner,
-                            settings,
-                            payPeriod,
-                            paystub,
-                            employee,
-                            bpiInsuranceProduct: bpiInsuranceProduct,
-                            sickLeaveProduct: sickLeaveProduct,
-                            vacationLeaveProduct: vacationLeaveProduct,
-                            loanSchedules: loanSchedules,
-                            allowanceItems: allowanceItems,
-                            loanTransactions: loanTransactions,
-                            timeEntries: timeEntries,
-                            leaves: leaves);
+                return result;
             }
             catch (PayrollException ex)
             {
-                throw;
+                return Result.Error(employee, ex.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                throw new Exception($"Failure to generate paystub for employee {paystub.EmployeeID}", ex);
+                //logger.Error("DoProcess", ex);
+                return Result.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo}");
             }
+        }
+
+        private Result GeneratePayStub(
+            PayrollResources resources,
+            int organizationId,
+            int userId,
+            string currentSystemOwner,
+            ListOfValueCollection settings,
+            CalendarCollection calendarCollection,
+            PayPeriod payPeriod,
+            Paystub paystub,
+            Employee employee,
+            Salary salary,
+            Paystub previousPaystub,
+            Product bpiInsuranceProduct,
+            Product sickLeaveProduct,
+            Product vacationLeaveProduct,
+            IReadOnlyCollection<LoanSchedule> loanSchedules,
+            IReadOnlyCollection<TimeEntry> previousTimeEntries,
+            IReadOnlyCollection<TimeEntry> timeEntries,
+            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
+            IReadOnlyCollection<Allowance> allowances,
+            IReadOnlyCollection<Leave> leaves)
+        {
+            if (salary == null)
+                return Result.Error(employee, "Employee has no salary for this cutoff.");
+
+            if ((!timeEntries.Any()) && (employee.IsDaily || employee.IsMonthly))
+                return Result.Error(employee, "No time entries.");
+
+            if (employee.Position == null)
+                return Result.Error(employee, "Employee has no job position set.");
+
+            if (paystub == null)
+            {
+                paystub = new Paystub()
+                {
+                    OrganizationID = organizationId,
+                    Created = DateTime.Now,
+                    CreatedBy = userId,
+                    LastUpdBy = userId,
+                    EmployeeID = employee.RowID,
+                    PayPeriodID = payPeriod.RowID,
+                    PayFromDate = payPeriod.PayFromDate,
+                    PayToDate = payPeriod.PayToDate
+                };
+            }
+
+            if (paystub.Actual == null)
+            {
+                paystub.Actual = new PaystubActual()
+                {
+                    OrganizationID = organizationId,
+                    EmployeeID = employee.RowID,
+                    PayPeriodID = payPeriod.RowID,
+                    PayFromDate = payPeriod.PayFromDate,
+                    PayToDate = payPeriod.PayToDate
+                };
+            }
+
+            ResetLoanSchedules(loanSchedules, paystub, userId);
+
+            var allowanceItems = CreateAllowanceItems(userId,
+                                                    settings,
+                                                    calendarCollection,
+                                                    payPeriod,
+                                                    paystub,
+                                                    employee,
+                                                    previousTimeEntries: previousTimeEntries,
+                                                    timeEntries: timeEntries,
+                                                    allowances);
+
+            var loanTransactions = CreateLoanTransactions(paystub, payPeriod, loanSchedules);
+
+            ComputePayroll(resources,
+                            userId: userId,
+                            currentSystemOwner,
+                            settings,
+                            calendarCollection,
+                            payPeriod,
+                            paystub: paystub,
+                            employee: employee,
+                            salary: salary,
+                            previousPaystub: previousPaystub,
+                            loanTransactions: loanTransactions,
+                            timeEntries: timeEntries,
+                            actualTimeEntries: actualTimeEntries,
+                            allowances: allowances,
+                            allowanceItems: allowanceItems.ToList());
+
+            SavePayroll(userId: userId,
+                        currentSystemOwner,
+                        settings,
+                        payPeriod,
+                        paystub,
+                        employee,
+                        bpiInsuranceProduct: bpiInsuranceProduct,
+                        sickLeaveProduct: sickLeaveProduct,
+                        vacationLeaveProduct: vacationLeaveProduct,
+                        loanSchedules: loanSchedules,
+                        allowanceItems: allowanceItems,
+                        loanTransactions: loanTransactions,
+                        timeEntries: timeEntries,
+                        leaves: leaves);
+
+            return Result.Success(employee);
         }
 
         private void ResetLoanSchedules(IReadOnlyCollection<LoanSchedule> loanSchedules, Paystub paystub, int userId)
@@ -832,6 +822,8 @@ namespace AccuPay.Data.Services
 
         public class Result
         {
+            public int EmployeeId { get; set; }
+
             public string EmployeeNo { get; set; }
 
             public string FullName { get; set; }
@@ -840,12 +832,41 @@ namespace AccuPay.Data.Services
 
             public string Description { get; set; }
 
-            public Result(string employeeNo, string fullName, ResultStatus status, string description)
+            public bool IsSuccess => Status == ResultStatus.Success;
+
+            public bool IsError => Status == ResultStatus.Error;
+
+            private Result(int employeeId, string employeeNo, string fullName, ResultStatus status, string description)
             {
-                this.EmployeeNo = employeeNo;
-                this.FullName = fullName;
-                this.Status = status;
-                this.Description = description;
+                EmployeeId = employeeId;
+                EmployeeNo = employeeNo;
+                FullName = fullName;
+                Status = status;
+                Description = description;
+            }
+
+            public static Result Success(Employee employee)
+            {
+                var result = new Result(
+                    employee.RowID.Value,
+                    employee.EmployeeNo,
+                    employee.FullNameWithMiddleInitialLastNameFirst,
+                    ResultStatus.Success,
+                    "");
+
+                return result;
+            }
+
+            public static Result Error(Employee employee, string description)
+            {
+                var result = new Result(
+                    employee.RowID.Value,
+                    employee.EmployeeNo,
+                    employee.FullNameWithMiddleInitialLastNameFirst,
+                    ResultStatus.Error,
+                    description);
+
+                return result;
             }
         }
 

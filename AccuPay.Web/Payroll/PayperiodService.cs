@@ -41,38 +41,34 @@ namespace AccuPay.Web.Payroll
         {
             await resources.Load(payperiodId, _currentUser.OrganizationId, DesktopUserId);
 
-            var successes = 0;
-            var failures = 0;
-            var details = new List<PayrollResultDetailsDto>();
+            var results = new List<PayrollGeneration.Result>();
 
-            var employees = resources.Employees;
-            foreach (var employee in employees)
+            foreach (var employee in resources.Employees)
             {
                 var generation = new PayrollGeneration(_dbContextOptionsService);
                 var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, DesktopUserId);
 
-                details.Add(new PayrollResultDetailsDto
-                {
-                    EmployeeNo = result.EmployeeNo,
-                    EmployeeName = result.FullName,
-                    Status = result.Status.ToString(),
-                    Description = result.Description
-                });
-
-                if (result.Status == PayrollGeneration.ResultStatus.Success)
-                {
-                    successes++;
-                }
-                else
-                {
-                    failures++;
-                }
+                results.Add(result);
             }
+
+            var successes = results.Where(t => t.IsSuccess).Count();
+            var errors = results.Where(t => t.IsError).Count();
+            var details = results
+                .Select(t => new PayrollResultDetailsDto
+                {
+                    EmployeeId = t.EmployeeId,
+                    EmployeeNo = t.EmployeeNo,
+                    EmployeeName = t.FullName,
+                    Status = t.Status.ToString(),
+                    Description = t.Description
+                })
+                .OrderBy(t => t.EmployeeName)
+                .ToList();
 
             var resultDto = new PayrollResultDto()
             {
                 Successes = successes,
-                Failures = failures,
+                Errors = errors,
                 Details = details
             };
 

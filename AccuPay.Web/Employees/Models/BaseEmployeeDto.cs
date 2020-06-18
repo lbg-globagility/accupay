@@ -12,7 +12,7 @@ namespace AccuPay.Web.Employees.Models
             if (employee == null) return;
 
             EmployeeNo = employee.EmployeeNo;
-            FullName = employee.FullName;
+            FullName = employee.FullNameWithMiddleInitialLastNameFirst;
         }
     }
 }
