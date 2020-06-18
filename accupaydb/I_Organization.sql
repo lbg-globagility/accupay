@@ -39,7 +39,8 @@ CREATE DEFINER=`root`@`localhost` PROCEDURE `I_Organization`(
 	IN `I_RDOCode` CHAR(50),
 	IN `I_ZIPCode` CHAR(50),
 	IN `I_WithholdingDeductionSchedule` CHAR(50),
-	IN `I_IsAgency` TINYINT(1)
+	IN `I_IsAgency` TINYINT(1),
+	IN `I_ClientId` INT
 )
 LANGUAGE SQL
 DETERMINISTIC
@@ -81,7 +82,8 @@ INSERT INTO organization
     RDOCode,
     ZIPCode,
     WithholdingDeductionSchedule,
-    IsAgency
+    IsAgency,
+    ClientId
     )
 VALUES
     (
@@ -117,7 +119,8 @@ VALUES
     I_RDOCode,
     I_ZIPCode,
     I_WithholdingDeductionSchedule,
-    I_IsAgency
+    I_IsAgency,
+    I_ClientId
     );END//
 DELIMITER ;
 

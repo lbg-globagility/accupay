@@ -96,6 +96,11 @@ namespace AccuPay.Data.Repositories
                             RemoveRange(_context.TimeAttendanceLogs.
                                                     Where(t => t.TimeStamp >= minimumDate).
                                                     Where(t => t.TimeStamp <= maximumDate));
+
+                if (timeLog.Employee != null)
+                {
+                    _context.Entry(timeLog.Employee).State = EntityState.Detached;
+                }
             }
 
             if (timeAttendanceLogs != null)
@@ -105,6 +110,11 @@ namespace AccuPay.Data.Repositories
                     timeAttendanceLog.ImportNumber = importId;
 
                     _context.TimeAttendanceLogs.Add(timeAttendanceLog);
+
+                    if (timeAttendanceLog.Employee != null)
+                    {
+                        _context.Entry(timeAttendanceLog.Employee).State = EntityState.Detached;
+                    }
                 }
             }
 
@@ -213,7 +223,7 @@ namespace AccuPay.Data.Repositories
                 .OrderBy(x => x.LastName)
                 .ThenBy(x => x.FirstName);
 
-            var employees =  await query.Page(options).ToListAsync();
+            var employees = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();
 
             var employeeIds = employees.Select(x => x.RowID);

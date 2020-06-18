@@ -618,6 +618,8 @@ Module mdlStoredProcedure
                 .Parameters.AddWithValue("I_ZIPCode", I_ZIPCode.ToString)
                 .Parameters.AddWithValue("I_IsAgency", I_IsAgency)
 
+                .Parameters.AddWithValue("I_ClientId", Z_Client)
+
                 .CommandType = CommandType.StoredProcedure
                 F_return = (.ExecuteNonQuery > 0)
             Catch ex As Exception

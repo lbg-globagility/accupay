@@ -162,16 +162,5 @@ namespace AccuPay.Data.Entities
         public bool IsTerminated => EmploymentStatus.Trim().ToUpper() == "TERMINATED";
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
-
-        public TotalTimeEntryHours TotalTimeEntryHours
-        {
-            get
-            {
-                if (TimeEntries == null)
-                    throw new ArgumentException("Time entries cannot be null");
-
-                return TotalTimeEntryCalculator.CalculateHours(TimeEntries);
-            }
-        }
     }
 }
