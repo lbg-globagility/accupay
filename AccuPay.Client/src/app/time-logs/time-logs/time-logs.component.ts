@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { TimeLogService } from 'src/app/time-logs/time-log.service';
-import { Moment } from 'moment';
 import * as moment from 'moment';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { MatTableDataSource } from '@angular/material/table';
@@ -25,10 +24,10 @@ interface DateHeader {
 
 @Component({
   selector: 'app-time-logs2',
-  templateUrl: './time-logs2.component.html',
-  styleUrls: ['./time-logs2.component.scss'],
+  templateUrl: './time-logs.component.html',
+  styleUrls: ['./time-logs.component.scss'],
 })
-export class TimeLogs2Component implements OnInit {
+export class TimeLogsComponent implements OnInit {
   displayedColumns = ['employee'];
 
   dateFrom = new Date(2020, 1, 1);

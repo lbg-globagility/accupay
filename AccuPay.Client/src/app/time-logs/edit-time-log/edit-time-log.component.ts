@@ -1,10 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { TimeLog } from '../shared/time-log';
-import { BehaviorSubject } from 'rxjs';
 import { TimeLogService } from '../time-log.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import Swal from 'sweetalert2';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
