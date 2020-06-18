@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { PayPeriod } from 'src/app/payroll/shared/payperiod';
-
 import { Sort } from '@angular/material/sort';
 import { Employee } from '../shared/employee';
 import { MatTableDataSource } from '@angular/material/table';
@@ -50,7 +49,7 @@ export class TimeEntryComponent implements OnInit {
     this.loadList();
   }
 
-  loadLatest() {
+  loadLatest(): void {
     this.payPeriodService.getLatest().subscribe((payPeriod) => {
       this.latestPayPeriod = payPeriod;
 
@@ -58,7 +57,7 @@ export class TimeEntryComponent implements OnInit {
     });
   }
 
-  loadList() {
+  loadList(): void {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -75,16 +74,7 @@ export class TimeEntryComponent implements OnInit {
       });
   }
 
-  sortData(sort: Sort) {
-    this.sort = sort;
-    this.modelChanged.next();
-  }
-
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
-  }
-
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadList();
