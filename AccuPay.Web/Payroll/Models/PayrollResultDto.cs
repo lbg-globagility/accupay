@@ -6,7 +6,7 @@ namespace AccuPay.Web.Payroll
     {
         public int Successes { get; set; }
 
-        public int Failures { get; set; }
+        public int Errors { get; set; }
 
         public List<PayrollResultDetailsDto> Details { get; set; }
     }
