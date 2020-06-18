@@ -87,6 +87,7 @@ Partial Class Form1
         Me.FileNameTextBox.Name = "FileNameTextBox"
         Me.FileNameTextBox.Size = New System.Drawing.Size(100, 20)
         Me.FileNameTextBox.TabIndex = 4
+        Me.FileNameTextBox.Text = "payslip.pdf"
         '
         'Label1
         '
@@ -103,6 +104,7 @@ Partial Class Form1
         Me.PasswordTextBox.Name = "PasswordTextBox"
         Me.PasswordTextBox.Size = New System.Drawing.Size(100, 20)
         Me.PasswordTextBox.TabIndex = 6
+        Me.PasswordTextBox.Text = "password"
         '
         'Label2
         '

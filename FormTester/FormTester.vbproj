@@ -155,6 +155,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\AccuPay.CrystalReports\AccuPay.CrystalReports.csproj">
+      <Project>{1af57d61-bc13-40e1-a0bc-bbdfdd223b7e}</Project>
+      <Name>AccuPay.CrystalReports</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
       <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>AccuPay.Data</Name>
