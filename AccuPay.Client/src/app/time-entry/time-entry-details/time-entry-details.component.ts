@@ -27,13 +27,13 @@ export class TimeEntryDetailsComponent implements OnInit {
   readonly displayedColumns: string[] = [
     'employee',
     'regularHours',
-    'absentHours',
-    'lateHours',
-    'undertimeHours',
     'leaveHours',
     'overtimeHours',
     'nightDifferentialHours',
     'nightDifferentialOvertimeHours',
+    'lateHours',
+    'undertimeHours',
+    'absentHours',
   ];
 
   payPeriod: PayPeriod;

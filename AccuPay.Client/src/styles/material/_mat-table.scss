@@ -5,6 +5,12 @@
   border: thin solid colors.$border;
 }
 
+.mat-header-cell.m-right,
+.mat-cell.m-right,
+.mat-footer-cell.m-right {
+  text-align: right;
+}
+
 .mat-table.m-dark-headers {
   .mat-header-cell {
     font-size: 0.875rem;
@@ -29,6 +35,11 @@
   }
 
   td.mat-cell {
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
+  }
+
+  td.mat-footer-cell {
     padding-left: sizes.$x4;
     padding-right: sizes.$x4;
   }
