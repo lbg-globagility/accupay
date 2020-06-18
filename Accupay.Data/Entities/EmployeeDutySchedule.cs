@@ -42,7 +42,7 @@ namespace AccuPay.Data.Entities
         public virtual Employee Employee { get; set; }
 
         [NotMapped]
-        public DateTime? ShiftStartTimeFull
+        public DateTime? StartTimeFull
         {
             get => StartTime == null ?
                         (DateTime?)null :
@@ -52,7 +52,7 @@ namespace AccuPay.Data.Entities
         }
 
         [NotMapped]
-        public DateTime? ShiftEndTimeFull
+        public DateTime? EndTimeFull
         {
             get => EndTime == null ?
                         (DateTime?)null :

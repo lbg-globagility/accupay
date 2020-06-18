@@ -4,19 +4,28 @@ using AccuPay.Web.Employees.Models;
 
 namespace AccuPay.Web.TimeEntries
 {
-    public class TimeEntryEmployeeDto : EmployeeDto
+    public class TimeEntryEmployeeDto : BaseEmployeeDto
     {
+        public int Id { get; set; }
         public TotalTimeEntryHours TotalTimeEntry { get; private set; }
 
-        internal new static TimeEntryEmployeeDto Convert(Employee employee)
+        public static TimeEntryEmployeeDto Convert(Employee employee)
         {
             if (employee == null) return null;
 
             var dto = new TimeEntryEmployeeDto();
 
             dto.ApplyData(employee);
+            dto.Id = employee.RowID.Value;
 
-            dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(employee.TimeEntries);
+            if (employee.TimeEntries == null)
+            {
+                dto.TotalTimeEntry = null;
+            }
+            else
+            {
+                dto.TotalTimeEntry = TotalTimeEntryCalculator.CalculateHours(employee.TimeEntries);
+            }
 
             return dto;
         }

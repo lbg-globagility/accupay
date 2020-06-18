@@ -1,4 +1,4 @@
-@import "styles/variables";
+@use "styles/sizes";
 
 /** Don't remove comment below, or else grid layout will not work in IE */
 /* autoprefixer grid: autoplace */
@@ -37,5 +37,5 @@
 .content {
   grid-area: content;
   overflow: auto;
-  padding: $app-space-2;
+  padding: sizes.$x4;
 }

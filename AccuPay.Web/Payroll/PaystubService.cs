@@ -1,5 +1,7 @@
-using AccuPay.Data.Entities;
+using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
+using AccuPay.Web.Loans;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,31 +10,38 @@ namespace AccuPay.Web.Payroll
 {
     public class PaystubService
     {
-        private readonly PaystubRepository _repository;
+        private readonly PaystubDataService _service;
+        private readonly PaystubRepository repository;
 
-        public PaystubService(PaystubRepository repository)
+        public PaystubService(PaystubDataService service, PaystubRepository repository)
         {
-            _repository = repository;
+            _service = service;
+            this.repository = repository;
         }
 
-        public async Task<ICollection<PaystubDto>> GetByPayperiod(int payperiodId)
+        public async Task<PaginatedList<PaystubDto>> PaginatedList(
+            PageOptions options,
+            int payPeriodId,
+            string searchTerm = "")
         {
-            var paystubs = await _repository.GetByPayPeriodWithEmployeeDivisionAsync(payperiodId);
-            var dtos = paystubs.Select(t => ConvertToDto(t)).ToList();
+            var paginatedList = await _service.GetPaginatedListAsync(options, payPeriodId, searchTerm);
+            var dtos = paginatedList.List.Select(t => PaystubDto.Convert(t)).ToList();
 
-            return dtos;
+            return new PaginatedList<PaystubDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
-        private PaystubDto ConvertToDto(Paystub paystub)
+        public async Task<List<AdjustmentDto>> GetAdjustments(int paystubId)
         {
-            var dto = new PaystubDto();
-            dto.Id = paystub.RowID;
-            dto.NetPay = paystub.NetPay;
+            var loanTransactions = await repository.GetAdjustmentsAsync(paystubId);
 
-            dto.Employee.FirstName = paystub.Employee.FirstName;
-            dto.Employee.LastName = paystub.Employee.LastName;
+            return loanTransactions.Select(x => AdjustmentDto.Convert(x)).ToList();
+        }
 
-            return dto;
+        public async Task<List<LoanTransactionDto>> GetLoanTransactions(int paystubId)
+        {
+            var loanTransactions = await repository.GetLoanTransanctionsAsync(paystubId);
+
+            return loanTransactions.Select(x => LoanTransactionDto.Convert(x)).ToList();
         }
     }
 }

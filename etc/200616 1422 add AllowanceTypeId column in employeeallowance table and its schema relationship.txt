@@ -1,0 +1,8 @@
+
+ALTER TABLE `employeeallowance`
+	ADD COLUMN IF NOT EXISTS `AllowanceTypeId` INT(10) NULL DEFAULT NULL AFTER `AllowanceAmount`;
+
+ALTER TABLE `employeeallowance`
+	DROP FOREIGN KEY IF EXISTS `FK_employeeallowance_allowancetype`;
+ALTER TABLE `employeeallowance`
+	ADD CONSTRAINT `FK_employeeallowance_allowancetype` FOREIGN KEY (`AllowanceTypeId`) REFERENCES `allowancetype` (`Id`);

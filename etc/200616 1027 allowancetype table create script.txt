@@ -1,0 +1,13 @@
+
+CREATE TABLE `allowancetype` (
+	`Id` INT NOT NULL AUTO_INCREMENT,
+	`Name` VARCHAR(50) NOT NULL,
+	`DisplayString` VARCHAR(50) NOT NULL,
+	`Frequency` VARCHAR(50) NOT NULL,
+	`IsTaxable` TINYINT NOT NULL DEFAULT '0',
+	`Is13thMonthPay` TINYINT NOT NULL DEFAULT '0',
+	`IsFixed` TINYINT NOT NULL DEFAULT '0',
+	PRIMARY KEY (`Id`)
+)
+COLLATE='utf8_general_ci'
+;

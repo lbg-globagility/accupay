@@ -49,6 +49,13 @@ namespace AccuPay.Data.Repositories
             return role;
         }
 
+        public async Task Update(AspNetRole role)
+        {
+            _context.Entry(role).State = EntityState.Modified;
+            role.RolePermissions.ToList().ForEach(t => _context.Entry(t).State = EntityState.Modified);
+            await _context.SaveChangesAsync();
+        }
+
         public async Task<ICollection<UserRole>> GetUserRoles(int organizationId)
         {
             var userRoles = await _context.UserRoles

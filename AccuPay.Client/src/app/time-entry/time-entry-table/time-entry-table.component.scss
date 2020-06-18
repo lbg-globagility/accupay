@@ -1,0 +1,26 @@
+:host {
+  display: block;
+  overflow: auto;
+}
+
+tr {
+  height: 44px;
+}
+
+.yellow-highlight {
+  background-color: #ffff99;
+}
+
+.red-highlight {
+  background-color: #f88379;
+}
+
+.mat-cell,
+.mat-footer-cell {
+  font-size: 12px !important;
+}
+
+th,
+td {
+  white-space: nowrap;
+}

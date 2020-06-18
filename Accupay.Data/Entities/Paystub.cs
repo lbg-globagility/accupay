@@ -53,6 +53,23 @@ namespace AccuPay.Data.Entities
 
         public decimal AbsentHours { get; set; }
 
+        public decimal RestDayNightDiffHours { get; set; }
+        public decimal RestDayNightDiffOTHours { get; set; }
+
+        public decimal SpecialHolidayNightDiffHours { get; set; }
+        public decimal SpecialHolidayNightDiffOTHours { get; set; }
+        public decimal SpecialHolidayRestDayHours { get; set; }
+        public decimal SpecialHolidayRestDayOTHours { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffHours { get; set; }
+        public decimal SpecialHolidayRestDayNightDiffOTHours { get; set; }
+
+        public decimal RegularHolidayNightDiffHours { get; set; }
+        public decimal RegularHolidayNightDiffOTHours { get; set; }
+        public decimal RegularHolidayRestDayHours { get; set; }
+        public decimal RegularHolidayRestDayOTHours { get; set; }
+        public decimal RegularHolidayRestDayNightDiffHours { get; set; }
+        public decimal RegularHolidayRestDayNightDiffOTHours { get; set; }
+
         [Column("WorkPay")]
         public decimal TotalEarnings { get; set; }
 
@@ -89,28 +106,7 @@ namespace AccuPay.Data.Entities
         [Column("TotalCompHDMF")]
         public decimal HdmfEmployerShare { get; set; }
 
-        public decimal TotalVacationDaysLeft { get; set; }
-
-        public decimal TotalUndeclaredSalary { get; set; }
-
         public decimal TotalLoans { get; set; }
-
-        public decimal RestDayNightDiffHours { get; set; }
-        public decimal RestDayNightDiffOTHours { get; set; }
-
-        public decimal SpecialHolidayNightDiffHours { get; set; }
-        public decimal SpecialHolidayNightDiffOTHours { get; set; }
-        public decimal SpecialHolidayRestDayHours { get; set; }
-        public decimal SpecialHolidayRestDayOTHours { get; set; }
-        public decimal SpecialHolidayRestDayNightDiffHours { get; set; }
-        public decimal SpecialHolidayRestDayNightDiffOTHours { get; set; }
-
-        public decimal RegularHolidayNightDiffHours { get; set; }
-        public decimal RegularHolidayNightDiffOTHours { get; set; }
-        public decimal RegularHolidayRestDayHours { get; set; }
-        public decimal RegularHolidayRestDayOTHours { get; set; }
-        public decimal RegularHolidayRestDayNightDiffHours { get; set; }
-        public decimal RegularHolidayRestDayNightDiffOTHours { get; set; }
 
         [ForeignKey("PayPeriodID")]
         public virtual PayPeriod PayPeriod { get; set; }

@@ -5,6 +5,7 @@ import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Paystub } from 'src/app/payroll/shared/paystub';
 import { PageOptions } from 'src/app/core/shared/page-options';
+import { PayrollResult } from '../shared/payroll-result';
 
 @Injectable({
   providedIn: 'root',
@@ -29,14 +30,24 @@ export class PayPeriodService {
     return this.httpClient.get<PayPeriod>(`${this.baseUrl}/${payPeriodId}`);
   }
 
-  getPaystubs(payPeriodId: number): Observable<Paystub[]> {
-    return this.httpClient.get<Paystub[]>(
-      `${this.baseUrl}/${payPeriodId}/paystubs`
+  getPaystubs(
+    payPeriodId: number,
+    options: PageOptions,
+    term: string = ''
+  ): Observable<PaginatedList<Paystub>> {
+    const params = options ? options.toObject() : null;
+    params.term = term;
+
+    return this.httpClient.get<PaginatedList<Paystub>>(
+      `${this.baseUrl}/${payPeriodId}/paystubs`,
+      {
+        params,
+      }
     );
   }
 
-  calculate(payPeriodId: number): Observable<void> {
-    return this.httpClient.post<void>(
+  calculate(payPeriodId: number): Observable<PayrollResult> {
+    return this.httpClient.post<PayrollResult>(
       `${this.baseUrl}/${payPeriodId}/calculate`,
       {}
     );

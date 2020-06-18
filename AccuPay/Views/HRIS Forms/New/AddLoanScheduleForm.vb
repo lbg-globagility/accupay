@@ -295,8 +295,8 @@ Public Class AddLoanScheduleForm
 
     Private Sub LoadLoanStatus()
 
-        Dim service = MainServiceProvider.GetRequiredService(Of LoanDataService)
-        Dim statusList = service.GetStatusList()
+        Dim repository = MainServiceProvider.GetRequiredService(Of LoanRepository)
+        Dim statusList = repository.GetStatusList()
 
         statusList.Remove(LoanSchedule.STATUS_CANCELLED)
         statusList.Remove(LoanSchedule.STATUS_COMPLETE)

@@ -6,11 +6,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 import { IfZeroPipe } from 'src/app/core/pipes/if-zero.pipe';
+import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
 import { DisplayFieldComponent } from 'src/app/shared/components/display-field/display-field.component';
-import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
+import { ExpandableRowComponent } from 'src/app/shared/components/expandable-row/expandable-row.component';
+import { ExpandableRowContainerDirective } from 'src/app/shared/components/expandable-row/expandable-row-container.directive';
+import { ExpandableRowTriggerDirective } from 'src/app/shared/components/expandable-row/expandable-row-trigger.directive';
+import { YesNoPipe } from '../core/pipes/yes-no.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +26,11 @@ import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
+    YesNoPipe,
     DisplayFieldComponent,
+    ExpandableRowComponent,
+    ExpandableRowContainerDirective,
+    ExpandableRowTriggerDirective,
     // ToggleButtonGroupComponent,
     // ToggleButtonComponent,
     // UserMiniInfoComponent,
@@ -47,9 +55,13 @@ import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
+    YesNoPipe,
     ImgFallbackDirective,
     StatusComponent,
     DisplayFieldComponent,
+    ExpandableRowComponent,
+    ExpandableRowContainerDirective,
+    ExpandableRowTriggerDirective,
     // UserMiniInfoComponent,
     NgxPermissionsModule,
     CommonModule,

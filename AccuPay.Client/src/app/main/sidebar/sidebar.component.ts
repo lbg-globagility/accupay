@@ -65,7 +65,7 @@ const menuItems: MenuItem[] = [
       {
         label: 'Leaves',
         route: '/leaves',
-      },    
+      },
       {
         label: 'Leave Balance',
         route: '/leave-balance',
@@ -93,6 +93,10 @@ const menuItems: MenuItem[] = [
         label: 'Allowances',
         route: '/allowances',
         icon: 'person',
+      },
+      {
+        label: 'Allowance Types',
+        route: '/allowance-types',
       },
       {
         label: 'Loans',

@@ -1,5 +1,6 @@
 using AccuPay.Web.Account;
 using AccuPay.Web.Allowances.Services;
+using AccuPay.Web.AllowanceType;
 using AccuPay.Web.Branches;
 using AccuPay.Web.Calendars;
 using AccuPay.Web.Core.Auth;
@@ -35,6 +36,7 @@ namespace AccuPay.Web
             services.AddScoped<AccountService>();
             services.AddScoped<AccountTokenService>();
             services.AddScoped<AllowanceService>();
+            services.AddScoped<AllowanceTypeService>();
             services.AddScoped<BranchService>();
             services.AddScoped<CalendarService>();
             services.AddScoped<DivisionService>();

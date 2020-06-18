@@ -1,5 +1,5 @@
-@import "styles/variables";
+@use "styles/colors";
 
 .__label {
-  color: $text-color-300;
+  color: colors.$text-300;
 }

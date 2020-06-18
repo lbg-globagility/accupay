@@ -1,0 +1,52 @@
+<h1 class="mat-headline">Result</h1>
+<button
+  mat-raised-button
+  id="style"
+  :focus
+  (click)="filterButton(successFilter)"
+>
+  Success ({{ result.successes }})
+</button>
+<button
+  mat-raised-button
+  id="style"
+  :focus
+  (click)="filterButton(failedFilter)"
+>
+  Failed ({{ result.failures }})
+</button>
+<div class="scroll">
+  <table mat-table [dataSource]="dataSource" class="w-full">
+    <ng-container matColumnDef="employeeNo">
+      <th mat-header-cell *matHeaderCellDef>Employee No</th>
+      <td mat-cell *matCellDef="let result">
+        {{ result.employeeNo }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="employeeName">
+      <th mat-header-cell *matHeaderCellDef>Name</th>
+      <td mat-cell *matCellDef="let result">
+        {{ result.employeeName }}
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef>Description</th>
+      <td mat-cell *matCellDef="let result">
+        {{ result.description }}
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <div class="app-empty-table" *ngIf="dataSource?.length <= 0">
+    No result were found.
+  </div>
+</div>
+
+<div mat-dialog-actions align="end">
+  <button mat-raised-button (click)="onClose()">OK</button>
+</div>

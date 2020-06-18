@@ -11,10 +11,10 @@ namespace AccuPay.Web
         {
             services.AddScoped<ActualTimeEntryRepository>();
             services.AddScoped<AddressRepository>();
-            services.AddScoped<AdjustmentRepository>();
             services.AddScoped<AgencyFeeRepository>();
             services.AddScoped<AgencyRepository>();
             services.AddScoped<AllowanceRepository>();
+            services.AddScoped<AllowanceTypeRepository>();
             services.AddScoped<AspNetUserRepository>();
             services.AddScoped<AttachmentRepository>();
             services.AddScoped<AwardRepository>();
@@ -39,7 +39,7 @@ namespace AccuPay.Web
             services.AddScoped<LeaveRepository>();
             services.AddScoped<LeaveLedgerRepository>();
             services.AddScoped<ListOfValueRepository>();
-            services.AddScoped<LoanScheduleRepository>();
+            services.AddScoped<LoanRepository>();
             services.AddScoped<OfficialBusinessRepository>();
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<OvertimeRepository>();
@@ -90,7 +90,6 @@ namespace AccuPay.Web
             services.AddScoped<AdjustmentService>();
             services.AddScoped<OvertimeRateService>();
             services.AddScoped<PayPeriodService>();
-            services.AddScoped<ProductDataService>();
             services.AddScoped<SystemOwnerService>();
 
             services.AddScoped<AllowanceDataService>();
@@ -100,7 +99,10 @@ namespace AccuPay.Web
             services.AddScoped<LoanDataService>();
             services.AddScoped<OfficialBusinessDataService>();
             services.AddScoped<OvertimeDataService>();
+            services.AddScoped<PaystubDataService>();
             services.AddScoped<PositionDataService>();
+            services.AddScoped<ProductDataService>();
+            services.AddScoped<TimeEntryDataService>();
             services.AddScoped<TimeLogDataService>();
 
             services.AddScoped<ShiftImportParser>();

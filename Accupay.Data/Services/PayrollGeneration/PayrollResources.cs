@@ -81,7 +81,7 @@ namespace AccuPay.Data.Services
 
         private readonly ListOfValueService _listOfValueService;
 
-        private readonly LoanScheduleRepository _loanScheduleRepository;
+        private readonly LoanRepository _loanScheduleRepository;
 
         private readonly PayPeriodRepository _payPeriodRepository;
 
@@ -110,7 +110,7 @@ namespace AccuPay.Data.Services
                                 EmployeeRepository employeeRepository,
                                 FilingStatusTypeRepository filingStatusTypeRepository,
                                 LeaveRepository leaveRepository,
-                                LoanScheduleRepository loanScheduleRepository,
+                                LoanRepository loanScheduleRepository,
                                 PayPeriodRepository payPeriodRepository,
                                 PaystubRepository paystubRepository,
                                 PhilHealthBracketRepository philHealthBracketRepository,
@@ -297,8 +297,8 @@ namespace AccuPay.Data.Services
             try
             {
                 Leaves = (await _leaveRepository.
-                        GetByTimePeriodAsync(organizationId: _organizationId,
-                                            timePeriod: _payPeriodSpan)).
+                        GetByDatePeriodAsync(organizationId: _organizationId,
+                                            datePeriod: _payPeriodSpan)).
                         ToList();
             }
             catch (Exception ex)

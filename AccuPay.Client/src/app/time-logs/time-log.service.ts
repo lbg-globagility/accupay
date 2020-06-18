@@ -4,12 +4,13 @@ import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { TimeLog } from 'src/app/time-logs/shared/time-log';
+import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
+import { TimeLogImportResult } from './shared/time-log-import-result';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TimeLogService {
-  
   baseUrl = 'api/timelogs';
 
   constructor(private httpClient: HttpClient) {}
@@ -20,6 +21,24 @@ export class TimeLogService {
     return this.httpClient.get<PaginatedList<TimeLog>>(`${this.baseUrl}`, {
       params,
     });
+  }
+
+  listByEmployee(
+    options: PageOptions,
+    dateFrom: Date,
+    dateTo: Date,
+    searchTerm: string
+  ): Observable<PaginatedList<EmployeeTimeLogs>> {
+    const params = options ? options.toObject() : null;
+    params.dateFrom = dateFrom.toISOString();
+    params.dateTo = dateTo.toISOString();
+    params.searchTerm = searchTerm;
+    return this.httpClient.get<PaginatedList<EmployeeTimeLogs>>(
+      `${this.baseUrl}/employees`,
+      {
+        params,
+      }
+    );
   }
 
   get(id: number): Observable<TimeLog> {
@@ -34,15 +53,22 @@ export class TimeLogService {
     return this.httpClient.put<TimeLog>(`${this.baseUrl}/${id}`, timeLog);
   }
 
+  update2(timeLogs: any[]): Observable<void> {
+    return this.httpClient.post<void>(`${this.baseUrl}`, timeLogs);
+  }
+
   create(timeLog: TimeLog): Observable<TimeLog> {
-    console.log(timeLog)
+    console.log(timeLog);
     return this.httpClient.post<TimeLog>(`${this.baseUrl}`, timeLog);
   }
 
-  import(file: File): Observable<TimeLog> {
+  import(file: File): Observable<TimeLogImportResult> {
     const formData = new FormData();
     formData.append('file', file);
 
-    return this.httpClient.post<TimeLog>(`${this.baseUrl}/import`, formData);
+    return this.httpClient.post<TimeLogImportResult>(
+      `${this.baseUrl}/import`,
+      formData
+    );
   }
 }

@@ -1,23 +1,24 @@
-@import '~@angular/material/theming';
-@import 'styles/variables';
+@use "styles/colors";
+@use "~@angular/material/theming" as *;
+@use "styles/sizes";
 
 :host {
   display: block;
-  background: app-color(accent);
+  background: colors.$accent;
   color: white;
   @include mat-elevation(4);
 }
 
 .menu-item {
   display: flex;
-  padding: $app-space-1 $app-space-2;
+  padding: sizes.$x2 sizes.$x4;
 }
 
 .submenu-item {
   display: flex;
-  padding: $app-space-1 $app-space-2 $app-space-1 $app-space-4;
+  padding: sizes.$x2 sizes.$x4 sizes.$x2 sizes.$x8;
 }
 
 .menu-icon {
-  margin-right: $app-space-2;
+  margin-right: sizes.$x4;
 }

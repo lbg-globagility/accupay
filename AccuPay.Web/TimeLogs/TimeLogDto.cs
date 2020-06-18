@@ -4,7 +4,7 @@ namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogDto
     {
-        public int Id { get; set; }
+        public int? Id { get; set; }
 
         public int EmployeeId { get; set; }
 

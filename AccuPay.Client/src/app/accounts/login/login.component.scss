@@ -1,16 +1,17 @@
-@import "styles/variables";
+@use "styles/colors";
+@use "styles/sizes";
 
 :host {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: app-color(primary);
+  background: colors.$primary;
 }
 
 .login {
   min-width: 400px;
-  padding: $app-space-4;
+  padding: sizes.$x8;
 
   &__header {
     display: flex;
@@ -25,17 +26,17 @@
 
   &__actions {
     position: relative;
-    margin-top: $app-space-2;
+    margin-top: sizes.$x4;
 
     button {
-      margin-right: app-space(1);
+      margin-right: sizes.$x2;
     }
   }
 }
 
 .error {
-  background: app-color(warn);
+  background: colors.$warn;
   color: white;
-  padding: $app-space-1;
-  margin-bottom: $app-space-1;
+  padding: sizes.$x2;
+  margin-bottom: sizes.$x2;
 }

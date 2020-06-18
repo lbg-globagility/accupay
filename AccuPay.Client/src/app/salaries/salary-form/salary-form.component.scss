@@ -1,4 +1,4 @@
-@import "styles/variables";
+@use "styles/colors";
 
 .field {
   &-label,
@@ -8,7 +8,7 @@
 
   &-label {
     font-size: 0.75rem;
-    color: $text-color-300;
+    color: colors.$text-300;
   }
 }
 

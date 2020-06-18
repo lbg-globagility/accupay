@@ -9,13 +9,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Compile Remove="Core\NewFolder\**" />
-      <Content Remove="Core\NewFolder\**" />
-      <EmbeddedResource Remove="Core\NewFolder\**" />
-      <None Remove="Core\NewFolder\**" />
-    </ItemGroup>
-
-    <ItemGroup>
       <Compile Remove="Core\Files\S3Filesystem.cs" />
       <Compile Remove="Files\Exceptions\AttachmentClaimException.cs" />
       <Compile Remove="Files\Services\ZippedFile.cs" />

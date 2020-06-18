@@ -1,20 +1,24 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { DecimalPipe } from '@angular/common';
 
 @Pipe({
   name: 'amount',
 })
-export class AmountPipe implements PipeTransform {
-  transform(value: any, ...args: any[]): string {
-    const places = 2;
-
+export class AmountPipe extends DecimalPipe implements PipeTransform {
+  transform(value: any, valueIfZero: string = null): string {
     if (typeof value !== 'number') {
       return value;
     }
 
-    const n = value as number;
-    const isNegative = n < 0;
-    const present = Math.abs(n).toFixed(places);
+    const num = value as number;
 
-    return isNegative ? `(${present})` : present;
+    if (valueIfZero && num == 0) {
+      return valueIfZero;
+    }
+
+    const numberFormat: string = '1.2-2';
+    const formatted = super.transform(Math.abs(num), numberFormat, null);
+
+    return num < 0 ? `(${formatted})` : formatted;
   }
 }

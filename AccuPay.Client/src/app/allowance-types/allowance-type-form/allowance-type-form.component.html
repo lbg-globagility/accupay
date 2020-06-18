@@ -1,0 +1,62 @@
+<form [formGroup]="form">
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-12">
+      <mat-label>Name *</mat-label>
+      <input type="text" matInput formControlName="name" />
+      <mat-error>Please input Name</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-12">
+      <mat-label>Display Text *</mat-label>
+      <input type="text" matInput formControlName="displayString" />
+      <mat-error>Please input Display Text</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-form-field appearance="fill" color="accent" class="col-lg-12">
+      <mat-label>Frequency *</mat-label>
+      <mat-select matInput formControlName="frequency">
+        <mat-option *ngFor="let frequency of frequencyList" [value]="frequency">
+          {{ frequency }}
+        </mat-option>
+      </mat-select>
+      <mat-error>Please select a status</mat-error>
+    </mat-form-field>
+  </div>
+
+  <div class="row">
+    <mat-checkbox
+      formControlName="isTaxable"
+      appearance="fill"
+      color="accent"
+      class="col-lg-6"
+    >
+      Is Taxable
+    </mat-checkbox>
+  </div>
+
+  <div class="row">
+    <mat-checkbox
+      formControlName="is13thMonthPay"
+      appearance="fill"
+      color="accent"
+      class="col-lg-6"
+    >
+      Is 13th month pay
+    </mat-checkbox>
+  </div>
+
+  <div class="row">
+    <mat-checkbox
+      formControlName="isFixed"
+      appearance="fill"
+      color="accent"
+      class="col-lg-6"
+    >
+      Is Fixed
+    </mat-checkbox>
+  </div>
+</form>

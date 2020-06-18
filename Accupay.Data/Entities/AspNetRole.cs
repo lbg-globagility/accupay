@@ -10,6 +10,8 @@ namespace AccuPay.Data.Entities
     {
         public int ClientId { get; set; }
 
+        public bool IsAdmin { get; set; }
+
         public virtual ICollection<RolePermission> RolePermissions { get; set; }
 
         public AspNetRole()
@@ -22,25 +24,23 @@ namespace AccuPay.Data.Entities
         {
             var rolePermission = RolePermissions.FirstOrDefault(p => p.Permission.Name == permissionName);
 
-            if (action == "read")
-            {
-                return rolePermission.Read;
-            }
-            else if (action == "update")
-            {
-                return rolePermission.Update;
-            }
-            else if (action == "delete")
-            {
-                return rolePermission.Delete;
-            }
-            else if (action == "create")
-            {
-                return rolePermission.Create;
-            }
-            else
+            if (rolePermission is null)
             {
                 return false;
+            }
+
+            switch (action)
+            {
+                case "read":
+                    return rolePermission.Read;
+                case "create":
+                    return rolePermission.Create;
+                case "update":
+                    return rolePermission.Update;
+                case "delete":
+                    return rolePermission.Delete;
+                default:
+                    return false;
             }
         }
 

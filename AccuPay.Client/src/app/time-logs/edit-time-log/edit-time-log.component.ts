@@ -1,63 +1,104 @@
-import { Component, OnInit } from '@angular/core';
-import { TimeLog } from '../shared/time-log';
-import { BehaviorSubject } from 'rxjs';
+import { Component, OnInit, Inject } from '@angular/core';
 import { TimeLogService } from '../time-log.service';
-import { ActivatedRoute, Router } from '@angular/router';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import Swal from 'sweetalert2';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
+import { FormGroup, FormBuilder, FormArray } from '@angular/forms';
+import * as moment from 'moment';
+import { range } from 'src/app/core/functions/dates';
+import { TimeParser } from 'src/app/core/shared/services/time-parser';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-edit-time-log',
   templateUrl: './edit-time-log.component.html',
-  styleUrls: ['./edit-time-log.component.scss']
+  styleUrls: ['./edit-time-log.component.scss'],
 })
 export class EditTimeLogComponent implements OnInit {
-  timeLog: TimeLog;
+  readonly displayedColumns: string[] = ['date', 'timeIn', 'timeOut'];
 
-  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+  savingState: LoadingState = new LoadingState();
 
-  timeLogId = Number(this.route.snapshot.paramMap.get('id'));
+  employee: EmployeeTimeLogs;
+
+  dateFrom: Date;
+
+  dateTo: Date;
+
+  form: FormGroup = this.fb.group({
+    timeLogs: this.fb.array([]),
+  });
+
+  get timeLogsArray(): FormArray {
+    return this.form.get('timeLogs') as FormArray;
+  }
 
   constructor(
+    private fb: FormBuilder,
+    private timeParser: TimeParser,
     private timeLogService: TimeLogService,
-    private route: ActivatedRoute,
-    private router: Router,
-    private errorHandler: ErrorHandler
-  ) {}
+    private dialogRef: MatDialogRef<EditTimeLogComponent>,
+    private errorHandler: ErrorHandler,
+    @Inject(MAT_DIALOG_DATA) data: any
+  ) {
+    this.employee = data.employee;
+    this.dateFrom = data.dateFrom;
+    this.dateTo = data.dateTo;
+  }
 
   ngOnInit(): void {
-    this.loadShift();
+    this.initializeForm();
   }
 
-  onSave(timeLog: TimeLog): void {
-    this.timeLogService.update(timeLog, this.timeLogId).subscribe(
-      () => {
-        this.displaySuccess();
-        this.router.navigate(['time-logs', this.timeLogId]);
+  save(): void {
+    this.savingState.changeToLoading();
+
+    const value = this.form.value;
+
+    const timeLogs = [];
+    for (const data of value.timeLogs) {
+      const timeLog = {
+        employeeId: this.employee.employeeId,
+        date: data.date,
+        startTime: this.timeParser.parse(moment(data.date), data.timeIn),
+        endTime: this.timeParser.parse(moment(data.date), data.timeOut),
+      };
+
+      timeLogs.push(timeLog);
+    }
+
+    this.timeLogService.update2(timeLogs).subscribe({
+      next: () => {
+        this.savingState.changeToSuccess();
+        this.dialogRef.close(true);
       },
-      (err) => this.errorHandler.badRequest(err, 'Failed to update time-log.')
-    );
-  }
-
-  onCancel(): void {
-    this.router.navigate(['time-logs', this.timeLogId]);
-  }
-
-  private loadShift(): void {
-    this.timeLogService.get(this.timeLogId).subscribe((data) => {
-      this.timeLog = data;
-
-      this.isLoading.next(true);
+      error: (err) => {
+        this.savingState.changeToError();
+        this.errorHandler.badRequest(err, 'Failed to save time logs');
+      },
     });
   }
 
-  private displaySuccess(): void {
-    Swal.fire({
-      title: 'Success',
-      text: 'Successfully updated!',
-      icon: 'success',
-      timer: 3000,
-      showConfirmButton: false,
-    });
+  private initializeForm(): void {
+    for (const date of range(this.dateFrom, this.dateTo)) {
+      const group = this.fb.group({
+        date: [date],
+        timeIn: [],
+        timeOut: [],
+      });
+
+      // Find time log for the current row, if found, patch the time in and out.
+      const timeLog = this.employee.timeLogs.find(
+        (t) => t.date === date.toISOString()
+      );
+      if (timeLog) {
+        group.patchValue({
+          timeIn: moment(timeLog.startTime).format('HH:mm'),
+          timeOut: moment(timeLog.endTime).format('HH:mm'),
+        });
+      }
+
+      this.timeLogsArray.push(group);
+    }
   }
 }

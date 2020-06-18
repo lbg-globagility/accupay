@@ -3,11 +3,11 @@ import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { StartPayrollDialogComponent } from 'src/app/payroll/start-payroll-dialog/start-payroll-dialog.component';
-import { filter, map, mergeMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { StartPayrollDialogComponent } from 'src/app/payroll/components/start-payroll-dialog/start-payroll-dialog.component';
+import { filter, mergeMap } from 'rxjs/operators';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
+import { PageEvent } from '@angular/material/paginator';
 
 @Component({
   selector: 'app-payroll',
@@ -17,7 +17,7 @@ import { Sort } from '@angular/material/sort';
 export class PayrollComponent implements OnInit {
   latestPayperiod: PayPeriod;
 
-  readonly displayedColumns = ['cutoff', 'status'];
+  readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
   dataSource: MatTableDataSource<PayPeriod>;
 
@@ -28,13 +28,12 @@ export class PayrollComponent implements OnInit {
   searchTerm: string;
 
   sort: Sort = {
-    active: 'lastName',
+    active: 'cutoff',
     direction: '',
   };
 
   constructor(
     private payperiodService: PayPeriodService,
-    private router: Router,
     private dialog: MatDialog
   ) {}
 
@@ -43,13 +42,13 @@ export class PayrollComponent implements OnInit {
     this.loadList();
   }
 
-  loadLatest() {
+  loadLatest(): void {
     this.payperiodService
       .getLatest()
       .subscribe((payperiod) => (this.latestPayperiod = payperiod));
   }
 
-  loadList() {
+  loadList(): void {
     const options = new PageOptions(
       this.pageIndex,
       this.pageSize,
@@ -66,7 +65,13 @@ export class PayrollComponent implements OnInit {
       });
   }
 
-  startPayroll() {
+  onPageChanged(pageEvent: PageEvent): void {
+    this.pageIndex = pageEvent.pageIndex;
+    this.pageSize = pageEvent.pageSize;
+    this.loadList();
+  }
+
+  startPayroll(): void {
     this.dialog
       .open(StartPayrollDialogComponent)
       .afterClosed()

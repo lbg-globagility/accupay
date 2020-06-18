@@ -1,18 +1,18 @@
-@import 'styles/variables';
+@use "styles/colors";
 
 :host {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background: app-color(primary);
+  background: colors.$primary;
   color: white;
 }
 
 .error {
   padding: 48px;
   background: white;
-  color: app-color(primary);
+  color: colors.$primary;
 
   &__title {
     font-size: 96px;

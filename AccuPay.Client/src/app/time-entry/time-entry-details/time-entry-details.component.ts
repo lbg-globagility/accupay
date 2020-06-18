@@ -7,11 +7,12 @@ import { Sort } from '@angular/material/sort';
 import { auditTime } from 'rxjs/operators';
 import { Employee } from '../shared/employee';
 import { MatTableDataSource } from '@angular/material/table';
-import { Subject } from 'rxjs';
+import { Subject, BehaviorSubject } from 'rxjs';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
+import { TimeEntry } from 'src/app/time-entry/shared/time-entry';
 
 @Component({
   selector: 'app-time-entry-details',
@@ -21,39 +22,43 @@ import { ActivatedRoute } from '@angular/router';
 export class TimeEntryDetailsComponent implements OnInit {
   payPeriodId = Number(this.route.snapshot.paramMap.get('id'));
 
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
   readonly displayedColumns: string[] = [
-    'employeeNo',
-    'fullName',
+    'employee',
     'regularHours',
-    'absentHours',
-    'lateHours',
-    'undertimeHours',
     'leaveHours',
     'overtimeHours',
     'nightDifferentialHours',
     'nightDifferentialOvertimeHours',
+    'lateHours',
+    'undertimeHours',
+    'absentHours',
   ];
 
   payPeriod: PayPeriod;
 
   savingState: LoadingState = new LoadingState();
 
+  dataSource: MatTableDataSource<Employee>;
+
+  totalCount: number;
+
   sort: Sort = {
-    active: 'employeeName',
+    active: 'employee',
     direction: '',
   };
 
-  dataSource: MatTableDataSource<Employee>;
-  modelChanged: Subject<any>;
-  employees: Employee[];
-
   pageIndex: number = 0;
   pageSize: number = 10;
-  totalPages: number;
-  totalCount: number;
-  term: string;
 
-  selectedRow: number;
+  searchTerm: string;
+
+  timeEntries: TimeEntry[];
+
+  expandedEmployee: Employee;
+
+  modelChanged: Subject<any>;
 
   constructor(
     private payPeriodService: PayPeriodService,
@@ -74,6 +79,8 @@ export class TimeEntryDetailsComponent implements OnInit {
   private loadPayPeriod(): void {
     this.payPeriodService.getById(this.payPeriodId).subscribe((data) => {
       this.payPeriod = data;
+
+      this.isLoading.next(true);
     });
   }
 
@@ -86,35 +93,45 @@ export class TimeEntryDetailsComponent implements OnInit {
     );
 
     this.timeEntryService
-      .getEmployees(this.payPeriodId, options, this.term)
-      .subscribe(async (data) => {
-        await setTimeout(() => {
-          this.employees = data.items;
-
-          this.totalPages = data.totalPages;
-          this.totalCount = data.totalCount;
-
-          this.dataSource = new MatTableDataSource(this.employees);
-        });
+      .getEmployees(this.payPeriodId, options, this.searchTerm)
+      .subscribe((data) => {
+        this.dataSource = new MatTableDataSource(data.items);
+        console.log(this.dataSource);
+        this.totalCount = data.totalCount;
       });
   }
 
-  afterGenerate() {
+  loadTimeEntries(): void {
+    if (this.expandedEmployee == null) {
+      return;
+    }
+
+    this.timeEntryService
+      .getTimeEntries(this.payPeriodId, this.expandedEmployee.id)
+      .subscribe((timeEntries) => {
+        this.timeEntries = timeEntries;
+      });
+  }
+
+  afterGenerate(): void {
     this.modelChanged.next();
   }
 
-  sortData(sort: Sort) {
+  sortData(sort: Sort): void {
     this.sort = sort;
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
-    this.selectedRow = id;
-  }
-
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
-    this.loadEmployees();
+    this.modelChanged.next();
+  }
+
+  toggleExpansion(employee: Employee): void {
+    this.expandedEmployee =
+      this.expandedEmployee === employee ? null : employee;
+
+    this.loadTimeEntries();
   }
 }

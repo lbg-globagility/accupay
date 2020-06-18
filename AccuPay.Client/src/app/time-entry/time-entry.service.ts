@@ -5,6 +5,7 @@ import { PageOptions } from '../core/shared/page-options';
 import { PaginatedList } from '../core/shared/paginated-list';
 import { Employee } from 'src/app/time-entry/shared/employee';
 import { PayPeriod } from './shared/payPeriod';
+import { TimeEntry } from 'src/app/time-entry/shared/time-entry';
 
 @Injectable({
   providedIn: 'root',
@@ -39,5 +40,14 @@ export class TimeEntryService {
 
   getDetails(payPeriodId: number): Observable<PayPeriod> {
     return this.httpClient.get<PayPeriod>(`${this.baseUrl}/${payPeriodId}`);
+  }
+
+  getTimeEntries(
+    payPeriodId: number,
+    employeeId: number
+  ): Observable<TimeEntry[]> {
+    return this.httpClient.get<TimeEntry[]>(
+      `${this.baseUrl}/${payPeriodId}/employees/${employeeId}`
+    );
   }
 }

@@ -57,13 +57,13 @@ Public Class BenchmarkPayrollForm
 
     Private ReadOnly _employeeRepository As EmployeeRepository
 
+    Private ReadOnly _loanRepository As LoanRepository
+
     Private ReadOnly _payPeriodRepository As PayPeriodRepository
 
     Private ReadOnly _salaryRepository As SalaryRepository
 
     Private ReadOnly _listOfValueService As ListOfValueService
-
-    Private ReadOnly _loanService As LoanDataService
 
     Private ReadOnly _overtimeRateService As OvertimeRateService
 
@@ -79,7 +79,7 @@ Public Class BenchmarkPayrollForm
 
         _listOfValueService = MainServiceProvider.GetRequiredService(Of ListOfValueService)
 
-        _loanService = MainServiceProvider.GetRequiredService(Of LoanDataService)
+        _loanRepository = MainServiceProvider.GetRequiredService(Of LoanRepository)
 
         _overtimeRateService = MainServiceProvider.GetRequiredService(Of OvertimeRateService)
 
@@ -287,25 +287,25 @@ Public Class BenchmarkPayrollForm
             Return False
         End If
 
-        Dim _pagibigLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
+        Dim pagibigLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.PAG_IBIG_LOAN, employeeId.Value)
 
-        If _pagibigLoans.Count > 1 Then
+        If pagibigLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _pagibigLoan = _pagibigLoans.FirstOrDefault
+            _pagibigLoan = pagibigLoans.FirstOrDefault
 
         End If
 
-        Dim _sssLoans = Await _loanService.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
+        Dim sssLoans = Await _loanRepository.GetActiveLoansByLoanNameAsync(ProductConstant.SSS_LOAN, employeeId.Value)
 
-        If _sssLoans.Count > 1 Then
+        If sssLoans.Count > 1 Then
 
             MessageBoxHelper.Warning("Selected employee currently has multiple active PAGIBIG LOANs. Please delete one in the loan schedule form first.")
             Return False
         Else
-            _sssLoan = _sssLoans.FirstOrDefault
+            _sssLoan = sssLoans.FirstOrDefault
 
         End If
 
