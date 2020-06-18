@@ -165,6 +165,17 @@ namespace AccuPay.Data.Repositories
             return paystub.AllowanceItems;
         }
 
+        public async Task<IEnumerable<Adjustment>> GetAdjustmentsAsync(int paystubId)
+        {
+            var paystub = await _context.Paystubs
+                .Include(x => x.Adjustments)
+                    .ThenInclude(x => x.Product)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefaultAsync();
+
+            return paystub.Adjustments;
+        }
+
         public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctionsAsync(int paystubId)
         {
             var paystub = await _context.Paystubs

@@ -1,5 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { PaystubService } from '../../services/paystub.service';
+import { Paystub } from '../../shared/paystub';
+import { Adjustment } from '../../shared/adjustment';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-adjustments-breakdown',
@@ -7,7 +11,35 @@ import { PaystubService } from '../../services/paystub.service';
   styleUrls: ['./adjustments-breakdown.component.scss'],
 })
 export class AdjustmentsBreakdownComponent implements OnInit {
-  constructor(private paystubService: PaystubService) {}
+  readonly displayedColumns = ['description', 'amount'];
 
-  ngOnInit(): void {}
+  dataSource: Adjustment[];
+
+  paystub: Paystub;
+
+  isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
+
+  constructor(
+    private paystubService: PaystubService,
+    private dialogRef: MatDialogRef<AdjustmentsBreakdownComponent>,
+    @Inject(MAT_DIALOG_DATA) private data: any
+  ) {
+    this.paystub = data.paystub;
+  }
+
+  ngOnInit(): void {
+    this.loadAdjustments();
+  }
+
+  private loadAdjustments(): void {
+    this.paystubService.GetAdjustments(this.paystub.id).subscribe((data) => {
+      this.dataSource = data;
+
+      this.isLoading.next(true);
+    });
+  }
+
+  onClose(): void {
+    this.dialogRef.close();
+  }
 }

@@ -11,7 +11,6 @@ namespace AccuPay.Web
         {
             services.AddScoped<ActualTimeEntryRepository>();
             services.AddScoped<AddressRepository>();
-            services.AddScoped<AdjustmentRepository>();
             services.AddScoped<AgencyFeeRepository>();
             services.AddScoped<AgencyRepository>();
             services.AddScoped<AllowanceRepository>();
