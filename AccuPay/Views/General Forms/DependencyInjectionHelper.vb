@@ -2,9 +2,11 @@ Option Strict On
 
 Imports AccuPay.Benchmark
 Imports AccuPay.Data
+Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Payslip
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
@@ -140,6 +142,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeLogsReader)
 
         services.AddTransient(Of PayslipCreator)
+        services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)

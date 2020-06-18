@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AccuPay.Infrastructure.Services.Excel
+namespace AccuPay.Utilities.Attributes
 {
     public class ColumnNameAttribute : Attribute
     {

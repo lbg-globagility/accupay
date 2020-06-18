@@ -2,10 +2,10 @@
 
 Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
+Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Helpers
-Imports AccuPay.Infrastructure.Services.Excel
 Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 Imports OfficeOpenXml
@@ -73,7 +73,7 @@ Public Class ImportAllowanceForm
         Dim fileName = browseFile.FileName
 
         Dim records As New List(Of AllowanceRowRecord)
-        Dim parser = New ExcelParser(Of AllowanceRowRecord)()
+        Dim parser = MainServiceProvider.GetRequiredService(Of IExcelParser(Of AllowanceRowRecord))
 
         Dim parsedSuccessfully = FunctionUtils.TryCatchExcelParserReadFunction(
             Sub()

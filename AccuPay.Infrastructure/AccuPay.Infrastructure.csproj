@@ -9,6 +9,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj" />
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj" />
   </ItemGroup>
 </Project>

@@ -1,6 +1,7 @@
 ﻿Option Strict On
 
-Imports AccuPay.Infrastructure.Services.Excel
+Imports AccuPay.Data.Interfaces.Excel
+Imports AccuPay.Utilities.Attributes
 
 Namespace Global.Globagility.AccuPay.ShiftSchedules
 

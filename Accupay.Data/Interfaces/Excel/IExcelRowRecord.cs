@@ -1,4 +1,4 @@
-﻿namespace AccuPay.Infrastructure.Services.Excel
+﻿namespace AccuPay.Data.Interfaces.Excel
 {
     public interface IExcelRowRecord
     {

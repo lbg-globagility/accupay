@@ -1,5 +1,4 @@
-﻿using AccuPay.Infrastructure.Services.Excel;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 

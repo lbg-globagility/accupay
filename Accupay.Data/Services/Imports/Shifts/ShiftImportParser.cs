@@ -1,7 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
-using AccuPay.Infrastructure.Services.Excel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -13,17 +13,18 @@ namespace AccuPay.Data.Services.Imports
     public class ShiftImportParser
     {
         private readonly EmployeeRepository _employeeRepository;
-        private readonly ExcelParser<ShiftScheduleRowRecord> _parser;
+        private readonly IExcelParser<ShiftScheduleRowRecord> _parser;
 
-        public ShiftImportParser(EmployeeRepository employeeRepository)
+        private const string WorkSheetName = "ShiftSchedule";
+
+        public ShiftImportParser(EmployeeRepository employeeRepository, IExcelParser<ShiftScheduleRowRecord> parser)
         {
             _employeeRepository = employeeRepository;
 
-            var workSheetName = "ShiftSchedule";
-            _parser = new ExcelParser<ShiftScheduleRowRecord>(workSheetName);
+            _parser = parser;
         }
 
-        public string XlsxExtension => ExcelParser<ShiftScheduleRowRecord>.XlsxExtension;
+        public string XlsxExtension => _parser.XlsxExtension;
 
         /// <summary>
         /// Parses a stream into a list of models. This only supports .xlsx files.
@@ -34,13 +35,13 @@ namespace AccuPay.Data.Services.Imports
         /// <returns></returns>
         public Task<ShiftImportParserOutput> Parse(Stream importFile, int organizationId)
         {
-            var parsedRecords = _parser.Read(importFile);
+            var parsedRecords = _parser.Read(importFile, WorkSheetName);
             return Validate(parsedRecords, organizationId);
         }
 
         public Task<ShiftImportParserOutput> Parse(string filePath, int organizationId)
         {
-            var parsedRecords = _parser.Read(filePath);
+            var parsedRecords = _parser.Read(filePath, WorkSheetName);
             return Validate(parsedRecords, organizationId);
         }
 

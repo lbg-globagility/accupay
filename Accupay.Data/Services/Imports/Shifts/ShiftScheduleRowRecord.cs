@@ -1,4 +1,5 @@
-﻿using AccuPay.Infrastructure.Services.Excel;
+﻿using AccuPay.Data.Interfaces.Excel;
+using AccuPay.Utilities.Attributes;
 using System;
 
 namespace AccuPay.Data.Services.Imports

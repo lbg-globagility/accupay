@@ -12,8 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Accupay.DB\AccuPay.DB.vbproj" />
-    <ProjectReference Include="..\AccuPay.Infrastructure\AccuPay.Infrastructure.csproj" />
     <ProjectReference Include="..\AccuPay.Utilities\AccuPay.Utilities.csproj" />
   </ItemGroup>
 

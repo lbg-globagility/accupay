@@ -1,4 +1,6 @@
-﻿using AccuPay.Utilities;
+﻿using AccuPay.Data.Interfaces.Excel;
+using AccuPay.Utilities;
+using AccuPay.Utilities.Attributes;
 using AccuPay.Utilities.Extensions;
 using OfficeOpenXml;
 using System;
@@ -10,22 +12,11 @@ using System.Text.RegularExpressions;
 
 namespace AccuPay.Infrastructure.Services.Excel
 {
-    public class ExcelParser<T> where T : IExcelRowRecord, new()
+    public class ExcelParser<T> : IExcelParser<T> where T : IExcelRowRecord, new()
     {
-        public const string XlsxExtension = ".xlsx";
+        public string XlsxExtension { get; } = ".xlsx";
 
-        private readonly string _worksheetName;
-
-        public ExcelParser()
-        {
-        }
-
-        public ExcelParser(string worksheetName)
-        {
-            _worksheetName = worksheetName;
-        }
-
-        public IList<T> Read(string filePath)
+        public IList<T> Read(string filePath, string worksheetName = null)
         {
             // we can probably support other file format unless it's .xls
             if (Path.GetExtension(filePath) != XlsxExtension)
@@ -33,7 +24,7 @@ namespace AccuPay.Infrastructure.Services.Excel
 
             var stream = GetFileContents(filePath);
 
-            return Read(stream);
+            return Read(stream, worksheetName);
         }
 
         /// <summary>
@@ -42,7 +33,7 @@ namespace AccuPay.Infrastructure.Services.Excel
         /// </summary>
         /// <param name="fileStream"></param>
         /// <returns></returns>
-        public IList<T> Read(Stream fileStream)
+        public IList<T> Read(Stream fileStream, string worksheetName = null)
         {
             List<T> records = new List<T>();
 
@@ -50,13 +41,13 @@ namespace AccuPay.Infrastructure.Services.Excel
             {
                 ExcelWorksheet worksheet;
 
-                if (_worksheetName == null)
+                if (worksheetName == null)
                     worksheet = excel.Workbook.Worksheets[1];
                 else
-                    worksheet = excel.Workbook.Worksheets[_worksheetName];
+                    worksheet = excel.Workbook.Worksheets[worksheetName];
 
                 if (worksheet == null)
-                    throw new WorkSheetNotFoundException($"Cannot find the worksheet {(string.IsNullOrWhiteSpace(_worksheetName) ? "" : $"`{ _worksheetName }`")}.");
+                    throw new WorkSheetNotFoundException($"Cannot find the worksheet {(string.IsNullOrWhiteSpace(worksheetName) ? "" : $"`{ worksheetName }`")}.");
 
                 var tprops = typeof(T).GetProperties().ToList();
 
