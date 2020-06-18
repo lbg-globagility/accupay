@@ -1,3 +1,4 @@
+using AccuPay.Data.Entities;
 using System;
 
 namespace AccuPay.Web.Loans
@@ -19,5 +20,22 @@ namespace AccuPay.Web.Loans
         public decimal Amount { get; set; }
 
         public decimal Balance { get; set; }
+
+        public static LoanHistoryDto Convert(LoanTransaction loanTransaction)
+        {
+            if (loanTransaction == null) return null;
+
+            return new LoanHistoryDto
+            {
+                Id = loanTransaction.RowID.Value,
+                EmployeeId = loanTransaction.EmployeeID,
+                EmployeeName = loanTransaction.LoanSchedule?.Employee?.FullNameWithMiddleInitialLastNameFirst,
+                EmployeeNo = loanTransaction.LoanSchedule?.Employee?.EmployeeNo,
+                EmployeeType = loanTransaction.LoanSchedule?.Employee?.EmployeeType,
+                DeductionDate = loanTransaction.PayPeriodPayToDate.Value,
+                Amount = loanTransaction.Amount,
+                Balance = loanTransaction.TotalBalance
+            };
+        }
     }
 }

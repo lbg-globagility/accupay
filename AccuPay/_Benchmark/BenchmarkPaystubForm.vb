@@ -27,8 +27,6 @@ Public Class BenchmarkPaystubForm
 
     Private _overtimeRate As OvertimeRate
 
-    Private ReadOnly _adjustmentRepository As AdjustmentRepository
-
     Private ReadOnly _employeeRepository As EmployeeRepository
 
     Private ReadOnly _paystubRepository As PaystubRepository
@@ -44,8 +42,6 @@ Public Class BenchmarkPaystubForm
     Sub New()
 
         InitializeComponent()
-
-        _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
 
         _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -371,10 +367,23 @@ Public Class BenchmarkPaystubForm
             Return
         End If
 
-        Dim otherIncomes = paystub.Adjustments.Where(Function(p) p.Amount > 0).ToList()
+        Dim otherIncomes = paystub.Adjustments.
+            Where(Function(p) p.Amount > 0).
+            Select(Function(p) New Adjustments With {
+                .Amount = p.Amount,
+                .Code = p.Product.Comments,
+                .Description = p.Product.PartNo
+                }).
+            ToList()
 
-        Dim deductions = paystub.Adjustments.Where(Function(p) p.Amount < 0).ToList()
-        deductions.ForEach(Function(a) a.Amount = Math.Abs(a.Amount))
+        Dim deductions = paystub.Adjustments.
+            Where(Function(p) p.Amount < 0).
+            Select(Function(p) New Adjustments With {
+                .Amount = Math.Abs(p.Amount),
+                .Code = p.Product.Comments,
+                .Description = p.Product.PartNo
+                }).
+            ToList()
 
         DeductionsGridView.DataSource = deductions
         OtherIncomeGridView.DataSource = otherIncomes
@@ -662,26 +671,6 @@ Public Class BenchmarkPaystubForm
 
         Return (pagIbigLoan, sssLoan)
 
-    End Function
-
-    Private Shared Function GetAdjustmentDeductions(payStubAdjustments As List(Of Adjustments)) As List(Of Adjustments)
-        Dim deductions = payStubAdjustments.Where(Function(p) p.Amount < 0).ToList
-        For Each deduction In deductions
-            deduction.Amount = Math.Abs(deduction.Amount)
-        Next
-
-        Return deductions
-    End Function
-
-    Private Async Function GetAdjustments(payStubId As Integer) As Task(Of List(Of Adjustments))
-
-        Return (Await _adjustmentRepository.GetByPaystubWithProductAsync(payStubId)).
-                                            Select(Function(p) New Adjustments With {
-                                                .Amount = p.Amount,
-                                                .Code = p.Product.Comments,
-                                                .Description = p.Product.PartNo
-                                                }).
-                                            ToList()
     End Function
 
     Private Async Function GetPayStub(employeeId As Integer) As Task(Of Paystub)

@@ -42,7 +42,6 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of ActualTimeEntryRepository)
         services.AddTransient(Of AddressRepository)
-        services.AddTransient(Of AdjustmentRepository)
         services.AddTransient(Of AgencyFeeRepository)
         services.AddTransient(Of AgencyRepository)
         services.AddTransient(Of AllowanceRepository)
@@ -68,7 +67,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of LeaveRepository)
         services.AddTransient(Of LeaveLedgerRepository)
         services.AddTransient(Of ListOfValueRepository)
-        services.AddTransient(Of LoanScheduleRepository)
+        services.AddTransient(Of LoanRepository)
         services.AddTransient(Of OfficialBusinessRepository)
         services.AddTransient(Of OrganizationRepository)
         services.AddTransient(Of OvertimeRepository)

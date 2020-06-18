@@ -115,8 +115,6 @@ Public Class PaystubPresenter
     Private Class Repository
         Inherits DbRepository
 
-        Private _adjustmentRepository As AdjustmentRepository
-
         Private _employeeRepository As EmployeeRepository
 
         Private _payPeriodRepository As PayPeriodRepository
@@ -130,8 +128,6 @@ Public Class PaystubPresenter
         Private _timeEntryRepository As TimeEntryRepository
 
         Sub New()
-
-            _adjustmentRepository = MainServiceProvider.GetRequiredService(Of AdjustmentRepository)
 
             _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
 
@@ -171,21 +167,21 @@ Public Class PaystubPresenter
 
             If paystubId Is Nothing Then Return Nothing
 
-            Return (Await _paystubRepository.GetAllowanceItems(paystubId.Value)).ToList()
+            Return (Await _paystubRepository.GetAllowanceItemsAsync(paystubId.Value)).ToList()
 
         End Function
 
         Public Async Function GetLoanTransactions(paystubId As Integer?) As Task(Of IList(Of LoanTransaction))
             If paystubId Is Nothing Then Return Nothing
 
-            Return (Await _paystubRepository.GetLoanTransanctions(paystubId.Value)).ToList()
+            Return (Await _paystubRepository.GetLoanTransanctionsAsync(paystubId.Value)).ToList()
         End Function
 
         Public Async Function GetAdjustments(paystubId As Integer?) As Task(Of IList(Of Adjustment))
 
             If paystubId Is Nothing Then Return Nothing
 
-            Return (Await _adjustmentRepository.GetByPaystubWithProductAsync(paystubId.Value)).ToList()
+            Return (Await _paystubRepository.GetAdjustmentsAsync(paystubId.Value)).ToList()
         End Function
 
         Public Async Function GetAdjustmentTypes() As Task(Of IList(Of Product))

@@ -139,7 +139,11 @@
               <td>{{ -paystub.withholdingTax | amount: "-" }}</td>
             </tr>
             <tr>
-              <td><a href="javascript:void(0);">Total Loans</a></td>
+              <td>
+                <a href="javascript:void(0);" (click)="showLoansBreakdown()"
+                  >Total Loans</a
+                >
+              </td>
               <td>{{ -paystub.totalLoans | amount: "-" }}</td>
             </tr>
             <tr>
@@ -147,7 +151,13 @@
               <th>{{ -paystub.totalDeductions | amount: "-" }}</th>
             </tr>
             <tr>
-              <td><a href="javascript:void(0);">Total Adjustments</a></td>
+              <td>
+                <a
+                  href="javascript:void(0);"
+                  (click)="showAdjustmentsBreakdown()"
+                  >Total Adjustments</a
+                >
+              </td>
               <td>{{ paystub.totalAdjustments | amount: "-" }}</td>
             </tr>
           </tbody>

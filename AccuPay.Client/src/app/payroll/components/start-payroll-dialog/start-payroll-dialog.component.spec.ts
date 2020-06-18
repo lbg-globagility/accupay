@@ -8,9 +8,8 @@ describe('StartPayrollDialogComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ StartPayrollDialogComponent ]
-    })
-    .compileComponents();
+      declarations: [StartPayrollDialogComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

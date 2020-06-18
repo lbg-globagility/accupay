@@ -8,9 +8,8 @@ describe('PayrollResultDetailsComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PayrollResultDetailsComponent ]
-    })
-    .compileComponents();
+      declarations: [PayrollResultDetailsComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -5,7 +5,6 @@ using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Shared;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,16 +16,19 @@ namespace AccuPay.Web.Loans
         private readonly LoanDataService _loanService;
         private readonly ProductRepository _productRepository;
         private readonly ListOfValueRepository _listOfValueRepository;
+        private readonly LoanRepository _loanRepository;
         private readonly ICurrentUser _currentUser;
 
         public LoanService(LoanDataService loanService,
                             ProductRepository productRepository,
                             ListOfValueRepository listOfValueRepository,
+                            LoanRepository loanRepository,
                             ICurrentUser currentUser)
         {
             _loanService = loanService;
             _productRepository = productRepository;
             _listOfValueRepository = listOfValueRepository;
+            _loanRepository = loanRepository;
             _currentUser = currentUser;
         }
 
@@ -34,9 +36,10 @@ namespace AccuPay.Web.Loans
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _loanService.GetPaginatedListAsync(options,
-                                                                        _currentUser.OrganizationId,
-                                                                        searchTerm);
+            var paginatedList = await _loanRepository.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -45,7 +48,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> GetById(int id)
         {
-            var officialBusiness = await _loanService.GetByIdWithEmployeeAndProductAsync(id);
+            var officialBusiness = await _loanRepository.GetByIdWithEmployeeAndProductAsync(id);
 
             return ConvertToDto(officialBusiness);
         }
@@ -69,7 +72,7 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> Update(int id, UpdateLoanDto dto)
         {
-            var loanSchedule = await _loanService.GetByIdAsync(id);
+            var loanSchedule = await _loanRepository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
             int userId = 1;
@@ -84,19 +87,9 @@ namespace AccuPay.Web.Loans
 
         public async Task<ActionResult<PaginatedList<LoanHistoryDto>>> GetLoanHistory(PageOptions options, int loanId)
         {
-            var currentLoanTransactions = await _loanService.GetPaginatedLoanHistoryList(options, loanId);
+            var currentLoanTransactions = await _loanRepository.GetLoanTransactionsAsync(options, loanId);
 
-            var dtos = currentLoanTransactions.List.Select(x => new LoanHistoryDto
-            {
-                Id = x.RowID.Value,
-                EmployeeId = x.EmployeeID,
-                EmployeeName = x.LoanSchedule.Employee.FullNameWithMiddleInitialLastNameFirst,
-                EmployeeNo = x.LoanSchedule.Employee.EmployeeNo,
-                EmployeeType = x.LoanSchedule.Employee.EmployeeType,
-                DeductionDate = x.PayPeriodPayToDate.Value,
-                Amount = x.Amount,
-                Balance = x.TotalBalance
-            });
+            var dtos = currentLoanTransactions.List.Select(x => LoanHistoryDto.Convert(x));
 
             return new PaginatedList<LoanHistoryDto>(dtos, currentLoanTransactions.TotalCount, ++options.PageIndex, options.PageSize);
         }
@@ -108,7 +101,7 @@ namespace AccuPay.Web.Loans
 
         public List<string> GetStatusList()
         {
-            return _loanService.GetStatusList();
+            return _loanRepository.GetStatusList();
         }
 
         public async Task<List<DropDownItem>> GetLoanTypes()

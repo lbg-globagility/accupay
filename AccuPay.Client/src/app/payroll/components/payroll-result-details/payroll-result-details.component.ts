@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { PayrollResultDetails } from '../shared/payroll-result-details';
-import { PayrollResult } from '../shared/payroll-result';
+import { PayrollResultDetails } from '../../shared/payroll-result-details';
+import { PayrollResult } from '../../shared/payroll-result';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
@@ -25,8 +25,6 @@ export class PayrollResultDetailsComponent implements OnInit {
   result: PayrollResult;
 
   dataSource: PayrollResultDetails[];
-
-  details: PayrollResultDetails[];
 
   constructor(
     private dialogRef: MatDialogRef<PayrollResultDetailsComponent>,

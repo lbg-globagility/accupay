@@ -8,7 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { PayrollResult } from '../shared/payroll-result';
 import { MatDialog } from '@angular/material/dialog';
-import { PayrollResultDetailsComponent } from '../payroll-result-details/payroll-result-details.component';
+import { PayrollResultDetailsComponent } from '../components/payroll-result-details/payroll-result-details.component';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
