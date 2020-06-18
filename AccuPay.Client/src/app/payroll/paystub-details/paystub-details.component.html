@@ -14,101 +14,101 @@
             <tr>
               <td>Basic Pay</td>
               <td>{{ paystub.basicHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.basicRate | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.basicRate | amount }}</td>
             </tr>
             <tr>
               <td>Absent</td>
-              <td>{{ paystub.absentHours | ifZero }}</td>
-              <td>{{ paystub.absenceDeduction | hasParenthesis }}</td>
+              <td>{{ paystub.absentHours | ifZero: "1.0-2" }}</td>
+              <td>{{ -paystub.absenceDeduction | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Late</td>
-              <td>{{ paystub.lateHours | ifZero }}</td>
-              <td>{{ paystub.lateDeduction | hasParenthesis }}</td>
+              <td>{{ paystub.lateHours | ifZero: "1.0-2" }}</td>
+              <td>{{ -paystub.lateDeduction | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Undertime</td>
-              <td>{{ paystub.undertimeHours | ifZero }}</td>
+              <td>{{ paystub.undertimeHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.undertimeDeduction | hasParenthesis }}
+                {{ -paystub.undertimeDeduction | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Overtime</td>
-              <td>{{ paystub.overtimeHours | ifZero }}</td>
-              <td>{{ paystub.overtimePay | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.overtimeHours | ifZero: "1.0-2" }}</td>
+              <td>{{ paystub.overtimePay | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Night Differential</td>
-              <td>{{ paystub.nightDiffHours | ifZero }}</td>
-              <td>{{ paystub.nightDiffPay | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.nightDiffHours | ifZero: "1.0-2" }}</td>
+              <td>{{ paystub.nightDiffPay | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Night Differential OT</td>
-              <td>{{ paystub.nightDiffOvertimeHours | ifZero }}</td>
+              <td>{{ paystub.nightDiffOvertimeHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.nightDiffOvertimePay | ifZero: "1.2-2" }}
+                {{ paystub.nightDiffOvertimePay | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Regular Holiday</td>
-              <td>{{ paystub.regularHolidayHours | ifZero }}</td>
+              <td>{{ paystub.regularHolidayHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.regularHolidayPay | ifZero: "1.2-2" }}
+                {{ paystub.regularHolidayPay | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Regular Holiday OT</td>
-              <td>{{ paystub.regularHolidayOTHours | ifZero }}</td>
+              <td>{{ paystub.regularHolidayOTHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.regularHolidayOTPay | ifZero: "1.2-2" }}
+                {{ paystub.regularHolidayOTPay | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Special Holiday</td>
-              <td>{{ paystub.specialHolidayHours | ifZero }}</td>
+              <td>{{ paystub.specialHolidayHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.specialHolidayPay | ifZero: "1.2-2" }}
+                {{ paystub.specialHolidayPay | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Special Holiday OT</td>
-              <td>{{ paystub.specialHolidayOTHours | ifZero }}</td>
+              <td>{{ paystub.specialHolidayOTHours | ifZero: "1.0-2" }}</td>
               <td>
-                {{ paystub.specialHolidayOTPay | ifZero: "1.2-2" }}
+                {{ paystub.specialHolidayOTPay | amount: "-" }}
               </td>
             </tr>
             <tr>
               <td>Rest Day Holiday</td>
-              <td>{{ paystub.restDayHours | ifZero }}</td>
-              <td>{{ paystub.restDayPay | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.restDayHours | ifZero: "1.0-2" }}</td>
+              <td>{{ paystub.restDayPay | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Rest Day Holiday OT</td>
-              <td>{{ paystub.restDayOTHours | ifZero }}</td>
-              <td>{{ paystub.restDayOTPay | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.restDayOTHours | ifZero: "1.0-2" }}</td>
+              <td>{{ paystub.restDayOTPay | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Leave</td>
-              <td>{{ paystub.leaveHours | ifZero }}</td>
-              <td>{{ paystub.leavePay | ifZero: "1.2-2" }}</td>
+              <td>{{ paystub.leaveHours | ifZero: "1.0-2" }}</td>
+              <td>{{ paystub.leavePay | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Non-taxable Allowance</td>
               <td></td>
-              <td>{{ paystub.totalNonTaxableAllowance | indicateNegative }}</td>
+              <td>{{ paystub.totalNonTaxableAllowance | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Taxable Allowance</td>
               <td></td>
-              <td>{{ paystub.totalTaxableAllowance | indicateNegative }}</td>
+              <td>{{ paystub.totalTaxableAllowance | amount: "-" }}</td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <th>GROSS PAY</th>
               <th></th>
-              <th>{{ paystub.grossPay | ifZero: "1.2-2" }}</th>
+              <th>{{ paystub.grossPay | amount: "-" }}</th>
             </tr>
           </tfoot>
         </table>
@@ -124,37 +124,37 @@
           <tbody>
             <tr>
               <td>SSS Premium</td>
-              <td>{{ paystub.sssEmployeeShare | hasParenthesis }}</td>
+              <td>{{ -paystub.sssEmployeeShare | amount: "-" }}</td>
             </tr>
             <tr>
               <td>PhilHealth</td>
-              <td>{{ paystub.philHealthEmployeeShare | hasParenthesis }}</td>
+              <td>{{ -paystub.philHealthEmployeeShare | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Pag-IBIG</td>
-              <td>{{ paystub.hdmfEmployeeShare | hasParenthesis }}</td>
+              <td>{{ -paystub.hdmfEmployeeShare | amount: "-" }}</td>
             </tr>
             <tr>
               <td>Tax Withheld</td>
-              <td>{{ paystub.withholdingTax | hasParenthesis }}</td>
+              <td>{{ -paystub.withholdingTax | amount: "-" }}</td>
             </tr>
             <tr>
               <td><a href="javascript:void(0);">Total Loans</a></td>
-              <td>{{ paystub.totalLoans | hasParenthesis }}</td>
+              <td>{{ -paystub.totalLoans | amount: "-" }}</td>
             </tr>
             <tr>
               <th>Total Deductions</th>
-              <th>{{ paystub.totalDeductions | hasParenthesis }}</th>
+              <th>{{ -paystub.totalDeductions | amount: "-" }}</th>
             </tr>
             <tr>
               <td><a href="javascript:void(0);">Total Adjustments</a></td>
-              <td>{{ paystub.totalAdjustments | indicateNegative }}</td>
+              <td>{{ paystub.totalAdjustments | amount: "-" }}</td>
             </tr>
           </tbody>
           <tfoot>
             <tr>
               <th>NET PAY:</th>
-              <th>{{ paystub.netPay | ifZero: "1.2-2" }}</th>
+              <th>{{ paystub.netPay | amount: "-" }}</th>
             </tr>
           </tfoot>
         </table>

@@ -7,8 +7,6 @@ import { RouterModule } from '@angular/router';
 import { IfEmptyPipe } from 'src/app/core/pipes/if-empty.pipe';
 import { IfZeroPipe } from 'src/app/core/pipes/if-zero.pipe';
 import { AmountPipe } from 'src/app/shared/pipes/amount.pipe';
-import { HasParenthesisPipe } from 'src/app/core/pipes/has-parenthesis.pipe';
-import { IndicateNegativePipe } from 'src/app/core/pipes/indicate-negative.pipe';
 import { ImgFallbackDirective } from 'src/app/shared/components/imgfallback/imgfallback.directive';
 import { StatusComponent } from 'src/app/shared/components/status/status.component';
 import { NgxPermissionsModule } from 'ngx-permissions';
@@ -28,8 +26,6 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
-    HasParenthesisPipe,
-    IndicateNegativePipe,
     YesNoPipe,
     DisplayFieldComponent,
     ExpandableRowComponent,
@@ -59,8 +55,6 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     IfEmptyPipe,
     IfZeroPipe,
     AmountPipe,
-    HasParenthesisPipe,
-    IndicateNegativePipe,
     YesNoPipe,
     ImgFallbackDirective,
     StatusComponent,
