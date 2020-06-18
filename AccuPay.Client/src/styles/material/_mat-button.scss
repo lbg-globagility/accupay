@@ -1,3 +1,5 @@
+@use "styles/colors";
+
 .mat-button-base {
   letter-spacing: 0.05em;
 }
@@ -14,11 +16,11 @@
 
 .mat-button-toggle {
   background-color: white !important;
-  color: app-color(accent) !important;
+  color: colors.$accent !important;
 }
 
 .mat-button-toggle-checked {
-  background-color: app-color(accent) !important;
+  background-color: colors.$accent !important;
   color: white !important;
 }
 

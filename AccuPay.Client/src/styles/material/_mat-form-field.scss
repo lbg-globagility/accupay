@@ -1,3 +1,5 @@
+@use "styles/sizes";
+
 // deprecated
 .mat-form-field.app-input-no-underline .mat-form-field-underline {
   display: none;
@@ -86,7 +88,7 @@
 .mat-form-field.mat-form-field-appearance-outline.m-with-icon {
   .mat-select-trigger .mat-icon {
     vertical-align: middle;
-    margin-right: app-space(2);
+    margin-right: sizes.$x4;
   }
 
   .mat-form-field-infix {
@@ -113,7 +115,7 @@
 .mat-form-field.mat-form-field-appearance-outline.app-with-icon {
   .mat-select-trigger .mat-icon {
     vertical-align: middle;
-    margin-right: app-space(2);
+    margin-right: sizes.$x4;
   }
 
   .mat-form-field-infix {

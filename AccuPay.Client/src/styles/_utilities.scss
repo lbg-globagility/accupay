@@ -1,7 +1,7 @@
-@import "styles/variables";
+@use "styles/sizes";
 
 .u-row ~ .u-row {
-  margin-top: app-space(1);
+  margin-top: sizes.$x2;
 }
 
 .app-expandable-row-trigger:not(.example-expanded-row):hover {

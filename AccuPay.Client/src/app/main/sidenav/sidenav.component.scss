@@ -1,8 +1,8 @@
-@import 'styles/variables';
+@use "styles/sizes";
 
 :host {
   display: flex;
-  padding: $app-space-2;
+  padding: sizes.$x4;
   flex-flow: column nowrap;
   align-items: center;
 }
@@ -17,7 +17,7 @@
 }
 
 .menu-title {
-  margin-top: $app-space-2;
+  margin-top: sizes.$x4;
   font-size: 20px;
 }
 

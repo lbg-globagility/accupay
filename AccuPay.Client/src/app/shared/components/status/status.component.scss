@@ -1,4 +1,4 @@
-@import "styles/variables";
+@use "styles/colors";
 
 @mixin create-status($status, $color) {
   [data-status="#{$status}"] {
@@ -24,48 +24,47 @@
   font-size: 0.8rem;
 }
 
-@include create-status2("leave", "Pending", app-color(status, red));
-@include create-status2("leave", "Approved", app-color(status, green));
-@include create-status2("leave", "Open", app-color(status, green));
-@include create-status2("leave", "Closed", app-color(status, blue));
-@include create-status2("leave", "Completed", app-color(status, blue));
+@include create-status2("leave", "Pending", colors.$red);
+@include create-status2("leave", "Approved", colors.$green);
+@include create-status2("leave", "Open", colors.$green);
+@include create-status2("leave", "Closed", colors.$blue);
+@include create-status2("leave", "Completed", colors.$blue);
 
-@include create-status2(
-  "officialBusiness",
-  "Approved",
-  app-color(status, green)
-);
-@include create-status2("officialBusiness", "Pending", app-color(status, red));
+@include create-status2("officialBusiness", "Approved", colors.$green);
+@include create-status2("officialBusiness", "Pending", colors.$red);
 
-@include create-status2("overtime", "Pending", app-color(status, red));
-@include create-status2("overtime", "Approved", app-color(status, green));
-@include create-status2("overtime", "Open", app-color(status, green));
-@include create-status2("overtime", "Closed", app-color(status, blue));
-@include create-status2("overtime", "Completed", app-color(status, blue));
+@include create-status2("payperiod", "Open", colors.$green);
+@include create-status2("payperiod", "Closed", colors.$red);
 
-@include create-status2("Recall", "Unsent", app-color(status, red));
-@include create-status2("Recall", "Incomplete", app-color(status, yellow));
-@include create-status2("Recall", "Open", app-color(status, green));
-@include create-status2("Recall", "Closed", app-color(status, blue));
-@include create-status2("Recall", "Completed", app-color(status, blue));
+@include create-status2("overtime", "Pending", colors.$red);
+@include create-status2("overtime", "Approved", colors.$green);
+@include create-status2("overtime", "Open", colors.$green);
+@include create-status2("overtime", "Closed", colors.$blue);
+@include create-status2("overtime", "Completed", colors.$blue);
 
-@include create-status2("Organization", "Pending", app-color(status, yellow));
-@include create-status2("Organization", "Verified", app-color(status, green));
+@include create-status2("Recall", "Unsent", colors.$red);
+@include create-status2("Recall", "Incomplete", colors.$yellow);
+@include create-status2("Recall", "Open", colors.$green);
+@include create-status2("Recall", "Closed", colors.$blue);
+@include create-status2("Recall", "Completed", colors.$blue);
 
-@include create-status2("RecallProvider", "Unsent", app-color(status, yellow));
-@include create-status2("RecallProvider", "Open", app-color(status, green));
-@include create-status2("RecallProvider", "Completed", app-color(status, blue));
+@include create-status2("Organization", "Pending", colors.$yellow);
+@include create-status2("Organization", "Verified", colors.$green);
 
-@include create-status2("User", "Pending", app-color(status, yellow));
-@include create-status2("User", "Active", app-color(status, green));
-@include create-status2("User", "Deactivated", app-color(status, red));
-@include create-status2("User", "Unregistered", app-color(status, blue));
+@include create-status2("RecallProvider", "Unsent", colors.$yellow);
+@include create-status2("RecallProvider", "Open", colors.$green);
+@include create-status2("RecallProvider", "Completed", colors.$blue);
+
+@include create-status2("User", "Pending", colors.$yellow);
+@include create-status2("User", "Active", colors.$green);
+@include create-status2("User", "Deactivated", colors.$red);
+@include create-status2("User", "Unregistered", colors.$blue);
 
 @include create-status("Pending", #f1c40f);
 @include create-status("Verified", #16a085);
 @include create-status("Active", #16a085);
 @include create-status("Deactivated", #f44336);
 
-@include create-status2("Task", "Unsent", app-color(status, red));
-@include create-status2("Task", "Open", app-color(status, green));
-@include create-status2("Task", "Completed", app-color(status, blue));
+@include create-status2("Task", "Unsent", colors.$red);
+@include create-status2("Task", "Open", colors.$green);
+@include create-status2("Task", "Completed", colors.$blue);

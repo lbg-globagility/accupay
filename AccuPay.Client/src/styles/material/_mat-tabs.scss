@@ -1,4 +1,4 @@
-@import 'styles/variables';
+@use "styles/colors";
 
 /**
  * Increase focus on the active tab link
@@ -6,7 +6,7 @@
 .mat-tab-nav-bar {
   .mat-tab-link.mat-tab-label-active {
     opacity: 1;
-    color: app-color(accent);
+    color: colors.$accent;
   }
 }
 

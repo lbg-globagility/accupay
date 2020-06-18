@@ -1,5 +1,8 @@
+@use "styles/colors";
+@use "styles/sizes";
+
 .mat-table.m-borders {
-  border: thin solid $app-border-color;
+  border: thin solid colors.$border;
 }
 
 .mat-table.m-dark-headers {
@@ -12,22 +15,22 @@
 .mat-table.m-padded-cells {
   th.mat-header-cell:first-of-type,
   td.mat-cell:first-of-type {
-    padding-left: $app-space-4;
+    padding-left: sizes.$x4;
   }
 
   th.mat-header-cell:last-of-type,
   td.mat-cell:last-of-type {
-    padding-right: $app-space-4;
+    padding-right: sizes.$x4;
   }
 
   th.mat-header-cell {
-    padding-left: $app-space-2;
-    padding-right: $app-space-2;
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
   }
 
   td.mat-cell {
-    padding-left: $app-space-2;
-    padding-right: $app-space-2;
+    padding-left: sizes.$x4;
+    padding-right: sizes.$x4;
   }
 }
 
