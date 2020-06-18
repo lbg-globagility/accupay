@@ -37,8 +37,13 @@ namespace AccuPay.Data.Services.Imports
         public async Task<TimeLogImportParserOutput> Parse(string importFile, int organizationId, int userId)
         {
             var parsedRecords = _reader.Read(importFile);
-            if (!parsedRecords.Logs.Any())
+            if (!parsedRecords.Logs.Any() && !parsedRecords.Errors.Any())
                 throw new BusinessLogicException("No logs were parsed. Please make sure the log files follows the right format.");
+            else if (!parsedRecords.Logs.Any())
+            {
+                AllParsedLogOutput errorParsedLogs = new AllParsedLogOutput(parsedRecords.Logs, parsedRecords.Errors);
+                return new TimeLogImportParserOutput(errorParsedLogs, new List<TimeLog>(), null);
+            }
 
             var helper = await GetHelper(parsedRecords.Logs.ToList(), organizationId: organizationId, userId: userId);
 
