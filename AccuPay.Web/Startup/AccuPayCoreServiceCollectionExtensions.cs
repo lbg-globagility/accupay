@@ -40,7 +40,7 @@ namespace AccuPay.Web
             services.AddScoped<LeaveRepository>();
             services.AddScoped<LeaveLedgerRepository>();
             services.AddScoped<ListOfValueRepository>();
-            services.AddScoped<LoanScheduleRepository>();
+            services.AddScoped<LoanRepository>();
             services.AddScoped<OfficialBusinessRepository>();
             services.AddScoped<OrganizationRepository>();
             services.AddScoped<OvertimeRepository>();

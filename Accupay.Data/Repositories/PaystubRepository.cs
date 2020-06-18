@@ -151,6 +151,34 @@ namespace AccuPay.Data.Repositories
 
         #region Queries
 
+        #region Child data
+
+        public async Task<IEnumerable<AllowanceItem>> GetAllowanceItemsAsync(int paystubId)
+        {
+            var paystub = await _context.Paystubs
+                .Include(x => x.AllowanceItems)
+                    .ThenInclude(x => x.Allowance)
+                        .ThenInclude(x => x.Product)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefaultAsync();
+
+            return paystub.AllowanceItems;
+        }
+
+        public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctionsAsync(int paystubId)
+        {
+            var paystub = await _context.Paystubs
+                .Include(x => x.LoanTransactions)
+                    .ThenInclude(x => x.LoanSchedule)
+                        .ThenInclude(x => x.LoanType)
+                .Where(x => x.RowID == paystubId)
+                .FirstOrDefaultAsync();
+
+            return paystub.LoanTransactions;
+        }
+
+        #endregion Child data
+
         public Paystub GetByCompositeKeyWithActual(EmployeeCompositeKey key)
         {
             return _context.Paystubs
@@ -264,34 +292,6 @@ namespace AccuPay.Data.Repositories
 
             return new PaginatedListResult<Paystub>(paystubs, count);
         }
-
-        #region Child data
-
-        public async Task<IEnumerable<AllowanceItem>> GetAllowanceItems(int paystubId)
-        {
-            var paystub = await _context.Paystubs
-                .Include(x => x.AllowanceItems)
-                    .ThenInclude(x => x.Allowance)
-                        .ThenInclude(x => x.Product)
-                .Where(x => x.RowID == paystubId)
-                .FirstOrDefaultAsync();
-
-            return paystub.AllowanceItems;
-        }
-
-        public async Task<IEnumerable<LoanTransaction>> GetLoanTransanctions(int paystubId)
-        {
-            var paystub = await _context.Paystubs
-                .Include(x => x.LoanTransactions)
-                    .ThenInclude(x => x.LoanSchedule)
-                        .ThenInclude(x => x.LoanType)
-                .Where(x => x.RowID == paystubId)
-                .FirstOrDefaultAsync();
-
-            return paystub.LoanTransactions;
-        }
-
-        #endregion Child data
 
         #endregion Queries
 

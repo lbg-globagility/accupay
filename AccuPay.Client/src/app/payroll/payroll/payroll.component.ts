@@ -3,7 +3,7 @@ import { PayPeriod } from 'src/app/payroll/shared/payperiod';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { StartPayrollDialogComponent } from 'src/app/payroll/start-payroll-dialog/start-payroll-dialog.component';
+import { StartPayrollDialogComponent } from 'src/app/payroll/components/start-payroll-dialog/start-payroll-dialog.component';
 import { filter, mergeMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { PageOptions } from 'src/app/core/shared/page-options';

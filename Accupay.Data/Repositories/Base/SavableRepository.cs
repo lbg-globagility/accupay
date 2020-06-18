@@ -14,26 +14,26 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        internal async Task<T> GetByIdAsync(int id)
+        public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync(x => x.RowID == id);
+                .AsNoTracking()
+                .FirstOrDefaultAsync(x => x.RowID == id);
         }
 
-        internal async Task DeleteAsync(T entity)
+        public async Task DeleteAsync(T entity)
         {
             _context.Remove(entity);
             await _context.SaveChangesAsync();
         }
 
-        internal async Task SaveAsync(T entity)
+        public async Task SaveAsync(T entity)
         {
             SaveFunction(entity);
             await _context.SaveChangesAsync();
         }
 
-        internal async Task SaveManyAsync(List<T> entities)
+        public async Task SaveManyAsync(List<T> entities)
         {
             entities.ForEach(entity => SaveFunction(entity));
             await _context.SaveChangesAsync();

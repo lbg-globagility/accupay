@@ -14,14 +14,14 @@ namespace AccuPay.Data.Services
 {
     public class LoanDataService : BaseDataService<LoanSchedule>
     {
-        private readonly LoanScheduleRepository _loanRepository;
+        private readonly LoanRepository _loanRepository;
 
         private readonly PayrollContext _context;
         private readonly SystemOwnerService _systemOwnerService;
 
         private readonly ProductRepository _productRepository;
 
-        public LoanDataService(LoanScheduleRepository loanRepository,
+        public LoanDataService(LoanRepository loanRepository,
                                 PayrollContext context,
                                 SystemOwnerService systemOwnerService,
                                 ProductRepository productRepository) : base(loanRepository)
@@ -222,45 +222,5 @@ namespace AccuPay.Data.Services
         }
 
         #endregion CRUD
-
-        public async Task<LoanSchedule> GetByIdAsync(int loanId)
-        {
-            return await _loanRepository.GetByIdAsync(loanId);
-        }
-
-        public async Task<LoanSchedule> GetByIdWithEmployeeAndProductAsync(int loanId)
-        {
-            return await _loanRepository.GetByIdWithEmployeeAndProductAsync(loanId);
-        }
-
-        public async Task<IEnumerable<LoanSchedule>> GetByEmployeeAsync(int employeeId)
-        {
-            return await _loanRepository.GetByEmployeeAsync(employeeId);
-        }
-
-        public async Task<PaginatedListResult<LoanSchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
-        {
-            return await _loanRepository.GetPaginatedListAsync(options, organizationId, searchTerm);
-        }
-
-        public async Task<IEnumerable<LoanSchedule>> GetActiveLoansByLoanNameAsync(string loanName, int employeeId)
-        {
-            return await _loanRepository.GetActiveLoansByLoanNameAsync(loanName, employeeId);
-        }
-
-        public async Task<IEnumerable<LoanTransaction>> GetLoanTransactionsWithPayPeriodAsync(int loanScheduleId)
-        {
-            return await _loanRepository.GetLoanTransactionsWithPayPeriodAsync(loanScheduleId);
-        }
-
-        public async Task<PaginatedListResult<LoanTransaction>> GetPaginatedLoanHistoryList(PageOptions options, int loanId)
-        {
-            return await _loanRepository.GetLoanTransactionsAsync(options, loanId);
-        }
-
-        public List<string> GetStatusList()
-        {
-            return _loanRepository.GetStatusList();
-        }
     }
 }
