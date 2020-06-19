@@ -7,6 +7,7 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { PageOptions } from 'src/app/core/shared/page-options';
 
 @Component({
   selector: 'app-view-salary',
@@ -14,11 +15,17 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./view-salary.component.scss'],
 })
 export class ViewSalaryComponent implements OnInit {
-  salary: Salary;
+  employeeId: number = Number(this.route.snapshot.paramMap.get('employeeId'));
+
+  latestSalary: Salary;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   salaryId = Number(this.route.snapshot.paramMap.get('id'));
+
+  salaries: Salary[] = [];
+
+  displayedColumns = ['effectiveFrom', 'basicSalary', 'allowanceSalary'];
 
   constructor(
     private salaryService: SalaryService,
@@ -29,6 +36,8 @@ export class ViewSalaryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.employeeId);
+    this.loadSalaries();
     this.loadSalary();
   }
 
@@ -58,9 +67,18 @@ export class ViewSalaryComponent implements OnInit {
     });
   }
 
+  private loadSalaries(): void {
+    const options = new PageOptions(0, 25);
+    this.salaryService
+      .list(options, null, this.employeeId)
+      .subscribe((data) => {
+        this.salaries = data.items;
+      });
+  }
+
   private loadSalary(): void {
-    this.salaryService.get(this.salaryId).subscribe((data) => {
-      this.salary = data;
+    this.salaryService.getLatest(this.employeeId).subscribe((salary) => {
+      this.latestSalary = salary;
 
       this.isLoading.next(true);
     });

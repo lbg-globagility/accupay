@@ -41,15 +41,13 @@ export class ShiftFormComponent implements OnInit {
     private employeeService: EmployeeService,
     private timeParser: TimeParser
   ) {
-    this.form
-      .get('breakStartTime')
-      .valueChanges.subscribe(() => {
-        if (!this.form.get('breakStartTime').value) {
-          this.form.get('breakLength').disable();
-        } else {
-          this.form.get('breakLength').enable();
-        }
-      });
+    this.form.get('breakStartTime').valueChanges.subscribe(() => {
+      if (!this.form.get('breakStartTime').value) {
+        this.form.get('breakLength').disable();
+      } else {
+        this.form.get('breakLength').enable();
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -71,7 +69,7 @@ export class ShiftFormComponent implements OnInit {
   private loadEmployees(): void {
     const options = new PageOptions(0, 1000, null, null);
 
-    this.employeeService.getList(options).subscribe((data) => {
+    this.employeeService.list(options).subscribe((data) => {
       this.employees = data.items;
     });
   }

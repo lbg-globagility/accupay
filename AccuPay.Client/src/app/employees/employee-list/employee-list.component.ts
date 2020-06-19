@@ -74,7 +74,7 @@ export class EmployeeListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.employeeService.getList(options, this.searchTerm).subscribe((data) => {
+    this.employeeService.list(options, this.searchTerm).subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.items);
       this.totalCount = data.totalCount;
     });

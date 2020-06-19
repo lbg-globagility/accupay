@@ -25,9 +25,9 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.SalaryRead)]
-        public async Task<ActionResult<PaginatedList<SalaryDto>>> List([FromQuery] PageOptions options, string term)
+        public async Task<ActionResult<PaginatedList<SalaryDto>>> List([FromQuery] PageOptions options, string term, int employeeId)
         {
-            return await _service.PaginatedList(options, term);
+            return await _service.List(options, term, employeeId);
         }
 
         [HttpGet("{id}")]
@@ -40,6 +40,18 @@ namespace AccuPay.Web.Controllers
                 return NotFound();
             else
                 return allowance;
+        }
+
+        [HttpGet("latest")]
+        [Permission(PermissionTypes.SalaryRead)]
+        public async Task<ActionResult<SalaryDto>> GetLatest(int employeeId)
+        {
+            var salary = await _service.GetLatest(employeeId);
+
+            if (salary is null)
+                return NotFound();
+            else
+                return salary;
         }
 
         [HttpPost]

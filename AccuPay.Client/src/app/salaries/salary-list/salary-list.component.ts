@@ -69,7 +69,7 @@ export class SalaryListComponent implements OnInit {
       this.sort.direction
     );
 
-    this.salaryService.getAll(options, this.searchTerm).subscribe((data) => {
+    this.salaryService.list(options, this.searchTerm).subscribe((data) => {
       this.salaries = data.items;
       this.totalCount = data.totalCount;
       this.dataSource = new MatTableDataSource(this.salaries);

@@ -33,14 +33,14 @@ export class EditSalaryComponent implements OnInit {
     this.salaryService.update(salary, this.salaryId).subscribe(
       () => {
         this.displaySuccess();
-        this.router.navigate(['salaries', this.salaryId]);
+        this.router.navigate(['salaries', this.salary.employeeId]);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to update salary.')
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['salaries', this.salaryId]);
+    this.router.navigate(['salaries', this.salary.employeeId]);
   }
 
   private loadSalary(): void {

@@ -14,12 +14,14 @@ export class EmployeeService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getList(
+  list(
     options: PageOptions,
-    term = ''
+    searchTerm: string = ''
   ): Observable<PaginatedList<Employee>> {
     const params = options ? options.toObject() : null;
-    params.term = term;
+    if (searchTerm != null) {
+      params.term = searchTerm;
+    }
 
     return this.httpClient.get<PaginatedList<Employee>>(this.apiRoute, {
       params,

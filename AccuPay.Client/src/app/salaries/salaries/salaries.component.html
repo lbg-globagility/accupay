@@ -1,0 +1,62 @@
+<div class="flex h-full">
+  <div class="w-1/4 flex flex-col h-full bg-white mat-elevation-z1">
+    <!-- Filter and sort -->
+    <div class="flex flex-none px-4">
+      <mat-form-field appearance="standard" class="w-2/3">
+        <mat-icon matPrefix>search</mat-icon>
+        <input
+          matInput
+          placeholder="Search"
+          [(ngModel)]="searchTerm"
+          (ngModelChange)="searchBoxChange()"
+        />
+        <button
+          *ngIf="searchTerm"
+          matSuffix
+          mat-icon-button
+          aria-label="Clear"
+          (click)="clearSearchBox()"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-form-field>
+      <mat-form-field appearance="standard" class="ml-2 w-1/3">
+        <mat-icon matPrefix>filter_list</mat-icon>
+        <mat-select value="Active only">
+          <mat-option value="Active only">Active only</mat-option>
+          <mat-option value="All">All</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-selection-list
+      dense
+      [multiple]="false"
+      class="flex-1 overflow-y-scroll"
+    >
+      <mat-list-option
+        *ngFor="let employee of employees"
+        routerLink="/salaries/{{ employee.id }}"
+      >
+        <!-- <mat-icon mat-list-icon>note</mat-icon> -->
+        <img
+          matListAvatar
+          src="/api/employees/{{ employee.id }}/image"
+          width="40px"
+        />
+        <div mat-line>{{ employee.lastName }}, {{ employee.firstName }}</div>
+        <div mat-line>#{{ employee.employeeNo }}</div>
+      </mat-list-option>
+    </mat-selection-list>
+    <mat-paginator
+      [pageIndex]="pageIndex"
+      [pageSize]="pageSize"
+      [length]="totalCount"
+      (page)="page($event)"
+      class="flex-none"
+    >
+    </mat-paginator>
+  </div>
+  <div class="w-3/4 p-4">
+    <router-outlet></router-outlet>
+  </div>
+</div>

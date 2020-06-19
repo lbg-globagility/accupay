@@ -6,6 +6,7 @@ import { ConfirmationDialogComponent } from '../shared/components/confirmation-d
 import { EditSalaryComponent } from './edit-salary/edit-salary.component';
 import { SalaryFormComponent } from './salary-form/salary-form.component';
 import { NewSalaryComponent } from './new-salary/new-salary.component';
+import { SalariesComponent } from './salaries/salaries.component';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { NewSalaryComponent } from './new-salary/new-salary.component';
     EditSalaryComponent,
     SalaryFormComponent,
     NewSalaryComponent,
+    SalariesComponent,
   ],
   imports: [SharedModule],
 })
