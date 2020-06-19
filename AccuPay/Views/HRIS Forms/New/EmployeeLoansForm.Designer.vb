@@ -50,9 +50,9 @@ Partial Class EmployeeLoansForm
         Dim DataGridViewCellStyle8 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.lblFormTitle = New System.Windows.Forms.Label()
         Me.pnlSearch = New System.Windows.Forms.Panel()
-        Me.searchTextBox = New System.Windows.Forms.TextBox()
+        Me.SearchTextBox = New System.Windows.Forms.TextBox()
         Me.lblSearch = New System.Windows.Forms.Label()
-        Me.employeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.EmployeesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.cemp_EmployeeID = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_LastName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -62,10 +62,10 @@ Partial Class EmployeeLoansForm
         Me.chkCancelledFilter = New System.Windows.Forms.CheckBox()
         Me.chkOnHoldFilter = New System.Windows.Forms.CheckBox()
         Me.chkInProgressFilter = New System.Windows.Forms.CheckBox()
-        Me.loanSchedulesDataGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
+        Me.LoanGridView = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.pnlForm = New System.Windows.Forms.Panel()
         Me.DetailsTabControl = New System.Windows.Forms.TabControl()
-        Me.tbpDetails = New System.Windows.Forms.TabPage()
+        Me.DetailsTabLayout = New System.Windows.Forms.TabPage()
         Me.LoanDetailsTabLayout = New System.Windows.Forms.TableLayoutPanel()
         Me.pnlTxtLoanBalance = New System.Windows.Forms.Panel()
         Me.Label3 = New System.Windows.Forms.Label()
@@ -110,9 +110,9 @@ Partial Class EmployeeLoansForm
         Me.c_Amount = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn116 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.EmployeeInfoTabLayout = New System.Windows.Forms.TableLayoutPanel()
-        Me.txtEmployeeFirstName = New System.Windows.Forms.TextBox()
-        Me.txtEmployeeNumber = New System.Windows.Forms.TextBox()
-        Me.pbEmployeePicture = New System.Windows.Forms.PictureBox()
+        Me.EmployeeNameTextBox = New System.Windows.Forms.TextBox()
+        Me.EmployeeNumberTextBox = New System.Windows.Forms.TextBox()
+        Me.EmployeePictureBox = New System.Windows.Forms.PictureBox()
         Me.ToolStrip12 = New System.Windows.Forms.ToolStrip()
         Me.tsbtnNewLoan = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnSaveLoan = New System.Windows.Forms.ToolStripButton()
@@ -123,7 +123,7 @@ Partial Class EmployeeLoansForm
         Me.btnClose = New System.Windows.Forms.ToolStripButton()
         Me.ToolStripButton25 = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnImportLoans = New System.Windows.Forms.ToolStripButton()
-        Me.LoanScheduleBindingSource = New System.Windows.Forms.BindingSource(Me.components)
+        Me.LoanListBindingSource = New System.Windows.Forms.BindingSource(Me.components)
         Me.cbShowAll = New System.Windows.Forms.CheckBox()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -157,13 +157,13 @@ Partial Class EmployeeLoansForm
         Me.Comments = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_status = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.pnlSearch.SuspendLayout()
-        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlMain.SuspendLayout()
         Me.Panel10.SuspendLayout()
-        CType(Me.loanSchedulesDataGridView, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.LoanGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.pnlForm.SuspendLayout()
         Me.DetailsTabControl.SuspendLayout()
-        Me.tbpDetails.SuspendLayout()
+        Me.DetailsTabLayout.SuspendLayout()
         Me.LoanDetailsTabLayout.SuspendLayout()
         Me.pnlTxtLoanBalance.SuspendLayout()
         Me.plnCboLoanType.SuspendLayout()
@@ -174,9 +174,9 @@ Partial Class EmployeeLoansForm
         Me.tbpHistory.SuspendLayout()
         CType(Me.loanHistoryGridView, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.EmployeeInfoTabLayout.SuspendLayout()
-        CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ToolStrip12.SuspendLayout()
-        CType(Me.LoanScheduleBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.LoanListBindingSource, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'lblFormTitle
@@ -195,7 +195,7 @@ Partial Class EmployeeLoansForm
         '
         Me.pnlSearch.BackColor = System.Drawing.Color.White
         Me.pnlSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.pnlSearch.Controls.Add(Me.searchTextBox)
+        Me.pnlSearch.Controls.Add(Me.SearchTextBox)
         Me.pnlSearch.Controls.Add(Me.lblSearch)
         Me.pnlSearch.Location = New System.Drawing.Point(8, 32)
         Me.pnlSearch.Name = "pnlSearch"
@@ -204,11 +204,11 @@ Partial Class EmployeeLoansForm
         '
         'searchTextBox
         '
-        Me.searchTextBox.Location = New System.Drawing.Point(80, 16)
-        Me.searchTextBox.MaxLength = 50
-        Me.searchTextBox.Name = "searchTextBox"
-        Me.searchTextBox.Size = New System.Drawing.Size(259, 22)
-        Me.searchTextBox.TabIndex = 64
+        Me.SearchTextBox.Location = New System.Drawing.Point(80, 16)
+        Me.SearchTextBox.MaxLength = 50
+        Me.SearchTextBox.Name = "searchTextBox"
+        Me.SearchTextBox.Size = New System.Drawing.Size(259, 22)
+        Me.SearchTextBox.TabIndex = 64
         '
         'lblSearch
         '
@@ -221,17 +221,17 @@ Partial Class EmployeeLoansForm
         '
         'employeesDataGridView
         '
-        Me.employeesDataGridView.AllowUserToAddRows = False
-        Me.employeesDataGridView.AllowUserToDeleteRows = False
-        Me.employeesDataGridView.AllowUserToOrderColumns = True
-        Me.employeesDataGridView.AllowUserToResizeRows = False
-        Me.employeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+        Me.EmployeesDataGridView.AllowUserToAddRows = False
+        Me.EmployeesDataGridView.AllowUserToDeleteRows = False
+        Me.EmployeesDataGridView.AllowUserToOrderColumns = True
+        Me.EmployeesDataGridView.AllowUserToResizeRows = False
+        Me.EmployeesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.employeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
-        Me.employeesDataGridView.BackgroundColor = System.Drawing.Color.White
-        Me.employeesDataGridView.ColumnHeadersHeight = 34
-        Me.employeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
-        Me.employeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
+        Me.EmployeesDataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill
+        Me.EmployeesDataGridView.BackgroundColor = System.Drawing.Color.White
+        Me.EmployeesDataGridView.ColumnHeadersHeight = 34
+        Me.EmployeesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+        Me.EmployeesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.cemp_EmployeeID, Me.cemp_LastName, Me.cemp_FirstName})
         DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -239,16 +239,16 @@ Partial Class EmployeeLoansForm
         DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.employeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
-        Me.employeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.employeesDataGridView.Location = New System.Drawing.Point(8, 120)
-        Me.employeesDataGridView.MultiSelect = False
-        Me.employeesDataGridView.Name = "employeesDataGridView"
-        Me.employeesDataGridView.ReadOnly = True
-        Me.employeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.employeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.employeesDataGridView.Size = New System.Drawing.Size(352, 415)
-        Me.employeesDataGridView.TabIndex = 140
+        Me.EmployeesDataGridView.DefaultCellStyle = DataGridViewCellStyle1
+        Me.EmployeesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.EmployeesDataGridView.Location = New System.Drawing.Point(8, 120)
+        Me.EmployeesDataGridView.MultiSelect = False
+        Me.EmployeesDataGridView.Name = "employeesDataGridView"
+        Me.EmployeesDataGridView.ReadOnly = True
+        Me.EmployeesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.EmployeesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.EmployeesDataGridView.Size = New System.Drawing.Size(352, 415)
+        Me.EmployeesDataGridView.TabIndex = 140
         '
         'cemp_EmployeeID
         '
@@ -292,7 +292,7 @@ Partial Class EmployeeLoansForm
         Me.Panel10.Controls.Add(Me.chkCancelledFilter)
         Me.Panel10.Controls.Add(Me.chkOnHoldFilter)
         Me.Panel10.Controls.Add(Me.chkInProgressFilter)
-        Me.Panel10.Controls.Add(Me.loanSchedulesDataGridView)
+        Me.Panel10.Controls.Add(Me.LoanGridView)
         Me.Panel10.Controls.Add(Me.pnlForm)
         Me.Panel10.Dock = System.Windows.Forms.DockStyle.Fill
         Me.Panel10.Location = New System.Drawing.Point(0, 25)
@@ -346,14 +346,14 @@ Partial Class EmployeeLoansForm
         '
         'loanSchedulesDataGridView
         '
-        Me.loanSchedulesDataGridView.AllowUserToAddRows = False
-        Me.loanSchedulesDataGridView.AllowUserToDeleteRows = False
-        Me.loanSchedulesDataGridView.AllowUserToResizeRows = False
-        Me.loanSchedulesDataGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+        Me.LoanGridView.AllowUserToAddRows = False
+        Me.LoanGridView.AllowUserToDeleteRows = False
+        Me.LoanGridView.AllowUserToResizeRows = False
+        Me.LoanGridView.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.loanSchedulesDataGridView.BackgroundColor = System.Drawing.Color.White
-        Me.loanSchedulesDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.loanSchedulesDataGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_loantype, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.c_noofpayperiodleft, Me.c_dedeffectivedatefrom, Me.Comments, Me.c_status})
+        Me.LoanGridView.BackgroundColor = System.Drawing.Color.White
+        Me.LoanGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.LoanGridView.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.c_loanno, Me.c_loantype, Me.c_totloanamt, Me.c_totballeft, Me.c_dedamt, Me.c_DedPercent, Me.c_dedsched, Me.c_noofpayperiod, Me.c_noofpayperiodleft, Me.c_dedeffectivedatefrom, Me.Comments, Me.c_status})
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 8.25!)
@@ -361,16 +361,16 @@ Partial Class EmployeeLoansForm
         DataGridViewCellStyle9.SelectionBackColor = System.Drawing.SystemColors.Highlight
         DataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.ControlText
         DataGridViewCellStyle9.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.loanSchedulesDataGridView.DefaultCellStyle = DataGridViewCellStyle9
-        Me.loanSchedulesDataGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
-        Me.loanSchedulesDataGridView.Location = New System.Drawing.Point(28, 428)
-        Me.loanSchedulesDataGridView.MultiSelect = False
-        Me.loanSchedulesDataGridView.Name = "loanSchedulesDataGridView"
-        Me.loanSchedulesDataGridView.ReadOnly = True
-        Me.loanSchedulesDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
-        Me.loanSchedulesDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.loanSchedulesDataGridView.Size = New System.Drawing.Size(781, 250)
-        Me.loanSchedulesDataGridView.TabIndex = 366
+        Me.LoanGridView.DefaultCellStyle = DataGridViewCellStyle9
+        Me.LoanGridView.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
+        Me.LoanGridView.Location = New System.Drawing.Point(28, 428)
+        Me.LoanGridView.MultiSelect = False
+        Me.LoanGridView.Name = "loanSchedulesDataGridView"
+        Me.LoanGridView.ReadOnly = True
+        Me.LoanGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing
+        Me.LoanGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
+        Me.LoanGridView.Size = New System.Drawing.Size(781, 250)
+        Me.LoanGridView.TabIndex = 366
         '
         'pnlForm
         '
@@ -386,7 +386,7 @@ Partial Class EmployeeLoansForm
         '
         Me.DetailsTabControl.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.DetailsTabControl.Controls.Add(Me.tbpDetails)
+        Me.DetailsTabControl.Controls.Add(Me.DetailsTabLayout)
         Me.DetailsTabControl.Controls.Add(Me.tbpHistory)
         Me.DetailsTabControl.Location = New System.Drawing.Point(0, 101)
         Me.DetailsTabControl.Name = "DetailsTabControl"
@@ -396,14 +396,14 @@ Partial Class EmployeeLoansForm
         '
         'tbpDetails
         '
-        Me.tbpDetails.Controls.Add(Me.LoanDetailsTabLayout)
-        Me.tbpDetails.Location = New System.Drawing.Point(4, 22)
-        Me.tbpDetails.Name = "tbpDetails"
-        Me.tbpDetails.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbpDetails.Size = New System.Drawing.Size(817, 248)
-        Me.tbpDetails.TabIndex = 0
-        Me.tbpDetails.Text = "Loan Details"
-        Me.tbpDetails.UseVisualStyleBackColor = True
+        Me.DetailsTabLayout.Controls.Add(Me.LoanDetailsTabLayout)
+        Me.DetailsTabLayout.Location = New System.Drawing.Point(4, 22)
+        Me.DetailsTabLayout.Name = "tbpDetails"
+        Me.DetailsTabLayout.Padding = New System.Windows.Forms.Padding(3)
+        Me.DetailsTabLayout.Size = New System.Drawing.Size(817, 248)
+        Me.DetailsTabLayout.TabIndex = 0
+        Me.DetailsTabLayout.Text = "Loan Details"
+        Me.DetailsTabLayout.UseVisualStyleBackColor = True
         '
         'LoanDetailsTabLayout
         '
@@ -911,9 +911,9 @@ Partial Class EmployeeLoansForm
         Me.EmployeeInfoTabLayout.ColumnCount = 2
         Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 121.0!))
         Me.EmployeeInfoTabLayout.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 861.0!))
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.txtEmployeeFirstName, 1, 0)
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.txtEmployeeNumber, 1, 1)
-        Me.EmployeeInfoTabLayout.Controls.Add(Me.pbEmployeePicture, 0, 0)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNameTextBox, 1, 0)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeeNumberTextBox, 1, 1)
+        Me.EmployeeInfoTabLayout.Controls.Add(Me.EmployeePictureBox, 0, 0)
         Me.EmployeeInfoTabLayout.Location = New System.Drawing.Point(0, 9)
         Me.EmployeeInfoTabLayout.Name = "EmployeeInfoTabLayout"
         Me.EmployeeInfoTabLayout.RowCount = 2
@@ -924,44 +924,44 @@ Partial Class EmployeeLoansForm
         '
         'txtEmployeeFirstName
         '
-        Me.txtEmployeeFirstName.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.txtEmployeeFirstName.BackColor = System.Drawing.Color.White
-        Me.txtEmployeeFirstName.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmployeeFirstName.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
-        Me.txtEmployeeFirstName.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
-        Me.txtEmployeeFirstName.Location = New System.Drawing.Point(124, 13)
-        Me.txtEmployeeFirstName.MaxLength = 250
-        Me.txtEmployeeFirstName.Name = "txtEmployeeFirstName"
-        Me.txtEmployeeFirstName.ReadOnly = True
-        Me.txtEmployeeFirstName.Size = New System.Drawing.Size(668, 28)
-        Me.txtEmployeeFirstName.TabIndex = 381
+        Me.EmployeeNameTextBox.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.EmployeeNameTextBox.BackColor = System.Drawing.Color.White
+        Me.EmployeeNameTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.EmployeeNameTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 18.0!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNameTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(242, Byte), Integer), CType(CType(149, Byte), Integer), CType(CType(54, Byte), Integer))
+        Me.EmployeeNameTextBox.Location = New System.Drawing.Point(124, 13)
+        Me.EmployeeNameTextBox.MaxLength = 250
+        Me.EmployeeNameTextBox.Name = "txtEmployeeFirstName"
+        Me.EmployeeNameTextBox.ReadOnly = True
+        Me.EmployeeNameTextBox.Size = New System.Drawing.Size(668, 28)
+        Me.EmployeeNameTextBox.TabIndex = 381
         '
         'txtEmployeeNumber
         '
-        Me.txtEmployeeNumber.BackColor = System.Drawing.Color.White
-        Me.txtEmployeeNumber.BorderStyle = System.Windows.Forms.BorderStyle.None
-        Me.txtEmployeeNumber.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.txtEmployeeNumber.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.txtEmployeeNumber.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
-        Me.txtEmployeeNumber.Location = New System.Drawing.Point(124, 47)
-        Me.txtEmployeeNumber.MaxLength = 50
-        Me.txtEmployeeNumber.Multiline = True
-        Me.txtEmployeeNumber.Name = "txtEmployeeNumber"
-        Me.txtEmployeeNumber.ReadOnly = True
-        Me.txtEmployeeNumber.Size = New System.Drawing.Size(855, 38)
-        Me.txtEmployeeNumber.TabIndex = 380
+        Me.EmployeeNumberTextBox.BackColor = System.Drawing.Color.White
+        Me.EmployeeNumberTextBox.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.EmployeeNumberTextBox.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.EmployeeNumberTextBox.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.EmployeeNumberTextBox.ForeColor = System.Drawing.Color.FromArgb(CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer), CType(CType(89, Byte), Integer))
+        Me.EmployeeNumberTextBox.Location = New System.Drawing.Point(124, 47)
+        Me.EmployeeNumberTextBox.MaxLength = 50
+        Me.EmployeeNumberTextBox.Multiline = True
+        Me.EmployeeNumberTextBox.Name = "txtEmployeeNumber"
+        Me.EmployeeNumberTextBox.ReadOnly = True
+        Me.EmployeeNumberTextBox.Size = New System.Drawing.Size(855, 38)
+        Me.EmployeeNumberTextBox.TabIndex = 380
         '
         'pbEmployeePicture
         '
-        Me.pbEmployeePicture.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
-        Me.pbEmployeePicture.Location = New System.Drawing.Point(28, 3)
-        Me.pbEmployeePicture.Margin = New System.Windows.Forms.Padding(28, 3, 3, 3)
-        Me.pbEmployeePicture.Name = "pbEmployeePicture"
-        Me.EmployeeInfoTabLayout.SetRowSpan(Me.pbEmployeePicture, 2)
-        Me.pbEmployeePicture.Size = New System.Drawing.Size(88, 82)
-        Me.pbEmployeePicture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
-        Me.pbEmployeePicture.TabIndex = 382
-        Me.pbEmployeePicture.TabStop = False
+        Me.EmployeePictureBox.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D
+        Me.EmployeePictureBox.Location = New System.Drawing.Point(28, 3)
+        Me.EmployeePictureBox.Margin = New System.Windows.Forms.Padding(28, 3, 3, 3)
+        Me.EmployeePictureBox.Name = "pbEmployeePicture"
+        Me.EmployeeInfoTabLayout.SetRowSpan(Me.EmployeePictureBox, 2)
+        Me.EmployeePictureBox.Size = New System.Drawing.Size(88, 82)
+        Me.EmployeePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage
+        Me.EmployeePictureBox.TabIndex = 382
+        Me.EmployeePictureBox.TabStop = False
         '
         'ToolStrip12
         '
@@ -1354,7 +1354,7 @@ Partial Class EmployeeLoansForm
         Me.Controls.Add(Me.cbShowAll)
         Me.Controls.Add(Me.pnlSearch)
         Me.Controls.Add(Me.lblFormTitle)
-        Me.Controls.Add(Me.employeesDataGridView)
+        Me.Controls.Add(Me.EmployeesDataGridView)
         Me.Controls.Add(Me.pnlMain)
         Me.Font = New System.Drawing.Font("Segoe UI", 8.25!)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
@@ -1362,15 +1362,15 @@ Partial Class EmployeeLoansForm
         Me.Text = "EmployeeLoansForm"
         Me.pnlSearch.ResumeLayout(False)
         Me.pnlSearch.PerformLayout()
-        CType(Me.employeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.EmployeesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlMain.ResumeLayout(False)
         Me.pnlMain.PerformLayout()
         Me.Panel10.ResumeLayout(False)
         Me.Panel10.PerformLayout()
-        CType(Me.loanSchedulesDataGridView, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.LoanGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.pnlForm.ResumeLayout(False)
         Me.DetailsTabControl.ResumeLayout(False)
-        Me.tbpDetails.ResumeLayout(False)
+        Me.DetailsTabLayout.ResumeLayout(False)
         Me.LoanDetailsTabLayout.ResumeLayout(False)
         Me.LoanDetailsTabLayout.PerformLayout()
         Me.pnlTxtLoanBalance.ResumeLayout(False)
@@ -1389,10 +1389,10 @@ Partial Class EmployeeLoansForm
         CType(Me.loanHistoryGridView, System.ComponentModel.ISupportInitialize).EndInit()
         Me.EmployeeInfoTabLayout.ResumeLayout(False)
         Me.EmployeeInfoTabLayout.PerformLayout()
-        CType(Me.pbEmployeePicture, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.EmployeePictureBox, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ToolStrip12.ResumeLayout(False)
         Me.ToolStrip12.PerformLayout()
-        CType(Me.LoanScheduleBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.LoanListBindingSource, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -1400,9 +1400,9 @@ Partial Class EmployeeLoansForm
 
     Friend WithEvents lblFormTitle As Label
     Friend WithEvents pnlSearch As Panel
-    Friend WithEvents searchTextBox As TextBox
+    Friend WithEvents SearchTextBox As TextBox
     Friend WithEvents lblSearch As Label
-    Friend WithEvents employeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents EmployeesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents pnlMain As Panel
     Friend WithEvents ToolStrip12 As ToolStrip
     Friend WithEvents tsbtnNewLoan As ToolStripButton
@@ -1419,11 +1419,11 @@ Partial Class EmployeeLoansForm
     Friend WithEvents lblLoanInterestPercentage As Label
     Friend WithEvents txtNumberOfPayPeriodLeft As TextBox
     Friend WithEvents lblNumberOfPayPeriodLeft As Label
-    Friend WithEvents pbEmployeePicture As PictureBox
+    Friend WithEvents EmployeePictureBox As PictureBox
     Friend WithEvents Label220 As Label
-    Friend WithEvents loanSchedulesDataGridView As DevComponents.DotNetBar.Controls.DataGridViewX
-    Friend WithEvents txtEmployeeFirstName As TextBox
-    Friend WithEvents txtEmployeeNumber As TextBox
+    Friend WithEvents LoanGridView As DevComponents.DotNetBar.Controls.DataGridViewX
+    Friend WithEvents EmployeeNameTextBox As TextBox
+    Friend WithEvents EmployeeNumberTextBox As TextBox
     Friend WithEvents lnlAddLoanType As LinkLabel
     Friend WithEvents txtLoanNumber As TextBox
     Friend WithEvents cboLoanType As ComboBox
@@ -1467,7 +1467,7 @@ Partial Class EmployeeLoansForm
     Friend WithEvents pnlForm As Panel
     Friend WithEvents EmployeeInfoTabLayout As TableLayoutPanel
     Friend WithEvents DetailsTabControl As TabControl
-    Friend WithEvents tbpDetails As TabPage
+    Friend WithEvents DetailsTabLayout As TabPage
     Friend WithEvents LoanDetailsTabLayout As TableLayoutPanel
     Friend WithEvents tbpHistory As TabPage
     Friend WithEvents plnCboLoanType As Panel
@@ -1480,7 +1480,7 @@ Partial Class EmployeeLoansForm
     Friend WithEvents Label2 As Label
     Friend WithEvents loanHistoryGridView As DevComponents.DotNetBar.Controls.DataGridViewX
     Friend WithEvents DataGridViewTextBoxColumn19 As DataGridViewTextBoxColumn
-    Friend WithEvents LoanScheduleBindingSource As BindingSource
+    Friend WithEvents LoanListBindingSource As BindingSource
     Friend WithEvents chkCompleteFilter As CheckBox
     Friend WithEvents chkCancelledFilter As CheckBox
     Friend WithEvents chkOnHoldFilter As CheckBox
