@@ -3,6 +3,7 @@
     <!-- Filter and sort -->
     <div class="flex flex-none px-4">
       <mat-form-field appearance="standard" class="w-2/3">
+        <mat-label>Search</mat-label>
         <mat-icon matPrefix>search</mat-icon>
         <input
           matInput
@@ -37,9 +38,9 @@
         *ngFor="let employee of employees"
         routerLink="/salaries/{{ employee.id }}"
       >
-        <!-- <mat-icon mat-list-icon>note</mat-icon> -->
         <img
           matListAvatar
+          appImgFallback
           src="/api/employees/{{ employee.id }}/image"
           width="40px"
         />

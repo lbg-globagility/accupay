@@ -2,3 +2,13 @@
   display: block;
   overflow: hidden;
 }
+
+mat-selection-list {
+  $-border: thin solid rgba(0, 0, 0, 0.17);
+  border-top: $-border;
+  border-bottom: $-border;
+}
+
+mat-list-option {
+  border-bottom: thin solid rgba(0, 0, 0, 0.07);
+}

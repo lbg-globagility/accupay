@@ -10,6 +10,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-salary',
   templateUrl: './edit-salary.component.html',
   styleUrls: ['./edit-salary.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditSalaryComponent implements OnInit {
   salary: Salary;

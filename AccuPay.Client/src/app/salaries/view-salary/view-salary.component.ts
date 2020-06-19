@@ -25,7 +25,12 @@ export class ViewSalaryComponent implements OnInit {
 
   salaries: Salary[] = [];
 
-  displayedColumns = ['effectiveFrom', 'basicSalary', 'allowanceSalary'];
+  displayedColumns = [
+    'effectiveFrom',
+    'basicAmount',
+    'allowanceAmount',
+    'totalAmount',
+  ];
 
   constructor(
     private salaryService: SalaryService,
@@ -36,9 +41,11 @@ export class ViewSalaryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    console.log(this.employeeId);
-    this.loadSalaries();
-    this.loadSalary();
+    this.route.paramMap.subscribe((paramMap) => {
+      this.employeeId = Number(paramMap.get('employeeId'));
+      this.loadSalaries();
+      this.loadSalary();
+    });
   }
 
   confirmDelete(): void {

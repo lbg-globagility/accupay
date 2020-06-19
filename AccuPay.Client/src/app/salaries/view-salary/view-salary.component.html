@@ -17,14 +17,28 @@
       </div>
 
       <div class="col-lg-3">
-        <app-display-field label="Basic Salary">
-          {{ latestSalary.basicSalary | amount }}
+        <app-display-field label="Employment Policy">
+          Office Head
+        </app-display-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-3">
+        <app-display-field label="Total Amount">
+          <span> ₱ {{ latestSalary.totalSalary | amount }} </span>
         </app-display-field>
       </div>
 
       <div class="col-lg-3">
-        <app-display-field label="Allowance Salary">
-          {{ latestSalary.allowanceSalary | amount }}
+        <app-display-field label="Basic Amount">
+          ₱ {{ latestSalary.basicSalary | amount }}
+        </app-display-field>
+      </div>
+
+      <div class="col-lg-3">
+        <app-display-field label="Allowance Amount">
+          ₱ {{ latestSalary.allowanceSalary | amount }}
         </app-display-field>
       </div>
     </div>
@@ -98,26 +112,26 @@
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="basicSalary">
-        <th mat-header-cell *matHeaderCellDef>Basic Salary</th>
-        <td mat-cell *matCellDef="let loan">
-          {{ loan.basicSalary | number: "1.2-2" }}
+      <ng-container matColumnDef="basicAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">Basic Amount</th>
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.basicSalary | amount }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="allowanceSalary">
-        <th mat-header-cell *matHeaderCellDef>
-          Allowance Salary
+      <ng-container matColumnDef="allowanceAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Allowance Amount
         </th>
-        <td mat-cell *matCellDef="let loan">
-          {{ loan.allowanceSalary | number: "1.2-2" }}
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.allowanceSalary | amount }}
         </td>
       </ng-container>
 
-      <ng-container matColumnDef="totalSalary">
-        <th mat-header-cell *matHeaderCellDef>Total Salary</th>
-        <td mat-cell *matCellDef="let loan">
-          {{ loan.totalSalary | number: "1.2-2" }}
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">Total Amount</th>
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.totalSalary | amount }}
         </td>
       </ng-container>
 
