@@ -9,7 +9,7 @@
     <img appImgFallback class="__organization-logo" />
 
     <button mat-button [matMenuTriggerFor]="organizationMenu">
-      Organization
+      {{ currentOrganization?.name }}
     </button>
     <mat-menu #organizationMenu="matMenu">
       <ng-container *ngFor="let organization of organizations">
