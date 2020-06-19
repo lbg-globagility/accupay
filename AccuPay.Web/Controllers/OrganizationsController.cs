@@ -46,5 +46,12 @@ namespace AccuPay.Web.Controllers
         {
             return await _service.Update(id, dto);
         }
+
+        [HttpGet("current-organization")]
+        [Permission(PermissionTypes.OrganizationRead)]
+        public async Task<ActionResult<OrganizationDto>> GetCurrentOrganization()
+        {
+            return await _service.GetCurrentOrganization();
+        }
     }
 }

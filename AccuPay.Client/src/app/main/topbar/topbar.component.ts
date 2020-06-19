@@ -13,6 +13,8 @@ export class TopbarComponent implements OnInit {
   @Output()
   toggleMenu = new EventEmitter<void>();
 
+  currentOrganization: Organization;
+
   organizations: Organization[];
 
   public constructor(
@@ -22,6 +24,7 @@ export class TopbarComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.getCurrentUserOrganization();
     this.loadOrganizations();
   }
 
@@ -31,9 +34,17 @@ export class TopbarComponent implements OnInit {
   }
 
   loadOrganizations() {
+    this.organizationService.getAll().subscribe((organizations) => {
+      this.organizations = organizations;
+    });
+  }
+
+  getCurrentUserOrganization() {
     this.organizationService
-      .getAll()
-      .subscribe((organizations) => (this.organizations = organizations));
+      .getCurrentOrganization()
+      .subscribe((organization) => {
+        this.currentOrganization = organization;
+      });
   }
 
   onToggleMenu(): void {
