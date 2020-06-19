@@ -141,6 +141,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeLogImportParser)
         services.AddTransient(Of TimeLogsReader)
 
+        services.AddTransient(Of PayslipDataService)
         services.AddTransient(Of PayslipCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 

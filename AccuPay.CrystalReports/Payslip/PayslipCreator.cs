@@ -1,5 +1,4 @@
-﻿using Accupay.DB;
-using AccuPay.Data.Entities;
+﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using CrystalDecisions.CrystalReports.Engine;
@@ -29,7 +28,9 @@ namespace AccuPay.CrystalReports.Payslip
 
         private readonly PayPeriodRepository _payPeriodRepository;
 
-        private SystemOwnerService _systemOwnerService;
+        private readonly SystemOwnerService _systemOwnerService;
+
+        private readonly PayslipDataService _dataService;
 
         private ReportClass _reportDocument;
 
@@ -39,7 +40,12 @@ namespace AccuPay.CrystalReports.Payslip
 
         private readonly string _currentSystemOwner;
 
-        public PayslipCreator(AddressRepository addressRepository, OrganizationRepository organizationRepository, PayPeriodRepository payPeriodRepository, SystemOwnerService systemOwnerService)
+        public PayslipCreator(
+            AddressRepository addressRepository,
+            OrganizationRepository organizationRepository,
+            PayPeriodRepository payPeriodRepository,
+            SystemOwnerService systemOwnerService,
+            PayslipDataService dataService)
         {
             _addressRepository = addressRepository;
 
@@ -48,7 +54,7 @@ namespace AccuPay.CrystalReports.Payslip
             _payPeriodRepository = payPeriodRepository;
 
             _systemOwnerService = systemOwnerService;
-
+            this._dataService = dataService;
             _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner();
         }
 
@@ -92,21 +98,30 @@ namespace AccuPay.CrystalReports.Payslip
             var organization = _organizationRepository.GetById(organizationId);
             var payPeriod = _payPeriodRepository.GetById(payPeriodId);
 
-            var organizationName = organization.Name;
-
             if (_currentSystemOwner == SystemOwnerService.Goldwings)
             {
-                _payslipDatatable = CreateGoldWingsDataSource(organization, payPeriod, isActual, employeeIds);
+                _payslipDatatable = CreateGoldWingsDataSource(
+                    organizationId: organization.RowID.Value,
+                    payPeriodId: payPeriod.RowID.Value,
+                    isActual,
+                    employeeIds);
                 _reportDocument = CreateGoldWingsReport(organization, payPeriod);
             }
             else if (_currentSystemOwner == SystemOwnerService.Cinema2000)
             {
-                _payslipDatatable = CreateCinemaDataSource(organization, payPeriodId, employeeIds);
+                _payslipDatatable = CreateCinemaDataSource(
+                    organizationId: organization.RowID.Value,
+                    payPeriodId: payPeriod.RowID.Value,
+                    employeeIds);
                 _reportDocument = CreateCinemaReport(organization, payPeriodId);
             }
             else
             {
-                _payslipDatatable = CreateDefaultDataSource(organization, payPeriod, isActual, employeeIds);
+                _payslipDatatable = CreateDefaultDataSource(
+                    organizationId: organization.RowID.Value,
+                    payPeriodId: payPeriod.RowID.Value,
+                    isActual,
+                    employeeIds);
                 _reportDocument = CreateDefaultReport(organization, payPeriod);
             }
 
@@ -128,11 +143,11 @@ namespace AccuPay.CrystalReports.Payslip
             return rptdoc;
         }
 
-        private DataTable CreateGoldWingsDataSource(Organization organization, PayPeriod payPeriod, sbyte isActual, int[] employeeIds)
+        private DataTable CreateGoldWingsDataSource(int organizationId, int payPeriodId, sbyte isActual, int[] employeeIds)
         {
-            var procedureCall = "CALL paystub_payslip(" + organization.RowID + "," + payPeriod.RowID + "," + isActual + ");";
+            var result = _dataService.GetGoldWingsData(organizationId, payPeriodId, isActual);
 
-            return CreateDataSource(procedureCall, GoldwingsEmployeeIdColumn, employeeIds);
+            return FilterData(result, GoldwingsEmployeeIdColumn, employeeIds);
         }
 
         private ReportClass CreateCinemaReport(Organization organization, int payPeriodId)
@@ -161,11 +176,11 @@ namespace AccuPay.CrystalReports.Payslip
             return rptdoc;
         }
 
-        private DataTable CreateCinemaDataSource(Organization organization, int payPeriodId, int[] employeeIds = null)
+        private DataTable CreateCinemaDataSource(int organizationId, int payPeriodId, int[] employeeIds = null)
         {
-            var procedureCall = "CALL RPT_payslip(" + organization.RowID + "," + payPeriodId + ", TRUE, NULL);";
+            var result = _dataService.GetCinema2000Data(organizationId, payPeriodId);
 
-            return CreateDataSource(procedureCall, CinemaEmployeeIdColumn, employeeIds);
+            return FilterData(result, CinemaEmployeeIdColumn, employeeIds);
         }
 
         private ReportClass CreateDefaultReport(Organization organization, PayPeriod payperiod)
@@ -181,21 +196,19 @@ namespace AccuPay.CrystalReports.Payslip
             return rptdoc;
         }
 
-        private DataTable CreateDefaultDataSource(Organization organization, PayPeriod payperiod, sbyte isActual, int[] employeeIds = null)
+        private DataTable CreateDefaultDataSource(int organizationId, int payPeriodId, sbyte isActual, int[] employeeIds = null)
         {
-            var procedureCall = "CALL PrintDefaultPayslip(" + organization.RowID + "," + payperiod.RowID + "," + isActual + ");";
+            var result = _dataService.GetDefaultData(organizationId, payPeriodId, isActual);
 
-            return CreateDataSource(procedureCall, DefaultEmployeeIdColumn, employeeIds);
+            return FilterData(result, DefaultEmployeeIdColumn, employeeIds);
         }
 
-        private DataTable CreateDataSource(string procedureCall, string employeeIdColumn, int[] employeeIds = null)
+        private DataTable FilterData(DataTable table, string employeeIdColumn, int[] employeeIds = null)
         {
-            SQLQueryToDatatable query = new SQLQueryToDatatable(procedureCall);
-
             if (employeeIds != null && employeeIds.Count() > 0)
-                return query.ResultTable.AsEnumerable().Where(r => employeeIds.Contains(r.Field<int>(employeeIdColumn))).CopyToDataTable();
+                return table.AsEnumerable().Where(r => employeeIds.Contains(r.Field<int>(employeeIdColumn))).CopyToDataTable();
             else
-                return query.ResultTable;
+                return table;
         }
 
         public PayslipCreator GeneratePDF(string saveFolderPath, string fileName)
