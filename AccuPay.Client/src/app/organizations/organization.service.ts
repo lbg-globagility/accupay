@@ -55,10 +55,4 @@ export class OrganizationService {
       organization
     );
   }
-
-  getCurrentOrganization(): Observable<Organization> {
-    return this.httpClient.get<Organization>(
-      `${this.baseUrl}/current-organization`
-    );
-  }
 }

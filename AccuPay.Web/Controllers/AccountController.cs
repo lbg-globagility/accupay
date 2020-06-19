@@ -1,4 +1,5 @@
 using AccuPay.Web.Account;
+using AccuPay.Web.Organizations;
 using AccuPay.Web.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,14 +14,17 @@ namespace AccuPay.Web.Controllers
     {
         private readonly AccountService _accountService;
         private readonly UserTokenService _userTokenService;
+        private readonly OrganizationService _organizationService;
         private readonly RoleService _roleService;
 
         public AccountController(AccountService accountService,
                                  UserTokenService userTokenService,
+                                 OrganizationService organizationService,
                                  RoleService roleService)
         {
             _accountService = accountService;
             _userTokenService = userTokenService;
+            _organizationService = organizationService;
             _roleService = roleService;
         }
 
@@ -78,6 +82,12 @@ namespace AccuPay.Web.Controllers
             var userDto = await _accountService.Register(dto);
 
             return userDto;
+        }
+
+        [HttpGet("organization")]
+        public async Task<ActionResult<OrganizationDto>> GetCurrentOrganization()
+        {
+            return await _organizationService.GetCurrentOrganization();
         }
     }
 }

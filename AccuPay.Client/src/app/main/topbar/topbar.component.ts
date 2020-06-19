@@ -3,6 +3,7 @@ import { AuthService } from 'src/app/core/auth/auth.service';
 import { Router } from '@angular/router';
 import { OrganizationService } from 'src/app/organizations/organization.service';
 import { Organization } from 'src/app/organizations/shared/organization';
+import { AccountService } from 'src/app/accounts/services/account.service';
 
 @Component({
   selector: 'app-topbar',
@@ -19,6 +20,7 @@ export class TopbarComponent implements OnInit {
 
   public constructor(
     private authService: AuthService,
+    private accountService: AccountService,
     private organizationService: OrganizationService,
     private router: Router
   ) {}
@@ -40,11 +42,9 @@ export class TopbarComponent implements OnInit {
   }
 
   getCurrentUserOrganization() {
-    this.organizationService
-      .getCurrentOrganization()
-      .subscribe((organization) => {
-        this.currentOrganization = organization;
-      });
+    this.accountService.getOrganization().subscribe((organization) => {
+      this.currentOrganization = organization;
+    });
   }
 
   onToggleMenu(): void {
