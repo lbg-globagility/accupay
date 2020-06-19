@@ -15,10 +15,10 @@
         public const string LOAN_TYPE_CATEGORY = "Loan Type";
         public const string MATERNITY_LEAVE = "Maternity leave";
         public const string OTHERS_LEAVE = "Others";
-        public const string PAG_IBIG_LOAN = "PAGIBIG LOAN";
+        public const string PAG_IBIG_LOAN = "PAGIBIG Loan";
         public const string PARENTAL_LEAVE = "Parental";
         public const string SICK_LEAVE = "Sick leave";
-        public const string SSS_LOAN = "SSS LOAN";
+        public const string SSS_LOAN = "SSS Loan";
         public const string VACATION_LEAVE = "Vacation leave";
     }
 }

@@ -9,8 +9,8 @@ CREATE TABLE `rolepermission` (
 	PRIMARY KEY (`Id`) USING BTREE,
 	INDEX `FK_rolepermission_aspnetroles` (`RoleId`) USING BTREE,
 	INDEX `FK_rolepermission_permission` (`PermissionId`) USING BTREE,
-	CONSTRAINT `FK_rolepermission_aspnetroles` FOREIGN KEY (`RoleId`) REFERENCES `accupaydb_web`.`aspnetroles` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
-	CONSTRAINT `FK_rolepermission_permission` FOREIGN KEY (`PermissionId`) REFERENCES `accupaydb_web`.`permission` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT
+	CONSTRAINT `FK_rolepermission_aspnetroles` FOREIGN KEY (`RoleId`) REFERENCES `aspnetroles` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT,
+	CONSTRAINT `FK_rolepermission_permission` FOREIGN KEY (`PermissionId`) REFERENCES `permission` (`Id`) ON UPDATE RESTRICT ON DELETE RESTRICT
 )
 COLLATE='utf8_general_ci'
 ENGINE=InnoDB
