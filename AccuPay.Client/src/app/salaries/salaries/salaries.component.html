@@ -9,7 +9,7 @@
           matInput
           placeholder="Search"
           [(ngModel)]="searchTerm"
-          (ngModelChange)="searchBoxChange()"
+          (ngModelChange)="applyFilter()"
         />
         <button
           *ngIf="searchTerm"
@@ -23,7 +23,7 @@
       </mat-form-field>
       <mat-form-field appearance="standard" class="ml-2 w-1/3">
         <mat-icon matPrefix>filter_list</mat-icon>
-        <mat-select value="Active only">
+        <mat-select [(ngModel)]="filter" (ngModelChange)="applyFilter()">
           <mat-option value="Active only">Active only</mat-option>
           <mat-option value="All">All</mat-option>
         </mat-select>
@@ -49,8 +49,6 @@
       </mat-list-option>
     </mat-selection-list>
     <mat-paginator
-      [pageIndex]="pageIndex"
-      [pageSize]="pageSize"
       [length]="totalCount"
       (page)="page($event)"
       class="flex-none"

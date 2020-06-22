@@ -6,6 +6,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
+import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 
 @Component({
   selector: 'app-salaries',
@@ -17,6 +18,8 @@ import { Constants } from 'src/app/core/shared/constants';
 })
 export class SalariesComponent implements OnInit {
   searchTerm: string;
+
+  filter: string = 'Active only';
 
   pageIndex = 0;
 
@@ -39,7 +42,7 @@ export class SalariesComponent implements OnInit {
     this.loadEmployees();
   }
 
-  searchBoxChange(): void {
+  applyFilter(): void {
     this.pageIndex = 0;
     this.modelChanged.next();
   }
@@ -51,15 +54,21 @@ export class SalariesComponent implements OnInit {
   }
 
   page(pageEvent: PageEvent): void {
+    console.log(pageEvent);
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.loadEmployees();
   }
 
   private loadEmployees(): void {
-    const options = new PageOptions(this.pageIndex, this.pageSize);
+    const options = new EmployeePageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.searchTerm,
+      this.filter
+    );
 
-    this.employeeService.list(options, this.searchTerm).subscribe((data) => {
+    this.employeeService.list(options).subscribe((data) => {
       this.employees = data.items;
       this.totalCount = data.totalCount;
     });
