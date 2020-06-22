@@ -22,6 +22,7 @@ Public Class ImportEmployeeForm
 
     Private _divisionService As DivisionDataService
     Private _positionService As PositionDataService
+    Private _branchRepository As BranchRepository
     Private _userActivityRepository As UserActivityRepository
 
 #End Region
@@ -33,6 +34,8 @@ Public Class ImportEmployeeForm
         _divisionService = MainServiceProvider.GetRequiredService(Of DivisionDataService)
 
         _positionService = MainServiceProvider.GetRequiredService(Of PositionDataService)
+
+        _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
@@ -118,6 +121,12 @@ Public Class ImportEmployeeForm
 
         <ColumnName("Leave allowance per year")>
         Public Property LeaveAllowance As Decimal
+
+        <ColumnName("Branch")>
+        Public Property Branch As String
+
+        <Ignore>
+        Public Property BranchId As Integer?
 
         <ColumnName("Works days per year")>
         Public Property WorkDaysPerYear As Decimal
@@ -312,7 +321,7 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.HDMFNo) Then .HdmfNo = em.HDMFNo?.Trim()
 
-            e.PositionID = em.PositionId
+            .PositionID = em.PositionId
 
             If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName?.Trim()
 
@@ -333,6 +342,8 @@ Public Class ImportEmployeeForm
             If Not String.IsNullOrWhiteSpace(em.TIN) Then .TinNo = em.TIN?.Trim()
 
             If em.WorkDaysPerYear > 0 Then .WorkDaysPerYear = em.WorkDaysPerYear
+
+            .BranchID = em.BranchId
 
         End With
 
@@ -359,6 +370,8 @@ Public Class ImportEmployeeForm
         End If
 
         Await AddPositionIdToModels(models)
+
+        Await AddBranchIdToModels(models)
 
         _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
         _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
@@ -400,6 +413,42 @@ Public Class ImportEmployeeForm
                 If currentPosition IsNot Nothing Then
 
                     existingPositions.Add(currentPosition)
+
+                End If
+            End If
+
+        Next
+
+    End Function
+
+    Private Async Function AddBranchIdToModels(models As List(Of EmployeeModel)) As Task
+
+        Dim existingBranches = (Await _branchRepository.GetAllAsync()).ToList()
+
+        For Each model In models
+            Dim currentBranch = existingBranches.
+                           FirstOrDefault(Function(b) b.Name.ToTrimmedLowerCase() =
+                                                        model.Branch.ToTrimmedLowerCase())
+
+            If currentBranch IsNot Nothing Then
+
+                model.BranchId = currentBranch.RowID
+            Else
+                currentBranch = New Branch
+                currentBranch.CreatedBy = z_User
+                currentBranch.Code = model.Branch.Trim()
+                currentBranch.Name = currentBranch.Code
+                currentBranch.CalendarID = Nothing
+
+                Await _branchRepository.CreateAsync(currentBranch)
+
+                model.BranchId = currentBranch?.RowID
+                model.Branch = currentBranch?.Name
+
+                'add the newly added branch to the list of existing branches
+                If currentBranch IsNot Nothing Then
+
+                    existingBranches.Add(currentBranch)
 
                 End If
             End If

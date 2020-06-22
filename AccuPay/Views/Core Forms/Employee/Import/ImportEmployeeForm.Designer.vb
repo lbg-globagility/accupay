@@ -25,7 +25,7 @@ Partial Class ImportEmployeeForm
         Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle9 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle10 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle11 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle12 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle13 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -33,9 +33,9 @@ Partial Class ImportEmployeeForm
         Dim DataGridViewCellStyle15 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle16 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle17 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle18 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle19 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle20 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle21 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle22 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle23 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle24 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -43,6 +43,9 @@ Partial Class ImportEmployeeForm
         Dim DataGridViewCellStyle26 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle27 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle28 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle29 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle30 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle31 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
@@ -61,8 +64,6 @@ Partial Class ImportEmployeeForm
         Me.lblStatus = New System.Windows.Forms.Label()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.DataGridView2 = New DevComponents.DotNetBar.Controls.DataGridViewX()
-        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn3 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -86,6 +87,7 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.DataGridViewTextBoxColumn24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn25 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn26 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn27 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -109,6 +111,7 @@ Partial Class ImportEmployeeForm
         Me.DataGridViewTextBoxColumn45 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn46 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn47 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.Column24 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.DataGridViewTextBoxColumn48 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column2 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -131,6 +134,7 @@ Partial Class ImportEmployeeForm
         Me.Column21 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column22 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Column23 = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        Me.BranchColumn = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -218,7 +222,7 @@ Partial Class ImportEmployeeForm
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
         Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column20, Me.Column21, Me.Column22, Me.Column23})
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column1, Me.Column2, Me.Column3, Me.Column4, Me.Column6, Me.Column7, Me.Column8, Me.Column9, Me.Column10, Me.Column11, Me.Column12, Me.Column13, Me.Column14, Me.Column15, Me.Column16, Me.Column17, Me.Column18, Me.Column20, Me.Column21, Me.Column22, Me.Column23, Me.BranchColumn})
         DataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle9.BackColor = System.Drawing.SystemColors.Window
         DataGridViewCellStyle9.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
@@ -269,14 +273,14 @@ Partial Class ImportEmployeeForm
         Me.DataGridView2.BorderStyle = System.Windows.Forms.BorderStyle.None
         Me.DataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.DataGridView2.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Column24, Me.DataGridViewTextBoxColumn24, Me.DataGridViewTextBoxColumn1, Me.DataGridViewTextBoxColumn2, Me.DataGridViewTextBoxColumn3, Me.DataGridViewTextBoxColumn4, Me.DataGridViewTextBoxColumn5, Me.DataGridViewTextBoxColumn6, Me.DataGridViewTextBoxColumn7, Me.DataGridViewTextBoxColumn8, Me.DataGridViewTextBoxColumn9, Me.DataGridViewTextBoxColumn10, Me.DataGridViewTextBoxColumn11, Me.DataGridViewTextBoxColumn12, Me.DataGridViewTextBoxColumn13, Me.DataGridViewTextBoxColumn14, Me.DataGridViewTextBoxColumn15, Me.DataGridViewTextBoxColumn16, Me.DataGridViewTextBoxColumn17, Me.DataGridViewTextBoxColumn18, Me.DataGridViewTextBoxColumn19, Me.DataGridViewTextBoxColumn20, Me.DataGridViewTextBoxColumn21, Me.DataGridViewTextBoxColumn22, Me.DataGridViewTextBoxColumn23})
-        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle18.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle18.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle18.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle18.SelectionForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle18.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle18
+        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle21.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle21.Font = New System.Drawing.Font("Segoe UI", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle21.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle21.SelectionForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle21.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.DataGridView2.DefaultCellStyle = DataGridViewCellStyle21
         Me.DataGridView2.Dock = System.Windows.Forms.DockStyle.Fill
         Me.DataGridView2.GridColor = System.Drawing.Color.FromArgb(CType(CType(208, Byte), Integer), CType(CType(215, Byte), Integer), CType(CType(229, Byte), Integer))
         Me.DataGridView2.Location = New System.Drawing.Point(3, 3)
@@ -284,22 +288,6 @@ Partial Class ImportEmployeeForm
         Me.DataGridView2.ReadOnly = True
         Me.DataGridView2.Size = New System.Drawing.Size(890, 431)
         Me.DataGridView2.TabIndex = 1
-        '
-        'Column24
-        '
-        Me.Column24.DataPropertyName = "LineNumber"
-        Me.Column24.HeaderText = "Line Number"
-        Me.Column24.Name = "Column24"
-        Me.Column24.ReadOnly = True
-        Me.Column24.Width = 60
-        '
-        'DataGridViewTextBoxColumn24
-        '
-        Me.DataGridViewTextBoxColumn24.DataPropertyName = "FailureDescription"
-        Me.DataGridViewTextBoxColumn24.HeaderText = "Reason"
-        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
-        Me.DataGridViewTextBoxColumn24.ReadOnly = True
-        Me.DataGridViewTextBoxColumn24.Width = 200
         '
         'DataGridViewTextBoxColumn1
         '
@@ -332,6 +320,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn5
         '
         Me.DataGridViewTextBoxColumn5.DataPropertyName = "Surname"
+        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn5.DefaultCellStyle = DataGridViewCellStyle11
         Me.DataGridViewTextBoxColumn5.HeaderText = "Surname"
         Me.DataGridViewTextBoxColumn5.Name = "DataGridViewTextBoxColumn5"
         Me.DataGridViewTextBoxColumn5.ReadOnly = True
@@ -340,8 +330,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn6
         '
         Me.DataGridViewTextBoxColumn6.DataPropertyName = "BirthDate"
-        DataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle11
+        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn6.DefaultCellStyle = DataGridViewCellStyle12
         Me.DataGridViewTextBoxColumn6.HeaderText = "Birth Date"
         Me.DataGridViewTextBoxColumn6.Name = "DataGridViewTextBoxColumn6"
         Me.DataGridViewTextBoxColumn6.ReadOnly = True
@@ -391,6 +381,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn13
         '
         Me.DataGridViewTextBoxColumn13.DataPropertyName = "Position"
+        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn13.DefaultCellStyle = DataGridViewCellStyle13
         Me.DataGridViewTextBoxColumn13.HeaderText = "Job Position"
         Me.DataGridViewTextBoxColumn13.Name = "DataGridViewTextBoxColumn13"
         Me.DataGridViewTextBoxColumn13.ReadOnly = True
@@ -398,8 +390,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn14
         '
         Me.DataGridViewTextBoxColumn14.DataPropertyName = "TIN"
-        DataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle12
+        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn14.DefaultCellStyle = DataGridViewCellStyle14
         Me.DataGridViewTextBoxColumn14.HeaderText = "TIN"
         Me.DataGridViewTextBoxColumn14.Name = "DataGridViewTextBoxColumn14"
         Me.DataGridViewTextBoxColumn14.ReadOnly = True
@@ -407,8 +399,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn15
         '
         Me.DataGridViewTextBoxColumn15.DataPropertyName = "SSSNo"
-        DataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle13
+        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn15.DefaultCellStyle = DataGridViewCellStyle15
         Me.DataGridViewTextBoxColumn15.HeaderText = "SSS No."
         Me.DataGridViewTextBoxColumn15.Name = "DataGridViewTextBoxColumn15"
         Me.DataGridViewTextBoxColumn15.ReadOnly = True
@@ -416,8 +408,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn16
         '
         Me.DataGridViewTextBoxColumn16.DataPropertyName = "PhilHealthNo"
-        DataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle14
+        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn16.DefaultCellStyle = DataGridViewCellStyle16
         Me.DataGridViewTextBoxColumn16.HeaderText = "PhilHealth No."
         Me.DataGridViewTextBoxColumn16.Name = "DataGridViewTextBoxColumn16"
         Me.DataGridViewTextBoxColumn16.ReadOnly = True
@@ -425,8 +417,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn17
         '
         Me.DataGridViewTextBoxColumn17.DataPropertyName = "HDMFNo"
-        DataGridViewCellStyle15.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle15
+        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn17.DefaultCellStyle = DataGridViewCellStyle17
         Me.DataGridViewTextBoxColumn17.HeaderText = "HMDF No."
         Me.DataGridViewTextBoxColumn17.Name = "DataGridViewTextBoxColumn17"
         Me.DataGridViewTextBoxColumn17.ReadOnly = True
@@ -434,8 +426,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn18
         '
         Me.DataGridViewTextBoxColumn18.DataPropertyName = "DateEmployed"
-        DataGridViewCellStyle16.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle16
+        DataGridViewCellStyle18.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn18.DefaultCellStyle = DataGridViewCellStyle18
         Me.DataGridViewTextBoxColumn18.HeaderText = "Column18"
         Me.DataGridViewTextBoxColumn18.Name = "DataGridViewTextBoxColumn18"
         Me.DataGridViewTextBoxColumn18.ReadOnly = True
@@ -457,6 +449,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn21
         '
         Me.DataGridViewTextBoxColumn21.DataPropertyName = "EmploymentStatus"
+        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn21.DefaultCellStyle = DataGridViewCellStyle19
         Me.DataGridViewTextBoxColumn21.HeaderText = "Employment Status"
         Me.DataGridViewTextBoxColumn21.Name = "DataGridViewTextBoxColumn21"
         Me.DataGridViewTextBoxColumn21.ReadOnly = True
@@ -471,11 +465,20 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn23
         '
         Me.DataGridViewTextBoxColumn23.DataPropertyName = "WorkDaysPerYear"
-        DataGridViewCellStyle17.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
-        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle17
+        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleRight
+        Me.DataGridViewTextBoxColumn23.DefaultCellStyle = DataGridViewCellStyle20
         Me.DataGridViewTextBoxColumn23.HeaderText = "Work Days Per Year"
         Me.DataGridViewTextBoxColumn23.Name = "DataGridViewTextBoxColumn23"
         Me.DataGridViewTextBoxColumn23.ReadOnly = True
+        Me.DataGridViewTextBoxColumn23.Width = 60
+        '
+        'DataGridViewTextBoxColumn24
+        '
+        Me.DataGridViewTextBoxColumn24.DataPropertyName = "FailureDescription"
+        Me.DataGridViewTextBoxColumn24.HeaderText = "Reason"
+        Me.DataGridViewTextBoxColumn24.Name = "DataGridViewTextBoxColumn24"
+        Me.DataGridViewTextBoxColumn24.ReadOnly = True
+        Me.DataGridViewTextBoxColumn24.Width = 200
         '
         'DataGridViewTextBoxColumn25
         '
@@ -517,8 +520,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn30
         '
         Me.DataGridViewTextBoxColumn30.DataPropertyName = "BirthDate"
-        DataGridViewCellStyle19.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn30.DefaultCellStyle = DataGridViewCellStyle19
+        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn30.DefaultCellStyle = DataGridViewCellStyle22
         Me.DataGridViewTextBoxColumn30.HeaderText = "Birth Date"
         Me.DataGridViewTextBoxColumn30.Name = "DataGridViewTextBoxColumn30"
         Me.DataGridViewTextBoxColumn30.ReadOnly = True
@@ -527,8 +530,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn31
         '
         Me.DataGridViewTextBoxColumn31.DataPropertyName = "Gender"
-        DataGridViewCellStyle20.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn31.DefaultCellStyle = DataGridViewCellStyle20
+        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn31.DefaultCellStyle = DataGridViewCellStyle23
         Me.DataGridViewTextBoxColumn31.HeaderText = "Gender"
         Me.DataGridViewTextBoxColumn31.Name = "DataGridViewTextBoxColumn31"
         Me.DataGridViewTextBoxColumn31.ReadOnly = True
@@ -578,8 +581,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn38
         '
         Me.DataGridViewTextBoxColumn38.DataPropertyName = "TIN"
-        DataGridViewCellStyle21.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn38.DefaultCellStyle = DataGridViewCellStyle21
+        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn38.DefaultCellStyle = DataGridViewCellStyle24
         Me.DataGridViewTextBoxColumn38.HeaderText = "TIN"
         Me.DataGridViewTextBoxColumn38.Name = "DataGridViewTextBoxColumn38"
         Me.DataGridViewTextBoxColumn38.ReadOnly = True
@@ -587,8 +590,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn39
         '
         Me.DataGridViewTextBoxColumn39.DataPropertyName = "SSSNo"
-        DataGridViewCellStyle22.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn39.DefaultCellStyle = DataGridViewCellStyle22
+        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn39.DefaultCellStyle = DataGridViewCellStyle25
         Me.DataGridViewTextBoxColumn39.HeaderText = "SSS No."
         Me.DataGridViewTextBoxColumn39.Name = "DataGridViewTextBoxColumn39"
         Me.DataGridViewTextBoxColumn39.ReadOnly = True
@@ -596,8 +599,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn40
         '
         Me.DataGridViewTextBoxColumn40.DataPropertyName = "PhilHealthNo"
-        DataGridViewCellStyle23.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle23
+        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn40.DefaultCellStyle = DataGridViewCellStyle26
         Me.DataGridViewTextBoxColumn40.HeaderText = "PhilHealth No."
         Me.DataGridViewTextBoxColumn40.Name = "DataGridViewTextBoxColumn40"
         Me.DataGridViewTextBoxColumn40.ReadOnly = True
@@ -605,8 +608,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn41
         '
         Me.DataGridViewTextBoxColumn41.DataPropertyName = "HDMFNo"
-        DataGridViewCellStyle24.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle24
+        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn41.DefaultCellStyle = DataGridViewCellStyle27
         Me.DataGridViewTextBoxColumn41.HeaderText = "HMDF No."
         Me.DataGridViewTextBoxColumn41.Name = "DataGridViewTextBoxColumn41"
         Me.DataGridViewTextBoxColumn41.ReadOnly = True
@@ -614,8 +617,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn42
         '
         Me.DataGridViewTextBoxColumn42.DataPropertyName = "DateEmployed"
-        DataGridViewCellStyle25.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle25
+        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn42.DefaultCellStyle = DataGridViewCellStyle28
         Me.DataGridViewTextBoxColumn42.HeaderText = "Column18"
         Me.DataGridViewTextBoxColumn42.Name = "DataGridViewTextBoxColumn42"
         Me.DataGridViewTextBoxColumn42.ReadOnly = True
@@ -623,8 +626,8 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn43
         '
         Me.DataGridViewTextBoxColumn43.DataPropertyName = "PayFrequency"
-        DataGridViewCellStyle26.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle26
+        DataGridViewCellStyle29.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn43.DefaultCellStyle = DataGridViewCellStyle29
         Me.DataGridViewTextBoxColumn43.HeaderText = "Pay Frequency"
         Me.DataGridViewTextBoxColumn43.Name = "DataGridViewTextBoxColumn43"
         Me.DataGridViewTextBoxColumn43.ReadOnly = True
@@ -653,17 +656,25 @@ Partial Class ImportEmployeeForm
         'DataGridViewTextBoxColumn47
         '
         Me.DataGridViewTextBoxColumn47.DataPropertyName = "WorkDaysPerYear"
-        DataGridViewCellStyle27.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle27
+        DataGridViewCellStyle30.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn47.DefaultCellStyle = DataGridViewCellStyle30
         Me.DataGridViewTextBoxColumn47.HeaderText = "Work Days Per Year"
         Me.DataGridViewTextBoxColumn47.Name = "DataGridViewTextBoxColumn47"
         Me.DataGridViewTextBoxColumn47.ReadOnly = True
         '
+        'Column24
+        '
+        Me.Column24.DataPropertyName = "LineNumber"
+        Me.Column24.HeaderText = "Line Number"
+        Me.Column24.Name = "Column24"
+        Me.Column24.ReadOnly = True
+        Me.Column24.Width = 60
+        '
         'DataGridViewTextBoxColumn48
         '
         Me.DataGridViewTextBoxColumn48.DataPropertyName = "WorkDaysPerYear"
-        DataGridViewCellStyle28.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
-        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle28
+        DataGridViewCellStyle31.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopRight
+        Me.DataGridViewTextBoxColumn48.DefaultCellStyle = DataGridViewCellStyle31
         Me.DataGridViewTextBoxColumn48.HeaderText = "Work Days Per Year"
         Me.DataGridViewTextBoxColumn48.Name = "DataGridViewTextBoxColumn48"
         '
@@ -828,6 +839,13 @@ Partial Class ImportEmployeeForm
         Me.Column23.Name = "Column23"
         Me.Column23.ReadOnly = True
         '
+        'BranchColumn
+        '
+        Me.BranchColumn.DataPropertyName = "Branch"
+        Me.BranchColumn.HeaderText = "Branch"
+        Me.BranchColumn.Name = "BranchColumn"
+        Me.BranchColumn.ReadOnly = True
+        '
         'ImportEmployeeForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -929,4 +947,5 @@ Partial Class ImportEmployeeForm
     Friend WithEvents Column21 As DataGridViewTextBoxColumn
     Friend WithEvents Column22 As DataGridViewTextBoxColumn
     Friend WithEvents Column23 As DataGridViewTextBoxColumn
+    Friend WithEvents BranchColumn As DataGridViewTextBoxColumn
 End Class
