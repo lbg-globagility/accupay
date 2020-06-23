@@ -23,6 +23,7 @@ Public Class ImportEmployeeForm
     Private _divisionService As DivisionDataService
     Private _positionService As PositionDataService
     Private _branchRepository As BranchRepository
+    Private _employeeRepository As EmployeeRepository
     Private _userActivityRepository As UserActivityRepository
 
 #End Region
@@ -37,6 +38,8 @@ Public Class ImportEmployeeForm
 
         _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
+        _employeeRepository = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
+
         _userActivityRepository = MainServiceProvider.GetRequiredService(Of UserActivityRepository)
 
     End Sub
@@ -48,6 +51,7 @@ Public Class ImportEmployeeForm
         Private _monthlyHasNoWorkDaysPerYear As Boolean
 
         Private _noEmployeeNo,
+        _employeeAlreadyExists,
         _noLastName,
         _noFirstName,
         _noBirthDate,
@@ -134,6 +138,12 @@ Public Class ImportEmployeeForm
         <ColumnName("Works days per year")>
         Public Property WorkDaysPerYear As Decimal
 
+        <ColumnName("Current VL balance (hours)")>
+        Public Property VacationLeaveBalance As Decimal
+
+        <ColumnName("Current SL balance (hours)")>
+        Public Property SickLeaveBalance As Decimal
+
         <Ignore>
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
@@ -141,8 +151,8 @@ Public Class ImportEmployeeForm
             Get
                 Dim resultStrings As New List(Of String)
 
-                If _monthlyHasNoWorkDaysPerYear Then resultStrings.Add("no Work Days Per Year")
-                If _noEmployeeNo Then resultStrings.Add("no Employee No")
+                If _noEmployeeNo Then resultStrings.Add("no Employee ID")
+                If _employeeAlreadyExists Then resultStrings.Add("Employee ID already exists")
                 If _noLastName Then resultStrings.Add("no Last Name")
                 If _noFirstName Then resultStrings.Add("no First Name")
                 If _noBirthDate Then resultStrings.Add("no Birth Date")
@@ -153,41 +163,45 @@ Public Class ImportEmployeeForm
                 If _noEmploymentDate Then resultStrings.Add("no Employment Date")
                 If _invalidEmploymentDate Then resultStrings.Add("Employment Date cannot be earlier than January 1, 1753")
                 If _noEmploymentStatus Then resultStrings.Add("no Employment Status")
+                If _monthlyHasNoWorkDaysPerYear Then resultStrings.Add("no Work Days Per Year")
 
                 Return String.Join("; ", resultStrings.Where(Function(s) Not String.IsNullOrWhiteSpace(s)).ToArray())
             End Get
         End Property
 
-        Public ReadOnly Property ConsideredFailed As Boolean
-            Get
-                Dim noEmployeeType = String.IsNullOrWhiteSpace(EmployeeType)
-                _monthlyHasNoWorkDaysPerYear = FIXED_AND_MONTHLY_TYPES.Any(Function(s) s = If(noEmployeeType, s, EmployeeType.ToLower())) And WorkDaysPerYear = 0
-                _noEmployeeNo = String.IsNullOrWhiteSpace(EmployeeNo)
-                _noLastName = String.IsNullOrWhiteSpace(LastName)
-                _noFirstName = String.IsNullOrWhiteSpace(FirstName)
-                _noBirthDate = Not BirthDate.HasValue
-                _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
-                _noGender = String.IsNullOrWhiteSpace(Gender)
-                _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
-                _noJob = String.IsNullOrWhiteSpace(Position)
-                _noEmploymentDate = Not DateEmployed.HasValue
-                _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
-                _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
+        Public Function ConsideredFailed(allEmployees As IEnumerable(Of Employee)) As Boolean
 
-                Return _monthlyHasNoWorkDaysPerYear _
-                Or _noEmployeeNo _
-                Or _noLastName _
-                Or _noFirstName _
-                Or _noBirthDate _
-                Or _invalidBirthDate _
-                Or _noGender _
-                Or _noMaritalStatus _
-                Or _noJob _
-                Or _noEmploymentDate _
-                Or _invalidEmploymentDate _
-                Or _noEmploymentStatus
-            End Get
-        End Property
+            _noEmployeeNo = String.IsNullOrWhiteSpace(EmployeeNo)
+            _employeeAlreadyExists = Not _noEmployeeNo AndAlso allEmployees.Any(Function(e) e.EmployeeNo = EmployeeNo)
+
+            Dim noEmployeeType = String.IsNullOrWhiteSpace(EmployeeType)
+            _monthlyHasNoWorkDaysPerYear = FIXED_AND_MONTHLY_TYPES.Any(Function(s) s = If(noEmployeeType, s, EmployeeType.ToLower())) And WorkDaysPerYear = 0
+
+            _noLastName = String.IsNullOrWhiteSpace(LastName)
+            _noFirstName = String.IsNullOrWhiteSpace(FirstName)
+            _noBirthDate = Not BirthDate.HasValue
+            _invalidBirthDate = _noBirthDate = False AndAlso BirthDate.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
+            _noGender = String.IsNullOrWhiteSpace(Gender)
+            _noMaritalStatus = String.IsNullOrWhiteSpace(MaritalStatus)
+            _noJob = String.IsNullOrWhiteSpace(Position)
+            _noEmploymentDate = Not DateEmployed.HasValue
+            _invalidEmploymentDate = _noEmploymentDate = False AndAlso DateEmployed.Value < Data.Helpers.PayrollTools.MinimumMicrosoftDate
+            _noEmploymentStatus = String.IsNullOrWhiteSpace(EmploymentStatus)
+
+            Return _noEmployeeNo _
+            Or _employeeAlreadyExists _
+            Or _monthlyHasNoWorkDaysPerYear _
+            Or _noLastName _
+            Or _noFirstName _
+            Or _noBirthDate _
+            Or _invalidBirthDate _
+            Or _noGender _
+            Or _noMaritalStatus _
+            Or _noJob _
+            Or _noEmploymentDate _
+            Or _invalidEmploymentDate _
+            Or _noEmploymentStatus
+        End Function
 
     End Class
 
@@ -208,40 +222,9 @@ Public Class ImportEmployeeForm
             Return
         End If
 
-        Dim models = _okModels
+        Dim employees = New List(Of EmployeeWithLeaveBalanceData)
 
-        Dim employeeNos = models.Select(Function(e) e.EmployeeNo).ToList()
-
-        Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-        Dim employees1 = Await employeeRepo.GetAllAsync(z_OrganizationID)
-
-        Dim employees = employees1.
-            Where(Function(e) employeeNos.Contains(e.EmployeeNo)).
-            ToList()
-
-        Dim existingEmployees = New List(Of Employee)
-        'for updates
-        For Each employee In employees
-            Dim model = models.
-                FirstOrDefault(Function(m) m.EmployeeNo = employee.EmployeeNo)
-
-            If model IsNot Nothing Then
-                AssignChanges(model, employee)
-                employee.LastUpdBy = z_User
-
-                existingEmployees.Add(employee)
-            End If
-
-        Next
-
-        'for insert
-        Dim notExistEmployees = models.
-            Where(Function(em) Not employees.Any(Function(e) e.EmployeeNo = em.EmployeeNo)).
-            ToList()
-
-        Dim newEmployees = New List(Of Employee)
-
-        For Each model In notExistEmployees
+        For Each model In _okModels
 
             Dim employee = New Employee With {
                 .RowID = Nothing,
@@ -253,42 +236,38 @@ Public Class ImportEmployeeForm
 
             AssignChanges(model, employee)
 
-            newEmployees.Add(employee)
+            employees.Add(
+                    New EmployeeWithLeaveBalanceData(
+                        employee,
+                        vacationLeaveBalance:=model.VacationLeaveBalance,
+                        sickLeaveBalance:=model.SickLeaveBalance))
 
         Next
 
-        Await SaveToDatabase(existingEmployees, newEmployees)
+        Await SaveToDatabase(employees)
     End Function
 
-    Private Async Function SaveToDatabase(existingEmployees As List(Of Employee),
-                                        newEmployees As List(Of Employee)) As Task
+    Private Async Function SaveToDatabase(employees As List(Of EmployeeWithLeaveBalanceData)) As Task
 
-        Dim importedEmployees = existingEmployees.CloneListJson()
-        importedEmployees.AddRange(newEmployees)
+        If employees.Any Then
 
-        If importedEmployees.Any Then
+            Dim service = MainServiceProvider.GetRequiredService(Of EmployeeDataService)
 
-            Dim employeeRepo = MainServiceProvider.GetRequiredService(Of EmployeeRepository)
-            Await employeeRepo.SaveManyAsync(importedEmployees)
+            Await service.ImportAsync(
+                employees,
+                organizationId:=z_OrganizationID,
+                userId:=z_User)
 
             Dim importList = New List(Of UserActivityItem)
             Dim entityName = FormEntityName.ToLower()
 
-            For Each item In newEmployees
+            For Each item In employees
 
                 importList.Add(New UserActivityItem() With
                         {
                         .Description = $"Imported a new {entityName}.",
-                        .EntityId = item.RowID.Value
+                        .EntityId = item.Employee.RowID.Value
                         })
-            Next
-
-            For Each model In existingEmployees
-                importList.Add(New UserActivityItem() With
-                    {
-                    .Description = $"Updated an {entityName} on import.",
-                    .EntityId = model.RowID.Value
-                    })
             Next
 
             _userActivityRepository.CreateRecord(z_User, FormEntityName, z_OrganizationID, UserActivityRepository.RecordTypeImport, importList)
@@ -374,12 +353,14 @@ Public Class ImportEmployeeForm
             Return
         End If
 
-        Await AddPositionIdToModels(models)
+        Dim allEmployees = Await _employeeRepository.GetAllAsync(z_OrganizationID)
 
-        Await AddBranchIdToModels(models)
+        _okModels = models.Where(Function(ee) Not ee.ConsideredFailed(allEmployees)).ToList()
+        _failModels = models.Where(Function(ee) ee.ConsideredFailed(allEmployees)).ToList()
 
-        _okModels = models.Where(Function(ee) Not ee.ConsideredFailed).ToList()
-        _failModels = models.Where(Function(ee) ee.ConsideredFailed).ToList()
+        Await AddPositionIdToModels(_okModels)
+
+        Await AddBranchIdToModels(_okModels)
 
         DataGridView1.DataSource = _okModels
         DataGridView2.DataSource = _failModels

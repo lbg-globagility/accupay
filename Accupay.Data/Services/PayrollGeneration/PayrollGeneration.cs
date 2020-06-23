@@ -647,6 +647,7 @@ namespace AccuPay.Data.Services
                                         IReadOnlyCollection<TimeEntry> timeEntries,
                                         IReadOnlyCollection<Leave> leaves)
         {
+            // use LeaveLedgerRepository
             var employeeLeaves = leaves.
                                     Where(l => l.EmployeeID == employee.RowID).
                                     OrderBy(l => l.StartDate).
