@@ -245,6 +245,7 @@ Partial Class EmployeeForm
         Me.Label315 = New System.Windows.Forms.Label()
         Me.LinkLabel2 = New System.Windows.Forms.LinkLabel()
         Me.Label365 = New System.Windows.Forms.Label()
+        Me.Label32 = New System.Windows.Forms.Label()
         Me.dgvDepen = New DevComponents.DotNetBar.Controls.DataGridViewX()
         Me.Colmn0 = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.Colmn1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
@@ -926,7 +927,6 @@ Partial Class EmployeeForm
         Me.c_minor = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_Remarks = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.c_RowID1 = New System.Windows.Forms.DataGridViewTextBoxColumn()
-        Me.Label32 = New System.Windows.Forms.Label()
         Me.tabctrlemp.SuspendLayout
         Me.tbpempchklist.SuspendLayout
         Me.ToolStrip15.SuspendLayout
@@ -2234,6 +2234,7 @@ Partial Class EmployeeForm
         Me.chkutflag.TabIndex = 37
         Me.chkutflag.Text = "Calculate undertime"
         Me.chkutflag.UseVisualStyleBackColor = True
+        Me.chkutflag.Visible = False
         '
         'chkotflag
         '
@@ -2244,6 +2245,7 @@ Partial Class EmployeeForm
         Me.chkotflag.TabIndex = 35
         Me.chkotflag.Text = "Calculate overtime"
         Me.chkotflag.UseVisualStyleBackColor = True
+        Me.chkotflag.Visible = False
         '
         'Label129
         '
@@ -2828,6 +2830,17 @@ Partial Class EmployeeForm
         Me.Label365.Size = New System.Drawing.Size(18, 24)
         Me.Label365.TabIndex = 535
         Me.Label365.Text = "*"
+        '
+        'Label32
+        '
+        Me.Label32.AutoSize = True
+        Me.Label32.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
+        Me.Label32.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
+        Me.Label32.Location = New System.Drawing.Point(386, 478)
+        Me.Label32.Name = "Label32"
+        Me.Label32.Size = New System.Drawing.Size(18, 24)
+        Me.Label32.TabIndex = 543
+        Me.Label32.Text = "*"
         '
         'dgvDepen
         '
@@ -9032,17 +9045,6 @@ Partial Class EmployeeForm
         Me.c_RowID1.Name = "c_RowID1"
         Me.c_RowID1.ReadOnly = True
         Me.c_RowID1.Visible = False
-        '
-        'Label32
-        '
-        Me.Label32.AutoSize = True
-        Me.Label32.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.25!, System.Drawing.FontStyle.Bold)
-        Me.Label32.ForeColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(30, Byte), Integer), CType(CType(30, Byte), Integer))
-        Me.Label32.Location = New System.Drawing.Point(386, 478)
-        Me.Label32.Name = "Label32"
-        Me.Label32.Size = New System.Drawing.Size(18, 24)
-        Me.Label32.TabIndex = 543
-        Me.Label32.Text = "*"
         '
         'EmployeeForm
         '

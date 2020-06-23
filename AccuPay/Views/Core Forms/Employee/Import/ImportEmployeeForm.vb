@@ -229,19 +229,16 @@ Public Class ImportEmployeeForm
 
         For Each model In _okModels
 
-            Dim employee = New Employee With {
-                .RowID = Nothing,
-                .OrganizationID = z_OrganizationID,
-                .Created = Now,
-                .CreatedBy = z_User,
-                .PayFrequencyID = Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId
-            }
+            Dim newEmployee = Employee.CreateEmptyEmployee(
+                organizationId:=z_OrganizationID,
+                userId:=z_User
+            )
 
-            AssignChanges(model, employee)
+            AssignChanges(model, newEmployee)
 
             employees.Add(
                 New EmployeeWithLeaveBalanceData(
-                    employee,
+                    newEmployee,
                     vacationLeaveBalance:=model.VacationLeaveBalance,
                     sickLeaveBalance:=model.SickLeaveBalance))
 

@@ -2439,6 +2439,11 @@ Public Class EmployeeForm
 
         BPIinsuranceText.Text = _policy.DefaultBPIInsurance
 
+        chkcalcHoliday.Checked = True
+        chkcalcNightDiff.Checked = True
+        chkcalcSpclHoliday.Checked = True
+        chkcalcRestDay.Checked = True
+
         AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
     End Sub
 
