@@ -1,5 +1,23 @@
 <h1 class="mat-headline">View Salary</h1>
 
+<div
+  *ngIf="employee"
+  class="flex items-center bg-white p-4 mb-4 mat-elevation-z1 mat-typography"
+>
+  <img
+    class="block rounded-full"
+    width="36"
+    appImgFallback
+    src="/api/employees/{{ employee.id }}/image"
+  />
+  <div class="ml-2">
+    <a routerLink="/employees/{{ employee.id }}">
+      {{ employee.fullName | ifEmpty }}
+    </a>
+    <div class="text-xs">#{{ employee.employeeNo | ifEmpty }}</div>
+  </div>
+</div>
+
 <mat-card *ngIf="latestSalary" class="mb-4">
   <h3 class="font-medium mb-4">Current Salary</h3>
   <mat-card-content>

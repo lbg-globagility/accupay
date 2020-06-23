@@ -29,33 +29,37 @@
         </mat-select>
       </mat-form-field>
     </div>
-    <mat-selection-list
-      dense
-      [multiple]="false"
-      class="flex-1 overflow-y-scroll"
-    >
-      <mat-list-option
-        *ngFor="let employee of employees"
-        routerLink="/salaries/{{ employee.id }}"
+    <div #employeesRef class="flex-1 overflow-y-scroll">
+      <mat-selection-list
+        dense
+        [multiple]="false"
+        [(ngModel)]="selectedEmployees"
+        (selectionChange)="selectEmployee()"
       >
-        <img
-          matListAvatar
-          appImgFallback
-          src="/api/employees/{{ employee.id }}/image"
-          width="40px"
-        />
-        <div mat-line>{{ employee.lastName }}, {{ employee.firstName }}</div>
-        <div mat-line>#{{ employee.employeeNo }}</div>
-      </mat-list-option>
-    </mat-selection-list>
+        <mat-list-option
+          *ngFor="let employee of employees"
+          [value]="employee"
+          routerLink="/salaries/{{ employee.id }}"
+        >
+          <img
+            matListAvatar
+            appImgFallback
+            src="/api/employees/{{ employee.id }}/image"
+          />
+          <div mat-line>{{ employee.fullName }}</div>
+          <div mat-line>#{{ employee.employeeNo }}</div>
+        </mat-list-option>
+      </mat-selection-list>
+    </div>
     <mat-paginator
+      [pageSize]="pageSize"
       [length]="totalCount"
       (page)="page($event)"
       class="flex-none"
     >
     </mat-paginator>
   </div>
-  <div class="w-3/4 p-4">
+  <div class="w-3/4 p-4 overflow-y-auto">
     <router-outlet></router-outlet>
   </div>
 </div>

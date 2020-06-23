@@ -8,6 +8,8 @@ import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { PageOptions } from 'src/app/core/shared/page-options';
+import { EmployeeService } from 'src/app/employees/services/employee.service';
+import { Employee } from 'src/app/employees/shared/employee';
 
 @Component({
   selector: 'app-view-salary',
@@ -17,11 +19,13 @@ import { PageOptions } from 'src/app/core/shared/page-options';
 export class ViewSalaryComponent implements OnInit {
   employeeId: number = Number(this.route.snapshot.paramMap.get('employeeId'));
 
-  latestSalary: Salary;
+  latestSalary: Salary = null;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   salaryId = Number(this.route.snapshot.paramMap.get('id'));
+
+  employee: Employee;
 
   salaries: Salary[] = [];
 
@@ -34,6 +38,7 @@ export class ViewSalaryComponent implements OnInit {
 
   constructor(
     private salaryService: SalaryService,
+    private employeeService: EmployeeService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
@@ -43,8 +48,9 @@ export class ViewSalaryComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe((paramMap) => {
       this.employeeId = Number(paramMap.get('employeeId'));
-      this.loadSalaries();
+      this.loadEmployee();
       this.loadSalary();
+      this.loadSalaries();
     });
   }
 
@@ -72,6 +78,12 @@ export class ViewSalaryComponent implements OnInit {
         (err) => this.errorHandler.badRequest(err, 'Failed to delete salary.')
       );
     });
+  }
+
+  private loadEmployee(): void {
+    this.employeeService
+      .getById(this.employeeId)
+      .subscribe((employee) => (this.employee = employee));
   }
 
   private loadSalaries(): void {
