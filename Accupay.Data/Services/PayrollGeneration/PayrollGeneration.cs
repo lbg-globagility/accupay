@@ -375,7 +375,7 @@ namespace AccuPay.Data.Services
             paystub.NetPay = AccuMath.CommercialRound(paystub.GrossPay - paystub.NetDeductions + paystub.TotalAdjustments);
 
             var actualCalculator = new PaystubActualCalculator();
-            actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner);
+            actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner, actualTimeEntries);
 
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
                                                         organizationId: paystub.OrganizationID.Value,
