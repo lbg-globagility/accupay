@@ -157,12 +157,8 @@
         [attr.colspan]="displayedColumns.length"
       >
         <div
-          class="example-element-detail"
-          [@detailExpand]="
-            officialBusiness == expandedOfficialBusiness
-              ? 'expanded'
-              : 'collapsed'
-          "
+          app-expandable-row
+          [expanded]="expandedOfficialBusiness == officialBusiness"
         >
           <div class="row p-2">
             <div class="col-lg-3">
@@ -182,13 +178,14 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      class="cursor-link example-element-row"
+      appExpandableRowTrigger
+      class="example-element-row"
       (click)="toggleExpansion(row)"
     ></tr>
     <tr
       mat-row
       *matRowDef="let row; columns: ['expandedDetail']"
-      class="example-detail-row"
+      appExpandableRowContainer
     ></tr>
   </table>
 

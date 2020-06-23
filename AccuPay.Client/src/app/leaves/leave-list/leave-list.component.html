@@ -166,10 +166,7 @@
         *matCellDef="let leave"
         [attr.colspan]="displayedColumns.length"
       >
-        <div
-          class="example-element-detail"
-          [@detailExpand]="leave == expandedLeave ? 'expanded' : 'collapsed'"
-        >
+        <div app-expandable-row [expanded]="expandedLeave == leave">
           <div class="row p-2">
             <div class="col-lg-3">
               <p>Reason</p>
@@ -188,13 +185,14 @@
     <tr
       mat-row
       *matRowDef="let row; columns: displayedColumns"
-      class="cursor-link example-element-row"
+      appExpandableRowTrigger
+      class="example-element-row"
       (click)="toggleExpansion(row)"
     ></tr>
     <tr
       mat-row
+      appExpandableRowContainer
       *matRowDef="let row; columns: ['expandedDetail']"
-      class="example-detail-row"
     ></tr>
   </table>
 

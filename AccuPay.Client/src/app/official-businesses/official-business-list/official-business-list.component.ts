@@ -10,13 +10,6 @@ import { OfficialBusiness } from 'src/app/official-businesses/shared/official-bu
 import { OfficialBusinessService } from 'src/app/official-businesses/official-business.service';
 import { NewOfficialBusinessComponent } from '../new-official-business/new-official-business.component';
 import { MatDialog } from '@angular/material/dialog';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
 import { EditOfficialBusinessComponent } from '../edit-official-business/edit-official-business.component';
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
@@ -27,16 +20,6 @@ import { Moment } from 'moment';
   selector: 'app-official-business-list',
   templateUrl: './official-business-list.component.html',
   styleUrls: ['./official-business-list.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
   host: {
     class: 'block p-4',
   },
