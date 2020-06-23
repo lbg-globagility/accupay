@@ -11,6 +11,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-role',
   templateUrl: './edit-role.component.html',
   styleUrls: ['./edit-role.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditRoleComponent implements OnInit {
   @ViewChild(RoleFormComponent)

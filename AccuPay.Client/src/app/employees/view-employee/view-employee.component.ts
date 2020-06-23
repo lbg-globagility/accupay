@@ -8,6 +8,9 @@ import { Employee } from '../shared/employee';
   selector: 'app-view-employee',
   templateUrl: './view-employee.component.html',
   styleUrls: ['./view-employee.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewEmployeeComponent implements OnInit {
   id: number;

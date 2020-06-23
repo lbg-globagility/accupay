@@ -10,6 +10,9 @@ import Swal from 'sweetalert2';
   selector: 'app-edit-division',
   templateUrl: './edit-division.component.html',
   styleUrls: ['./edit-division.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditDivisionComponent implements OnInit {
   division: Division;

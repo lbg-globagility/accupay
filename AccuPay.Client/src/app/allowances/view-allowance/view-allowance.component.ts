@@ -12,6 +12,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-view-allowance',
   templateUrl: './view-allowance.component.html',
   styleUrls: ['./view-allowance.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewAllowanceComponent implements OnInit {
   allowance: Allowance;

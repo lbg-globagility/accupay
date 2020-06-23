@@ -36,6 +36,9 @@ import {
       ),
     ]),
   ],
+  host: {
+    class: 'block h-full p-4',
+  },
 })
 export class AllowanceTypeListComponent implements OnInit {
   readonly displayedColumns: string[] = [

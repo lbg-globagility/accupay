@@ -9,6 +9,9 @@ import { PageOptions } from 'src/app/core/shared/page-options';
   selector: 'app-organization-list',
   templateUrl: './organization-list.component.html',
   styleUrls: ['./organization-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class OrganizationListComponent implements OnInit {
   readonly displayedColumns: string[] = ['name'];

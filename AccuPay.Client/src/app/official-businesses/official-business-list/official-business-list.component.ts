@@ -37,6 +37,9 @@ import { Moment } from 'moment';
       ),
     ]),
   ],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class OfficialBusinessListComponent implements OnInit {
   readonly displayedColumns: string[] = [

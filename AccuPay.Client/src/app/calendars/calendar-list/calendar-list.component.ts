@@ -6,6 +6,9 @@ import { Calendar } from 'src/app/calendars/shared/calendar';
   selector: 'app-calendar-list',
   templateUrl: './calendar-list.component.html',
   styleUrls: ['./calendar-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class CalendarListComponent implements OnInit {
   readonly displayedColumns: string[] = ['name', 'actions'];

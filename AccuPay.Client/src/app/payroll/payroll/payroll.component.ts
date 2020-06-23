@@ -13,6 +13,9 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-payroll',
   templateUrl: './payroll.component.html',
   styleUrls: ['./payroll.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class PayrollComponent implements OnInit {
   latestPayperiod: PayPeriod;

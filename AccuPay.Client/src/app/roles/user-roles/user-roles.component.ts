@@ -14,6 +14,9 @@ import Swal from 'sweetalert2';
   selector: 'app-user-roles',
   templateUrl: './user-roles.component.html',
   styleUrls: ['./user-roles.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class UserRolesComponent implements OnInit {
   readonly defaultColumns: string[] = ['user', 'none'];

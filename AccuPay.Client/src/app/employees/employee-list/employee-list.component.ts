@@ -14,6 +14,9 @@ import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-opti
   selector: 'app-employee-list',
   templateUrl: './employee-list.component.html',
   styleUrls: ['./employee-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EmployeeListComponent implements OnInit {
   readonly displayedColumns: string[] = ['employeeNo', 'lastName', 'firstName'];

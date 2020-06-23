@@ -26,6 +26,9 @@ interface DateHeader {
   selector: 'app-time-logs2',
   templateUrl: './time-logs.component.html',
   styleUrls: ['./time-logs.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class TimeLogsComponent implements OnInit {
   displayedColumns = ['employee'];

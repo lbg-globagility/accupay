@@ -13,6 +13,9 @@ import { PositionService } from 'src/app/positions/position.service';
   selector: 'app-position-list',
   templateUrl: './position-list.component.html',
   styleUrls: ['./position-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class PositionListComponent implements OnInit {
   readonly displayedColumns: string[] = ['divisionName', 'name'];

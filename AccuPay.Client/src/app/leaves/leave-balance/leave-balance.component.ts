@@ -17,6 +17,9 @@ import { LeaveBalance } from '../shared/leave-balance';
   selector: 'app-leave-balance',
   templateUrl: './leave-balance.component.html',
   styleUrls: ['./leave-balance.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class LeaveBalanceComponent implements OnInit {
   readonly displayedColumns: string[] = [

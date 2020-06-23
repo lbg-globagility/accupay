@@ -13,6 +13,9 @@ import { AllowanceService } from 'src/app/allowances/allowance.service';
   selector: 'app-allowance-list',
   templateUrl: './allowance-list.component.html',
   styleUrls: ['./allowance-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class AllowanceListComponent implements OnInit {
   readonly displayedColumns: string[] = [

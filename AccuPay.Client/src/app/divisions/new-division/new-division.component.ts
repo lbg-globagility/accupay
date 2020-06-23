@@ -9,6 +9,9 @@ import Swal from 'sweetalert2';
   selector: 'app-new-division',
   templateUrl: './new-division.component.html',
   styleUrls: ['./new-division.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewDivisionComponent {
   constructor(

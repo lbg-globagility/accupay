@@ -37,6 +37,9 @@ import { Moment } from 'moment';
       ),
     ]),
   ],
+  host: {
+    class: 'block h-full p-4',
+  },
 })
 export class OvertimeListComponent implements OnInit {
   readonly displayedColumns: string[] = [

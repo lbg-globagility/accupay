@@ -8,6 +8,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-user',
   templateUrl: './edit-user.component.html',
   styleUrls: ['./edit-user.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditUserComponent implements OnInit {
   user: User;

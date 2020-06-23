@@ -12,6 +12,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-view-position',
   templateUrl: './view-position.component.html',
   styleUrls: ['./view-position.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewPositionComponent implements OnInit {
   position: Position;

@@ -12,6 +12,9 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-time-entry',
   templateUrl: './time-entry.component.html',
   styleUrls: ['./time-entry.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class TimeEntryComponent implements OnInit {
   readonly displayedColumns = ['cutoff', 'status', 'actions'];

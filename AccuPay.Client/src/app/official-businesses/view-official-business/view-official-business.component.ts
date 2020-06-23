@@ -12,6 +12,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-view-official-business',
   templateUrl: './view-official-business.component.html',
   styleUrls: ['./view-official-business.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewOfficialBusinessComponent implements OnInit {
   officialBusiness: OfficialBusiness;

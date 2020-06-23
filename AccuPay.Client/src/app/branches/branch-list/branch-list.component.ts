@@ -7,6 +7,9 @@ import { MatTableDataSource } from '@angular/material/table';
   selector: 'app-branch-list',
   templateUrl: './branch-list.component.html',
   styleUrls: ['./branch-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class BranchListComponent implements OnInit {
   readonly displayedColumns: string[] = ['name', 'code', 'actions'];

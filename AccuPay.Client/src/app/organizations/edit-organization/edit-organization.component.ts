@@ -8,6 +8,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-organization',
   templateUrl: './edit-organization.component.html',
   styleUrls: ['./edit-organization.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditOrganizationComponent implements OnInit {
   private organizationId: number = +this.route.snapshot.paramMap.get('id');
