@@ -106,6 +106,16 @@ const menuItems: MenuItem[] = [
     ],
   },
   {
+    label: 'Reports',
+    icon: 'list_alt',
+    items: [
+      {
+        label: 'Loan Report',
+        route: '/loan-report',
+      },
+    ],
+  },
+  {
     label: 'Security',
     icon: 'security',
     items: [
