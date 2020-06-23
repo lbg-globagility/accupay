@@ -119,8 +119,11 @@ Public Class ImportEmployeeForm
         <ColumnName("Employment status(Probationary/Regular/Resigned/Terminated)")>
         Public Property EmploymentStatus As String
 
-        <ColumnName("Leave allowance per year")>
-        Public Property LeaveAllowance As Decimal
+        <ColumnName("VL allowance per year (hours)")>
+        Public Property VacationLeaveAllowance As Decimal
+
+        <ColumnName("SL allowance per year (hours)")>
+        Public Property SickLeaveAllowance As Decimal
 
         <ColumnName("Branch")>
         Public Property Branch As String
@@ -325,7 +328,9 @@ Public Class ImportEmployeeForm
 
             If Not String.IsNullOrWhiteSpace(em.LastName) Then .LastName = em.LastName?.Trim()
 
-            If em.LeaveAllowance > 0 Then .VacationLeaveAllowance = em.LeaveAllowance
+            If em.VacationLeaveAllowance > 0 Then .VacationLeaveAllowance = em.VacationLeaveAllowance
+
+            If em.SickLeaveAllowance > 0 Then .SickLeaveAllowance = em.SickLeaveAllowance
 
             If Not String.IsNullOrWhiteSpace(em.MaritalStatus) Then .MaritalStatus = em.MaritalStatus?.Trim()
 
@@ -393,6 +398,9 @@ Public Class ImportEmployeeForm
         Dim existingPositions = (Await _positionService.GetAllAsync(z_OrganizationID)).ToList()
 
         For Each model In models
+
+            If model.Position Is Nothing Then Continue For
+
             Dim currentPosition = existingPositions.
                            FirstOrDefault(Function(p) p.Name.ToTrimmedLowerCase() =
                                                         model.Position.ToTrimmedLowerCase())
@@ -426,6 +434,9 @@ Public Class ImportEmployeeForm
         Dim existingBranches = (Await _branchRepository.GetAllAsync()).ToList()
 
         For Each model In models
+
+            If model.Branch Is Nothing Then Continue For
+
             Dim currentBranch = existingBranches.
                            FirstOrDefault(Function(b) b.Name.ToTrimmedLowerCase() =
                                                         model.Branch.ToTrimmedLowerCase())
