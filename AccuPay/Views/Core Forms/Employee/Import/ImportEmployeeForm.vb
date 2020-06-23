@@ -144,6 +144,9 @@ Public Class ImportEmployeeForm
         <ColumnName("Current SL balance (hours)")>
         Public Property SickLeaveBalance As Decimal
 
+        <ColumnName("ATM No./Account No.")>
+        Public Property AtmNumber As String
+
         <Ignore>
         Public Property LineNumber As Integer Implements IExcelRowRecord.LineNumber
 
@@ -237,10 +240,10 @@ Public Class ImportEmployeeForm
             AssignChanges(model, employee)
 
             employees.Add(
-                    New EmployeeWithLeaveBalanceData(
-                        employee,
-                        vacationLeaveBalance:=model.VacationLeaveBalance,
-                        sickLeaveBalance:=model.SickLeaveBalance))
+                New EmployeeWithLeaveBalanceData(
+                    employee,
+                    vacationLeaveBalance:=model.VacationLeaveBalance,
+                    sickLeaveBalance:=model.SickLeaveBalance))
 
         Next
 
@@ -326,6 +329,8 @@ Public Class ImportEmployeeForm
             If Not String.IsNullOrWhiteSpace(em.TIN) Then .TinNo = em.TIN?.Trim()
 
             If em.WorkDaysPerYear > 0 Then .WorkDaysPerYear = em.WorkDaysPerYear
+
+            If Not String.IsNullOrWhiteSpace(em.AtmNumber) Then .AtmNo = em.AtmNumber
 
             .BranchID = em.BranchId
 
