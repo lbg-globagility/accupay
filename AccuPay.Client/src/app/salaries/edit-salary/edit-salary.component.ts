@@ -10,6 +10,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-salary',
   templateUrl: './edit-salary.component.html',
   styleUrls: ['./edit-salary.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditSalaryComponent implements OnInit {
   salary: Salary;
@@ -33,14 +36,14 @@ export class EditSalaryComponent implements OnInit {
     this.salaryService.update(salary, this.salaryId).subscribe(
       () => {
         this.displaySuccess();
-        this.router.navigate(['salaries', this.salaryId]);
+        this.router.navigate(['salaries', this.salary.employeeId]);
       },
       (err) => this.errorHandler.badRequest(err, 'Failed to update salary.')
     );
   }
 
   onCancel(): void {
-    this.router.navigate(['salaries', this.salaryId]);
+    this.router.navigate(['salaries', this.salary.employeeId]);
   }
 
   private loadSalary(): void {

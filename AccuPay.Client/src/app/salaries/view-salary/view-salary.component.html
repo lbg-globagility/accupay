@@ -1,181 +1,160 @@
-<header class="app-page-header">
-  <h1>View Salary</h1>
-</header>
+<h1 class="mat-headline">View Salary</h1>
 
-<ng-container *ngIf="isLoading | async">
-  <button
-    style="margin-right: 10px;"
-    mat-raised-button
-    color="accent"
-    routerLink="/salaries/{{ salaryId }}/edit"
-  >
-    EDIT SALARY
-  </button>
-  <button mat-raised-button color="warn" (click)="confirmDelete()">
-    DELETE SALARY
-  </button>
+<div
+  *ngIf="employee"
+  class="flex items-center bg-white p-4 mb-4 mat-elevation-z1 mat-typography"
+>
+  <img
+    class="block rounded-full"
+    width="36"
+    appImgFallback
+    src="/api/employees/{{ employee.id }}/image"
+  />
+  <div class="ml-2">
+    <a routerLink="/employees/{{ employee.id }}">
+      {{ employee.fullName | ifEmpty }}
+    </a>
+    <div class="text-xs">#{{ employee.employeeNo | ifEmpty }}</div>
+  </div>
+</div>
 
-  <!-- Employee -->
-  <mat-card>
-    <mat-card-content>
-      <div class="row">
-        <!-- Employee Name -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Employee Name</p>
-            <p class="field-value">{{ salary.employeeName }}</p>
-          </div>
-        </div>
-
-        <!-- Employee Number -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Employee Number</p>
-            <p class="field-value">{{ salary.employeeNumber }}</p>
-          </div>
-        </div>
-
-        <!-- Employee Type -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Employee Type</p>
-            <p class="field-value">{{ salary.employeeType }}</p>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Salary -->
-  <mat-card>
-    <mat-card-content>
-      <h3 class="font-medium">Salary</h3>
-      <br />
-
-      <div class="row">
-        <!-- Effective From -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Effective From</p>
-            <p class="field-value">{{ salary.effectiveFrom | date }}</p>
-          </div>
-        </div>
+<mat-card *ngIf="latestSalary" class="mb-4">
+  <h3 class="font-medium mb-4">Current Salary</h3>
+  <mat-card-content>
+    <div class="row">
+      <div class="col-lg-3">
+        <app-display-field label="Effective From">
+          {{ latestSalary.effectiveFrom | date }}
+        </app-display-field>
       </div>
 
-      <div class="row">
-        <!-- Basic Salary -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Basic Salary</p>
-            <p class="field-value">
-              {{ salary.basicSalary | number: "1.2-2" }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Allowance Salary -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Allowance Salary</p>
-            <p class="field-value">
-              {{ salary.allowanceSalary | number: "1.2-2" }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Total Salary -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Total Salary</p>
-            <p class="field-value">
-              {{ salary.totalSalary | number: "1.2-2" }}
-            </p>
-          </div>
-        </div>
-      </div>
-    </mat-card-content>
-  </mat-card>
-
-  <!-- Contributions -->
-  <mat-card>
-    <mat-card-content>
-      <h3 class="font-medium">Contributions</h3>
-      <br />
-
-      <div class="row">
-        <!-- Pay SSS -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Pay SSS</p>
-            <p class="field-value">
-              {{ salary.doPaySSSContribution ? "Yes" : "No" }}
-            </p>
-          </div>
-        </div>
+      <div class="col-lg-3">
+        <app-display-field label="Salary Type">
+          Monthly
+        </app-display-field>
       </div>
 
-      <div class="row">
-        <!-- Auto Compute PhilHealth -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Auto Compute PhilHealth</p>
-            <p class="field-value">
-              {{ salary.autoComputePhilHealthContribution ? "Yes" : "No" }}
-            </p>
-          </div>
-        </div>
+      <div class="col-lg-3">
+        <app-display-field label="Employment Policy">
+          Office Head
+        </app-display-field>
+      </div>
+    </div>
 
-        <!-- Custom PhilHealth Deduction -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Custom PhilHealth Deduction</p>
-            <p
-              class="field-value"
-              *ngIf="
-                salary.autoComputePhilHealthContribution;
-                else philHealthElse
-              "
-            >
-              -
-            </p>
-            <ng-template #philHealthElse
-              ><p class="field-value">
-                {{ salary.philHealthDeduction | number: "1.2-2" }}
-              </p></ng-template
-            >
-          </div>
-        </div>
+    <div class="row">
+      <div class="col-lg-3">
+        <app-display-field label="Total Amount">
+          <span> ₱ {{ latestSalary.totalSalary | amount }} </span>
+        </app-display-field>
       </div>
 
-      <div class="row">
-        <!-- Auto Compute PAGIBIG -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Auto Compute PAGIBIG</p>
-            <p class="field-value">
-              {{ salary.autoComputeHDMFContribution ? "Yes" : "No" }}
-            </p>
-          </div>
-        </div>
-
-        <!-- Custom PAGIBIG Deduction -->
-        <div class="col-lg-3 mb-4">
-          <div class="field">
-            <p class="field-label">Custom PAGIBIG Deduction</p>
-            <p
-              class="field-value"
-              *ngIf="salary.autoComputeHDMFContribution; else hdmfElse"
-            >
-              -
-            </p>
-            <ng-template #hdmfElse
-              ><p class="field-value">
-                {{ salary.hdmfDeduction | number: "1.2-2" }}
-              </p></ng-template
-            >
-          </div>
-        </div>
+      <div class="col-lg-3">
+        <app-display-field label="Basic Amount">
+          ₱ {{ latestSalary.basicSalary | amount }}
+        </app-display-field>
       </div>
-    </mat-card-content>
-  </mat-card>
-</ng-container>
+
+      <div class="col-lg-3">
+        <app-display-field label="Allowance Amount">
+          ₱ {{ latestSalary.allowanceSalary | amount }}
+        </app-display-field>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-3">
+        <app-display-field label="SSS Contribution">
+          <ng-container
+            *ngIf="latestSalary.doPaySSSContribution; else sssOverride"
+          >
+            <span>Automatic Computation</span>
+          </ng-container>
+          <ng-template #sssOverride>
+            No contribution
+          </ng-template>
+        </app-display-field>
+      </div>
+
+      <div class="col-lg-3">
+        <app-display-field label="PhilHealth Contribution">
+          <ng-container
+            *ngIf="
+              latestSalary.autoComputePhilHealthContribution;
+              else philHealthOverride
+            "
+          >
+            <span>Automatic Computation</span>
+          </ng-container>
+          <ng-template #philHealthOverride>
+            {{ latestSalary.philHealthDeduction | amount }}
+          </ng-template>
+        </app-display-field>
+      </div>
+
+      <div class="col-lg-3">
+        <app-display-field label="Pag-IBIG Contribution">
+          <ng-container
+            *ngIf="
+              latestSalary.autoComputeHDMFContribution;
+              else pagIbigOverride
+            "
+          >
+            <span>Automatic Computation</span>
+          </ng-container>
+          <ng-template #pagIbigOverride>
+            {{ latestSalary.hdmfDeduction | amount }}
+          </ng-template>
+        </app-display-field>
+      </div>
+    </div>
+  </mat-card-content>
+  <mat-card-actions align="end">
+    <button
+      mat-button
+      color="primary"
+      routerLink="/salaries/{{ latestSalary.id }}/edit"
+    >
+      UPDATE
+    </button>
+  </mat-card-actions>
+</mat-card>
+
+<mat-card class="m-no-padding">
+  <h3 class="font-medium p-4">Salary History</h3>
+  <mat-card-content>
+    <table mat-table [dataSource]="salaries" class="w-full">
+      <ng-container matColumnDef="effectiveFrom">
+        <th mat-header-cell *matHeaderCellDef>Effective From</th>
+        <td mat-cell *matCellDef="let salary">
+          {{ salary.effectiveFrom | date }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="basicAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">Basic Amount</th>
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.basicSalary | amount }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="allowanceAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">
+          Allowance Amount
+        </th>
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.allowanceSalary | amount }}
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="totalAmount">
+        <th mat-header-cell *matHeaderCellDef class="m-right">Total Amount</th>
+        <td mat-cell *matCellDef="let loan" class="m-right">
+          ₱ {{ loan.totalSalary | amount }}
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>

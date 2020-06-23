@@ -1,29 +1,20 @@
-<mat-card *ngIf="salary">
+<mat-card *ngIf="salary" class="mb-4">
   <mat-card-content>
     <div class="row">
       <!-- Employee Name -->
-      <div class="col-lg-4 mb-4">
-        <div class="field">
-          <p class="field-label">Employee Name</p>
-          <p class="field-value">{{ salary.employeeName }}</p>
-        </div>
-      </div>
+      <app-display-field label="Employee Name" class="col-lg-3">
+        {{ salary.employeeName }}
+      </app-display-field>
 
       <!-- Employee Number -->
-      <div class="col-lg-4 mb-4">
-        <div class="field">
-          <p class="field-label">Employee Number</p>
-          <p class="field-value">{{ salary.employeeNumber }}</p>
-        </div>
-      </div>
+      <app-display-field label="Employee Number" class="col-lg-3">
+        {{ salary.employeeNumber }}
+      </app-display-field>
 
       <!-- Employee Type -->
-      <div class="col-lg-4 mb-4">
-        <div class="field">
-          <p class="field-label">Employee Type</p>
-          <p class="field-value">{{ salary.employeeType }}</p>
-        </div>
-      </div>
+      <app-display-field label="Employee Type" class="col-lg-3">
+        {{ salary.employeeType }}
+      </app-display-field>
     </div>
   </mat-card-content>
 </mat-card>
@@ -54,53 +45,9 @@
             </mat-form-field>
           </div>
 
-          <h3 class="font-medium">Salary</h3>
-          <br />
+          <h3 class="font-medium mb-4">Salary</h3>
           <div class="row">
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Basic Salary *</mat-label>
-              <input
-                matInput
-                type="number"
-                autocomplete="off"
-                formControlName="basicSalary"
-              />
-            </mat-form-field>
-
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
-              <mat-label>Allowance Salary *</mat-label>
-              <input
-                matInput
-                type="number"
-                autocomplete="off"
-                formControlName="allowanceSalary"
-              />
-            </mat-form-field>
-          </div>
-
-          <div class="row">
-            <div class="col-lg-4 mb-4 readonly-field">
-              <div class="field">
-                <p class="field-label">Total Salary</p>
-                <p class="field-value">
-                  {{ computedTotalSalary | number: "1.2-2" }}
-                </p>
-              </div>
-            </div>
-
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
+            <mat-form-field appearance="fill" class="col-lg-6">
               <mat-label>Effective From *</mat-label>
               <input
                 matInput
@@ -115,12 +62,42 @@
             </mat-form-field>
           </div>
 
+          <div class="row">
+            <mat-form-field appearance="fill" class="col-lg-3">
+              <mat-label>Basic Amount *</mat-label>
+              <span matPrefix>₱ &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="basicSalary"
+              />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="col-lg-3">
+              <mat-label>Allowance Amount *</mat-label>
+              <span matPrefix>₱ &nbsp;</span>
+              <input
+                matInput
+                type="number"
+                autocomplete="off"
+                formControlName="allowanceSalary"
+              />
+            </mat-form-field>
+          </div>
+
+          <div class="row">
+            <app-display-field label="Total Amount" class="col-lg-4">
+              ₱ {{ computedTotalSalary | amount }}
+            </app-display-field>
+          </div>
+
           <h3 class="font-medium">Contributions</h3>
           <br />
 
-          <div class="row" style="margin-bottom: 50px;">
+          <div class="row mb-4">
             <mat-checkbox
-              class="col-lg-4"
+              class="col-lg-3"
               formControlName="doPaySSSContribution"
               >Pay SSS</mat-checkbox
             >
@@ -128,16 +105,12 @@
 
           <div class="row">
             <mat-checkbox
-              class="col-lg-4"
+              class="col-lg-3"
               formControlName="autoComputePhilHealthContribution"
               >Auto Compute PhilHealth</mat-checkbox
             >
 
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
+            <mat-form-field appearance="fill" class="col-lg-3">
               <mat-label>PhilHealth Deduction *</mat-label>
               <input
                 matInput
@@ -150,16 +123,12 @@
 
           <div class="row">
             <mat-checkbox
-              class="col-lg-4"
+              class="col-lg-3"
               formControlName="autoComputeHDMFContribution"
               >Auto Compute PAGIBIG</mat-checkbox
             >
 
-            <mat-form-field
-              appearance="outline"
-              color="accent"
-              class="col-lg-4"
-            >
+            <mat-form-field appearance="fill" class="col-lg-3">
               <mat-label>PAGIBIG Deduction *</mat-label>
               <input
                 matInput

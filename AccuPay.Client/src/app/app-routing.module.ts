@@ -72,6 +72,7 @@ import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.componen
 import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balance.component';
 import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.component';
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
+import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
 
 const routes: Routes = [
   {
@@ -128,16 +129,22 @@ const routes: Routes = [
       },
       {
         path: 'salaries',
-        component: SalaryListComponent,
+        component: SalariesComponent,
+        children: [
+          {
+            path: ':employeeId',
+            component: ViewSalaryComponent,
+          },
+        ],
       },
       {
         path: 'salaries/new',
         component: NewSalaryComponent,
       },
-      {
-        path: 'salaries/:id',
-        component: ViewSalaryComponent,
-      },
+      // {
+      //   path: 'salaries/:id',
+      //   component: ViewSalaryComponent,
+      // },
       {
         path: 'salaries/:id/edit',
         component: EditSalaryComponent,

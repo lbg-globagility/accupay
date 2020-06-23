@@ -8,6 +8,7 @@ import { Sort } from '@angular/material/sort';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
 import { PageEvent } from '@angular/material/paginator';
+import { EmployeePageOptions } from 'src/app/employees/shared/employee-page-options';
 
 @Component({
   selector: 'app-employee-list',
@@ -67,14 +68,13 @@ export class EmployeeListComponent implements OnInit {
   }
 
   private loadEmployees() {
-    const options = new PageOptions(
+    const options = new EmployeePageOptions(
       this.pageIndex,
       this.pageSize,
-      this.sort.active,
-      this.sort.direction
+      this.searchTerm
     );
 
-    this.employeeService.getList(options, this.searchTerm).subscribe((data) => {
+    this.employeeService.list(options).subscribe((data) => {
       this.dataSource = new MatTableDataSource(data.items);
       this.totalCount = data.totalCount;
     });
