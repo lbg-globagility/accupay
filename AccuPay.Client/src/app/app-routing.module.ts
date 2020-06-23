@@ -73,6 +73,7 @@ import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balanc
 import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.component';
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
 import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
+import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
 
 const routes: Routes = [
   {
@@ -151,11 +152,22 @@ const routes: Routes = [
       },
       {
         path: 'leaves',
-        component: LeaveListComponent,
-      },
-      {
-        path: 'leave-balance',
-        component: LeaveBalanceComponent,
+        component: LeavesComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: LeaveListComponent,
+          },
+          {
+            path: 'balances',
+            component: LeaveBalanceComponent,
+          },
+        ],
       },
       {
         path: 'official-businesses',
