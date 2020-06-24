@@ -106,6 +106,11 @@ const menuItems: MenuItem[] = [
     ],
   },
   {
+    label: 'Reports',
+    icon: 'list_alt',
+    route: '/reports',
+  },
+  {
     label: 'Security',
     icon: 'security',
     items: [
