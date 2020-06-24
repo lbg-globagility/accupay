@@ -129,6 +129,10 @@ const routes: Routes = [
         component: EditRoleComponent,
       },
       {
+        path: 'salaries/new',
+        component: NewSalaryComponent,
+      },
+      {
         path: 'salaries',
         component: SalariesComponent,
         children: [
@@ -137,10 +141,6 @@ const routes: Routes = [
             component: ViewSalaryComponent,
           },
         ],
-      },
-      {
-        path: 'salaries/new',
-        component: NewSalaryComponent,
       },
       // {
       //   path: 'salaries/:id',
