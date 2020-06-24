@@ -83,10 +83,6 @@
       <Project>{9cad162b-fa9f-4b09-950c-b2e9d7c766fc}</Project>
       <Name>AccuPay.Data</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Accupay.DB\AccuPay.DB.vbproj">
-      <Project>{2e134199-5c8f-4425-8b40-4566b4ea87da}</Project>
-      <Name>AccuPay.DB</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

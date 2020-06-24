@@ -63,12 +63,12 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public IEnumerable<Branch> GetAll()
+        public ICollection<Branch> GetAll()
         {
             return _context.Branches.ToList();
         }
 
-        public async Task<IEnumerable<Branch>> GetAllAsync()
+        public async Task<ICollection<Branch>> GetAllAsync()
         {
             return await _context.Branches.ToListAsync();
         }

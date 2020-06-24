@@ -48,13 +48,21 @@ namespace AccuPay.Data.Services
 
             if (findByOrganization)
             {
-                value = _values?.FirstOrDefault(f => f.Type == type &&
-                                                    f.LIC == lic &&
-                                                    f.OrganizationID != null &&
-                                                    f.OrganizationID == organizationId);
+                value = _values?
+                    .Where(x => x.Type == type)
+                    .Where(x => x.LIC == lic)
+                    .Where(x => x.OrganizationID != null)
+                    .Where(x => x.OrganizationID == organizationId)
+                    .FirstOrDefault();
 
                 if (value == null)
-                    value = _values?.FirstOrDefault(f => f.Type == type && f.LIC == lic);
+                {
+                    value = _values?
+                        .Where(x => x.Type == type)
+                        .Where(x => x.LIC == lic)
+                        .Where(x => x.OrganizationID == null)
+                        .FirstOrDefault();
+                }
             }
             else
                 value = _values?.FirstOrDefault(f => f.Type == type && f.LIC == lic);

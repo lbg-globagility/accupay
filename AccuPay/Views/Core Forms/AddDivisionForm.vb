@@ -93,9 +93,7 @@ Public Class AddDivisionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.
-                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
-                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
+        _payFrequencies = payFrequencies.Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly).ToList
 
     End Function
 

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class EmployeeRepository
+    public class EmployeeRepository : BaseRepository
     {
         private readonly PayrollContext _context;
 
@@ -21,13 +21,13 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveAsync(Employee employee)
         {
-            if (employee.RowID.HasValue)
+            if (IsNewEntity(employee.RowID))
             {
-                _context.Entry(employee).State = EntityState.Modified;
+                _context.Employees.AddRange(employee);
             }
             else
             {
-                _context.Employees.AddRange(employee);
+                _context.Entry(employee).State = EntityState.Modified;
             }
             await _context.SaveChangesAsync();
         }
@@ -73,18 +73,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveManyAsync(List<Employee> employees)
         {
-            var updated = employees.Where(e => e.RowID.HasValue).ToList();
+            var updated = employees.Where(e => !IsNewEntity(e.RowID)).ToList();
             if (updated.Any())
             {
                 updated.ForEach(x => _context.Entry(x).State = EntityState.Modified);
             }
 
-            var added = employees.Where(e => !e.RowID.HasValue).ToList();
+            var added = employees.Where(e => IsNewEntity(e.RowID)).ToList();
             if (added.Any())
             {
-                // this adds a value to RowID (int minimum value)
-                // so if there is a code checking for null to RowID
-                // it will always be false
                 _context.Employees.AddRange(added);
             }
             await _context.SaveChangesAsync();

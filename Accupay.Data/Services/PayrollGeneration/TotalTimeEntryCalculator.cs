@@ -49,7 +49,7 @@ namespace AccuPay.Data.Services
             UndertimeHours = timeEntries.Sum(t => t.UndertimeHours);
             AbsentHours = timeEntries.Sum(t => t.AbsentHours);
 
-            if (salary == null || employee == null || actualTimeEntries == null || !actualTimeEntries.Any())
+            if (salary == null || employee == null)
                 return;
 
             HourlyRate = PayrollTools.GetHourlyRateByDailyRate(salary, employee);
@@ -58,44 +58,39 @@ namespace AccuPay.Data.Services
             RegularPay = HourlyRate * RegularHours;
             ActualRegularPay = ActualHourlyRate * RegularHours;
 
-            OvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.OvertimePay));
-            ActualOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.OvertimePay));
+            if (timeEntries != null && timeEntries.Any())
+            {
+                OvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.OvertimePay));
+                NightDiffPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffPay));
+                NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffOTPay));
+                RestDayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RestDayPay));
+                RestDayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RestDayOTPay));
+                SpecialHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.SpecialHolidayPay));
+                SpecialHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.SpecialHolidayOTPay));
+                RegularHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RegularHolidayPay));
+                RegularHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RegularHolidayOTPay));
+                LeavePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.LeavePay));
+                LateDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.LateDeduction));
+                UndertimeDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.UndertimeDeduction));
+                AbsenceDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.AbsentDeduction));
+            }
 
-            NightDiffPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffPay));
-            ActualNightDiffPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffPay));
-
-            NightDiffOvertimePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.NightDiffOTPay));
-            ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffOTPay));
-
-            RestDayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RestDayPay));
-            ActualRestDayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RestDayPay));
-
-            RestDayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RestDayOTPay));
-            ActualRestDayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RestDayOTPay));
-
-            SpecialHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.SpecialHolidayPay));
-            ActualSpecialHolidayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.SpecialHolidayPay));
-
-            SpecialHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.SpecialHolidayOTPay));
-            ActualSpecialHolidayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.SpecialHolidayOTPay));
-
-            RegularHolidayPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RegularHolidayPay));
-            ActualRegularHolidayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RegularHolidayPay));
-
-            RegularHolidayOTPay = AccuMath.CommercialRound(timeEntries.Sum(t => t.RegularHolidayOTPay));
-            ActualRegularHolidayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RegularHolidayOTPay));
-
-            LeavePay = AccuMath.CommercialRound(timeEntries.Sum(t => t.LeavePay));
-            ActualLeavePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.LeavePay));
-
-            LateDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.LateDeduction));
-            ActualLateDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.LateDeduction));
-
-            UndertimeDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.UndertimeDeduction));
-            ActualUndertimeDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.UndertimeDeduction));
-
-            AbsenceDeduction = AccuMath.CommercialRound(timeEntries.Sum(t => t.AbsentDeduction));
-            ActualAbsenceDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.AbsentDeduction));
+            if (actualTimeEntries != null && actualTimeEntries.Any())
+            {
+                ActualOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.OvertimePay));
+                ActualNightDiffPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffPay));
+                ActualNightDiffOvertimePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.NightDiffOTPay));
+                ActualRestDayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RestDayPay));
+                ActualRestDayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RestDayOTPay));
+                ActualSpecialHolidayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.SpecialHolidayPay));
+                ActualSpecialHolidayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.SpecialHolidayOTPay));
+                ActualRegularHolidayPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RegularHolidayPay));
+                ActualRegularHolidayOTPay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.RegularHolidayOTPay));
+                ActualLeavePay = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.LeavePay));
+                ActualLateDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.LateDeduction));
+                ActualUndertimeDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.UndertimeDeduction));
+                ActualAbsenceDeduction = AccuMath.CommercialRound(actualTimeEntries.Sum(t => t.AbsentDeduction));
+            }
         }
 
         public decimal HourlyRate { get; }

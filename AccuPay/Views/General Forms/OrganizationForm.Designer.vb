@@ -766,6 +766,7 @@ Partial Class OrganizationForm
         Me.cbopayfreq.Name = "cbopayfreq"
         Me.cbopayfreq.Size = New System.Drawing.Size(245, 21)
         Me.cbopayfreq.TabIndex = 315
+        Me.cbopayfreq.Visible = False
         '
         'Label36
         '
@@ -775,6 +776,7 @@ Partial Class OrganizationForm
         Me.Label36.Size = New System.Drawing.Size(81, 13)
         Me.Label36.TabIndex = 345
         Me.Label36.Text = "Pay frequency :"
+        Me.Label36.Visible = False
         '
         'txtfilename
         '

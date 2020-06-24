@@ -129,6 +129,7 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of AllowanceDataService)
         services.AddTransient(Of DivisionDataService)
+        services.AddTransient(Of EmployeeDataService)
         services.AddTransient(Of EmployeeDutyScheduleDataService)
         services.AddTransient(Of LeaveDataService)
         services.AddTransient(Of LoanDataService)
@@ -141,6 +142,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeLogImportParser)
         services.AddTransient(Of TimeLogsReader)
 
+        services.AddTransient(Of PayslipDataService)
         services.AddTransient(Of PayslipCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 

@@ -1,5 +1,5 @@
 ﻿using AccuPay.Data.Enums;
-using AccuPay.Data.Services;
+using AccuPay.Data.Helpers;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -79,9 +79,7 @@ namespace AccuPay.Data.Entities
         public bool CalcHoliday { get; set; }
         public bool CalcSpecialHoliday { get; set; }
         public bool CalcNightDiff { get; set; }
-        public bool CalcNightDiffOT { get; set; }
         public bool CalcRestDay { get; set; }
-        public bool CalcRestDayOT { get; set; }
         public DateTime? DateRegularized { get; set; }
         public DateTime? DateEvaluated { get; set; }
         public bool RevealInPayroll { get; set; }
@@ -162,5 +160,21 @@ namespace AccuPay.Data.Entities
         public bool IsTerminated => EmploymentStatus.Trim().ToUpper() == "TERMINATED";
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
+
+        public static Employee CreateEmptyEmployee(int organizationId, int userId)
+        {
+            return new Employee
+            {
+                RowID = null,
+                OrganizationID = organizationId,
+                Created = DateTime.Now,
+                CreatedBy = userId,
+                PayFrequencyID = PayrollTools.PayFrequencySemiMonthlyId,
+                CalcHoliday = true,
+                CalcNightDiff = true,
+                CalcRestDay = true,
+                CalcSpecialHoliday = true
+            };
+        }
     }
 }

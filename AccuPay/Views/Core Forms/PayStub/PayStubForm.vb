@@ -804,8 +804,20 @@ Public Class PayStubForm
 
             Dim generationTask = Task.Run(
                 Sub()
-                    Parallel.ForEach(
-                            resources.Employees,
+                    'TEMPORARY set to synchronous since there is a race condition issue
+                    'that is hard to debug
+                    'Parallel.ForEach(
+                    '        resources.Employees,
+                    '        Sub(employee)
+
+                    '            _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
+                    '                                            userId:=z_User,
+                    '                                            employee:=employee,
+                    '                                            resources:=resources))
+
+                    '            Interlocked.Increment(_finishedPaystubs)
+                    '        End Sub)
+                    resources.Employees.ToList().ForEach(
                             Sub(employee)
 
                                 _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,

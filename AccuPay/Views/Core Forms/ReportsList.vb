@@ -139,17 +139,18 @@ Public Class ReportsList
     End Sub
 
     Sub report_maker()
-        Dim n_listviewitem As New ListViewItem
+        If lvMainMenu.SelectedItems.Count = 0 Then Return
 
+        Dim listviewitem As New ListViewItem
         Try
-            n_listviewitem = lvMainMenu.SelectedItems(0)
+            listviewitem = lvMainMenu.SelectedItems(0)
         Catch ex As Exception
             MsgBox(getErrExcptn(ex, Me.Name))
             Exit Sub
         End Try
 
-        If TypeOf n_listviewitem.Tag Is IReportProvider Then
-            Dim provider = DirectCast(n_listviewitem.Tag, IReportProvider)
+        If TypeOf listviewitem.Tag Is IReportProvider Then
+            Dim provider = DirectCast(listviewitem.Tag, IReportProvider)
 
             Try
                 If _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark AndAlso
@@ -157,7 +158,7 @@ Public Class ReportsList
 
                     Dim payrollSummary = DirectCast(provider, PayrollSummaryExcelFormatReportProvider)
 
-                    Dim isActual = n_listviewitem.Text.EndsWith(ActualDescription)
+                    Dim isActual = listviewitem.Text.EndsWith(ActualDescription)
 
                     payrollSummary.IsActual = isActual
 

@@ -71,9 +71,7 @@ namespace AccuPay.Web.Employees.Models
             CalcHoliday = employee.CalcHoliday;
             CalcSpecialHoliday = employee.CalcSpecialHoliday;
             CalcNightDiff = employee.CalcNightDiff;
-            CalcNightDiffOT = employee.CalcNightDiffOT;
             CalcRestDay = employee.CalcRestDay;
-            CalcRestDayOT = employee.CalcRestDayOT;
             DateRegularized = employee.DateRegularized;
             DateEvaluated = employee.DateEvaluated;
             RevealInPayroll = employee.RevealInPayroll;
