@@ -39,10 +39,12 @@ export class EditOfficialBusinessComponent implements OnInit {
     this.loadOfficialBusiness();
   }
 
-  onSave(officialBusiness: OfficialBusiness): void {
+  onSave(): void {
     if (!this.officialBusinessForm.form.valid) {
       return;
     }
+
+    const officialBusiness = this.officialBusinessForm.value;
 
     this.savingState.changeToLoading();
 
