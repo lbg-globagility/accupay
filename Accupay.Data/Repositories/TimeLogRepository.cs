@@ -232,7 +232,7 @@ namespace AccuPay.Data.Repositories
                 .Include(x => x.Branch)
                 .Where(x => employeeIds.Contains(x.EmployeeID))
                 .Where(x => x.OrganizationID == organizationId)
-                .Where(x => dateFrom <= x.LogDate && x.LogDate <= dateTo)
+                .Where(x => dateFrom.Date <= x.LogDate && x.LogDate <= dateTo.Date)
                 .ToListAsync();
 
             return (employees, total, timeLogs);

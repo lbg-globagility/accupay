@@ -1,5 +1,8 @@
 using AccuPay.Data.Entities;
+using AccuPay.Web.Core.Json;
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace AccuPay.Web.Payroll
 {
@@ -7,8 +10,12 @@ namespace AccuPay.Web.Payroll
     {
         public int? Id { get; set; }
 
+        [DataType(DataType.Date)]
+        [JsonConverter(typeof(DateConverter))]
         public DateTime CutoffStart { get; set; }
 
+        [DataType(DataType.Date)]
+        [JsonConverter(typeof(DateConverter))]
         public DateTime CutoffEnd { get; set; }
 
         public string Status { get; set; }
