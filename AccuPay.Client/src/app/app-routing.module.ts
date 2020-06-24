@@ -41,7 +41,7 @@ import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { ViewLoanComponent } from 'src/app/loans/view-loan/view-loan.component';
 import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
 import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
-import { LoanReportComponent } from 'src/app/reports/loan-report/loan-report.component';
+import { ReportsComponent } from 'src/app/reports/reports/reports.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
@@ -74,6 +74,7 @@ import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balanc
 import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.component';
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
 import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
+import { ReportFormComponent } from 'src/app/reports/report-form/report-form.component';
 
 const routes: Routes = [
   {
@@ -238,9 +239,16 @@ const routes: Routes = [
         path: 'loans/:id/edit',
         component: EditLoanComponent,
       },
+
       {
-        path: 'loan-report',
-        component: LoanReportComponent,
+        path: 'reports',
+        component: ReportsComponent,
+        children: [
+          {
+            path: ':report',
+            component: ReportFormComponent,
+          },
+        ],
       },
       {
         path: 'organizations',

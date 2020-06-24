@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { LoanReportComponent } from '../reports/loan-report/loan-report.component';
+import { ReportsComponent } from '../reports/reports/reports.component';
+import { ReportFormComponent } from './report-form/report-form.component';
 
 @NgModule({
-  declarations: [LoanReportComponent],
+  declarations: [ReportsComponent, ReportFormComponent],
   imports: [SharedModule],
 })
 export class ReportsModule {}
