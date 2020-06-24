@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-salary',
   templateUrl: './new-salary.component.html',
   styleUrls: ['./new-salary.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewSalaryComponent {
   constructor(

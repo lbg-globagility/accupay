@@ -75,6 +75,7 @@ import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.compone
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
 import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
 import { ReportFormComponent } from 'src/app/reports/report-form/report-form.component';
+import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
 
 const routes: Routes = [
   {
@@ -130,6 +131,10 @@ const routes: Routes = [
         component: EditRoleComponent,
       },
       {
+        path: 'salaries/new',
+        component: NewSalaryComponent,
+      },
+      {
         path: 'salaries',
         component: SalariesComponent,
         children: [
@@ -138,10 +143,6 @@ const routes: Routes = [
             component: ViewSalaryComponent,
           },
         ],
-      },
-      {
-        path: 'salaries/new',
-        component: NewSalaryComponent,
       },
       // {
       //   path: 'salaries/:id',
@@ -153,11 +154,22 @@ const routes: Routes = [
       },
       {
         path: 'leaves',
-        component: LeaveListComponent,
-      },
-      {
-        path: 'leave-balance',
-        component: LeaveBalanceComponent,
+        component: LeavesComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: LeaveListComponent,
+          },
+          {
+            path: 'balances',
+            component: LeaveBalanceComponent,
+          },
+        ],
       },
       {
         path: 'official-businesses',

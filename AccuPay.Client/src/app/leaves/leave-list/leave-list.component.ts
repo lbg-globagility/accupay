@@ -8,13 +8,6 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Leave } from 'src/app/leaves/shared/leave';
 import { LeaveService } from 'src/app/leaves/leave.service';
-import {
-  state,
-  trigger,
-  transition,
-  animate,
-  style,
-} from '@angular/animations';
 import { MatDialog } from '@angular/material/dialog';
 import { NewLeaveComponent } from 'src/app/leaves/new-leave/new-leave.component';
 import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.component';
@@ -27,16 +20,6 @@ import { Moment } from 'moment';
   selector: 'app-leave-list',
   templateUrl: './leave-list.component.html',
   styleUrls: ['./leave-list.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
   host: {
     class: 'block p-4',
   },

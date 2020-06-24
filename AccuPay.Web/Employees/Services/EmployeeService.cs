@@ -150,7 +150,7 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task GenerateEmployeesImages()
         {
-            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync(_currentUser.OrganizationId);
+            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync();
 
             foreach (var employee in employees)
             {

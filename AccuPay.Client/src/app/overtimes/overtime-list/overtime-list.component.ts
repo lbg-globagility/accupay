@@ -14,29 +14,12 @@ import { EditOvertimeComponent } from 'src/app/overtimes/edit-overtime/edit-over
 import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmation-dialog/confirmation-dialog.component';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import {
-  trigger,
-  state,
-  style,
-  transition,
-  animate,
-} from '@angular/animations';
 import { Moment } from 'moment';
 
 @Component({
   selector: 'app-overtime-list',
   templateUrl: './overtime-list.component.html',
   styleUrls: ['./overtime-list.component.scss'],
-  animations: [
-    trigger('detailExpand', [
-      state('collapsed', style({ height: '0px', minHeight: '0' })),
-      state('expanded', style({ height: '*' })),
-      transition(
-        'expanded <=> collapsed',
-        animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')
-      ),
-    ]),
-  ],
   host: {
     class: 'block h-full p-4',
   },
