@@ -69,12 +69,34 @@ import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component'
 import { ReportFormComponent } from 'src/app/reports/report-form/report-form.component';
 import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
 import { EmployeesComponent } from 'src/app/employees/employees/employees.component';
+import { NewClientComponent } from 'src/app/clients/components/new-client/new-client.component';
+import { EditClientComponent } from 'src/app/clients/components/edit-client/edit-client.component';
+import { ClientsComponent } from 'src/app/clients/components/clients/clients.component';
+import { ViewClientComponent } from 'src/app/clients/components/view-client/view-client.component';
 
 const routes: Routes = [
   {
     path: '',
     component: MainComponent,
     children: [
+      {
+        path: 'clients/new',
+        component: NewClientComponent,
+      },
+      {
+        path: 'clients',
+        component: ClientsComponent,
+        children: [
+          {
+            path: ':id',
+            component: ViewClientComponent,
+          },
+        ],
+      },
+      {
+        path: 'clients/:id/edit',
+        component: EditClientComponent,
+      },
       {
         path: 'employees/new',
         component: NewEmployeeComponent,

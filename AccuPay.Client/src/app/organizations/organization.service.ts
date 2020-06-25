@@ -5,6 +5,7 @@ import { Organization } from 'src/app/organizations/shared/organization';
 import { Observable } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { map } from 'rxjs/operators';
+import { OrganizationPageOptions } from 'src/app/organizations/shared/organization-page-options';
 
 @Injectable({
   providedIn: 'root',
@@ -28,7 +29,9 @@ export class OrganizationService {
       );
   }
 
-  list(options: PageOptions): Observable<PaginatedList<Organization>> {
+  list(
+    options: OrganizationPageOptions
+  ): Observable<PaginatedList<Organization>> {
     const params = options ? options.toObject() : null;
 
     return this.httpClient.get<PaginatedList<Organization>>(`${this.baseUrl}`, {

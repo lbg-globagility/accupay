@@ -128,6 +128,11 @@ const menuItems: MenuItem[] = [
       },
     ],
   },
+  {
+    label: 'Clients',
+    icon: 'business',
+    route: '/clients',
+  },
 ];
 
 @Component({

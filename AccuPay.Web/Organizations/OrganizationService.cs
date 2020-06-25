@@ -48,7 +48,7 @@ namespace AccuPay.Web.Organizations
             return ConvertToDto(organization);
         }
 
-        public async Task<PaginatedList<OrganizationDto>> List(PageOptions options)
+        public async Task<PaginatedList<OrganizationDto>> List(OrganizationPageOptions options)
         {
             var (organizations, total) = await _repository.List(options, _currentUser.ClientId);
             var dtos = organizations.Select(t => ConvertToDto(t)).ToList();
