@@ -11,13 +11,13 @@ namespace AccuPay.Data.Services
 
         public DataTable GetData(int organizationId, DateTime date)
         {
-            object[,] @params = new object[3, 3];
-            @params[0, 0] = "OrganizID";
-            @params[1, 0] = "paramDate";
-            @params[0, 1] = organizationId;
-            @params[1, 1] = date.ToString("yyyy-MM-dd");
+            object[,] parameters = new object[3, 3];
+            parameters[0, 0] = "OrganizID";
+            parameters[1, 0] = "paramDate";
+            parameters[0, 1] = organizationId;
+            parameters[1, 1] = date.ToString("yyyy-MM-dd");
 
-            var data = (DataTable)CallProcedure("RPT_PhilHealth_Monthly", @params);
+            var data = (DataTable)CallProcedure("RPT_PhilHealth_Monthly", parameters);
 
             return data;
         }
