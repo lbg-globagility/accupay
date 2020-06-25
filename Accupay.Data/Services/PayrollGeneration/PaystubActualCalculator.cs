@@ -1,18 +1,21 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Utilities;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace AccuPay.Data.Services
 {
     public class PaystubActualCalculator
     {
-        public void Compute(Employee employee,
-                            Salary salary,
-                            ListOfValueCollection settings,
-                            PayPeriod payperiod,
-                            Paystub paystub,
-                            string currentSystemOwner)
+        public void Compute(
+            Employee employee,
+            Salary salary,
+            ListOfValueCollection settings,
+            PayPeriod payperiod,
+            Paystub paystub,
+            string currentSystemOwner,
+            IReadOnlyCollection<ActualTimeEntry> actualTimeEntries)
         {
             decimal totalEarnings = 0;
 
@@ -59,6 +62,7 @@ namespace AccuPay.Data.Services
                 }
             }
 
+            paystub.Actual.ComputeBasicPay(employee.IsDaily, salary.TotalSalary, actualTimeEntries);
             paystub.Actual.GrossPay = AccuMath.CommercialRound(totalEarnings + paystub.TotalAllowance);
             paystub.Actual.TotalAdjustments = AccuMath.CommercialRound(paystub.TotalAdjustments + paystub.ActualAdjustments.Sum(a => a.Amount));
             paystub.Actual.NetPay = AccuMath.CommercialRound(paystub.Actual.GrossPay - paystub.NetDeductions + paystub.Actual.TotalAdjustments);

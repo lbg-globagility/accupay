@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace AccuPay.Data.Services
 {
@@ -215,7 +214,9 @@ namespace AccuPay.Data.Services
 
             _total = employees.Count;
 
-            Parallel.ForEach(employees, employee =>
+            // TEMPORARY set to synchronous since there is a race condition issue
+            // that is hard to debug
+            employees.ToList().ForEach(employee =>
             {
                 try
                 {

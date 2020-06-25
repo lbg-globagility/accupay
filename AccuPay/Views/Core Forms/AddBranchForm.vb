@@ -70,9 +70,13 @@ Public Class AddBranchForm
 
         Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
-        _branches = Await _branchRepository.GetAllAsync()
+        _branches = (Await _branchRepository.GetAllAsync()).
+                        OrderBy(Function(b) b.Name).
+                        ToList
 
-        _calendars = Await _calendarRepository.GetAllAsync()
+        _calendars = (Await _calendarRepository.GetAllAsync()).
+                        OrderBy(Function(c) c.Name).
+                        ToList
 
         NameTextBox.Clear()
         DetailsGroupBox.Enabled = False

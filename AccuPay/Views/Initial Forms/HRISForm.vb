@@ -154,6 +154,7 @@ Public Class HRISForm
         Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
+        EmployeeForm.tbpEmployee_Enter(sender, e)
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Personal Profile")
         EmployeeForm.tbpEmployee.Focus()

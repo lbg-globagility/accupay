@@ -99,31 +99,47 @@ namespace AccuPay.Data.Services
                 case SssCalculationBasis.BasicSalary:
                     return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
 
+                case SssCalculationBasis.BasicMinusDeductions:
+
+                    if (employee.IsFixed)
+                    {
+                        return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                    }
+                    else
+                    {
+                        return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
+                            paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                    }
+
+                case SssCalculationBasis.BasicMinusDeductionsWithoutPremium:
+
+                    if (employee.IsFixed)
+                    {
+                        return PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                    }
+                    else
+                    {
+                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
+                                            paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+
+                        if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                        {
+                            totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
+                                            paystub.RegularHoursAndTotalRestDay;
+                        }
+
+                        var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                        var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
+                        var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
+
+                        return totalHours * hourlyRate;
+                    }
+
                 case SssCalculationBasis.Earnings:
                     return (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
 
                 case SssCalculationBasis.GrossPay:
                     return (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
-
-                case SssCalculationBasis.BasicMinusDeductions:
-                    return (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                            paystub.TotalDaysPayWithOutOvertimeAndLeave;
-
-                case SssCalculationBasis.BasicMinusDeductionsWithoutPremium:
-                    var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                                        paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
-
-                    if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
-                    {
-                        totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
-                                        paystub.RegularHoursAndTotalRestDay;
-                    }
-
-                    var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
-                    var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
-                    var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
-
-                    return totalHours * hourlyRate;
 
                 default:
                     return 0;

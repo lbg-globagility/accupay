@@ -10,23 +10,23 @@ namespace AccuPay.Data.Repositories
 {
     public class LeaveLedgerRepository
     {
-        private readonly PayrollContext context;
+        private readonly PayrollContext _context;
 
         public LeaveLedgerRepository(PayrollContext context)
         {
-            this.context = context;
+            _context = context;
         }
 
         public async Task<ICollection<LeaveLedger>> GetAllByEmployee(int? employeeId)
         {
-            return await context.LeaveLedgers
+            return await _context.LeaveLedgers
                 .Where(t => t.EmployeeID == employeeId)
                 .ToListAsync();
         }
 
         public async Task<ICollection<LeaveTransaction>> GetTransactionsByLedger(int? leaveLedgerId)
         {
-            return await context.LeaveTransactions
+            return await _context.LeaveTransactions
                 .Where(t => t.LeaveLedgerID == leaveLedgerId)
                 .OrderByDescending(t => t.TransactionDate)
                 .ToListAsync();
@@ -34,7 +34,7 @@ namespace AccuPay.Data.Repositories
 
         public async Task<PaginatedListResult<LeaveTransaction>> ListTransactions(PageOptions options, int organizationId, int id, string type = null)
         {
-            var query = context.LeaveTransactions
+            var query = _context.LeaveTransactions
                 .Include(x => x.Employee)
                 .Include(x => x.LeaveLedger)
                 .Where(x => x.OrganizationID == organizationId)
@@ -51,15 +51,15 @@ namespace AccuPay.Data.Repositories
 
         public async Task<IEnumerable<LeaveLedger>> GetLeaveBalance(int organizationId, string searchTerm = null)
         {
-            var balanceList = await context.LeaveLedgers
-                                .Include(x => x.LastTransaction.Employee)
-                                .Include(x => x.Product)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .Where(x => x.Product.PartNo == ProductConstant.VACATION_LEAVE || x.Product.PartNo == ProductConstant.SICK_LEAVE)
-                                .Where(x => x.LastTransactionID != null)
-                                .OrderBy(x => x.LastTransaction.Employee.LastName)
-                                .ThenBy(x => x.LastTransaction.Employee.FirstName)
-                                .ToListAsync();
+            var balanceList = await _context.LeaveLedgers
+                .Include(x => x.LastTransaction.Employee)
+                .Include(x => x.Product)
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.Product.PartNo == ProductConstant.VACATION_LEAVE || x.Product.PartNo == ProductConstant.SICK_LEAVE)
+                .Where(x => x.LastTransactionID != null)
+                .OrderBy(x => x.LastTransaction.Employee.LastName)
+                .ThenBy(x => x.LastTransaction.Employee.FirstName)
+                .ToListAsync();
 
             var query = balanceList.AsQueryable();
 
@@ -73,6 +73,36 @@ namespace AccuPay.Data.Repositories
             }
 
             return query;
+        }
+
+        public async Task CreateBeginningBalanceAsync(int employeeId, int leaveTypeId, int userId, int organizationId, decimal balance)
+        {
+            // this should be get or create leave ledger
+            var ledger = await _context.LeaveLedgers
+                .Include(x => x.LastTransaction)
+                .Where(x => x.EmployeeID == employeeId)
+                .Where(x => x.ProductID == leaveTypeId)
+                .FirstOrDefaultAsync();
+
+            if (ledger == null) return;
+
+            var newTransaction = new LeaveTransaction()
+            {
+                LeaveLedgerID = ledger.RowID,
+                EmployeeID = employeeId,
+                CreatedBy = userId,
+                OrganizationID = organizationId,
+                Type = LeaveTransactionType.Credit,
+                TransactionDate = DateTime.Now,
+                Amount = balance,
+                Description = "Beginning Balance",
+                Balance = balance
+            };
+
+            _context.LeaveTransactions.Add(newTransaction);
+            ledger.LastTransaction = newTransaction;
+
+            await _context.SaveChangesAsync();
         }
     }
 }

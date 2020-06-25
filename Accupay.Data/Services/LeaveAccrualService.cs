@@ -98,7 +98,7 @@ namespace AccuPay.Data.Services
                 TransactionDate = payperiod.PayToDate,
                 Amount = leaveHours,
                 Description = "Accrual",
-                Balance = lastTransaction.Balance + leaveHours
+                Balance = (lastTransaction?.Balance ?? 0) + leaveHours
             };
 
             context.LeaveTransactions.Add(newTransaction);
@@ -203,7 +203,7 @@ namespace AccuPay.Data.Services
                 var nextAccrualDate = lastAccrual == null
                     ? employee.StartDate.AddMonths(1).AddDays(1)
                     : lastAccrual.TransactionDate.AddMonths(1);
-                
+
                 var finalAccrualDate = employee.StartDate.AddMonths(12).AddDays(1);
 
                 // Check if the current date is still too early to update the ledger

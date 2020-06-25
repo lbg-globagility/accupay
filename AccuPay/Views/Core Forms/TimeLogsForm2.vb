@@ -795,7 +795,9 @@ Public Class TimeLogsForm2
         colBranchID.DisplayMember = "Name"
 
         Dim branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
-        colBranchID.DataSource = Await branchRepository.GetAllAsync
+        colBranchID.DataSource = (Await branchRepository.GetAllAsync).
+                                    OrderBy(Function(b) b.Name).
+                                    ToList
 
     End Function
 

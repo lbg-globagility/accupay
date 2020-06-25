@@ -1,0 +1,2 @@
+ALTER TABLE `paystubactual`
+	ADD COLUMN IF NOT EXISTS `BasicPay` DECIMAL(20,4) NULL DEFAULT 0 AFTER `OvertimePay`;

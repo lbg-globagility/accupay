@@ -401,7 +401,7 @@ namespace AccuPay.Data.Services
             paystub.NetPay = AccuMath.CommercialRound(paystub.GrossPay - paystub.NetDeductions + paystub.TotalAdjustments);
 
             var actualCalculator = new PaystubActualCalculator();
-            actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner);
+            actualCalculator.Compute(employee, salary, settings, payPeriod, paystub, currentSystemOwner, actualTimeEntries);
 
             var thirteenthMonthPayCalculator = new ThirteenthMonthPayCalculator(
                                                         organizationId: paystub.OrganizationID.Value,
@@ -673,6 +673,7 @@ namespace AccuPay.Data.Services
                                         IReadOnlyCollection<TimeEntry> timeEntries,
                                         IReadOnlyCollection<Leave> leaves)
         {
+            // use LeaveLedgerRepository
             var employeeLeaves = leaves.
                                     Where(l => l.EmployeeID == employee.RowID).
                                     OrderBy(l => l.StartDate).
