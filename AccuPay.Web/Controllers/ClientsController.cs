@@ -20,13 +20,13 @@ namespace AccuPay.Web.Controllers
         [HttpGet]
         public async Task<ActionResult<PaginatedList<ClientDto>>> List([FromQuery] PageOptions options)
         {
-            throw new NotImplementedException();
+            return await _service.List(options);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<ClientDto>> GetById(int id)
         {
-            throw new NotImplementedException();
+            return await _service.GetById(id);
         }
 
         [HttpPost]
