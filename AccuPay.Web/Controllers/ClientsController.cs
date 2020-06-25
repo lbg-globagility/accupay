@@ -30,15 +30,15 @@ namespace AccuPay.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<ClientDto>> Create()
+        public async Task<ActionResult<ClientDto>> Create([FromBody] CreateClientDto dto)
         {
-            throw new NotImplementedException();
+            return await _service.Create(dto);
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<ClientDto>> Update(int id)
+        public async Task<ActionResult<ClientDto>> Update(int id, [FromBody] UpdateClientDto dto)
         {
-            throw new NotImplementedException();
+            return await _service.Update(id, dto);
         }
     }
 }

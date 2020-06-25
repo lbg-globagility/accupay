@@ -30,12 +30,35 @@ namespace AccuPay.Web.Clients
             return new PaginatedList<ClientDto>(dtos, total);
         }
 
-        public async Task Create(CreateClientDto dto)
+        public async Task<ClientDto> Create(CreateClientDto dto)
         {
+            var client = new Client()
+            {
+                Name = dto.Name,
+                TradeName = dto.TradeName,
+                Address = dto.Address,
+                PhoneNumber = dto.PhoneNumber,
+                ContactPerson =  dto.ContactPerson,
+            };
+
+            await _repository.Create(client);
+
+            return ConvertToDto(client);
         }
 
-        public async Task Update(UpdateClientDto dto)
+        public async Task<ClientDto> Update(int id, UpdateClientDto dto)
         {
+            var client = await _repository.GetById(id);
+
+            client.Name = dto.Name;
+            client.TradeName = dto.TradeName;
+            client.Address = dto.Address;
+            client.PhoneNumber = dto.PhoneNumber;
+            client.ContactPerson = dto.ContactPerson;
+
+            await _repository.Update(client);
+
+            return ConvertToDto(client);
         }
 
         private ClientDto ConvertToDto(Client client)
