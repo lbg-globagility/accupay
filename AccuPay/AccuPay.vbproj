@@ -1548,12 +1548,6 @@
       <DependentUpon>Payroll Summary Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Reports\Reports\Phil Health Monthly Report.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\Reports\Tax Monthly Report.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2526,10 +2520,6 @@
     <EmbeddedResource Include="Reports\Reports\Payroll Summary Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Payroll Summary Report.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\Phil Health Monthly Report.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>Phil Health Monthly Report.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\Reports\Tax Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
