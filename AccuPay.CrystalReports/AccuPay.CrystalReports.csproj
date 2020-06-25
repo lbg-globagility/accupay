@@ -51,6 +51,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PagIBIGMonthlyReport\Pagibig Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportCreator.cs" />
     <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -102,6 +109,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="PagIBIGMonthlyReport\Pagibig Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Pagibig Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.cs</LastGenOutput>
@@ -130,5 +141,6 @@
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

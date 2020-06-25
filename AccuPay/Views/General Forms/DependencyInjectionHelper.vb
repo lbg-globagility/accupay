@@ -149,6 +149,8 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of SSSMonthyReportCreator)
         services.AddTransient(Of PhilHealthMonthlyReportDataService)
         services.AddTransient(Of PhilHealthMonthlyReportCreator)
+        services.AddTransient(Of PagIBIGMonthlyReportDataService)
+        services.AddTransient(Of PagIBIGMonthlyReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 
         'services.AddTransient(Of MetroLogin)
