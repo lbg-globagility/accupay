@@ -9,7 +9,7 @@ import { Employee } from '../shared/employee';
   templateUrl: './view-employee.component.html',
   styleUrls: ['./view-employee.component.scss'],
   host: {
-    class: 'block p-4',
+    class: 'block',
   },
 })
 export class ViewEmployeeComponent implements OnInit {

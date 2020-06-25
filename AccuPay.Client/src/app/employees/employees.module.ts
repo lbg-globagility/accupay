@@ -6,6 +6,7 @@ import { NewEmployeeComponent } from './new-employee/new-employee.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { SharedModule } from '../shared/shared.module';
 import { EmployeeFormComponent } from './employee-form/employee-form.component';
+import { EmployeesComponent } from './employees/employees.component';
 
 @NgModule({
   declarations: [
@@ -14,6 +15,7 @@ import { EmployeeFormComponent } from './employee-form/employee-form.component';
     NewEmployeeComponent,
     EmployeeListComponent,
     EmployeeFormComponent,
+    EmployeesComponent,
   ],
   imports: [SharedModule],
 })

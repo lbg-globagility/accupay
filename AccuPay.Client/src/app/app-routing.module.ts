@@ -76,6 +76,7 @@ import { AllowanceTypeListComponent } from './allowance-types/allowance-type-lis
 import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
 import { ReportFormComponent } from 'src/app/reports/report-form/report-form.component';
 import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
+import { EmployeesComponent } from 'src/app/employees/employees/employees.component';
 
 const routes: Routes = [
   {
@@ -87,16 +88,18 @@ const routes: Routes = [
         component: NewEmployeeComponent,
       },
       {
-        path: 'employees/:id',
-        component: ViewEmployeeComponent,
-      },
-      {
         path: 'employees/:id/edit',
         component: EditEmployeeComponent,
       },
       {
         path: 'employees',
-        component: EmployeeListComponent,
+        component: EmployeesComponent,
+        children: [
+          {
+            path: ':id',
+            component: ViewEmployeeComponent,
+          },
+        ],
       },
       {
         path: 'users',
