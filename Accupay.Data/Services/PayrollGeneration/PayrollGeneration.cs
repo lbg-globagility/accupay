@@ -12,6 +12,7 @@ namespace AccuPay.Data.Services
     public class PayrollGeneration
     {
         private readonly DbContextOptionsService _dbContextOptionsService;
+        private bool _usesLoanDeductFromBonus;
 
         //private static ILog logger = LogManager.GetLogger("PayrollLogger");
 
@@ -68,9 +69,17 @@ namespace AccuPay.Data.Services
                                         Where(a => a.EmployeeID == employee.RowID).
                                         ToList();
 
+            var bonuses = resources.Bonuses
+                .Where(a => a.EmployeeID == employee.RowID)
+                .ToList();
+
             var leaves = resources.Leaves.
                                     Where(a => a.EmployeeID == employee.RowID).
                                     ToList();
+
+            var checker = resources.FeatureListChecker;
+            _usesLoanDeductFromBonus = checker.HasAccess(Feature.LoanDeductFromBonus);
+
             try
             {
                 var result = GeneratePayStub(
@@ -93,7 +102,8 @@ namespace AccuPay.Data.Services
                     timeEntries: timeEntries,
                     actualTimeEntries: actualTimeEntries,
                     allowances: allowances,
-                    leaves: leaves);
+                    leaves: leaves,
+                    bonuses: bonuses);
 
                 return result;
             }
@@ -101,10 +111,10 @@ namespace AccuPay.Data.Services
             {
                 return Result.Error(employee, ex.Message);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 //logger.Error("DoProcess", ex);
-                return Result.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo}");
+                return Result.Error(employee, $"Failure to generate paystub for employee {employee.EmployeeNo} {ex.Message}");
             }
         }
 
@@ -128,7 +138,8 @@ namespace AccuPay.Data.Services
             IReadOnlyCollection<TimeEntry> timeEntries,
             IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
             IReadOnlyCollection<Allowance> allowances,
-            IReadOnlyCollection<Leave> leaves)
+            IReadOnlyCollection<Leave> leaves,
+            IReadOnlyCollection<Bonus> bonuses)
         {
             if (salary == null)
                 return Result.Error(employee, "Employee has no salary for this cutoff.");
@@ -194,7 +205,8 @@ namespace AccuPay.Data.Services
                             timeEntries: timeEntries,
                             actualTimeEntries: actualTimeEntries,
                             allowances: allowances,
-                            allowanceItems: allowanceItems.ToList());
+                            allowanceItems: allowanceItems.ToList(),
+                            bonuses: bonuses);
 
             SavePayroll(userId: userId,
                         currentSystemOwner,
@@ -251,6 +263,16 @@ namespace AccuPay.Data.Services
                 {
                     loan.LastUpdBy = userId;
                     context.Entry(loan).State = EntityState.Modified;
+
+                    if (!_usesLoanDeductFromBonus) { continue; }
+                    if (loan.LoanPaymentFromBonuses.Any())
+                    {
+                        // this will set the value of LoanPaymentFromBonus.PaystubId
+                        loan.LoanPaymentFromBonuses.ToList().ForEach(lb => context.Entry(lb).State = EntityState.Modified);
+
+                        // revert to it's original LoanSchedule.DeductionAmount
+                        loan.DeductionAmount = loan.LoanPaymentFromBonuses.FirstOrDefault().DeductionAmount;
+                    }
                 }
 
                 if (paystub.RowID.HasValue)
@@ -326,7 +348,8 @@ namespace AccuPay.Data.Services
                                     IReadOnlyCollection<TimeEntry> timeEntries,
                                     IReadOnlyCollection<ActualTimeEntry> actualTimeEntries,
                                     IReadOnlyCollection<Allowance> allowances,
-                                    IReadOnlyCollection<AllowanceItem> allowanceItems)
+                                    IReadOnlyCollection<AllowanceItem> allowanceItems,
+                                    IReadOnlyCollection<Bonus> bonuses)
         {
             if (currentSystemOwner != SystemOwnerService.Benchmark)
             {
@@ -341,6 +364,9 @@ namespace AccuPay.Data.Services
             paystub.TotalTaxableAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => a.IsTaxable).Sum(a => a.Amount));
             paystub.TotalAllowance = AccuMath.CommercialRound(allowanceItems.Where(a => !a.IsTaxable).Sum(a => a.Amount));
             var grandTotalAllowance = paystub.TotalAllowance + paystub.TotalTaxableAllowance;
+
+            // Bonuses
+            paystub.TotalBonus = AccuMath.CommercialRound(bonuses.Sum(b => b.BonusAmount));
 
             // Loans
             paystub.TotalLoans = loanTransactions.Sum(t => t.Amount);
@@ -652,11 +678,15 @@ namespace AccuPay.Data.Services
                                     OrderBy(l => l.StartDate).
                                     ToList();
 
-            var leaveIds = employeeLeaves.Select(l => l.RowID);
+            var leaveIds = employeeLeaves.Select(l => l.RowID).ToArray();
 
-            var transactions = (from t in context.LeaveTransactions
+            List<LeaveTransaction> transactions = new List<LeaveTransaction>() { };
+            if (leaveIds.Any())
+            {
+                transactions = (from t in context.LeaveTransactions
                                 where leaveIds.Contains(t.ReferenceID)
                                 select t).ToList();
+            }
 
             var employeeId = employee.RowID;
             var ledgers = context.LeaveLedgers.
@@ -745,6 +775,11 @@ namespace AccuPay.Data.Services
                 else
                 {
                     deductionAmount = loanSchedule.DeductionAmount;
+
+                    if (_usesLoanDeductFromBonus)
+                    {
+                        if (loanSchedule.LoanPaymentFromBonuses.Any()) deductionAmount = loanSchedule.LoanPaymentFromBonuses.Sum(l => l.AmountPayment);
+                    }
                 }
 
                 loanSchedule.TotalBalanceLeft -= deductionAmount;
@@ -765,6 +800,12 @@ namespace AccuPay.Data.Services
                 };
 
                 loanTransactions.Add(loanTransaction);
+
+                if (!_usesLoanDeductFromBonus) { continue; }
+                foreach (var loanPaidBonus in loanSchedule.LoanPaymentFromBonuses)
+                {
+                    loanPaidBonus.Paystub = paystub;
+                }
             }
 
             return loanTransactions;
