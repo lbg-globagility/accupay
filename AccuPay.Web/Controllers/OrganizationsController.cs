@@ -21,7 +21,7 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet]
         [Permission(PermissionTypes.OrganizationRead)]
-        public async Task<ActionResult<PaginatedList<OrganizationDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult<PaginatedList<OrganizationDto>>> List([FromQuery] OrganizationPageOptions options)
         {
             return await _service.List(options);
         }
@@ -46,6 +46,5 @@ namespace AccuPay.Web.Controllers
         {
             return await _service.Update(id, dto);
         }
-
     }
 }
