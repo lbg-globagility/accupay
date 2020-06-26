@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Indigo
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient

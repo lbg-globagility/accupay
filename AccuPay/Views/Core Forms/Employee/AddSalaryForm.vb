@@ -1,7 +1,8 @@
 ﻿Option Strict On
+
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
 Imports Microsoft.Extensions.DependencyInjection
 
@@ -66,7 +67,6 @@ Public Class AddSalaryForm
         Dim succeed As Boolean
         Dim messageTitle = ""
 
-
         Await FunctionUtils.TryCatchFunctionAsync("New Salary",
             Async Function()
                 Dim newSalary = New Salary
@@ -118,4 +118,5 @@ Public Class AddSalaryForm
     Private Sub txtAllowance_txtAmount_TextChanged(sender As Object, e As EventArgs) Handles txtAmount.TextChanged, txtAllowance.TextChanged
         txtTotalSalary.Text = Decimal.Round((txtAllowance.Text.ToDecimal + txtAmount.Text.ToDecimal), 2).ToString("#.##")
     End Sub
+
 End Class

@@ -3,8 +3,8 @@
 Imports System.ComponentModel
 Imports AccuPay.Benchmark
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 
 Public Class SetOvertimeForm
 
