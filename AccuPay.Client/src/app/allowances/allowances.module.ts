@@ -5,9 +5,17 @@ import { ViewAllowanceComponent } from './view-allowance/view-allowance.componen
 import { NewAllowanceComponent } from './new-allowance/new-allowance.component';
 import { EditAllowanceComponent } from './edit-allowance/edit-allowance.component';
 import { AllowanceFormComponent } from './allowance-form/allowance-form.component';
+import { AllowancesComponent } from './allowances/allowances.component';
 
 @NgModule({
-  declarations: [AllowanceListComponent, ViewAllowanceComponent, NewAllowanceComponent, EditAllowanceComponent, AllowanceFormComponent],
+  declarations: [
+    AllowanceListComponent,
+    ViewAllowanceComponent,
+    NewAllowanceComponent,
+    EditAllowanceComponent,
+    AllowanceFormComponent,
+    AllowancesComponent,
+  ],
   imports: [SharedModule],
 })
 export class AllowancesModule {}
