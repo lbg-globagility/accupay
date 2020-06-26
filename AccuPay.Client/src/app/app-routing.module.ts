@@ -73,6 +73,7 @@ import { NewClientComponent } from 'src/app/clients/components/new-client/new-cl
 import { EditClientComponent } from 'src/app/clients/components/edit-client/edit-client.component';
 import { ClientsComponent } from 'src/app/clients/components/clients/clients.component';
 import { ViewClientComponent } from 'src/app/clients/components/view-client/view-client.component';
+import { AllowancesComponent } from 'src/app/allowances/allowances/allowances.component';
 
 const routes: Routes = [
   {
@@ -230,7 +231,22 @@ const routes: Routes = [
       },
       {
         path: 'allowances',
-        component: AllowanceListComponent,
+        component: AllowancesComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: AllowanceListComponent,
+          },
+          {
+            path: 'types',
+            component: AllowanceTypeListComponent,
+          },
+        ],
       },
       {
         path: 'allowances/new',
