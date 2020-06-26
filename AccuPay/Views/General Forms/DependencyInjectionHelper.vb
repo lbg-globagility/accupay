@@ -151,6 +151,10 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PhilHealthMonthlyReportCreator)
         services.AddTransient(Of PagIBIGMonthlyReportDataService)
         services.AddTransient(Of PagIBIGMonthlyReportCreator)
+        services.AddTransient(Of LoanSummaryByTypeReportDataService)
+        services.AddTransient(Of LoanSummaryByTypeReportCreator)
+        services.AddTransient(Of LoanSummaryByEmployeeReportDataService)
+        services.AddTransient(Of LoanSummaryByEmployeeReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 
         'services.AddTransient(Of MetroLogin)
