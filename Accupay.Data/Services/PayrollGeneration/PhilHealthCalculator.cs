@@ -107,54 +107,77 @@ namespace AccuPay.Data.Services
 
             var basisPay = 0M;
 
-            // If philHealth calculation is based on the basic salary, get it from the salary record
-            if (calculationBasis == PhilHealthCalculationBasis.BasicSalary)
-                basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
-            else if (calculationBasis == PhilHealthCalculationBasis.BasicAndEcola)
+            switch (calculationBasis)
             {
-                var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                case PhilHealthCalculationBasis.BasicSalary:
+                    basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                    break;
 
-                var ecolas = allowances.Where(ea => ea.Product.PartNo.ToLower() == ProductConstant.ECOLA);
+                case PhilHealthCalculationBasis.BasicMinusDeductions:
 
-                var ecolaPerMonth = 0M;
-                if (ecolas.Any())
-                {
-                    var ecola = ecolas.FirstOrDefault();
+                    if (employee.IsFixed)
+                    {
+                        basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                    }
+                    else
+                    {
+                        basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
+                        paystub.TotalDaysPayWithOutOvertimeAndLeave;
+                    }
+                    break;
 
-                    ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear);
-                }
+                case PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium:
 
-                basisPay = monthlyRate + ecolaPerMonth;
-            }
-            else if (calculationBasis == PhilHealthCalculationBasis.Earnings)
-            {
-                basisPay = (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
-            }
-            else if (calculationBasis == PhilHealthCalculationBasis.GrossPay)
-            {
-                basisPay = (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
-            }
-            else if (calculationBasis == PhilHealthCalculationBasis.BasicMinusDeductions)
-            {
-                basisPay = (previousPaystub?.TotalDaysPayWithOutOvertimeAndLeave ?? 0) +
-                    paystub.TotalDaysPayWithOutOvertimeAndLeave;
-            }
-            else if (calculationBasis == PhilHealthCalculationBasis.BasicMinusDeductionsWithoutPremium)
-            {
-                var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
-                                paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
+                    if (employee.IsFixed)
+                    {
+                        basisPay = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                    }
+                    else
+                    {
+                        var totalHours = (previousPaystub?.TotalWorkedHoursWithoutOvertimeAndLeave ?? 0) +
+                                    paystub.TotalWorkedHoursWithoutOvertimeAndLeave;
 
-                if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
-                {
-                    totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
-                                    paystub.RegularHoursAndTotalRestDay;
-                }
+                        if (currentSystemOwner == SystemOwnerService.Benchmark && employee.IsPremiumInclusive)
+                        {
+                            totalHours = (previousPaystub?.RegularHoursAndTotalRestDay ?? 0) +
+                                            paystub.RegularHoursAndTotalRestDay;
+                        }
 
-                var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
-                var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
-                var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
+                        var monthlyRate = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+                        var dailyRate = PayrollTools.GetDailyRate(monthlyRate, employee.WorkDaysPerYear);
+                        var hourlyRate = PayrollTools.GetHourlyRateByDailyRate(dailyRate);
 
-                basisPay = totalHours * hourlyRate;
+                        basisPay = totalHours * hourlyRate;
+                    }
+                    break;
+
+                case PhilHealthCalculationBasis.BasicAndEcola:
+
+                    var monthlyRate2 = PayrollTools.GetEmployeeMonthlyRate(employee, salary);
+
+                    var ecolas = allowances.Where(ea => ea.Product.PartNo.ToLower() == ProductConstant.ECOLA);
+
+                    var ecolaPerMonth = 0M;
+                    if (ecolas.Any())
+                    {
+                        var ecola = ecolas.FirstOrDefault();
+
+                        ecolaPerMonth = ecola.Amount * (employee.WorkDaysPerYear / CalendarConstants.MonthsInAYear);
+                    }
+
+                    basisPay = monthlyRate2 + ecolaPerMonth;
+                    break;
+
+                case PhilHealthCalculationBasis.Earnings:
+                    basisPay = (previousPaystub?.TotalEarnings ?? 0) + paystub.TotalEarnings;
+                    break;
+
+                case PhilHealthCalculationBasis.GrossPay:
+                    basisPay = (previousPaystub?.GrossPay ?? 0) + paystub.GrossPay;
+                    break;
+
+                default:
+                    break;
             }
 
             var totalContribution = ComputePhilHealth(basisPay);
