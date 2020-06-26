@@ -1,21 +1,16 @@
 ﻿using AccuPay.Utilities.Extensions;
 using System;
-using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace AccuPay.Data.Entities
 {
     [Table("employeeleave")]
-    public class Leave
+    public class Leave : BaseEntity
     {
         public const string StatusApproved = "Approved";
 
         public const string StatusPending = "Pending";
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public virtual int? RowID { get; set; }
 
         public virtual int? OrganizationID { get; set; }
 
@@ -89,6 +84,9 @@ namespace AccuPay.Data.Entities
             get => EndDate ?? StartDate;
             set => EndDate = value;
         }
+
+        [NotMapped]
+        public bool IsWholeDay => StartTime == null && EndTime == null;
 
         public void UpdateEndDate()
         {

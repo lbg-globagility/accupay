@@ -16,10 +16,11 @@ namespace AccuPay.Web.Leaves
         private readonly LeaveDataService _service;
         private readonly ICurrentUser _currentUser;
 
-        public LeaveService(LeaveRepository leaveRepository,
-                            ProductRepository productRepository,
-                            LeaveDataService service,
-                            ICurrentUser currentUser)
+        public LeaveService(
+            LeaveRepository leaveRepository,
+            ProductRepository productRepository,
+            LeaveDataService service,
+            ICurrentUser currentUser)
         {
             _leaveRepository = leaveRepository;
             _productRepository = productRepository;
@@ -30,11 +31,12 @@ namespace AccuPay.Web.Leaves
         public async Task<PaginatedList<LeaveDto>> PaginatedList(PageOptions options, LeaveFilter filter)
         {
             // TODO: sort and desc in repository
-            var paginatedList = await _leaveRepository.GetPaginatedListAsync(options,
-                                                                             _currentUser.OrganizationId,
-                                                                             filter.Term,
-                                                                             filter.DateFrom,
-                                                                             filter.DateTo);
+            var paginatedList = await _leaveRepository.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId,
+                filter.Term,
+                filter.DateFrom,
+                filter.DateTo);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -43,9 +45,10 @@ namespace AccuPay.Web.Leaves
 
         public async Task<PaginatedList<LeaveBalanceDto>> GetLeaveBalance(PageOptions options, string searchTerm)
         {
-            var paginatedList = await _service.GetLeaveBalance(options,
-                                                          _currentUser.OrganizationId,
-                                                          searchTerm);
+            var paginatedList = await _service.GetLeaveBalances(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm);
 
             var dtos = paginatedList.List.GroupBy(x => x.EmployeeID).Select(x => new LeaveBalanceDto
             {
@@ -63,10 +66,11 @@ namespace AccuPay.Web.Leaves
 
         public async Task<PaginatedList<LeaveTransactionDto>> ListTransactions(PageOptions options, int id, string type)
         {
-            var paginatedList = await _service.ListTransactions(options,
-                                                                _currentUser.OrganizationId,
-                                                                id,
-                                                                type);
+            var paginatedList = await _service.ListTransactions(
+                options,
+                _currentUser.OrganizationId,
+                id,
+                type);
 
             var dtos = paginatedList.List.Select(x => ConvertToLedgerDto(x));
 
@@ -82,7 +86,6 @@ namespace AccuPay.Web.Leaves
 
         public async Task<LeaveDto> Create(CreateLeaveDto dto)
         {
-            // TODO: validations
             int userId = 1;
 
             var leave = new Leave()
@@ -93,16 +96,13 @@ namespace AccuPay.Web.Leaves
             };
             ApplyChanges(dto, leave);
 
-            // use SaveManyAsync temporarily for validating leave balance
-            await _service.SaveManyAsync(new List<Leave> { leave }, _currentUser.OrganizationId);
+            await _service.SaveAsync(leave);
 
             return ConvertToDto(leave);
         }
 
         public async Task<LeaveDto> Update(int id, UpdateLeaveDto dto)
         {
-            // TODO: validations
-
             var leave = await _leaveRepository.GetByIdAsync(id);
             if (leave == null) return null;
 
@@ -111,10 +111,14 @@ namespace AccuPay.Web.Leaves
 
             ApplyChanges(dto, leave);
 
-            // use SaveManyAsync temporarily for validating leave balance
-            await _service.SaveManyAsync(new List<Leave> { leave }, _currentUser.OrganizationId);
+            await _service.SaveAsync(leave);
 
             return ConvertToDto(leave);
+        }
+
+        public async Task Delete(int id)
+        {
+            await _service.DeleteAsync(id);
         }
 
         public async Task<List<string>> GetLeaveTypes()

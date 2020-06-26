@@ -115,10 +115,10 @@ Public Class DateRangePickerDialog
     Private Async Function LoadPayPeriods() As Task
 
         _payperiods = (Await _payPeriodRepository.
-                        GetByPayFrequencyAndYearAsync(
+                        GetByYearAndPayPrequencyAsync(
                                                 organizationId:=z_OrganizationID,
-                                                payFrequencyId:=_payFrequencyId,
-                                                year:=Me.Year)).
+                                                year:=Me.Year,
+                                                payFrequencyId:=_payFrequencyId)).
                     ToList()
 
         Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.

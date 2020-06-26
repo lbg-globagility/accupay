@@ -184,8 +184,7 @@ Public Class selectPayPeriod
         Dim dt = sql.GetFoundRows.Tables(0)
 
         Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
-                                GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID) 'PayFreqType
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0

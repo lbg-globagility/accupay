@@ -5,6 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Data.ValueObjects
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Attributes
 Imports AccuPay.Utils
@@ -151,8 +152,7 @@ Public Class ImportLeaveForm
                         Async Function() As Task(Of Boolean)
 
                             Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                            Await leaveService.SaveManyAsync(leaves,
-                                                             z_OrganizationID)
+                            Await leaveService.SaveManyAsync(leaves)
 
                             Dim importList = New List(Of UserActivityItem)
                             Dim entityName = FormEntityName.ToLower()
@@ -188,14 +188,15 @@ Public Class ImportLeaveForm
 
         Dim leaves As New List(Of Leave)
 
-        Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).ToList()
+        Dim employeeIDs = _okModels.Select(Function(lm) lm.EmployeeID).Distinct().ToArray()
         Dim minDate = _okModels.Min(Function(lm) lm.StartDate.Value.Date)
+        Dim maxDate = _okModels.Max(Function(lm) lm.StartDate.Value.Date)
 
         Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
-        Dim currentLeaves = Await leaveRepository.
-                    GetFilteredAllAsync(Function(lv) lv.OrganizationID.Value = z_OrganizationID AndAlso
-                                        employeeIDs.Contains(lv.EmployeeID.Value) AndAlso
-                                        lv.StartDate >= minDate)
+        Dim currentLeaves = Await leaveRepository.GetByEmployeeAndDatePeriodAsync(
+            z_OrganizationID,
+            employeeIDs,
+            New TimePeriod(minDate, maxDate))
 
         If currentLeaves.Any() Then
             For Each model In _okModels

@@ -52,7 +52,7 @@ namespace AccuPay.Data.Services
                                         .Where(d => d.ParentDivisionID == division.ParentDivisionID)
                                         .Where(d => d.OrganizationID == division.OrganizationID);
 
-            if (isNewEntity(division.RowID) == false)
+            if (IsNewEntity(division.RowID) == false)
             {
                 doesExistQuery = doesExistQuery.Where(d => division.RowID != d.RowID);
             }
@@ -70,6 +70,7 @@ namespace AccuPay.Data.Services
 
         public async Task<Division> GetOrCreateDefaultDivisionAsync(int organizationId, int userId)
         {
+            var divisionRepository = new DivisionRepository(_context);
             using (var transaction = await _context.Database.BeginTransactionAsync())
             {
                 try
@@ -89,7 +90,8 @@ namespace AccuPay.Data.Services
                         defaultParentDivision.Name = Division.DefaultLocationName;
                         defaultParentDivision.ParentDivisionID = null;
 
-                        await SaveAsync(defaultParentDivision);
+                        await SanitizeEntity(defaultParentDivision);
+                        await divisionRepository.SaveAsync(defaultParentDivision);
                         // querying the new default parent division from here can already
                         // get the new row data. This can replace the context.local in leaverepository
                     }
@@ -110,7 +112,9 @@ namespace AccuPay.Data.Services
 
                         defaultDivision.Name = Division.DefaultDivisionName;
                         defaultDivision.ParentDivisionID = defaultParentDivision.RowID;
-                        await SaveAsync(defaultDivision);
+
+                        await SanitizeEntity(defaultDivision);
+                        await divisionRepository.SaveAsync(defaultDivision);
                     }
 
                     transaction.Commit();

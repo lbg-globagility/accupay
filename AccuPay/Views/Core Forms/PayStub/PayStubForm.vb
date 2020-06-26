@@ -242,8 +242,7 @@ Public Class PayStubForm
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
         Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
-                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         dgvpayper.Rows.Clear()

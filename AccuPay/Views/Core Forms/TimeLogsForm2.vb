@@ -108,7 +108,7 @@ Public Class TimeLogsForm2
         Dim employees = (Await _employeeRepository.GetByMultipleIdAsync(employeeIDs)).ToList()
 
         Dim shiftSchedules = Await _employeeDutyScheduleRepository.
-                GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIDs, datePeriod)
+                GetByEmployeeAndDatePeriodAsync(z_OrganizationID, employeeIDs, datePeriod)
 
         shiftSchedules = shiftSchedules.
                                 Where(Function(s) s.StartTime.HasValue).

@@ -50,7 +50,7 @@ namespace AccuPay.Data.Services
             if (existingPosition != null)
             {
                 // insert
-                if (isNewEntity(position.RowID))
+                if (IsNewEntity(position.RowID))
                 {
                     throw new BusinessLogicException("Position name already exists!");
                 }

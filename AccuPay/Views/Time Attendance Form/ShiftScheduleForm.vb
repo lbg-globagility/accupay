@@ -326,39 +326,39 @@ Public Class ShiftScheduleForm
 
             Dim oldShiftSchedule = oldRecords.Where(Function(x) x.RowID = ssm.RowID).FirstOrDefault()
 
-            If Not Nullable.Equals(ssm.StartTime, oldShiftSchedule.StartTime) Then
+            If Not Nullable.Equals(ssm.StartTime, oldShiftSchedule?.StartTime) Then
                 changes.Add(New UserActivityItem() With
                     {
                     .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} start time from '{oldShiftSchedule.StartTime}' to '{ssm.StartTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    .Description = $"Updated {entityName} start time from '{oldShiftSchedule?.StartTime}' to '{ssm.StartTime}' on '{ssm.DateSched.ToShortDateString}'."
                     })
             End If
-            If Not Nullable.Equals(ssm.EndTime, oldShiftSchedule.EndTime) Then
+            If Not Nullable.Equals(ssm.EndTime, oldShiftSchedule?.EndTime) Then
                 changes.Add(New UserActivityItem() With
                     {
                     .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} end time from '{oldShiftSchedule.EndTime}' to '{ssm.EndTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    .Description = $"Updated {entityName} end time from '{oldShiftSchedule?.EndTime}' to '{ssm.EndTime}' on '{ssm.DateSched.ToShortDateString}'."
                     })
             End If
-            If Not Nullable.Equals(ssm.BreakStartTime, oldShiftSchedule.BreakStartTime) Then
+            If Not Nullable.Equals(ssm.BreakStartTime, oldShiftSchedule?.BreakStartTime) Then
                 changes.Add(New UserActivityItem() With
                     {
                     .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} break start from '{oldShiftSchedule.BreakStartTime}' to '{ssm.BreakStartTime}' on '{ssm.DateSched.ToShortDateString}'."
+                    .Description = $"Updated {entityName} break start from '{oldShiftSchedule?.BreakStartTime}' to '{ssm.BreakStartTime}' on '{ssm.DateSched.ToShortDateString}'."
                     })
             End If
-            If oldShiftSchedule.BreakLength <> ssm.BreakLength Then
+            If oldShiftSchedule?.BreakLength <> ssm.BreakLength Then
                 changes.Add(New UserActivityItem() With
                     {
                     .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} break length from '{oldShiftSchedule.BreakLength}' to '{ssm.BreakLength}' on '{ssm.DateSched.ToShortDateString}'."
+                    .Description = $"Updated {entityName} break length from '{oldShiftSchedule?.BreakLength}' to '{ssm.BreakLength}' on '{ssm.DateSched.ToShortDateString}'."
                     })
             End If
-            If oldShiftSchedule.IsRestDay <> ssm.IsRestDay Then
+            If oldShiftSchedule?.IsRestDay <> ssm.IsRestDay Then
                 changes.Add(New UserActivityItem() With
                     {
                     .EntityId = CInt(ssm.RowID),
-                    .Description = $"Updated {entityName} restday from '{oldShiftSchedule.IsRestDay}' to '{ssm.IsRestDay}' on '{ssm.DateSched.ToShortDateString}'."
+                    .Description = $"Updated {entityName} restday from '{oldShiftSchedule?.IsRestDay}' to '{ssm.IsRestDay}' on '{ssm.DateSched.ToShortDateString}'."
                     })
             End If
 
@@ -465,10 +465,10 @@ Public Class ShiftScheduleForm
         Dim employeeIds = employees.Select(Function(e) e.RowID.Value).ToArray()
 
         Dim employeeDutyScheduleRepository = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim empShiftScheds = Await employeeDutyScheduleRepository.
-                GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(z_OrganizationID,
-                                                                    employeeIds,
-                                                                    datePeriod)
+        Dim empShiftScheds = Await employeeDutyScheduleRepository.GetByEmployeeAndDatePeriodWithEmployeeAsync(
+            z_OrganizationID,
+            employeeIds,
+            datePeriod)
 
         If empShiftScheds.Any Then
             Dim notExists = Function(shSched As ShiftScheduleModel)
@@ -914,9 +914,10 @@ Public Class ShiftScheduleForm
         Next
 
         Dim employeeDutyScheduleRepositoryQuery = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
-        Dim oldRecords = Await employeeDutyScheduleRepositoryQuery.GetByMultipleEmployeeAndDatePeriodAsync(z_OrganizationID,
-                                                                                                       toSaveListEmployeeIDs,
-                                                                                                       datePeriod)
+        Dim oldRecords = Await employeeDutyScheduleRepositoryQuery.GetByEmployeeAndDatePeriodAsync(
+            z_OrganizationID,
+            toSaveListEmployeeIDs,
+            datePeriod)
 
         Try
             Dim employeeDutyScheduleRepositorySave = MainServiceProvider.GetRequiredService(Of EmployeeDutyScheduleRepository)
