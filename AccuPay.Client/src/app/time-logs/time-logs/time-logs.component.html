@@ -25,6 +25,15 @@
   </div>
   <div class="col-lg-2">
     <mat-form-field appearance="standard" class="w-full">
+      <mat-label>Status</mat-label>
+      <mat-select [(ngModel)]="statusFilter" (ngModelChange)="applyFilter()">
+        <mat-option value="Active only">Active only</mat-option>
+        <mat-option value="All">All</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div class="col-lg-2">
+    <mat-form-field appearance="standard" class="w-full">
       <mat-label>From</mat-label>
       <input
         matInput

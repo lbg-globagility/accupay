@@ -32,12 +32,9 @@ namespace AccuPay.Web.Controllers
         [HttpGet("employees")]
         [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<PaginatedList<EmployeeTimeLogsDto>>> ListByEmployee(
-            [FromQuery] PageOptions options,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string searchTerm)
+            [FromQuery] TimeLogsByEmployeePageOptions options)
         {
-            return await _service.ListByEmployee(options, dateFrom, dateTo, searchTerm);
+            return await _service.ListByEmployee(options);
         }
 
         [HttpGet("{id}")]

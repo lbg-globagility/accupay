@@ -16,6 +16,7 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { TimeLogImportResultComponent } from '../time-log-import-result/time-log-import-result.component';
 import Swal from 'sweetalert2';
 import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
+import { TimeLogsByEmployeePageOptions } from 'src/app/time-logs/shared/timelogs-by-employee-page-options';
 
 interface DateHeader {
   title: string;
@@ -55,6 +56,8 @@ export class TimeLogsComponent implements OnInit {
   modelChanged: Subject<any>;
 
   searchTerm: string = '';
+
+  statusFilter: string = 'Active only';
 
   dataSource: MatTableDataSource<
     EmployeeTimeLogsModel
@@ -111,8 +114,6 @@ export class TimeLogsComponent implements OnInit {
       (t) => t.employeeId === model.employeeId
     );
 
-    console.log(employee);
-
     this.dialog
       .open(EditTimeLogComponent, {
         data: {
@@ -153,17 +154,22 @@ export class TimeLogsComponent implements OnInit {
   }
 
   private loadTimeLogs(): void {
-    const options = new PageOptions(this.pageIndex, this.pageSize);
+    const options = new TimeLogsByEmployeePageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.dateFrom,
+      this.dateTo,
+      this.searchTerm,
+      this.statusFilter
+    );
 
-    this.timeLogService
-      .listByEmployee(options, this.dateFrom, this.dateTo, this.searchTerm)
-      .subscribe((data) => {
-        this.employees = data.items;
-        this.dataSource = new MatTableDataSource(
-          this.convertToLocalModels(data.items)
-        );
-        this.totalCount = data.totalCount;
-      });
+    this.timeLogService.listByEmployee(options).subscribe((data) => {
+      this.employees = data.items;
+      this.dataSource = new MatTableDataSource(
+        this.convertToLocalModels(data.items)
+      );
+      this.totalCount = data.totalCount;
+    });
   }
 
   private convertToLocalModels(employees: EmployeeTimeLogs[]) {
