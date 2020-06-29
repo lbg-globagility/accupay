@@ -1,0 +1,4 @@
+UPDATE listofval SET DisplayValue = 'LoanSummaryByEmployeeReportProvider',
+	LIC = 'LoanSummaryByEmployeeReportProvider' 
+	WHERE DisplayValue = 'LoanSummaryReportProvider' AND
+	LIC = 'LoanSummaryReportProvider';

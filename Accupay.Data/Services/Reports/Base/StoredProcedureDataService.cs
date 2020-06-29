@@ -10,7 +10,7 @@ namespace AccuPay.Data.Services
     /// </summary>
     public class StoredProcedureDataService
     {
-        private readonly PayrollContext _context;
+        protected readonly PayrollContext _context;
 
         public StoredProcedureDataService(PayrollContext context)
         {
@@ -25,6 +25,24 @@ namespace AccuPay.Data.Services
             cmd.Connection = connection;
             cmd.CommandType = CommandType.Text;
             cmd.CommandText = procedureCall;
+
+            DbDataAdapter adapter = new MySqlDataAdapter();
+            adapter.SelectCommand = cmd;
+            adapter.Fill(dataTable);
+            return dataTable;
+        }
+
+        protected DataTable CallProcedure(string procedureName, object[,] paramsCollection)
+        {
+            DataTable dataTable = new DataTable();
+            var connection = (MySqlConnection)_context.Database.GetDbConnection();
+            var cmd = new MySqlCommand(procedureName, connection);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            for (int i = 0; i <= paramsCollection.GetUpperBound(0); i++)
+            {
+                cmd.Parameters.AddWithValue(paramsCollection[i, 0]?.ToString(), paramsCollection[i, 1]);
+            }
 
             DbDataAdapter adapter = new MySqlDataAdapter();
             adapter.SelectCommand = cmd;
