@@ -6,13 +6,16 @@
 <div class="mb-4">
   <button mat-raised-button (click)="calculate()">CALCULATE</button>
   <button
+    [disabled]="isDownloadingPayslip"
     mat-raised-button
     (click)="downloadFile()"
     style="margin-left: 10px;"
-    mat-raised-button
     color="accent"
   >
-    DOWNLOAD PAYSLIP
+    {{ isDownloadingPayslip ? "DOWNLOADING..." : "DOWNLOAD PAYSLIPS" }}
+    <mat-icon *ngIf="isDownloadingPayslip"
+      ><mat-spinner diameter="20" color="accent"> </mat-spinner
+    ></mat-icon>
   </button>
 </div>
 

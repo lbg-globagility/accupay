@@ -51,10 +51,12 @@ export class ViewPayPeriodComponent implements OnInit {
 
   expandedPaystub: Paystub;
 
+  isDownloadingPayslip: boolean = false;
+
   constructor(
     private payPeriodService: PayPeriodService,
     private route: ActivatedRoute,
-    private snackbar: MatSnackBar,
+    private snackBar: MatSnackBar,
     private errorHandler: ErrorHandler,
     private dialog: MatDialog
   ) {
@@ -102,14 +104,14 @@ export class ViewPayPeriodComponent implements OnInit {
   }
 
   calculate(): void {
-    this.snackbar.open('Calculating payroll');
+    this.snackBar.open('Calculating payroll');
 
     this.payPeriodService.calculate(this.payPeriodId).subscribe({
       next: (data) => {
         this.payrollResult = data;
         this.loadPaystubs();
         this.showDetails();
-        this.snackbar.dismiss();
+        this.snackBar.dismiss();
       },
       error: (err) =>
         this.errorHandler.badRequest(err, 'Failed to calculate payroll'),
@@ -125,6 +127,15 @@ export class ViewPayPeriodComponent implements OnInit {
   }
 
   downloadFile(): void {
-    this.payPeriodService.getDocument(this.payPeriodId);
+    this.isDownloadingPayslip = true;
+    this.payPeriodService
+      .getDocument(this.payPeriodId)
+      .then(() => {})
+      .catch((err) => {
+        this.errorHandler.badRequest(err, 'Error downloading payslips.');
+      })
+      .finally(() => {
+        this.isDownloadingPayslip = false;
+      });
   }
 }

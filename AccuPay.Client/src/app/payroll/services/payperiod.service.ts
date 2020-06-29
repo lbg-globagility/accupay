@@ -14,6 +14,8 @@ import { saveAs } from 'file-saver';
 export class PayPeriodService {
   private baseUrl = 'api/payperiods';
 
+  readonly payslipFileName = 'payslip.pdf';
+
   constructor(private httpClient: HttpClient) {}
 
   GetList(
@@ -65,16 +67,22 @@ export class PayPeriodService {
     );
   }
 
-  getDocument(payPeriodId: number) {
-    this.httpClient
-      .get(`${this.baseUrl}/${payPeriodId}/payslips`, {
-        responseType: 'blob',
-      })
-      .subscribe(
-        (blob) => {
-          saveAs(blob, 'payslip2.pdf');
-        },
-        (error) => console.log('Error downloading the file.')
-      );
+  getDocument(payPeriodId: number): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.httpClient
+        .get(`${this.baseUrl}/${payPeriodId}/payslips`, {
+          responseType: 'blob',
+        })
+        .subscribe(
+          (blob) => {
+            saveAs(blob, this.payslipFileName);
+            resolve();
+          },
+          (error) => {
+            console.log('Error downloading the file.');
+            reject(error);
+          }
+        );
+    });
   }
 }
