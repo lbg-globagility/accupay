@@ -1,8 +1,11 @@
 ﻿using AccuPay.CrystalReports.Payslip;
+using AccuPay.CrystalReportsWeb.DependencyHelper;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Web.Http;
 using Unity;
 using Unity.Injection;
@@ -15,25 +18,7 @@ namespace AccuPay.CrystalReportsWeb
         public static void Register(HttpConfiguration config)
         {
             // Web API configuration and services
-            var container = new UnityContainer();
-
-            DbContextOptionsBuilder builder = new DbContextOptionsBuilder();
-
-            builder
-                .UseMySql("server=localhost;userid=root;password=globagility;database=accupaydb_cinema2k;")
-                .EnableSensitiveDataLogging()
-                .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-
-            container.RegisterType<PayrollContext>(new HierarchicalLifetimeManager(),
-                new InjectionConstructor(builder.Options));
-
-            container.RegisterType<AddressRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<OrganizationRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<PayPeriodRepository>(new HierarchicalLifetimeManager());
-            container.RegisterType<PayslipDataService>(new HierarchicalLifetimeManager());
-            container.RegisterType<SystemOwnerService>(new HierarchicalLifetimeManager());
-            container.RegisterType<PayslipCreator>(new HierarchicalLifetimeManager());
-            config.DependencyResolver = new UnityResolver(container);
+            DependencyConfig.Register(config);
 
             // Web API routes
             config.MapHttpAttributeRoutes();
