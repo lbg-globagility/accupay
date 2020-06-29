@@ -51,6 +51,33 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="LoanSummaryByEmployeeReport\LoanReports.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReports.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByEmployeeReport\LoanSummaryByEmployeeReportCreator.cs" />
+    <Compile Include="LoanSummaryByTypeReport\LoanReportByType.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByType.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByTypeReport\LoanReportByTypePerPage.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LoanReportByTypePerPage.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="LoanSummaryByTypeReport\LoanSummaryByTypeReportCreator.cs" />
+    <Compile Include="PagIBIGMonthlyReport\Pagibig Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportCreator.cs" />
     <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -76,7 +103,35 @@
       <DependentUpon>TwoEmpIn1PaySlip.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="PhilHealthMonthlyReport\Phil Health Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PhilHealthMonthlyReport\PhilHealthMonthlyReportCreator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SSSMonthlyReport\SSS Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>SSS Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SSSMonthlyReport\SSSMonthyReportCreator.cs" />
+    <Compile Include="TaxMonthlyReport\Tax Monthly Report.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Tax Monthly Report.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TaxMonthlyReport\TaxMonthlyReportCreator.cs" />
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummaryReportCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
@@ -88,6 +143,22 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="LoanSummaryByEmployeeReport\LoanReports.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReports.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoanSummaryByTypeReport\LoanReportByType.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByType.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LoanSummaryByTypeReport\LoanReportByTypePerPage.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>LoanReportByTypePerPage.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PagIBIGMonthlyReport\Pagibig Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Pagibig Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>DefaulltPayslipFullOvertimeBreakdown.cs</LastGenOutput>
@@ -103,6 +174,22 @@
     <EmbeddedResource Include="Payslip\TwoEmpIn1PaySlip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>TwoEmpIn1PaySlip.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PhilHealthMonthlyReport\Phil Health Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Phil Health Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SSSMonthlyReport\SSS Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>SSS Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TaxMonthlyReport\Tax Monthly Report.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>Tax Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthSummary.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

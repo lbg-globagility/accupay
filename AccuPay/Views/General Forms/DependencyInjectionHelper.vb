@@ -1,6 +1,7 @@
 Option Strict On
 
 Imports AccuPay.Benchmark
+Imports AccuPay.CrystalReports
 Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data
 Imports AccuPay.Data.Interfaces.Excel
@@ -144,6 +145,20 @@ Public Class DependencyInjectionHelper
 
         services.AddTransient(Of PayslipDataService)
         services.AddTransient(Of PayslipCreator)
+        services.AddTransient(Of SSSMonthlyReportDataService)
+        services.AddTransient(Of SSSMonthyReportCreator)
+        services.AddTransient(Of PhilHealthMonthlyReportDataService)
+        services.AddTransient(Of PhilHealthMonthlyReportCreator)
+        services.AddTransient(Of PagIBIGMonthlyReportDataService)
+        services.AddTransient(Of PagIBIGMonthlyReportCreator)
+        services.AddTransient(Of LoanSummaryByTypeReportDataService)
+        services.AddTransient(Of LoanSummaryByTypeReportCreator)
+        services.AddTransient(Of LoanSummaryByEmployeeReportDataService)
+        services.AddTransient(Of LoanSummaryByEmployeeReportCreator)
+        services.AddTransient(Of TaxMonthlyReportDataService)
+        services.AddTransient(Of TaxMonthlyReportCreator)
+        services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
+        services.AddTransient(Of ThirteenthMonthSummaryReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
 
         'services.AddTransient(Of MetroLogin)

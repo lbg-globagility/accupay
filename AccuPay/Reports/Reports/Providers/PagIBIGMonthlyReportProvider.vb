@@ -1,6 +1,8 @@
 ﻿Option Strict On
 
+Imports AccuPay.CrystalReports
 Imports CrystalDecisions.CrystalReports.Engine
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class PagIBIGMonthlyReportProvider
     Implements IReportProvider
@@ -15,30 +17,12 @@ Public Class PagIBIGMonthlyReportProvider
             Return
         End If
 
-        Dim params(2, 2) As Object
+        Dim service = MainServiceProvider.GetRequiredService(Of PagIBIGMonthlyReportCreator)
 
-        params(0, 0) = "OrganizID"
-        params(1, 0) = "paramDate"
-
-        params(0, 1) = orgztnID
-
-        Dim thedatevalue = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-        params(1, 1) = Format(CDate(n_selectMonth.MonthValue), "yyyy-MM-dd")
-
-        Dim date_from = Format(CDate(n_selectMonth.MonthValue), "MMMM  yyyy")
-
-        Dim data = callProcAsDatTab(params, "RPT_PAGIBIG_Monthly")
-
-        Dim report = New Pagibig_Monthly_Report
-
-        Dim objText As TextObject = DirectCast(report.ReportDefinition.Sections(1).ReportObjects("Text2"), TextObject)
-        objText.Text = "for the month of " & date_from
-
-        report.SetDataSource(data)
+        Dim pagIBIGReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 
         Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = report
+        crvwr.crysrepvwr.ReportSource = pagIBIGReport.GetReportDocument
         crvwr.Show()
     End Sub
 
