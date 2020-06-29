@@ -3,7 +3,17 @@
 <ng-container *ngIf="isLoading | async">
   <app-official-business-form
     [officialBusiness]="officialBusiness"
-    (save)="onSave($event)"
-    (cancel)="onCancel()"
   ></app-official-business-form>
 </ng-container>
+
+<div mat-dialog-actions align="end">
+  <button
+    mat-button
+    color="accent"
+    [disabled]="savingState.isLoading"
+    (click)="onSave()"
+  >
+    SAVE
+  </button>
+  <button mat-button [mat-dialog-close]="false">CANCEL</button>
+</div>

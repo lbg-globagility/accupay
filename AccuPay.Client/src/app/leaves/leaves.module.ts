@@ -7,6 +7,7 @@ import { LeaveFormComponent } from './leave-form/leave-form.component';
 import { NewLeaveComponent } from './new-leave/new-leave.component';
 import { LeaveBalanceComponent } from './leave-balance/leave-balance.component';
 import { LeaveLedgerComponent } from './leave-ledger/leave-ledger.component';
+import { LeavesComponent } from './leaves/leaves.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { LeaveLedgerComponent } from './leave-ledger/leave-ledger.component';
     NewLeaveComponent,
     LeaveBalanceComponent,
     LeaveLedgerComponent,
+    LeavesComponent,
   ],
   imports: [SharedModule],
 })

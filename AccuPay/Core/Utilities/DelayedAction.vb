@@ -2,7 +2,7 @@
 
 Imports System.Threading.Tasks
 
-Namespace Global.AccuPay.Utils
+Namespace Global.AccuPay.Desktop.Utilities
 
     ''' <summary>
     '''
@@ -10,7 +10,7 @@ Namespace Global.AccuPay.Utils
     ''' <typeparam name="T">The return type of the passed function.</typeparam>
     Public Class DelayedAction(Of T)
 
-        Private _timeoutTimer As Windows.Forms.Timer
+        Private _timeoutTimer As Timer
 
         Private _actionAfterTimeOut As Func(Of Task(Of T))
 

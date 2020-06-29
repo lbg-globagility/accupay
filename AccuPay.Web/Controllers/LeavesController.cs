@@ -65,11 +65,11 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.LeaveDelete)]
         public async Task<ActionResult> Delete(int id)
         {
-            var leave = await _repository.GetByIdAsync(id);
+            var leave = await _service.GetById(id);
 
             if (leave == null) return NotFound();
 
-            await _repository.DeleteAsync(id);
+            await _service.Delete(id);
 
             return Ok();
         }

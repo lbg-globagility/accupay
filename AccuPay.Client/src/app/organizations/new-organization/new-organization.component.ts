@@ -8,6 +8,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-organization',
   templateUrl: './new-organization.component.html',
   styleUrls: ['./new-organization.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewOrganizationComponent implements OnInit {
   constructor(

@@ -6,7 +6,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class DateRangePickerDialog
@@ -115,10 +115,10 @@ Public Class DateRangePickerDialog
     Private Async Function LoadPayPeriods() As Task
 
         _payperiods = (Await _payPeriodRepository.
-                        GetByPayFrequencyAndYearAsync(
+                        GetByYearAndPayPrequencyAsync(
                                                 organizationId:=z_OrganizationID,
-                                                payFrequencyId:=_payFrequencyId,
-                                                year:=Me.Year)).
+                                                year:=Me.Year,
+                                                payFrequencyId:=_payFrequencyId)).
                     ToList()
 
         Dim payPeriodsWithPaystubCount = Await _payPeriodRepository.

@@ -61,4 +61,5 @@ export interface Employee {
   agencyID: string;
   advancementPoints: string;
   bpiInsurance: string;
+  fullName: string;
 }

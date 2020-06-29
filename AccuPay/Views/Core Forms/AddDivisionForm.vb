@@ -5,7 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionForm
@@ -93,9 +93,7 @@ Public Class AddDivisionForm
 
         Dim payFrequencies = Await _payFrequencyRepository.GetAllAsync()
 
-        _payFrequencies = payFrequencies.
-                                Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly OrElse
-                                    p.RowID.Value = PayFrequencyType.Weekly).ToList
+        _payFrequencies = payFrequencies.Where(Function(p) p.RowID.Value = PayFrequencyType.SemiMonthly).ToList
 
     End Function
 

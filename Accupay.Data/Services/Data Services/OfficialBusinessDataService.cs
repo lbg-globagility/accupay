@@ -59,7 +59,7 @@ namespace AccuPay.Data.Services
                                     .Where(l => l.EmployeeID == officialBusiness.EmployeeID)
                                     .Where(l => l.StartDate.Value.Date == officialBusiness.StartDate.Value.Date);
 
-            if (isNewEntity(officialBusiness.RowID) == false)
+            if (IsNewEntity(officialBusiness.RowID) == false)
             {
                 doesExistQuery = doesExistQuery.Where(l => officialBusiness.RowID != l.RowID);
             }

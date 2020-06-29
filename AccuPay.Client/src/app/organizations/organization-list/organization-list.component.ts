@@ -4,11 +4,15 @@ import { Organization } from 'src/app/organizations/shared/organization';
 import { OrganizationService } from 'src/app/organizations/organization.service';
 import { PageEvent } from '@angular/material/paginator';
 import { PageOptions } from 'src/app/core/shared/page-options';
+import { OrganizationPageOptions } from 'src/app/organizations/shared/organization-page-options';
 
 @Component({
   selector: 'app-organization-list',
   templateUrl: './organization-list.component.html',
   styleUrls: ['./organization-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class OrganizationListComponent implements OnInit {
   readonly displayedColumns: string[] = ['name'];
@@ -28,7 +32,7 @@ export class OrganizationListComponent implements OnInit {
   }
 
   loadOrganizations() {
-    const options = new PageOptions(this.pageIndex, this.pageSize);
+    const options = new OrganizationPageOptions(this.pageIndex, this.pageSize);
 
     this.organizationService.list(options).subscribe((data) => {
       this.dataSource = new MatTableDataSource<Organization>(data.items);

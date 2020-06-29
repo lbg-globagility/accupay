@@ -31,7 +31,9 @@ Public Class SelectBranchForm
 
     Private Async Function LoadBranch() As Task
 
-        _branches = (Await _branchRepository.GetAllAsync()).ToList()
+        _branches = (Await _branchRepository.GetAllAsync()).
+                        OrderBy(Function(b) b.Name).
+                        ToList
 
         BranchComboBox.DisplayMember = "Name"
         BranchComboBox.DataSource = _branches

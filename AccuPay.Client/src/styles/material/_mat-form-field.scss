@@ -1,8 +1,7 @@
 @use "styles/sizes";
 
-// deprecated
-.mat-form-field.app-input-no-underline .mat-form-field-underline {
-  display: none;
+.mat-form-field {
+  font-size: 0.875rem;
 }
 
 .mat-form-field.m-no-underline {
@@ -79,40 +78,7 @@
   }
 }
 
-// deprecated
-.mat-form-field.app-no-padding .mat-form-field-wrapper {
-  margin-bottom: 0;
-  padding-bottom: 0;
-}
-
 .mat-form-field.mat-form-field-appearance-outline.m-with-icon {
-  .mat-select-trigger .mat-icon {
-    vertical-align: middle;
-    margin-right: sizes.$x4;
-  }
-
-  .mat-form-field-infix {
-    padding: 0;
-  }
-
-  .mat-select {
-    padding: 9.5px 0;
-
-    .mat-select-arrow-wrapper {
-      transform: translateY(-2.75px);
-    }
-  }
-
-  .mat-select.mat-select-empty {
-    padding: 1em 0;
-
-    .mat-select-arrow-wrapper {
-      transform: translateY(-25%);
-    }
-  }
-}
-
-.mat-form-field.mat-form-field-appearance-outline.app-with-icon {
   .mat-select-trigger .mat-icon {
     vertical-align: middle;
     margin-right: sizes.$x4;

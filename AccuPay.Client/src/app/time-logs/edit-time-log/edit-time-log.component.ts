@@ -88,9 +88,10 @@ export class EditTimeLogComponent implements OnInit {
       });
 
       // Find time log for the current row, if found, patch the time in and out.
-      const timeLog = this.employee.timeLogs.find(
-        (t) => t.date === date.toISOString()
-      );
+      const timeLog = this.employee.timeLogs.find((t) => {
+        return t.date.substring(0, 10) === moment(date).format('yyyy-MM-DD');
+      });
+
       if (timeLog) {
         group.patchValue({
           timeIn: moment(timeLog.startTime).format('HH:mm'),

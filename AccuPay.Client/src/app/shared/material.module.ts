@@ -19,6 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatListModule } from '@angular/material/list';
 
 import {
   MatMomentDateModule,
@@ -40,7 +41,7 @@ import {
     // MatExpansionModule,
     MatIconModule,
     MatInputModule,
-    // MatListModule,
+    MatListModule,
     MatMenuModule,
     MatPaginatorModule,
     // MatProgressBarModule,

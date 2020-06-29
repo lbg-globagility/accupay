@@ -8,6 +8,9 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'app-view-organization',
   templateUrl: './view-organization.component.html',
   styleUrls: ['./view-organization.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewOrganizationComponent implements OnInit {
   state: LoadingState = new LoadingState();

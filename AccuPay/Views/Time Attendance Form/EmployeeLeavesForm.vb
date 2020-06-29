@@ -4,8 +4,8 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeLeavesForm
@@ -32,10 +32,7 @@ Public Class EmployeeLeavesForm
 
     Sub New()
 
-        ' This call is required by the designer.
         InitializeComponent()
-
-        ' Add any initialization after the InitializeComponent() call.
 
         _employees = New List(Of Employee)
 
@@ -350,8 +347,6 @@ Public Class EmployeeLeavesForm
 
         If _
             newLeave.StartDate.Date <> oldLeave.StartDate.Date OrElse
-            Not CheckIfBothNullorBothHaveValue(newLeave.EndDate, oldLeave.EndDate) OrElse
-            newLeave.EndDate?.Date <> oldLeave.EndDate?.Date OrElse
             Not CheckIfBothNullorBothHaveValue(newLeave.StartTime, oldLeave.StartTime) OrElse
             newLeave.StartTime.StripSeconds <> oldLeave.StartTime.StripSeconds OrElse
             Not CheckIfBothNullorBothHaveValue(newLeave.EndTime, oldLeave.EndTime) OrElse
@@ -450,8 +445,8 @@ Public Class EmployeeLeavesForm
 
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                             Async Function()
-                                                Dim leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
-                                                Await leaveRepository.DeleteAsync(Me._currentLeave.RowID.Value)
+                                                Dim service = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                                                Await service.DeleteAsync(Me._currentLeave.RowID.Value)
 
                                                 _userActivityRepository.RecordDelete(z_User, FormEntityName, Me._currentLeave.RowID.Value, z_OrganizationID)
 
@@ -632,12 +627,6 @@ Public Class EmployeeLeavesForm
         For Each item In Me._currentLeaves
             If CheckIfLeaveIsChanged(item) Then
 
-                Dim validationErrorMessage = item.Validate()
-                If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-                    MessageBoxHelper.ErrorMessage(validationErrorMessage)
-                    Return
-                End If
-
                 item.LastUpdBy = z_User
                 changedLeaves.Add(item)
             End If
@@ -657,8 +646,7 @@ Public Class EmployeeLeavesForm
         Await FunctionUtils.TryCatchFunctionAsync(messageTitle,
                                         Async Function()
                                             Dim leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
-                                            Await leaveService.SaveManyAsync(changedLeaves,
-                                                                            z_OrganizationID)
+                                            Await leaveService.SaveManyAsync(changedLeaves)
 
                                             For Each item In changedLeaves
                                                 RecordUpdate(item)

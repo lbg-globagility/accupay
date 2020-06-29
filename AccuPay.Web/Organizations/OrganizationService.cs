@@ -2,6 +2,8 @@ using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Web.Core.Auth;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -46,12 +48,20 @@ namespace AccuPay.Web.Organizations
             return ConvertToDto(organization);
         }
 
-        public async Task<PaginatedList<OrganizationDto>> List(PageOptions options)
+        public async Task<PaginatedList<OrganizationDto>> List(OrganizationPageOptions options)
         {
             var (organizations, total) = await _repository.List(options, _currentUser.ClientId);
             var dtos = organizations.Select(t => ConvertToDto(t)).ToList();
 
             return new PaginatedList<OrganizationDto>(dtos, total, 1, 1);
+        }
+
+        public async Task<ActionResult<OrganizationDto>> GetCurrentOrganization()
+        {
+            var organization = await _repository.GetByIdAsync(_currentUser.OrganizationId);
+            var dto = ConvertToDto(organization);
+
+            return dto;
         }
 
         public OrganizationDto ConvertToDto(Organization organization)

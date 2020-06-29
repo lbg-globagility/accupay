@@ -71,9 +71,7 @@ namespace AccuPay.Web.Employees.Models
             CalcHoliday = employee.CalcHoliday;
             CalcSpecialHoliday = employee.CalcSpecialHoliday;
             CalcNightDiff = employee.CalcNightDiff;
-            CalcNightDiffOT = employee.CalcNightDiffOT;
             CalcRestDay = employee.CalcRestDay;
-            CalcRestDayOT = employee.CalcRestDayOT;
             DateRegularized = employee.DateRegularized;
             DateEvaluated = employee.DateEvaluated;
             RevealInPayroll = employee.RevealInPayroll;
@@ -82,6 +80,7 @@ namespace AccuPay.Web.Employees.Models
             AgencyID = employee.AgencyID;
             AdvancementPoints = employee.AdvancementPoints;
             BPIInsurance = employee.BPIInsurance;
+            FullName = employee.FullNameWithMiddleInitialLastNameFirst;
         }
 
         public int? Id { get; set; }
@@ -145,5 +144,6 @@ namespace AccuPay.Web.Employees.Models
         public int? AgencyID { get; set; }
         public int AdvancementPoints { get; set; }
         public decimal BPIInsurance { get; set; }
+        public string FullName { get; set; }
     }
 }

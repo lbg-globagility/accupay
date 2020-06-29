@@ -1,7 +1,7 @@
 ﻿Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class HRISForm
@@ -154,6 +154,7 @@ Public Class HRISForm
         Dim index = EmployeeForm.GetEmployeeProfileTabPageIndex
 
         EmployeeForm.tabctrlemp.SelectedIndex = index
+        EmployeeForm.tbpEmployee_Enter(sender, e)
         EmployeeForm.tabIndx = index
         ChangeForm(EmployeeForm, "Employee Personal Profile")
         EmployeeForm.tbpEmployee.Focus()

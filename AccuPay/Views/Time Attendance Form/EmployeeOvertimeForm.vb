@@ -4,9 +4,9 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class EmployeeOvertimeForm
@@ -259,7 +259,6 @@ Public Class EmployeeOvertimeForm
 
         If _
             newOvertime.OTStartDate.Date <> oldOvertime.OTStartDate.Date OrElse
-            newOvertime.OTEndDate.Date <> oldOvertime.OTEndDate.Date OrElse
             Not CheckIfBothNullorBothHaveValue(newOvertime.OTStartTime, oldOvertime.OTStartTime) OrElse
             newOvertime.OTStartTime.StripSeconds <> oldOvertime.OTStartTime.StripSeconds OrElse
             Not CheckIfBothNullorBothHaveValue(newOvertime.OTEndTime, oldOvertime.OTEndTime) OrElse

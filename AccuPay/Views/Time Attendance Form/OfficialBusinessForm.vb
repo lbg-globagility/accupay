@@ -4,8 +4,8 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class OfficialBusinessForm
@@ -257,8 +257,6 @@ Public Class OfficialBusinessForm
         If _
             Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.StartDate, oldOfficialBusiness.StartDate) OrElse
            (newOfficialBusiness.StartDate.HasValue AndAlso newOfficialBusiness.StartDate.Value.Date <> oldOfficialBusiness.StartDate.Value.Date) OrElse
-            Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.EndDate, oldOfficialBusiness.EndDate) OrElse
-           (newOfficialBusiness.EndDate.HasValue AndAlso newOfficialBusiness.EndDate.Value.Date <> oldOfficialBusiness.EndDate.Value.Date) OrElse
             Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.StartTime, oldOfficialBusiness.StartTime) OrElse
             newOfficialBusiness.StartTime.StripSeconds <> oldOfficialBusiness.StartTime.StripSeconds OrElse
             Not CheckIfBothNullorBothHaveValue(newOfficialBusiness.EndTime, oldOfficialBusiness.EndTime) OrElse

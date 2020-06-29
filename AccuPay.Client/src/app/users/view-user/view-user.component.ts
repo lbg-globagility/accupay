@@ -8,6 +8,9 @@ import { UserService } from 'src/app/users/user.service';
   selector: 'app-view-user',
   templateUrl: './view-user.component.html',
   styleUrls: ['./view-user.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewUserComponent implements OnInit {
   user: User;

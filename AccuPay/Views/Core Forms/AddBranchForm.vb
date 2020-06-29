@@ -5,9 +5,9 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Enums
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddBranchForm
@@ -70,9 +70,13 @@ Public Class AddBranchForm
 
         Dim _branchRepository = MainServiceProvider.GetRequiredService(Of BranchRepository)
 
-        _branches = Await _branchRepository.GetAllAsync()
+        _branches = (Await _branchRepository.GetAllAsync()).
+                        OrderBy(Function(b) b.Name).
+                        ToList
 
-        _calendars = Await _calendarRepository.GetAllAsync()
+        _calendars = (Await _calendarRepository.GetAllAsync()).
+                        OrderBy(Function(c) c.Name).
+                        ToList
 
         NameTextBox.Clear()
         DetailsGroupBox.Enabled = False

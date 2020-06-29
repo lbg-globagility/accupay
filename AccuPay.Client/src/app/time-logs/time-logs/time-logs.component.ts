@@ -15,24 +15,37 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { TimeLogImportResultComponent } from '../time-log-import-result/time-log-import-result.component';
 import Swal from 'sweetalert2';
+import { PayPeriodService } from 'src/app/payroll/services/payperiod.service';
+import { TimeLogsByEmployeePageOptions } from 'src/app/time-logs/shared/timelogs-by-employee-page-options';
 
 interface DateHeader {
   title: string;
   date: Date;
+  dateOnly: string;
   dayOfWeek: string;
+}
+
+interface EmployeeTimeLogsModel {
+  employeeId: number;
+  employeeNo: string;
+  fullName: string;
+  timeLogs: {};
 }
 
 @Component({
   selector: 'app-time-logs2',
   templateUrl: './time-logs.component.html',
   styleUrls: ['./time-logs.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class TimeLogsComponent implements OnInit {
   displayedColumns = ['employee'];
 
-  dateFrom = new Date(2020, 1, 1);
+  dateFrom: Date = new Date();
 
-  dateTo = new Date(2020, 1, 15);
+  dateTo: Date = new Date();
 
   headers: DateHeader[] = [];
 
@@ -44,12 +57,19 @@ export class TimeLogsComponent implements OnInit {
 
   searchTerm: string = '';
 
-  dataSource: MatTableDataSource<EmployeeTimeLogs> = new MatTableDataSource();
+  statusFilter: string = 'Active only';
+
+  dataSource: MatTableDataSource<
+    EmployeeTimeLogsModel
+  > = new MatTableDataSource();
 
   totalCount: number;
 
+  employees: EmployeeTimeLogs[] = [];
+
   constructor(
     private timeLogService: TimeLogService,
+    private payPeriodService: PayPeriodService,
     private dialog: MatDialog,
     private errorHandler: ErrorHandler,
     private snackBar: MatSnackBar
@@ -61,18 +81,17 @@ export class TimeLogsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.payPeriodService.getLatest().subscribe((payPeriod) => {
+      this.dateFrom = new Date(payPeriod.cutoffStart);
+      this.dateTo = new Date(payPeriod.cutoffEnd);
+      this.createDateHeaders();
+      this.loadTimeLogs();
+    });
+  }
+
+  datesChanged() {
     this.createDateHeaders();
     this.loadTimeLogs();
-  }
-
-  getTimeIn(employee: EmployeeTimeLogs, date: Date): string {
-    return employee.timeLogs.find((t) => t.date === date.toISOString())
-      ?.startTime;
-  }
-
-  getTimeOut(employee: EmployeeTimeLogs, date: Date): string {
-    return employee.timeLogs.find((t) => t.date === date.toISOString())
-      ?.endTime;
   }
 
   applyFilter(): void {
@@ -90,7 +109,11 @@ export class TimeLogsComponent implements OnInit {
     this.modelChanged.next();
   }
 
-  edit(employee: EmployeeTimeLogs): void {
+  edit(model: EmployeeTimeLogsModel): void {
+    const employee = this.employees.find(
+      (t) => t.employeeId === model.employeeId
+    );
+
     this.dialog
       .open(EditTimeLogComponent, {
         data: {
@@ -131,20 +154,53 @@ export class TimeLogsComponent implements OnInit {
   }
 
   private loadTimeLogs(): void {
-    const options = new PageOptions(this.pageIndex, this.pageSize);
+    const options = new TimeLogsByEmployeePageOptions(
+      this.pageIndex,
+      this.pageSize,
+      this.dateFrom,
+      this.dateTo,
+      this.searchTerm,
+      this.statusFilter
+    );
 
-    this.timeLogService
-      .listByEmployee(options, this.dateFrom, this.dateTo, this.searchTerm)
-      .subscribe((data) => {
-        this.dataSource = new MatTableDataSource(data.items);
-        this.totalCount = data.totalCount;
-      });
+    this.timeLogService.listByEmployee(options).subscribe((data) => {
+      this.employees = data.items;
+      this.dataSource = new MatTableDataSource(
+        this.convertToLocalModels(data.items)
+      );
+      this.totalCount = data.totalCount;
+    });
+  }
+
+  private convertToLocalModels(employees: EmployeeTimeLogs[]) {
+    return employees.map((t) => this.convertToLocalModel(t));
+  }
+
+  private convertToLocalModel(employee: EmployeeTimeLogs) {
+    const model: EmployeeTimeLogsModel = {
+      employeeId: employee.employeeId,
+      employeeNo: employee.employeeNo,
+      fullName: employee.fullName,
+      timeLogs: {},
+    };
+
+    for (const timeLog of employee.timeLogs) {
+      model.timeLogs[timeLog.date.substring(0, 10)] = {
+        id: timeLog.id,
+        date: timeLog.date,
+        startTime: timeLog.startTime,
+        endTime: timeLog.endTime,
+      };
+    }
+
+    return model;
   }
 
   private createDateHeaders(): void {
     this.headers = range(this.dateFrom, this.dateTo).map((date) => ({
       title: moment(date).format('MM/DD'),
       date,
+      dateOnly: moment(date).format('yyyy-MM-DD'),
       dayOfWeek: moment(date).format('ddd'),
     }));
 

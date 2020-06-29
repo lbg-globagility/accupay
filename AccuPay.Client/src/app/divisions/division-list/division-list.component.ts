@@ -13,6 +13,9 @@ import { PageEvent } from '@angular/material/paginator';
   selector: 'app-division-list',
   templateUrl: './division-list.component.html',
   styleUrls: ['./division-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class DivisionListComponent implements OnInit {
   readonly displayedColumns: string[] = ['parentName', 'name', 'divisionType'];

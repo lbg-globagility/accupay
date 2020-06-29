@@ -82,6 +82,14 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Salary> GetLatest(int employeeId)
+        {
+            return await _context.Salaries
+                .Where(t => t.EmployeeID == employeeId)
+                .OrderByDescending(t => t.EffectiveFrom)
+                .FirstOrDefaultAsync();
+        }
+
         #endregion Single entity
 
         #region List of entities
@@ -93,7 +101,11 @@ namespace AccuPay.Data.Repositories
                 .ToList();
         }
 
-        public async Task<PaginatedListResult<Salary>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedListResult<Salary>> List(
+            PageOptions options,
+            int organizationId,
+            string searchTerm = "",
+            int? employeeId = null)
         {
             var query = _context.Salaries
                 .Include(x => x.Employee)
@@ -111,6 +123,11 @@ namespace AccuPay.Data.Repositories
                     EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
                     EF.Functions.Like(x.Employee.LastName, searchTerm));
+            }
+
+            if (employeeId.HasValue)
+            {
+                query = query.Where(t => t.EmployeeID == employeeId);
             }
 
             var salaries = await query.Page(options).ToListAsync();

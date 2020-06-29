@@ -14,20 +14,20 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
-        public bool isNewEntity(int? id)
+        protected bool IsNewEntity(int? id)
         {
             // sometimes it's not int.MinValue
             return id == null || id <= 0;
         }
 
-        public async Task SaveAsync(T entity)
+        public virtual async Task SaveAsync(T entity)
         {
             await SanitizeEntity(entity);
 
             await _repository.SaveAsync(entity);
         }
 
-        public async Task SaveManyAsync(List<T> entities)
+        public virtual async Task SaveManyAsync(List<T> entities)
         {
             foreach (var entity in entities)
             {

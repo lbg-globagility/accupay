@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-branch',
   templateUrl: './new-branch.component.html',
   styleUrls: ['./new-branch.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewBranchComponent implements OnInit {
   constructor(

@@ -74,8 +74,6 @@ namespace AccuPay.Data.Entities
         [ForeignKey("EmployeeID")]
         public virtual Employee Employee { get; set; }
 
-        // This should not be used since this is only recorded starting June 2020
-        // even if this is a column has been added for a long time
         public decimal BasicPay { get; internal set; }
 
         public decimal BasicDeductions => LateDeduction + UndertimeDeduction + AbsenceDeduction;

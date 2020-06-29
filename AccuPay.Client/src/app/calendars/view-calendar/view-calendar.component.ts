@@ -12,6 +12,9 @@ import { Calendar } from 'src/app/calendars/shared/calendar';
   selector: 'app-view-calendar',
   templateUrl: './view-calendar.component.html',
   styleUrls: ['./view-calendar.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewCalendarComponent implements OnInit {
   readonly displayedColumns: string[] = ['date', 'description'];

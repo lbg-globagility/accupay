@@ -28,17 +28,8 @@ const menuItems: MenuItem[] = [
         route: '/positions',
       },
       {
-        label: 'Organizations',
-        route: '/organizations',
-      },
-      {
         label: 'Branches',
         route: '/branches',
-      },
-      {
-        label: 'Calendars',
-        route: '/calendars',
-        icon: 'person',
       },
     ],
   },
@@ -67,10 +58,6 @@ const menuItems: MenuItem[] = [
         route: '/leaves',
       },
       {
-        label: 'Leave Balance',
-        route: '/leave-balance',
-      },
-      {
         label: 'Official Business',
         route: '/official-businesses',
       },
@@ -95,15 +82,16 @@ const menuItems: MenuItem[] = [
         icon: 'person',
       },
       {
-        label: 'Allowance Types',
-        route: '/allowance-types',
-      },
-      {
         label: 'Loans',
         route: '/loans',
         icon: 'person',
       },
     ],
+  },
+  {
+    label: 'Reports',
+    icon: 'list_alt',
+    route: '/reports',
   },
   {
     label: 'Security',
@@ -122,6 +110,25 @@ const menuItems: MenuItem[] = [
         route: '/user-access',
       },
     ],
+  },
+  {
+    label: 'Settings',
+    icon: 'settings',
+    items: [
+      {
+        label: 'Organizations',
+        route: '/organizations',
+      },
+      {
+        label: 'Calendars',
+        route: '/calendars',
+      },
+    ],
+  },
+  {
+    label: 'Clients',
+    icon: 'business',
+    route: '/clients',
   },
 ];
 

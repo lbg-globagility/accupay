@@ -3,6 +3,7 @@ using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,10 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayperiodDto> Start(StartPayrollDto dto)
         {
-            var payperiod = await _payperiodRepository.GetByCutoffDates(dto.CutoffStart, dto.CutoffEnd);
+            var payperiod = await _payperiodRepository.GetByCutoffDates(
+                new TimePeriod(dto.CutoffStart, dto.CutoffEnd),
+                _currentUser.OrganizationId);
+
             payperiod.Status = PayPeriodStatus.Open;
 
             await _payperiodRepository.Update(payperiod);

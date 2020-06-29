@@ -20,6 +20,9 @@ import { Constants } from 'src/app/core/shared/constants';
   selector: 'app-view-payperiod',
   templateUrl: './view-payperiod.component.html',
   styleUrls: ['./view-payperiod.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ViewPayPeriodComponent implements OnInit {
   private payPeriodId: number = +this.route.snapshot.paramMap.get('id');

@@ -4,8 +4,8 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class selectPayPeriod
@@ -184,8 +184,7 @@ Public Class selectPayPeriod
         Dim dt = sql.GetFoundRows.Tables(0)
 
         Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
-                                GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID) 'PayFreqType
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         Dim index As Integer = 0

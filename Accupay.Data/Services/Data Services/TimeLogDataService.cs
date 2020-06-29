@@ -25,12 +25,9 @@ namespace AccuPay.Data.Services
 
         public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog>)> ListByEmployee(
             int organizationId,
-            PageOptions options,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string searchTerm)
+            TimeLogsByEmployeePageOptions options)
         {
-            return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo, searchTerm);
+            return await _repository.ListByEmployee(organizationId, options);
         }
 
         public async Task<ICollection<TimeLog>> GetAll(

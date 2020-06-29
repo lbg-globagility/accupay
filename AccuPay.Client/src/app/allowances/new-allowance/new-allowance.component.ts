@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-allowance',
   templateUrl: './new-allowance.component.html',
   styleUrls: ['./new-allowance.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewAllowanceComponent {
   constructor(

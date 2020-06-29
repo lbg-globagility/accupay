@@ -33,11 +33,11 @@ namespace AccuPay.Web.Employees.Services
             _fileRepository = fileRepository;
         }
 
-        public async Task<PaginatedList<EmployeeDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<EmployeeDto>> PaginatedList(EmployeePageOptions options)
         {
-            var paginatedList = await _employeeRepository.GetPaginatedListAsync(options,
-                                                                             _currentUser.OrganizationId,
-                                                                             searchTerm);
+            var paginatedList = await _employeeRepository.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId);
 
             var dtos = paginatedList.List.Select(e => EmployeeDto.Convert(e));
 
@@ -150,7 +150,7 @@ namespace AccuPay.Web.Employees.Services
 
         public async Task GenerateEmployeesImages()
         {
-            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync(_currentUser.OrganizationId);
+            var employees = await _employeeRepository.GetEmployeesWithoutImageAsync();
 
             foreach (var employee in employees)
             {

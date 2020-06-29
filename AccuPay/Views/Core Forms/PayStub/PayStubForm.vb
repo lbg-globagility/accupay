@@ -8,8 +8,8 @@ Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Repositories.PaystubRepository
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
-Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -242,8 +242,7 @@ Public Class PayStubForm
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
         Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
-                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         dgvpayper.Rows.Clear()
@@ -804,8 +803,20 @@ Public Class PayStubForm
 
             Dim generationTask = Task.Run(
                 Sub()
-                    Parallel.ForEach(
-                            resources.Employees,
+                    'TEMPORARY set to synchronous since there is a race condition issue
+                    'that is hard to debug
+                    'Parallel.ForEach(
+                    '        resources.Employees,
+                    '        Sub(employee)
+
+                    '            _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,
+                    '                                            userId:=z_User,
+                    '                                            employee:=employee,
+                    '                                            resources:=resources))
+
+                    '            Interlocked.Increment(_finishedPaystubs)
+                    '        End Sub)
+                    resources.Employees.ToList().ForEach(
                             Sub(employee)
 
                                 _results.Add(generator.DoProcess(organizationId:=z_OrganizationID,

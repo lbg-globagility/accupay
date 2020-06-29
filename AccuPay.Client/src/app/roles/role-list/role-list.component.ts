@@ -11,6 +11,9 @@ import { RoleService } from 'src/app/roles/services/role.service';
   selector: 'app-role-list',
   templateUrl: './role-list.component.html',
   styleUrls: ['./role-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class RoleListComponent implements OnInit {
   readonly displayedColumns: string[] = ['name', 'actions'];

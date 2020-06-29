@@ -14,7 +14,7 @@ export class TimeParser {
   parse(date: moment.Moment, time: Date): Date {
     if (!time) return null;
 
-    return new Date(date.format('L') + ' ' + time + ':00Z');
+    return new Date(date.format('L') + ' ' + time);
   }
 
   /**

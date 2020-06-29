@@ -10,6 +10,9 @@ import Swal from 'sweetalert2';
   selector: 'app-edit-branch',
   templateUrl: './edit-branch.component.html',
   styleUrls: ['./edit-branch.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditBranchComponent implements OnInit {
   state: LoadingState = new LoadingState();

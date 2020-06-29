@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-employee',
   templateUrl: './edit-employee.component.html',
   styleUrls: ['./edit-employee.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditEmployeeComponent implements OnInit {
   private id: number;

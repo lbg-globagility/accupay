@@ -3,8 +3,8 @@
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Helpers
-Imports AccuPay.Utils
 Imports Globagility.AccuPay.Salaries
 Imports Microsoft.Extensions.DependencyInjection
 

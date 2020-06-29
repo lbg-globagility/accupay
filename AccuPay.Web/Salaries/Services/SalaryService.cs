@@ -20,13 +20,14 @@ namespace AccuPay.Web.Salaries.Services
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<SalaryDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<SalaryDto>> List(PageOptions options, string searchTerm, int employeeId)
         {
             // TODO: sort and desc in repository
-
-            var paginatedList = await _repository.GetPaginatedListAsync(options,
-                                                                        _currentUser.OrganizationId,
-                                                                        searchTerm);
+            var paginatedList = await _repository.List(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm,
+                employeeId);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -36,6 +37,13 @@ namespace AccuPay.Web.Salaries.Services
         public async Task<SalaryDto> GetById(int id)
         {
             var salary = await _repository.GetByIdWithEmployeeAsync(id);
+
+            return ConvertToDto(salary);
+        }
+
+        public async Task<SalaryDto> GetLatest(int employeeId)
+        {
+            var salary = await _repository.GetLatest(employeeId);
 
             return ConvertToDto(salary);
         }

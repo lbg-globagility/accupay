@@ -2,7 +2,7 @@
 
 Imports log4net
 
-Namespace Global.AccuPay.Utils
+Namespace Global.AccuPay.Desktop.Utilities
 
     Public Class MessageBoxHelper
 

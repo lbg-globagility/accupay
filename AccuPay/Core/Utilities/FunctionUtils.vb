@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Exceptions
 Imports AccuPay.Infrastructure.Services.Excel
 
-Namespace Global.AccuPay.Utils
+Namespace Global.AccuPay.Desktop.Utilities
 
     Public Class FunctionUtils
 

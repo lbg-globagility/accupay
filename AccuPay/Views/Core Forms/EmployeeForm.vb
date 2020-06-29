@@ -5,9 +5,9 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
 Imports File = System.IO.File
@@ -1876,6 +1876,8 @@ Public Class EmployeeForm
 
     Private Sub Employee_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
+        AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
+
         if_sysowner_is_benchmark = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.Benchmark
         if_sysowner_is_laglobal = _systemOwnerService.GetCurrentSystemOwner() = SystemOwnerService.LAGlobal
 
@@ -2379,7 +2381,15 @@ Public Class EmployeeForm
     Dim currDepenCount As Integer
 
     Sub tsbtnNewEmp_Click(sender As Object, e As EventArgs) Handles tsbtnNewEmp.Click
-        If tsbtnNewEmp.Visible = False Then : Exit Sub : End If
+
+        RemoveHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
+
+        If tsbtnNewEmp.Visible = False Then
+
+            AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
+            Return
+
+        End If
 
         txtEmpID.Focus()
         tsbtnNewEmp.Enabled = False
@@ -2428,6 +2438,13 @@ Public Class EmployeeForm
         chkbxRevealInPayroll.Checked = False
 
         BPIinsuranceText.Text = _policy.DefaultBPIInsurance
+
+        chkcalcHoliday.Checked = True
+        chkcalcNightDiff.Checked = True
+        chkcalcSpclHoliday.Checked = True
+        chkcalcRestDay.Checked = True
+
+        AddHandler tbpEmployee.Enter, AddressOf tbpEmployee_Enter
     End Sub
 
     Dim PayFreqE_asc As String
@@ -3497,7 +3514,7 @@ Public Class EmployeeForm
 
     Dim emp_ralation As New AutoCompleteStringCollection
 
-    Async Sub tbpEmployee_Enter(sender As Object, e As EventArgs) Handles tbpEmployee.Enter
+    Async Sub tbpEmployee_Enter(sender As Object, e As EventArgs)
 
         UpdateTabPageText()
 

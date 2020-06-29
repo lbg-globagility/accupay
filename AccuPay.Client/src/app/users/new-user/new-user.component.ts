@@ -8,6 +8,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-user',
   templateUrl: './new-user.component.html',
   styleUrls: ['./new-user.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewUserComponent implements OnInit {
   constructor(

@@ -72,7 +72,7 @@ namespace AccuPay.Data.Services
             var employeeIds = shiftModels.Select(x => x.EmployeeId.Value).Distinct().ToArray();
 
             var existingShifts = await _repository
-                    .GetByMultipleEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
+                    .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
 
             List<EmployeeDutySchedule> addedShifts = new List<EmployeeDutySchedule>();
             List<EmployeeDutySchedule> updatedShifts = new List<EmployeeDutySchedule>();

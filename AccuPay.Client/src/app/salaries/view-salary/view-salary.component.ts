@@ -7,6 +7,9 @@ import { ConfirmationDialogComponent } from 'src/app/shared/components/confirmat
 import { Salary } from 'src/app/salaries/shared/salary';
 import { SalaryService } from 'src/app/salaries/salary.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { PageOptions } from 'src/app/core/shared/page-options';
+import { EmployeeService } from 'src/app/employees/services/employee.service';
+import { Employee } from 'src/app/employees/shared/employee';
 
 @Component({
   selector: 'app-view-salary',
@@ -14,14 +17,28 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   styleUrls: ['./view-salary.component.scss'],
 })
 export class ViewSalaryComponent implements OnInit {
-  salary: Salary;
+  employeeId: number = Number(this.route.snapshot.paramMap.get('employeeId'));
+
+  latestSalary: Salary = null;
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
   salaryId = Number(this.route.snapshot.paramMap.get('id'));
 
+  employee: Employee;
+
+  salaries: Salary[] = [];
+
+  displayedColumns = [
+    'effectiveFrom',
+    'basicAmount',
+    'allowanceAmount',
+    'totalAmount',
+  ];
+
   constructor(
     private salaryService: SalaryService,
+    private employeeService: EmployeeService,
     private route: ActivatedRoute,
     private dialog: MatDialog,
     private router: Router,
@@ -29,7 +46,12 @@ export class ViewSalaryComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadSalary();
+    this.route.paramMap.subscribe((paramMap) => {
+      this.employeeId = Number(paramMap.get('employeeId'));
+      this.loadEmployee();
+      this.loadSalary();
+      this.loadSalaries();
+    });
   }
 
   confirmDelete(): void {
@@ -58,9 +80,24 @@ export class ViewSalaryComponent implements OnInit {
     });
   }
 
+  private loadEmployee(): void {
+    this.employeeService
+      .getById(this.employeeId)
+      .subscribe((employee) => (this.employee = employee));
+  }
+
+  private loadSalaries(): void {
+    const options = new PageOptions(0, 25);
+    this.salaryService
+      .list(options, null, this.employeeId)
+      .subscribe((data) => {
+        this.salaries = data.items;
+      });
+  }
+
   private loadSalary(): void {
-    this.salaryService.get(this.salaryId).subscribe((data) => {
-      this.salary = data;
+    this.salaryService.getLatest(this.employeeId).subscribe((salary) => {
+      this.latestSalary = salary;
 
       this.isLoading.next(true);
     });
