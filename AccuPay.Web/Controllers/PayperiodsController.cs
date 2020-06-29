@@ -5,6 +5,7 @@ using AccuPay.Web.Payroll;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -17,10 +18,19 @@ namespace AccuPay.Web.Controllers
         private readonly PayperiodService _payperiodService;
         private readonly PaystubService _paystubService;
 
+        private static readonly HttpClient _httpClient = new HttpClient();
+
         public PayperiodsController(PayperiodService payperiodService, PaystubService paystubService)
         {
             _payperiodService = payperiodService;
             _paystubService = paystubService;
+        }
+
+        [HttpGet]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
+        {
+            return await _payperiodService.List(options);
         }
 
         [HttpPost]
@@ -77,11 +87,34 @@ namespace AccuPay.Web.Controllers
             return await _paystubService.PaginatedList(options, payperiodId);
         }
 
-        [HttpGet]
+        [HttpGet("{payperiodId}/payslips")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult> GetPayslips(int payperiodId)
         {
-            return await _payperiodService.List(options);
+            UriBuilder uriBuilder = new UriBuilder
+            {
+                Scheme = Uri.UriSchemeHttps,
+                Host = "localhost",
+                Port = 44379,
+                Path = $"/api/reports/payslip/{payperiodId}"
+            };
+
+            var uri = new Uri(uriBuilder.ToString());
+
+            _httpClient.DefaultRequestHeaders.Accept.Clear();
+            _httpClient.DefaultRequestHeaders.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+            HttpResponseMessage response = await _httpClient.GetAsync(uri);
+
+            if (response.IsSuccessStatusCode)
+            {
+                HttpContent content = response.Content;
+                var contentStream = await content.ReadAsStreamAsync();
+                return File(contentStream, "application/pdf", "payslip.pdf");
+            }
+            else
+            {
+                return BadRequest();
+            }
         }
     }
 }

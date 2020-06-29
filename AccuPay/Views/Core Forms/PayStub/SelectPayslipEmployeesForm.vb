@@ -240,21 +240,24 @@ Public Class SelectPayslipEmployeesForm
 
     Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles PreviewButton.Click
 
-        Dim isActual = PayslipTypeComboBox.Text = Actual
+        FunctionUtils.TryCatchFunction("Print Payslip",
+            Sub()
+                Dim isActual = PayslipTypeComboBox.Text = Actual
 
-        Dim employeeIds = _employeeModels.
-                            Where(Function(m) m.IsSelected).
-                            Select(Function(m) m.EmployeeId).
-                            ToArray()
+                Dim employeeIds = _employeeModels.
+                    Where(Function(m) m.IsSelected).
+                    Select(Function(m) m.EmployeeId).
+                    ToArray()
 
-        Dim reportDocument = _payslipCreator.CreateReportDocument(organizationId:=z_OrganizationID,
-                                                                 payPeriodId:=_currentPayPeriod.RowID.Value,
-                                                                 Convert.ToSByte(isActual),
-                                                                 employeeIds)
+                Dim reportDocument = _payslipCreator.CreateReportDocument(
+                    payPeriodId:=_currentPayPeriod.RowID.Value,
+                    isActual:=Convert.ToSByte(isActual),
+                    employeeIds:=employeeIds)
 
-        Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-        crvwr.Show()
+                Dim crvwr As New CrysRepForm
+                crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+                crvwr.Show()
+            End Sub)
     End Sub
 
     Private Async Sub ProceedButton_Click(sender As Object, e As EventArgs) Handles SendEmailsButton.Click

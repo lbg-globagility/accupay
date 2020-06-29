@@ -6,6 +6,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Paystub } from 'src/app/payroll/shared/paystub';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PayrollResult } from '../shared/payroll-result';
+import { saveAs } from 'file-saver';
 
 @Injectable({
   providedIn: 'root',
@@ -14,6 +15,17 @@ export class PayPeriodService {
   private baseUrl = 'api/payperiods';
 
   constructor(private httpClient: HttpClient) {}
+
+  GetList(
+    options: PageOptions,
+    term = ''
+  ): Observable<PaginatedList<PayPeriod>> {
+    const params = options ? options.toObject() : null;
+    params.term = term;
+    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
+      params,
+    });
+  }
 
   start(cutoffStart: Date, cutoffEnd: Date): Observable<void> {
     return this.httpClient.post<void>(`${this.baseUrl}`, {
@@ -53,14 +65,16 @@ export class PayPeriodService {
     );
   }
 
-  GetList(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<PayPeriod>> {
-    const params = options ? options.toObject() : null;
-    params.term = term;
-    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
-      params,
-    });
+  getDocument(payPeriodId: number) {
+    this.httpClient
+      .get(`${this.baseUrl}/${payPeriodId}/payslips`, {
+        responseType: 'blob',
+      })
+      .subscribe(
+        (blob) => {
+          saveAs(blob, 'payslip2.pdf');
+        },
+        (error) => console.log('Error downloading the file.')
+      );
   }
 }

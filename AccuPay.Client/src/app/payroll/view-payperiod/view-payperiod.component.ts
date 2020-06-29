@@ -94,6 +94,10 @@ export class ViewPayPeriodComponent implements OnInit {
     this.modelChanged.next();
   }
 
+  toggleExpansion(paystub: Paystub): void {
+    this.expandedPaystub = this.expandedPaystub === paystub ? null : paystub;
+  }
+
   calculate(): void {
     this.snackbar.open('Calculating payroll');
 
@@ -117,7 +121,7 @@ export class ViewPayPeriodComponent implements OnInit {
     });
   }
 
-  toggleExpansion(paystub: Paystub): void {
-    this.expandedPaystub = this.expandedPaystub === paystub ? null : paystub;
+  downloadFile(): void {
+    this.payPeriodService.getDocument(this.payPeriodId);
   }
 }

@@ -1,13 +1,27 @@
+<<<<<<< Updated upstream
 <h1>View Payperiod</h1>
 <h3>
+=======
+<h1 class="mat-headline">View Payperiod</h1>
+<h3 class="font-medium mb-4">
+>>>>>>> Stashed changes
   {{ payPeriod?.cutoffStart | date }} to {{ payPeriod?.cutoffEnd | date }}
 </h3>
 
-<div>
+<div class="mb-4">
   <button mat-raised-button (click)="calculate()">CALCULATE</button>
+  <button
+    mat-raised-button
+    (click)="downloadFile()"
+    style="margin-left: 10px;"
+    mat-raised-button
+    color="accent"
+  >
+    DOWNLOAD PAYSLIP
+  </button>
 </div>
 
-<h3>Paystubs</h3>
+<h3 class="font-medium mb-4">Paystubs</h3>
 <table
   mat-table
   [dataSource]="dataSource"

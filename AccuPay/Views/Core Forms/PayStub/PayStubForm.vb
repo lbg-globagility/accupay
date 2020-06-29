@@ -1921,16 +1921,23 @@ Public Class PayStubForm
 
     Private Sub PrintPayslip(isActual As SByte)
 
-        Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+        FunctionUtils.TryCatchFunction("Print Payslip",
+            Sub()
+                Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+                Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
 
-        Dim payPeriod = ValNoComma(paypRowID)
+                Dim payPeriodId = ValNoComma(paypRowID)
 
-        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, payPeriod, isActual)
+                Dim reportDocument = payslipCreator.CreateReportDocument(
+                    payPeriodId:=payPeriodId,
+                    isActual:=isActual)
 
-        Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-        crvwr.Show()
+                Dim crvwr As New CrysRepForm
+                crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+                crvwr.Show()
+
+            End Sub,
+            "Error generating payslips.")
     End Sub
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click

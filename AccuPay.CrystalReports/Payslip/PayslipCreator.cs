@@ -6,6 +6,7 @@ using CrystalDecisions.Shared;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Pdf.Security;
+using System;
 using System.Data;
 using System.IO;
 using System.Linq;
@@ -44,8 +45,8 @@ namespace AccuPay.CrystalReports.Payslip
             AddressRepository addressRepository,
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
-            SystemOwnerService systemOwnerService,
-            PayslipDataService dataService)
+            PayslipDataService dataService,
+            SystemOwnerService systemOwnerService)
         {
             _addressRepository = addressRepository;
 
@@ -56,6 +57,8 @@ namespace AccuPay.CrystalReports.Payslip
             _systemOwnerService = systemOwnerService;
             this._dataService = dataService;
             _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner();
+
+            _payslipDatatable = new DataTable();
         }
 
         public ReportClass GetReportDocument()
@@ -91,12 +94,15 @@ namespace AccuPay.CrystalReports.Payslip
             return _payslipDatatable.Rows.Count > 0 ? _payslipDatatable.Rows[0] : null;
         }
 
-        public PayslipCreator CreateReportDocument(int organizationId, int payPeriodId, sbyte isActual, int[] employeeIds = null)
+        public PayslipCreator CreateReportDocument(int payPeriodId, sbyte isActual = 0, int[] employeeIds = null)
         {
             // Use dapper or entity framework for procedure calls
-
-            var organization = _organizationRepository.GetById(organizationId);
             var payPeriod = _payPeriodRepository.GetById(payPeriodId);
+
+            if (payPeriod == null || payPeriod.OrganizationID == null)
+                throw new Exception("Pay Period or OrganizationID cannot be null");
+
+            var organization = _organizationRepository.GetById(payPeriod.OrganizationID.Value);
 
             if (_currentSystemOwner == SystemOwnerService.Goldwings)
             {
@@ -215,6 +221,11 @@ namespace AccuPay.CrystalReports.Payslip
         {
             string pdfFullPath = Path.Combine(saveFolderPath, fileName);
 
+            return GeneratePDF(pdfFullPath);
+        }
+
+        public PayslipCreator GeneratePDF(string pdfFullPath)
+        {
             ExportOptions CrExportOptions;
             DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
             PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
