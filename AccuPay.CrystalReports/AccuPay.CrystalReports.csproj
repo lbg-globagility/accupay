@@ -125,6 +125,13 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="TaxMonthlyReport\TaxMonthlyReportCreator.cs" />
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummaryReportCreator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">
@@ -179,6 +186,10 @@
     <EmbeddedResource Include="TaxMonthlyReport\Tax Monthly Report.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>Tax Monthly Report.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.rpt">
+      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
+      <LastGenOutput>ThirteenthMonthSummary.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

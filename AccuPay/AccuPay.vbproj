@@ -1033,12 +1033,6 @@
     <Compile Include="Reports\Reports\Providers\SSSMonthlyReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\TaxReportProvider.vb" />
     <Compile Include="Reports\Reports\Providers\ThirteenthMonthSummaryReportProvider.vb" />
-    <Compile Include="Reports\Reports\ThirteenthMonthSummary.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Reports\rpt\rpt\HyundaiPayslip.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -2224,10 +2218,6 @@
     <EmbeddedResource Include="Reports\Reports\FiledLeaveReport.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>FiledLeaveReport.vb</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Reports\ThirteenthMonthSummary.rpt">
-      <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
-      <LastGenOutput>ThirteenthMonthSummary.vb</LastGenOutput>
     </EmbeddedResource>
     <EmbeddedResource Include="Reports\rpt\rpt\HyundaiPayslip.rpt">
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
