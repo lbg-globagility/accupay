@@ -7,16 +7,27 @@ using System.Web.Http;
 
 namespace AccuPay.CrystalReportsWeb.Controllers
 {
+    /// <summary>
+    /// Reports API endpoints returning pdf files.
+    /// </summary>
     [RoutePrefix("api/reports")]
     public class ReportsController : ApiController
     {
         private readonly PayslipCreator _payslipCreator;
 
+        /// <summary>
+        /// sdf
+        /// </summary>
         public ReportsController(PayslipCreator organizationRepository)
         {
-            this._payslipCreator = organizationRepository;
+            _payslipCreator = organizationRepository;
         }
 
+        /// <summary>
+        /// Download pdf of all the employee payslip per pay period.
+        /// </summary>
+        /// <param name="payPeriodId">The pay period ID. Organization ID is fetched from the payperiod object that is fetched using payPeriodId.</param>
+        /// <returns></returns>
         [Route("payslip/{payPeriodId}")]
         public HttpResponseMessage GetPayslip(int payPeriodId)
         {
@@ -36,12 +47,6 @@ namespace AccuPay.CrystalReportsWeb.Controllers
             response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
 
             return response;
-        }
-
-        [Route("test")]
-        public string Reports()
-        {
-            return "sdf";
         }
     }
 }
