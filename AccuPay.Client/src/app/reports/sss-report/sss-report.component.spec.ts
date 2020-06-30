@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ReportFormComponent } from './report-form.component';
+import { SssReportComponent } from './sss-report.component';
 
-describe('ReportFormComponent', () => {
-  let component: ReportFormComponent;
-  let fixture: ComponentFixture<ReportFormComponent>;
+describe('SssReportComponent', () => {
+  let component: SssReportComponent;
+  let fixture: ComponentFixture<SssReportComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ReportFormComponent ]
+      declarations: [ SssReportComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ReportFormComponent);
+    fixture = TestBed.createComponent(SssReportComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

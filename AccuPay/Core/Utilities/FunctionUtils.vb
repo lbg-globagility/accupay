@@ -9,9 +9,10 @@ Namespace Global.AccuPay.Desktop.Utilities
     Public Class FunctionUtils
 
         Public Shared Sub TryCatchFunction(
-                                        messageTitle As String,
-                                        action As Action,
-                                        Optional baseExceptionErrorMessage As String = Nothing) As Task
+            messageTitle As String,
+            action As Action,
+            Optional baseExceptionErrorMessage As String = Nothing)
+
             Try
 
                 action()
@@ -35,9 +36,9 @@ Namespace Global.AccuPay.Desktop.Utilities
         End Sub
 
         Public Shared Async Function TryCatchFunctionAsync(
-                                        messageTitle As String,
-                                        action As Func(Of Task),
-                                        Optional baseExceptionErrorMessage As String = Nothing) As Task
+            messageTitle As String,
+            action As Func(Of Task),
+            Optional baseExceptionErrorMessage As String = Nothing) As Task
             Try
 
                 Await action()
@@ -61,9 +62,10 @@ Namespace Global.AccuPay.Desktop.Utilities
         End Function
 
         Public Shared Async Function TryCatchFunctionAsync(
-                                        messageTitle As String,
-                                        action As Func(Of Task(Of Boolean)),
-                                        Optional baseExceptionErrorMessage As String = Nothing) As Task(Of Boolean)
+            messageTitle As String,
+            action As Func(Of Task(Of Boolean)),
+            Optional baseExceptionErrorMessage As String = Nothing) As Task(Of Boolean)
+
             Try
 
                 Return Await action()
@@ -89,8 +91,9 @@ Namespace Global.AccuPay.Desktop.Utilities
         End Function
 
         Public Shared Function TryCatchExcelParserReadFunction(
-                                        action As Action,
-                                       Optional messageTitle As String = "WorkSheet Parsing Error") As Boolean
+            action As Action,
+            Optional messageTitle As String = "WorkSheet Parsing Error") As Boolean
+
             Try
 
                 action()
@@ -114,8 +117,9 @@ Namespace Global.AccuPay.Desktop.Utilities
         End Function
 
         Public Shared Async Function TryCatchExcelParserReadFunctionAsync(
-                                        action As Func(Of Task),
-                                        Optional messageTitle As String = "WorkSheet Parsing Error") As Task
+            action As Func(Of Task),
+            Optional messageTitle As String = "WorkSheet Parsing Error") As Task
+
             Try
 
                 Await action()

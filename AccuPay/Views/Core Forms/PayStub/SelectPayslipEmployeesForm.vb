@@ -1,7 +1,7 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
@@ -26,7 +26,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private _payslipCreator As PayslipCreator
+    Private _payslipCreator As PayslipBuilder
 
     Private _policyHelper As PolicyHelper
 
@@ -49,7 +49,7 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipTypes = New List(Of String) From {Declared, Actual}
 
-        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 

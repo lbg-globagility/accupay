@@ -5,33 +5,34 @@ using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class SSSMonthyReportCreator
+    public class SSSMonthyReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly SSSMonthlyReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public SSSMonthyReportCreator(SSSMonthlyReportDataService dataService)
+        public SSSMonthyReportBuilder(SSSMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public SSSMonthyReportCreator CreateReportDocument(int organizationId, DateTime date)
+        public SSSMonthyReportBuilder CreateReportDocument(int organizationId, DateTime dateMonth)
         {
             _reportDocument = new SSS_Monthly_Report();
 
-            _reportDocument.SetDataSource(_dataService.GetData(organizationId, date));
+            _reportDocument.SetDataSource(_dataService.GetData(organizationId, dateMonth));
 
             TextObject objText = (TextObject)_reportDocument.ReportDefinition.Sections[1].ReportObjects["Text2"];
 
-            var date_from = date.ToString("MMMM  yyyy");
+            var date_from = dateMonth.ToString("MMMM  yyyy");
             objText.Text = "for the month of " + date_from;
 
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

@@ -1,7 +1,7 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
@@ -1935,7 +1935,7 @@ Public Class PayStubForm
         FunctionUtils.TryCatchFunction("Print Payslip",
             Sub()
                 Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-                Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+                Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
                 Dim payPeriodId = ValNoComma(paypRowID)
 

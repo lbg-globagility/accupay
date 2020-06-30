@@ -129,7 +129,7 @@ export class ViewPayPeriodComponent implements OnInit {
   downloadFile(): void {
     this.isDownloadingPayslip = true;
     this.payPeriodService
-      .getDocument(this.payPeriodId)
+      .getPayslipPDF(this.payPeriodId)
       .then(() => {})
       .catch((err) => {
         this.errorHandler.badRequest(err, 'Error downloading payslips.');

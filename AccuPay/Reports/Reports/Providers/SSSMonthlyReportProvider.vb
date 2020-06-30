@@ -18,7 +18,7 @@ Public Class SSSMonthlyReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of SSSMonthyReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of SSSMonthyReportBuilder)
 
         Dim sssMonthlyReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 
