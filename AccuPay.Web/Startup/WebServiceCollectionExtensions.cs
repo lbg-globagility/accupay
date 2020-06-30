@@ -69,6 +69,7 @@ namespace AccuPay.Web
             services.AddScoped<UserTokenService>();
 
             services.AddScoped<GenerateDefaultImageService>();
+            services.AddScoped<GenerateDefaultUserImageService>();
 
             return services;
         }
