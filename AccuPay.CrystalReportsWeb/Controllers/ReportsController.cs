@@ -1,9 +1,6 @@
 ﻿using AccuPay.CrystalReportsWeb.Services;
 using System;
-using System.IO;
-using System.Net;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace AccuPay.CrystalReportsWeb.Controllers
