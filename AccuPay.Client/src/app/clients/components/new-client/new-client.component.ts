@@ -4,6 +4,8 @@ import { ClientService } from 'src/app/clients/services/client.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { UserFormComponent } from 'src/app/clients/components/user-form/user-form.component';
+import { CreateClient } from 'src/app/clients/shared/create-client';
 
 @Component({
   selector: 'app-new-client',
@@ -16,6 +18,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 export class NewClientComponent implements OnInit {
   @ViewChild(ClientFormComponent)
   clientForm: ClientFormComponent;
+
+  @ViewChild(UserFormComponent)
+  userForm: UserFormComponent;
 
   constructor(
     private clientService: ClientService,
@@ -31,7 +36,18 @@ export class NewClientComponent implements OnInit {
     }
 
     const value = this.clientForm.value;
-    this.clientService.create(value).subscribe({
+    const createClient: CreateClient = {
+      name: value.name,
+      tradeName: value.tradeName,
+      address: value.address,
+      phoneNumber: value.phoneNumber,
+      contactPerson: value.contactPerson,
+      user: null,
+    };
+
+    createClient.user = this.userForm.value;
+
+    this.clientService.create(createClient).subscribe({
       next: (client) => {
         this.router.navigate(['clients', client.id]);
         this.displaySuccess();

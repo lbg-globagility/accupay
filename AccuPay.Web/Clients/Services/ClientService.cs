@@ -1,6 +1,8 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using Microsoft.AspNetCore.Identity;
+using Notisphere.Users.Services;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -8,23 +10,27 @@ namespace AccuPay.Web.Clients
 {
     public class ClientService
     {
-        private readonly ClientRepository _repository;
+        private readonly ClientRepository _clientRepository;
+        private readonly UserManager<AspNetUser> _users;
+        private readonly UserEmailService _emailService;
 
-        public ClientService(ClientRepository repository)
+        public ClientService(ClientRepository clientRepository, UserManager<AspNetUser> users, UserEmailService emailService)
         {
-            _repository = repository;
+            _clientRepository = clientRepository;
+            _users = users;
+            _emailService = emailService;
         }
 
         public async Task<ClientDto> GetById(int clientId)
         {
-            var client = await _repository.GetById(clientId);
+            var client = await _clientRepository.GetById(clientId);
 
             return ConvertToDto(client);
         }
 
         public async Task<PaginatedList<ClientDto>> List(PageOptions options)
         {
-            var (clients, total) = await _repository.List(options);
+            var (clients, total) = await _clientRepository.List(options);
             var dtos = clients.Select(t => ConvertToDto(t));
 
             return new PaginatedList<ClientDto>(dtos, total);
@@ -38,17 +44,32 @@ namespace AccuPay.Web.Clients
                 TradeName = dto.TradeName,
                 Address = dto.Address,
                 PhoneNumber = dto.PhoneNumber,
-                ContactPerson =  dto.ContactPerson,
+                ContactPerson = dto.ContactPerson,
             };
 
-            await _repository.Create(client);
+            await _clientRepository.Create(client);
+
+            if (dto.User != null)
+            {
+                var user = new AspNetUser()
+                {
+                    UserName = dto.User.Email,
+                    Email = dto.User.Email,
+                    FirstName = dto.User.FirstName,
+                    LastName = dto.User.LastName,
+                    ClientId = client.Id
+                };
+
+                await _users.CreateAsync(user);
+                await _emailService.SendInvitation(user);
+            }
 
             return ConvertToDto(client);
         }
 
         public async Task<ClientDto> Update(int id, UpdateClientDto dto)
         {
-            var client = await _repository.GetById(id);
+            var client = await _clientRepository.GetById(id);
 
             client.Name = dto.Name;
             client.TradeName = dto.TradeName;
@@ -56,7 +77,7 @@ namespace AccuPay.Web.Clients
             client.PhoneNumber = dto.PhoneNumber;
             client.ContactPerson = dto.ContactPerson;
 
-            await _repository.Update(client);
+            await _clientRepository.Update(client);
 
             return ConvertToDto(client);
         }
