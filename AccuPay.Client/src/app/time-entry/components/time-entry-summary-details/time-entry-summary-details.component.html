@@ -1,4 +1,8 @@
-<mat-card>
+<div *ngIf="loadingState.isLoading" class="flex justify-center">
+  <mat-spinner></mat-spinner>
+</div>
+
+<mat-card *ngIf="loadingState.isSuccess">
   <h3 class="font-medium mb-4">
     Current Time Entry Summary
     <!-- {{ payPeriod?.cutoffStart | date }} to {{ payPeriod?.cutoffEnd | date }} -

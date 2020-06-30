@@ -3,6 +3,7 @@ import { PayPeriod } from '../../shared/payperiod';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TimeEntryService } from '../../time-entry.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-time-entry-summary-details',
@@ -22,6 +23,8 @@ export class TimeEntrySummaryDetailsComponent implements OnInit {
   @Input()
   panelOpenState: Boolean;
 
+  loadingState: LoadingState = new LoadingState();
+
   payPeriod: PayPeriod;
 
   constructor(
@@ -35,9 +38,14 @@ export class TimeEntrySummaryDetailsComponent implements OnInit {
   }
 
   loadDetails(): void {
+    this.loadingState.changeToLoading();
+
     this.timeEntryService
       .getDetails(this.payPeriodId)
-      .subscribe((payPeriod) => (this.payPeriod = payPeriod));
+      .subscribe((payPeriod) => {
+        this.payPeriod = payPeriod;
+        this.loadingState.changeToSuccess();
+      });
   }
 
   onGenerate(): void {

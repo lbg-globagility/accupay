@@ -7,6 +7,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Subject, BehaviorSubject } from 'rxjs';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PageEvent } from '@angular/material/paginator';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-time-entry',
@@ -29,6 +30,8 @@ export class TimeEntryComponent implements OnInit {
 
   isLoading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
+  loadingState: LoadingState = new LoadingState();
+
   sort: Sort = {
     active: 'cutoff',
     direction: '',
@@ -48,6 +51,7 @@ export class TimeEntryComponent implements OnInit {
   constructor(private payPeriodService: PayPeriodService) {}
 
   ngOnInit(): void {
+    this.loadingState.changeToLoading();
     this.loadLatest();
     this.loadList();
   }
@@ -74,6 +78,7 @@ export class TimeEntryComponent implements OnInit {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;
         this.dataSource = new MatTableDataSource(data.items);
+        this.loadingState.changeToSuccess();
       });
   }
 
