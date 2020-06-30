@@ -12,12 +12,18 @@ namespace AccuPay.Web.Clients
     {
         private readonly ClientRepository _clientRepository;
         private readonly UserManager<AspNetUser> _users;
+        private readonly RoleManager<AspNetRole> _roles;
         private readonly UserEmailService _emailService;
 
-        public ClientService(ClientRepository clientRepository, UserManager<AspNetUser> users, UserEmailService emailService)
+        public ClientService(
+            ClientRepository clientRepository,
+            UserManager<AspNetUser> users,
+            RoleManager<AspNetRole> roles,
+            UserEmailService emailService)
         {
             _clientRepository = clientRepository;
             _users = users;
+            _roles = roles;
             _emailService = emailService;
         }
 
@@ -48,6 +54,15 @@ namespace AccuPay.Web.Clients
             };
 
             await _clientRepository.Create(client);
+
+            var role = new AspNetRole()
+            {
+                Name = "Admin",
+                ClientId = client.Id,
+                IsAdmin = true
+            };
+
+            await _roles.CreateAsync(role);
 
             if (dto.User != null)
             {
