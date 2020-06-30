@@ -124,8 +124,5 @@
       }
     }
   },
-  "defaultProject": "AccuPay",
-  "cli": {
-    "analytics": false
-  }
+  "defaultProject": "AccuPay"
 }

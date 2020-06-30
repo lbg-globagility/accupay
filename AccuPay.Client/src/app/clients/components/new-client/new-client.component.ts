@@ -4,10 +4,8 @@ import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { CreateClient } from 'src/app/clients/shared/create-client';
-import {
-  ClientFormComponent,
-  UserFormComponent,
-} from 'src/app/clients/components';
+import { ClientFormComponent } from 'src/app/clients/components/client-form/client-form.component';
+import { UserFormComponent } from 'src/app/clients/components/user-form/user-form.component';
 
 @Component({
   selector: 'app-new-client',
