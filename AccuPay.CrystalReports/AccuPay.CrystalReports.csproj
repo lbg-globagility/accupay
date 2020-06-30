@@ -51,6 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BaseReportBuilder.cs" />
+    <Compile Include="IPdfGenerator.cs" />
     <Compile Include="LoanSummaryByEmployeeReport\LoanReports.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -96,7 +98,7 @@
       <DependentUpon>OfficialPaySlipFormat.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Payslip\PayslipCreator.cs" />
+    <Compile Include="Payslip\PayslipBuilder.cs" />
     <Compile Include="Payslip\TwoEmpIn1PaySlip.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -117,7 +119,7 @@
       <DependentUpon>SSS Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="SSSMonthlyReport\SSSMonthyReportCreator.cs" />
+    <Compile Include="SSSMonthlyReport\SSSMonthyReportBuilder.cs" />
     <Compile Include="TaxMonthlyReport\Tax Monthly Report.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

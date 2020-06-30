@@ -1,5 +1,5 @@
-﻿using AccuPay.CrystalReports.Payslip;
-using AccuPay.CrystalReportsWeb.DependencyHelper;
+﻿using AccuPay.CrystalReports;
+using AccuPay.CrystalReportsWeb.Services;
 using AccuPay.Data;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
@@ -29,10 +29,11 @@ namespace AccuPay.CrystalReportsWeb
         {
             var services = new ServiceCollection();
 
-            services.AddControllersAsServices(typeof(DependencyConfig).Assembly.GetExportedTypes()
+            services.AddClassesFromAssembly(typeof(DependencyConfig).Assembly.GetExportedTypes()
             .Where(t => !t.IsAbstract && !t.IsGenericTypeDefinition)
             .Where(t => typeof(IHttpController).IsAssignableFrom(t)
-                        || t.Name.EndsWith("Controller", StringComparison.OrdinalIgnoreCase)));
+                        || t.Name.EndsWith("Controller", StringComparison.OrdinalIgnoreCase)
+                        || typeof(IControllerService).IsAssignableFrom(t)));
 
             services.AddDbContext<PayrollContext>(options =>
             {
@@ -47,7 +48,10 @@ namespace AccuPay.CrystalReportsWeb
             services.AddScoped<PayPeriodRepository>();
             services.AddScoped<PayslipDataService>();
             services.AddScoped<SystemOwnerService>();
-            services.AddScoped<PayslipCreator>();
+            services.AddScoped<PayslipBuilder>();
+
+            services.AddScoped<SSSMonthlyReportDataService>();
+            services.AddScoped<SSSMonthyReportBuilder>();
 
             var serviceProvider = services.BuildServiceProvider();
 
@@ -57,7 +61,7 @@ namespace AccuPay.CrystalReportsWeb
 
     public static class ServiceProviderExtensions
     {
-        public static IServiceCollection AddControllersAsServices(this IServiceCollection services,
+        public static IServiceCollection AddClassesFromAssembly(this IServiceCollection services,
             IEnumerable<Type> controllerTypes)
         {
             foreach (var type in controllerTypes)

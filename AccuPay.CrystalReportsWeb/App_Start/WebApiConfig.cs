@@ -1,15 +1,4 @@
-﻿using AccuPay.CrystalReports.Payslip;
-using AccuPay.CrystalReportsWeb.DependencyHelper;
-using AccuPay.Data;
-using AccuPay.Data.Repositories;
-using AccuPay.Data.Services;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Web.Http;
-using Unity;
-using Unity.Injection;
-using Unity.Lifetime;
+﻿using System.Web.Http;
 
 namespace AccuPay.CrystalReportsWeb
 {

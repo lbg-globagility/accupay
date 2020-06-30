@@ -1,4 +1,5 @@
-﻿using AccuPay.Data.Entities;
+﻿using AccuPay.CrystalReports.Payslip;
+using AccuPay.Data.Entities;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using CrystalDecisions.CrystalReports.Engine;
@@ -11,9 +12,9 @@ using System.Data;
 using System.IO;
 using System.Linq;
 
-namespace AccuPay.CrystalReports.Payslip
+namespace AccuPay.CrystalReports
 {
-    public class PayslipCreator
+    public class PayslipBuilder : BaseReportBuilder, IPdfGenerator
     {
         private const string customDateFormat = "M/d/yyyy";
 
@@ -33,15 +34,11 @@ namespace AccuPay.CrystalReports.Payslip
 
         private readonly PayslipDataService _dataService;
 
-        private ReportClass _reportDocument;
-
-        private string _pdfFile;
-
         private DataTable _payslipDatatable;
 
         private readonly string _currentSystemOwner;
 
-        public PayslipCreator(
+        public PayslipBuilder(
             AddressRepository addressRepository,
             OrganizationRepository organizationRepository,
             PayPeriodRepository payPeriodRepository,
@@ -59,16 +56,6 @@ namespace AccuPay.CrystalReports.Payslip
             _currentSystemOwner = _systemOwnerService.GetCurrentSystemOwner();
 
             _payslipDatatable = new DataTable();
-        }
-
-        public ReportClass GetReportDocument()
-        {
-            return _reportDocument;
-        }
-
-        public string GetPDF()
-        {
-            return _pdfFile;
         }
 
         public bool CheckIfEmployeeExists(int employeeId)
@@ -94,7 +81,7 @@ namespace AccuPay.CrystalReports.Payslip
             return _payslipDatatable.Rows.Count > 0 ? _payslipDatatable.Rows[0] : null;
         }
 
-        public PayslipCreator CreateReportDocument(int payPeriodId, sbyte isActual = 0, int[] employeeIds = null)
+        public PayslipBuilder CreateReportDocument(int payPeriodId, sbyte isActual = 0, int[] employeeIds = null)
         {
             // Use dapper or entity framework for procedure calls
             var payPeriod = _payPeriodRepository.GetById(payPeriodId);
@@ -217,34 +204,21 @@ namespace AccuPay.CrystalReports.Payslip
                 return table;
         }
 
-        public PayslipCreator GeneratePDF(string saveFolderPath, string fileName)
+        public BaseReportBuilder GeneratePDF(string saveFolderPath, string fileName)
         {
             string pdfFullPath = Path.Combine(saveFolderPath, fileName);
 
             return GeneratePDF(pdfFullPath);
         }
 
-        public PayslipCreator GeneratePDF(string pdfFullPath)
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            ExportOptions CrExportOptions;
-            DiskFileDestinationOptions CrDiskFileDestinationOptions = new DiskFileDestinationOptions();
-            PdfRtfWordFormatOptions CrFormatTypeOptions = new PdfRtfWordFormatOptions();
-            CrDiskFileDestinationOptions.DiskFileName = pdfFullPath;
-            CrExportOptions = _reportDocument.ExportOptions;
-
-            CrExportOptions.ExportDestinationType = ExportDestinationType.DiskFile;
-            CrExportOptions.ExportFormatType = ExportFormatType.PortableDocFormat;
-            CrExportOptions.DestinationOptions = CrDiskFileDestinationOptions;
-            CrExportOptions.FormatOptions = CrFormatTypeOptions;
-
-            _reportDocument.Export();
-
-            _pdfFile = pdfFullPath;
+            ExportPDF(pdfFullPath);
 
             return this;
         }
 
-        public PayslipCreator AddPdfPassword(string password)
+        public PayslipBuilder AddPdfPassword(string password)
         {
             PdfDocument document = PdfReader.Open(_pdfFile);
             PdfSecuritySettings securitySettings = document.SecuritySettings;

@@ -66,7 +66,6 @@ import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balanc
 import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.component';
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
 import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
-import { ReportFormComponent } from 'src/app/reports/report-form/report-form.component';
 import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
 import { EmployeesComponent } from 'src/app/employees/employees/employees.component';
 import { AllowancesComponent } from 'src/app/allowances/allowances/allowances.component';
@@ -77,6 +76,7 @@ import {
   ViewClientComponent,
   EditClientComponent,
 } from 'src/app/clients/components';
+import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
 
 const routes: Routes = [
   {
@@ -258,8 +258,8 @@ const routes: Routes = [
         component: ReportsComponent,
         children: [
           {
-            path: ':report',
-            component: ReportFormComponent,
+            path: 'sss',
+            component: SssReportComponent,
           },
         ],
       },

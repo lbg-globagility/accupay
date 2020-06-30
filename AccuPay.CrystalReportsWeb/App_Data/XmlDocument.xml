@@ -486,16 +486,20 @@
             Reports API endpoints returning pdf files.
             </summary>
         </member>
-        <member name="M:AccuPay.CrystalReportsWeb.Controllers.ReportsController.#ctor(AccuPay.CrystalReports.Payslip.PayslipCreator)">
-            <summary>
-            sdf
-            </summary>
-        </member>
         <member name="M:AccuPay.CrystalReportsWeb.Controllers.ReportsController.GetPayslip(System.Int32)">
             <summary>
-            Download pdf of all the employee payslip per pay period.
+            Returns a pdf file containing all of the employee payslips of the selected pay period.
             </summary>
-            <param name="payPeriodId">The pay period ID. Organization ID is fetched from the payperiod object that is fetched using payPeriodId.</param>
+            <param name="payPeriodId">The pay period ID which determines the organization and cutoff dates of the report.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AccuPay.CrystalReportsWeb.Controllers.ReportsController.GetSSSMonthlyReport(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a pdf file containing the SSS Monthly report of the selected month and year.
+            </summary>
+            <param name="organizationId">The ID of the organization that the report will be based on.</param>
+            <param name="month">The month of the report.</param>
+            <param name="year">The year of the report.</param>
             <returns></returns>
         </member>
     </members>

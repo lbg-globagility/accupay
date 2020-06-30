@@ -48,6 +48,7 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     // MatProgressBarModule,
   ],
   exports: [
+    StatusComponent,
     // LocalePipe,
     // SanitizerPipe,
     // BytesPipe,
@@ -57,7 +58,6 @@ import { YesNoPipe } from '../core/pipes/yes-no.pipe';
     AmountPipe,
     YesNoPipe,
     ImgFallbackDirective,
-    StatusComponent,
     DisplayFieldComponent,
     ExpandableRowComponent,
     ExpandableRowContainerDirective,

@@ -2,7 +2,6 @@ Option Strict On
 
 Imports AccuPay.Benchmark
 Imports AccuPay.CrystalReports
-Imports AccuPay.CrystalReports.Payslip
 Imports AccuPay.Data
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
@@ -144,9 +143,9 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of TimeLogsReader)
 
         services.AddTransient(Of PayslipDataService)
-        services.AddTransient(Of PayslipCreator)
+        services.AddTransient(Of PayslipBuilder)
         services.AddTransient(Of SSSMonthlyReportDataService)
-        services.AddTransient(Of SSSMonthyReportCreator)
+        services.AddTransient(Of SSSMonthyReportBuilder)
         services.AddTransient(Of PhilHealthMonthlyReportDataService)
         services.AddTransient(Of PhilHealthMonthlyReportCreator)
         services.AddTransient(Of PagIBIGMonthlyReportDataService)

@@ -1,8 +1,6 @@
-﻿using AccuPay.CrystalReports.Payslip;
-using System.IO;
-using System.Net;
+﻿using AccuPay.CrystalReportsWeb.Services;
+using System;
 using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Web.Http;
 
 namespace AccuPay.CrystalReportsWeb.Controllers
@@ -11,42 +9,46 @@ namespace AccuPay.CrystalReportsWeb.Controllers
     /// Reports API endpoints returning pdf files.
     /// </summary>
     [RoutePrefix("api/reports")]
-    public class ReportsController : ApiController
+    public class ReportsController : ApiReportController
     {
-        private readonly PayslipCreator _payslipCreator;
+        private readonly ReportingService _reportingService;
 
-        /// <summary>
-        /// sdf
-        /// </summary>
-        public ReportsController(PayslipCreator organizationRepository)
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+
+        public ReportsController(ReportingService reportingService)
+#pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-            _payslipCreator = organizationRepository;
+            _reportingService = reportingService;
         }
 
         /// <summary>
-        /// Download pdf of all the employee payslip per pay period.
+        /// Returns a pdf file containing all of the employee payslips of the selected pay period.
         /// </summary>
-        /// <param name="payPeriodId">The pay period ID. Organization ID is fetched from the payperiod object that is fetched using payPeriodId.</param>
+        /// <param name="payPeriodId">The pay period ID which determines the organization and cutoff dates of the report.</param>
         /// <returns></returns>
         [Route("payslip/{payPeriodId}")]
         public HttpResponseMessage GetPayslip(int payPeriodId)
         {
-            string pdfFullPath = Path.GetTempFileName();
+            string pdfFullPath = _reportingService.GeneratePayslip(payPeriodId);
 
-            _payslipCreator
-                .CreateReportDocument(
-                    payPeriodId: payPeriodId)
-                .GeneratePDF(pdfFullPath);
+            return PdfReportResult(pdfFullPath);
+        }
 
-            var response = new HttpResponseMessage(HttpStatusCode.OK)
-            {
-                Content = new StreamContent(File.OpenRead(pdfFullPath))
-            };
+        /// <summary>
+        /// Returns a pdf file containing the SSS Monthly report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="month">The month of the report.</param>
+        /// <param name="year">The year of the report.</param>
+        /// <returns></returns>
+        [Route("sss-report/{organizationId}/{month}/{year}")]
+        public HttpResponseMessage GetSSSMonthlyReport(int organizationId, int month, int year)
+        {
+            var dateMonth = new DateTime(year, month, 1);
 
-            var contentType = "application/pdf";
-            response.Content.Headers.ContentType = new MediaTypeHeaderValue(contentType);
+            string pdfFullPath = _reportingService.GenerateSSSMonthlyReport(organizationId, dateMonth);
 
-            return response;
+            return PdfReportResult(pdfFullPath);
         }
     }
 }

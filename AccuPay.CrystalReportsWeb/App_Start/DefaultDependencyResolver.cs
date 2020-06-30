@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Web.Http.Dependencies;
 
-namespace AccuPay.CrystalReportsWeb.DependencyHelper
+namespace AccuPay.CrystalReportsWeb
 {
     public class DefaultDependencyResolver : IDependencyResolver
     {
