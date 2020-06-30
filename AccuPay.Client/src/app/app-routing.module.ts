@@ -74,6 +74,7 @@ import { EditClientComponent } from 'src/app/clients/components/edit-client/edit
 import { ClientsComponent } from 'src/app/clients/components/clients/clients.component';
 import { ViewClientComponent } from 'src/app/clients/components/view-client/view-client.component';
 import { AllowancesComponent } from 'src/app/allowances/allowances/allowances.component';
+import { SecurityComponent } from 'src/app/users/security/security.component';
 
 const routes: Routes = [
   {
@@ -116,38 +117,7 @@ const routes: Routes = [
           },
         ],
       },
-      {
-        path: 'users',
-        component: UserListComponent,
-      },
-      {
-        path: 'users/new',
-        component: NewUserComponent,
-      },
-      {
-        path: 'users/:id',
-        component: ViewUserComponent,
-      },
-      {
-        path: 'users/:id/edit',
-        component: EditUserComponent,
-      },
-      {
-        path: 'roles',
-        component: RoleListComponent,
-      },
-      {
-        path: 'roles/new',
-        component: NewRoleComponent,
-      },
-      {
-        path: 'user-access',
-        component: UserRolesComponent,
-      },
-      {
-        path: 'roles/:id/edit',
-        component: EditRoleComponent,
-      },
+
       {
         path: 'salaries/new',
         component: NewSalaryComponent,
@@ -378,6 +348,49 @@ const routes: Routes = [
       {
         path: 'payroll/:id',
         component: ViewPayPeriodComponent,
+      },
+      {
+        path: 'security',
+        component: SecurityComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'users',
+            pathMatch: 'full',
+          },
+          {
+            path: 'users',
+            component: UserListComponent,
+          },
+          {
+            path: 'roles',
+            component: RoleListComponent,
+          },
+          {
+            path: 'user-access',
+            component: UserRolesComponent,
+          },
+        ],
+      },
+      {
+        path: 'users/new',
+        component: NewUserComponent,
+      },
+      {
+        path: 'users/:id',
+        component: ViewUserComponent,
+      },
+      {
+        path: 'users/:id/edit',
+        component: EditUserComponent,
+      },
+      {
+        path: 'roles/new',
+        component: NewRoleComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
       },
     ],
     canActivate: [AuthGuard],

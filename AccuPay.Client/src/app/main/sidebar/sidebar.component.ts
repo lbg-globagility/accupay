@@ -96,20 +96,21 @@ const menuItems: MenuItem[] = [
   {
     label: 'Security',
     icon: 'security',
-    items: [
-      {
-        label: 'Users',
-        route: '/users',
-      },
-      {
-        label: 'Roles',
-        route: '/roles',
-      },
-      {
-        label: 'User Access',
-        route: '/user-access',
-      },
-    ],
+    route: '/security',
+    // items: [
+    //   {
+    //     label: 'Users',
+    //     route: '/users',
+    //   },
+    //   {
+    //     label: 'Roles',
+    //     route: '/roles',
+    //   },
+    //   {
+    //     label: 'User Access',
+    //     route: '/user-access',
+    //   },
+    // ],
   },
   {
     label: 'Settings',

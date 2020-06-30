@@ -1,8 +1,6 @@
-<h1 class="mat-headline">Users</h1>
-
 <div class="row middle-md">
   <div class="col-md-3">
-    <mat-form-field color="accent" class="w-full">
+    <mat-form-field appearance="standard" class="w-full">
       <mat-icon matPrefix class="m-align-middle">search</mat-icon>
       <mat-label>Search</mat-label>
       <input
@@ -24,9 +22,14 @@
     </mat-form-field>
   </div>
   <div class="col-md-6"></div>
-  <div class="col-md-3">
-    <button mat-raised-button color="accent" class="new-btn" routerLink="new">
-      NEW USER
+  <div class="col-md-3 flex justify-end">
+    <button
+      mat-raised-button
+      color="accent"
+      class="m-with-icon"
+      routerLink="/users/new"
+    >
+      <mat-icon>add</mat-icon>NEW USER
     </button>
   </div>
 </div>

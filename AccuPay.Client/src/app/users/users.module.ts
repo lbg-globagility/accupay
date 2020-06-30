@@ -5,9 +5,17 @@ import { ViewUserComponent } from './view-user/view-user.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { NewUserComponent } from './new-user/new-user.component';
 import { EditUserComponent } from './edit-user/edit-user.component';
+import { SecurityComponent } from './security/security.component';
 
 @NgModule({
-  declarations: [UserListComponent, ViewUserComponent, UserFormComponent, NewUserComponent, EditUserComponent],
+  declarations: [
+    UserListComponent,
+    ViewUserComponent,
+    UserFormComponent,
+    NewUserComponent,
+    EditUserComponent,
+    SecurityComponent,
+  ],
   imports: [SharedModule],
 })
 export class UsersModule {}

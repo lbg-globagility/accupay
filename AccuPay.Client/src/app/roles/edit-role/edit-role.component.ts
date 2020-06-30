@@ -64,7 +64,7 @@ export class EditRoleComponent implements OnInit {
   }
 
   cancel() {
-    this.router.navigate(['roles']);
+    this.router.navigate(['roles', this.roleId]);
   }
 
   private displaySuccess() {
