@@ -4,6 +4,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Client } from 'src/app/clients/shared/client';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { HttpClient } from '@angular/common/http';
+import { CreateClient } from 'src/app/clients/shared/create-client';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class ClientService {
     return this.httpClient.get<Client>(`${this.baseUrl}/${clientId}`);
   }
 
-  create(client: Client): Observable<Client> {
+  create(client: CreateClient): Observable<Client> {
     return this.httpClient.post<Client>(`${this.baseUrl}`, client);
   }
 
