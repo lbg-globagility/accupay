@@ -1,11 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { ClientFormComponent } from 'src/app/clients/components/client-form/client-form.component';
 import { ClientService } from 'src/app/clients/services/client.service';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { UserFormComponent } from 'src/app/clients/components/user-form/user-form.component';
 import { CreateClient } from 'src/app/clients/shared/create-client';
+import {
+  ClientFormComponent,
+  UserFormComponent,
+} from 'src/app/clients/components';
 
 @Component({
   selector: 'app-new-client',
