@@ -151,7 +151,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PagIBIGMonthlyReportDataService)
         services.AddTransient(Of PagIBIGMonthlyReportBuilder)
         services.AddTransient(Of LoanSummaryByTypeReportDataService)
-        services.AddTransient(Of LoanSummaryByTypeReportCreator)
+        services.AddTransient(Of LoanSummaryByTypeReportBuilder)
         services.AddTransient(Of LoanSummaryByEmployeeReportDataService)
         services.AddTransient(Of LoanSummaryByEmployeeReportCreator)
         services.AddTransient(Of TaxMonthlyReportDataService)

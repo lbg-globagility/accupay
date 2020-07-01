@@ -10,17 +10,20 @@ namespace AccuPay.CrystalReportsWeb.Services
         private readonly SSSMonthyReportBuilder _sSSMonthyReportBuilder;
         private readonly PhilHealthMonthlyReportBuilder _philHealthMonthlyReportBuilder;
         private readonly PagIBIGMonthlyReportBuilder _pagIBIGMonthlyReportBuilder;
+        private readonly LoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
             SSSMonthyReportBuilder sSSMonthyReportCreator,
             PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
-            PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder)
+            PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
+             LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;
             _philHealthMonthlyReportBuilder = philHealthMonthlyReportBuilder;
             _pagIBIGMonthlyReportBuilder = pagIBIGMonthlyReportBuilder;
+            _loanSummaryByTypeReportBuilder = loanSummaryByTypeReportBuilder;
         }
 
         public string GeneratePayslip(int payPeriodId)
@@ -56,12 +59,23 @@ namespace AccuPay.CrystalReportsWeb.Services
             return pdfFullPath;
         }
 
-        public string GeneratePagIBIGMonthlyReport(int organizationId, DateTime dateMonth)
+        public string GeneratePagIBIGContributionReport(int organizationId, DateTime dateMonth)
         {
             string pdfFullPath = Path.GetTempFileName();
 
             _pagIBIGMonthlyReportBuilder
                 .CreateReportDocument(organizationId, dateMonth)
+                .GeneratePDF(pdfFullPath);
+
+            return pdfFullPath;
+        }
+
+        public string GenerateLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+            string pdfFullPath = Path.GetTempFileName();
+
+            _loanSummaryByTypeReportBuilder
+                .CreateReportDocument(organizationId, dateFrom, dateTo)
                 .GeneratePDF(pdfFullPath);
 
             return pdfFullPath;

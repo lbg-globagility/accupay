@@ -76,11 +76,34 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// <param name="year">The year of the report.</param>
         /// <returns></returns>
         [Route("pagibig-report/{organizationId}/{month}/{year}")]
-        public HttpResponseMessage GetPagIBIGMonthlyReport(int organizationId, int month, int year)
+        public HttpResponseMessage GetPagIBIGContributionReport(int organizationId, int month, int year)
         {
             var dateMonth = new DateTime(year, month, 1);
 
-            string pdfFullPath = _reportingService.GeneratePagIBIGMonthlyReport(organizationId, dateMonth);
+            string pdfFullPath = _reportingService.GeneratePagIBIGContributionReport(organizationId, dateMonth);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the Loan by type report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="monthFrom">The start month of the report.</param>
+        /// <param name="dayFrom">The start year of the report.</param>
+        /// <param name="yearFrom">The start month of the report.</param>
+        /// <param name="monthTo">The end year of the report.</param>
+        /// <param name="dayTo">The end month of the report.</param>
+        /// <param name="yearTo">The end year of the report.</param>
+        /// <param name="isPerPage">The report is generated per page.</param>
+        /// <returns></returns>
+        [Route("loanbytype-report/{organizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
+        public HttpResponseMessage GetLoanByTypeReport(int organizationId, int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        {
+            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
+            var dateTo = new DateTime(yearTo, monthTo, dayTo);
+
+            string pdfFullPath = _reportingService.GenerateLoanByTypeReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
         }

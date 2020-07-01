@@ -22,5 +22,29 @@ namespace AccuPay.Web.Controllers
             var path = $"sss-report/{_currentUser.OrganizationId}/{month}/{year}";
             return await GetPDF(path, "sss-report.pdf");
         }
+
+        [HttpGet("philhealth-report/{month}/{year}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetPhilHeathReport(int month, int year)
+        {
+            var path = $"philhealth-report/{_currentUser.OrganizationId}/{month}/{year}";
+            return await GetPDF(path, "philhealth-report.pdf");
+        }
+
+        [HttpGet("pagibig-report/{month}/{year}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetPagIBIGReport(int month, int year)
+        {
+            var path = $"pagibig-report/{_currentUser.OrganizationId}/{month}/{year}";
+            return await GetPDF(path, "pagibig-report.pdf");
+        }
+
+        [HttpGet("loanbyType-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetPagIBIGReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        {
+            var path = $"loanbyType-report/{_currentUser.OrganizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}";
+            return await GetPDF(path, "loan-by-type-report.pdf");
+        }
     }
 }

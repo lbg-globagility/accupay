@@ -5,6 +5,8 @@ import { SelectMonthComponent } from './components/select-month/select-month.com
 import { SssReportComponent } from './sss-report/sss-report.component';
 import { PhilhealthReportComponent } from './philhealth-report/philhealth-report.component';
 import { PagibigReportComponent } from './pagibig-report/pagibig-report.component';
+import { LoanReportBytypeComponent } from './loan-report-bytype/loan-report-bytype.component';
+import { SelectDateRangeComponent } from './components/select-date-range/select-date-range.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +15,8 @@ import { PagibigReportComponent } from './pagibig-report/pagibig-report.componen
     SssReportComponent,
     PhilhealthReportComponent,
     PagibigReportComponent,
+    LoanReportBytypeComponent,
+    SelectDateRangeComponent,
   ],
 
   imports: [SharedModule],
