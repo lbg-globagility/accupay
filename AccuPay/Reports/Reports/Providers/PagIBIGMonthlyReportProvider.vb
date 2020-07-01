@@ -17,7 +17,7 @@ Public Class PagIBIGMonthlyReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of PagIBIGMonthlyReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of PagIBIGMonthlyReportBuilder)
 
         Dim pagIBIGReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 

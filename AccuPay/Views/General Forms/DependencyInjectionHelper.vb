@@ -149,7 +149,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of PhilHealthMonthlyReportDataService)
         services.AddTransient(Of PhilHealthMonthlyReportBuilder)
         services.AddTransient(Of PagIBIGMonthlyReportDataService)
-        services.AddTransient(Of PagIBIGMonthlyReportCreator)
+        services.AddTransient(Of PagIBIGMonthlyReportBuilder)
         services.AddTransient(Of LoanSummaryByTypeReportDataService)
         services.AddTransient(Of LoanSummaryByTypeReportCreator)
         services.AddTransient(Of LoanSummaryByEmployeeReportDataService)

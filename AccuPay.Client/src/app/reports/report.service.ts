@@ -10,6 +10,7 @@ export class ReportService extends BasePdfService {
 
   readonly sssFileName = 'sss-report.pdf';
   readonly philHealthFileName = 'philhealth-report.pdf';
+  readonly pagIBIGFileName = 'PagIBIG-report.pdf';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -26,6 +27,13 @@ export class ReportService extends BasePdfService {
     return this.getPDF(
       this.philHealthFileName,
       `${this.baseUrl}/philhealth-report/${month}/${year}`
+    );
+  }
+
+  getPagIBIGReport(month: number, year: number) {
+    return this.getPDF(
+      this.pagIBIGFileName,
+      `${this.baseUrl}/pagibig-report/${month}/${year}`
     );
   }
 }
