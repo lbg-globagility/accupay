@@ -41,19 +41,18 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public async Task<IEnumerable<User>> ToListAsync()
+        public async Task<ICollection<User>> ToListAsync()
         {
-            return await _query.ToListAsync();
-        }
-
-        public User FirstOrDefault()
-        {
-            return _query.FirstOrDefault();
+            return await _query
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<User> FirstOrDefaultAsync()
         {
-            return await _query.FirstOrDefaultAsync();
+            return await _query
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
         }
     }
 }

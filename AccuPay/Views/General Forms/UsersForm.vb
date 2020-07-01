@@ -3,21 +3,26 @@ Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UsersForm
-    Private isNew As Boolean = False
-    Dim rowid As Integer
 
-    Private _policyHelper As PolicyHelper
+    Private isNew As Boolean = False
 
     Private dataSource As List(Of UserBoundItem)
+
+    Private ReadOnly _policyHelper As PolicyHelper
+
+    Private ReadOnly _userRepository As UserRepository
 
     Sub New()
 
         InitializeComponent()
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
     End Sub
 
@@ -32,8 +37,7 @@ Public Class UsersForm
     End Sub
 
     Private Async Sub FillUsers()
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-        Dim users = Await userRepository.GetAllActiveWithPositionAsync()
+        Dim users = Await _userRepository.GetAllActiveWithPositionAsync()
 
         Dim source = users.Select(Function(u) New UserBoundItem(u))
         dataSource = source.ToList()
@@ -64,8 +68,6 @@ Public Class UsersForm
             cboxposition.SelectedValue = .PositionID
 
             UserLevelComboBox.SelectedIndex = .UserLevel
-
-            rowid = .RowID
         End With
 
     End Sub
@@ -175,6 +177,16 @@ Public Class UsersForm
     End Function
 
     Private Async Sub SaveUser_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+        Await FunctionUtils.TryCatchFunctionAsync("Save User",
+            Async Function()
+                Await SaveUser()
+            End Function)
+
+        btnSave.Enabled = True
+    End Sub
+
+    Private Async Function SaveUser() As Threading.Tasks.Task
         Dim enableSaveButton = Sub()
                                    btnSave.Enabled = True
                                End Sub
@@ -208,11 +220,10 @@ Public Class UsersForm
             Return
         End If
 
-        Dim userRepositoryQuery = MainServiceProvider.GetRequiredService(Of UserRepository)
-        Dim userRepositorySave = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
 
         If isNew Then
-            Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
+            Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
             If usernameExists Then
                 usernameExistsAlready()
                 Return
@@ -221,7 +232,7 @@ Public Class UsersForm
             Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
             ApplyChanges(newUser)
-            Await userRepositorySave.SaveAsync(newUser)
+            Await dataService.CreateAsync(newUser)
 
             myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
 
@@ -233,10 +244,10 @@ Public Class UsersForm
             Dim userBoundItem = GetUserBoundItem()
             If userBoundItem Is Nothing Then Return
 
-            Dim user = Await userRepositoryQuery.GetByIdWithPositionAsync(userBoundItem.RowID)
+            Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
 
             If username <> user.Username Then
-                Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
+                Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
                 If usernameExists Then
                     usernameExistsAlready()
                     Return
@@ -244,13 +255,13 @@ Public Class UsersForm
             End If
 
             ApplyChanges(user)
-            Await userRepositorySave.SaveAsync(user)
+            Await dataService.UpdateAsync(user)
 
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
         End If
 
         enableSaveButton()
-    End Sub
+    End Function
 
     Private Function GetUserBoundItem() As UserBoundItem
         Dim currentRow = dgvUserList.CurrentRow
@@ -435,8 +446,8 @@ Public Class UsersForm
             btnDelete.Enabled = False
 
             Dim user = GetUserBoundItem()
-            Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-            Await userRepository.SoftDeleteAsync(user.RowID)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
+            Await dataService.SoftDeleteAsync(user.RowID)
 
             dgvUserList.ClearSelection()
 

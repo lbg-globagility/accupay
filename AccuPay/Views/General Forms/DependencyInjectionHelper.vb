@@ -137,6 +137,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PositionDataService)
         services.AddTransient(Of TimeLogDataService)
+        services.AddTransient(Of UserDataService)
 
         services.AddTransient(Of ShiftImportParser)
         services.AddTransient(Of TimeLogImportParser)

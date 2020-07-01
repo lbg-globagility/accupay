@@ -42,7 +42,7 @@ namespace AccuPay.Web.Divisions
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
             int userId = 1;
-            var division = Division.CreateEmptyDivision(organizationId: _currentuser.OrganizationId, userId: userId);
+            var division = Division.NewDivision(organizationId: _currentuser.OrganizationId, userId: userId);
             ApplyChanges(dto, division);
 
             await _service.SaveAsync(division);
