@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace AccuPay.Data.Repositories
 
         public UserQueryBuilder ByUsername(string username)
         {
-            _query = _query.Where(u => u.Username == username);
+            _query = _query.Where(u => u.Username.Trim().ToLower() == username.ToTrimmedLowerCase());
             return this;
         }
 
@@ -53,6 +54,13 @@ namespace AccuPay.Data.Repositories
             return await _query
                 .AsNoTracking()
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AnyAsync()
+        {
+            return await _query
+                .AsNoTracking()
+                .AnyAsync();
         }
     }
 }

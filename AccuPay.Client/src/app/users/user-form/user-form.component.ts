@@ -48,6 +48,7 @@ export class UserFormComponent implements OnInit {
   ngOnInit(): void {
     if (this.user) {
       this.form.patchValue(this.user);
+      this.form.get('email').disable();
     }
   }
 

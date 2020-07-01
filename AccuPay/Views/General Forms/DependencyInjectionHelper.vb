@@ -3,10 +3,12 @@ Option Strict On
 Imports AccuPay.Benchmark
 Imports AccuPay.CrystalReports
 Imports AccuPay.Data
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
@@ -160,6 +162,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of ThirteenthMonthSummaryReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
+        services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)

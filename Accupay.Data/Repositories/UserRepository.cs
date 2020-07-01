@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -8,8 +9,11 @@ namespace AccuPay.Data.Repositories
 {
     public class UserRepository : SavableRepository<User>
     {
-        public UserRepository(PayrollContext context) : base(context)
+        private readonly IEncryption _encryption;
+
+        public UserRepository(PayrollContext context, IEncryption encryption) : base(context)
         {
+            _encryption = encryption;
         }
 
         #region User List
@@ -53,6 +57,19 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<bool> CheckIfUsernameExistsAsync(string username, bool isIncrypted = false)
+        {
+            if (isIncrypted == false)
+            {
+                username = _encryption.Encrypt(username);
+            }
+
+            var builder = new UserQueryBuilder(_context);
+            return await builder
+                .ByUsername(username)
+                .AnyAsync();
+        }
+
         public async Task<User> GetByUsernameAsync(string username)
         {
             var builder = new UserQueryBuilder(_context);
@@ -87,6 +104,30 @@ namespace AccuPay.Data.Repositories
             user.SetStatus(UserStatus.Inactive);
 
             await SaveAsync(user);
+        }
+
+        public async Task<string> GetUniqueUsernameAsync(string username, int? clientId = null)
+        {
+            if (clientId.HasValue)
+            {
+                if (await CheckIfUsernameExistsAsync(username))
+                {
+                    username = $"{username} - {clientId}";
+                }
+                else
+                {
+                    return username;
+                }
+            }
+
+            int counter = 0;
+            while (await CheckIfUsernameExistsAsync(username))
+            {
+                username = $"{username} - {clientId}[{counter}]";
+                counter++;
+            }
+
+            return username;
         }
 
         #endregion CRUD

@@ -1,6 +1,7 @@
 ﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Desktop.Utilities
@@ -16,6 +17,8 @@ Public Class UsersForm
 
     Private ReadOnly _userRepository As UserRepository
 
+    Private ReadOnly _encryptor As IEncryption
+
     Sub New()
 
         InitializeComponent()
@@ -23,6 +26,8 @@ Public Class UsersForm
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
         _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
 
     End Sub
 
@@ -57,7 +62,7 @@ Public Class UsersForm
 
         With user
             txtUserName.Text = .UserID
-            txtPassword.Text = DecryptData(.Password)
+            txtPassword.Text = _encryptor.Decrypt(.Password)
             txtConfirmPassword.Text = txtPassword.Text
             txtConfirmPassword.Tag = txtConfirmPassword.Text
             txtLastName.Text = .LastName
@@ -210,8 +215,6 @@ Public Class UsersForm
         End If
 
         Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
-        Dim username = EncryptData(txtUserName.Text)
-        Dim password = EncryptData(txtPassword.Text)
 
         If Not passwordConfirmed Then
             myBalloon("Password does not match.", "Save failed", lblSaveMsg, , -100)
@@ -223,8 +226,7 @@ Public Class UsersForm
         Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
 
         If isNew Then
-            Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
-            If usernameExists Then
+            If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
                 usernameExistsAlready()
                 Return
             End If
@@ -246,15 +248,15 @@ Public Class UsersForm
 
             Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
 
-            If username <> user.Username Then
-                Dim usernameExists = (Await _userRepository.GetByUsernameAsync(username)) IsNot Nothing
-                If usernameExists Then
+            If _encryptor.Encrypt(txtUserName.Text) <> user.Username Then
+                If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
                     usernameExistsAlready()
                     Return
                 End If
             End If
 
             ApplyChanges(user)
+            user.LastUpdBy = z_User
             Await dataService.UpdateAsync(user)
 
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
@@ -271,8 +273,8 @@ Public Class UsersForm
 
     Private Sub ApplyChanges(ByRef u As User)
         With u
-            .Username = EncryptData(txtUserName.Text)
-            .Password = EncryptData(txtPassword.Text)
+            .Username = txtUserName.Text
+            .Password = txtPassword.Text
             .LastName = txtLastName.Text
             .FirstName = txtFirstName.Text
             .MiddleName = txtMiddleName.Text
@@ -492,9 +494,14 @@ Public Class UsersForm
 
     Private Class UserBoundItem
 
+        Private ReadOnly _encryptor As IEncryption
+
         Public Sub New(u As User)
+
+            _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
+
             Dim userName As String = u.Username
-            _UserID = Convert.ToString(DecryptData(userName))
+            _UserID = Convert.ToString(_encryptor.Decrypt(userName))
 
             _PositionName = u.Position.Name
             _LastName = u.LastName

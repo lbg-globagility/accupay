@@ -9,9 +9,11 @@ namespace AccuPay.Utilities
         /// </summary>
         /// <param name="guid"></param>
         /// <returns></returns>
-        public static byte[] ToByteArray(Guid guid)
+        public static byte[] ToByteArray(Guid? guid)
         {
-            var bytes = guid.ToByteArray();
+            if (guid == null) return null;
+
+            var bytes = guid.Value.ToByteArray();
 
             var temp = bytes[0];
             bytes[0] = bytes[3];
