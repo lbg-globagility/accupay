@@ -1,17 +1,12 @@
-﻿using AccuPay.Data.Helpers;
-using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System;
 using System.ComponentModel.DataAnnotations.Schema;
 using static AccuPay.Data.Helpers.UserConstants;
 
 namespace AccuPay.Data.Entities
 {
     [Table("user")]
-    public class User
+    public class User : BaseEntity
     {
-        [Key]
-        public int? RowID { get; set; }
-
         public string LastName { get; set; }
 
         public string FirstName { get; set; }
@@ -41,24 +36,16 @@ namespace AccuPay.Data.Entities
 
         public string EmailAddress { get; set; }
 
-        //public char? AllowLimitedAccess { get; set; }
-
-        //public char? InSession { get; set; }
-
         public int UserLevel { get; set; }
+
+        public Guid? AspNetUserId { get; set; }
 
         [ForeignKey("PositionID")]
         public virtual Position Position { get; set; }
 
         #region Functions
 
-        public bool IsActive
-        {
-            get
-            {
-                return Status == ACTIVE_STATUS;
-            }
-        }
+        public bool IsActive => Status == ACTIVE_STATUS;
 
         public void SetStatus(UserStatus userStatus)
         {

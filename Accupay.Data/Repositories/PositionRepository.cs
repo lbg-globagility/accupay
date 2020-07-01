@@ -33,40 +33,47 @@ namespace AccuPay.Data.Repositories
 
         internal async Task<Position> GetByIdWithDivisionAsync(int positionId)
         {
-            return await _context.Positions.
-                            Include(p => p.Division).
-                            Where(p => p.RowID == positionId).
-                            FirstOrDefaultAsync();
+            return await _context.Positions
+                .Include(p => p.Division)
+                .Where(p => p.RowID == positionId)
+                .FirstOrDefaultAsync();
         }
 
         internal async Task<Position> GetByNameAsync(int organizationId, string positionName)
         {
             return await _context.Positions
-                            .Where(p => p.OrganizationID == organizationId)
-                            .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase())
-                            .AsNoTracking()
-                            .FirstOrDefaultAsync();
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Name.Trim().ToLower() == positionName.ToTrimmedLowerCase())
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<Position> GetFirstPositionAsync()
+        {
+            return await _context.Positions
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        internal async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
+        internal async Task<ICollection<Position>> GetAllAsync(int organizationId)
         {
-            return await _context.Positions.
-                Where(p => p.OrganizationID == organizationId).
-                ToListAsync();
+            return await _context.Positions
+                .Where(p => p.OrganizationID == organizationId)
+                .ToListAsync();
         }
 
         internal async Task<PaginatedListResult<Position>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.Positions
-                                .Include(x => x.Division)
-                                .Where(x => x.OrganizationID == organizationId)
-                                .OrderBy(x => x.Division.Name)
-                                .ThenBy(x => x.Name)
-                                .AsQueryable();
+                .Include(x => x.Division)
+                .Where(x => x.OrganizationID == organizationId)
+                .OrderBy(x => x.Division.Name)
+                .ThenBy(x => x.Name)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {

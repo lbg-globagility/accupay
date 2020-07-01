@@ -161,7 +161,7 @@ namespace AccuPay.Data.Entities
 
         public bool IsRetired => EmploymentStatus.Trim().ToUpper() == "RETIRED";
 
-        public static Employee CreateEmptyEmployee(int organizationId, int userId)
+        public static Employee NewEmployee(int organizationId, int userId)
         {
             return new Employee
             {

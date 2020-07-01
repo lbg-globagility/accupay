@@ -1,11 +1,14 @@
 using AccuPay.Data.Entities;
+using AccuPay.Data.Exceptions;
 using AccuPay.Data.Repositories;
+using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Files.Services;
 using Microsoft.AspNetCore.Identity;
 using Notisphere.Users.Services;
 using System;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Users
@@ -24,6 +27,7 @@ namespace AccuPay.Web.Users
         private readonly GenerateDefaultUserImageService _generateDefaultUserImageService;
         private readonly IFilesystem _filesystem;
         private readonly FileRepository _fileRepository;
+        private readonly UserDataService _userDataService;
 
         public UserService(UserManager<AspNetUser> users,
                            UserEmailService emailService,
@@ -31,7 +35,8 @@ namespace AccuPay.Web.Users
                            AspNetUserRepository repository,
                            GenerateDefaultUserImageService generateDefaultUserImageService,
                            IFilesystem filesystem,
-                           FileRepository fileRepository)
+                           FileRepository fileRepository,
+                           UserDataService userDataService)
         {
             _users = users;
             _emailService = emailService;
@@ -40,6 +45,7 @@ namespace AccuPay.Web.Users
             _generateDefaultUserImageService = generateDefaultUserImageService;
             _filesystem = filesystem;
             _fileRepository = fileRepository;
+            _userDataService = userDataService;
         }
 
         public async Task<UserDto> Create(CreateUserDto dto)
@@ -52,11 +58,12 @@ namespace AccuPay.Web.Users
                 UserName = dto.Email,
                 ClientId = _currentUser.ClientId
             };
-
             var result = await _users.CreateAsync(user, DEFAULT_PASSWORD);
             if (result.Succeeded)
             {
                 await _emailService.SendInvitation(user);
+
+                await _userDataService.CreateAsync(user, 1);
 
                 return new UserDto()
                 {
@@ -68,8 +75,12 @@ namespace AccuPay.Web.Users
             }
             else
             {
-                // Probably not the best way to return errors
-                throw new Exception();
+                if (result.Errors?.Count() > 0)
+                {
+                    throw new BusinessLogicException(result.Errors.ToList()[0].Description);
+                }
+
+                throw new BusinessLogicException("Error creating user.");
             }
         }
 
@@ -93,8 +104,12 @@ namespace AccuPay.Web.Users
             }
             else
             {
-                // Probably not the best way to return errors
-                throw new Exception();
+                if (result?.Errors?.Count() > 0)
+                {
+                    throw new BusinessLogicException(result.Errors.ToList()[0].Description);
+                }
+
+                throw new BusinessLogicException("Error creating user.");
             }
         }
 
@@ -128,7 +143,7 @@ namespace AccuPay.Web.Users
         public async Task<File> CreateOriginalImageIdAsync(AspNetUser user)
         {
             using var virtualFile = _generateDefaultUserImageService.Create(user);
-            var path = $"User/{user.Id.ToString()}/{virtualFile.Filename}";
+            var path = $"User/{user.Id}/{virtualFile.Filename}";
 
             await _filesystem.Move(virtualFile.Stream, path);
 

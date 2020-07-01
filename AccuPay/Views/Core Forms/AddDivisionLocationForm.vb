@@ -27,7 +27,7 @@ Public Class AddDivisionLocationForm
 
     Private Sub AddDivisionLocationForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
-        Me.NewDivision = Division.CreateEmptyDivision(organizationId:=z_OrganizationID, userId:=z_User)
+        Me.NewDivision = Division.NewDivision(organizationId:=z_OrganizationID, userId:=z_User)
 
         Me.IsSaved = False
 

@@ -162,29 +162,6 @@ Module mdlValidation
 
     End Function
 
-    Public Function EncryptData(ByVal a As String)
-        Dim Encryped As String = Nothing
-        If Not a Is Nothing Then
-            For Each x As Char In a
-                Dim ToCOn As Integer = Convert.ToInt64(x) + 133
-                Encryped &= Convert.ToChar(Convert.ToInt64(ToCOn))
-            Next
-        End If
-
-        Return Encryped
-    End Function
-
-    Public Function DecryptData(ByVal a As String)
-        Dim DEcrypedio As String = Nothing
-        If Not a Is Nothing Then
-            For Each x As Char In a
-                Dim ToCOn As Integer = Convert.ToInt64(x) - 133
-                DEcrypedio &= Convert.ToChar(Convert.ToInt64(ToCOn))
-            Next
-        End If
-        Return DEcrypedio
-    End Function
-
     Public Function DirectCommand(ByVal SqCommand As String)
         Dim NumberitemInserted As Integer
         Dim command As MySqlCommand = New MySqlCommand(SqCommand, New MySqlConnection(connectionString))
