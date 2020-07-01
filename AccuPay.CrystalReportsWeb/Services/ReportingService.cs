@@ -7,14 +7,17 @@ namespace AccuPay.CrystalReportsWeb.Services
     public class ReportingService : IControllerService
     {
         private readonly PayslipBuilder _payslipCreator;
-        private readonly SSSMonthyReportBuilder _sSSMonthyReportCreator;
+        private readonly SSSMonthyReportBuilder _sSSMonthyReportBuilder;
+        private readonly PhilHealthMonthlyReportBuilder _philHealthMonthlyReportBuilder;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
-            SSSMonthyReportBuilder sSSMonthyReportCreator)
+            SSSMonthyReportBuilder sSSMonthyReportCreator,
+            PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder)
         {
             _payslipCreator = payslipCreator;
-            _sSSMonthyReportCreator = sSSMonthyReportCreator;
+            _sSSMonthyReportBuilder = sSSMonthyReportCreator;
+            _philHealthMonthlyReportBuilder = philHealthMonthlyReportBuilder;
         }
 
         public string GeneratePayslip(int payPeriodId)
@@ -32,7 +35,18 @@ namespace AccuPay.CrystalReportsWeb.Services
         {
             string pdfFullPath = Path.GetTempFileName();
 
-            _sSSMonthyReportCreator
+            _sSSMonthyReportBuilder
+                .CreateReportDocument(organizationId, dateMonth)
+                .GeneratePDF(pdfFullPath);
+
+            return pdfFullPath;
+        }
+
+        public string GeneratePhilHealthMonthlyReport(int organizationId, DateTime dateMonth)
+        {
+            string pdfFullPath = Path.GetTempFileName();
+
+            _philHealthMonthlyReportBuilder
                 .CreateReportDocument(organizationId, dateMonth)
                 .GeneratePDF(pdfFullPath);
 

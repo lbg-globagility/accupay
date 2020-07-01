@@ -5,17 +5,16 @@ using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class PhilHealthMonthlyReportCreator
+    public class PhilHealthMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly PhilHealthMonthlyReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public PhilHealthMonthlyReportCreator(PhilHealthMonthlyReportDataService dataService)
+        public PhilHealthMonthlyReportBuilder(PhilHealthMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public PhilHealthMonthlyReportCreator CreateReportDocument(int organizationId, DateTime date)
+        public PhilHealthMonthlyReportBuilder CreateReportDocument(int organizationId, DateTime date)
         {
             _reportDocument = new Phil_Health_Monthly_Report();
 
@@ -29,9 +28,11 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

@@ -52,6 +52,9 @@ namespace AccuPay.CrystalReportsWeb
 
             services.AddScoped<SSSMonthlyReportDataService>();
             services.AddScoped<SSSMonthyReportBuilder>();
+            services.AddScoped<PhilHealthMonthlyReportDataService>();
+            services.AddScoped<PhilHealthMonthlyReportBuilder>();
+
 
             var serviceProvider = services.BuildServiceProvider();
 

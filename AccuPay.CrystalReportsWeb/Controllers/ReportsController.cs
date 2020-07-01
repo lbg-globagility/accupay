@@ -50,5 +50,22 @@ namespace AccuPay.CrystalReportsWeb.Controllers
 
             return PdfReportResult(pdfFullPath);
         }
+
+        /// <summary>
+        /// Returns a pdf file containing the PhilHealth Monthly report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="month">The month of the report.</param>
+        /// <param name="year">The year of the report.</param>
+        /// <returns></returns>
+        [Route("philhealth-report/{organizationId}/{month}/{year}")]
+        public HttpResponseMessage GetPhilHealthMonthlyReport(int organizationId, int month, int year)
+        {
+            var dateMonth = new DateTime(year, month, 1);
+
+            string pdfFullPath = _reportingService.GeneratePhilHealthMonthlyReport(organizationId, dateMonth);
+
+            return PdfReportResult(pdfFullPath);
+        }
     }
 }
