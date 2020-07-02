@@ -126,6 +126,8 @@ Namespace Global.AccuPay.Repository
 
             If employees Is Nothing OrElse employees.Count = 0 Then Return employees
 
+            searchValue = searchValue.ToLower()
+
             Dim matchCriteria =
             Function(employee As Employee) As Boolean
                 Dim containsEmployeeId = employee.EmployeeNo.ToLower().Contains(searchValue)
