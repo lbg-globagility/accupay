@@ -28,10 +28,11 @@ namespace AccuPay.Web.Organizations
 
         public async Task<OrganizationDto> Create(CreateOrganizationDto dto)
         {
-            var organization = new Organization()
-            {
-                Name = dto.Name
-            };
+            var organization = Organization.NewOrganization(
+                userId: _currentUser.DesktopUserId,
+                clientId: _currentUser.ClientId);
+
+            organization.Name = dto.Name;
 
             await _repository.Create(organization);
 
@@ -42,6 +43,7 @@ namespace AccuPay.Web.Organizations
         {
             var organization = await _repository.GetByIdAsync(organizationId);
             organization.Name = dto.Name;
+            organization.LastUpdBy = _currentUser.DesktopUserId;
 
             await _repository.Update(organization);
 

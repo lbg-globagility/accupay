@@ -1,8 +1,8 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
-using Notisphere.Users.Services;
 using System.Linq;
 using System.Threading.Tasks;
 

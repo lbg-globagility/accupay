@@ -5,8 +5,8 @@ using AccuPay.Data.Services;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Files;
 using AccuPay.Web.Files.Services;
+using AccuPay.Web.Users.Services;
 using Microsoft.AspNetCore.Identity;
-using Notisphere.Users.Services;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -63,7 +63,7 @@ namespace AccuPay.Web.Users
             {
                 await _emailService.SendInvitation(user);
 
-                await _userDataService.CreateAsync(user, 1);
+                await _userDataService.CreateAsync(user, _currentUser.DesktopUserId);
 
                 return new UserDto()
                 {
