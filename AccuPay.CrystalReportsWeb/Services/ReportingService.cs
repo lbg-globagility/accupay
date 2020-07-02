@@ -13,6 +13,7 @@ namespace AccuPay.CrystalReportsWeb.Services
         private readonly LoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
         private readonly LoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
         private readonly TaxMonthlyReportBuilder _taxMonthlyReportBuilder;
+        private readonly ThirteenthMonthSummaryReportBuilder _thirteenthMonthSummaryReportBuilder;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
@@ -21,7 +22,8 @@ namespace AccuPay.CrystalReportsWeb.Services
             PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
              LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
              LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
-             TaxMonthlyReportBuilder taxMonthlyReportBuilder)
+             TaxMonthlyReportBuilder taxMonthlyReportBuilder,
+             ThirteenthMonthSummaryReportBuilder thirteenthMonthSummaryReportBuilder)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;
@@ -30,6 +32,7 @@ namespace AccuPay.CrystalReportsWeb.Services
             _loanSummaryByTypeReportBuilder = loanSummaryByTypeReportBuilder;
             _loanSummaryByEmployeeReportBuilder = loanSummaryByEmployeeReportBuilder;
             _taxMonthlyReportBuilder = taxMonthlyReportBuilder;
+            _thirteenthMonthSummaryReportBuilder = thirteenthMonthSummaryReportBuilder;
         }
 
         public string GeneratePayslip(int payPeriodId)
@@ -107,11 +110,22 @@ namespace AccuPay.CrystalReportsWeb.Services
             return pdfFullPath;
         }
 
-        public string GenerateTaxReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public string GenerateTaxReport(int organizationId, int month, int year)
         {
             string pdfFullPath = Path.GetTempFileName();
 
             _taxMonthlyReportBuilder
+                .CreateReportDocument(organizationId, month, year)
+                .GeneratePDF(pdfFullPath);
+
+            return pdfFullPath;
+        }
+
+        public string GenerateThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+            string pdfFullPath = Path.GetTempFileName();
+
+            _thirteenthMonthSummaryReportBuilder
                 .CreateReportDocument(organizationId, dateFrom, dateTo)
                 .GeneratePDF(pdfFullPath);
 

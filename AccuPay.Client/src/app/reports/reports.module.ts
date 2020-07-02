@@ -9,6 +9,7 @@ import { LoanReportBytypeComponent } from './loan-report-bytype/loan-report-byty
 import { SelectDateRangeComponent } from './components/select-date-range/select-date-range.component';
 import { LoanReportByemployeeComponent } from './loan-report-byemployee/loan-report-byemployee.component';
 import { TaxReportComponent } from './tax-report/tax-report.component';
+import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thirtheenth-month-report.component';
 
 @NgModule({
   declarations: [
@@ -21,6 +22,7 @@ import { TaxReportComponent } from './tax-report/tax-report.component';
     SelectDateRangeComponent,
     LoanReportByemployeeComponent,
     TaxReportComponent,
+    ThirtheenthMonthReportComponent,
   ],
 
   imports: [SharedModule],

@@ -56,12 +56,20 @@ namespace AccuPay.Web.Controllers
             return await GetPDF(path, "loan-by-employee-report.pdf");
         }
 
-        [HttpGet("tax-report/{dateFrom}/{dateTo}")]
+        [HttpGet("tax-report/{month}/{year}")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult> GetTaxReport(DateTime dateFrom, DateTime dateTo)
+        public async Task<ActionResult> GetTaxReport(int month, int year)
         {
-            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
+            var path = $"tax-report/{_currentUser.OrganizationId}/{month}/{year}";
             return await GetPDF(path, "tax-report.pdf");
+        }
+
+        [HttpGet("thirteenthmonth-report/{dateFrom}/{dateTo}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetThirteenthMonthReport(DateTime dateFrom, DateTime dateTo)
+        {
+            var path = $"thirteenthmonth-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
+            return await GetPDF(path, "thirteenth-month-report.pdf");
         }
     }
 }

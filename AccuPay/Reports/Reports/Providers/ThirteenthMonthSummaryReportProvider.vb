@@ -18,7 +18,7 @@ Public Class ThirteenthMonthSummaryReportProvider
         Dim dateFrom = payperiodSelector.DateFrom
         Dim dateTo = payperiodSelector.DateTo
 
-        Dim service = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of ThirteenthMonthSummaryReportBuilder)
 
         Dim thirteenthMonthReport = service.CreateReportDocument(z_OrganizationID, CDate(dateFrom), CDate(dateTo))
 

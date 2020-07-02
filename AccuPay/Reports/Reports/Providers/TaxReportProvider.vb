@@ -26,19 +26,9 @@ Public Class TaxReportProvider
 
         Dim month = CDate(n_selectMonth.MonthFirstDate)
 
-        Dim payPeriods = _payPeriodRepository.GetByMonthYearAndPayPrequency(
-                                z_OrganizationID,
-                                month:=month.Month,
-                                year:=month.Year,
-                                payFrequencyId:=AccuPay.Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId).
-                            ToList()
-
-        Dim dateFrom = payPeriods.First().PayFromDate
-        Dim dateTo = payPeriods.Last().PayToDate
-
         Dim service = MainServiceProvider.GetRequiredService(Of TaxMonthlyReportBuilder)
 
-        Dim taxMonthlyReport = service.CreateReportDocument(z_OrganizationID, dateFrom, dateTo)
+        Dim taxMonthlyReport = service.CreateReportDocument(z_OrganizationID, month:=month.Month, year:=month.Year)
 
         Dim crvwr As New CrysRepForm()
         crvwr.crysrepvwr.ReportSource = taxMonthlyReport.GetReportDocument

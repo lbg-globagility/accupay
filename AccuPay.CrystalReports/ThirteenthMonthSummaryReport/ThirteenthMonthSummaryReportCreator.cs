@@ -5,17 +5,16 @@ using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class ThirteenthMonthSummaryReportCreator
+    public class ThirteenthMonthSummaryReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly ThirteenthMonthSummaryReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public ThirteenthMonthSummaryReportCreator(ThirteenthMonthSummaryReportDataService dataService)
+        public ThirteenthMonthSummaryReportBuilder(ThirteenthMonthSummaryReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public ThirteenthMonthSummaryReportCreator CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public ThirteenthMonthSummaryReportBuilder CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
             _reportDocument = new ThirteenthMonthSummary();
 
@@ -24,9 +23,11 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

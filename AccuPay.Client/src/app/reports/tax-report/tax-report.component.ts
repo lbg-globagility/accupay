@@ -1,8 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
-import { SelectDateRangeComponent } from '../components/select-date-range/select-date-range.component';
 import { ReportService } from '../report.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
 import { Moment } from 'moment';
+import { SelectMonthComponent } from '../components/select-month/select-month.component';
 
 @Component({
   selector: 'app-tax-report',
@@ -10,8 +10,8 @@ import { Moment } from 'moment';
   styleUrls: ['./tax-report.component.scss'],
 })
 export class TaxReportComponent {
-  @ViewChild(SelectDateRangeComponent)
-  dateRangeForm: SelectDateRangeComponent;
+  @ViewChild(SelectMonthComponent)
+  monthForm: SelectMonthComponent;
 
   isDownloading: boolean = false;
 
@@ -21,19 +21,22 @@ export class TaxReportComponent {
   ) {}
 
   generateReport(): void {
-    if (!this.dateRangeForm.form.valid) {
+    if (!this.monthForm.date.valid) {
       return;
     }
 
-    var dateFrom = (this.dateRangeForm.form.controls.startDate
-      .value as Moment).format('MM-DD-yyyy');
+    console.log(this.monthForm.date.value);
+    console.log(new Date(this.monthForm.date.value));
 
-    var dateTo = (this.dateRangeForm.form.controls.endDate
-      .value as Moment).format('MM-DD-yyyy');
+    var date = this.monthForm.date.value as Moment;
+    var month = Number(date.format('M'));
+    var year = date.year();
+    console.log(month);
+    console.log(date.year());
 
     this.isDownloading = true;
     this.reportService
-      .getTaxReport(dateFrom, dateTo)
+      .getTaxReport(month, year)
       .catch((err) => {
         this.errorHandler.badRequest(err, 'Error downloading Tax Report.');
       })

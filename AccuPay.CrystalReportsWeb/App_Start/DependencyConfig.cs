@@ -62,6 +62,8 @@ namespace AccuPay.CrystalReportsWeb
             services.AddScoped<LoanSummaryByEmployeeReportBuilder>();
             services.AddScoped<TaxMonthlyReportDataService>();
             services.AddScoped<TaxMonthlyReportBuilder>();
+            services.AddScoped<ThirteenthMonthSummaryReportDataService>();
+            services.AddScoped<ThirteenthMonthSummaryReportBuilder>();
 
 
             var serviceProvider = services.BuildServiceProvider();

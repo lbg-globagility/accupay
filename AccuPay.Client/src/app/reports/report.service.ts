@@ -14,6 +14,7 @@ export class ReportService extends BasePdfService {
   readonly loanByTypeFileName = 'loan-by-type-report.pdf';
   readonly loanByEmployeeFileName = 'loan-by-employee-report.pdf';
   readonly taxFileName = 'tax-report.pdf';
+  readonly thirteenthMonthFileName = 'thirteenth-month-report.pdf';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -57,9 +58,16 @@ export class ReportService extends BasePdfService {
     );
   }
 
-  getTaxReport(dateFrom: string, dateTo: string) {
+  getTaxReport(month: number, year: number) {
     return this.getPDF(
-      this.loanByEmployeeFileName,
+      this.taxFileName,
+      `${this.baseUrl}/tax-report/${month}/${year}`
+    );
+  }
+
+  get13thMonthReport(dateFrom: string, dateTo: string) {
+    return this.getPDF(
+      this.thirteenthMonthFileName,
       `${this.baseUrl}/tax-report/${dateFrom}/${dateTo}`
     );
   }

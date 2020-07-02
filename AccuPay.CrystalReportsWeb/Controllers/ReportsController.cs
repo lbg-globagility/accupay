@@ -122,14 +122,30 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// Returns a pdf file containing the Tax report of the selected month and year.
         /// </summary>
         /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="month">The month of the report.</param>
+        /// <param name="year">The year of the report.</param>
+        /// <returns></returns>
+        [Route("tax-report/{organizationId}/{month}/{year}")]
+        public HttpResponseMessage GetTaxReport(int organizationId, int month, int year)
+        {
+
+            string pdfFullPath = _reportingService.GenerateTaxReport(organizationId, month, year);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the 13th month report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
         /// <param name="dateFrom">The start date of the report.</param>
         /// <param name="dateTo">The end date of the report.</param>
         /// <returns></returns>
-        [Route("tax-report/{organizationId}/{dateFrom}/{dateTo}")]
-        public HttpResponseMessage GetTaxReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        [Route("thirteenthmonth-report/{organizationId}/{dateFrom}/{dateTo}")]
+        public HttpResponseMessage GetThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
 
-            string pdfFullPath = _reportingService.GenerateTaxReport(organizationId, dateFrom, dateTo);
+            string pdfFullPath = _reportingService.GenerateThirteenthMonthReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
         }

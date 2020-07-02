@@ -1,18 +1,32 @@
-﻿using System;
+﻿using AccuPay.Data.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Text;
 
 namespace AccuPay.Data.Services
 {
     public class TaxMonthlyReportDataService : StoredProcedureDataService
     {
-        public TaxMonthlyReportDataService(PayrollContext context) : base(context)
+        private readonly PayPeriodRepository _repository;
+        public TaxMonthlyReportDataService(PayrollContext context, PayPeriodRepository repository) : base(context)
         {
+            _repository = repository;
         }
 
-        public DataTable GetData(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public DataTable GetData(int organizationId, int month, int year)
         {
+
+            var payPeriods = _repository.GetByMonthYearAndPayPrequency(
+                                organizationId,
+                                month: month,
+                                year: year,
+                                payFrequencyId: AccuPay.Data.Helpers.PayrollTools.PayFrequencySemiMonthlyId);
+
+            var dateFrom = payPeriods.First().PayFromDate;
+            var dateTo = payPeriods.Last().PayToDate;
+
             var parameters = new object[,] {
                 {
                     "OrganizID",
