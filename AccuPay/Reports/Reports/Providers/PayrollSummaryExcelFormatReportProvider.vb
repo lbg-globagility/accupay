@@ -153,13 +153,21 @@ Public Class PayrollSummaryExcelFormatReportProvider
         If payrollSelector Is Nothing Then Return
 
         Dim keepInOneSheet = Convert.ToBoolean(ExcelOptionFormat())
+        Dim salaryDistribution = payrollSelector.cboStringParameter.Text
+
+        Dim dividedCategories = {PayrollSummaryCategory.Cash, PayrollSummaryCategory.DirectDeposit}
+        If dividedCategories.Contains(salaryDistribution) = False Then
+
+            salaryDistribution = Nothing
+
+        End If
 
         Dim parameters = New Object() {
             orgztnID,
             payrollSelector.PayPeriodFromID,
             payrollSelector.PayPeriodToID,
             bool_result,
-            payrollSelector.cboStringParameter.Text,
+            salaryDistribution,
             keepInOneSheet
         }
 

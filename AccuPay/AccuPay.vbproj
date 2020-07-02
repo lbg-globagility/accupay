@@ -420,6 +420,7 @@
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
+    <Compile Include="Core\PayrollSummaryCategory.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelHelper.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelService.vb" />
