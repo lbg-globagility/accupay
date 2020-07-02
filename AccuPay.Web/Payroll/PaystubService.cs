@@ -1,4 +1,3 @@
-using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Web.Loans;
@@ -19,15 +18,12 @@ namespace AccuPay.Web.Payroll
             this.repository = repository;
         }
 
-        public async Task<PaginatedList<PaystubDto>> PaginatedList(
-            PageOptions options,
-            int payPeriodId,
-            string searchTerm = "")
+        public async Task<ICollection<PaystubDto>> GetAll(int payPeriodId)
         {
-            var paginatedList = await _service.GetPaginatedListAsync(options, payPeriodId, searchTerm);
-            var dtos = paginatedList.List.Select(t => PaystubDto.Convert(t)).ToList();
+            var paystubs = await _service.GetAll(payPeriodId);
+            var dtos = paystubs.Select(t => PaystubDto.Convert(t)).ToList();
 
-            return new PaginatedList<PaystubDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
+            return dtos;
         }
 
         public async Task<List<AdjustmentDto>> GetAdjustments(int paystubId)

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -84,9 +86,10 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet("{payperiodId}/paystubs")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PaginatedList<PaystubDto>>> GetPaystubs(int payperiodId, [FromQuery] PageOptions options, string searchTerm)
+        public async Task<ActionResult<ICollection<PaystubDto>>> GetPaystubs(int payperiodId)
         {
-            return await _paystubService.PaginatedList(options, payperiodId);
+            var paystubs = await _paystubService.GetAll(payperiodId);
+            return paystubs.ToList();
         }
 
         [HttpGet("{payperiodId}/payslips")]

@@ -50,11 +50,11 @@ export class PayPeriodService extends BasePdfService {
     payPeriodId: number,
     options: PageOptions,
     term: string = ''
-  ): Observable<PaginatedList<Paystub>> {
+  ): Observable<Paystub[]> {
     const params = options ? options.toObject() : null;
     params.term = term;
 
-    return this.httpClient.get<PaginatedList<Paystub>>(
+    return this.httpClient.get<Paystub[]>(
       `${this.baseUrl}/${payPeriodId}/paystubs`,
       {
         params,

@@ -1,174 +1,196 @@
-<div class="row">
-  <div class="col-md-5 col-md-offset-3">
-    <div class="row" style="border: 2px solid;">
-      <div class="col-md-6">
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th></th>
-              <th>Hrs.</th>
-              <th>Total Earnings</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Basic Pay</td>
-              <td>{{ paystub.basicHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.basicRate | amount }}</td>
-            </tr>
-            <tr>
-              <td>Absent</td>
-              <td>{{ paystub.absentHours | ifZero: "1.0-2" }}</td>
-              <td>{{ -paystub.absenceDeduction | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Late</td>
-              <td>{{ paystub.lateHours | ifZero: "1.0-2" }}</td>
-              <td>{{ -paystub.lateDeduction | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Undertime</td>
-              <td>{{ paystub.undertimeHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ -paystub.undertimeDeduction | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Overtime</td>
-              <td>{{ paystub.overtimeHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.overtimePay | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Night Differential</td>
-              <td>{{ paystub.nightDiffHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.nightDiffPay | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Night Differential OT</td>
-              <td>{{ paystub.nightDiffOvertimeHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ paystub.nightDiffOvertimePay | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Regular Holiday</td>
-              <td>{{ paystub.regularHolidayHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ paystub.regularHolidayPay | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Regular Holiday OT</td>
-              <td>{{ paystub.regularHolidayOTHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ paystub.regularHolidayOTPay | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Special Holiday</td>
-              <td>{{ paystub.specialHolidayHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ paystub.specialHolidayPay | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Special Holiday OT</td>
-              <td>{{ paystub.specialHolidayOTHours | ifZero: "1.0-2" }}</td>
-              <td>
-                {{ paystub.specialHolidayOTPay | amount: "-" }}
-              </td>
-            </tr>
-            <tr>
-              <td>Rest Day Holiday</td>
-              <td>{{ paystub.restDayHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.restDayPay | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Rest Day Holiday OT</td>
-              <td>{{ paystub.restDayOTHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.restDayOTPay | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Leave</td>
-              <td>{{ paystub.leaveHours | ifZero: "1.0-2" }}</td>
-              <td>{{ paystub.leavePay | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Non-taxable Allowance</td>
-              <td></td>
-              <td>{{ paystub.totalNonTaxableAllowance | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Taxable Allowance</td>
-              <td></td>
-              <td>{{ paystub.totalTaxableAllowance | amount: "-" }}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>GROSS PAY</th>
-              <th></th>
-              <th>{{ paystub.grossPay | amount: "-" }}</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
-      <div class="col-md-6">
-        <table class="data-table" style="float: right;">
-          <thead>
-            <tr>
-              <th>Deductions</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>SSS Premium</td>
-              <td>{{ -paystub.sssEmployeeShare | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>PhilHealth</td>
-              <td>{{ -paystub.philHealthEmployeeShare | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Pag-IBIG</td>
-              <td>{{ -paystub.hdmfEmployeeShare | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>Tax Withheld</td>
-              <td>{{ -paystub.withholdingTax | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <td>
-                <a href="javascript:void(0);" (click)="showLoansBreakdown()"
-                  >Total Loans</a
-                >
-              </td>
-              <td>{{ -paystub.totalLoans | amount: "-" }}</td>
-            </tr>
-            <tr>
-              <th>Total Deductions</th>
-              <th>{{ -paystub.totalDeductions | amount: "-" }}</th>
-            </tr>
-            <tr>
-              <td>
-                <a
-                  href="javascript:void(0);"
-                  (click)="showAdjustmentsBreakdown()"
-                  >Total Adjustments</a
-                >
-              </td>
-              <td>{{ paystub.totalAdjustments | amount: "-" }}</td>
-            </tr>
-          </tbody>
-          <tfoot>
-            <tr>
-              <th>NET PAY:</th>
-              <th>{{ paystub.netPay | amount: "-" }}</th>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+<div class="h-full box-border p-4 bg-white mat-elevation-z1">
+  <div class="flex items-center">
+    <img
+      class="block rounded-full"
+      height="40"
+      appImgFallback
+      src="/api/employees/{{ paystub?.employeeId }}/image"
+    />
+    <div class="ml-2">
+      <a
+        routerLink="/employees/{{ paystub.employeeId }}"
+        matTooltip="Go to profile"
+      >
+        {{ paystub.fullName | ifEmpty }}
+      </a>
+      <div class="text-xs mt-1">#{{ paystub.employeeNo | ifEmpty }}</div>
+    </div>
+  </div>
+
+  <div class="flex">
+    <div class="w-1/2">
+      <table class="data-table text-sm">
+        <thead>
+          <tr>
+            <th></th>
+            <th>Hrs.</th>
+            <th>Total Earnings</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Basic Pay</td>
+            <td>{{ paystub.basicHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.basicRate | amount }}</td>
+          </tr>
+          <tr>
+            <td>Absent</td>
+            <td>{{ paystub.absentHours | ifZero: "1.0-2" }}</td>
+            <td>{{ -paystub.absenceDeduction | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Late</td>
+            <td>{{ paystub.lateHours | ifZero: "1.0-2" }}</td>
+            <td>{{ -paystub.lateDeduction | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Undertime</td>
+            <td>{{ paystub.undertimeHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ -paystub.undertimeDeduction | amount: "-" }}
+            </td>
+          </tr>
+          <tr>
+            <td>Overtime</td>
+            <td>{{ paystub.overtimeHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.overtimePay | amount: "-" }}</td>
+          </tr>
+          <tr *ngIf="paystub.nightDiffHours > 0">
+            <td>Night Differential</td>
+            <td>{{ paystub.nightDiffHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.nightDiffPay | amount: "-" }}</td>
+          </tr>
+          <tr *ngIf="paystub.nightDiffOvertimeHours > 0">
+            <td>Night Differential OT</td>
+            <td>{{ paystub.nightDiffOvertimeHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ paystub.nightDiffOvertimePay | amount: "-" }}
+            </td>
+          </tr>
+          <tr *ngIf="paystub.regularHolidayPay > 0">
+            <td>Regular Holiday</td>
+            <td>{{ paystub.regularHolidayHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ paystub.regularHolidayPay | amount: "-" }}
+            </td>
+          </tr>
+          <tr *ngIf="paystub.regularHolidayOTPay > 0">
+            <td>Regular Holiday OT</td>
+            <td>{{ paystub.regularHolidayOTHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ paystub.regularHolidayOTPay | amount: "-" }}
+            </td>
+          </tr>
+          <tr *ngIf="paystub.specialHolidayPay > 0">
+            <td>Special Holiday</td>
+            <td>{{ paystub.specialHolidayHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ paystub.specialHolidayPay | amount: "-" }}
+            </td>
+          </tr>
+          <tr *ngIf="paystub.specialHolidayOTPay > 0">
+            <td>Special Holiday OT</td>
+            <td>{{ paystub.specialHolidayOTHours | ifZero: "1.0-2" }}</td>
+            <td>
+              {{ paystub.specialHolidayOTPay | amount: "-" }}
+            </td>
+          </tr>
+          <tr *ngIf="paystub.restDayPay > 0">
+            <td>Rest Day Holiday</td>
+            <td>{{ paystub.restDayHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.restDayPay | amount: "-" }}</td>
+          </tr>
+          <tr *ngIf="paystub.restDayOTPay > 0">
+            <td>Rest Day Holiday OT</td>
+            <td>{{ paystub.restDayOTHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.restDayOTPay | amount: "-" }}</td>
+          </tr>
+          <tr *ngIf="paystub.leavePay > 0">
+            <td>Leave</td>
+            <td>{{ paystub.leaveHours | ifZero: "1.0-2" }}</td>
+            <td>{{ paystub.leavePay | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Non-taxable Allowance</td>
+            <td></td>
+            <td>{{ paystub.totalNonTaxableAllowance | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Taxable Allowance</td>
+            <td></td>
+            <td>{{ paystub.totalTaxableAllowance | amount: "-" }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th>GROSS PAY</th>
+            <th></th>
+            <th>{{ paystub.grossPay | amount: "-" }}</th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+    <div class="w-1/2">
+      <table class="data-table text-sm">
+        <thead>
+          <tr>
+            <th>Deductions</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>SSS Premium</td>
+            <td>{{ -paystub.sssEmployeeShare | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>PhilHealth</td>
+            <td>{{ -paystub.philHealthEmployeeShare | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Pag-IBIG</td>
+            <td>{{ -paystub.hdmfEmployeeShare | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>Tax Withheld</td>
+            <td>{{ -paystub.withholdingTax | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="javascript:void(0);"
+                (click)="showLoansBreakdown()"
+                matTooltip="View loans"
+              >
+                Total Loans
+              </a>
+            </td>
+            <td>{{ -paystub.totalLoans | amount: "-" }}</td>
+          </tr>
+          <tr>
+            <th>Total Deductions</th>
+            <th>{{ -paystub.totalDeductions | amount: "-" }}</th>
+          </tr>
+          <tr>
+            <td>
+              <a
+                href="javascript:void(0);"
+                (click)="showAdjustmentsBreakdown()"
+                matTooltip="View adjustments"
+              >
+                Total Adjustments
+              </a>
+            </td>
+            <td>{{ paystub.totalAdjustments | amount: "-" }}</td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <td>NET PAY</td>
+            <td class="text-4xl text-right">₱ {{ paystub.netPay | amount }}</td>
+          </tr>
+        </tfoot>
+      </table>
     </div>
   </div>
 </div>
