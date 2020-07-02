@@ -34,9 +34,10 @@ namespace AccuPay.Data.Repositories
 
         #region CRUD
 
-        public async Task ChangeManyAsync(List<TimeLog> addedTimeLogs,
-                                        List<TimeLog> updatedTimeLogs,
-                                        List<TimeLog> deletedTimeLogs)
+        public async Task ChangeManyAsync(
+            List<TimeLog> addedTimeLogs,
+            List<TimeLog> updatedTimeLogs,
+            List<TimeLog> deletedTimeLogs)
         {
             if (addedTimeLogs != null)
             {
@@ -56,10 +57,10 @@ namespace AccuPay.Data.Repositories
 
             if (deletedTimeLogs != null)
             {
-                deletedTimeLogs = deletedTimeLogs.
-                                GroupBy(x => x.RowID).
-                                Select(x => x.FirstOrDefault()).
-                                ToList();
+                deletedTimeLogs = deletedTimeLogs
+                    .GroupBy(x => x.RowID)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
                 _context.TimeLogs.RemoveRange(deletedTimeLogs);
             }
 
@@ -93,9 +94,9 @@ namespace AccuPay.Data.Repositories
                 var maximumDate = timeLog.LogDate.ToMaximumHourValue();
 
                 _context.TimeAttendanceLogs.
-                            RemoveRange(_context.TimeAttendanceLogs.
-                                                    Where(t => t.TimeStamp >= minimumDate).
-                                                    Where(t => t.TimeStamp <= maximumDate));
+                    RemoveRange(_context.TimeAttendanceLogs
+                        .Where(t => t.TimeStamp >= minimumDate)
+                        .Where(t => t.TimeStamp <= maximumDate));
 
                 if (timeLog.Employee != null)
                 {
@@ -169,7 +170,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        internal async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.TimeLogs
                 .Include(x => x.Employee)
@@ -198,7 +199,7 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<TimeLog>(timeLogs, count);
         }
 
-        internal async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployee(
+        public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployeeAsync(
             int organizationId,
             PageOptions options,
             DateTime dateFrom,
@@ -238,7 +239,7 @@ namespace AccuPay.Data.Repositories
             return (employees, total, timeLogs);
         }
 
-        internal async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
+        public async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
         {
             return await _context.TimeLogs
                 .Include(b => b.Branch)
@@ -246,12 +247,12 @@ namespace AccuPay.Data.Repositories
                 .FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<TimeLog> GetByIdAsync(int id)
+        public async Task<TimeLog> GetByIdAsync(int id)
         {
             return await _context.TimeLogs.FirstOrDefaultAsync(l => l.RowID == id);
         }
 
-        internal async Task<TimeLog> GetByIdAsync(CompositeKey key)
+        public async Task<TimeLog> GetByIdAsync(CompositeKey key)
         {
             return await _context.TimeLogs
                 .Where(x => x.EmployeeID == key.EmployeeId)
@@ -275,10 +276,11 @@ namespace AccuPay.Data.Repositories
 
             int counter = 0;
 
-            while (context.TimeLogs.
-                        FirstOrDefault(t => t.TimeentrylogsImportID == importId) != null ||
-                                        context.TimeAttendanceLogs.
-                                            FirstOrDefault(t => t.ImportNumber == importId) != null)
+            while (context.TimeLogs
+                .FirstOrDefault(t => t.TimeentrylogsImportID == importId) != null ||
+                                context.TimeAttendanceLogs
+                                    .FirstOrDefault(t => t.ImportNumber == importId)
+                                != null)
             {
                 counter += 1;
 

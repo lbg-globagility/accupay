@@ -3,6 +3,7 @@ using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Data.ValueObjects;
 using AccuPay.Infrastructure.Services.Excel;
 using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Http;
@@ -12,13 +13,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static AccuPay.Data.Services.Imports.TimeLogImportParser;
 
 namespace AccuPay.Web.TimeLogs
 {
     public class TimeLogService
     {
-        private TimeLogDataService _service;
+        private TimeLogDataService _dataService;
         private readonly TimeLogImportParser _importParser;
         private readonly ICurrentUser _currentUser;
         private readonly TimeLogRepository _repository;
@@ -29,7 +29,7 @@ namespace AccuPay.Web.TimeLogs
             ICurrentUser currentUser,
             TimeLogRepository repository)
         {
-            _service = service;
+            _dataService = service;
             _importParser = importParser;
             _currentUser = currentUser;
             _repository = repository;
@@ -39,7 +39,7 @@ namespace AccuPay.Web.TimeLogs
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
+            var paginatedList = await _repository.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -48,7 +48,13 @@ namespace AccuPay.Web.TimeLogs
 
         public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(PageOptions options, DateTime dateFrom, DateTime dateTo, string searchTerm)
         {
-            var (employees, total, timelogs) = await _service.ListByEmployee(_currentUser.OrganizationId, options, dateFrom, dateTo, searchTerm);
+            var (employees, total, timelogs) = await _repository.ListByEmployeeAsync(
+                _currentUser.OrganizationId,
+                options,
+                dateFrom,
+                dateTo,
+                searchTerm);
+
             var dtos = employees.Select(t => ConvertToDto(t, timelogs)).ToList();
 
             return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
@@ -69,7 +75,7 @@ namespace AccuPay.Web.TimeLogs
 
             ApplyChanges(dto, timeLog);
 
-            await _service.CreateAsync(timeLog);
+            await _dataService.CreateAsync(timeLog);
 
             return ConvertToDto(timeLog);
         }
@@ -80,7 +86,8 @@ namespace AccuPay.Web.TimeLogs
             var dateFrom = dtos.Select(t => t.Date).Min();
             var dateTo = dtos.Select(t => t.Date).Max();
 
-            var timeLogs = await _service.GetAll(employeeIds, dateFrom, dateTo);
+            var timeLogs = await _repository
+                .GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIds, new TimePeriod(dateFrom, dateTo));
 
             var added = new List<TimeLog>();
             var updated = new List<TimeLog>();
@@ -129,26 +136,26 @@ namespace AccuPay.Web.TimeLogs
                 }
             }
 
-            await _repository.ChangeManyAsync(added, updated, deleted);
+            await _dataService.ChangeManyAsync(added, updated, deleted);
         }
 
         internal async Task<TimeLogDto> GetByIdWithEmployeeAsync(int id)
         {
-            var timelog = await _service.GetByIdWithEmployeeAsync(id);
+            var timelog = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(timelog);
         }
 
         internal async Task<TimeLogDto> GetByIdAsync(int id)
         {
-            var timelog = await _service.GetByIdAsync(id);
+            var timelog = await _repository.GetByIdAsync(id);
 
             return ConvertToDto(timelog);
         }
 
         internal async Task Delete(int id)
         {
-            await _service.DeleteAsync(id);
+            await _dataService.DeleteAsync(id);
         }
 
         internal async Task<TimeLogImportResultDto> Import(IFormFile file)
@@ -176,8 +183,6 @@ namespace AccuPay.Web.TimeLogs
                 InvalidRecords = invalidDtos,
                 GeneratedTimeLogs = timeLogs
             };
-
-            //await _service.SaveImportAsync(parsedResult.GeneratedTimeLogs, parsedResult.GeneratedTimeAttendanceLogs);
         }
 
         private static TimeLogImportDetailsDto ConvertToImportDetailsDto(TimeLogImportModel parsedResult)
@@ -190,8 +195,8 @@ namespace AccuPay.Web.TimeLogs
                 ErrorMessage = parsedResult.ErrorMessage,
                 LineContent = parsedResult.LineContent,
                 LineNumber = parsedResult.LineNumber,
-                Type = parsedResult.Type                
-            };            
+                Type = parsedResult.Type
+            };
         }
 
         private static TimeLogDto ConvertToDto(TimeLog timeLog)

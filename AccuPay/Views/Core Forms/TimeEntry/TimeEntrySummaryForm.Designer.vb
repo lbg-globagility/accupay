@@ -135,8 +135,9 @@ Partial Class TimeEntrySummaryForm
         Me.cemp_FirstName = New System.Windows.Forms.DataGridViewTextBoxColumn()
         Me.lblforballoon = New System.Windows.Forms.Label()
         Me.ToolStrip1 = New System.Windows.Forms.ToolStrip()
-        Me.generateTimeEntryButton = New System.Windows.Forms.ToolStripButton()
-        Me.regenerateTimeEntryButton = New System.Windows.Forms.ToolStripButton()
+        Me.GenerateDefaultShiftAndTimeLogsButton = New System.Windows.Forms.ToolStripButton()
+        Me.GenerateTimeEntryButton = New System.Windows.Forms.ToolStripButton()
+        Me.RegenerateTimeEntryButton = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnCloseempawar = New System.Windows.Forms.ToolStripButton()
         Me.tsbtnAudittrail = New System.Windows.Forms.ToolStripButton()
         Me.cboYears = New System.Windows.Forms.ToolStripComboBox()
@@ -460,28 +461,36 @@ Partial Class TimeEntrySummaryForm
         '
         Me.ToolStrip1.BackColor = System.Drawing.Color.Transparent
         Me.ToolStrip1.GripStyle = System.Windows.Forms.ToolStripGripStyle.Hidden
-        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.generateTimeEntryButton, Me.regenerateTimeEntryButton, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm, Me.tstbnResetLeaveBalance, Me.ToolStripLabel1, Me.tsBtnDeleteTimeEntry, Me.tsbtnrecalc})
+        Me.ToolStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.GenerateDefaultShiftAndTimeLogsButton, Me.GenerateTimeEntryButton, Me.RegenerateTimeEntryButton, Me.tsbtnCloseempawar, Me.tsbtnAudittrail, Me.cboYears, Me.ToolStripSeparator14, Me.actualButton, Me.btnAmPm, Me.tstbnResetLeaveBalance, Me.ToolStripLabel1, Me.tsBtnDeleteTimeEntry, Me.tsbtnrecalc})
         Me.ToolStrip1.Location = New System.Drawing.Point(3, 3)
         Me.ToolStrip1.Name = "ToolStrip1"
         Me.ToolStrip1.Size = New System.Drawing.Size(886, 25)
         Me.ToolStrip1.TabIndex = 125
         Me.ToolStrip1.Text = "ToolStrip1"
         '
-        'generateTimeEntryButton
+        'GenerateDefaultShiftAndTimeLogsButton
         '
-        Me.generateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.cash_register
-        Me.generateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.generateTimeEntryButton.Name = "generateTimeEntryButton"
-        Me.generateTimeEntryButton.Size = New System.Drawing.Size(142, 22)
-        Me.generateTimeEntryButton.Text = "G&enerate Time Entries"
+        Me.GenerateDefaultShiftAndTimeLogsButton.Image = Global.AccuPay.My.Resources.Resources.Action_db_add_icon
+        Me.GenerateDefaultShiftAndTimeLogsButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.GenerateDefaultShiftAndTimeLogsButton.Name = "GenerateDefaultShiftAndTimeLogsButton"
+        Me.GenerateDefaultShiftAndTimeLogsButton.Size = New System.Drawing.Size(222, 22)
+        Me.GenerateDefaultShiftAndTimeLogsButton.Text = "Generate Default Shift and Time Logs"
         '
-        'regenerateTimeEntryButton
+        'GenerateTimeEntryButton
         '
-        Me.regenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
-        Me.regenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
-        Me.regenerateTimeEntryButton.Name = "regenerateTimeEntryButton"
-        Me.regenerateTimeEntryButton.Size = New System.Drawing.Size(86, 22)
-        Me.regenerateTimeEntryButton.Text = "Regenerate"
+        Me.GenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.cash_register
+        Me.GenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.GenerateTimeEntryButton.Name = "GenerateTimeEntryButton"
+        Me.GenerateTimeEntryButton.Size = New System.Drawing.Size(141, 22)
+        Me.GenerateTimeEntryButton.Text = "G&enerate Time Entries"
+        '
+        'RegenerateTimeEntryButton
+        '
+        Me.RegenerateTimeEntryButton.Image = Global.AccuPay.My.Resources.Resources.checked_list0
+        Me.RegenerateTimeEntryButton.ImageTransparentColor = System.Drawing.Color.Magenta
+        Me.RegenerateTimeEntryButton.Name = "RegenerateTimeEntryButton"
+        Me.RegenerateTimeEntryButton.Size = New System.Drawing.Size(86, 22)
+        Me.RegenerateTimeEntryButton.Text = "Regenerate"
         '
         'tsbtnCloseempawar
         '
@@ -539,13 +548,13 @@ Partial Class TimeEntrySummaryForm
         Me.tstbnResetLeaveBalance.Image = CType(resources.GetObject("tstbnResetLeaveBalance.Image"), System.Drawing.Image)
         Me.tstbnResetLeaveBalance.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tstbnResetLeaveBalance.Name = "tstbnResetLeaveBalance"
-        Me.tstbnResetLeaveBalance.Size = New System.Drawing.Size(144, 22)
+        Me.tstbnResetLeaveBalance.Size = New System.Drawing.Size(144, 20)
         Me.tstbnResetLeaveBalance.Text = "Renew Leave Balances"
         '
         'ToolStripLabel1
         '
         Me.ToolStripLabel1.Name = "ToolStripLabel1"
-        Me.ToolStripLabel1.Size = New System.Drawing.Size(52, 22)
+        Me.ToolStripLabel1.Size = New System.Drawing.Size(52, 15)
         Me.ToolStripLabel1.Text = "               "
         '
         'tsBtnDeleteTimeEntry
@@ -553,7 +562,7 @@ Partial Class TimeEntrySummaryForm
         Me.tsBtnDeleteTimeEntry.Image = Global.AccuPay.My.Resources.Resources.CLOSE_00
         Me.tsBtnDeleteTimeEntry.ImageTransparentColor = System.Drawing.Color.Magenta
         Me.tsBtnDeleteTimeEntry.Name = "tsBtnDeleteTimeEntry"
-        Me.tsBtnDeleteTimeEntry.Size = New System.Drawing.Size(157, 22)
+        Me.tsBtnDeleteTimeEntry.Size = New System.Drawing.Size(156, 20)
         Me.tsBtnDeleteTimeEntry.Text = "Delete Time Entry Period"
         Me.tsBtnDeleteTimeEntry.ToolTipText = "Deletes employee's time" & Global.Microsoft.VisualBasic.ChrW(13) & Global.Microsoft.VisualBasic.ChrW(10) & "entry of the selected period"
         '
@@ -2797,7 +2806,7 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents DataGridViewTextBoxColumn12 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents DataGridViewTextBoxColumn44 As System.Windows.Forms.DataGridViewTextBoxColumn
     Friend WithEvents ToolStrip1 As System.Windows.Forms.ToolStrip
-    Friend WithEvents generateTimeEntryButton As System.Windows.Forms.ToolStripButton
+    Friend WithEvents GenerateTimeEntryButton As System.Windows.Forms.ToolStripButton
     Friend WithEvents tsbtnCloseempawar As System.Windows.Forms.ToolStripButton
     Friend WithEvents Label29 As System.Windows.Forms.Label
     Friend WithEvents searchTextBox As System.Windows.Forms.TextBox
@@ -2962,7 +2971,7 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents cemp_EmployeeID As DataGridViewTextBoxColumn
     Friend WithEvents cemp_LastName As DataGridViewTextBoxColumn
     Friend WithEvents cemp_FirstName As DataGridViewTextBoxColumn
-    Friend WithEvents regenerateTimeEntryButton As ToolStripButton
+    Friend WithEvents RegenerateTimeEntryButton As ToolStripButton
     Friend WithEvents ColumnRowID As DataGridViewTextBoxColumn
     Friend WithEvents ColumnDate As DataGridViewTextBoxColumn
     Friend WithEvents ColumnDay As DataGridViewTextBoxColumn
@@ -3014,4 +3023,5 @@ Partial Class TimeEntrySummaryForm
     Friend WithEvents ColumnRemarks As DataGridViewTextBoxColumn
     Friend WithEvents ColumnTimeStampIn As DataGridViewTextBoxColumn
     Friend WithEvents ColumnTimeStampOut As DataGridViewTextBoxColumn
+    Friend WithEvents GenerateDefaultShiftAndTimeLogsButton As ToolStripButton
 End Class

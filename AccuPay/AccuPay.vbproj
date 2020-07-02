@@ -722,6 +722,12 @@
     <Compile Include="Views\Core Forms\SelectBranchForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.Designer.vb">
+      <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.Designer.vb">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>
     </Compile>
@@ -2109,6 +2115,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\SelectBranchForm.resx">
       <DependentUpon>SelectBranchForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\Core Forms\TimeEntry\DefaultShiftAndTimeLogsForm.resx">
+      <DependentUpon>DefaultShiftAndTimeLogsForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Views\Core Forms\USER CONTROLS\NullableTimePicker.resx">
       <DependentUpon>NullableTimePicker.vb</DependentUpon>

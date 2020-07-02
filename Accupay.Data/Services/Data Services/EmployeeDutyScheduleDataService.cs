@@ -50,19 +50,10 @@ namespace AccuPay.Data.Services
             await _repository.UpdateAsync(shift);
         }
 
-        public async Task<EmployeeDutySchedule> GetByIdAsync(int id)
-        {
-            return await _repository.GetByIdAsync(id);
-        }
-
-        public async Task<EmployeeDutySchedule> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _repository.GetByIdWithEmployeeAsync(id);
-        }
-
-        public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(IEnumerable<ShiftModel> shiftModels,
-                                                                            int organizationId,
-                                                                            int userId)
+        public async Task<BatchApplyResult<EmployeeDutySchedule>> BatchApply(
+            IEnumerable<ShiftModel> shiftModels,
+            int organizationId,
+            int userId)
         {
             var minDate = shiftModels.Min(x => x.Date);
             var maxDate = shiftModels.Max(x => x.Date);
@@ -105,11 +96,6 @@ namespace AccuPay.Data.Services
             await _repository.ChangeManyAsync(addedShifts: addedShifts, updatedShifts: updatedShifts);
 
             return new BatchApplyResult<EmployeeDutySchedule>(addedList: addedShifts, updatedList: updatedShifts);
-        }
-
-        public async Task<PaginatedListResult<EmployeeDutySchedule>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
-        {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
         }
     }
 }

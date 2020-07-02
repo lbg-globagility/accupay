@@ -18,43 +18,10 @@ namespace AccuPay.Data.Services
             _repository = repository;
         }
 
-        public async Task<PaginatedListResult<TimeLog>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm)
-        {
-            return await _repository.GetPaginatedListAsync(options, organizationId, searchTerm);
-        }
-
-        public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog>)> ListByEmployee(
-            int organizationId,
-            PageOptions options,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string searchTerm)
-        {
-            return await _repository.ListByEmployee(organizationId, options, dateFrom, dateTo, searchTerm);
-        }
-
-        public async Task<ICollection<TimeLog>> GetAll(
-            ICollection<int> employeeIds,
-            DateTime dateFrom,
-            DateTime dateTo)
-        {
-            return await _repository.GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(employeeIds, new TimePeriod(dateFrom, dateTo));
-        }
-
         public async Task SaveImportAsync(IReadOnlyCollection<TimeLog> timeLogs,
                                         IReadOnlyCollection<TimeAttendanceLog> timeAttendanceLogs = null)
         {
             await _repository.SaveImportAsync(timeLogs, timeAttendanceLogs);
-        }
-
-        public async Task<TimeLog> GetByIdWithEmployeeAsync(int id)
-        {
-            return await _repository.GetByIdWithEmployeeAsync(id);
-        }
-
-        public async Task<TimeLog> GetByIdAsync(int id)
-        {
-            return await _repository.GetByIdWithEmployeeAsync(id);
         }
 
         public async Task DeleteAsync(int id)
@@ -87,6 +54,21 @@ namespace AccuPay.Data.Services
                 throw new BusinessLogicException("Employee already has a shift for that day.");
 
             await _repository.CreateAsync(timeLog);
+        }
+
+        public async Task ChangeManyAsync(
+            List<TimeLog> addedTimeLogs = null,
+            List<TimeLog> updatedTimeLogs = null,
+            List<TimeLog> deletedTimeLogs = null)
+        {
+            if (addedTimeLogs == null && updatedTimeLogs == null && deletedTimeLogs == null)
+                throw new BusinessLogicException("No logs to be saved.");
+
+            // TODO: validations
+            await _repository.ChangeManyAsync(
+                addedTimeLogs: addedTimeLogs,
+                updatedTimeLogs: updatedTimeLogs,
+                deletedTimeLogs: deletedTimeLogs);
         }
     }
 }

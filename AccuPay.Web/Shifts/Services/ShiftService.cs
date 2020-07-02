@@ -1,5 +1,6 @@
 using AccuPay.Data.Entities;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
 using AccuPay.Infrastructure.Services.Excel;
@@ -15,14 +16,18 @@ namespace AccuPay.Web.Shifts.Services
 {
     public class ShiftService
     {
+        private readonly EmployeeDutyScheduleRepository _repository;
         private readonly EmployeeDutyScheduleDataService _service;
         private readonly ShiftImportParser _importParser;
         private readonly ICurrentUser _currentUser;
 
-        public ShiftService(EmployeeDutyScheduleDataService service,
-                            ShiftImportParser importParser,
-                            ICurrentUser currentUser)
+        public ShiftService(
+            EmployeeDutyScheduleRepository repository,
+            EmployeeDutyScheduleDataService service,
+            ShiftImportParser importParser,
+            ICurrentUser currentUser)
         {
+            _repository = repository;
             _service = service;
             _importParser = importParser;
             _currentUser = currentUser;
@@ -32,7 +37,7 @@ namespace AccuPay.Web.Shifts.Services
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _service.GetPaginatedListAsync(options,
+            var paginatedList = await _repository.GetPaginatedListAsync(options,
                                                                     _currentUser.OrganizationId,
                                                                     searchTerm);
 
@@ -43,7 +48,7 @@ namespace AccuPay.Web.Shifts.Services
 
         internal async Task<ShiftDto> GetById(int id)
         {
-            var shift = await _service.GetByIdWithEmployeeAsync(id);
+            var shift = await _repository.GetByIdWithEmployeeAsync(id);
 
             return ConvertToDto(shift);
         }
@@ -71,7 +76,7 @@ namespace AccuPay.Web.Shifts.Services
         internal async Task<ShiftDto> Update(int id, UpdateShiftDto dto)
         {
             // TODO: validations
-            var shift = await _service.GetByIdAsync(id);
+            var shift = await _repository.GetByIdAsync(id);
             if (shift == null) return null;
 
             shift.LastUpdBy = 1;

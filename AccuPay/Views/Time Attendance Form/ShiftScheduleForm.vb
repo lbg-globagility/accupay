@@ -955,7 +955,7 @@ Public Class ShiftScheduleForm
         userActivity.ShowDialog()
     End Sub
 
-    Private Async Sub EmployeeTreeView1_TickedEmployee(sender As Object, e As EventArgs) Handles EmployeeTreeView1.TickedEmployee
+    Private Async Sub EmployeeTreeView1_TickedEmployee(sender As Object, e As EventArgs) Handles EmployeeTreeView1.EmployeeTicked
 
         Await RefreshGridByDateFilter()
     End Sub
