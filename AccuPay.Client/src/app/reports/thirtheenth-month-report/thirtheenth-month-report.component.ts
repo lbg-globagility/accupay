@@ -37,7 +37,7 @@ export class ThirtheenthMonthReportComponent {
       .catch((err) => {
         this.errorHandler.badRequest(
           err,
-          'Error downloading Loan By Employee Report.'
+          'Error downloading 13th Month Report.'
         );
       })
       .finally(() => {
