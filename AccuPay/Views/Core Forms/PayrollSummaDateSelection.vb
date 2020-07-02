@@ -412,10 +412,6 @@ Public Class PayrollSummaDateSelection
         VIEW_payp(, SemiMonthlyTab.Text.Trim)
     End Sub
 
-    Private Sub WeeklyTab_Enter(sender As Object, e As EventArgs) Handles WeeklyTab.Enter
-        VIEW_payp(, WeeklyTab.Text.Trim)
-    End Sub
-
     Private Class PayPeriod
 
         Public Property RowID As Integer?
