@@ -37,5 +37,7 @@ namespace AccuPay.Data.Services
         public bool ShowBranch => _settings.GetBoolean("Employee Policy.ShowBranch", false);
 
         public bool UseBPIInsurance => _settings.GetBoolean("Employee Policy.UseBPIInsurance", false);
+
+        public bool UseDefaultShiftAndTimeLogs => _settings.GetBoolean("Data Policy.UseDefaultShiftAndTimeLogs", false);
     }
 }

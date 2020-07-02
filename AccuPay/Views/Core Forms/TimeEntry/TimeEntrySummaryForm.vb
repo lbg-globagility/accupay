@@ -125,6 +125,8 @@ Public Class TimeEntrySummaryForm
         ColumnBranch.Visible = _policy.PayRateCalculationBasis =
                                         PayRateCalculationBasis.Branch
 
+        GenerateDefaultShiftAndTimeLogsButton.Visible = _policy.UseDefaultShiftAndTimeLogs
+
         CheckIfMoneyColumnsAreGoingToBeHidden()
     End Sub
 

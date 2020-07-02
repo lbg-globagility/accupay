@@ -475,6 +475,7 @@ Partial Class TimeEntrySummaryForm
         Me.GenerateDefaultShiftAndTimeLogsButton.Name = "GenerateDefaultShiftAndTimeLogsButton"
         Me.GenerateDefaultShiftAndTimeLogsButton.Size = New System.Drawing.Size(222, 22)
         Me.GenerateDefaultShiftAndTimeLogsButton.Text = "Generate Default Shift and Time Logs"
+        Me.GenerateDefaultShiftAndTimeLogsButton.Visible = False
         '
         'GenerateTimeEntryButton
         '
