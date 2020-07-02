@@ -39,12 +39,20 @@ namespace AccuPay.Web.Controllers
             return await GetPDF(path, "pagibig-report.pdf");
         }
 
-        [HttpGet("loanbyType-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
-        [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult> GetPagIBIGReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        [HttpGet("loanbytype-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
+        [Permission(PermissionTypes.LoanRead)]
+        public async Task<ActionResult> GetLoanByTypeReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
         {
             var path = $"loanbyType-report/{_currentUser.OrganizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}";
             return await GetPDF(path, "loan-by-type-report.pdf");
+        }
+
+        [HttpGet("loanbyemployee-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}")]
+        [Permission(PermissionTypes.LoanRead)]
+        public async Task<ActionResult> GetLoanByEmployeeReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        {
+            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}";
+            return await GetPDF(path, "loan-by-employee-report.pdf");
         }
     }
 }

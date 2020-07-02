@@ -11,19 +11,22 @@ namespace AccuPay.CrystalReportsWeb.Services
         private readonly PhilHealthMonthlyReportBuilder _philHealthMonthlyReportBuilder;
         private readonly PagIBIGMonthlyReportBuilder _pagIBIGMonthlyReportBuilder;
         private readonly LoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
+        private readonly LoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
             SSSMonthyReportBuilder sSSMonthyReportCreator,
             PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
             PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
-             LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder)
+             LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
+             LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;
             _philHealthMonthlyReportBuilder = philHealthMonthlyReportBuilder;
             _pagIBIGMonthlyReportBuilder = pagIBIGMonthlyReportBuilder;
             _loanSummaryByTypeReportBuilder = loanSummaryByTypeReportBuilder;
+            _loanSummaryByEmployeeReportBuilder = loanSummaryByEmployeeReportBuilder;
         }
 
         public string GeneratePayslip(int payPeriodId)
@@ -75,6 +78,17 @@ namespace AccuPay.CrystalReportsWeb.Services
             string pdfFullPath = Path.GetTempFileName();
 
             _loanSummaryByTypeReportBuilder
+                .CreateReportDocument(organizationId, dateFrom, dateTo)
+                .GeneratePDF(pdfFullPath);
+
+            return pdfFullPath;
+        }
+
+        public string GenerateLoanByEmployeeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+            string pdfFullPath = Path.GetTempFileName();
+
+            _loanSummaryByEmployeeReportBuilder
                 .CreateReportDocument(organizationId, dateFrom, dateTo)
                 .GeneratePDF(pdfFullPath);
 

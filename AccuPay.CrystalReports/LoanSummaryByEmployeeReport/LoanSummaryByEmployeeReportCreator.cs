@@ -9,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReports
 {
-    public class LoanSummaryByEmployeeReportCreator
+    public class LoanSummaryByEmployeeReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly LoanSummaryByEmployeeReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public LoanSummaryByEmployeeReportCreator(LoanSummaryByEmployeeReportDataService dataService)
+        public LoanSummaryByEmployeeReportBuilder(LoanSummaryByEmployeeReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public LoanSummaryByEmployeeReportCreator CreateReportDocument(int organizationId, DateTime date_from, DateTime date_to)
+        public LoanSummaryByEmployeeReportBuilder CreateReportDocument(int organizationId, DateTime date_from, DateTime date_to)
         {
             _reportDocument = new LoanReports();
 
@@ -36,9 +35,11 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

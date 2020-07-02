@@ -12,6 +12,7 @@ export class ReportService extends BasePdfService {
   readonly philHealthFileName = 'philhealth-report.pdf';
   readonly pagIBIGFileName = 'pagibig-report.pdf';
   readonly loanByTypeFileName = 'loan-by-type-report.pdf';
+  readonly loanByEmployeeFileName = 'loan-by-employee-report.pdf';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -47,8 +48,22 @@ export class ReportService extends BasePdfService {
     isPerPage: any
   ): Promise<any> {
     return this.getPDF(
-      this.pagIBIGFileName,
+      this.loanByTypeFileName,
       `${this.baseUrl}/loanbytype-report/${monthFrom}/${dayFrom}/${yearFrom}/${monthTo}/${dayTo}/${yearTo}/${isPerPage}`
+    );
+  }
+
+  getLoanByEmployeeReport(
+    monthFrom: number,
+    dayFrom: number,
+    yearFrom: number,
+    monthTo: number,
+    dayTo: number,
+    yearTo: number
+  ): Promise<any> {
+    return this.getPDF(
+      this.loanByEmployeeFileName,
+      `${this.baseUrl}/loanbyemployee-report/${monthFrom}/${dayFrom}/${yearFrom}/${monthTo}/${dayTo}/${yearTo}`
     );
   }
 }

@@ -107,5 +107,27 @@ namespace AccuPay.CrystalReportsWeb.Controllers
 
             return PdfReportResult(pdfFullPath);
         }
+
+        /// <summary>
+        /// Returns a pdf file containing the Loan by type report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="monthFrom">The start month of the report.</param>
+        /// <param name="dayFrom">The start year of the report.</param>
+        /// <param name="yearFrom">The start month of the report.</param>
+        /// <param name="monthTo">The end year of the report.</param>
+        /// <param name="dayTo">The end month of the report.</param>
+        /// <param name="yearTo">The end year of the report.</param>
+        /// <returns></returns>
+        [Route("loanbyemployee-report/{organizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}")]
+        public HttpResponseMessage GetLoanByEmployeeReport(int organizationId, int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo)
+        {
+            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
+            var dateTo = new DateTime(yearTo, monthTo, dayTo);
+
+            string pdfFullPath = _reportingService.GenerateLoanByEmployeeReport(organizationId, dateFrom, dateTo);
+
+            return PdfReportResult(pdfFullPath);
+        }
     }
 }

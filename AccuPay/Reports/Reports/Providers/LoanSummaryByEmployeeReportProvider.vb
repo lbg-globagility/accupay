@@ -23,7 +23,7 @@ Public Class LoanSummaryByEmployeeReportProvider
                 date_from = n_PayrollSummaDateSelection.DateFrom
                 date_to = n_PayrollSummaDateSelection.DateTo
 
-                Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByEmployeeReportCreator)
+                Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByEmployeeReportBuilder)
 
                 Dim loanSummaryByEmployeeReport = service.CreateReportDocument(z_OrganizationID, CDate(date_from), CDate(date_to))
 

@@ -1,27 +1,21 @@
 import { Component, ViewChild } from '@angular/core';
-import { Moment } from 'moment';
+import { SelectDateRangeComponent } from '../components/select-date-range/select-date-range.component';
 import { ReportService } from '../report.service';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
-import { FormGroup, FormBuilder } from '@angular/forms';
-import { SelectDateRangeComponent } from '../components/select-date-range/select-date-range.component';
+import { Moment } from 'moment';
 
 @Component({
-  selector: 'app-loan-report-bytype',
-  templateUrl: './loan-report-bytype.component.html',
-  styleUrls: ['./loan-report-bytype.component.scss'],
+  selector: 'app-loan-report-byemployee',
+  templateUrl: './loan-report-byemployee.component.html',
+  styleUrls: ['./loan-report-byemployee.component.scss'],
 })
-export class LoanReportBytypeComponent {
+export class LoanReportByemployeeComponent {
   @ViewChild(SelectDateRangeComponent)
   dateRangeForm: SelectDateRangeComponent;
-
-  form: FormGroup = this.fb.group({
-    isPerPage: [null],
-  });
 
   isDownloading: boolean = false;
 
   constructor(
-    private fb: FormBuilder,
     private reportService: ReportService,
     private errorHandler: ErrorHandler
   ) {}
@@ -41,26 +35,20 @@ export class LoanReportBytypeComponent {
     var dayTo = dateTo.date();
     var yearTo = dateTo.year();
 
-    var isPerPage = this.form.controls.isPerPage.value;
-    if (isPerPage == null) {
-      isPerPage = false;
-    }
-
     this.isDownloading = true;
     this.reportService
-      .getLoanByTypeReport(
+      .getLoanByEmployeeReport(
         monthFrom,
         dayFrom,
         yearFrom,
         monthTo,
         dayTo,
-        yearTo,
-        isPerPage
+        yearTo
       )
       .catch((err) => {
         this.errorHandler.badRequest(
           err,
-          'Error downloading Loan By Type Report.'
+          'Error downloading Loan By Employee Report.'
         );
       })
       .finally(() => {
