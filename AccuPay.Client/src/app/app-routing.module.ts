@@ -81,6 +81,7 @@ import { PhilhealthReportComponent } from './reports/philhealth-report/philhealt
 import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
 import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
+import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 
 const routes: Routes = [
   {
@@ -280,6 +281,10 @@ const routes: Routes = [
           {
             path: 'loanbyemployee',
             component: LoanReportByemployeeComponent,
+          },
+          {
+            path: 'tax',
+            component: TaxReportComponent,
           },
         ],
       },

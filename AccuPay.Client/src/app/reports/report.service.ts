@@ -13,6 +13,7 @@ export class ReportService extends BasePdfService {
   readonly pagIBIGFileName = 'pagibig-report.pdf';
   readonly loanByTypeFileName = 'loan-by-type-report.pdf';
   readonly loanByEmployeeFileName = 'loan-by-employee-report.pdf';
+  readonly taxFileName = 'tax-report.pdf';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -39,31 +40,27 @@ export class ReportService extends BasePdfService {
     );
   }
   getLoanByTypeReport(
-    monthFrom: number,
-    dayFrom: number,
-    yearFrom: number,
-    monthTo: number,
-    dayTo: number,
-    yearTo: number,
-    isPerPage: any
+    dateFrom: string,
+    dateTo: string,
+    isPerPage: boolean
   ): Promise<any> {
     return this.getPDF(
       this.loanByTypeFileName,
-      `${this.baseUrl}/loanbytype-report/${monthFrom}/${dayFrom}/${yearFrom}/${monthTo}/${dayTo}/${yearTo}/${isPerPage}`
+      `${this.baseUrl}/loanbytype-report/${dateFrom}/${dateTo}/${isPerPage}`
     );
   }
 
-  getLoanByEmployeeReport(
-    monthFrom: number,
-    dayFrom: number,
-    yearFrom: number,
-    monthTo: number,
-    dayTo: number,
-    yearTo: number
-  ): Promise<any> {
+  getLoanByEmployeeReport(dateFrom: string, dateTo: string): Promise<any> {
     return this.getPDF(
       this.loanByEmployeeFileName,
-      `${this.baseUrl}/loanbyemployee-report/${monthFrom}/${dayFrom}/${yearFrom}/${monthTo}/${dayTo}/${yearTo}`
+      `${this.baseUrl}/loanbyemployee-report/${dateFrom}/${dateTo}`
+    );
+  }
+
+  getTaxReport(dateFrom: string, dateTo: string) {
+    return this.getPDF(
+      this.loanByEmployeeFileName,
+      `${this.baseUrl}/tax-report/${dateFrom}/${dateTo}`
     );
   }
 }

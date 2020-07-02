@@ -12,6 +12,7 @@ namespace AccuPay.CrystalReportsWeb.Services
         private readonly PagIBIGMonthlyReportBuilder _pagIBIGMonthlyReportBuilder;
         private readonly LoanSummaryByTypeReportBuilder _loanSummaryByTypeReportBuilder;
         private readonly LoanSummaryByEmployeeReportBuilder _loanSummaryByEmployeeReportBuilder;
+        private readonly TaxMonthlyReportBuilder _taxMonthlyReportBuilder;
 
         public ReportingService(
             PayslipBuilder payslipCreator,
@@ -19,7 +20,8 @@ namespace AccuPay.CrystalReportsWeb.Services
             PhilHealthMonthlyReportBuilder philHealthMonthlyReportBuilder,
             PagIBIGMonthlyReportBuilder pagIBIGMonthlyReportBuilder,
              LoanSummaryByTypeReportBuilder loanSummaryByTypeReportBuilder,
-             LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder)
+             LoanSummaryByEmployeeReportBuilder loanSummaryByEmployeeReportBuilder,
+             TaxMonthlyReportBuilder taxMonthlyReportBuilder)
         {
             _payslipCreator = payslipCreator;
             _sSSMonthyReportBuilder = sSSMonthyReportCreator;
@@ -27,6 +29,7 @@ namespace AccuPay.CrystalReportsWeb.Services
             _pagIBIGMonthlyReportBuilder = pagIBIGMonthlyReportBuilder;
             _loanSummaryByTypeReportBuilder = loanSummaryByTypeReportBuilder;
             _loanSummaryByEmployeeReportBuilder = loanSummaryByEmployeeReportBuilder;
+            _taxMonthlyReportBuilder = taxMonthlyReportBuilder;
         }
 
         public string GeneratePayslip(int payPeriodId)
@@ -73,13 +76,22 @@ namespace AccuPay.CrystalReportsWeb.Services
             return pdfFullPath;
         }
 
-        public string GenerateLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public string GenerateLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo, bool isPerPage)
         {
             string pdfFullPath = Path.GetTempFileName();
 
-            _loanSummaryByTypeReportBuilder
+            if (isPerPage)
+            {
+                _loanSummaryByTypeReportBuilder
+                .CreateReportDocumentPerPage(organizationId, dateFrom, dateTo)
+                .GeneratePDF(pdfFullPath);
+            }
+            else
+            {
+                _loanSummaryByTypeReportBuilder
                 .CreateReportDocument(organizationId, dateFrom, dateTo)
                 .GeneratePDF(pdfFullPath);
+            }
 
             return pdfFullPath;
         }
@@ -89,6 +101,17 @@ namespace AccuPay.CrystalReportsWeb.Services
             string pdfFullPath = Path.GetTempFileName();
 
             _loanSummaryByEmployeeReportBuilder
+                .CreateReportDocument(organizationId, dateFrom, dateTo)
+                .GeneratePDF(pdfFullPath);
+
+            return pdfFullPath;
+        }
+
+        public string GenerateTaxReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+            string pdfFullPath = Path.GetTempFileName();
+
+            _taxMonthlyReportBuilder
                 .CreateReportDocument(organizationId, dateFrom, dateTo)
                 .GeneratePDF(pdfFullPath);
 

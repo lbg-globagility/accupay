@@ -31,15 +31,11 @@ export class LoanReportBytypeComponent {
       return;
     }
 
-    var dateFrom = this.dateRangeForm.form.controls.startDate.value as Moment;
-    var monthFrom = Number(dateFrom.format('M'));
-    var dayFrom = dateFrom.date();
-    var yearFrom = dateFrom.year();
+    var dateFrom = (this.dateRangeForm.form.controls.startDate
+      .value as Moment).format('MM-DD-yyyy');
 
-    var dateTo = this.dateRangeForm.form.controls.endDate.value as Moment;
-    var monthTo = Number(dateTo.format('M'));
-    var dayTo = dateTo.date();
-    var yearTo = dateTo.year();
+    var dateTo = (this.dateRangeForm.form.controls.endDate
+      .value as Moment).format('MM-DD-yyyy');
 
     var isPerPage = this.form.controls.isPerPage.value;
     if (isPerPage == null) {
@@ -48,15 +44,7 @@ export class LoanReportBytypeComponent {
 
     this.isDownloading = true;
     this.reportService
-      .getLoanByTypeReport(
-        monthFrom,
-        dayFrom,
-        yearFrom,
-        monthTo,
-        dayTo,
-        yearTo,
-        isPerPage
-      )
+      .getLoanByTypeReport(dateFrom, dateTo, isPerPage)
       .catch((err) => {
         this.errorHandler.badRequest(
           err,

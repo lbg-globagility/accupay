@@ -36,7 +36,7 @@ Public Class TaxReportProvider
         Dim dateFrom = payPeriods.First().PayFromDate
         Dim dateTo = payPeriods.Last().PayToDate
 
-        Dim service = MainServiceProvider.GetRequiredService(Of TaxMonthlyReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of TaxMonthlyReportBuilder)
 
         Dim taxMonthlyReport = service.CreateReportDocument(z_OrganizationID, dateFrom, dateTo)
 

@@ -2,6 +2,7 @@ using AccuPay.Web.Core.Auth;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using System;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -39,20 +40,28 @@ namespace AccuPay.Web.Controllers
             return await GetPDF(path, "pagibig-report.pdf");
         }
 
-        [HttpGet("loanbytype-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
+        [HttpGet("loanbytype-report/{dateFrom}/{dateTo}/{isPerPage}")]
         [Permission(PermissionTypes.LoanRead)]
-        public async Task<ActionResult> GetLoanByTypeReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        public async Task<ActionResult> GetLoanByTypeReport(DateTime dateFrom, DateTime dateTo, bool isPerPage)
         {
-            var path = $"loanbyType-report/{_currentUser.OrganizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}";
+            var path = $"loanbyType-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}/{isPerPage}";
             return await GetPDF(path, "loan-by-type-report.pdf");
         }
 
-        [HttpGet("loanbyemployee-report/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}")]
+        [HttpGet("loanbyemployee-report/{dateFrom}/{dateTo}")]
         [Permission(PermissionTypes.LoanRead)]
-        public async Task<ActionResult> GetLoanByEmployeeReport(int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        public async Task<ActionResult> GetLoanByEmployeeReport(DateTime dateFrom, DateTime dateTo)
         {
-            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}";
+            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
             return await GetPDF(path, "loan-by-employee-report.pdf");
+        }
+
+        [HttpGet("tax-report/{dateFrom}/{dateTo}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetTaxReport(DateTime dateFrom, DateTime dateTo)
+        {
+            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
+            return await GetPDF(path, "tax-report.pdf");
         }
     }
 }

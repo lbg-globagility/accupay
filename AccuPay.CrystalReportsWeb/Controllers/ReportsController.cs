@@ -89,43 +89,47 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// Returns a pdf file containing the Loan by type report of the selected month and year.
         /// </summary>
         /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
-        /// <param name="monthFrom">The start month of the report.</param>
-        /// <param name="dayFrom">The start year of the report.</param>
-        /// <param name="yearFrom">The start month of the report.</param>
-        /// <param name="monthTo">The end year of the report.</param>
-        /// <param name="dayTo">The end month of the report.</param>
-        /// <param name="yearTo">The end year of the report.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
         /// <param name="isPerPage">The report is generated per page.</param>
         /// <returns></returns>
-        [Route("loanbytype-report/{organizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}/{isPerPage}")]
-        public HttpResponseMessage GetLoanByTypeReport(int organizationId, int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo, bool isPerPage)
+        [Route("loanbytype-report/{organizationId}/{dateFrom}/{dateTo}/{isPerPage}")]
+        public HttpResponseMessage GetLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo, bool isPerPage)
         {
-            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
-            var dateTo = new DateTime(yearTo, monthTo, dayTo);
 
-            string pdfFullPath = _reportingService.GenerateLoanByTypeReport(organizationId, dateFrom, dateTo);
+            string pdfFullPath = _reportingService.GenerateLoanByTypeReport(organizationId, dateFrom, dateTo, isPerPage);
 
             return PdfReportResult(pdfFullPath);
         }
 
         /// <summary>
-        /// Returns a pdf file containing the Loan by type report of the selected month and year.
+        /// Returns a pdf file containing the Loan by Employee report of the selected month and year.
         /// </summary>
         /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
-        /// <param name="monthFrom">The start month of the report.</param>
-        /// <param name="dayFrom">The start year of the report.</param>
-        /// <param name="yearFrom">The start month of the report.</param>
-        /// <param name="monthTo">The end year of the report.</param>
-        /// <param name="dayTo">The end month of the report.</param>
-        /// <param name="yearTo">The end year of the report.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
         /// <returns></returns>
-        [Route("loanbyemployee-report/{organizationId}/{monthFrom}/{dayFrom}/{yearFrom}/{monthTo}/{dayTo}/{yearTo}")]
-        public HttpResponseMessage GetLoanByEmployeeReport(int organizationId, int monthFrom, int dayFrom, int yearFrom, int monthTo, int dayTo, int yearTo)
+        [Route("loanbyemployee-report/{organizationId}/{dateFrom}/{dateTo}")]
+        public HttpResponseMessage GetLoanByEmployeeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
-            var dateFrom = new DateTime(yearFrom, monthFrom, dayFrom);
-            var dateTo = new DateTime(yearTo, monthTo, dayTo);
 
             string pdfFullPath = _reportingService.GenerateLoanByEmployeeReport(organizationId, dateFrom, dateTo);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the Tax report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
+        /// <returns></returns>
+        [Route("tax-report/{organizationId}/{dateFrom}/{dateTo}")]
+        public HttpResponseMessage GetTaxReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+
+            string pdfFullPath = _reportingService.GenerateTaxReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
         }

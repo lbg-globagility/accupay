@@ -9,17 +9,16 @@ using System.Threading.Tasks;
 
 namespace AccuPay.CrystalReports
 {
-    public class TaxMonthlyReportCreator
+    public class TaxMonthlyReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly TaxMonthlyReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public TaxMonthlyReportCreator(TaxMonthlyReportDataService dataService)
+        public TaxMonthlyReportBuilder(TaxMonthlyReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public TaxMonthlyReportCreator CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public TaxMonthlyReportBuilder CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
             _reportDocument = new Tax_Monthly_Report();
 
@@ -31,9 +30,11 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

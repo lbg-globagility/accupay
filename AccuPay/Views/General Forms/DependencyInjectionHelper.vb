@@ -155,7 +155,7 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of LoanSummaryByEmployeeReportDataService)
         services.AddTransient(Of LoanSummaryByEmployeeReportBuilder)
         services.AddTransient(Of TaxMonthlyReportDataService)
-        services.AddTransient(Of TaxMonthlyReportCreator)
+        services.AddTransient(Of TaxMonthlyReportBuilder)
         services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
         services.AddTransient(Of ThirteenthMonthSummaryReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
