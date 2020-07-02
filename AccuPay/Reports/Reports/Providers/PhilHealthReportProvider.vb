@@ -17,7 +17,7 @@ Public Class PhilHealthReportProvider
             Return
         End If
 
-        Dim service = MainServiceProvider.GetRequiredService(Of PhilHealthMonthlyReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of PhilHealthMonthlyReportBuilder)
 
         Dim philHealthReport = service.CreateReportDocument(z_OrganizationID, CDate(n_selectMonth.MonthValue))
 

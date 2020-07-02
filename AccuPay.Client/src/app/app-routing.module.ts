@@ -77,6 +77,8 @@ import {
   EditClientComponent,
 } from 'src/app/clients/components';
 import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
+import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
+import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
 
 const routes: Routes = [
   {
@@ -260,6 +262,14 @@ const routes: Routes = [
           {
             path: 'sss',
             component: SssReportComponent,
+          },
+          {
+            path: 'philhealth',
+            component: PhilhealthReportComponent,
+          },
+          {
+            path: 'pagibig',
+            component: PagibigReportComponent,
           },
         ],
       },

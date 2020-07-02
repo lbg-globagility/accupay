@@ -8,7 +8,9 @@ import { HttpClient } from '@angular/common/http';
 export class ReportService extends BasePdfService {
   private baseUrl = 'api/reports';
 
-  readonly payslipFileName = 'sss-report.pdf';
+  readonly sssFileName = 'sss-report.pdf';
+  readonly philHealthFileName = 'philhealth-report.pdf';
+  readonly pagIBIGFileName = 'PagIBIG-report.pdf';
 
   constructor(protected httpClient: HttpClient) {
     super(httpClient);
@@ -16,8 +18,22 @@ export class ReportService extends BasePdfService {
 
   getSSSReport(month: number, year: number): Promise<any> {
     return this.getPDF(
-      this.payslipFileName,
+      this.sssFileName,
       `${this.baseUrl}/sss-report/${month}/${year}`
+    );
+  }
+
+  getPhilHealthReport(month: number, year: number): Promise<any> {
+    return this.getPDF(
+      this.philHealthFileName,
+      `${this.baseUrl}/philhealth-report/${month}/${year}`
+    );
+  }
+
+  getPagIBIGReport(month: number, year: number) {
+    return this.getPDF(
+      this.pagIBIGFileName,
+      `${this.baseUrl}/pagibig-report/${month}/${year}`
     );
   }
 }

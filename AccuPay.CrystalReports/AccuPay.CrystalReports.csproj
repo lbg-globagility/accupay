@@ -111,7 +111,7 @@
       <DependentUpon>Phil Health Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PhilHealthMonthlyReport\PhilHealthMonthlyReportCreator.cs" />
+    <Compile Include="PhilHealthMonthlyReport\PhilHealthMonthlyReportBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SSSMonthlyReport\SSS Monthly Report.cs">
       <AutoGen>True</AutoGen>

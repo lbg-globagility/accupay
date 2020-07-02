@@ -502,5 +502,23 @@
             <param name="year">The year of the report.</param>
             <returns></returns>
         </member>
+        <member name="M:AccuPay.CrystalReportsWeb.Controllers.ReportsController.GetPhilHealthMonthlyReport(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a pdf file containing the PhilHealth Monthly report of the selected month and year.
+            </summary>
+            <param name="organizationId">The ID of the organization that the report will be based on.</param>
+            <param name="month">The month of the report.</param>
+            <param name="year">The year of the report.</param>
+            <returns></returns>
+        </member>
+        <member name="M:AccuPay.CrystalReportsWeb.Controllers.ReportsController.GetPagIBIGMonthlyReport(System.Int32,System.Int32,System.Int32)">
+            <summary>
+            Returns a pdf file containing the PagIBIG Monthly report of the selected month and year.
+            </summary>
+            <param name="organizationId">The ID of the organization that the report will be based on.</param>
+            <param name="month">The month of the report.</param>
+            <param name="year">The year of the report.</param>
+            <returns></returns>
+        </member>
     </members>
 </doc>

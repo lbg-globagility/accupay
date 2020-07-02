@@ -1,23 +1,33 @@
 ﻿Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Helpers
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class UsersForm
-    Private isNew As Boolean = False
-    Dim rowid As Integer
 
-    Private _policyHelper As PolicyHelper
+    Private isNew As Boolean = False
 
     Private dataSource As List(Of UserBoundItem)
+
+    Private ReadOnly _policyHelper As PolicyHelper
+
+    Private ReadOnly _userRepository As UserRepository
+
+    Private ReadOnly _encryptor As IEncryption
 
     Sub New()
 
         InitializeComponent()
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
+
+        _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
+
+        _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
 
     End Sub
 
@@ -32,8 +42,7 @@ Public Class UsersForm
     End Sub
 
     Private Async Sub FillUsers()
-        Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-        Dim users = Await userRepository.GetAllActiveWithPositionAsync()
+        Dim users = Await _userRepository.GetAllActiveWithPositionAsync()
 
         Dim source = users.Select(Function(u) New UserBoundItem(u))
         dataSource = source.ToList()
@@ -53,7 +62,7 @@ Public Class UsersForm
 
         With user
             txtUserName.Text = .UserID
-            txtPassword.Text = DecryptData(.Password)
+            txtPassword.Text = _encryptor.Decrypt(.Password)
             txtConfirmPassword.Text = txtPassword.Text
             txtConfirmPassword.Tag = txtConfirmPassword.Text
             txtLastName.Text = .LastName
@@ -64,8 +73,6 @@ Public Class UsersForm
             cboxposition.SelectedValue = .PositionID
 
             UserLevelComboBox.SelectedIndex = .UserLevel
-
-            rowid = .RowID
         End With
 
     End Sub
@@ -175,6 +182,16 @@ Public Class UsersForm
     End Function
 
     Private Async Sub SaveUser_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+        Await FunctionUtils.TryCatchFunctionAsync("Save User",
+            Async Function()
+                Await SaveUser()
+            End Function)
+
+        btnSave.Enabled = True
+    End Sub
+
+    Private Async Function SaveUser() As Threading.Tasks.Task
         Dim enableSaveButton = Sub()
                                    btnSave.Enabled = True
                                End Sub
@@ -198,8 +215,6 @@ Public Class UsersForm
         End If
 
         Dim passwordConfirmed = txtPassword.Text = txtConfirmPassword.Text
-        Dim username = EncryptData(txtUserName.Text)
-        Dim password = EncryptData(txtPassword.Text)
 
         If Not passwordConfirmed Then
             myBalloon("Password does not match.", "Save failed", lblSaveMsg, , -100)
@@ -208,12 +223,10 @@ Public Class UsersForm
             Return
         End If
 
-        Dim userRepositoryQuery = MainServiceProvider.GetRequiredService(Of UserRepository)
-        Dim userRepositorySave = MainServiceProvider.GetRequiredService(Of UserRepository)
+        Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
 
         If isNew Then
-            Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
-            If usernameExists Then
+            If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
                 usernameExistsAlready()
                 Return
             End If
@@ -221,7 +234,7 @@ Public Class UsersForm
             Dim newUser = User.NewUser(z_OrganizationID, z_User)
 
             ApplyChanges(newUser)
-            Await userRepositorySave.SaveAsync(newUser)
+            Await dataService.CreateAsync(newUser)
 
             myBalloon("Successfully Save", "Saved", lblSaveMsg, , -100)
 
@@ -233,24 +246,24 @@ Public Class UsersForm
             Dim userBoundItem = GetUserBoundItem()
             If userBoundItem Is Nothing Then Return
 
-            Dim user = Await userRepositoryQuery.GetByIdWithPositionAsync(userBoundItem.RowID)
+            Dim user = Await _userRepository.GetByIdWithPositionAsync(userBoundItem.RowID)
 
-            If username <> user.Username Then
-                Dim usernameExists = (Await userRepositoryQuery.GetByUsernameAsync(username)) IsNot Nothing
-                If usernameExists Then
+            If _encryptor.Encrypt(txtUserName.Text) <> user.Username Then
+                If Await _userRepository.CheckIfUsernameExistsAsync(txtUserName.Text) Then
                     usernameExistsAlready()
                     Return
                 End If
             End If
 
             ApplyChanges(user)
-            Await userRepositorySave.SaveAsync(user)
+            user.LastUpdBy = z_User
+            Await dataService.UpdateAsync(user)
 
             myBalloon("Successfully Save", "Updated", lblSaveMsg, , -100)
         End If
 
         enableSaveButton()
-    End Sub
+    End Function
 
     Private Function GetUserBoundItem() As UserBoundItem
         Dim currentRow = dgvUserList.CurrentRow
@@ -260,8 +273,8 @@ Public Class UsersForm
 
     Private Sub ApplyChanges(ByRef u As User)
         With u
-            .Username = EncryptData(txtUserName.Text)
-            .Password = EncryptData(txtPassword.Text)
+            .Username = txtUserName.Text
+            .Password = txtPassword.Text
             .LastName = txtLastName.Text
             .FirstName = txtFirstName.Text
             .MiddleName = txtMiddleName.Text
@@ -435,8 +448,8 @@ Public Class UsersForm
             btnDelete.Enabled = False
 
             Dim user = GetUserBoundItem()
-            Dim userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
-            Await userRepository.SoftDeleteAsync(user.RowID)
+            Dim dataService = MainServiceProvider.GetRequiredService(Of UserDataService)
+            Await dataService.SoftDeleteAsync(user.RowID)
 
             dgvUserList.ClearSelection()
 
@@ -481,9 +494,14 @@ Public Class UsersForm
 
     Private Class UserBoundItem
 
+        Private ReadOnly _encryptor As IEncryption
+
         Public Sub New(u As User)
+
+            _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
+
             Dim userName As String = u.Username
-            _UserID = Convert.ToString(DecryptData(userName))
+            _UserID = Convert.ToString(_encryptor.Decrypt(userName))
 
             _PositionName = u.Position.Name
             _LastName = u.LastName

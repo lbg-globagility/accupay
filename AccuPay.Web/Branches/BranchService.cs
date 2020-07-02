@@ -1,6 +1,6 @@
 using AccuPay.Data.Entities;
-using AccuPay.Data.Helpers;
 using AccuPay.Data.Repositories;
+using AccuPay.Web.Core.Auth;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,10 +10,12 @@ namespace AccuPay.Web.Branches
     public class BranchService
     {
         private readonly BranchRepository _branchRepository;
+        private readonly ICurrentUser _currentUser;
 
-        public BranchService(BranchRepository branchRepository)
+        public BranchService(BranchRepository branchRepository, ICurrentUser currentUser)
         {
             _branchRepository = branchRepository;
+            _currentUser = currentUser;
         }
 
         public async Task<BranchDto> GetById(int branchId)
@@ -28,6 +30,7 @@ namespace AccuPay.Web.Branches
             var branch = new Branch();
             branch.Name = dto.Name;
             branch.Code = dto.Code;
+            branch.CreatedBy = _currentUser.DesktopUserId;
 
             await _branchRepository.CreateAsync(branch);
 
@@ -39,6 +42,7 @@ namespace AccuPay.Web.Branches
             var branch = await _branchRepository.GetById(id);
             branch.Name = dto.Name;
             branch.Code = dto.Code;
+            branch.LastUpdBy = _currentUser.DesktopUserId;
 
             await _branchRepository.UpdateAsync(branch);
 

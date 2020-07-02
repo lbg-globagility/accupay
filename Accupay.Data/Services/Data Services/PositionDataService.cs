@@ -99,7 +99,7 @@ namespace AccuPay.Data.Services
             return await _positionRepository.GetByIdWithDivisionAsync(positionId);
         }
 
-        public async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
+        public async Task<ICollection<Position>> GetAllAsync(int organizationId)
         {
             return await _positionRepository.GetAllAsync(organizationId);
         }
