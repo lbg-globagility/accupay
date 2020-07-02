@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,9 +19,15 @@ namespace AccuPay.Data.Repositories
             _query = _context.OldUsers;
         }
 
-        public UserQueryBuilder ById(int rowId)
+        public UserQueryBuilder ById(int id)
         {
-            _query = _query.Where(u => u.RowID == rowId);
+            _query = _query.Where(u => u.RowID == id);
+            return this;
+        }
+
+        public UserQueryBuilder ByAspNetUserId(Guid aspNetUserId)
+        {
+            _query = _query.Where(u => u.AspNetUserId == aspNetUserId);
             return this;
         }
 

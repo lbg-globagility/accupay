@@ -51,12 +51,10 @@ namespace AccuPay.Web.Shifts.Services
         internal async Task<ShiftDto> Create(CreateShiftDto dto)
         {
             // TODO: validations
-            int userId = 1;
-
             var shift = new EmployeeDutySchedule
             {
                 OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 EmployeeID = dto.EmployeeId,
                 DateSched = dto.Date
             };
@@ -74,7 +72,7 @@ namespace AccuPay.Web.Shifts.Services
             var shift = await _service.GetByIdAsync(id);
             if (shift == null) return null;
 
-            shift.LastUpdBy = 1;
+            shift.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, shift);
 
@@ -99,7 +97,7 @@ namespace AccuPay.Web.Shifts.Services
             if (stream == null)
                 throw new Exception("Unable to parse excel file.");
 
-            int userId = 1;
+            int userId = _currentUser.DesktopUserId;
             var parsedResult = await _importParser.Parse(stream, _currentUser.OrganizationId);
 
             await _service.BatchApply(parsedResult.ValidRecords, organizationId: _currentUser.OrganizationId, userId: userId);

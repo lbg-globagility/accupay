@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using static AccuPay.Data.Helpers.UserConstants;
@@ -48,13 +49,27 @@ namespace AccuPay.Data.Repositories
 
         #region By User
 
-        public async Task<User> GetByIdWithPositionAsync(int rowId)
+        public async Task<User> GetByIdWithPositionAsync(int id)
         {
             var builder = new UserQueryBuilder(_context);
             return await builder
                 .IncludePosition()
-                .ById(rowId)
+                .ById(id)
                 .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetByAspNetUserIdAsync(Guid aspNetUserId)
+        {
+            var builder = new UserQueryBuilder(_context);
+            return await builder
+                .ByAspNetUserId(aspNetUserId)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<User> GetFirstUserAsync()
+        {
+            var builder = new UserQueryBuilder(_context);
+            return await builder.FirstOrDefaultAsync();
         }
 
         public async Task<bool> CheckIfUsernameExistsAsync(string username, bool isIncrypted = false)
