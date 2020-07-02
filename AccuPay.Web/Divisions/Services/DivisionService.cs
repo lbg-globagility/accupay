@@ -13,19 +13,19 @@ namespace AccuPay.Web.Divisions
     public class DivisionService
     {
         private readonly DivisionDataService _service;
-        private readonly ICurrentUser _currentuser;
+        private readonly ICurrentUser _currentUser;
 
         public DivisionService(DivisionDataService service, ICurrentUser currentuser)
         {
             _service = service;
-            _currentuser = currentuser;
+            _currentUser = currentuser;
         }
 
         public async Task<PaginatedList<DivisionDto>> PaginatedList(PageOptions options, string searchTerm)
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _service.GetPaginatedListAsync(options, _currentuser.OrganizationId, searchTerm);
+            var paginatedList = await _service.GetPaginatedListAsync(options, _currentUser.OrganizationId, searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -41,8 +41,24 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<ActionResult<DivisionDto>> Create(CreateDivisionDto dto)
         {
-            int userId = 1;
-            var division = Division.NewDivision(organizationId: _currentuser.OrganizationId, userId: userId);
+            var division = Division.NewDivision(
+                organizationId: _currentUser.OrganizationId,
+                userId: _currentUser.DesktopUserId);
+
+            ApplyChanges(dto, division);
+
+            await _service.SaveAsync(division);
+
+            return ConvertToDto(division);
+        }
+
+        internal async Task<DivisionDto> Update(int id, UpdateDivisionDto dto)
+        {
+            var division = await _service.GetByIdWithParentAsync(id);
+            if (division == null) return null;
+
+            division.LastUpdBy = _currentUser.DesktopUserId;
+
             ApplyChanges(dto, division);
 
             await _service.SaveAsync(division);
@@ -62,7 +78,7 @@ namespace AccuPay.Web.Divisions
 
         internal async Task<IEnumerable<DivisionDto>> GetAllParents()
         {
-            IEnumerable<Division> parents = await _service.GetAllParentsAsync(_currentuser.OrganizationId);
+            IEnumerable<Division> parents = await _service.GetAllParentsAsync(_currentUser.OrganizationId);
 
             var dtos = parents.Select(x => ConvertToDto(x));
 
@@ -72,21 +88,6 @@ namespace AccuPay.Web.Divisions
         internal async Task<IEnumerable<string>> GetSchedules()
         {
             return await _service.GetSchedulesAsync();
-        }
-
-        internal async Task<DivisionDto> Update(int id, UpdateDivisionDto dto)
-        {
-            var division = await _service.GetByIdWithParentAsync(id);
-            if (division == null) return null;
-
-            int userId = 1;
-            division.LastUpdBy = userId;
-
-            ApplyChanges(dto, division);
-
-            await _service.SaveAsync(division);
-
-            return ConvertToDto(division);
         }
 
         private static DivisionDto ConvertToDto(Division division)
