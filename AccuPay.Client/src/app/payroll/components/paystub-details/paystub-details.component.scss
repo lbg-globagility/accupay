@@ -7,7 +7,7 @@
 
 .data-table td,
 .data-table th {
-  padding: sizes.$x1;
+  padding: sizes.$x1 0;
 }
 
 .data-table > thead > tr > th:first-child,
