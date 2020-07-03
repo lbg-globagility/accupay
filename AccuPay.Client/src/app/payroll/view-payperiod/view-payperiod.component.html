@@ -16,12 +16,24 @@
     <button
       [disabled]="isDownloadingPayslip"
       mat-raised-button
-      (click)="downloadFile()"
+      (click)="downloadPayslips()"
       style="margin-left: 8px;"
       color="primary"
     >
       {{ isDownloadingPayslip ? "DOWNLOADING..." : "DOWNLOAD PAYSLIPS" }}
       <mat-icon *ngIf="isDownloadingPayslip"
+        ><mat-spinner diameter="20" color="accent"> </mat-spinner
+      ></mat-icon>
+    </button>
+    <button
+      [disabled]="isDownloadingSummary"
+      mat-raised-button
+      (click)="downloadSummary()"
+      style="margin-left: 8px;"
+      color="primary"
+    >
+      {{ isDownloadingSummary ? "DOWNLOADING..." : "DOWNLOAD SUMMARY" }}
+      <mat-icon *ngIf="isDownloadingSummary"
         ><mat-spinner diameter="20" color="accent"> </mat-spinner
       ></mat-icon>
     </button>

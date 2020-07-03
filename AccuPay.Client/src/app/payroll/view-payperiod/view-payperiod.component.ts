@@ -15,6 +15,7 @@ import { PageEvent, MatPaginator } from '@angular/material/paginator';
 import { Subject } from 'rxjs';
 import { auditTime } from 'rxjs/operators';
 import { Constants } from 'src/app/core/shared/constants';
+import { ReportService } from 'src/app/reports/report.service';
 
 @Component({
   selector: 'app-view-payperiod',
@@ -55,9 +56,11 @@ export class ViewPayPeriodComponent implements OnInit {
   expandedPaystub: Paystub;
 
   isDownloadingPayslip: boolean = false;
+  isDownloadingSummary: boolean = false;
 
   constructor(
     private payPeriodService: PayPeriodService,
+    private reportService: ReportService,
     private route: ActivatedRoute,
     private snackBar: MatSnackBar,
     private errorHandler: ErrorHandler,
@@ -137,7 +140,7 @@ export class ViewPayPeriodComponent implements OnInit {
     });
   }
 
-  downloadFile(): void {
+  downloadPayslips(): void {
     this.isDownloadingPayslip = true;
     this.payPeriodService
       .getPayslipPDF(this.payPeriodId)
@@ -146,6 +149,18 @@ export class ViewPayPeriodComponent implements OnInit {
       })
       .finally(() => {
         this.isDownloadingPayslip = false;
+      });
+  }
+
+  downloadSummary(): void {
+    this.isDownloadingSummary = true;
+    this.reportService
+      .getPayrollSummary(this.payPeriodId, this.payPeriodId)
+      .catch((err) => {
+        this.errorHandler.badRequest(err, 'Error downloading payroll summary.');
+      })
+      .finally(() => {
+        this.isDownloadingSummary = false;
       });
   }
 }
