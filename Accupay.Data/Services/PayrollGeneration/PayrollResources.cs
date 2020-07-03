@@ -41,6 +41,8 @@ namespace AccuPay.Data.Services
 
         public IReadOnlyCollection<Allowance> Allowances { get; private set; }
 
+        public IReadOnlyCollection<Bonus> Bonuses { get; private set; }
+
         public IReadOnlyCollection<DivisionMinimumWage> DivisionMinimumWages { get; private set; }
 
         public IReadOnlyCollection<Employee> Employees { get; private set; }
@@ -68,6 +70,8 @@ namespace AccuPay.Data.Services
         private readonly ActualTimeEntryRepository _actualTimeEntryRepository;
 
         private readonly AllowanceRepository _allowanceRepository;
+
+        private readonly BonusRepository _bonusRepository;
 
         private readonly CalendarService _calendarService;
 
@@ -101,6 +105,8 @@ namespace AccuPay.Data.Services
 
         private readonly WithholdingTaxBracketRepository _withholdingTaxBracketRepository;
 
+        public FeatureListChecker FeatureListChecker { get; private set; }
+
         public PayrollResources(CalendarService calendarService,
                                 ListOfValueService listOfValueService,
                                 SystemOwnerService systemOwnerService,
@@ -118,13 +124,15 @@ namespace AccuPay.Data.Services
                                 SalaryRepository salaryRepository,
                                 SocialSecurityBracketRepository socialSecurityBracketRepository,
                                 TimeEntryRepository timeEntryRepository,
-                                WithholdingTaxBracketRepository withholdingTaxBracketRepository)
+                                WithholdingTaxBracketRepository withholdingTaxBracketRepository,
+                                BonusRepository bonusRepository)
         {
             _calendarService = calendarService;
             _listOfValueService = listOfValueService;
             _systemOwnerService = systemOwnerService;
             _actualTimeEntryRepository = actualTimeEntryRepository;
             _allowanceRepository = allowanceRepository;
+            _bonusRepository = bonusRepository;
             _divisionMinimumWageRepository = divisionMinimumWageRepository;
             _employeeRepository = employeeRepository;
             _filingStatusTypeRepository = filingStatusTypeRepository;
@@ -158,6 +166,7 @@ namespace AccuPay.Data.Services
 
             await LoadActualTimeEntries();
             await LoadAllowances();
+            await LoadBonuses();
             await LoadBpiInsuranceProduct();
             await LoadDivisionMinimumWages();
             await LoadEmployees();
@@ -178,6 +187,8 @@ namespace AccuPay.Data.Services
             await LoadTimeEntries();
             await LoadVacationLeaveProduct();
             await LoadWithholdingTaxBrackets();
+
+            FeatureListChecker = FeatureListChecker.Instance;
         }
 
         private async Task LoadAllowances()
@@ -495,6 +506,20 @@ namespace AccuPay.Data.Services
             catch (Exception ex)
             {
                 throw new ResourceLoadingException("WithholdingTaxBrackets", ex);
+            }
+        }
+
+        private async Task LoadBonuses()
+        {
+            try
+            {
+                Bonuses = (await _bonusRepository
+                    .GetByPayPeriodAsync(organizationId: _organizationId, timePeriod: _payPeriodSpan))
+                    .ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ResourceLoadingException("Bonuses", ex);
             }
         }
     }
