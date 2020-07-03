@@ -7,10 +7,26 @@
         [(ngModel)]="selectedReports"
         (selectionChange)="selectReport()"
       >
+        <mat-list-option [value]="'pagibig'">
+          <div mat-line>
+            PAG IBIG Contribution Report
+          </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'philhealth'">
+          <div mat-line>
+            PhilHealth Report
+          </div>
+        </mat-list-option>
+
         <mat-list-option [value]="'sss'">
           <div mat-line>
             SSS Report
           </div>
+        </mat-list-option>
+
+        <mat-list-option [value]="'tax'">
+          <div mat-line>Tax Report</div>
         </mat-list-option>
 
         <mat-list-option [value]="'loanbytype'">
@@ -22,28 +38,6 @@
         <mat-list-option [value]="'loanbyemployee'">
           <div mat-line>
             Loan Report by Employee
-          </div>
-        </mat-list-option>
-
-        <mat-list-option [value]="'tax'">
-          <div mat-line>Tax Report</div>
-        </mat-list-option>
-
-        <mat-list-option [value]="'attendance'">
-          <div mat-line>
-            Attendance Report
-          </div>
-        </mat-list-option>
-
-        <mat-list-option [value]="'philhealth'">
-          <div mat-line>
-            PhilHealth Report
-          </div>
-        </mat-list-option>
-
-        <mat-list-option [value]="'pagibig'">
-          <div mat-line>
-            PAG IBIG Contribution Report
           </div>
         </mat-list-option>
       </mat-selection-list>

@@ -12,6 +12,8 @@ namespace AccuPay.Web.Controllers
     [Authorize]
     public class ReportsController : ReportsControllerBase
     {
+        public const string DateFormat = "yyyy-MM-dd";
+
         public ReportsController(ICurrentUser currentUser, IConfiguration configuration) : base(currentUser, configuration)
         {
         }
@@ -44,7 +46,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult> GetLoanByTypeReport(DateTime dateFrom, DateTime dateTo, bool isPerPage)
         {
-            var path = $"loanbyType-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}/{isPerPage}";
+            var path = $"loanbyType-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}/{isPerPage}";
             return await GetPDF(path, "loan-by-type-report.pdf");
         }
 
@@ -52,7 +54,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.LoanRead)]
         public async Task<ActionResult> GetLoanByEmployeeReport(DateTime dateFrom, DateTime dateTo)
         {
-            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
+            var path = $"loanbyemployee-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}";
             return await GetPDF(path, "loan-by-employee-report.pdf");
         }
 
@@ -68,7 +70,7 @@ namespace AccuPay.Web.Controllers
         [Permission(PermissionTypes.PayPeriodRead)]
         public async Task<ActionResult> GetThirteenthMonthReport(DateTime dateFrom, DateTime dateTo)
         {
-            var path = $"thirteenthmonth-report/{_currentUser.OrganizationId}/{dateFrom}/{dateTo}";
+            var path = $"thirteenthmonth-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}";
             return await GetPDF(path, "thirteenth-month-report.pdf");
         }
     }
