@@ -165,18 +165,24 @@ Public Class DependencyInjectionHelper
 
     Private Shared Sub ConfigureDbContextOptions(dbContextOptionsBuilder As DbContextOptionsBuilder)
 
-        Dim dbCommandConsoleLoggerFactory As LoggerFactory = New LoggerFactory({
-                         New ConsoleLoggerProvider(
-                               Function(category, level)
-                                   Return category = DbLoggerCategory.Database.Command.Name AndAlso
-                                        level = LogLevel.Information
-                               End Function, True)
-                         })
-
         dbContextOptionsBuilder.
             UseMySql(mysql_conn_text).
-            UseLoggerFactory(dbCommandConsoleLoggerFactory).
-            EnableSensitiveDataLogging()
+            UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking)
+
+        If Debugger.IsAttached Then
+
+            Dim dbCommandConsoleLoggerFactory As LoggerFactory = New LoggerFactory({
+                New ConsoleLoggerProvider(
+                    Function(category, level)
+                        Return category = DbLoggerCategory.Database.Command.Name AndAlso
+                            level = LogLevel.Information
+                    End Function, True)
+                })
+
+            dbContextOptionsBuilder = dbContextOptionsBuilder.
+                EnableSensitiveDataLogging().
+                UseLoggerFactory(dbCommandConsoleLoggerFactory)
+        End If
     End Sub
 
 End Class
