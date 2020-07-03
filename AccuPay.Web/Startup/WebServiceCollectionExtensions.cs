@@ -18,6 +18,7 @@ using AccuPay.Web.Organizations;
 using AccuPay.Web.Overtimes;
 using AccuPay.Web.Payroll;
 using AccuPay.Web.Positions;
+using AccuPay.Web.Reports;
 using AccuPay.Web.Salaries.Services;
 using AccuPay.Web.Shifts.Services;
 using AccuPay.Web.TimeEntries;
@@ -51,6 +52,7 @@ namespace AccuPay.Web
             services.AddScoped<OrganizationService>();
             services.AddScoped<PermissionService>();
             services.AddScoped<PositionService>();
+            services.AddScoped<ReportService>();
             services.AddScoped<SalaryService>();
             services.AddScoped<ShiftService>();
             services.AddScoped<TimeLogService>();

@@ -10,6 +10,7 @@ import { SelectDateRangeComponent } from './components/select-date-range/select-
 import { LoanReportByemployeeComponent } from './loan-report-byemployee/loan-report-byemployee.component';
 import { TaxReportComponent } from './tax-report/tax-report.component';
 import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thirtheenth-month-report.component';
+import { PayrollSummaryComponent } from './payroll-summary/payroll-summary.component';
 
 @NgModule({
   declarations: [
@@ -23,6 +24,7 @@ import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thir
     LoanReportByemployeeComponent,
     TaxReportComponent,
     ThirtheenthMonthReportComponent,
+    PayrollSummaryComponent,
   ],
 
   imports: [SharedModule],

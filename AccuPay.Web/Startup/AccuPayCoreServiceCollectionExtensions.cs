@@ -3,6 +3,7 @@ using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Infrastructure.Reports;
 using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.Extensions.DependencyInjection;
@@ -117,6 +118,9 @@ namespace AccuPay.Web
 
             services.AddScoped(typeof(IExcelParser<>), typeof(ExcelParser<>));
             services.AddScoped<IEncryption, AccuPayDesktopEncryption>();
+
+            services.AddScoped<PayrollSummaryExcelFormatReportDataService>();
+            services.AddScoped<IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder>();
 
             return services;
         }

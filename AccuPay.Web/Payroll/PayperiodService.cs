@@ -18,7 +18,10 @@ namespace AccuPay.Web.Payroll
         private readonly PayPeriodRepository _payperiodRepository;
         private readonly ICurrentUser _currentUser;
 
-        public PayperiodService(DbContextOptionsService dbContextOptionsService, PayPeriodRepository payperiodRepository, ICurrentUser currentUser)
+        public PayperiodService(
+            DbContextOptionsService dbContextOptionsService,
+            PayPeriodRepository payperiodRepository,
+            ICurrentUser currentUser)
         {
             _dbContextOptionsService = dbContextOptionsService;
             _payperiodRepository = payperiodRepository;

@@ -1,8 +1,10 @@
 using AccuPay.Web.Core.Auth;
+using AccuPay.Web.Reports;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -13,9 +15,11 @@ namespace AccuPay.Web.Controllers
     public class ReportsController : ReportsControllerBase
     {
         public const string DateFormat = "yyyy-MM-dd";
+        private readonly ReportService _service;
 
-        public ReportsController(ICurrentUser currentUser, IConfiguration configuration) : base(currentUser, configuration)
+        public ReportsController(ICurrentUser currentUser, IConfiguration configuration, ReportService service) : base(currentUser, configuration)
         {
+            _service = service;
         }
 
         [HttpGet("sss-report/{month}/{year}")]
@@ -72,6 +76,34 @@ namespace AccuPay.Web.Controllers
         {
             var path = $"thirteenthmonth-report/{_currentUser.OrganizationId}/{dateFrom.ToString(DateFormat)}/{dateTo.ToString(DateFormat)}";
             return await GetPDF(path, "thirteenth-month-report.pdf");
+        }
+
+        [HttpGet("payroll-summary/{payPeriodFromId}/{payPeriodToId}")]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult> GetPayrollSummary(
+            int payPeriodFromId,
+            int payPeriodToId,
+            bool keepInOneSheet = true,
+            bool hideEmptyColumns = true,
+            string salaryDistributionType = "Cash",
+            bool isActual = false)
+        {
+            var fileName = await _service.GetPayrollSummary(
+                keepInOneSheet: keepInOneSheet,
+                hideEmptyColumns: hideEmptyColumns,
+                payPeriodFromId: payPeriodFromId,
+                payPeriodToId: payPeriodToId,
+                salaryDistributionType: salaryDistributionType,
+                isActual: isActual);
+
+            var result = PhysicalFile(fileName, "application/vnd.ms-excel");
+
+            Response.Headers["Content-Disposition"] = new ContentDispositionHeaderValue("attachment")
+            {
+                FileName = "Payroll Summary"
+            }.ToString();
+
+            return result;
         }
     }
 }

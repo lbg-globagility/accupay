@@ -8,9 +8,8 @@ describe('LoanReportByemployeeComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoanReportByemployeeComponent ]
-    })
-    .compileComponents();
+      declarations: [LoanReportByemployeeComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

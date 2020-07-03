@@ -5,11 +5,11 @@ import { ReportService } from '../report.service';
 import { ErrorHandler } from '../../core/shared/services/error-handler';
 
 @Component({
-  selector: 'app-pagibig-report',
-  templateUrl: './pagibig-report.component.html',
-  styleUrls: ['./pagibig-report.component.scss'],
+  selector: 'app-payroll-summary',
+  templateUrl: './payroll-summary.component.html',
+  styleUrls: ['./payroll-summary.component.scss'],
 })
-export class PagibigReportComponent {
+export class PayrollSummaryComponent {
   @ViewChild(SelectMonthComponent)
   monthForm: SelectMonthComponent;
 
@@ -25,15 +25,18 @@ export class PagibigReportComponent {
       return;
     }
 
-    let date = this.monthForm.date.value as Moment;
-    let month = Number(date.format('M'));
-    let year = date.year();
+    // var date = this.monthForm.date.value as Moment;
+    // var month = Number(date.format('M'));
+    // var year = date.year();
+
+    let payPeriodFromId = 629;
+    let payPeriodToId = 629;
 
     this.isDownloading = true;
     this.reportService
-      .getPagIBIGReport(month, year)
+      .getPayrollSummary(payPeriodFromId, payPeriodToId)
       .catch((err) => {
-        this.errorHandler.badRequest(err, 'Error downloading PAGIBIG Report.');
+        this.errorHandler.badRequest(err, 'Error downloading Payroll Summary.');
       })
       .finally(() => {
         this.isDownloading = false;

@@ -8,9 +8,8 @@ describe('PagibigReportComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PagibigReportComponent ]
-    })
-    .compileComponents();
+      declarations: [PagibigReportComponent],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

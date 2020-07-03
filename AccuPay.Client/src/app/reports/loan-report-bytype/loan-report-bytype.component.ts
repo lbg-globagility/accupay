@@ -31,13 +31,13 @@ export class LoanReportBytypeComponent {
       return;
     }
 
-    var dateFrom = (this.dateRangeForm.form.controls.startDate
+    let dateFrom = (this.dateRangeForm.form.controls.startDate
       .value as Moment).format('MM-DD-yyyy');
 
-    var dateTo = (this.dateRangeForm.form.controls.endDate
+    let dateTo = (this.dateRangeForm.form.controls.endDate
       .value as Moment).format('MM-DD-yyyy');
 
-    var isPerPage = this.form.controls.isPerPage.value;
+    let isPerPage = this.form.controls.isPerPage.value;
     if (isPerPage == null) {
       isPerPage = false;
     }

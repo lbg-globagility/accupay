@@ -25,14 +25,9 @@ export class PhilhealthReportComponent {
       return;
     }
 
-    console.log(this.monthForm.date.value);
-    console.log(new Date(this.monthForm.date.value));
-
-    var date = this.monthForm.date.value as Moment;
-    var month = Number(date.format('M'));
-    var year = date.year();
-    console.log(month);
-    console.log(date.year());
+    let date = this.monthForm.date.value as Moment;
+    let month = Number(date.format('M'));
+    let year = date.year();
 
     this.isDownloading = true;
     this.reportService

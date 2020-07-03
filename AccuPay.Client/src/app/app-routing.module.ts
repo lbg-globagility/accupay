@@ -76,12 +76,13 @@ import {
   ViewClientComponent,
   EditClientComponent,
 } from 'src/app/clients/components';
-import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
-import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
+import { PayrollSummaryComponent } from './reports/payroll-summary/payroll-summary.component';
 import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
+import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
+import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
+import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
-import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 
 const routes: Routes = [
   {
@@ -263,28 +264,32 @@ const routes: Routes = [
         component: ReportsComponent,
         children: [
           {
-            path: 'sss',
-            component: SssReportComponent,
-          },
-          {
-            path: 'philhealth',
-            component: PhilhealthReportComponent,
+            path: 'payroll-summary',
+            component: PayrollSummaryComponent,
           },
           {
             path: 'pagibig',
             component: PagibigReportComponent,
           },
           {
-            path: 'loanbytype',
-            component: LoanReportBytypeComponent,
+            path: 'philhealth',
+            component: PhilhealthReportComponent,
           },
           {
-            path: 'loanbyemployee',
-            component: LoanReportByemployeeComponent,
+            path: 'sss',
+            component: SssReportComponent,
           },
           {
             path: 'tax',
             component: TaxReportComponent,
+          },
+          {
+            path: 'loans-by-type',
+            component: LoanReportBytypeComponent,
+          },
+          {
+            path: 'loans-by-employee',
+            component: LoanReportByemployeeComponent,
           },
         ],
       },
