@@ -1,0 +1,24 @@
+<form (ngSubmit)="generateReport()">
+  <mat-card>
+    <mat-card-content>
+      <h1 class="mat-headline">13th Month Report</h1>
+    </mat-card-content>
+    <mat-card-content>
+      <app-select-date-range></app-select-date-range>
+    </mat-card-content>
+
+    <mat-card-content style="text-align: right;">
+      <button
+        [disabled]="isDownloading"
+        mat-raised-button
+        type="submit"
+        color="accent"
+      >
+        {{ isDownloading ? "DOWNLOADING..." : "DOWNLOAD" }}
+        <mat-icon *ngIf="isDownloading"
+          ><mat-spinner diameter="20" color="accent"> </mat-spinner
+        ></mat-icon>
+      </button>
+    </mat-card-content>
+  </mat-card>
+</form>

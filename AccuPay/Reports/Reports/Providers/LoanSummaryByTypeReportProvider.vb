@@ -25,9 +25,9 @@ Public Class LoanSummaryByTypeReportProvider
         Dim dateFrom = CDate(dateSelector.DateFrom)
         Dim dateTo = CDate(dateSelector.DateTo)
 
-        Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByTypeReportCreator)
+        Dim service = MainServiceProvider.GetRequiredService(Of LoanSummaryByTypeReportBuilder)
 
-        Dim loanReport As LoanSummaryByTypeReportCreator
+        Dim loanReport As LoanSummaryByTypeReportBuilder
 
         If pagingStylePrompt = MsgBoxResult.Yes Then
             'per page

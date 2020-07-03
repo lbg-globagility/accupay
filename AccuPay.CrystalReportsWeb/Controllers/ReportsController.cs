@@ -76,11 +76,76 @@ namespace AccuPay.CrystalReportsWeb.Controllers
         /// <param name="year">The year of the report.</param>
         /// <returns></returns>
         [Route("pagibig-report/{organizationId}/{month}/{year}")]
-        public HttpResponseMessage GetPagIBIGMonthlyReport(int organizationId, int month, int year)
+        public HttpResponseMessage GetPagIBIGContributionReport(int organizationId, int month, int year)
         {
             var dateMonth = new DateTime(year, month, 1);
 
-            string pdfFullPath = _reportingService.GeneratePagIBIGMonthlyReport(organizationId, dateMonth);
+            string pdfFullPath = _reportingService.GeneratePagIBIGContributionReport(organizationId, dateMonth);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the Loan by type report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
+        /// <param name="isPerPage">The report is generated per page.</param>
+        /// <returns></returns>
+        [Route("loanbytype-report/{organizationId}/{dateFrom}/{dateTo}/{isPerPage}")]
+        public HttpResponseMessage GetLoanByTypeReport(int organizationId, DateTime dateFrom, DateTime dateTo, bool isPerPage)
+        {
+
+            string pdfFullPath = _reportingService.GenerateLoanByTypeReport(organizationId, dateFrom, dateTo, isPerPage);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the Loan by Employee report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
+        /// <returns></returns>
+        [Route("loanbyemployee-report/{organizationId}/{dateFrom}/{dateTo}")]
+        public HttpResponseMessage GetLoanByEmployeeReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+
+            string pdfFullPath = _reportingService.GenerateLoanByEmployeeReport(organizationId, dateFrom, dateTo);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the Tax report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="month">The month of the report.</param>
+        /// <param name="year">The year of the report.</param>
+        /// <returns></returns>
+        [Route("tax-report/{organizationId}/{month}/{year}")]
+        public HttpResponseMessage GetTaxReport(int organizationId, int month, int year)
+        {
+
+            string pdfFullPath = _reportingService.GenerateTaxReport(organizationId, month, year);
+
+            return PdfReportResult(pdfFullPath);
+        }
+
+        /// <summary>
+        /// Returns a pdf file containing the 13th month report of the selected month and year.
+        /// </summary>
+        /// <param name="organizationId">The ID of the organization that the report will be based on.</param>
+        /// <param name="dateFrom">The start date of the report.</param>
+        /// <param name="dateTo">The end date of the report.</param>
+        /// <returns></returns>
+        [Route("thirteenthmonth-report/{organizationId}/{dateFrom}/{dateTo}")]
+        public HttpResponseMessage GetThirteenthMonthReport(int organizationId, DateTime dateFrom, DateTime dateTo)
+        {
+
+            string pdfFullPath = _reportingService.GenerateThirteenthMonthReport(organizationId, dateFrom, dateTo);
 
             return PdfReportResult(pdfFullPath);
         }

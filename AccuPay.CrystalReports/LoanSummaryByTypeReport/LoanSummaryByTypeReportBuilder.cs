@@ -5,17 +5,16 @@ using System;
 
 namespace AccuPay.CrystalReports
 {
-    public class LoanSummaryByTypeReportCreator
+    public class LoanSummaryByTypeReportBuilder : BaseReportBuilder, IPdfGenerator
     {
         private readonly LoanSummaryByTypeReportDataService _dataService;
-        private ReportClass _reportDocument;
 
-        public LoanSummaryByTypeReportCreator(LoanSummaryByTypeReportDataService dataService)
+        public LoanSummaryByTypeReportBuilder(LoanSummaryByTypeReportDataService dataService)
         {
             _dataService = dataService;
         }
 
-        public LoanSummaryByTypeReportCreator CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public LoanSummaryByTypeReportBuilder CreateReportDocument(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
             _reportDocument = new LoanReportByType();
 
@@ -31,7 +30,7 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public LoanSummaryByTypeReportCreator CreateReportDocumentPerPage(int organizationId, DateTime dateFrom, DateTime dateTo)
+        public LoanSummaryByTypeReportBuilder CreateReportDocumentPerPage(int organizationId, DateTime dateFrom, DateTime dateTo)
         {
             _reportDocument = new LoanReportByTypePerPage();
 
@@ -47,9 +46,11 @@ namespace AccuPay.CrystalReports
             return this;
         }
 
-        public ReportClass GetReportDocument()
+        public BaseReportBuilder GeneratePDF(string pdfFullPath)
         {
-            return _reportDocument;
+            ExportPDF(pdfFullPath);
+
+            return this;
         }
     }
 }

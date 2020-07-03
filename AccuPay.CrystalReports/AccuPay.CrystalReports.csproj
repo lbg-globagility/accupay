@@ -59,7 +59,7 @@
       <DependentUpon>LoanReports.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LoanSummaryByEmployeeReport\LoanSummaryByEmployeeReportCreator.cs" />
+    <Compile Include="LoanSummaryByEmployeeReport\LoanSummaryByEmployeeReportBuilder.cs" />
     <Compile Include="LoanSummaryByTypeReport\LoanReportByType.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -72,14 +72,14 @@
       <DependentUpon>LoanReportByTypePerPage.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="LoanSummaryByTypeReport\LoanSummaryByTypeReportCreator.cs" />
+    <Compile Include="LoanSummaryByTypeReport\LoanSummaryByTypeReportBuilder.cs" />
     <Compile Include="PagIBIGMonthlyReport\Pagibig Monthly Report.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Pagibig Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportCreator.cs" />
+    <Compile Include="PagIBIGMonthlyReport\PagIBIGMonthlyReportBuilder.cs" />
     <Compile Include="Payslip\DefaulltPayslipFullOvertimeBreakdown.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -126,14 +126,14 @@
       <DependentUpon>Tax Monthly Report.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="TaxMonthlyReport\TaxMonthlyReportCreator.cs" />
+    <Compile Include="TaxMonthlyReport\TaxMonthlyReportBuilder.cs" />
     <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummary.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>ThirteenthMonthSummary.rpt</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummaryReportCreator.cs" />
+    <Compile Include="ThirteenthMonthSummaryReport\ThirteenthMonthSummaryReportBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Accupay.Data\AccuPay.Data.csproj">

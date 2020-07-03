@@ -5,6 +5,11 @@ import { SelectMonthComponent } from './components/select-month/select-month.com
 import { SssReportComponent } from './sss-report/sss-report.component';
 import { PhilhealthReportComponent } from './philhealth-report/philhealth-report.component';
 import { PagibigReportComponent } from './pagibig-report/pagibig-report.component';
+import { LoanReportBytypeComponent } from './loan-report-bytype/loan-report-bytype.component';
+import { SelectDateRangeComponent } from './components/select-date-range/select-date-range.component';
+import { LoanReportByemployeeComponent } from './loan-report-byemployee/loan-report-byemployee.component';
+import { TaxReportComponent } from './tax-report/tax-report.component';
+import { ThirtheenthMonthReportComponent } from './thirtheenth-month-report/thirtheenth-month-report.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +18,11 @@ import { PagibigReportComponent } from './pagibig-report/pagibig-report.componen
     SssReportComponent,
     PhilhealthReportComponent,
     PagibigReportComponent,
+    LoanReportBytypeComponent,
+    SelectDateRangeComponent,
+    LoanReportByemployeeComponent,
+    TaxReportComponent,
+    ThirtheenthMonthReportComponent,
   ],
 
   imports: [SharedModule],
