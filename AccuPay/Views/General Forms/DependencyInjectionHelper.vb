@@ -8,6 +8,7 @@ Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Infrastructure.Reports
 Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
@@ -163,6 +164,9 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of ThirteenthMonthSummaryReportCreator)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
         services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)
+
+        services.AddTransient(Of PayrollSummaryExcelFormatReportDataService)
+        services.AddTransient(Of IPayrollSummaryReportBuilder, PayrollSummaryReportBuilder)
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)

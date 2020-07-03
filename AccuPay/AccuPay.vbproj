@@ -419,6 +419,7 @@
     <Compile Include="Core\DB\SQLQueryToDatatable.vb" />
     <Compile Include="Core\DB\SqlReaderExtensions.vb" />
     <Compile Include="Core\DB\SqlToDataTable.vb" />
+    <Compile Include="Core\Enums\ExcelOption.vb" />
     <Compile Include="Core\Enums\FormMode.vb" />
     <Compile Include="Core\Utilities\DelayedAction.vb" />
     <Compile Include="Core\Utilities\Excel\ExcelHelper.vb" />

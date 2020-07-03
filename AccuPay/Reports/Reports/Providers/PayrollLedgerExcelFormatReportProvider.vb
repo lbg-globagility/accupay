@@ -448,4 +448,9 @@ Public Class PayrollLedgerExcelFormatReportProvider
         Numeric
     End Enum
 
+    Private Enum SalaryActualization As Short
+        Declared = 0
+        Actual = 1
+    End Enum
+
 End Class

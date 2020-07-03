@@ -1,8 +1,10 @@
 ﻿using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 
 namespace AccuPay.Infrastructure.Reports
 {
@@ -35,8 +37,8 @@ namespace AccuPay.Infrastructure.Reports
             {
                 yield return letter;
 
-                var firstLetter = '\0';
-                var currentLetter = '\0';
+                char? firstLetter = null;
+                char currentLetter;
 
                 var isMultiCharacter = letter.Length > 1;
                 if (isMultiCharacter)
@@ -47,33 +49,22 @@ namespace AccuPay.Infrastructure.Reports
                 else
                     currentLetter = letter[0];
 
-                var currentLetterAsNumeric = char.GetNumericValue(currentLetter);
-                if (currentLetterAsNumeric >= char.GetNumericValue('Z'))
+                var currentLetterAsNumeric = Asc(currentLetter);
+                if (currentLetterAsNumeric >= Asc('Z'))
                 {
-                    if (firstLetter == '\0')
+                    if (firstLetter == null)
                         firstLetter = 'A';
                     else
+                    {
                         firstLetter++;
-                    
+                    }
+
                     letter = $"{firstLetter}A";
                 }
                 else
-                    letter = $"{firstLetter}{currentLetter + 1}";
+                    letter = $"{firstLetter}{(char)(currentLetter + 1)}";
             }
         }
-
-        //protected static PayrollSummaDateSelection GetPayrollSelector()
-        //{
-        //    var payrollSelector = new PayrollSummaDateSelection()
-        //    {
-        //        ReportIndex = 6
-        //    };
-
-        //    if (payrollSelector.ShowDialog() != DialogResult.OK)
-        //        return null/* TODO Change to default(_) if this is not a reference type */;
-
-        //    return payrollSelector;
-        //}
 
         protected static void RenderSubTotal(ExcelWorksheet worksheet, string subTotalCellRange, int employeesStartIndex, int employeesLastIndex, int formulaColumnStart)
         {
@@ -104,6 +95,54 @@ namespace AccuPay.Infrastructure.Reports
                 withBlock.LeftMargin = MarginSize[0];
                 withBlock.RightMargin = MarginSize[0];
             }
+        }
+
+        protected static int Asc(char String)
+        {
+            int num;
+            byte[] numArray;
+            int num1 = Convert.ToInt32(String);
+            if (num1 >= 128)
+            {
+                try
+                {
+                    Encoding fileIOEncoding = Encoding.Default;
+                    char[] str = new char[] { String };
+                    if (!fileIOEncoding.IsSingleByte)
+                    {
+                        numArray = new byte[2];
+                        if (fileIOEncoding.GetBytes(str, 0, 1, numArray, 0) != 1)
+                        {
+                            if (BitConverter.IsLittleEndian)
+                            {
+                                byte num2 = numArray[0];
+                                numArray[0] = numArray[1];
+                                numArray[1] = num2;
+                            }
+                            num = BitConverter.ToInt16(numArray, 0);
+                        }
+                        else
+                        {
+                            num = numArray[0];
+                        }
+                    }
+                    else
+                    {
+                        numArray = new byte[1];
+                        fileIOEncoding.GetBytes(str, 0, 1, numArray, 0);
+                        num = numArray[0];
+                    }
+                }
+                catch (Exception exception)
+                {
+                    throw exception;
+                }
+            }
+            else
+            {
+                num = num1;
+            }
+            return num;
         }
     }
 }
