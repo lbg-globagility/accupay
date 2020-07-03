@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
@@ -12,6 +13,13 @@ namespace AccuPay.Data.Repositories
         public SavableRepository(PayrollContext context)
         {
             _context = context;
+        }
+
+        public T GetById(int id)
+        {
+            return _context.Set<T>()
+                .AsNoTracking()
+                .FirstOrDefault(x => x.RowID == id);
         }
 
         public async Task<T> GetByIdAsync(int id)
@@ -29,13 +37,25 @@ namespace AccuPay.Data.Repositories
 
         public async Task SaveAsync(T entity)
         {
-            SaveFunction(entity);
+            SaveFunction(entity, IsNewEntity(entity.RowID));
             await _context.SaveChangesAsync();
         }
 
         public async Task SaveManyAsync(List<T> entities)
         {
-            entities.ForEach(entity => SaveFunction(entity));
+            entities.ForEach(entity => SaveFunction(entity, IsNewEntity(entity.RowID)));
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task CreateAsync(T entity)
+        {
+            SaveFunction(entity, newEntity: true);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(T entity)
+        {
+            SaveFunction(entity, newEntity: false);
             await _context.SaveChangesAsync();
         }
 
@@ -44,9 +64,9 @@ namespace AccuPay.Data.Repositories
             // no action
         }
 
-        private void SaveFunction(T entity)
+        private void SaveFunction(T entity, bool newEntity)
         {
-            if (IsNewEntity(entity.RowID))
+            if (newEntity)
             {
                 _context.Set<T>().Add(entity);
             }

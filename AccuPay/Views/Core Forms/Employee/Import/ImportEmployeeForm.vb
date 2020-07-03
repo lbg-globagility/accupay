@@ -5,10 +5,10 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Helpers
 Imports AccuPay.Utilities.Attributes
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ImportEmployeeForm
@@ -229,7 +229,7 @@ Public Class ImportEmployeeForm
 
         For Each model In _okModels
 
-            Dim newEmployee = Employee.CreateEmptyEmployee(
+            Dim newEmployee = Employee.NewEmployee(
                 organizationId:=z_OrganizationID,
                 userId:=z_User
             )

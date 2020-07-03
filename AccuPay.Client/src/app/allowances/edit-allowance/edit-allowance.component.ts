@@ -10,6 +10,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-allowance',
   templateUrl: './edit-allowance.component.html',
   styleUrls: ['./edit-allowance.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditAllowanceComponent implements OnInit {
   allowance: Allowance;

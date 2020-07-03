@@ -1,5 +1,4 @@
 ﻿using AccuPay.Data.Entities;
-using AccuPay.Data.Exceptions;
 using AccuPay.Data.Helpers;
 using AccuPay.Data.ValueObjects;
 using AccuPay.Utilities.Extensions;
@@ -7,92 +6,24 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
-    public class LeaveRepository
+    public class LeaveRepository : SavableRepository<Leave>
     {
-        private readonly PayrollContext _context;
-
-        public LeaveRepository(PayrollContext context)
+        public LeaveRepository(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         #region CRUD
 
-        public async Task DeleteAsync(int id)
+        protected override void DetachNavigationProperties(Leave leave)
         {
-            var leave = await GetByIdAsync(id);
-
-            _context.Remove(leave);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task SaveWithContextAsync(Leave leave, bool deferSave = true)
-        {
-            if (leave.StartTime.HasValue)
+            if (leave.Employee != null)
             {
-                leave.StartTime = leave.StartTime.Value.StripSeconds();
+                _context.Entry(leave.Employee).State = EntityState.Detached;
             }
-
-            if (leave.EndTime.HasValue)
-            {
-                leave.EndTime = leave.EndTime.Value.StripSeconds();
-            }
-
-            leave.UpdateEndDate();
-
-            await SaveAsyncFunction(leave);
-
-            if (deferSave == false)
-            {
-                await _context.SaveChangesAsync();
-            }
-        }
-
-        private async Task SaveAsyncFunction(Leave leave)
-        {
-            if (await _context.Leaves.Where(l => leave.RowID == null ? true : leave.RowID != l.RowID).
-                                Where(l => l.EmployeeID == leave.EmployeeID).
-                                Where(l => (leave.StartDate.Date >= l.StartDate.Date && leave.StartDate.Date <= l.EndDate.Value.Date) ||
-                                        (leave.EndDate.Value.Date >= l.StartDate.Date && leave.EndDate.Value.Date <= l.EndDate.Value.Date)).
-                                AnyAsync())
-                throw new BusinessLogicException($"Employee already has a leave for {leave.StartDate.ToShortDateString()}");
-
-            if (leave.RowID == null)
-            {
-                _context.Leaves.Add(leave);
-            }
-            else
-            {
-                // since we used LoadAsync() above, we can't just simply attach the leave
-                // TODO: refactor the validate leave above to not load the whole database
-                // better if we use transactions then check afterwards if there are invariants
-                // just like in metrotiles
-                await UpdateAsync(leave, _context);
-            }
-        }
-
-        private async Task UpdateAsync(Leave leave, PayrollContext context)
-        {
-            var currentLeave = await context.Leaves.
-                                FirstOrDefaultAsync(l => l.RowID == leave.RowID);
-
-            if (currentLeave == null) return;
-
-            currentLeave.StartTime = leave.StartTime;
-            currentLeave.EndTime = leave.EndTime;
-            currentLeave.LeaveType = leave.LeaveType;
-            currentLeave.StartDate = leave.StartDate;
-            currentLeave.EndDate = leave.EndDate;
-            currentLeave.Reason = leave.Reason;
-            currentLeave.Comments = leave.Comments;
-            currentLeave.Status = leave.Status;
-            currentLeave.LastUpdBy = leave.LastUpdBy;
         }
 
         #endregion CRUD
@@ -117,7 +48,7 @@ namespace AccuPay.Data.Repositories
 
         #region List of entities
 
-        public async Task<IEnumerable<Leave>> GetByEmployeeAsync(int employeeId)
+        public async Task<ICollection<Leave>> GetByEmployeeAsync(int employeeId)
         {
             return await _context.Leaves
                 .Where(l => l.EmployeeID == employeeId)
@@ -166,14 +97,14 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Leave>(leaves, count);
         }
 
-        public IEnumerable<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
+        public ICollection<Leave> GetAllApprovedByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
             return CreateBaseQueryByDatePeriod(organizationId, datePeriod)
                     .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
                     .ToList();
         }
 
-        public async Task<IEnumerable<Leave>> GetAllApprovedByEmployeeAndDatePeriod(int organizationId, int employeeId, TimePeriod datePeriod)
+        public async Task<ICollection<Leave>> GetAllApprovedByEmployeeAndDatePeriod(int organizationId, int employeeId, TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
                     .Where(l => l.Status.Trim().ToLower() == Leave.StatusApproved.ToTrimmedLowerCase())
@@ -181,14 +112,31 @@ namespace AccuPay.Data.Repositories
                     .ToListAsync();
         }
 
-        public async Task<IEnumerable<Leave>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
+        public async Task<ICollection<Leave>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
         {
             return await CreateBaseQueryByDatePeriod(organizationId, datePeriod).ToListAsync();
         }
 
-        public async Task<IEnumerable<Leave>> GetFilteredAllAsync(Expression<Func<Leave, bool>> filter)
+        public async Task<ICollection<Leave>> GetByEmployeeAndDatePeriodAsync(int organizationId, int[] employeeIds, TimePeriod datePeriod)
         {
-            return await _context.Leaves.Where(filter).ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(x => employeeIds.Contains(x.EmployeeID.Value))
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<Leave>> GetUnusedApprovedLeavesByTypeAsync(int employeeId, Leave leave, DateTime firstDayOfTheYear, DateTime lastDayOfTheYear)
+        {
+            return await _context.Leaves
+                .AsNoTracking()
+                .Where(l => l.EmployeeID == employeeId)
+                .Where(l => l.Status.Trim().ToUpper() == Leave.StatusApproved.ToUpper())
+                .Where(l => l.LeaveType == leave.LeaveType)
+                .Where(l => l.StartDate >= firstDayOfTheYear)
+                .Where(l => l.StartDate <= lastDayOfTheYear)
+                .Where(l => _context.LeaveTransactions
+                    .Where(t => t.ReferenceID == l.RowID)
+                    .Count() == 0)
+                .ToListAsync();
         }
 
         #endregion List of entities

@@ -1,12 +1,14 @@
 Option Strict On
 
 Imports AccuPay.Benchmark
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
 Imports AccuPay.Data
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Interfaces.Excel
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.Services.Imports
+Imports AccuPay.Infrastructure.Services.Encryption
 Imports AccuPay.Infrastructure.Services.Excel
 Imports Microsoft.EntityFrameworkCore
 Imports Microsoft.Extensions.DependencyInjection
@@ -139,14 +141,30 @@ Public Class DependencyInjectionHelper
         services.AddTransient(Of OvertimeDataService)
         services.AddTransient(Of PositionDataService)
         services.AddTransient(Of TimeLogDataService)
+        services.AddTransient(Of UserDataService)
 
         services.AddTransient(Of ShiftImportParser)
         services.AddTransient(Of TimeLogImportParser)
         services.AddTransient(Of TimeLogsReader)
 
         services.AddTransient(Of PayslipDataService)
-        services.AddTransient(Of PayslipCreator)
+        services.AddTransient(Of PayslipBuilder)
+        services.AddTransient(Of SSSMonthlyReportDataService)
+        services.AddTransient(Of SSSMonthyReportBuilder)
+        services.AddTransient(Of PhilHealthMonthlyReportDataService)
+        services.AddTransient(Of PhilHealthMonthlyReportBuilder)
+        services.AddTransient(Of PagIBIGMonthlyReportDataService)
+        services.AddTransient(Of PagIBIGMonthlyReportBuilder)
+        services.AddTransient(Of LoanSummaryByTypeReportDataService)
+        services.AddTransient(Of LoanSummaryByTypeReportBuilder)
+        services.AddTransient(Of LoanSummaryByEmployeeReportDataService)
+        services.AddTransient(Of LoanSummaryByEmployeeReportBuilder)
+        services.AddTransient(Of TaxMonthlyReportDataService)
+        services.AddTransient(Of TaxMonthlyReportBuilder)
+        services.AddTransient(Of ThirteenthMonthSummaryReportDataService)
+        services.AddTransient(Of ThirteenthMonthSummaryReportBuilder)
         services.AddTransient(GetType(IExcelParser(Of)), GetType(ExcelParser(Of)))
+        services.AddTransient(Of IEncryption, AccuPayDesktopEncryption)
 
         'services.AddTransient(Of MetroLogin)
         'services.AddTransient(Of MDIPrimaryForm)

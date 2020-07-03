@@ -39,9 +39,10 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task ChangeManyAsync(List<EmployeeDutySchedule> addedShifts = null,
-                                        List<EmployeeDutySchedule> updatedShifts = null,
-                                        List<EmployeeDutySchedule> deletedShifts = null)
+        public async Task ChangeManyAsync(
+            List<EmployeeDutySchedule> addedShifts = null,
+            List<EmployeeDutySchedule> updatedShifts = null,
+            List<EmployeeDutySchedule> deletedShifts = null)
         {
             if (addedShifts != null)
             {
@@ -61,10 +62,10 @@ namespace AccuPay.Data.Repositories
 
             if (deletedShifts != null)
             {
-                deletedShifts = deletedShifts.
-                                GroupBy(x => x.RowID).
-                                Select(x => x.FirstOrDefault()).
-                                ToList();
+                deletedShifts = deletedShifts
+                    .GroupBy(x => x.RowID)
+                    .Select(x => x.FirstOrDefault())
+                    .ToList();
                 _context.EmployeeDutySchedules.RemoveRange(deletedShifts);
             }
 
@@ -137,7 +138,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodAsync(
+        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodAsync(
             int organizationId,
             int[] employeeIds,
             TimePeriod datePeriod)
@@ -149,7 +150,7 @@ namespace AccuPay.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<ICollection<EmployeeDutySchedule>> GetByMultipleEmployeeAndDatePeriodWithEmployeeAsync(
+        public async Task<ICollection<EmployeeDutySchedule>> GetByEmployeeAndDatePeriodWithEmployeeAsync(
             int organizationId,
             int[] employeeIds,
             TimePeriod datePeriod)

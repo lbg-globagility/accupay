@@ -1,4 +1,5 @@
 ﻿using AccuPay.Data.Helpers;
+using AccuPay.Utilities.Extensions;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace AccuPay.Data.Entities
@@ -68,23 +69,23 @@ namespace AccuPay.Data.Entities
 
         public int? BranchID { get; set; }
 
-        public void SetLeaveHours(string type, decimal leaveHours)
+        public void SetLeaveHours(string leaveType, decimal leaveHours)
         {
-            switch (type)
+            switch (leaveType.ToTrimmedLowerCase())
             {
-                case ProductConstant.SICK_LEAVE:
+                case var type when string.Equals(type, ProductConstant.SICK_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     SickLeaveHours = leaveHours;
                     break;
 
-                case ProductConstant.VACATION_LEAVE:
+                case var type when string.Equals(type, ProductConstant.VACATION_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     VacationLeaveHours = leaveHours;
                     break;
 
-                case ProductConstant.MATERNITY_LEAVE:
+                case var type when string.Equals(type, ProductConstant.MATERNITY_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     MaternityLeaveHours = leaveHours;
                     break;
 
-                case ProductConstant.OTHERS_LEAVE:
+                case var type when string.Equals(type, ProductConstant.OTHERS_LEAVE, System.StringComparison.InvariantCultureIgnoreCase):
                     OtherLeaveHours = leaveHours;
                     break;
             }

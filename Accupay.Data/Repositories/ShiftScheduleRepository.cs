@@ -16,24 +16,32 @@ namespace AccuPay.Data.Repositories
             _context = context;
         }
 
-        public IEnumerable<ShiftSchedule> GetByDatePeriod(int organizationId, TimePeriod timePeriod)
+        public ICollection<ShiftSchedule> GetByDatePeriod(int organizationId, TimePeriod datePeriod)
         {
-            return _context.ShiftSchedules.
-                            Include(x => x.Shift).
-                            Where(x => x.OrganizationID == organizationId).
-                            Where(x => x.EffectiveFrom <= timePeriod.End).
-                            Where(x => timePeriod.Start <= x.EffectiveTo).
-                            ToList();
+            return CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .ToList();
         }
 
-        public async Task<IEnumerable<ShiftSchedule>> GetByDatePeriodAsync(int organizationId, TimePeriod timePeriod)
+        public async Task<ICollection<ShiftSchedule>> GetByDatePeriodAsync(int organizationId, TimePeriod datePeriod)
         {
-            return await _context.ShiftSchedules.
-                            Include(x => x.Shift).
-                            Where(x => x.OrganizationID == organizationId).
-                            Where(x => x.EffectiveFrom <= timePeriod.End).
-                            Where(x => timePeriod.Start <= x.EffectiveTo).
-                            ToListAsync();
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .ToListAsync();
+        }
+
+        public async Task<ICollection<ShiftSchedule>> GetByEmployeeAndDatePeriodAsync(int organizationId, int[] employeeIds, TimePeriod datePeriod)
+        {
+            return await CreateBaseQueryByDatePeriod(organizationId, datePeriod)
+                .Where(s => employeeIds.Contains(s.EmployeeID.Value))
+                .ToListAsync();
+        }
+
+        private IQueryable<ShiftSchedule> CreateBaseQueryByDatePeriod(int organizationId, TimePeriod datePeriod)
+        {
+            return _context.ShiftSchedules
+                .Include(x => x.Shift)
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.EffectiveFrom <= datePeriod.End)
+                .Where(x => datePeriod.Start <= x.EffectiveTo);
         }
     }
 }

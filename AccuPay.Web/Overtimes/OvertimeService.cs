@@ -21,11 +21,12 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<PaginatedList<OvertimeDto>> PaginatedList(PageOptions options, OvertimeFilter filter)
         {
-            var paginatedList = await _service.GetPaginatedListAsync(options,
-                                                                     _currentUser.OrganizationId,
-                                                                     filter.Term,
-                                                                     filter.DateFrom,
-                                                                     filter.DateTo);
+            var paginatedList = await _service.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId,
+                filter.Term,
+                filter.DateFrom,
+                filter.DateTo);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -41,11 +42,10 @@ namespace AccuPay.Web.Overtimes
 
         public async Task<OvertimeDto> Create(CreateOvertimeDto dto)
         {
-            int userId = 1;
             var overtime = new Overtime()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
@@ -60,8 +60,7 @@ namespace AccuPay.Web.Overtimes
             var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            int userId = 1;
-            overtime.LastUpdBy = userId;
+            overtime.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, overtime);
 

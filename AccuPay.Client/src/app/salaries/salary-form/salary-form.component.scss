@@ -1,17 +1,5 @@
 @use "styles/colors";
 
-.field {
-  &-label,
-  &-value {
-    display: block;
-  }
-
-  &-label {
-    font-size: 0.75rem;
-    color: colors.$text-300;
-  }
-}
-
 .readonly-field {
   padding-left: 0.5rem;
 }

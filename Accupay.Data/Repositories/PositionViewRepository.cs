@@ -1,7 +1,5 @@
 ﻿using AccuPay.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -19,7 +17,7 @@ namespace AccuPay.Data.Repositories
             this._builder = builder;
         }
 
-        public async Task FillUserPositionViewAsync(int positionId, int organizationId, int userId)
+        public async Task FillUserPositionViewAsync(int positionId, int organizationId, int savedByUserId)
         {
             var jobPositionView = await _builder.
                 ByOrganizationId(organizationId).
@@ -28,7 +26,7 @@ namespace AccuPay.Data.Repositories
 
             // if no PositionView fetched, base on PositionId and OrganizationId given,
             // this code should provide for it
-            var mockPositionViews = await ImitationPositionViews(positionId, userId);
+            var mockPositionViews = await ImitationPositionViews(positionId, savedByUserId);
 
             if (!jobPositionView.Any())
             {
@@ -54,7 +52,7 @@ namespace AccuPay.Data.Repositories
             }
         }
 
-        private async Task<List<PositionView>> ImitationPositionViews(int positionId, int userId)
+        private async Task<List<PositionView>> ImitationPositionViews(int positionId, int savedByUserId)
         {
             var position = await _context.Positions.FindAsync(positionId);
             //var samePositions = await positionRepository.GetAllByNameAsync(position.Name);
@@ -69,7 +67,7 @@ namespace AccuPay.Data.Repositories
 
                 //foreach (var p in samePositions)
                 //{
-                var newPositionView = PositionView.NewPositionView(viewOrganizationId, userId);
+                var newPositionView = PositionView.NewPositionView(viewOrganizationId, savedByUserId);
 
                 newPositionView.ViewID = viewId;
                 newPositionView.PositionID = position.RowID;// p.RowID;

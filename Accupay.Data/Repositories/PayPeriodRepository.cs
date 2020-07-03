@@ -1,6 +1,7 @@
 ﻿using AccuPay.Data.Entities;
 using AccuPay.Data.Enums;
 using AccuPay.Data.Helpers;
+using AccuPay.Data.ValueObjects;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -9,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace AccuPay.Data.Repositories
 {
+    // TODO: use a query builder to prevent using IsSemiMonthly and other entity functions directly since it does not directly translate to sql query.
     public class PayPeriodRepository
     {
         private readonly PayrollContext _context;
@@ -73,12 +75,12 @@ namespace AccuPay.Data.Repositories
         /// <returns></returns>
         public async Task<PayPeriod> GetCurrentProcessing(int organizationId)
         {
-            return await _context.PayPeriods.
-                            Include(x => x.Paystubs).
-                            Where(p => p.IsClosed == false).
-                            Where(p => p.OrganizationID == organizationId).
-                            Where(p => p.Paystubs.Any()).
-                            FirstOrDefaultAsync();
+            return await _context.PayPeriods
+                .Include(x => x.Paystubs)
+                .Where(p => p.IsClosed == false)
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Paystubs.Any())
+                .FirstOrDefaultAsync();
         }
 
         /// <summary>
@@ -92,9 +94,9 @@ namespace AccuPay.Data.Repositories
             var isFirstHalf = currentDay.Day <= 15;
 
             var query = _context.PayPeriods
-                                .Where(p => p.OrganizationID == organizationId)
-                                .Where(p => p.Year == currentDay.Year)
-                                .Where(p => p.Month == currentDay.Month);
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Year == currentDay.Year)
+                .Where(p => p.Month == currentDay.Month);
 
             if (isFirstHalf)
             {
@@ -108,11 +110,22 @@ namespace AccuPay.Data.Repositories
             return await query.FirstOrDefaultAsync();
         }
 
-        public async Task<PayPeriod> GetByCutoffDates(DateTime cutoffStart, DateTime cutoffEnd)
+        public async Task<PayPeriod> GetByDateAsync(DateTime date, int organizationId)
         {
             return await _context.PayPeriods
-                .Where(p => p.PayFromDate == cutoffStart)
-                .Where(p => p.PayToDate == cutoffEnd)
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.IsBetween(date))
+                .Where(p => p.IsSemiMonthly)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<PayPeriod> GetByCutoffDates(TimePeriod cutoffDate, int organizationId)
+        {
+            return await _context.PayPeriods
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.PayFromDate == cutoffDate.Start)
+                .Where(p => p.PayToDate == cutoffDate.End)
+                .Where(p => p.IsSemiMonthly)
                 .FirstOrDefaultAsync();
         }
 
@@ -123,115 +136,113 @@ namespace AccuPay.Data.Repositories
             if (currentPayPeriod == null)
                 return null;
 
-            return _context.PayPeriods.
-                            Where(p => p.OrganizationID == currentPayPeriod.OrganizationID).
-                            Where(p => p.PayFrequencyID == currentPayPeriod.PayFrequencyID).
-                            Where(p => p.PayFromDate > currentPayPeriod.PayFromDate).
-                            OrderBy(p => p.PayFromDate).
-                            FirstOrDefault();
+            return _context.PayPeriods
+                .Where(p => p.OrganizationID == currentPayPeriod.OrganizationID)
+                .Where(p => p.PayFrequencyID == currentPayPeriod.PayFrequencyID)
+                .Where(p => p.PayFromDate > currentPayPeriod.PayFromDate)
+                .OrderBy(p => p.PayFromDate)
+                .FirstOrDefault();
         }
 
-        public async Task<DateTime?> GetFirstDayOfTheYear(PayPeriod currentPayPeriod,
-                                                            int organizationId)
+        public async Task<DateTime?> GetFirstDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
         {
-            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(currentPayPeriod,
-                                                                            organizationId);
+            var firstPayPeriodOfTheYear = await GetFirstPayPeriodOfTheYear(currentPayPeriod, organizationId);
 
             return firstPayPeriodOfTheYear?.PayFromDate;
         }
 
-        public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(PayPeriod currentPayPeriod,
-                                                                int organizationId)
+        public async Task<PayPeriod> GetFirstPayPeriodOfTheYear(PayPeriod currentPayPeriod, int organizationId)
         {
             var currentPayPeriodYear = currentPayPeriod?.Year;
 
             if (currentPayPeriodYear == null)
                 return null;
 
-            return await _context.PayPeriods.Where(p => p.OrganizationID == organizationId).
-                                            Where(p => p.Year == currentPayPeriodYear).
-                                            Where(p => p.IsSemiMonthly).
-                                            Where(p => p.IsFirstPayPeriodOfTheYear).
-                                            FirstOrDefaultAsync();
+            return await _context.PayPeriods
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Year == currentPayPeriodYear)
+                .Where(p => p.IsSemiMonthly)
+                .Where(p => p.IsFirstPayPeriodOfTheYear)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<DateTime?> GetLastDayOfTheYear(PayPeriod currentPayPeriod, int organizationId)
+        {
+            var currentPayPeriodYear = currentPayPeriod?.Year;
+
+            if (currentPayPeriodYear == null)
+                return null;
+
+            return await _context.PayPeriods
+                .Where(p => p.OrganizationID == organizationId)
+                .Where(p => p.Year == currentPayPeriodYear)
+                .Where(p => p.IsSemiMonthly)
+                .Where(p => p.IsLastPayPeriodOfTheYear)
+                .Select(p => p.PayToDate)
+                .FirstOrDefaultAsync();
         }
 
         #endregion Single entity
 
         #region List of entities
 
-        public async Task<IEnumerable<PayPeriod>> GetAllSemiMonthlyAsync(int organizationId)
+        public async Task<ICollection<PayPeriod>> GetAllSemiMonthlyThatHasPaystubsAsync(int organizationId)
         {
-            return await GetByPayFrequencyAsync(organizationId: organizationId,
-                                                payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId);
+            return await CreateBaseQueryByPayPrequency(
+                    organizationId: organizationId,
+                    payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId)
+                .Where(x => _context.Paystubs.Any(p => p.PayPeriodID == x.RowID))
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<PayPeriod>> GetAllSemiMonthlyThatHasPaystubsAsync(int organizationId)
+        public async Task<ICollection<PayPeriod>> GetByYearAndPayPrequencyAsync(
+            int organizationId,
+            int year,
+            int payFrequencyId)
         {
-            return await CreateBaseQueryByPayPrequency(organizationId: organizationId,
-                                            payFrequencyId: PayrollTools.PayFrequencySemiMonthlyId).
-                            Where(x => _context.Paystubs.Any(p => p.PayPeriodID == x.RowID)).
-                            ToListAsync();
+            return await CreateBaseQueryByPayPrequency(
+                    organizationId: organizationId,
+                    payFrequencyId: payFrequencyId)
+                .Where(x => x.Year == year)
+                .ToListAsync();
         }
 
-        public async Task<IEnumerable<PayPeriod>> GetByPayFrequencyAsync(int organizationId, int payFrequencyId)
+        public ICollection<PayPeriod> GetByMonthYearAndPayPrequency(
+            int organizationId,
+            int month,
+            int year,
+            int payFrequencyId)
         {
-            return await CreateBaseQueryByPayPrequency(organizationId: organizationId,
-                                            payFrequencyId: payFrequencyId).
-                            ToListAsync();
+            return CreateBaseQueryByMonthYearAndPayPrequency(
+                    organizationId: organizationId,
+                    month: month,
+                    year: year,
+                    payFrequencyId: payFrequencyId)
+                .ToList();
         }
 
-        public async Task<IEnumerable<PayPeriod>> GetByPayFrequencyAndYearAsync(int organizationId,
-                                                                                int payFrequencyId,
-                                                                                int year)
+        public async Task<ICollection<PayPeriod>> GetByMonthYearAndPayPrequencyAsync(
+            int organizationId,
+            int month,
+            int year,
+            int payFrequencyId)
         {
-            return await CreateBaseQueryByPayPrequency(organizationId: organizationId,
-                                            payFrequencyId: payFrequencyId).
-                            Where(x => x.Year == year).
-                            ToListAsync();
-        }
-
-        public async Task<IEnumerable<PayPeriod>> GetByYearAndPayPrequencyAsync(int organizationId,
-                                                                               int year,
-                                                                               int payFrequencyId)
-        {
-            return await CreateBaseQueryByPayPrequency(organizationId: organizationId,
-                                            payFrequencyId: payFrequencyId).
-                            Where(x => x.Year == year).
-                            ToListAsync();
-        }
-
-        public IEnumerable<PayPeriod> GetByMonthYearAndPayPrequency(int organizationId,
-                                                                    int month,
-                                                                    int year,
-                                                                    int payFrequencyId)
-        {
-            return CreateBaseQueryByMonthYearAndPayPrequency(organizationId: organizationId,
-                                                            month: month,
-                                                            year: year,
-                                                            payFrequencyId: payFrequencyId).
-                            ToList();
-        }
-
-        public async Task<IEnumerable<PayPeriod>> GetByMonthYearAndPayPrequencyAsync(int organizationId,
-                                                                                    int month,
-                                                                                    int year,
-                                                                                    int payFrequencyId)
-        {
-            return await CreateBaseQueryByMonthYearAndPayPrequency(organizationId: organizationId,
-                                                                    month: month,
-                                                                    year: year,
-                                                                    payFrequencyId: payFrequencyId).
-                            ToListAsync();
+            return await CreateBaseQueryByMonthYearAndPayPrequency(
+                    organizationId: organizationId,
+                    month: month,
+                    year: year,
+                    payFrequencyId: payFrequencyId)
+                .ToListAsync();
         }
 
         public async Task<PaginatedListResult<PayPeriod>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
         {
             var query = _context.PayPeriods
-                                    .Where(t => t.OrganizationID == organizationId)
-                                    .Where(t => t.Status != PayPeriodStatus.Pending)
-                                    .Where(t => t.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
-                                    .OrderByDescending(t => t.PayFromDate)
-                                .AsQueryable();
+                .Where(t => t.OrganizationID == organizationId)
+                .Where(t => t.Status != PayPeriodStatus.Pending)
+                .Where(t => t.PayFrequencyID == PayrollTools.PayFrequencySemiMonthlyId)
+                .OrderByDescending(t => t.PayFromDate)
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -252,23 +263,26 @@ namespace AccuPay.Data.Repositories
 
         #endregion Queries
 
-        private IQueryable<PayPeriod> CreateBaseQueryByMonthYearAndPayPrequency(int organizationId,
-                                                                                 int month,
-                                                                                 int year,
-                                                                                 int payFrequencyId)
+        private IQueryable<PayPeriod> CreateBaseQueryByMonthYearAndPayPrequency(
+            int organizationId,
+            int month,
+            int year,
+            int payFrequencyId)
         {
-            return CreateBaseQueryByPayPrequency(organizationId: organizationId,
-                                                payFrequencyId: payFrequencyId).
-                            Where(x => x.Year == year).
-                            Where(x => x.Month == month);
+            return CreateBaseQueryByPayPrequency(
+                    organizationId: organizationId,
+                    payFrequencyId: payFrequencyId)
+                .Where(x => x.Year == year)
+                .Where(x => x.Month == month);
         }
 
-        private IQueryable<PayPeriod> CreateBaseQueryByPayPrequency(int organizationId,
-                                                                   int payFrequencyId)
+        private IQueryable<PayPeriod> CreateBaseQueryByPayPrequency(
+            int organizationId,
+            int payFrequencyId)
         {
-            return _context.PayPeriods.
-                            Where(x => x.OrganizationID == organizationId).
-                            Where(x => x.PayFrequencyID == payFrequencyId);
+            return _context.PayPeriods
+                .Where(x => x.OrganizationID == organizationId)
+                .Where(x => x.PayFrequencyID == payFrequencyId);
         }
 
         /// <summary>

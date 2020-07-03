@@ -50,7 +50,7 @@ namespace AccuPay.Data.Services
             if (existingPosition != null)
             {
                 // insert
-                if (isNewEntity(position.RowID))
+                if (IsNewEntity(position.RowID))
                 {
                     throw new BusinessLogicException("Position name already exists!");
                 }
@@ -99,7 +99,7 @@ namespace AccuPay.Data.Services
             return await _positionRepository.GetByIdWithDivisionAsync(positionId);
         }
 
-        public async Task<IEnumerable<Position>> GetAllAsync(int organizationId)
+        public async Task<ICollection<Position>> GetAllAsync(int organizationId)
         {
             return await _positionRepository.GetAllAsync(organizationId);
         }

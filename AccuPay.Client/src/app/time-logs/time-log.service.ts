@@ -6,6 +6,7 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { TimeLog } from 'src/app/time-logs/shared/time-log';
 import { EmployeeTimeLogs } from 'src/app/time-logs/shared/employee-time-logs';
 import { TimeLogImportResult } from './shared/time-log-import-result';
+import { TimeLogsByEmployeePageOptions } from 'src/app/time-logs/shared/timelogs-by-employee-page-options';
 
 @Injectable({
   providedIn: 'root',
@@ -24,15 +25,10 @@ export class TimeLogService {
   }
 
   listByEmployee(
-    options: PageOptions,
-    dateFrom: Date,
-    dateTo: Date,
-    searchTerm: string
+    options: TimeLogsByEmployeePageOptions
   ): Observable<PaginatedList<EmployeeTimeLogs>> {
     const params = options ? options.toObject() : null;
-    params.dateFrom = dateFrom.toISOString();
-    params.dateTo = dateTo.toISOString();
-    params.searchTerm = searchTerm;
+
     return this.httpClient.get<PaginatedList<EmployeeTimeLogs>>(
       `${this.baseUrl}/employees`,
       {

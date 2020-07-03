@@ -304,6 +304,31 @@ namespace AccuPay.Data.Repositories
             return new PaginatedListResult<Paystub>(paystubs, count);
         }
 
+        public async Task<ICollection<Paystub>> GetAll(int payPeriodId)
+        {
+            var query = CreateBaseQueryByPayPeriodWithEmployeeDivision(payPeriodId)
+                .OrderBy(x => x.Employee.LastName)
+                .ThenBy(x => x.Employee.FirstName)
+                .AsQueryable();
+
+            return await query.ToListAsync();
+
+            //if (!string.IsNullOrWhiteSpace(searchTerm))
+            //{
+            //    searchTerm = $"%{searchTerm}%";
+
+            //    query = query.Where(x =>
+            //        EF.Functions.Like(x.Employee.EmployeeNo, searchTerm) ||
+            //        EF.Functions.Like(x.Employee.FirstName, searchTerm) ||
+            //        EF.Functions.Like(x.Employee.LastName, searchTerm));
+            //}
+
+            //var paystubs = await query.Page(options).ToListAsync();
+            //var count = await query.CountAsync();
+
+            //return new PaginatedListResult<Paystub>(paystubs, count);
+        }
+
         #endregion Queries
 
         /// <summary>

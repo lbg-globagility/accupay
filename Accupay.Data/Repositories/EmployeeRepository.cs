@@ -38,21 +38,31 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(PageOptions options, int organizationId, string searchTerm = "")
+        public async Task<PaginatedListResult<Employee>> GetPaginatedListAsync(EmployeePageOptions options, int organizationId)
         {
             var query = _context.Employees
-                                .Include(e => e.Position)
-                                .Where(e => e.OrganizationID == organizationId)
-                                .OrderBy(e => e.FullNameLastNameFirst)
-                                .AsQueryable();
+                .Include(e => e.Position)
+                .Where(e => e.OrganizationID == organizationId)
+                .OrderBy(e => e.LastName)
+                    .ThenBy(e => e.FirstName)
+                    .ThenBy(e => e.MiddleName)
+                .AsQueryable();
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (options.HasSearchTerm)
             {
-                searchTerm = $"%{searchTerm}%";
+                var searchTerm = $"%{options.SearchTerm}%";
 
                 query = query.Where(x =>
-                    EF.Functions.Like(x.FullNameWithMiddleInitialLastNameFirst, searchTerm) ||
+                    EF.Functions.Like(x.LastName + " " + x.FirstName, searchTerm) ||
                     EF.Functions.Like(x.EmployeeNo, searchTerm));
+            }
+
+            if (options.HasFilter)
+            {
+                if (options.Filter == "Active only")
+                {
+                    query = query.Where(e => e.EmploymentStatus != "Resigned" && e.EmploymentStatus != "Terminated");
+                }
             }
 
             var employees = await query.Page(options).ToListAsync();
@@ -264,13 +274,12 @@ namespace AccuPay.Data.Repositories
                             ToListAsync(null);
         }
 
-        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync(int organizationId)
+        public async Task<IEnumerable<Employee>> GetEmployeesWithoutImageAsync()
         {
             return await _context.Employees
-                                 .Include(x => x.OriginalImage)
-                                 .Where(x => x.OrganizationID == organizationId)
-                                 .Where(x => x.OriginalImageId == null)
-                                 .ToListAsync();
+                .Include(x => x.OriginalImage)
+                .Where(x => x.OriginalImageId == null)
+                .ToListAsync();
         }
 
         #endregion List of entities

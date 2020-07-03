@@ -1,7 +1,9 @@
+using AccuPay.Data.Interfaces;
 using AccuPay.Data.Interfaces.Excel;
 using AccuPay.Data.Repositories;
 using AccuPay.Data.Services;
 using AccuPay.Data.Services.Imports;
+using AccuPay.Infrastructure.Services.Encryption;
 using AccuPay.Infrastructure.Services.Excel;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,6 +28,7 @@ namespace AccuPay.Web
             services.AddScoped<CalendarRepository>();
             services.AddScoped<CategoryRepository>();
             services.AddScoped<CertificationRepository>();
+            services.AddScoped<ClientRepository>();
             services.AddScoped<DayTypeRepository>();
             services.AddScoped<DisciplinaryActionRepository>();
             services.AddScoped<DivisionMinimumWageRepository>();
@@ -106,12 +109,14 @@ namespace AccuPay.Web
             services.AddScoped<ProductDataService>();
             services.AddScoped<TimeEntryDataService>();
             services.AddScoped<TimeLogDataService>();
+            services.AddScoped<UserDataService>();
 
             services.AddScoped<ShiftImportParser>();
             services.AddScoped<TimeLogImportParser>();
             services.AddScoped<TimeLogsReader>();
 
             services.AddScoped(typeof(IExcelParser<>), typeof(ExcelParser<>));
+            services.AddScoped<IEncryption, AccuPayDesktopEncryption>();
 
             return services;
         }

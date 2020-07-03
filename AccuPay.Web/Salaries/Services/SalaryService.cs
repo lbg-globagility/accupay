@@ -13,20 +13,22 @@ namespace AccuPay.Web.Salaries.Services
         private readonly SalaryRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public SalaryService(SalaryRepository salaryRepository,
-                             ICurrentUser currentUser)
+        public SalaryService(
+            SalaryRepository salaryRepository,
+            ICurrentUser currentUser)
         {
             _repository = salaryRepository;
             _currentUser = currentUser;
         }
 
-        public async Task<PaginatedList<SalaryDto>> PaginatedList(PageOptions options, string searchTerm)
+        public async Task<PaginatedList<SalaryDto>> List(PageOptions options, string searchTerm, int employeeId)
         {
             // TODO: sort and desc in repository
-
-            var paginatedList = await _repository.GetPaginatedListAsync(options,
-                                                                        _currentUser.OrganizationId,
-                                                                        searchTerm);
+            var paginatedList = await _repository.List(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm,
+                employeeId);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -40,13 +42,20 @@ namespace AccuPay.Web.Salaries.Services
             return ConvertToDto(salary);
         }
 
+        public async Task<SalaryDto> GetLatest(int employeeId)
+        {
+            var salary = await _repository.GetLatest(employeeId);
+
+            return ConvertToDto(salary);
+        }
+
         public async Task<SalaryDto> Create(CreateSalaryDto dto)
         {
             var salary = new Salary
             {
                 OrganizationID = _currentUser.OrganizationId,
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = 1
+                CreatedBy = _currentUser.DesktopUserId
             };
 
             ApplyChanges(dto, salary);
@@ -61,7 +70,7 @@ namespace AccuPay.Web.Salaries.Services
             var salary = await _repository.GetByIdAsync(id);
             if (salary == null) return null;
 
-            salary.LastUpdBy = 1;
+            salary.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, salary);
 

@@ -19,11 +19,12 @@ namespace AccuPay.Web.Loans
         private readonly LoanRepository _loanRepository;
         private readonly ICurrentUser _currentUser;
 
-        public LoanService(LoanDataService loanService,
-                            ProductRepository productRepository,
-                            ListOfValueRepository listOfValueRepository,
-                            LoanRepository loanRepository,
-                            ICurrentUser currentUser)
+        public LoanService(
+            LoanDataService loanService,
+            ProductRepository productRepository,
+            ListOfValueRepository listOfValueRepository,
+            LoanRepository loanRepository,
+            ICurrentUser currentUser)
         {
             _loanService = loanService;
             _productRepository = productRepository;
@@ -55,11 +56,10 @@ namespace AccuPay.Web.Loans
 
         public async Task<LoanDto> Create(CreateLoanDto dto)
         {
-            int userId = 1;
             var loanSchedule = new LoanSchedule()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 OrganizationID = _currentUser.OrganizationId,
                 TotalBalanceLeft = dto.TotalLoanAmount
             };
@@ -75,8 +75,7 @@ namespace AccuPay.Web.Loans
             var loanSchedule = await _loanRepository.GetByIdAsync(id);
             if (loanSchedule == null) return null;
 
-            int userId = 1;
-            loanSchedule.LastUpdBy = userId;
+            loanSchedule.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, loanSchedule);
 

@@ -1,9 +1,10 @@
 ﻿Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
+Imports AccuPay.Data.Interfaces
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class MetroLogin
@@ -16,6 +17,8 @@ Public Class MetroLogin
 
     Private _organizationRepository As OrganizationRepository
 
+    Private ReadOnly _encryptor As IEncryption
+
     Sub New()
 
         InitializeComponent()
@@ -27,6 +30,8 @@ Public Class MetroLogin
         _userRepository = MainServiceProvider.GetRequiredService(Of UserRepository)
 
         _organizationRepository = MainServiceProvider.GetRequiredService(Of OrganizationRepository)
+
+        _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub
 
     Protected Overrides Sub OnLoad(e As EventArgs)
@@ -155,8 +160,8 @@ Public Class MetroLogin
                                  End Sub
         disableButton()
 
-        Dim username As String = New EncryptString(txtbxUserID.Text).ResultValue
-        Dim passkey As String = New EncryptString(txtbxPword.Text).ResultValue
+        Dim username As String = _encryptor.Encrypt(txtbxUserID.Text)
+        Dim passkey As String = _encryptor.Encrypt(txtbxPword.Text)
 
         Dim user = Await _userRepository.GetByUsernameWithPositionAsync(username)
 
@@ -248,7 +253,7 @@ Public Class MetroLogin
     Function UserAuthentication(Optional pass_word As Object = Nothing)
         Dim n_ReadSQLFunction As New ReadSQLFunction("UserAuthentication",
                                                      "returnvaue",
-                                                     New EncryptString(txtbxUserID.Text).ResultValue,
+                                                     _encryptor.Encrypt(txtbxUserID.Text),
                                                      pass_word,
                                                      orgztnID)
 
@@ -405,51 +410,5 @@ Public Class MetroLogin
         End With
 
     End Sub
-
-End Class
-
-Friend Class EncryptString
-
-    Dim n_ResultValue = Nothing
-
-    Property ResultValue As Object
-
-        Get
-            Return n_ResultValue
-
-        End Get
-
-        Set(value As Object)
-            n_ResultValue = value
-
-        End Set
-
-    End Property
-
-    Sub New(StringToEncrypt As String)
-
-        n_ResultValue = EncrypedData(StringToEncrypt)
-
-    End Sub
-
-    Private Function EncrypedData(ByVal a As String)
-
-        Dim Encryped = Nothing
-
-        If Not a Is Nothing Then
-
-            For Each x As Char In a
-
-                Dim ToCOn As Integer = Convert.ToInt64(x) + 133
-
-                Encryped &= Convert.ToChar(Convert.ToInt64(ToCOn))
-
-            Next
-
-        End If
-
-        Return Encryped
-
-    End Function
 
 End Class

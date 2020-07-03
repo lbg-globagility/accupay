@@ -32,12 +32,9 @@ namespace AccuPay.Web.Controllers
         [HttpGet("employees")]
         [Permission(PermissionTypes.TimeLogRead)]
         public async Task<ActionResult<PaginatedList<EmployeeTimeLogsDto>>> ListByEmployee(
-            [FromQuery] PageOptions options,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string searchTerm)
+            [FromQuery] TimeLogsByEmployeePageOptions options)
         {
-            return await _service.ListByEmployee(options, dateFrom, dateTo, searchTerm);
+            return await _service.ListByEmployee(options);
         }
 
         [HttpGet("{id}")]
@@ -52,18 +49,11 @@ namespace AccuPay.Web.Controllers
                 return timelog;
         }
 
-        //[HttpPost]
-        //[Permission(PermissionTypes.TimeLogCreate)]
-        //public async Task<ActionResult<TimeLogDto>> Create([FromBody] CreateTimeLogDto dto)
-        //{
-        //    return await _service.Create(dto);
-        //}
-
         [HttpPost]
         [Permission(PermissionTypes.TimeLogUpdate)]
         public async Task<ActionResult> Update([FromBody] ICollection<UpdateTimeLogDto> dtos)
         {
-            await _service.Update(dtos);
+            await _service.BatchApply(dtos);
 
             return Ok();
         }

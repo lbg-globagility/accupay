@@ -277,6 +277,7 @@ namespace AccuPay.Data.Services
 
                 if (paystub.RowID.HasValue)
                 {
+                    paystub.LastUpdBy = userId;
                     context.Entry(paystub).State = EntityState.Modified;
                     context.Entry(paystub.Actual).State = EntityState.Modified;
 

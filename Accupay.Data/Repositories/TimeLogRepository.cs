@@ -201,23 +201,28 @@ namespace AccuPay.Data.Repositories
 
         public async Task<(ICollection<Employee> employees, int total, ICollection<TimeLog> timeLogs)> ListByEmployeeAsync(
             int organizationId,
-            PageOptions options,
-            DateTime dateFrom,
-            DateTime dateTo,
-            string searchTerm)
+            TimeLogsByEmployeePageOptions options)
         {
             // TODO: might want to use employeeRepository for this query
             var query = _context.Employees
                 .Where(x => x.OrganizationID == organizationId);
 
-            if (!string.IsNullOrWhiteSpace(searchTerm))
+            if (options.HasSearchTerm)
             {
-                searchTerm = $"%{searchTerm}%";
+                var searchTerm = $"%{options.SearchTerm}%";
 
                 query = query.Where(x =>
                     EF.Functions.Like(x.EmployeeNo, searchTerm) ||
                     EF.Functions.Like(x.FirstName, searchTerm) ||
                     EF.Functions.Like(x.LastName, searchTerm));
+            }
+
+            if (options.HasStatus)
+            {
+                if (options.Status == "Active only")
+                {
+                    query = query.Where(e => e.EmploymentStatus != "Resigned" && e.EmploymentStatus != "Terminated");
+                }
             }
 
             query = query
@@ -233,7 +238,7 @@ namespace AccuPay.Data.Repositories
                 .Include(x => x.Branch)
                 .Where(x => employeeIds.Contains(x.EmployeeID))
                 .Where(x => x.OrganizationID == organizationId)
-                .Where(x => dateFrom <= x.LogDate && x.LogDate <= dateTo)
+                .Where(x => options.DateFrom.Date <= x.LogDate && x.LogDate <= options.DateTo.Date)
                 .ToListAsync();
 
             return (employees, total, timeLogs);

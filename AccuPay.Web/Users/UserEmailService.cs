@@ -1,12 +1,11 @@
 using AccuPay.Data.Entities;
 using AccuPay.Web.Core.Emails;
 using AccuPay.Web.Core.Views;
-using AccuPay.Web.Users;
 using AccuPay.Web.Views.Emails;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 
-namespace Notisphere.Users.Services
+namespace AccuPay.Web.Users.Services
 {
     public class UserEmailService
     {

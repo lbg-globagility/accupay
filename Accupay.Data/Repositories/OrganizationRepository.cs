@@ -46,11 +46,19 @@ namespace AccuPay.Data.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task<(ICollection<Organization> organizations, int total)> List(PageOptions options, int clientId)
+        public async Task<(ICollection<Organization> organizations, int total)> List(OrganizationPageOptions options, int clientId)
         {
             var query = _context.Organizations
-                .Where(t => t.ClientId == clientId)
                 .Where(o => o.IsInActive == false);
+
+            if (options.HasClientId)
+            {
+                query = query.Where(t => t.ClientId == options.ClientId);
+            }
+            else
+            {
+                query = query.Where(t => t.ClientId == clientId);
+            }
 
             var organizations = await query.Page(options).ToListAsync();
             var total = await query.CountAsync();

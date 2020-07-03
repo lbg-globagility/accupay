@@ -38,10 +38,9 @@ namespace AccuPay.Web.Positions
 
         public async Task<PositionDto> Create(CreatePositionDto dto)
         {
-            int userId = 1;
             var overtime = new Position()
             {
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, overtime);
@@ -56,8 +55,7 @@ namespace AccuPay.Web.Positions
             var overtime = await _service.GetByIdAsync(id);
             if (overtime == null) return null;
 
-            int userId = 1;
-            overtime.LastUpdBy = userId;
+            overtime.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, overtime);
 

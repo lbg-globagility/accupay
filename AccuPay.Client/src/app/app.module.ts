@@ -27,6 +27,8 @@ import { DivisionsModule } from './divisions/divisions.module';
 import { TimeEntryModule } from './time-entry/time-entry.module';
 import { RolesModule } from 'src/app/roles/roles.module';
 import { AllowanceTypesModule } from './allowance-types/allowance-types.module';
+import { ReportsModule } from './reports/reports.module';
+import { ClientsModule } from 'src/app/clients/clients.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -39,6 +41,7 @@ import { AllowanceTypesModule } from './allowance-types/allowance-types.module';
     AccountsModule,
     MainModule,
     AllowancesModule,
+    ClientsModule,
     EmployeesModule,
     LeavesModule,
     LoansModule,
@@ -57,6 +60,7 @@ import { AllowanceTypesModule } from './allowance-types/allowance-types.module';
     TimeEntryModule,
     RolesModule,
     AllowanceTypesModule,
+    ReportsModule,
   ],
   providers: [
     {

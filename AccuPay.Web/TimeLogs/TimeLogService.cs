@@ -46,15 +46,9 @@ namespace AccuPay.Web.TimeLogs
             return new PaginatedList<TimeLogDto>(dtos, paginatedList.TotalCount, ++options.PageIndex, options.PageSize);
         }
 
-        public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(PageOptions options, DateTime dateFrom, DateTime dateTo, string searchTerm)
+        public async Task<PaginatedList<EmployeeTimeLogsDto>> ListByEmployee(TimeLogsByEmployeePageOptions options)
         {
-            var (employees, total, timelogs) = await _repository.ListByEmployeeAsync(
-                _currentUser.OrganizationId,
-                options,
-                dateFrom,
-                dateTo,
-                searchTerm);
-
+            var (employees, total, timelogs) = await _dataService.ListByEmployeeAsync(_currentUser.OrganizationId, options);
             var dtos = employees.Select(t => ConvertToDto(t, timelogs)).ToList();
 
             return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
@@ -80,7 +74,7 @@ namespace AccuPay.Web.TimeLogs
             return ConvertToDto(timeLog);
         }
 
-        internal async Task Update(ICollection<UpdateTimeLogDto> dtos)
+        internal async Task BatchApply(ICollection<UpdateTimeLogDto> dtos)
         {
             var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
             var dateFrom = dtos.Select(t => t.Date).Min();
@@ -110,8 +104,8 @@ namespace AccuPay.Web.TimeLogs
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
-                            CreatedBy = 1,
-                            LastUpdBy = 1,
+                            CreatedBy = _currentUser.DesktopUserId,
+                            LastUpdBy = _currentUser.DesktopUserId,
                             LogDate = dto.Date,
                             TimeInFull = dto.StartTime,
                             TimeOutFull = dto.EndTime
@@ -126,6 +120,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existingTimeLog.TimeInFull = dto.StartTime;
                         existingTimeLog.TimeOutFull = dto.EndTime;
+                        existingTimeLog.LastUpdBy = _currentUser.DesktopUserId;
 
                         updated.Add(existingTimeLog);
                     }
@@ -172,8 +167,10 @@ namespace AccuPay.Web.TimeLogs
             if (fileStream?.Name == null)
                 throw new Exception("Unable to parse text file.");
 
-            int userId = 1;
-            var parsedResult = await _importParser.Parse(fileStream.Name, organizationId: _currentUser.OrganizationId, userId: userId);
+            var parsedResult = await _importParser.Parse(
+                importFile: fileStream.Name,
+                organizationId: _currentUser.OrganizationId,
+                userId: _currentUser.DesktopUserId);
 
             var invalidDtos = parsedResult.InvalidRecords.Select(x => ConvertToImportDetailsDto(x));
             var timeLogs = parsedResult.GeneratedTimeLogs.Select(x => ConvertToDto(x));

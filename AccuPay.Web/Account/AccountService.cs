@@ -58,7 +58,7 @@ namespace AccuPay.Web.Account
                 throw LoginException.NoOrganization();
             }
 
-            var token = _accountTokenService.CreateAccessToken(user, organization);
+            var token = await _accountTokenService.CreateAccessToken(user, organization);
 
             return token;
         }
@@ -73,7 +73,7 @@ namespace AccuPay.Web.Account
                 throw new Exception("User has no permission to acess organization");
             }
 
-            var token = _accountTokenService.CreateAccessToken(user, organization);
+            var token = await _accountTokenService.CreateAccessToken(user, organization);
 
             return token;
         }

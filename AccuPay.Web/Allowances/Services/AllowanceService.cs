@@ -17,9 +17,10 @@ namespace AccuPay.Web.Allowances.Services
         private readonly AllowanceDataService _allowanceService;
         private readonly ICurrentUser _currentUser;
 
-        public AllowanceService(AllowanceDataService allowanceService,
-                                ProductRepository productRepository,
-                                ICurrentUser currentUser)
+        public AllowanceService(
+            AllowanceDataService allowanceService,
+            ProductRepository productRepository,
+            ICurrentUser currentUser)
         {
             _productRepository = productRepository;
             _allowanceService = allowanceService;
@@ -30,9 +31,10 @@ namespace AccuPay.Web.Allowances.Services
         {
             // TODO: sort and desc in repository
 
-            var paginatedList = await _allowanceService.GetPaginatedListAsync(options,
-                                                                              _currentUser.OrganizationId,
-                                                                              searchTerm);
+            var paginatedList = await _allowanceService.GetPaginatedListAsync(
+                options,
+                _currentUser.OrganizationId,
+                searchTerm);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -51,7 +53,7 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = new Allowance
             {
                 OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = 1,
+                CreatedBy = _currentUser.DesktopUserId,
                 EmployeeID = dto.EmployeeId
             };
             ApplyChanges(dto, allowance);
@@ -66,7 +68,7 @@ namespace AccuPay.Web.Allowances.Services
             var allowance = await _allowanceService.GetByIdAsync(id);
             if (allowance == null) return null;
 
-            allowance.LastUpdBy = 1;
+            allowance.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, allowance);
 

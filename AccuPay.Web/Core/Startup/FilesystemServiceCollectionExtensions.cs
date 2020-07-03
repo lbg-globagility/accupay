@@ -1,6 +1,6 @@
+using AccuPay.Web.Core.Files;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using AccuPay.Web.Core.Files;
 using System;
 
 namespace AccuPay.Web.Core.Startup

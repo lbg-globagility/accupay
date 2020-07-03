@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
   selector: 'app-new-calendar',
   templateUrl: './new-calendar.component.html',
   styleUrls: ['./new-calendar.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewCalendarComponent implements OnInit {
   constructor(

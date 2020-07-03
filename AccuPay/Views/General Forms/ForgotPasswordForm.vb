@@ -1,13 +1,17 @@
 ﻿Imports System.Net
 Imports System.Net.Mail
+Imports AccuPay.Data.Interfaces
+Imports Microsoft.Extensions.DependencyInjection
 
 Public Class ForgotPasswordForm
 
-    Private MetroLogin As MetroLogin
+    Private ReadOnly _encryptor As IEncryption
 
-    Public Sub SetParentForms(metroLogin As MetroLogin)
-        Me.MetroLogin = metroLogin
+    Sub New()
 
+        InitializeComponent()
+
+        _encryptor = MainServiceProvider.GetRequiredService(Of IEncryption)
     End Sub
 
     Private Sub btnSend_Click(sender As Object, e As EventArgs) Handles btnSend.Click
@@ -17,7 +21,9 @@ Public Class ForgotPasswordForm
 
         End If
 
-        Dim emailadd As String = getStringItem("Select EmailAddress from user where UserID = '" & mdlValidation.EncryptData(txtUserID.Text) & "'")
+        Dim encryptedUsername = _encryptor.Encrypt(txtUserID.Text)
+
+        Dim emailadd As String = getStringItem("Select EmailAddress from user where UserID = '" & encryptedUsername & "'")
         Dim getemailadd As String = emailadd
 
         If emailadd = "" Then
@@ -26,8 +32,9 @@ Public Class ForgotPasswordForm
         End If
 
         Try
-            Dim pw As String = getStringItem("Select Password from user where userid = '" & mdlValidation.EncryptData(txtUserID.Text) & "'")
-            Dim getpw As String = DecryptData(pw)
+            Dim pw As String = getStringItem("Select Password from user where userid = '" & encryptedUsername & "'")
+
+            Dim getpw As String = _encryptor.Decrypt(pw)
 
             SendEmail(emailadd, getpw)
 

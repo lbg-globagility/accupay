@@ -1,12 +1,12 @@
 ﻿Option Strict On
 
 Imports System.Threading.Tasks
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 Imports Microsoft.Win32
 
@@ -26,7 +26,7 @@ Public Class SelectPayslipEmployeesForm
 
     Private _currentPayPeriod As PayPeriod
 
-    Private _payslipCreator As PayslipCreator
+    Private _payslipCreator As PayslipBuilder
 
     Private _policyHelper As PolicyHelper
 
@@ -49,7 +49,7 @@ Public Class SelectPayslipEmployeesForm
 
         _payslipTypes = New List(Of String) From {Declared, Actual}
 
-        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+        _payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
         _policyHelper = MainServiceProvider.GetRequiredService(Of PolicyHelper)
 
@@ -240,21 +240,24 @@ Public Class SelectPayslipEmployeesForm
 
     Private Sub PreviewButton_Click(sender As Object, e As EventArgs) Handles PreviewButton.Click
 
-        Dim isActual = PayslipTypeComboBox.Text = Actual
+        FunctionUtils.TryCatchFunction("Print Payslip",
+            Sub()
+                Dim isActual = PayslipTypeComboBox.Text = Actual
 
-        Dim employeeIds = _employeeModels.
-                            Where(Function(m) m.IsSelected).
-                            Select(Function(m) m.EmployeeId).
-                            ToArray()
+                Dim employeeIds = _employeeModels.
+                    Where(Function(m) m.IsSelected).
+                    Select(Function(m) m.EmployeeId).
+                    ToArray()
 
-        Dim reportDocument = _payslipCreator.CreateReportDocument(organizationId:=z_OrganizationID,
-                                                                 payPeriodId:=_currentPayPeriod.RowID.Value,
-                                                                 Convert.ToSByte(isActual),
-                                                                 employeeIds)
+                Dim reportDocument = _payslipCreator.CreateReportDocument(
+                    payPeriodId:=_currentPayPeriod.RowID.Value,
+                    isActual:=Convert.ToSByte(isActual),
+                    employeeIds:=employeeIds)
 
-        Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-        crvwr.Show()
+                Dim crvwr As New CrysRepForm
+                crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+                crvwr.Show()
+            End Sub)
     End Sub
 
     Private Async Sub ProceedButton_Click(sender As Object, e As EventArgs) Handles SendEmailsButton.Click

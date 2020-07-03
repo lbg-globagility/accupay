@@ -5,7 +5,7 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddDivisionForm
@@ -113,7 +113,7 @@ Public Class AddDivisionForm
 
     Private Sub ResetForm()
 
-        Me._newDivision = Division.CreateEmptyDivision(organizationId:=z_OrganizationID,
+        Me._newDivision = Division.NewDivision(organizationId:=z_OrganizationID,
                                                        userId:=z_User)
 
         DivisionUserControl1.SetDivision(Me._newDivision,

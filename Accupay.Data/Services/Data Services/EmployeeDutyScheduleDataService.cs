@@ -30,6 +30,9 @@ namespace AccuPay.Data.Services
 
         public async Task CreateAsync(EmployeeDutySchedule shift)
         {
+            if (shift == null)
+                throw new BusinessLogicException("Invalid shift.");
+
             if (shift.EmployeeID == null)
                 throw new BusinessLogicException("Employee is required.");
 
@@ -63,7 +66,7 @@ namespace AccuPay.Data.Services
             var employeeIds = shiftModels.Select(x => x.EmployeeId.Value).Distinct().ToArray();
 
             var existingShifts = await _repository
-                    .GetByMultipleEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
+                    .GetByEmployeeAndDatePeriodAsync(organizationId, employeeIds, datePeriod);
 
             List<EmployeeDutySchedule> addedShifts = new List<EmployeeDutySchedule>();
             List<EmployeeDutySchedule> updatedShifts = new List<EmployeeDutySchedule>();

@@ -24,13 +24,10 @@ CREATE TABLE IF NOT EXISTS `loanpaidbonus` (
   KEY `FK_loanpaidbonus_employeeloanschedule` (`LoanId`),
   KEY `FK_loanpaidbonus_employeebonus` (`BonusId`),
   CONSTRAINT `FK_loanpaidbonus_employeebonus` FOREIGN KEY (`BonusId`) REFERENCES `employeebonus` (`RowID`),
-  CONSTRAINT `FK_loanpaidbonus_employeeloanschedule` FOREIGN KEY (`LoanId`) REFERENCES `employeeloanschedule` (`RowID`)
-),
-  CONSTRAINT `FK_loanpaidbonus_paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`)
+  CONSTRAINT `FK_loanpaidbonus_employeeloanschedule` FOREIGN KEY (`LoanId`) REFERENCES `employeeloanschedule` (`RowID`),
+  CONSTRAINT `FK_loanpaidbonus_paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`)  ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `loanpaidbonus`
-	ADD CONSTRAINT `FK_loanpaidbonus_paystub` FOREIGN KEY (`PaystubId`) REFERENCES `paystub` (`RowID`) ON DELETE SET NULL;
 
 -- Data exporting was unselected.
 

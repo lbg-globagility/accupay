@@ -3,6 +3,7 @@ using AccuPay.Web.Allowances.Services;
 using AccuPay.Web.AllowanceType;
 using AccuPay.Web.Branches;
 using AccuPay.Web.Calendars;
+using AccuPay.Web.Clients;
 using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Core.Configurations;
 using AccuPay.Web.Core.Emails;
@@ -22,8 +23,8 @@ using AccuPay.Web.Shifts.Services;
 using AccuPay.Web.TimeEntries;
 using AccuPay.Web.TimeLogs;
 using AccuPay.Web.Users;
+using AccuPay.Web.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Notisphere.Users.Services;
 
 namespace AccuPay.Web
 {
@@ -39,6 +40,7 @@ namespace AccuPay.Web
             services.AddScoped<AllowanceTypeService>();
             services.AddScoped<BranchService>();
             services.AddScoped<CalendarService>();
+            services.AddScoped<ClientService>();
             services.AddScoped<DivisionService>();
             services.AddScoped<EmployeeService>();
             services.AddScoped<LeaveService>();
@@ -67,6 +69,7 @@ namespace AccuPay.Web
             services.AddScoped<UserTokenService>();
 
             services.AddScoped<GenerateDefaultImageService>();
+            services.AddScoped<GenerateDefaultUserImageService>();
 
             return services;
         }

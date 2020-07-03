@@ -11,6 +11,9 @@ import { AllowanceType } from '../shared/allowance-type';
   selector: 'app-new-allowance-type',
   templateUrl: './new-allowance-type.component.html',
   styleUrls: ['./new-allowance-type.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewAllowanceTypeComponent implements OnInit {
   @ViewChild(AllowanceTypeFormComponent)

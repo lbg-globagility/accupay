@@ -5,7 +5,6 @@ import { PageNotFoundComponent } from 'src/app/errors/page-not-found/page-not-fo
 import { UnderConstructionComponent } from 'src/app/errors/under-construction/under-construction.component';
 import { LoginComponent } from 'src/app/accounts/login/login.component';
 import { AuthGuard } from 'src/app/core/auth/auth.guard';
-import { EmployeeListComponent } from './employees/employee-list/employee-list.component';
 import { UserListComponent } from 'src/app/users/user-list/user-list.component';
 import { ViewUserComponent } from 'src/app/users/view-user/view-user.component';
 import { NewUserComponent } from 'src/app/users/new-user/new-user.component';
@@ -13,18 +12,11 @@ import { EditUserComponent } from 'src/app/users/edit-user/edit-user.component';
 import { NewEmployeeComponent } from './employees/new-employee/new-employee.component';
 import { ViewEmployeeComponent } from './employees/view-employee/view-employee.component';
 import { EditEmployeeComponent } from './employees/edit-employee/edit-employee.component';
-import { SalaryListComponent } from 'src/app/salaries/salary-list/salary-list.component';
 import { ViewSalaryComponent } from 'src/app/salaries/view-salary/view-salary.component';
 import { NewSalaryComponent } from 'src/app/salaries/new-salary/new-salary.component';
 import { EditSalaryComponent } from 'src/app/salaries/edit-salary/edit-salary.component';
 import { LeaveListComponent } from 'src/app/leaves/leave-list/leave-list.component';
-import { ViewLeaveComponent } from 'src/app/leaves/view-leave/view-leave.component';
-import { NewLeaveComponent } from 'src/app/leaves/new-leave/new-leave.component';
-import { EditLeaveComponent } from 'src/app/leaves/edit-leave/edit-leave.component';
 import { OfficialBusinessListComponent } from 'src/app/official-businesses/official-business-list/official-business-list.component';
-import { ViewOfficialBusinessComponent } from 'src/app/official-businesses/view-official-business/view-official-business.component';
-import { NewOfficialBusinessComponent } from 'src/app/official-businesses/new-official-business/new-official-business.component';
-import { EditOfficialBusinessComponent } from 'src/app/official-businesses/edit-official-business/edit-official-business.component';
 import { OvertimeListComponent } from 'src/app/overtimes/overtime-list/overtime-list.component';
 import { ViewOvertimeComponent } from 'src/app/overtimes/view-overtime/view-overtime.component';
 import { NewOvertimeComponent } from 'src/app/overtimes/new-overtime/new-overtime.component';
@@ -41,6 +33,7 @@ import { LoanListComponent } from 'src/app/loans/loan-list/loan-list.component';
 import { ViewLoanComponent } from 'src/app/loans/view-loan/view-loan.component';
 import { NewLoanComponent } from 'src/app/loans/new-loan/new-loan.component';
 import { EditLoanComponent } from 'src/app/loans/edit-loan/edit-loan.component';
+import { ReportsComponent } from 'src/app/reports/reports/reports.component';
 import { OrganizationListComponent } from 'src/app/organizations/organization-list/organization-list.component';
 import { NewOrganizationComponent } from 'src/app/organizations/new-organization/new-organization.component';
 import { ViewOrganizationComponent } from 'src/app/organizations/view-organization/view-organization.component';
@@ -72,6 +65,23 @@ import { UserRolesComponent } from 'src/app/roles/user-roles/user-roles.componen
 import { LeaveBalanceComponent } from 'src/app/leaves/leave-balance/leave-balance.component';
 import { TimeLogsComponent } from 'src/app/time-logs/time-logs/time-logs.component';
 import { AllowanceTypeListComponent } from './allowance-types/allowance-type-list/allowance-type-list.component';
+import { SalariesComponent } from 'src/app/salaries/salaries/salaries.component';
+import { LeavesComponent } from 'src/app/leaves/leaves/leaves.component';
+import { EmployeesComponent } from 'src/app/employees/employees/employees.component';
+import { AllowancesComponent } from 'src/app/allowances/allowances/allowances.component';
+import { SecurityComponent } from 'src/app/users/security/security.component';
+import {
+  NewClientComponent,
+  ClientsComponent,
+  ViewClientComponent,
+  EditClientComponent,
+} from 'src/app/clients/components';
+import { SssReportComponent } from 'src/app/reports/sss-report/sss-report.component';
+import { PhilhealthReportComponent } from './reports/philhealth-report/philhealth-report.component';
+import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.component';
+import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
+import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
+import { TaxReportComponent } from './reports/tax-report/tax-report.component';
 
 const routes: Routes = [
   {
@@ -79,12 +89,26 @@ const routes: Routes = [
     component: MainComponent,
     children: [
       {
-        path: 'employees/new',
-        component: NewEmployeeComponent,
+        path: 'clients/new',
+        component: NewClientComponent,
       },
       {
-        path: 'employees/:id',
-        component: ViewEmployeeComponent,
+        path: 'clients',
+        component: ClientsComponent,
+        children: [
+          {
+            path: ':id',
+            component: ViewClientComponent,
+          },
+        ],
+      },
+      {
+        path: 'clients/:id/edit',
+        component: EditClientComponent,
+      },
+      {
+        path: 'employees/new',
+        component: NewEmployeeComponent,
       },
       {
         path: 'employees/:id/edit',
@@ -92,51 +116,28 @@ const routes: Routes = [
       },
       {
         path: 'employees',
-        component: EmployeeListComponent,
+        component: EmployeesComponent,
+        children: [
+          {
+            path: ':id',
+            component: ViewEmployeeComponent,
+          },
+        ],
       },
-      {
-        path: 'users',
-        component: UserListComponent,
-      },
-      {
-        path: 'users/new',
-        component: NewUserComponent,
-      },
-      {
-        path: 'users/:id',
-        component: ViewUserComponent,
-      },
-      {
-        path: 'users/:id/edit',
-        component: EditUserComponent,
-      },
-      {
-        path: 'roles',
-        component: RoleListComponent,
-      },
-      {
-        path: 'roles/new',
-        component: NewRoleComponent,
-      },
-      {
-        path: 'user-access',
-        component: UserRolesComponent,
-      },
-      {
-        path: 'roles/:id/edit',
-        component: EditRoleComponent,
-      },
-      {
-        path: 'salaries',
-        component: SalaryListComponent,
-      },
+
       {
         path: 'salaries/new',
         component: NewSalaryComponent,
       },
       {
-        path: 'salaries/:id',
-        component: ViewSalaryComponent,
+        path: 'salaries',
+        component: SalariesComponent,
+        children: [
+          {
+            path: ':employeeId',
+            component: ViewSalaryComponent,
+          },
+        ],
       },
       {
         path: 'salaries/:id/edit',
@@ -144,11 +145,22 @@ const routes: Routes = [
       },
       {
         path: 'leaves',
-        component: LeaveListComponent,
-      },
-      {
-        path: 'leave-balance',
-        component: LeaveBalanceComponent,
+        component: LeavesComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: LeaveListComponent,
+          },
+          {
+            path: 'balances',
+            component: LeaveBalanceComponent,
+          },
+        ],
       },
       {
         path: 'official-businesses',
@@ -196,7 +208,22 @@ const routes: Routes = [
       },
       {
         path: 'allowances',
-        component: AllowanceListComponent,
+        component: AllowancesComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'overview',
+            pathMatch: 'full',
+          },
+          {
+            path: 'overview',
+            component: AllowanceListComponent,
+          },
+          {
+            path: 'types',
+            component: AllowanceTypeListComponent,
+          },
+        ],
       },
       {
         path: 'allowances/new',
@@ -229,6 +256,37 @@ const routes: Routes = [
       {
         path: 'loans/:id/edit',
         component: EditLoanComponent,
+      },
+
+      {
+        path: 'reports',
+        component: ReportsComponent,
+        children: [
+          {
+            path: 'sss',
+            component: SssReportComponent,
+          },
+          {
+            path: 'philhealth',
+            component: PhilhealthReportComponent,
+          },
+          {
+            path: 'pagibig',
+            component: PagibigReportComponent,
+          },
+          {
+            path: 'loanbytype',
+            component: LoanReportBytypeComponent,
+          },
+          {
+            path: 'loanbyemployee',
+            component: LoanReportByemployeeComponent,
+          },
+          {
+            path: 'tax',
+            component: TaxReportComponent,
+          },
+        ],
       },
       {
         path: 'organizations',
@@ -317,6 +375,49 @@ const routes: Routes = [
       {
         path: 'payroll/:id',
         component: ViewPayPeriodComponent,
+      },
+      {
+        path: 'security',
+        component: SecurityComponent,
+        children: [
+          {
+            path: '',
+            redirectTo: 'users',
+            pathMatch: 'full',
+          },
+          {
+            path: 'users',
+            component: UserListComponent,
+          },
+          {
+            path: 'roles',
+            component: RoleListComponent,
+          },
+          {
+            path: 'user-access',
+            component: UserRolesComponent,
+          },
+        ],
+      },
+      {
+        path: 'users/new',
+        component: NewUserComponent,
+      },
+      {
+        path: 'users/:id',
+        component: ViewUserComponent,
+      },
+      {
+        path: 'users/:id/edit',
+        component: EditUserComponent,
+      },
+      {
+        path: 'roles/new',
+        component: NewRoleComponent,
+      },
+      {
+        path: 'roles/:id/edit',
+        component: EditRoleComponent,
       },
     ],
     canActivate: [AuthGuard],

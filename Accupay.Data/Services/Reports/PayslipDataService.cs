@@ -4,11 +4,8 @@ namespace AccuPay.Data.Services
 {
     public class PayslipDataService : StoredProcedureDataService
     {
-        private readonly PayrollContext _context;
-
         public PayslipDataService(PayrollContext context) : base(context)
         {
-            _context = context;
         }
 
         public DataTable GetDefaultData(int organizationId, int payPeriodId, sbyte isActual)

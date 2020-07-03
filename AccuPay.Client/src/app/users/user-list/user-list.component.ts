@@ -13,6 +13,9 @@ import { UserService } from 'src/app/users/user.service';
   selector: 'app-user-list',
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class UserListComponent implements OnInit {
   readonly displayedColumns: string[] = [

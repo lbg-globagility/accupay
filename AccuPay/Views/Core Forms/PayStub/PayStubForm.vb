@@ -1,15 +1,15 @@
 Imports System.Collections.Concurrent
 Imports System.Threading
 Imports System.Threading.Tasks
-Imports AccuPay.CrystalReports.Payslip
+Imports AccuPay.CrystalReports
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Repositories.PaystubRepository
 Imports AccuPay.Data.Services
 Imports AccuPay.Data.ValueObjects
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities
-Imports AccuPay.Utils
 Imports log4net
 Imports Microsoft.Extensions.DependencyInjection
 Imports MySql.Data.MySqlClient
@@ -242,8 +242,7 @@ Public Class PayStubForm
         Dim catchdt As New DataTable : catchdt = n_SQLQueryToDatatable.ResultTable
 
         Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.
-                                            GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
+        Dim payPeriodsWithPaystubCount = Await payPeriodRepository.GetAllSemiMonthlyThatHasPaystubsAsync(z_OrganizationID)
         _payPeriodDataList = New List(Of PayPeriodStatusData)
 
         dgvpayper.Rows.Clear()
@@ -1933,16 +1932,23 @@ Public Class PayStubForm
 
     Private Sub PrintPayslip(isActual As SByte)
 
-        Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
-        Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipCreator)
+        FunctionUtils.TryCatchFunction("Print Payslip",
+            Sub()
+                Dim payPeriodRepository = MainServiceProvider.GetRequiredService(Of PayPeriodRepository)
+                Dim payslipCreator = MainServiceProvider.GetRequiredService(Of PayslipBuilder)
 
-        Dim payPeriod = ValNoComma(paypRowID)
+                Dim payPeriodId = ValNoComma(paypRowID)
 
-        Dim reportDocument = payslipCreator.CreateReportDocument(orgztnID, payPeriod, isActual)
+                Dim reportDocument = payslipCreator.CreateReportDocument(
+                    payPeriodId:=payPeriodId,
+                    isActual:=isActual)
 
-        Dim crvwr As New CrysRepForm
-        crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
-        crvwr.Show()
+                Dim crvwr As New CrysRepForm
+                crvwr.crysrepvwr.ReportSource = reportDocument.GetReportDocument()
+                crvwr.Show()
+
+            End Sub,
+            "Error generating payslips.")
     End Sub
 
     Private Sub PrintPayrollSummaryToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles PrintPayrollSummaryToolStripMenuItem.Click

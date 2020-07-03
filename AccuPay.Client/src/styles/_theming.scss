@@ -5,3 +5,7 @@ $accent-palette: mat-palette($mat-light-blue, 900);
 $warn-palette: mat-palette($mat-red);
 
 $theme: mat-light-theme($primary-palette, $accent-palette, $warn-palette);
+
+$typography: mat-typography-config(
+  $font-family: "Roboto, 'Helvetica Neue', monospace",
+);

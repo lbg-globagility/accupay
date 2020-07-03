@@ -23,11 +23,12 @@ namespace AccuPay.Web.OfficialBusinesses
         {
             // TODO: sort and desc in repository
             int organizationId = _currentUser.OrganizationId;
-            var paginatedList = await _service.GetPaginatedListAsync(options,
-                                                                     organizationId,
-                                                                     filter.Term,
-                                                                     filter.DateFrom,
-                                                                     filter.DateTo);
+            var paginatedList = await _service.GetPaginatedListAsync(
+                options,
+                organizationId,
+                filter.Term,
+                filter.DateFrom,
+                filter.DateTo);
 
             var dtos = paginatedList.List.Select(x => ConvertToDto(x));
 
@@ -44,11 +45,10 @@ namespace AccuPay.Web.OfficialBusinesses
         public async Task<OfficialBusinessDto> Create(CreateOfficialBusinessDto dto)
         {
             int organizationId = _currentUser.OrganizationId;
-            int userId = 1;
             var officialBusiness = new OfficialBusiness()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 OrganizationID = organizationId,
             };
             ApplyChanges(dto, officialBusiness);
@@ -63,8 +63,7 @@ namespace AccuPay.Web.OfficialBusinesses
             var officialBusiness = await _service.GetByIdAsync(id);
             if (officialBusiness == null) return null;
 
-            int userId = 1;
-            officialBusiness.LastUpdBy = userId;
+            officialBusiness.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, officialBusiness);
 

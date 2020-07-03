@@ -6,6 +6,7 @@ export interface Paystub {
   payperiodId: number;
   basicRate: number;
   basicHours: number;
+  basicPay: number;
   regularHours: number;
   regularPay: number;
   overtimeHours: number;
@@ -48,4 +49,12 @@ export interface Paystub {
   hdmfEmployeeShare: number;
   totalLoans: number;
   netPay: number;
+  salary: {
+    id: number;
+    basicAmount: number;
+    allowanceAmount: number;
+    hourlyRate: number;
+    dailyRate: number;
+    salaryType: string;
+  };
 }

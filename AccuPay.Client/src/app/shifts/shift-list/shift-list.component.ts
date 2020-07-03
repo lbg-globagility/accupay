@@ -15,6 +15,9 @@ import Swal from 'sweetalert2';
   selector: 'app-shift-list',
   templateUrl: './shift-list.component.html',
   styleUrls: ['./shift-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class ShiftListComponent implements OnInit {
   readonly displayedColumns: string[] = [

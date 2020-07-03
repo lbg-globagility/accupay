@@ -1,4 +1,6 @@
-﻿Imports System.IO
+﻿Option Strict On
+
+Imports System.IO
 Imports AccuPay.Data.Helpers
 Imports AccuPay.Helpers
 

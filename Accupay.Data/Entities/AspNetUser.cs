@@ -18,5 +18,9 @@ namespace AccuPay.Data.Entities
         public int ClientId { get; set; }
 
         public AspNetUserStatus Status { get; set; }
+        
+        public int? OriginalImageId { get; set; }
+
+        public virtual File OriginalImage { get; set; }
     }
 }

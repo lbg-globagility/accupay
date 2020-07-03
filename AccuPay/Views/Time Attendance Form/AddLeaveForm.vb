@@ -4,7 +4,7 @@ Imports System.Threading.Tasks
 Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
-Imports AccuPay.Utils
+Imports AccuPay.Desktop.Utilities
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class AddLeaveForm
@@ -17,8 +17,6 @@ Public Class AddLeaveForm
 
     Private _newLeave As New Leave
 
-    Private _leaveService As LeaveDataService
-
     Private _leaveRepository As LeaveRepository
 
     Private _productRepository As ProductRepository
@@ -30,8 +28,6 @@ Public Class AddLeaveForm
         InitializeComponent()
 
         _currentEmployee = employee
-
-        _leaveService = MainServiceProvider.GetRequiredService(Of LeaveDataService)
 
         _leaveRepository = MainServiceProvider.GetRequiredService(Of LeaveRepository)
 
@@ -146,19 +142,6 @@ Public Class AddLeaveForm
         myBalloon(content, title, EmployeeInfoTabLayout, 400)
     End Sub
 
-    Private Function ValidateSave(newLeave As Leave) As Boolean
-
-        Dim validationErrorMessage = newLeave.Validate()
-
-        If Not String.IsNullOrWhiteSpace(validationErrorMessage) Then
-            MessageBoxHelper.ErrorMessage(validationErrorMessage)
-            Return False
-        End If
-
-        Return True
-
-    End Function
-
     Private Sub UpdateEndDateDependingOnStartAndEndTimes()
         If Me._newLeave Is Nothing Then Return
 
@@ -194,16 +177,10 @@ Public Class AddLeaveForm
             Me._newLeave.EndTime = Nothing
         End If
 
-        If ValidateSave(Me._newLeave) = False Then Return
-
         Await FunctionUtils.TryCatchFunctionAsync("New Leave",
             Async Function()
-                Dim list As New List(Of Leave)
-                list.Add(Me._newLeave)
-
-                'Temporarily use SaveMany to validate the leave
-                'TODO: use SaveAsync
-                Await _leaveService.SaveManyAsync(list, z_OrganizationID)
+                Dim service = MainServiceProvider.GetRequiredService(Of LeaveDataService)
+                Await service.SaveAsync(Me._newLeave)
 
                 _userActivityRepository.RecordAdd(z_User, FormEntityName, Me._newLeave.RowID.Value, z_OrganizationID)
 

@@ -66,7 +66,7 @@ namespace AccuPay.Data.Services
 
             await SanitizeProperties(loan);
 
-            if (isNewEntity(loan.RowID))
+            if (IsNewEntity(loan.RowID))
                 SanitizeInsert(loan);
             else
                 await SanitizeUpdate(loan);

@@ -6,14 +6,30 @@ import { PaginatedList } from 'src/app/core/shared/paginated-list';
 import { Paystub } from 'src/app/payroll/shared/paystub';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PayrollResult } from '../shared/payroll-result';
+import { BasePdfService } from 'src/app/core/shared/services/base-pdf-service';
 
 @Injectable({
   providedIn: 'root',
 })
-export class PayPeriodService {
+export class PayPeriodService extends BasePdfService {
   private baseUrl = 'api/payperiods';
 
-  constructor(private httpClient: HttpClient) {}
+  readonly payslipFileName = 'payslip.pdf';
+
+  constructor(protected httpClient: HttpClient) {
+    super(httpClient);
+  }
+
+  GetList(
+    options: PageOptions,
+    term = ''
+  ): Observable<PaginatedList<PayPeriod>> {
+    const params = options ? options.toObject() : null;
+    params.term = term;
+    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
+      params,
+    });
+  }
 
   start(cutoffStart: Date, cutoffEnd: Date): Observable<void> {
     return this.httpClient.post<void>(`${this.baseUrl}`, {
@@ -34,11 +50,11 @@ export class PayPeriodService {
     payPeriodId: number,
     options: PageOptions,
     term: string = ''
-  ): Observable<PaginatedList<Paystub>> {
+  ): Observable<Paystub[]> {
     const params = options ? options.toObject() : null;
     params.term = term;
 
-    return this.httpClient.get<PaginatedList<Paystub>>(
+    return this.httpClient.get<Paystub[]>(
       `${this.baseUrl}/${payPeriodId}/paystubs`,
       {
         params,
@@ -53,14 +69,10 @@ export class PayPeriodService {
     );
   }
 
-  GetList(
-    options: PageOptions,
-    term = ''
-  ): Observable<PaginatedList<PayPeriod>> {
-    const params = options ? options.toObject() : null;
-    params.term = term;
-    return this.httpClient.get<PaginatedList<PayPeriod>>(`${this.baseUrl}`, {
-      params,
-    });
+  getPayslipPDF(payPeriodId: number): Promise<any> {
+    return this.getPDF(
+      this.payslipFileName,
+      `${this.baseUrl}/${payPeriodId}/payslips`
+    );
   }
 }

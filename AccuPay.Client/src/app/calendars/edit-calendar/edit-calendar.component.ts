@@ -8,6 +8,9 @@ import Swal from 'sweetalert2';
   selector: 'app-edit-calendar',
   templateUrl: './edit-calendar.component.html',
   styleUrls: ['./edit-calendar.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditCalendarComponent implements OnInit {
   calendarId: number = +this.route.snapshot.paramMap.get('id');

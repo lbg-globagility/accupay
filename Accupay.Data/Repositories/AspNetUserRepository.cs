@@ -41,5 +41,13 @@ namespace AccuPay.Data.Repositories
 
             return (users, count);
         }
+
+        public async Task<IEnumerable<AspNetUser>> GetUsersWithoutImageAsync()
+        {
+            return await _context.Users
+                .Include(x => x.OriginalImage)
+                .Where(x => x.OriginalImageId == null)
+                .ToListAsync();
+        }
     }
 }

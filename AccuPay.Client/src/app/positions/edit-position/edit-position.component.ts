@@ -10,6 +10,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-edit-position',
   templateUrl: './edit-position.component.html',
   styleUrls: ['./edit-position.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EditPositionComponent implements OnInit {
   position: Position;

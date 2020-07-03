@@ -4,7 +4,10 @@ using AccuPay.Web.Core.Auth;
 using AccuPay.Web.Payroll;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace AccuPay.Web.Controllers
@@ -12,15 +15,26 @@ namespace AccuPay.Web.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    public class PayperiodsController : ControllerBase
+    public class PayperiodsController : ReportsControllerBase
     {
         private readonly PayperiodService _payperiodService;
         private readonly PaystubService _paystubService;
 
-        public PayperiodsController(PayperiodService payperiodService, PaystubService paystubService)
+        public PayperiodsController(
+            PayperiodService payperiodService,
+            PaystubService paystubService,
+            ICurrentUser currentUser,
+            IConfiguration configuration) : base(currentUser, configuration)
         {
             _payperiodService = payperiodService;
             _paystubService = paystubService;
+        }
+
+        [HttpGet]
+        [Permission(PermissionTypes.PayPeriodRead)]
+        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
+        {
+            return await _payperiodService.List(options);
         }
 
         [HttpPost]
@@ -72,16 +86,18 @@ namespace AccuPay.Web.Controllers
 
         [HttpGet("{payperiodId}/paystubs")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PaginatedList<PaystubDto>>> GetPaystubs(int payperiodId, [FromQuery] PageOptions options, string searchTerm)
+        public async Task<ActionResult<ICollection<PaystubDto>>> GetPaystubs(int payperiodId)
         {
-            return await _paystubService.PaginatedList(options, payperiodId);
+            var paystubs = await _paystubService.GetAll(payperiodId);
+            return paystubs.ToList();
         }
 
-        [HttpGet]
+        [HttpGet("{payperiodId}/payslips")]
         [Permission(PermissionTypes.PayPeriodRead)]
-        public async Task<ActionResult<PaginatedList<PayperiodDto>>> List([FromQuery] PageOptions options)
+        public async Task<ActionResult> GetPayslips(int payperiodId)
         {
-            return await _payperiodService.List(options);
+            var path = $"payslip/{payperiodId}";
+            return await GetPDF(path, "payslip.pdf");
         }
     }
 }

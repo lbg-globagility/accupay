@@ -6,8 +6,8 @@ Imports AccuPay.Data.Entities
 Imports AccuPay.Data.Enums
 Imports AccuPay.Data.Repositories
 Imports AccuPay.Data.Services
+Imports AccuPay.Desktop.Utilities
 Imports AccuPay.Utilities.Extensions
-Imports AccuPay.Utils
 Imports Microsoft.Extensions.DependencyInjection
 
 Public Class NewDivisionPositionForm

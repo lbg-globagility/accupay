@@ -6,7 +6,7 @@
 /* You can add global styles to this file, and also import other style files */
 
 @include normalize.normalize();
-@include mat-core();
+@include mat-core(theming.$typography);
 
 @include angular-material-theme(theming.$theme);
 

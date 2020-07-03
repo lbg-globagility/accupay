@@ -8,11 +8,15 @@ import { filter, mergeMap } from 'rxjs/operators';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { Sort } from '@angular/material/sort';
 import { PageEvent } from '@angular/material/paginator';
+import { LoadingState } from 'src/app/core/states/loading-state';
 
 @Component({
   selector: 'app-payroll',
   templateUrl: './payroll.component.html',
   styleUrls: ['./payroll.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class PayrollComponent implements OnInit {
   latestPayperiod: PayPeriod;
@@ -20,6 +24,8 @@ export class PayrollComponent implements OnInit {
   readonly displayedColumns = ['cutoff', 'status', 'actions'];
 
   dataSource: MatTableDataSource<PayPeriod>;
+
+  loadingState: LoadingState = new LoadingState();
 
   pageIndex: number = 0;
   pageSize: number = 10;
@@ -38,6 +44,7 @@ export class PayrollComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadingState.changeToLoading();
     this.loadLatest();
     this.loadList();
   }
@@ -62,6 +69,7 @@ export class PayrollComponent implements OnInit {
         this.totalPages = data.totalPages;
         this.totalCount = data.totalCount;
         this.dataSource = new MatTableDataSource(data.items);
+        this.loadingState.changeToSuccess();
       });
   }
 

@@ -13,9 +13,18 @@ export class SalaryService {
 
   constructor(private httpClient: HttpClient) {}
 
-  getAll(options: PageOptions, term = ''): Observable<PaginatedList<Salary>> {
+  list(
+    options: PageOptions,
+    term: string = '',
+    employeeId?: number
+  ): Observable<PaginatedList<Salary>> {
     const params = options ? options.toObject() : null;
-    params.term = term;
+    if (term) {
+      params.term = term;
+    }
+    if (params) {
+      params.employeeId = `${employeeId}`;
+    }
     return this.httpClient.get<PaginatedList<Salary>>(`${this.baseUrl}`, {
       params,
     });
@@ -23,6 +32,12 @@ export class SalaryService {
 
   get(id: number): Observable<Salary> {
     return this.httpClient.get<Salary>(`${this.baseUrl}/${id}`);
+  }
+
+  getLatest(employeeId: number): Observable<Salary> {
+    return this.httpClient.get<Salary>(
+      `${this.baseUrl}/latest?employeeId=${employeeId}`
+    );
   }
 
   create(salary: Salary): Observable<Salary> {

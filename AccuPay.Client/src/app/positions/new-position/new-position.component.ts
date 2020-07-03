@@ -9,6 +9,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-position',
   templateUrl: './new-position.component.html',
   styleUrls: ['./new-position.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewPositionComponent {
   constructor(

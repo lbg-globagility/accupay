@@ -69,5 +69,14 @@ namespace AccuPay.Web.Controllers
 
             return new PaginatedList<UserDto>(dtos, count, 1, 1);
         }
+
+        [HttpGet("user-image")]
+        [Permission(PermissionTypes.UserRead)]
+        public async Task<ActionResult> GenerateUsersImage()
+        {
+            await _service.GenerateUserImages();
+
+            return Ok();
+        }
     }
 }

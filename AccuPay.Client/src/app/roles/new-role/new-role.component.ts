@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
   selector: 'app-new-role',
   templateUrl: './new-role.component.html',
   styleUrls: ['./new-role.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewRoleComponent implements OnInit {
   savingState: LoadingState = new LoadingState();

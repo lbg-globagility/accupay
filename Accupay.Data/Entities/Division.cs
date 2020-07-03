@@ -142,7 +142,7 @@ namespace AccuPay.Data.Entities
             return ParentDivisionID == division.RowID;
         }
 
-        public static Division CreateEmptyDivision(int organizationId, int userId)
+        public static Division NewDivision(int organizationId, int userId)
         {
             return new Division()
             {

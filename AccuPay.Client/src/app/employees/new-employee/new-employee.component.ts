@@ -8,6 +8,9 @@ import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
   selector: 'app-new-employee',
   templateUrl: './new-employee.component.html',
   styleUrls: ['./new-employee.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class NewEmployeeComponent implements OnInit {
   baseRoute = 'employees';

@@ -15,6 +15,9 @@ import { LoanHistoryComponent } from '../loan-history/loan-history.component';
   selector: 'app-loan-list',
   templateUrl: './loan-list.component.html',
   styleUrls: ['./loan-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class LoanListComponent implements OnInit {
   readonly displayedColumns: string[] = [
