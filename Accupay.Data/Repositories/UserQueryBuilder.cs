@@ -1,5 +1,7 @@
 ﻿using AccuPay.Data.Entities;
+using AccuPay.Utilities.Extensions;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,15 +19,21 @@ namespace AccuPay.Data.Repositories
             _query = _context.OldUsers;
         }
 
-        public UserQueryBuilder ById(int rowId)
+        public UserQueryBuilder ById(int id)
         {
-            _query = _query.Where(u => u.RowID == rowId);
+            _query = _query.Where(u => u.RowID == id);
+            return this;
+        }
+
+        public UserQueryBuilder ByAspNetUserId(Guid aspNetUserId)
+        {
+            _query = _query.Where(u => u.AspNetUserId == aspNetUserId);
             return this;
         }
 
         public UserQueryBuilder ByUsername(string username)
         {
-            _query = _query.Where(u => u.Username == username);
+            _query = _query.Where(u => u.Username.Trim().ToLower() == username.ToTrimmedLowerCase());
             return this;
         }
 
@@ -41,19 +49,25 @@ namespace AccuPay.Data.Repositories
             return this;
         }
 
-        public async Task<IEnumerable<User>> ToListAsync()
+        public async Task<ICollection<User>> ToListAsync()
         {
-            return await _query.ToListAsync();
-        }
-
-        public User FirstOrDefault()
-        {
-            return _query.FirstOrDefault();
+            return await _query
+                .AsNoTracking()
+                .ToListAsync();
         }
 
         public async Task<User> FirstOrDefaultAsync()
         {
-            return await _query.FirstOrDefaultAsync();
+            return await _query
+                .AsNoTracking()
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task<bool> AnyAsync()
+        {
+            return await _query
+                .AsNoTracking()
+                .AnyAsync();
         }
     }
 }

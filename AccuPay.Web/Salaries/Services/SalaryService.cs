@@ -13,8 +13,9 @@ namespace AccuPay.Web.Salaries.Services
         private readonly SalaryRepository _repository;
         private readonly ICurrentUser _currentUser;
 
-        public SalaryService(SalaryRepository salaryRepository,
-                             ICurrentUser currentUser)
+        public SalaryService(
+            SalaryRepository salaryRepository,
+            ICurrentUser currentUser)
         {
             _repository = salaryRepository;
             _currentUser = currentUser;
@@ -54,7 +55,7 @@ namespace AccuPay.Web.Salaries.Services
             {
                 OrganizationID = _currentUser.OrganizationId,
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = 1
+                CreatedBy = _currentUser.DesktopUserId
             };
 
             ApplyChanges(dto, salary);
@@ -69,7 +70,7 @@ namespace AccuPay.Web.Salaries.Services
             var salary = await _repository.GetByIdAsync(id);
             if (salary == null) return null;
 
-            salary.LastUpdBy = 1;
+            salary.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, salary);
 

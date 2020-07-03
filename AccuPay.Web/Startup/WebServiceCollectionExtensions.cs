@@ -23,8 +23,8 @@ using AccuPay.Web.Shifts.Services;
 using AccuPay.Web.TimeEntries;
 using AccuPay.Web.TimeLogs;
 using AccuPay.Web.Users;
+using AccuPay.Web.Users.Services;
 using Microsoft.Extensions.DependencyInjection;
-using Notisphere.Users.Services;
 
 namespace AccuPay.Web
 {

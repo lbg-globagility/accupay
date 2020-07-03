@@ -1,0 +1,2 @@
+ALTER TABLE `organization`
+	CHANGE COLUMN `SSSDeductionSchedule` `SSSDeductionSchedule` VARCHAR(50) NULL DEFAULT NULL COMMENT 'per Pay Frequency, or per End of Month' AFTER `PhilhealthDeductionSchedule`;

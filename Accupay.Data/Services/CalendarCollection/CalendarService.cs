@@ -19,9 +19,10 @@ namespace AccuPay.Data.Services
             _branchRepository = branchRepository;
         }
 
-        public CalendarCollection GetCalendarCollection(TimePeriod timePeriod,
-                                                        PayRateCalculationBasis calculationBasis,
-                                                        int organizationId)
+        public CalendarCollection GetCalendarCollection(
+            TimePeriod timePeriod,
+            PayRateCalculationBasis calculationBasis,
+            int organizationId)
         {
             var payrates = _context.PayRates.
                                 Where(p => p.OrganizationID == organizationId).

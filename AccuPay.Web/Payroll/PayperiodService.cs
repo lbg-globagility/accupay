@@ -13,9 +13,6 @@ namespace AccuPay.Web.Payroll
 {
     public class PayperiodService
     {
-        // this should be replaced
-        private const int DesktopUserId = 1;
-
         private readonly DbContextOptionsService _dbContextOptionsService;
 
         private readonly PayPeriodRepository _payperiodRepository;
@@ -35,6 +32,7 @@ namespace AccuPay.Web.Payroll
                 _currentUser.OrganizationId);
 
             payperiod.Status = PayPeriodStatus.Open;
+            payperiod.LastUpdBy = _currentUser.DesktopUserId;
 
             await _payperiodRepository.Update(payperiod);
 
@@ -43,14 +41,14 @@ namespace AccuPay.Web.Payroll
 
         public async Task<PayrollResultDto> Calculate(PayrollResources resources, int payperiodId)
         {
-            await resources.Load(payperiodId, _currentUser.OrganizationId, DesktopUserId);
+            await resources.Load(payperiodId, _currentUser.OrganizationId, _currentUser.DesktopUserId);
 
             var results = new List<PayrollGeneration.Result>();
 
             foreach (var employee in resources.Employees)
             {
                 var generation = new PayrollGeneration(_dbContextOptionsService);
-                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, DesktopUserId);
+                var result = generation.DoProcess(employee, resources, _currentUser.OrganizationId, _currentUser.DesktopUserId);
 
                 results.Add(result);
             }

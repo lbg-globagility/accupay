@@ -8,6 +8,7 @@ import { PageEvent } from '@angular/material/paginator';
 import { Sort } from '@angular/material/sort';
 import { Allowance } from 'src/app/allowances/shared/allowance';
 import { AllowanceService } from 'src/app/allowances/allowance.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-allowance-list',
@@ -52,7 +53,10 @@ export class AllowanceListComponent implements OnInit {
 
   selectedRow: number;
 
-  constructor(private allowanceService: AllowanceService) {
+  constructor(
+    private allowanceService: AllowanceService,
+    private router: Router
+  ) {
     this.modelChanged = new Subject();
     this.modelChanged
       .pipe(auditTime(Constants.ThrottleTime))
@@ -78,27 +82,31 @@ export class AllowanceListComponent implements OnInit {
     });
   }
 
-  applyFilter(searchTerm: string) {
+  gotoNewAllowance(): void {
+    this.router.navigate(['/allowances/new']);
+  }
+
+  applyFilter(searchTerm: string): void {
     this.searchTerm = searchTerm;
     this.pageIndex = 0;
     this.modelChanged.next();
   }
 
-  clearSearchBox() {
+  clearSearchBox(): void {
     this.clearSearch = '';
     this.applyFilter(this.clearSearch);
   }
 
-  sortData(sort: Sort) {
+  sortData(sort: Sort): void {
     this.sort = sort;
     this.modelChanged.next();
   }
 
-  setHoveredRow(id: number) {
+  setHoveredRow(id: number): void {
     this.selectedRow = id;
   }
 
-  onPageChanged(pageEvent: PageEvent) {
+  onPageChanged(pageEvent: PageEvent): void {
     this.pageIndex = pageEvent.pageIndex;
     this.pageSize = pageEvent.pageSize;
     this.getAllowanceList();

@@ -229,7 +229,7 @@ Public Class ImportEmployeeForm
 
         For Each model In _okModels
 
-            Dim newEmployee = Employee.CreateEmptyEmployee(
+            Dim newEmployee = Employee.NewEmployee(
                 organizationId:=z_OrganizationID,
                 userId:=z_User
             )

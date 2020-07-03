@@ -33,6 +33,7 @@ namespace AccuPay.Web.Payroll
             EmployeeId = paystub.EmployeeID.Value;
             PayperiodId = paystub.PayPeriodID.Value;
             BasicHours = paystub.BasicHours;
+            BasicPay = paystub.BasicPay;
             RegularHours = paystub.RegularHours;
             RegularPay = paystub.RegularPay;
             OvertimeHours = paystub.OvertimeHours;
@@ -75,6 +76,16 @@ namespace AccuPay.Web.Payroll
             TotalLoans = paystub.TotalLoans;
             TotalDeductions = paystub.NetDeductions;
             NetPay = paystub.NetPay;
+
+            Salary = new SalaryDto()
+            {
+                Id = paystubData.Salary.RowID.Value,
+                BasicAmount = paystubData.Salary.BasicSalary,
+                AllowanceAmount = paystubData.Salary.AllowanceSalary,
+                HourlyRate = paystubData.HourlyRate,
+                DailyRate = paystubData.DailyRate,
+                SalaryType = paystubData.Paystub.Employee.EmployeeType,
+            };
         }
 
         public int Id { get; set; }
@@ -83,9 +94,11 @@ namespace AccuPay.Web.Payroll
 
         public int PayperiodId { get; set; }
 
+        public decimal BasicRate { get; set; }
+
         public decimal BasicHours { get; set; }
 
-        public decimal BasicRate { get; set; }
+        public decimal BasicPay { get; set; }
 
         public decimal RegularHours { get; set; }
 
@@ -166,8 +179,26 @@ namespace AccuPay.Web.Payroll
         public decimal HdmfEmployeeShare { get; set; }
 
         public decimal TotalLoans { get; set; }
+
         public decimal TotalDeductions { get; set; }
 
         public decimal NetPay { get; set; }
+
+        public SalaryDto Salary { get; set; }
+
+        public class SalaryDto
+        {
+            public int Id { get; set; }
+
+            public decimal BasicAmount { get; set; }
+
+            public decimal AllowanceAmount { get; set; }
+
+            public string SalaryType { get; set; }
+
+            public decimal DailyRate { get; set; }
+
+            public decimal HourlyRate { get; set; }
+        }
     }
 }

@@ -172,6 +172,10 @@ namespace AccuPay.Data
 
             modelBuilder.Entity<UserRole>()
                 .HasKey(t => new { t.UserId, t.RoleId, t.OrganizationId });
+
+            modelBuilder.Entity<User>()
+                .Property(t => t.AspNetUserId)
+                .HasConversion(new NullableGuidToBigEndianBytesConverter());
         }
     }
 }

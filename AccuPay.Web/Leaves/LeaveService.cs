@@ -86,12 +86,10 @@ namespace AccuPay.Web.Leaves
 
         public async Task<LeaveDto> Create(CreateLeaveDto dto)
         {
-            int userId = 1;
-
             var leave = new Leave()
             {
                 EmployeeID = dto.EmployeeId,
-                CreatedBy = userId,
+                CreatedBy = _currentUser.DesktopUserId,
                 OrganizationID = _currentUser.OrganizationId,
             };
             ApplyChanges(dto, leave);
@@ -106,8 +104,7 @@ namespace AccuPay.Web.Leaves
             var leave = await _leaveRepository.GetByIdAsync(id);
             if (leave == null) return null;
 
-            int userId = 1;
-            leave.LastUpdBy = userId;
+            leave.LastUpdBy = _currentUser.DesktopUserId;
 
             ApplyChanges(dto, leave);
 

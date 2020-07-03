@@ -23,6 +23,7 @@ namespace AccuPay.Web.Controllers
             _configuration = configuration;
         }
 
+        [ApiExplorerSettings(IgnoreApi = true)]
         public async Task<ActionResult> GetPDF(string path, string fileName)
         {
             var port = ObjectUtils.ToNullableInteger(_configuration["ReportsAPI:Port"]);

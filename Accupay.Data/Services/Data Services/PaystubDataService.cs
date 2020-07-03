@@ -1,5 +1,5 @@
-﻿using AccuPay.Data.Helpers;
-using AccuPay.Data.Repositories;
+﻿using AccuPay.Data.Repositories;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -18,23 +18,20 @@ namespace AccuPay.Data.Services
             _payPeriodRepository = payPeriodRepository;
         }
 
-        public async Task<PaginatedListResult<PaystubData>> GetPaginatedListAsync(
-            PageOptions options,
-            int payPeriodId,
-            string searchTerm = "")
+        public async Task<ICollection<PaystubData>> GetAll(int payPeriodId)
         {
-            var paginatedList = await _paystubRepository.GetPaginatedListAsync(options, payPeriodId, searchTerm);
+            var paystubs = await _paystubRepository.GetAll(payPeriodId);
 
             var payPeriod = await _payPeriodRepository.GetByIdAsync(payPeriodId);
 
-            var employeeIds = paginatedList.List.Select(x => x.EmployeeID.Value).ToArray();
+            var employeeIds = paystubs.Select(x => x.EmployeeID.Value).ToArray();
 
             var salaries = await _salaryRepository.GetByMultipleEmployeeAsync(employeeIds, payPeriod.PayFromDate);
 
-            var paystubsWithSalary = paginatedList.List.Select(x =>
+            var paystubsWithSalary = paystubs.Select(x =>
                 new PaystubData(x, salaries.FirstOrDefault(s => s.EmployeeID == x.EmployeeID))).ToList();
 
-            return new PaginatedListResult<PaystubData>(paystubsWithSalary, paginatedList.TotalCount);
+            return paystubsWithSalary;
         }
     }
 }

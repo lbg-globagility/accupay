@@ -12,7 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using static AccuPay.Data.Services.Imports.TimeLogImportParser;
 
 namespace AccuPay.Web.TimeLogs
 {
@@ -54,27 +53,7 @@ namespace AccuPay.Web.TimeLogs
             return new PaginatedList<EmployeeTimeLogsDto>(dtos, total, ++options.PageIndex, options.PageSize);
         }
 
-        internal async Task<ActionResult<TimeLogDto>> Create(CreateTimeLogDto dto)
-        {
-            // TODO: validations
-            int userId = 1;
-
-            var timeLog = new TimeLog
-            {
-                OrganizationID = _currentUser.OrganizationId,
-                CreatedBy = userId,
-                EmployeeID = dto.EmployeeId,
-                LogDate = dto.Date
-            };
-
-            ApplyChanges(dto, timeLog);
-
-            await _service.CreateAsync(timeLog);
-
-            return ConvertToDto(timeLog);
-        }
-
-        internal async Task Update(ICollection<UpdateTimeLogDto> dtos)
+        internal async Task BatchApply(ICollection<UpdateTimeLogDto> dtos)
         {
             var employeeIds = dtos.Select(t => t.EmployeeId).ToList();
             var dateFrom = dtos.Select(t => t.Date).Min();
@@ -103,8 +82,8 @@ namespace AccuPay.Web.TimeLogs
                         {
                             OrganizationID = _currentUser.OrganizationId,
                             EmployeeID = dto.EmployeeId,
-                            CreatedBy = 1,
-                            LastUpdBy = 1,
+                            CreatedBy = _currentUser.DesktopUserId,
+                            LastUpdBy = _currentUser.DesktopUserId,
                             LogDate = dto.Date,
                             TimeInFull = dto.StartTime,
                             TimeOutFull = dto.EndTime
@@ -119,6 +98,7 @@ namespace AccuPay.Web.TimeLogs
                     {
                         existingTimeLog.TimeInFull = dto.StartTime;
                         existingTimeLog.TimeOutFull = dto.EndTime;
+                        existingTimeLog.LastUpdBy = _currentUser.DesktopUserId;
 
                         updated.Add(existingTimeLog);
                     }
@@ -165,8 +145,10 @@ namespace AccuPay.Web.TimeLogs
             if (fileStream?.Name == null)
                 throw new Exception("Unable to parse text file.");
 
-            int userId = 1;
-            var parsedResult = await _importParser.Parse(fileStream.Name, organizationId: _currentUser.OrganizationId, userId: userId);
+            var parsedResult = await _importParser.Parse(
+                importFile: fileStream.Name,
+                organizationId: _currentUser.OrganizationId,
+                userId: _currentUser.DesktopUserId);
 
             var invalidDtos = parsedResult.InvalidRecords.Select(x => ConvertToImportDetailsDto(x));
             var timeLogs = parsedResult.GeneratedTimeLogs.Select(x => ConvertToDto(x));
@@ -176,8 +158,6 @@ namespace AccuPay.Web.TimeLogs
                 InvalidRecords = invalidDtos,
                 GeneratedTimeLogs = timeLogs
             };
-
-            //await _service.SaveImportAsync(parsedResult.GeneratedTimeLogs, parsedResult.GeneratedTimeAttendanceLogs);
         }
 
         private static TimeLogImportDetailsDto ConvertToImportDetailsDto(TimeLogImportModel parsedResult)
@@ -190,8 +170,8 @@ namespace AccuPay.Web.TimeLogs
                 ErrorMessage = parsedResult.ErrorMessage,
                 LineContent = parsedResult.LineContent,
                 LineNumber = parsedResult.LineNumber,
-                Type = parsedResult.Type                
-            };            
+                Type = parsedResult.Type
+            };
         }
 
         private static TimeLogDto ConvertToDto(TimeLog timeLog)

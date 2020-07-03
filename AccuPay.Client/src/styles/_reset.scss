@@ -1,8 +1,11 @@
+@use "~@angular/material/theming" as *;
 @use "styles/colors";
+@use "styles/theming";
 
 html,
 body {
   height: 100%;
+  font-family: mat-font-family(theming.$typography);
 }
 
 button {

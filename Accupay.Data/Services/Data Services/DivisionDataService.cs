@@ -30,6 +30,9 @@ namespace AccuPay.Data.Services
         {
             var division = await _divisionRepository.GetByIdWithParentAsync(divisionId);
 
+            if (division == null)
+                throw new BusinessLogicException("Division does not exists.");
+
             // TODO: move this to repositories
             if (_context.AgencyFees.Any(a => a.DivisionID == divisionId))
                 throw new BusinessLogicException("Division already has agency fees therefore cannot be deleted.");
@@ -83,7 +86,7 @@ namespace AccuPay.Data.Services
 
                     if (defaultParentDivision == null)
                     {
-                        defaultParentDivision = Division.CreateEmptyDivision(
+                        defaultParentDivision = Division.NewDivision(
                                                             organizationId: organizationId,
                                                             userId: userId);
 
@@ -106,7 +109,7 @@ namespace AccuPay.Data.Services
 
                     if (defaultDivision == null)
                     {
-                        defaultDivision = Division.CreateEmptyDivision(
+                        defaultDivision = Division.NewDivision(
                                                             organizationId: organizationId,
                                                             userId: userId);
 

@@ -35,5 +35,16 @@ namespace AccuPay.Data.Entities
 
         [Column("NoPurpose")]
         public bool IsInActive { get; set; }
+
+        public static Organization NewOrganization(int userId, int clientId)
+        {
+            return new Organization()
+            {
+                CreatedBy = userId,
+                ClientId = clientId,
+                NightDifferentialTimeFrom = new TimeSpan(22, 0, 0),
+                NightDifferentialTimeTo = new TimeSpan(6, 0, 0),
+            };
+        }
     }
 }

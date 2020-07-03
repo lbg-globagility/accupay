@@ -8,6 +8,9 @@ import { LoansBreakdownComponent } from '../loans-breakdown/loans-breakdown.comp
   selector: 'app-paystub-details',
   templateUrl: './paystub-details.component.html',
   styleUrls: ['./paystub-details.component.scss'],
+  host: {
+    class: 'block h-full',
+  },
 })
 export class PaystubDetailsComponent {
   @Input()
