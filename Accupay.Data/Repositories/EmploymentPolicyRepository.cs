@@ -34,6 +34,10 @@ namespace AccuPay.Data.Repositories
         public async Task Create(EmploymentPolicy employmentPolicy)
         {
             _context.EmploymentPolicies.Add(employmentPolicy);
+
+            // Detach the EmployeePolicyTypes as they're not supposed to saved alongside the employee policy.
+            employmentPolicy.Items.ToList().ForEach(t => _context.Entry(t.Type).State = EntityState.Detached);
+
             await _context.SaveChangesAsync();
         }
 
