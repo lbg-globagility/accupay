@@ -8,6 +8,7 @@ import {
   ViewClientComponent,
   UserFormComponent,
 } from 'src/app/clients/components';
+import { OrganizationFormComponent } from './components/organization-form/organization-form.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import {
     ClientsComponent,
     ViewClientComponent,
     UserFormComponent,
+    OrganizationFormComponent,
   ],
   imports: [SharedModule],
 })
