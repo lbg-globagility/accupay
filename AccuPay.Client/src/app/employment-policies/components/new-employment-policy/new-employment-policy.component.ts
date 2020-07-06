@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-import { EmploymentPolicyForm } from 'src/app/employment-policies/shared/employment-policy-form';
 import { Router } from '@angular/router';
 import { EmploymentPolicyService } from 'src/app/employment-policies/services/employment-policy.service';
-import { EmploymentPolicy } from 'src/app/employment-policies/shared/employment-policy';
+import {
+  EmploymentPolicyForm,
+  EmploymentPolicy,
+} from 'src/app/employment-policies/shared';
 
 @Component({
   selector: 'app-new-employment-policy',

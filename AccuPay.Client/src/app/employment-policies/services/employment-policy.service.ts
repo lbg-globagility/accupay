@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { EmploymentPolicy } from 'src/app/employment-policies/shared/employment-policy';
 import { PageOptions } from 'src/app/core/shared/page-options';
 import { PaginatedList } from 'src/app/core/shared/paginated-list';
+import { EmploymentPolicy } from 'src/app/employment-policies/shared';
 
 @Injectable({
   providedIn: 'root',

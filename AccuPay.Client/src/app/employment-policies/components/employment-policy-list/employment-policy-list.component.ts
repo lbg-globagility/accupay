@@ -15,9 +15,12 @@ import { Sort } from '@angular/material/sort';
   selector: 'app-employment-policy-list',
   templateUrl: './employment-policy-list.component.html',
   styleUrls: ['./employment-policy-list.component.scss'],
+  host: {
+    class: 'block p-4',
+  },
 })
 export class EmploymentPolicyListComponent implements OnInit {
-  readonly displayedColumns: string[] = ['name'];
+  readonly displayedColumns: string[] = ['name', 'actions'];
 
   searchTerm: string;
 

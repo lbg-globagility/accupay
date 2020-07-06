@@ -1,10 +1,19 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from 'src/app/shared/shared.module';
-import { EmploymentPolicyListComponent } from './employment-policy-list/employment-policy-list.component';
-import { NewEmploymentPolicyComponent } from './new-employment-policy/new-employment-policy.component';
+import {
+  EmploymentPolicyListComponent,
+  EmploymentPolicyFormComponent,
+  NewEmploymentPolicyComponent,
+  EditEmploymentPolicyComponent,
+} from 'src/app/employment-policies/components';
 
 @NgModule({
-  declarations: [EmploymentPolicyListComponent, NewEmploymentPolicyComponent],
+  declarations: [
+    EmploymentPolicyListComponent,
+    NewEmploymentPolicyComponent,
+    EditEmploymentPolicyComponent,
+    EmploymentPolicyFormComponent,
+  ],
   imports: [SharedModule],
 })
 export class EmploymentPoliciesModule {}

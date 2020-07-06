@@ -82,8 +82,11 @@ import { PagibigReportComponent } from './reports/pagibig-report/pagibig-report.
 import { LoanReportBytypeComponent } from './reports/loan-report-bytype/loan-report-bytype.component';
 import { LoanReportByemployeeComponent } from './reports/loan-report-byemployee/loan-report-byemployee.component';
 import { TaxReportComponent } from './reports/tax-report/tax-report.component';
-import { EmploymentPolicyListComponent } from 'src/app/employment-policies/employment-policy-list/employment-policy-list.component';
-import { NewEmploymentPolicyComponent } from 'src/app/employment-policies/new-employment-policy/new-employment-policy.component';
+import {
+  EditEmploymentPolicyComponent,
+  NewEmploymentPolicyComponent,
+  EmploymentPolicyListComponent,
+} from 'src/app/employment-policies/components';
 
 const routes: Routes = [
   {
@@ -123,6 +126,10 @@ const routes: Routes = [
       {
         path: 'employment-policies/new',
         component: NewEmploymentPolicyComponent,
+      },
+      {
+        path: 'employment-policies/:id/edit',
+        component: EditEmploymentPolicyComponent,
       },
       {
         path: 'users',
