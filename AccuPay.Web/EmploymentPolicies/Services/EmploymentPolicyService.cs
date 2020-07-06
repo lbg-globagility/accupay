@@ -18,11 +18,20 @@ namespace AccuPay.Web.EmploymentPolicies.Services
 
         public async Task<EmploymentPolicyDto> Create(CreateEmploymentPolicyDto dto)
         {
-            var employmentPolicy = new EmploymentPolicy();
-            employmentPolicy.Name = dto.Name;
+            var types = new EmploymentPolicyTypesCollection(await _repository.GetAllTypes());
+
+            var employmentPolicy = new EmploymentPolicy(dto.Name);
+
+            employmentPolicy.SetItem(types.Find("WorkDaysPerYear"), dto.WorkDaysPerYear);
+            employmentPolicy.SetItem(types.Find("GracePeriod"), dto.GracePeriod);
+            employmentPolicy.SetItem(types.Find("ComputeNightDiff"), dto.ComputeNightDiff);
+            employmentPolicy.SetItem(types.Find("ComputeNightDiffOT"), dto.ComputeNightDiff);
+            employmentPolicy.SetItem(types.Find("ComputeRestDay"), dto.ComputeRestDay);
+            employmentPolicy.SetItem(types.Find("ComputeRestDayOT"), dto.ComputeRestDayOT);
+            employmentPolicy.SetItem(types.Find("ComputeSpecialHoliday"), dto.ComputeSpecialHoliday);
+            employmentPolicy.SetItem(types.Find("ComputeRegularHoliday"), dto.ComputeRegularHoliday);
 
             await _repository.Create(employmentPolicy);
-
             return ConvertToDto(employmentPolicy);
         }
 

@@ -1,8 +1,12 @@
 export interface EmploymentPolicy {
-  id: number;
+  id?: number;
   name: string;
-  items: {
-    type: string;
-    value: any;
-  }[];
+  workDaysPerYear: number;
+  gracePeriod: number;
+  computeNightDiff: boolean;
+  computeNightDiffOT: boolean;
+  computeRestDay: boolean;
+  computeRestDayOT: boolean;
+  computeSpecialHoliday: boolean;
+  computeRegularHoliday: boolean;
 }

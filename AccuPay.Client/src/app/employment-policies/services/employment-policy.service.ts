@@ -13,6 +13,13 @@ export class EmploymentPolicyService {
 
   constructor(private httpClient: HttpClient) {}
 
+  create(employmentPolicy: EmploymentPolicy): Observable<EmploymentPolicy> {
+    return this.httpClient.post<EmploymentPolicy>(
+      `${this.baseUrl}`,
+      employmentPolicy
+    );
+  }
+
   list(options: PageOptions): Observable<PaginatedList<EmploymentPolicy>> {
     const params = options.toObject();
 
