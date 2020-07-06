@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { EmploymentPolicyService } from 'src/app/employment-policies/services/employment-policy.service';
 import { EmploymentPolicyFormComponent } from 'src/app/employment-policies/components/employment-policy-form/employment-policy-form.component';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-new-employment-policy',
@@ -34,6 +35,7 @@ export class NewEmploymentPolicyComponent implements OnInit {
 
     this.employmentPolicyService.create(value).subscribe({
       next: () => {
+        this.displaySuccess();
         this.router.navigate(['employment-policies']);
       },
       error: (err) => {
@@ -44,5 +46,15 @@ export class NewEmploymentPolicyComponent implements OnInit {
 
   cancel(): void {
     this.router.navigate(['employment-policies']);
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Successfully created a new leave!',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
   }
 }

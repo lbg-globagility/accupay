@@ -4,6 +4,7 @@ import { EmploymentPolicyService } from 'src/app/employment-policies/services/em
 import { EmploymentPolicy } from 'src/app/employment-policies/shared';
 import { EmploymentPolicyFormComponent } from 'src/app/employment-policies/components/employment-policy-form/employment-policy-form.component';
 import { ErrorHandler } from 'src/app/core/shared/services/error-handler';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-edit-employment-policy',
@@ -42,6 +43,7 @@ export class EditEmploymentPolicyComponent implements OnInit {
       .update(this.employmentPolicyId, value)
       .subscribe({
         next: () => {
+          this.displaySuccess();
           this.router.navigate(['employment-policies']);
         },
         error: (err) =>
@@ -62,5 +64,15 @@ export class EditEmploymentPolicyComponent implements OnInit {
       .subscribe(
         (employmentPolicy) => (this.employmentPolicy = employmentPolicy)
       );
+  }
+
+  private displaySuccess() {
+    Swal.fire({
+      title: 'Success',
+      text: 'Successfully created a new leave!',
+      icon: 'success',
+      timer: 3000,
+      showConfirmButton: false,
+    });
   }
 }
